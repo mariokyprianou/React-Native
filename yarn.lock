@@ -7786,6 +7786,13 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   version "1.0.1"
   resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdchecksum.git#80d5fef51f75157dcecb4abbfe6b9c10c024bf57"
 
+react-native-design-to-component@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-design-to-component/-/react-native-design-to-component-1.0.0.tgz#1f948bda86a40e53b5ee429f10d8ce0a4664f345"
+  integrity sha512-JPGyMvD3tWT8zzciJVK5s5YjoWYXi17ee41L/aJ8yh+NeJFZUVMmabqzxBCQou3x27+GsNERn5/qYgQRn09Zwg==
+  dependencies:
+    react-native-hooks "^0.9.0"
+
 react-native-dimension@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-native-dimension/-/react-native-dimension-1.0.6.tgz#049e40746160137f5e1dde89983b04ff8dc288d5"
@@ -7825,6 +7832,11 @@ react-native-gesture-handler@~1.5.0:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
+
+react-native-hooks@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-hooks/-/react-native-hooks-0.9.0.tgz#589fc2390296d9afe03327298dabcf0a1f350910"
+  integrity sha512-yqSAH0zxqjYHYPo6mPut3dEROoB5qMvsAbN3EK0MDQrWA5zdqmzgTEpS9/qwXaIyllk6hQbHxYnRTWq2uq4tJQ==
 
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"

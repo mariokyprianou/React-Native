@@ -7,9 +7,10 @@
 
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {ThemeProvider} from 'react-native-elements';
+import ThemeProvider from './hooks/theme/ThemeProvider';
 import {ApolloProvider} from 'react-apollo';
 import {NavigationContainer} from '@react-navigation/native';
+import {ScaleProvider} from 'react-native-design-to-component';
 
 import ApolloClient from './apollo/ApolloClient';
 import Theme from './styles/AppTheme';
@@ -52,13 +53,15 @@ const App = () => {
   // }
 
   return (
-    <ThemeProvider theme={Theme}>
-      {/* <ApolloProvider client={client}> */}
-      <NavigationContainer>
-        <AppContainer />
-      </NavigationContainer>
-      {/* </ApolloProvider> */}
-    </ThemeProvider>
+    <ScaleProvider config={{height: 667, width: 375}}>
+      <ThemeProvider>
+        {/* <ApolloProvider client={client}> */}
+        <NavigationContainer>
+          <AppContainer />
+        </NavigationContainer>
+        {/* </ApolloProvider> */}
+      </ThemeProvider>
+    </ScaleProvider>
   );
 };
 

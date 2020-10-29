@@ -8998,6 +8998,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
+"the-core-ui-component-tdicon@git+ssh://git@bitbucket.org:thedistance/the-core-ui-component-tdicon.git":
+  version "1.0.0"
+  resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-component-tdicon.git#2ce76527953cfdd4f07c4ec43cd3002cea5b3ae3"
+
 "the-core-ui-theme-base@git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git":
   version "1.0.0"
   resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git#6e63a869b359f6caabcceeb091816ba3bac32144"

@@ -8,6 +8,8 @@
 
 const enGB = {
   AppTitle: 'Power',
+  ButtonText_Gym: 'GYM',
+  ButtonText_Home: 'HOME',
 };
 
 export default enGB;

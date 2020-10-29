@@ -45,6 +45,7 @@
     "react-native-splash-screen": "^3.2.0",
     "react-native-tab-view": "^2.14.4",
     "react-native-vector-icons": "^6.6.0",
+    "the-core-ui-component-tdicon": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-component-tdicon.git",
     "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git"
   },
   "devDependencies": {

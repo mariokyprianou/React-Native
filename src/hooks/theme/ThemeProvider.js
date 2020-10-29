@@ -56,6 +56,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(22),
       color: colors.brownishGrey80,
     },
+    bold15_brownishGrey100: {
+      // fontFamily: 'ProximaNova-Bold',
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.brownishGrey100,
+    },
     bold15_white100: {
       // fontFamily: 'ProximaNova-Bold',
       fontSize: fontSize(15),

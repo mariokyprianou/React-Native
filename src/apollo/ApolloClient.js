@@ -5,7 +5,7 @@
  * Copyright (c) 2019 The Distance
  */
 
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage} from '@react-native-community/async-storage';
 import {persistCache} from 'apollo-cache-persist';
 import {ApolloClient, InMemoryCache, HttpLink} from 'apollo-boost';
 

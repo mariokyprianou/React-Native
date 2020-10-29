@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Text} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import Theme from '../../styles/AppTheme';
@@ -24,6 +24,7 @@ const InitialReleaseScreen = () => {
 
   return (
     <View style={Theme.InitialReleaseScreen.container}>
+      {/* <Text>Hello</Text> */}
       <Image source={image} style={Theme.InitialReleaseScreen.image} />
     </View>
   );

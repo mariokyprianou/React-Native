@@ -43,9 +43,9 @@ const App = () => {
     validateChecksum();
   }, [client]);
 
-  if (!validChecksum) {
-    return <View />;
-  }
+  // if (!validChecksum) {
+  //   return <View style={{flex: 1, backgroundColor: 'pink'}} />;
+  // }
 
   // if (loading) {
   //   return <View />;

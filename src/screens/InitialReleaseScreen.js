@@ -1,18 +1,19 @@
 /*
- * Created Date: Fri, 27th Dec 2019, 21:02:13 pm
- * Author: James Shaw
- * Email: james.shaw@thedistance.co.uk
- * Copyright (c) 2019 The Distance
+ * Jira Ticket:
+ * Created Date: Thu, 29th Oct 2020, 13:00:59 pm
+ * Author: Jodi Dublon
+ * Email: jodi.dublon@thedistance.co.uk
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useEffect} from 'react';
 import {View, Image} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
-import Theme from '../../styles/AppTheme';
-import Secrets from '../../environment/Secrets';
+import Theme from '../styles/AppTheme';
+import Secrets from '../environment/Secrets';
 
-const image = require('../../../assets/images/initial-release/initial-release.png');
+const image = require('../../assets/images/initial-release/initial-release.png');
 
 const InitialReleaseScreen = () => {
   useEffect(() => {

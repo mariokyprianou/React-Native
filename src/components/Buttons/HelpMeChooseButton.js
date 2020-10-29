@@ -11,8 +11,13 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import LinearGradient from 'react-native-linear-gradient';
 
-export default function HelpMeChooseButton() {
+export default function HelpMeChooseButton({
+  type = 'selected',
+  letter = 'A',
+  text = 'Lorem ipsum dolor sit amet',
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -20,29 +25,61 @@ export default function HelpMeChooseButton() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
-    box: {
+    container: {
       width: getWidth(163),
       height: getWidth(163),
+    },
+    box: {
       justifyContent: 'flex-end',
-      backgroundColor: 'pink',
       paddingHorizontal: getWidth(10),
       paddingBottom: getHeight(30),
     },
-    letterText: {
+    unselectedBox: {
+      backgroundColor: colors.white100,
+      shadowColor: colors.black10,
+      shadowOffset: {width: 0, height: 3},
+      shadowRadius: 6,
+      shadowOpacity: 1,
+      elevation: 6,
+    },
+    linearGradientStyle: {
+      flex: 1,
+    },
+    selectedLetterText: {
       ...textStyles.bold14_white100,
     },
-    bodyText: {
+    selectedBodyText: {
       ...textStyles.bold16_white100,
+    },
+    unselectedLetterText: {
+      ...textStyles.semiBold14_black100,
+    },
+    unselectedBodyText: {
+      ...textStyles.medium15_black100,
     },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+  if (type === 'selected') {
+    return (
+      <View style={styles.container}>
+        <LinearGradient
+          style={{...styles.linearGradientStyle, ...styles.box}}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={[colors.tealish100, colors.tiffanyBlue100]}>
+          <Text style={styles.selectedLetterText}>{letter}</Text>
+          <Text style={styles.selectedBodyText}>{text}</Text>
+        </LinearGradient>
+      </View>
+    );
+  }
   return (
-    <View style={styles.box}>
-      <Text style={styles.letterText}>A</Text>
-      <Text style={styles.bodyText}>Lorem ipsum dolor sit amet</Text>
+    <View style={{...styles.container, ...styles.box, ...styles.unselectedBox}}>
+      <Text style={styles.unselectedLetterText}>{letter}</Text>
+      <Text style={styles.unselectedBodyText}>{text}</Text>
     </View>
   );
 }

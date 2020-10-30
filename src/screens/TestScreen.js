@@ -11,7 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import FadingBottomView from '../components/Views/FadingBottomView';
+import DefaultButton from '../components/Buttons/DefaultButton';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,7 +33,7 @@ export default function TestScreen() {
         backgroundColor: 'pink',
       }}>
       <Text style={{marginBottom: 50}}>Test components here</Text>
-      <FadingBottomView />
+      <DefaultButton />
     </View>
   );
 }

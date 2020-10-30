@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -15,7 +15,7 @@ import TDIcon from 'the-core-ui-component-tdicon';
 
 export default function GymHomeSelector() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {ButtonText_Gym, ButtonText_Home} = dictionary;
@@ -23,14 +23,13 @@ export default function GymHomeSelector() {
   const buttonIcon = require('../../../assets/icons/reverse.png');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
-  const styles = StyleSheet.create({
+  const styles = {
     pill: {
       backgroundColor: colors.white80,
       flexDirection: 'row',
       width: getWidth(82),
       height: getHeight(28),
       borderRadius: radius(18),
-      // justifyContent: 'center',
     },
     touch: {
       flex: 1,
@@ -41,7 +40,12 @@ export default function GymHomeSelector() {
     text: {
       ...textStyles.bold15_brownishGrey100,
     },
-  });
+    icon: {
+      color: colors.brownishGrey100,
+      size: 15,
+      solid: true,
+    },
+  };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleSelect() {
@@ -54,10 +58,7 @@ export default function GymHomeSelector() {
     <View style={styles.pill}>
       <TouchableOpacity onPress={handleSelect} style={styles.touch}>
         <Text style={styles.text}>{buttonText}</Text>
-        <TDIcon
-          input={buttonIcon}
-          inputStyle={{color: colors.brownishGrey100, size: 15, solid: true}}
-        />
+        <TDIcon input={buttonIcon} inputStyle={styles.icon} />
       </TouchableOpacity>
     </View>
   );

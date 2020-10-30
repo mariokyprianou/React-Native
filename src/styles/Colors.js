@@ -24,6 +24,7 @@ const Colors = {
   tealish100: 'rgba(46, 193, 187, 1)',
   tiffanyBlue100: 'rgba(116, 235, 231, 1)',
   paleBlue100: 'rgba(223, 232, 238, 1)',
+  paleTurquoise100: 'rgba(191, 226, 224, 1)',
   white75: 'rgba(255, 255, 255, 0.75)',
   white80: 'rgba(255, 255, 255, 0.8)',
   white90: 'rgba(255, 255, 255, 0.9)',

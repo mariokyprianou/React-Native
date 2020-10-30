@@ -11,7 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import PercentageBar from '../components/Informatics/PercentageBar';
+import PercentageBar from '../components/Infographics/PercentageBar';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,9 +33,6 @@ export default function TestScreen() {
         backgroundColor: 'pink',
       }}>
       <Text style={{marginBottom: 50}}>Test components here</Text>
-      <PercentageBar icon="lightning" text="FAT LOSS" percentage={80} />
-      <PercentageBar icon="heartRate" text="FITNESS" percentage={30} />
-      <PercentageBar icon="weight" text="BUILD MUSCLE" percentage={45} />
     </View>
   );
 }

@@ -6,9 +6,10 @@
  */
 
 import React from 'react';
-import InitialReleaseScreen from './screens/InitialReleaseScreen';
-import TestScreen from './screens/TestScreen';
+// import InitialReleaseScreen from './screens/InitialReleaseScreen';
+// import TestScreen from './screens/TestScreen';
 import AppStack from './navigation/AppStack';
+import OnboardingScreen from './screens/OnboardingScreen';
 
 export default function AppContainer() {
   return (
@@ -22,7 +23,7 @@ export default function AppContainer() {
       /> */}
       <AppStack.Screen
         name="Test"
-        component={TestScreen}
+        component={OnboardingScreen}
         options={{
           headerShown: false,
         }}

@@ -37,6 +37,10 @@ export default function PercentageBar({icon, text, percentage}) {
     container: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconContainer: {
+      width: getWidth(22),
     },
     icon: {
       color: colors.white100,
@@ -72,7 +76,7 @@ export default function PercentageBar({icon, text, percentage}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <View style={{width: 25}}>
+      <View style={styles.iconContainer}>
         <TDIcon input={iconSelector[icon]} inputStyle={styles.icon} />
       </View>
       <View style={styles.textContainer}>

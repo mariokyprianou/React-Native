@@ -15,13 +15,19 @@ import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
 import PercentageBar from '../Infographics/PercentageBar';
 
-export default function TrainerCard({name = 'Katrina'}) {
+export default function TrainerCard({
+  name = 'Katrina',
+  fatLoss = 35,
+  fitness = 70,
+  buildMuscle = 20,
+  image,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+  const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
 
-  const fake = require('../../../assets/images/fake.png');
+  const {CardText_FatLoss, CardText_Fitness, CardText_BuildMuscle} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -45,16 +51,21 @@ export default function TrainerCard({name = 'Katrina'}) {
     overlay: {
       width: '100%',
       position: 'absolute',
+      bottom: 10,
     },
     titleContainer: {
-      backgroundColor: 'orange',
-      width: '100%',
+      width: '90%',
+      alignSelf: 'center',
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      marginBottom: getHeight(20),
     },
     nameText: {
       ...textStyles.bold30_white100,
+    },
+    barsContainer: {
+      justifyContent: 'center',
     },
   });
 
@@ -63,7 +74,7 @@ export default function TrainerCard({name = 'Katrina'}) {
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image source={fake} style={styles.image} />
+        <Image source={image} style={styles.image} />
         <FadingBottomView color="blue" />
       </View>
       <View style={styles.overlay}>
@@ -71,9 +82,23 @@ export default function TrainerCard({name = 'Katrina'}) {
           <Text style={styles.nameText}>{name}</Text>
           <GymHomeSelector />
         </View>
-        <PercentageBar icon="lightning" text="FAT LOSS" percentage={35} />
-        <PercentageBar icon="heartRate" text="FITNESS" percentage={75} />
-        <PercentageBar icon="weight" text="BUILD MUSCLE" percentage={20} />
+        <View style={styles.barsContainer}>
+          <PercentageBar
+            icon="lightning"
+            text={CardText_FatLoss}
+            percentage={fatLoss}
+          />
+          <PercentageBar
+            icon="heartRate"
+            text={CardText_Fitness}
+            percentage={fitness}
+          />
+          <PercentageBar
+            icon="weight"
+            text={CardText_BuildMuscle}
+            percentage={buildMuscle}
+          />
+        </View>
       </View>
     </View>
   );

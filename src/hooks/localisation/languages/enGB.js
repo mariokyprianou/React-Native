@@ -24,6 +24,7 @@ const enGB = {
   ButtonText_GetStarted: 'GET STARTED',
   ButtonText_GoBack: 'GO BACK',
   ButtonText_Gym: 'GYM',
+  ButtonText_Home: 'HOME',
   ButtonText_Login: 'LOGIN',
   ButtonText_Programme: 'PROGRAMME',
   ButtonText_QuestionMark: '?',
@@ -44,6 +45,9 @@ const enGB = {
   CardText_Reps: 'reps',
   CardText_Sets: 'sets',
   CardText_Day: 'DAY',
+  CardText_FatLoss: 'FAT LOSS',
+  CardText_Fitness: 'FITNESS',
+  CardText_BuildMuscle: 'BUILD MUSCLE',
   TitleText_Question: 'QUESTION',
   TitleText_Of: 'OF',
 };

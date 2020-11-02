@@ -51,6 +51,7 @@ export default function GymHomeSelector() {
   function handleSelect() {
     if (buttonText === ButtonText_Gym) setButtonText(ButtonText_Home);
     if (buttonText === ButtonText_Home) setButtonText(ButtonText_Gym);
+    console.log(buttonText);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

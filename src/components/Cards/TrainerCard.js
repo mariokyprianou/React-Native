@@ -16,10 +16,10 @@ import GymHomeSelector from '../Buttons/GymHomeSelector';
 import PercentageBar from '../Infographics/PercentageBar';
 
 export default function TrainerCard({
-  name = 'Katrina',
-  fatLoss = 35,
-  fitness = 70,
-  buildMuscle = 20,
+  name,
+  fatLoss,
+  fitness,
+  buildMuscle,
   image,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **

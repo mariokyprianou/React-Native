@@ -36,6 +36,13 @@ const enGB = {
   ButtonText_StartWorkout: 'START WORKOUT',
   ButtonText_TryAgain: 'TRY AGAIN',
   ButtonText_Pluralise: "'S",
+  CardText_Low: 'Low',
+  CardText_Medium: 'Medium',
+  CardText_High: 'High',
+  CardText_Intensity: 'intensity',
+  CardText_Mins: 'mins',
+  CardText_Reps: 'reps',
+  CardText_Sets: 'sets',
   TitleText_Question: 'QUESTION',
   TitleText_Of: 'OF',
 };

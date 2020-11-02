@@ -43,6 +43,7 @@ const enGB = {
   CardText_Mins: 'mins',
   CardText_Reps: 'reps',
   CardText_Sets: 'sets',
+  CardText_Day: 'DAY',
   TitleText_Question: 'QUESTION',
   TitleText_Of: 'OF',
 };

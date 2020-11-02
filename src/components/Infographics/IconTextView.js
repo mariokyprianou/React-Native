@@ -13,6 +13,8 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 
+// possible type - intensity, workoutComplete
+
 export default function IconTextView({type, duration, intensity, reps, sets}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();

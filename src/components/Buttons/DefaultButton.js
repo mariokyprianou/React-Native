@@ -14,7 +14,15 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-export default function DefaultScreen({
+// possible type - addPhoto, addResult, addWeight, allowAnalytics, allowNotifications, changeDevice, changeEmail,
+// changePassword, continue, continueFromWeek, createAccount, done, getStarted, goBack, login, programme, remindMe,
+// restart, sendResetRequest, setLanguage, share, startNow, startWorkout, tryAgain, pluralise
+
+// possible icon - share, reminder, chevron
+
+// possible variant - white, gradient, transparent
+
+export default function DefaultButton({
   type,
   icon,
   variant,

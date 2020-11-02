@@ -13,6 +13,8 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 
+// possible type - selected or null
+
 export default function HelpMeChooseButton({
   type = 'selected',
   letter = 'A',

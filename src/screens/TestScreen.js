@@ -11,7 +11,6 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import WorkoutCard from '../components/Cards/WorkoutCard';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,8 +32,6 @@ export default function TestScreen() {
         // backgroundColor: '#00008B',
       }}>
       <Text style={{marginBottom: 50}}>Test components here</Text>
-      <WorkoutCard />
-      <View style={{marginVertical: getHeight(30)}} />
     </View>
   );
 }

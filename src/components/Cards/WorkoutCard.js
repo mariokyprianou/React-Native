@@ -6,25 +6,38 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import IconTextView from '../Infographics/IconTextView';
 
-export default function WorkoutCard() {
+// possible status' - currentDay, complete, todo
+
+export default function WorkoutCard({
+  status,
+  title,
+  day,
+  date,
+  duration,
+  intensity,
+  image,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
+  const [workoutDay, setWorkoutDay] = useState(day);
+
+  const {CardText_Day} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
       width: getWidth(335),
-      height: getHeight(100),
+      height: title === 'REST DAY' ? getHeight(66) : getHeight(100),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -34,6 +47,20 @@ export default function WorkoutCard() {
       shadowOpacity: 1,
       elevation: 6,
     },
+    completeOverlay: {
+      backgroundColor: colors.white75,
+      width: getWidth(335),
+      height: title === 'REST DAY' ? getHeight(66) : getHeight(100),
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+    image: {
+      height: '100%',
+      opacity: 0.2,
+      position: 'absolute',
+      right: 0,
+    },
     iconContainer: {
       marginLeft: getWidth(10),
       marginRight: getWidth(20),
@@ -41,6 +68,12 @@ export default function WorkoutCard() {
     icon: {
       solid: true,
       size: fontSize(14),
+    },
+    completeIconContainer: {
+      marginRight: getWidth(7),
+    },
+    completeIcon: {
+      color: colors.brownGrey100,
     },
     textContainer: {
       flexDirection: 'column',
@@ -50,7 +83,8 @@ export default function WorkoutCard() {
     },
     dayContainer: {
       flexDirection: 'row',
-      marginBottom: getHeight(17),
+      alignItems: 'center',
+      marginBottom: title === 'REST DAY' ? getHeight(0) : getHeight(17),
     },
     workoutDay: {
       ...textStyles.medium14_aquamarine100,
@@ -64,17 +98,38 @@ export default function WorkoutCard() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
+      {status === 'currentDay' && <Image source={image} style={styles.image} />}
       <View style={styles.iconContainer}>
         <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>REST DAY</Text>
+        <Text style={styles.title}>{title}</Text>
         <View style={styles.dayContainer}>
-          <Text style={styles.workoutDay}>Day 1: </Text>
-          <Text style={styles.date}>Wednesday 1st June</Text>
+          {status === 'complete' && (
+            <View style={styles.completeIconContainer}>
+              <TDIcon
+                input={'check-circle'}
+                inputStyle={{...styles.icon, ...styles.completeIcon}}
+              />
+            </View>
+          )}
+          {title !== 'REST DAY' && (
+            <Text
+              style={
+                styles.workoutDay
+              }>{`${CardText_Day} ${workoutDay}: `}</Text>
+          )}
+          <Text style={styles.date}>{date}</Text>
         </View>
-        <IconTextView type="intensity" duration="25" intensity="low" />
+        {title !== 'REST DAY' && (
+          <IconTextView
+            type="intensity"
+            duration={duration}
+            intensity={intensity}
+          />
+        )}
       </View>
+      {status === 'complete' && <View style={styles.completeOverlay} />}
     </View>
   );
 }

@@ -12,6 +12,8 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TDIcon from 'the-core-ui-component-tdicon';
 
+// possible icons - lightning, heartRate, weight
+
 export default function PercentageBar({icon, text, percentage}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -70,7 +72,9 @@ export default function PercentageBar({icon, text, percentage}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <TDIcon input={iconSelector[icon]} inputStyle={styles.icon} />
+      <View style={{width: 25}}>
+        <TDIcon input={iconSelector[icon]} inputStyle={styles.icon} />
+      </View>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{text}</Text>
         <View style={styles.barContainer}>

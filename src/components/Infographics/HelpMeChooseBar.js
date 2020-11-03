@@ -47,6 +47,7 @@ export default function HelpMeChooseBar({
     },
     text: {
       ...textStyles.light15_black100,
+      marginTop: getHeight(14),
     },
   });
 

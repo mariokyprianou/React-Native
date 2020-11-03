@@ -161,7 +161,7 @@ export default function ThemeProvider({children}) {
     light15_black100: {
       // fontFamily: 'ProximaNova-Light',
       fontSize: fontSize(15),
-      lineHeight: fontSize(35),
+      lineHeight: fontSize(20),
       color: colors.black100,
     },
     medium12_brownishGrey100: {

@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -28,6 +28,7 @@ export default function DefaultButton({
   variant,
   weekNo,
   trainerName,
+  onPress,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -178,6 +179,12 @@ export default function DefaultButton({
       alignItems: 'center',
       ...buttonVariant[variant],
     },
+    touch: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: getHeight(50),
+    },
     gradient: {
       flex: 1,
       height: getHeight(50),
@@ -199,25 +206,27 @@ export default function DefaultButton({
   if (variant === 'gradient') {
     return (
       <View style={styles.container}>
-        <LinearGradient
-          style={styles.gradient}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={[colors.tealish100, colors.tiffanyBlue100]}>
-          <Text style={styles.text}>{buttonText[type]}</Text>
-          {icon && (
-            <View style={styles.iconContainer}>
-              <TDIcon
-                input={iconType[icon]}
-                inputStyle={
-                  icon === 'chevron'
-                    ? {...iconStyles[icon], ...iconVariant[variant]}
-                    : {style: iconStyles[icon], ...iconStyles.imageProps}
-                }
-              />
-            </View>
-          )}
-        </LinearGradient>
+        <TouchableOpacity onPress={onPress} style={styles.touch}>
+          <LinearGradient
+            style={styles.gradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            colors={[colors.tealish100, colors.tiffanyBlue100]}>
+            <Text style={styles.text}>{buttonText[type]}</Text>
+            {icon && (
+              <View style={styles.iconContainer}>
+                <TDIcon
+                  input={iconType[icon]}
+                  inputStyle={
+                    icon === 'chevron'
+                      ? {...iconStyles[icon], ...iconVariant[variant]}
+                      : {style: iconStyles[icon], ...iconStyles.imageProps}
+                  }
+                />
+              </View>
+            )}
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -225,13 +234,15 @@ export default function DefaultButton({
   if (type === 'continueFromWeek') {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>{`${buttonText[type]} ${weekNo}`}</Text>
-        <View style={styles.iconContainer}>
-          <TDIcon
-            input={'chevron-right'}
-            inputStyle={{...iconStyles[icon], ...iconVariant[variant]}}
-          />
-        </View>
+        <TouchableOpacity onPress={onPress} style={styles.touch}>
+          <Text style={styles.text}>{`${buttonText[type]} ${weekNo}`}</Text>
+          <View style={styles.iconContainer}>
+            <TDIcon
+              input={'chevron-right'}
+              inputStyle={{...iconStyles[icon], ...iconVariant[variant]}}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -239,16 +250,18 @@ export default function DefaultButton({
   if (type === 'programme') {
     return (
       <View style={styles.container}>
-        <Text
-          style={
-            styles.text
-          }>{`${trainerName}${ButtonText_Pluralise} ${buttonText[type]}`}</Text>
-        <View style={styles.iconContainer}>
-          <TDIcon
-            input={'chevron-right'}
-            inputStyle={{...iconStyles[icon], ...iconVariant[variant]}}
-          />
-        </View>
+        <TouchableOpacity onPress={onPress} style={styles.touch}>
+          <Text
+            style={
+              styles.text
+            }>{`${trainerName}${ButtonText_Pluralise} ${buttonText[type]}`}</Text>
+          <View style={styles.iconContainer}>
+            <TDIcon
+              input={'chevron-right'}
+              inputStyle={{...iconStyles[icon], ...iconVariant[variant]}}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -256,19 +269,21 @@ export default function DefaultButton({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{buttonText[type]}</Text>
-      {icon && (
-        <View style={styles.iconContainer}>
-          <TDIcon
-            input={iconType[icon]}
-            inputStyle={
-              icon === 'chevron'
-                ? {...iconStyles[icon], ...iconVariant[variant]}
-                : {style: iconStyles[icon], ...iconStyles.imageProps}
-            }
-          />
-        </View>
-      )}
+      <TouchableOpacity onPress={onPress} style={styles.touch}>
+        <Text style={styles.text}>{buttonText[type]}</Text>
+        {icon && (
+          <View style={styles.iconContainer}>
+            <TDIcon
+              input={iconType[icon]}
+              inputStyle={
+                icon === 'chevron'
+                  ? {...iconStyles[icon], ...iconVariant[variant]}
+                  : {style: iconStyles[icon], ...iconStyles.imageProps}
+              }
+            />
+          </View>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }

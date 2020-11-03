@@ -49,9 +49,12 @@ const enGB = {
   CardText_Fitness: 'FITNESS',
   CardText_BuildMuscle: 'BUILD MUSCLE',
   InfoText_SelectYourProgramme: 'Select your programme',
+  InfoText_SuggestedProgramme1: `Based on your answers, we think`,
+  InfoText_SuggestedProgramme2: `would be the best trainer for you.`,
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
   TitleText_Of: 'OF',
   TitleText_Question: 'QUESTION',
+  TitleText_Result: 'RESULT',
   TitleText_YourFirstWeek: 'Your first week with',
 };
 

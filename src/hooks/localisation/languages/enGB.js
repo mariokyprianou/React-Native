@@ -48,8 +48,11 @@ const enGB = {
   CardText_FatLoss: 'FAT LOSS',
   CardText_Fitness: 'FITNESS',
   CardText_BuildMuscle: 'BUILD MUSCLE',
-  TitleText_Question: 'QUESTION',
+  InfoText_SelectYourProgramme: 'Select your programme',
+  InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
   TitleText_Of: 'OF',
+  TitleText_Question: 'QUESTION',
+  TitleText_YourFirstWeek: 'Your first week with',
 };
 
 export default enGB;

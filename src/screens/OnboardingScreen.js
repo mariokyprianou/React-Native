@@ -10,7 +10,6 @@ import React, {useRef, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
 import Swiper from 'react-native-swiper';
 import OnboardingSliderItem from '../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../components/Buttons/DefaultButton';
@@ -40,9 +39,8 @@ const fakeData = [
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
 

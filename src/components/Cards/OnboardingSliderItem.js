@@ -7,11 +7,10 @@
  */
 
 import React from 'react';
-import {Dimensions, View, Image, Text} from 'react-native';
+import {Dimensions, View, Image, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TDIcon from 'the-core-ui-component-tdicon';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function OnboardingSliderItem({
   image,

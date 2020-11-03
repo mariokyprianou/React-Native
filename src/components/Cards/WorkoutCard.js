@@ -17,7 +17,6 @@ import IconTextView from '../Infographics/IconTextView';
 // possible status' - currentDay, complete, todo
 
 export default function WorkoutCard({
-  status,
   title,
   day,
   date,
@@ -30,6 +29,7 @@ export default function WorkoutCard({
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const [workoutDay, setWorkoutDay] = useState(day);
+  const [status, setStatus] = useState();
 
   const {CardText_Day} = dictionary;
 
@@ -46,6 +46,7 @@ export default function WorkoutCard({
       shadowRadius: 6,
       shadowOpacity: 1,
       elevation: 6,
+      marginTop: getHeight(27),
     },
     completeOverlay: {
       backgroundColor: colors.white75,

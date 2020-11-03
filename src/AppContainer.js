@@ -9,7 +9,7 @@ import React from 'react';
 // import InitialReleaseScreen from './screens/InitialReleaseScreen';
 // import TestScreen from './screens/TestScreen';
 import AppStack from './navigation/AppStack';
-import OnboardingScreen from './screens/OnboardingScreen';
+import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
 
 export default function AppContainer() {
   return (
@@ -23,9 +23,9 @@ export default function AppContainer() {
       /> */}
       <AppStack.Screen
         name="Test"
-        component={OnboardingScreen}
+        component={MeetYourIconsScreen}
         options={{
-          title: false,
+          headerShown: false,
         }}
       />
     </AppStack.Navigator>

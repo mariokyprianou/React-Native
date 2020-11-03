@@ -25,7 +25,7 @@ export default function AppContainer() {
         name="Test"
         component={OnboardingScreen}
         options={{
-          headerShown: false,
+          title: false,
         }}
       />
     </AppStack.Navigator>

@@ -7,19 +7,22 @@
  */
 
 import React from 'react';
-import {Dimensions, View, Image} from 'react-native';
+import {Dimensions, View, Image, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export default function OnboardingSliderItem({image}) {
+export default function OnboardingSliderItem({
+  image,
+  header,
+  text,
+  handlePress,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {colors} = useTheme();
+  const {colors, textStyles} = useTheme();
 
-  const fake = require('../../../assets/fake.png');
   const screenWidth = Dimensions.get('screen').width;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -47,25 +50,37 @@ export default function OnboardingSliderItem({image}) {
       size: fontSize(18),
       color: colors.black100,
     },
+    textContainer: {
+      alignItems: 'center',
+    },
+    header: {
+      ...textStyles.bold24_black100,
+      marginTop: getHeight(36),
+    },
+    text: {
+      ...textStyles.medium15_brownishGrey100,
+      marginTop: getHeight(6),
+      marginBottom: getHeight(10),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePressLeft() {}
-
-  function handlePressRight() {}
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={handlePressLeft}>
+        <TouchableOpacity onPress={() => handlePress('left')}>
           <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handlePressRight}>
+        <TouchableOpacity onPress={() => handlePress('right')}>
           <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
         </TouchableOpacity>
       </View>
-      <Image source={fake} style={styles.image} />
+      <Image source={image} style={styles.image} />
+      <View style={styles.textContainer}>
+        <Text style={styles.header}>{header}</Text>
+        <Text style={styles.text}>{text}</Text>
+      </View>
     </View>
   );
 }

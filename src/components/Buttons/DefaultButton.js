@@ -171,7 +171,7 @@ export default function DefaultButton({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
-      width: '95%',
+      width: '90%',
       height: getHeight(50),
       flexDirection: 'row',
       justifyContent: 'center',

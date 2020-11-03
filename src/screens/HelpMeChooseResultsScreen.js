@@ -22,11 +22,7 @@ export default function DefaultScreen({name = 'Katrina'}) {
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {
-    TitleText_Result,
-    InfoText_SuggestedProgramme1,
-    InfoText_SuggestedProgramme2,
-  } = dictionary;
+  const {TitleText_Result, InfoText_SuggestedProgramme} = dictionary;
 
   const capitalizedName = name.toUpperCase();
 
@@ -100,10 +96,7 @@ export default function DefaultScreen({name = 'Katrina'}) {
           />
         </View>
         <Text style={styles.name}>{capitalizedName}</Text>
-        <Text
-          style={
-            styles.result
-          }>{`${InfoText_SuggestedProgramme1} ${name} ${InfoText_SuggestedProgramme2}`}</Text>
+        <Text style={styles.result}>{InfoText_SuggestedProgramme(name)}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

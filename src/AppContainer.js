@@ -8,7 +8,7 @@
 import React from 'react';
 // import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import AppStack from './navigation/AppStack';
-import HelpMeChooseResultsScreen from './screens/HelpMeChooseResultsScreen';
+import CongratulationsScreen from './screens/CongratulationsScreen';
 
 export default function AppContainer() {
   return (
@@ -22,9 +22,9 @@ export default function AppContainer() {
       /> */}
       <AppStack.Screen
         name="Test"
-        component={HelpMeChooseResultsScreen}
+        component={CongratulationsScreen}
         options={{
-          title: false,
+          headerShown: false,
         }}
       />
     </AppStack.Navigator>

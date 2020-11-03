@@ -236,12 +236,6 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.white100,
     },
-    regular15_white100: {
-      // fontFamily: 'ProximaNova-Regular',
-      fontSize: fontSize(15),
-      lineHeight: fontSize(20),
-      color: colors.white100,
-    },
     regular15_brownishGrey80: {
       // fontFamily: 'ProximaNova-Regular',
       fontSize: fontSize(15),
@@ -253,6 +247,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(15),
       lineHeight: fontSize(18),
       color: colors.brownishGrey100,
+    },
+    regular15_white100: {
+      // fontFamily: 'ProximaNova-Regular',
+      fontSize: fontSize(15),
+      lineHeight: fontSize(20),
+      color: colors.white100,
     },
     regular16_black100: {
       // fontFamily: 'ProximaNova-Regular',

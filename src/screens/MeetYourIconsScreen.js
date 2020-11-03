@@ -113,6 +113,8 @@ export default function MeetYourIconsScreen() {
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const connected = false; // change to check connection
+
   const {
     TitleText_YourFirstWeek,
     InfoText_WeeksOfTraining,
@@ -144,6 +146,10 @@ export default function MeetYourIconsScreen() {
       height: getHeight(29),
       width: getWidth(158),
       marginLeft: getWidth(18),
+    },
+    zeroImage: {
+      width: '100%',
+      height: '100%',
     },
     selectText: {
       ...textStyles.semiBold16_white90,
@@ -195,6 +201,17 @@ export default function MeetYourIconsScreen() {
       backgroundColor: colors.paleTurquoise100,
       alignItems: 'center',
     },
+    zeroButtonContainer: {
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+    },
+    zeroInfoText: {
+      ...textStyles.regular15_white100,
+      marginBottom: getHeight(80),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -208,6 +225,38 @@ export default function MeetYourIconsScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+  if (!connected) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View>
+            <Image source={logo} style={styles.image} />
+            <Text style={styles.selectText}>
+              {InfoText_SelectYourProgramme}
+            </Text>
+          </View>
+          <View
+            style={{
+              alignSelf: 'flex-start',
+              position: 'absolute',
+              right: 10,
+            }}>
+            <CantChooseButton />
+          </View>
+        </View>
+        <Image source={fakeImage} style={styles.zeroImage} />
+        <View style={styles.zeroButtonContainer}>
+          <Text style={styles.zeroInfoText}>
+            Lorem ipsum dolor sit amet, consectetur
+          </Text>
+          {/* change ^^ to zero state info text */}
+          <DefaultButton type="tryAgain" icon="chevron" variant="white" />
+          <Spacer height={30} />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>

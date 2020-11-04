@@ -107,7 +107,7 @@ export default function ThemeProvider({children}) {
     bold22_black100: {
       // fontFamily: 'ProximaNova-Bold',
       fontSize: fontSize(22),
-      lineHeight: fontSize(28),
+      lineHeight: fontSize(35),
       color: colors.black100,
     },
     bold22_white100: {

@@ -48,6 +48,7 @@ const enGB = {
   CardText_FatLoss: 'FAT LOSS',
   CardText_Fitness: 'FITNESS',
   CardText_BuildMuscle: 'BUILD MUSCLE',
+  HeaderText_AllProgrammes: 'ALL PROGRAMMES',
   InfoText_Pluralise: "'s",
   InfoText_SelectYourProgramme: 'Select your programme',
   InfoText_SuggestedProgramme: (name) =>

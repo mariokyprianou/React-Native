@@ -7,17 +7,9 @@
  */
 
 import AppStack from './AppStack';
-import AuthStack from './AuthStack';
 import BottomTab from './BottomTab';
 import ProfileStack from './ProfileStack';
 import ProgressStack from './ProgressStack';
 import WorkoutStack from './WorkoutStack';
 
-export {
-  AppStack,
-  AuthStack,
-  BottomTab,
-  ProfileStack,
-  ProgressStack,
-  WorkoutStack,
-};
+export {AppStack, BottomTab, ProfileStack, ProgressStack, WorkoutStack};

@@ -10,6 +10,9 @@ import React from 'react';
 import {AppStack} from './navigation';
 import CongratulationsScreen from './screens/CongratulationsScreen';
 
+// onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
+// tab container, workout container, progress container, profile container
+
 export default function AppContainer() {
   return (
     <AppStack.Navigator>

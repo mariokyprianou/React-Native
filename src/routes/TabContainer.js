@@ -13,6 +13,8 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import {useTheme, useDictionary} from '../../hooks';
 import {BottomTab} from '../navigation';
 
+// contains workout container (opens on workout home screen), progress container, profile container
+
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {fontSize} = ScaleHook();

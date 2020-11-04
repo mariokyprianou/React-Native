@@ -11,6 +11,7 @@ import {View, Text, TouchableOpacity, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
+import useWorkoutHome from '../hooks/data/useWorkoutHome';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import TDIcon from 'the-core-ui-component-tdicon';
 import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
@@ -20,85 +21,6 @@ import formatWorkoutWeek from '../utils/formatWorkoutWeek';
 import addRestDays from '../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 
-const fakeImage = require('../../assets/fakeCard.png');
-
-const fakeData = {
-  currentWeek: [
-    {
-      title: 'UPPER BODY',
-      day: 1,
-      duration: 30,
-      intensity: 'high',
-      image: fakeImage,
-    },
-    {
-      title: 'LOWER BODY',
-      day: 2,
-      duration: 30,
-      intensity: 'high',
-      image: fakeImage,
-    },
-    {
-      title: 'ABS',
-      day: 3,
-      duration: 30,
-      intensity: 'high',
-      image: fakeImage,
-    },
-    // {
-    //   title: 'CARDIO',
-    //   day: 4,
-    //   duration: 30,
-    //   intensity: 'high',
-    //   image: fakeImage,
-    // },
-    // {
-    //   title: 'MOBILITY',
-    //   day: 5,
-    //   duration: 30,
-    //   intensity: 'high',
-    //   image: fakeImage,
-    // },
-  ],
-  nextWeek: [
-    {
-      title: 'LEGS',
-      day: 1,
-      duration: 30,
-      intensity: 'high',
-      image: fakeImage,
-    },
-    {
-      title: 'UPPER BODY',
-      day: 2,
-      duration: 30,
-      intensity: 'high',
-      image: fakeImage,
-    },
-    {
-      title: 'ABS',
-      day: 3,
-      duration: 30,
-      intensity: 'high',
-      image: fakeImage,
-    },
-    // {
-    //   title: 'CARDIO',
-    //   day: 4,
-    //   duration: 30,
-    //   intensity: 'high',
-    //   image: fakeImage,
-    // },
-    // {
-    //   title: 'MOBILITY',
-    //   day: 5,
-    //   duration: 30,
-    //   intensity: 'high',
-    //   image: fakeImage,
-    // },
-  ],
-};
-
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -107,19 +29,20 @@ export default function WorkoutHomeScreen() {
   const {TitleText_Week} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
   const [formattedWorkouts, setFormattedWorkouts] = useState();
+  const {workoutHomeData} = useWorkoutHome();
 
   useEffect(() => {
     if (weekNumber === 1) {
-      const thisWeek = formatWorkoutWeek(fakeData.currentWeek, 1);
+      const thisWeek = formatWorkoutWeek(workoutHomeData.currentWeek, 1);
       const thisWeekWithRests = addRestDays(thisWeek);
       setFormattedWorkouts(thisWeekWithRests);
     }
     if (weekNumber === 2) {
-      const nextWeek = formatWorkoutWeek(fakeData.nextWeek, 2);
+      const nextWeek = formatWorkoutWeek(workoutHomeData.nextWeek, 2);
       const nextWeekWithRests = addRestDays(nextWeek);
       setFormattedWorkouts(nextWeekWithRests);
     }
-  }, [fakeData, weekNumber]);
+  }, [workoutHomeData, weekNumber]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

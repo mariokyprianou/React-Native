@@ -18,6 +18,7 @@ import {
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
+import useMeetYourIcons from '../hooks/data/useMeetYourIcons';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
 import TrainerCard from '../components/Cards/TrainerCard';
@@ -28,83 +29,6 @@ import CantChooseButton from '../components/Buttons/CantChooseButton';
 
 const fakeImage = require('../../assets/fake2.png');
 
-const fakeData = [
-  {
-    key: 1,
-    name: 'Katrina',
-    fatLoss: 70,
-    fitness: 50,
-    buildMuscle: 30,
-    image: fakeImage,
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    liveWeeks: 12,
-    firstWeek: [
-      {
-        key: 3,
-        title: 'Legs day',
-        day: 1,
-        date: 'Tuesday 3rd November',
-        duration: 30,
-        intensity: 'low',
-      },
-      {
-        key: 4,
-        title: 'Upper body day',
-        day: 2,
-        date: 'Thursday 5th November',
-        duration: 45,
-        intensity: 'medium',
-      },
-      {
-        key: 5,
-        title: 'Core day',
-        day: 3,
-        date: 'Saturday 7th November',
-        duration: 60,
-        intensity: 'high',
-      },
-    ],
-  },
-  {
-    key: 2,
-    name: 'Sally',
-    fatLoss: 30,
-    fitness: 60,
-    buildMuscle: 90,
-    image: fakeImage,
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    liveWeeks: 10,
-    firstWeek: [
-      {
-        key: 6,
-        title: 'Core day',
-        day: 1,
-        date: 'Tuesday 3rd November',
-        duration: 45,
-        intensity: 'medium',
-      },
-      {
-        key: 7,
-        title: 'Upper body day',
-        day: 2,
-        date: 'Thursday 5th November',
-        duration: 60,
-        intensity: 'medium',
-      },
-      {
-        key: 8,
-        title: 'Legs day',
-        day: 3,
-        date: 'Saturday 7th November',
-        duration: 90,
-        intensity: 'high',
-      },
-    ],
-  },
-];
-
 export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
@@ -112,6 +36,7 @@ export default function MeetYourIconsScreen() {
   const {dictionary} = useDictionary();
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
+  const {meetYourIconsData} = useMeetYourIcons();
 
   const connected = true; // change to check connection
 
@@ -229,7 +154,7 @@ export default function MeetYourIconsScreen() {
     if (direction === 'left' && activeIndex !== 0) {
       iconsSwiper.current.scrollTo(activeIndex - 1, true);
     }
-    if (direction === 'right' && activeIndex !== fakeData.length - 1) {
+    if (direction === 'right' && activeIndex !== meetYourIconsData.length - 1) {
       iconsSwiper.current.scrollTo(activeIndex + 1, true);
     }
   }
@@ -269,7 +194,7 @@ export default function MeetYourIconsScreen() {
         loop={false}
         onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
-        {fakeData.map(
+        {meetYourIconsData.map(
           ({
             fatLoss,
             fitness,

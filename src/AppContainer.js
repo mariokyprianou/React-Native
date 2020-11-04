@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-// import InitialReleaseScreen from './screens/InitialReleaseScreen';
+import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
 import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
 

@@ -6,9 +6,12 @@
  */
 
 import React from 'react';
-import InitialReleaseScreen from './screens/InitialReleaseScreen';
-import TestScreen from './screens/TestScreen';
-import AppStack from './navigation/AppStack';
+// import InitialReleaseScreen from './screens/InitialReleaseScreen';
+import {AppStack} from './navigation';
+import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
+
+// onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
+// tab container, workout container, progress container, profile container
 
 export default function AppContainer() {
   return (
@@ -22,9 +25,9 @@ export default function AppContainer() {
       />
       {/* <AppStack.Screen
         name="Test"
-        component={TestScreen}
+        component={MeetYourIconsScreen}
         options={{
-          headerShown: false,
+          title: false,
         }}
       /> */}
     </AppStack.Navigator>

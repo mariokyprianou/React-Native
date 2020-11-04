@@ -56,6 +56,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(22),
       color: colors.brownishGrey80,
     },
+    bold15_brownishGrey100: {
+      // fontFamily: 'ProximaNova-Bold',
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.brownishGrey100,
+    },
     bold15_white100: {
       // fontFamily: 'ProximaNova-Bold',
       fontSize: fontSize(15),
@@ -80,6 +86,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(16),
       color: colors.brownishGrey100,
     },
+    bold18_white100: {
+      // fontFamily: 'ProximaNova-Bold',
+      fontSize: fontSize(18),
+      lineHeight: fontSize(35),
+      color: colors.white100,
+    },
     bold20_black100: {
       // fontFamily: 'ProximaNova-Bold',
       fontSize: fontSize(20),
@@ -95,7 +107,7 @@ export default function ThemeProvider({children}) {
     bold22_black100: {
       // fontFamily: 'ProximaNova-Bold',
       fontSize: fontSize(22),
-      lineHeight: fontSize(28),
+      lineHeight: fontSize(35),
       color: colors.black100,
     },
     bold22_white100: {
@@ -155,7 +167,7 @@ export default function ThemeProvider({children}) {
     light15_black100: {
       // fontFamily: 'ProximaNova-Light',
       fontSize: fontSize(15),
-      lineHeight: fontSize(35),
+      lineHeight: fontSize(20),
       color: colors.black100,
     },
     medium12_brownishGrey100: {
@@ -230,12 +242,6 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.white100,
     },
-    regular15_white100: {
-      // fontFamily: 'ProximaNova-Regular',
-      fontSize: fontSize(15),
-      lineHeight: fontSize(20),
-      color: colors.white100,
-    },
     regular15_brownishGrey80: {
       // fontFamily: 'ProximaNova-Regular',
       fontSize: fontSize(15),
@@ -247,6 +253,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(15),
       lineHeight: fontSize(18),
       color: colors.brownishGrey100,
+    },
+    regular15_white100: {
+      // fontFamily: 'ProximaNova-Regular',
+      fontSize: fontSize(15),
+      lineHeight: fontSize(20),
+      color: colors.white100,
     },
     regular16_black100: {
       // fontFamily: 'ProximaNova-Regular',

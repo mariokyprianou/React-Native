@@ -24,8 +24,14 @@ export default function TestScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={{marginTop: 50}}>
-      <Text>Test components here</Text>
+    <View
+      style={{
+        marginVertical: getHeight(50),
+        alignItems: 'center',
+        flex: 1,
+        // backgroundColor: '#00008B',
+      }}>
+      <Text style={{marginBottom: 50}}>Test components here</Text>
     </View>
   );
 }

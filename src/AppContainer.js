@@ -11,7 +11,7 @@ import {AppStack} from './navigation';
 import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
-// tab container, workout container, progress container, profile container
+// tab container
 
 export default function AppContainer() {
   return (

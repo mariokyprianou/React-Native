@@ -137,7 +137,7 @@ export default function MeetYourIconsScreen() {
       position: 'absolute',
       top: 0,
       zIndex: 9,
-      marginTop: getHeight(40),
+      marginTop: getHeight(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
@@ -155,15 +155,22 @@ export default function MeetYourIconsScreen() {
       ...textStyles.semiBold16_white90,
       marginLeft: getWidth(24),
     },
+    cantChooseContainer: {
+      alignSelf: 'flex-start',
+      position: 'absolute',
+      right: 10,
+    },
     iconContainer: {
       width: '90%',
-      height: getHeight(410),
+      height: getHeight(150),
       position: 'absolute',
       left: screenWidth * 0.05,
+      top: getHeight(130),
       zIndex: 9,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-end',
+      paddingBottom: getHeight(30),
     },
     icon: {
       size: fontSize(18),
@@ -198,8 +205,11 @@ export default function MeetYourIconsScreen() {
       paddingBottom: getHeight(50),
     },
     buttonContainer: {
-      backgroundColor: colors.paleTurquoise100,
+      width: '100%',
+      backgroundColor: 'transparent',
       alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
     },
     zeroButtonContainer: {
       backgroundColor: 'transparent',
@@ -235,12 +245,7 @@ export default function MeetYourIconsScreen() {
               {InfoText_SelectYourProgramme}
             </Text>
           </View>
-          <View
-            style={{
-              alignSelf: 'flex-start',
-              position: 'absolute',
-              right: 10,
-            }}>
+          <View style={styles.cantChooseContainer}>
             <CantChooseButton />
           </View>
         </View>
@@ -259,20 +264,6 @@ export default function MeetYourIconsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View>
-          <Image source={logo} style={styles.image} />
-          <Text style={styles.selectText}>{InfoText_SelectYourProgramme}</Text>
-        </View>
-        <View
-          style={{
-            alignSelf: 'flex-start',
-            position: 'absolute',
-            right: 10,
-          }}>
-          <CantChooseButton />
-        </View>
-      </View>
       <Swiper
         ref={iconsSwiper}
         loop={false}
@@ -290,6 +281,17 @@ export default function MeetYourIconsScreen() {
             firstWeek,
           }) => (
             <ScrollView style={styles.sliderContainer}>
+              <View style={styles.headerContainer}>
+                <View>
+                  <Image source={logo} style={styles.image} />
+                  <Text style={styles.selectText}>
+                    {InfoText_SelectYourProgramme}
+                  </Text>
+                </View>
+                <View style={styles.cantChooseContainer}>
+                  <CantChooseButton />
+                </View>
+              </View>
               <View style={styles.iconContainer}>
                 <TouchableOpacity onPress={() => handlePress('left')}>
                   <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
@@ -307,6 +309,7 @@ export default function MeetYourIconsScreen() {
                   image={image}
                 />
               </View>
+              <Spacer height={30} />
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{text}</Text>
                 <Text
@@ -329,6 +332,7 @@ export default function MeetYourIconsScreen() {
                   />
                 ))}
               </View>
+              <Spacer height={90} />
             </ScrollView>
           ),
         )}
@@ -336,7 +340,7 @@ export default function MeetYourIconsScreen() {
       <View style={styles.buttonContainer}>
         <DefaultButton type="startNow" icon="chevron" variant="gradient" />
         <Spacer height={10} />
-        <DefaultButton type="login" variant="transparent" />
+        <DefaultButton type="login" variant="transparentGreyText" />
         <Spacer height={10} />
       </View>
     </View>

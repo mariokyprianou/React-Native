@@ -50,8 +50,7 @@ export default function TrainerCard({
     },
     overlay: {
       width: '100%',
-      position: 'absolute',
-      bottom: 10,
+      bottom: getHeight(120),
     },
     titleContainer: {
       width: '90%',

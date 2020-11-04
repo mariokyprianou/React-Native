@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
@@ -106,8 +106,11 @@ export default function WorkoutHomeScreen() {
           <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
         </TouchableOpacity>
       </View>
+      {/* <ScrollView> */}
       {/* <DraggableFlatList
         data={formattedWorkouts}
+        keyExtractor={(item, index) => index}
+        onDragEnd={({data}) => setFormattedWorkouts({data})}
         renderItem={({item, index, drag}) => (
           <WorkoutCard
             title={item.title}
@@ -119,9 +122,9 @@ export default function WorkoutHomeScreen() {
             drag={drag}
           />
         )}
-        keyExtractor={(item, index) => index}
-        onDragEnd={({data}) => setFormattedWorkouts({data})}
       /> */}
+      {/* </ScrollView> */}
+
       <FlatList
         data={formattedWorkouts}
         ListFooterComponent={<Spacer height={100} />}

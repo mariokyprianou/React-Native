@@ -62,7 +62,9 @@ const enGB = {
   TitleText_Of: 'OF',
   TitleText_Question: 'QUESTION',
   TitleText_Result: 'RESULT',
+  TitleText_Week: 'Week',
   TitleText_YourFirstWeek: 'Your first week with',
+  WorkoutText_RestDay: 'REST DAY',
 };
 
 export default enGB;

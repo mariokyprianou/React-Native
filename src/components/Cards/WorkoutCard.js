@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
+import {format} from 'date-fns';
 import IconTextView from '../Infographics/IconTextView';
 
 // possible status' - currentDay, complete, todo
@@ -31,13 +32,16 @@ export default function WorkoutCard({
   const [workoutDay, setWorkoutDay] = useState(day);
   const [status, setStatus] = useState();
 
-  const {CardText_Day} = dictionary;
+  const {CardText_Day, WorkoutText_RestDay} = dictionary;
+
+  const today = new Date();
+  const formattedToday = format(today, 'iiii, do LLL');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
       width: getWidth(335),
-      height: title === 'REST DAY' ? getHeight(66) : getHeight(100),
+      height: title === WorkoutText_RestDay ? getHeight(66) : getHeight(100),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -51,7 +55,7 @@ export default function WorkoutCard({
     completeOverlay: {
       backgroundColor: colors.white75,
       width: getWidth(335),
-      height: title === 'REST DAY' ? getHeight(66) : getHeight(100),
+      height: title === WorkoutText_RestDay ? getHeight(66) : getHeight(100),
       position: 'absolute',
       top: 0,
       left: 0,
@@ -99,7 +103,7 @@ export default function WorkoutCard({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      {status === 'currentDay' && <Image source={image} style={styles.image} />}
+      {date === formattedToday && <Image source={image} style={styles.image} />}
       <View style={styles.iconContainer}>
         <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
       </View>
@@ -114,7 +118,7 @@ export default function WorkoutCard({
               />
             </View>
           )}
-          {title !== 'REST DAY' && (
+          {title !== WorkoutText_RestDay && (
             <Text
               style={
                 styles.workoutDay
@@ -122,7 +126,7 @@ export default function WorkoutCard({
           )}
           <Text style={styles.date}>{date}</Text>
         </View>
-        {title !== 'REST DAY' && (
+        {title !== WorkoutText_RestDay && (
           <IconTextView
             type="intensity"
             duration={duration}

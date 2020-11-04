@@ -5,6 +5,7 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
+import {addDays, format} from 'date-fns';
 
 const addRestDays = (data) => {
   const restDay = {
@@ -21,6 +22,11 @@ const addRestDays = (data) => {
     data.splice(3, 0, restDay);
     data.splice(5, 0, restDay, restDay);
   }
+  // const dataWithDates = data.map((day, index) => {
+  //   if (!day.date) {
+  //     const date =
+  //   }
+  // })
   return data;
 };
 

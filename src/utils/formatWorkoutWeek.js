@@ -8,10 +8,10 @@
 
 import {addDays, format} from 'date-fns';
 
-const formatWorkoutWeek = (data, currentWeek = true) => {
+const formatWorkoutWeek = (data, week = 1) => {
   const today = new Date();
   const nextWeek = addDays(today, 7);
-  let startDay = currentWeek === true ? today : nextWeek;
+  let startDay = week === 1 ? today : nextWeek;
 
   if (data.length === 5) {
     let results = data.map((day) => {

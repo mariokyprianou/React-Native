@@ -8,7 +8,7 @@
 import React from 'react';
 // import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
-import WorkoutHomeScreen from './screens/WorkoutHomeScreen';
+import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container, workout container, progress container, profile container
@@ -25,9 +25,9 @@ export default function AppContainer() {
       /> */}
       <AppStack.Screen
         name="Test"
-        component={WorkoutHomeScreen}
+        component={MeetYourIconsScreen}
         options={{
-          headerShown: false,
+          title: false,
         }}
       />
     </AppStack.Navigator>

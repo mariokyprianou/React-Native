@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
@@ -18,6 +18,7 @@ import WorkoutCard from '../components/Cards/WorkoutCard';
 import Spacer from '../components/Utility/Spacer';
 import formatWorkoutWeek from '../utils/formatWorkoutWeek';
 import addRestDays from '../utils/addRestDays';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 const fakeImage = require('../../assets/fakeCard.png');
 
@@ -109,12 +110,12 @@ export default function WorkoutHomeScreen() {
 
   useEffect(() => {
     if (weekNumber === 1) {
-      const thisWeek = formatWorkoutWeek(fakeData.currentWeek);
+      const thisWeek = formatWorkoutWeek(fakeData.currentWeek, 1);
       const thisWeekWithRests = addRestDays(thisWeek);
       setFormattedWorkouts(thisWeekWithRests);
     }
     if (weekNumber === 2) {
-      const nextWeek = formatWorkoutWeek(fakeData.nextWeek);
+      const nextWeek = formatWorkoutWeek(fakeData.nextWeek, 2);
       const nextWeekWithRests = addRestDays(nextWeek);
       setFormattedWorkouts(nextWeekWithRests);
     }
@@ -182,6 +183,22 @@ export default function WorkoutHomeScreen() {
           <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
         </TouchableOpacity>
       </View>
+      {/* <DraggableFlatList
+        data={formattedWorkouts}
+        renderItem={({item, index, drag}) => (
+          <WorkoutCard
+            title={item.title}
+            day={item.day}
+            date={item.date}
+            duration={item.duration}
+            intensity={item.intensity}
+            image={item.image}
+            drag={drag}
+          />
+        )}
+        keyExtractor={(item, index) => index}
+        onDragEnd={({data}) => setFormattedWorkouts({data})}
+      /> */}
       <FlatList
         data={formattedWorkouts}
         ListFooterComponent={<Spacer height={100} />}

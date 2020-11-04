@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -24,6 +24,7 @@ export default function WorkoutCard({
   duration,
   intensity,
   image,
+  drag,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -51,6 +52,11 @@ export default function WorkoutCard({
       shadowOpacity: 1,
       elevation: 6,
       marginTop: getHeight(27),
+    },
+    touch: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     completeOverlay: {
       backgroundColor: colors.white75,
@@ -103,38 +109,42 @@ export default function WorkoutCard({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      {date === formattedToday && <Image source={image} style={styles.image} />}
-      <View style={styles.iconContainer}>
-        <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.dayContainer}>
-          {status === 'complete' && (
-            <View style={styles.completeIconContainer}>
-              <TDIcon
-                input={'check-circle'}
-                inputStyle={{...styles.icon, ...styles.completeIcon}}
-              />
-            </View>
-          )}
-          {title !== WorkoutText_RestDay && (
-            <Text
-              style={
-                styles.workoutDay
-              }>{`${CardText_Day} ${workoutDay}: `}</Text>
-          )}
-          <Text style={styles.date}>{date}</Text>
-        </View>
-        {title !== WorkoutText_RestDay && (
-          <IconTextView
-            type="intensity"
-            duration={duration}
-            intensity={intensity}
-          />
+      <TouchableOpacity style={styles.touch} onLongPress={drag}>
+        {date === formattedToday && (
+          <Image source={image} style={styles.image} />
         )}
-      </View>
-      {status === 'complete' && <View style={styles.completeOverlay} />}
+        <View style={styles.iconContainer}>
+          <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{title}</Text>
+          <View style={styles.dayContainer}>
+            {status === 'complete' && (
+              <View style={styles.completeIconContainer}>
+                <TDIcon
+                  input={'check-circle'}
+                  inputStyle={{...styles.icon, ...styles.completeIcon}}
+                />
+              </View>
+            )}
+            {title !== WorkoutText_RestDay && (
+              <Text
+                style={
+                  styles.workoutDay
+                }>{`${CardText_Day} ${workoutDay}: `}</Text>
+            )}
+            <Text style={styles.date}>{date}</Text>
+          </View>
+          {title !== WorkoutText_RestDay && (
+            <IconTextView
+              type="intensity"
+              duration={duration}
+              intensity={intensity}
+            />
+          )}
+        </View>
+        {status === 'complete' && <View style={styles.completeOverlay} />}
+      </TouchableOpacity>
     </View>
   );
 }

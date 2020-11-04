@@ -113,7 +113,7 @@ export default function MeetYourIconsScreen() {
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const connected = false; // change to check connection
+  const connected = true; // change to check connection
 
   const {
     TitleText_YourFirstWeek,

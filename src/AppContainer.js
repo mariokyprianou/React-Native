@@ -7,7 +7,7 @@
 
 import React from 'react';
 // import InitialReleaseScreen from './screens/InitialReleaseScreen';
-import AppStack from './navigation/AppStack';
+import {AppStack} from './navigation';
 import CongratulationsScreen from './screens/CongratulationsScreen';
 
 export default function AppContainer() {

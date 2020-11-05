@@ -28,8 +28,8 @@ export default function WorkoutHomeScreen() {
   const {dictionary} = useDictionary();
   const {TitleText_Week} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
-  const [formattedWorkouts, setFormattedWorkouts] = useState();
   const {workoutHomeData} = useWorkoutHome();
+  const [formattedWorkouts, setFormattedWorkouts] = useState();
 
   useEffect(() => {
     if (weekNumber === 1) {
@@ -43,6 +43,10 @@ export default function WorkoutHomeScreen() {
       setFormattedWorkouts(nextWeekWithRests);
     }
   }, [workoutHomeData, weekNumber]);
+
+  // const draggableData = formattedWorkouts.map((workout, index) => ({
+  //   key: `item-${index}`,
+  // }));
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -108,8 +112,8 @@ export default function WorkoutHomeScreen() {
       </View>
       {/* <ScrollView> */}
       {/* <DraggableFlatList
-        data={formattedWorkouts}
-        keyExtractor={(item, index) => index}
+        data={draggableData}
+        keyExtractor={(item, index) => `draggable-item-${item.key}`}
         onDragEnd={({data}) => setFormattedWorkouts({data})}
         renderItem={({item, index, drag}) => (
           <WorkoutCard

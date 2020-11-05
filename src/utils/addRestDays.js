@@ -22,12 +22,19 @@ const addRestDays = (data) => {
     data.splice(3, 0, restDay);
     data.splice(5, 0, restDay, restDay);
   }
-  // const dataWithDates = data.map((day, index) => {
-  //   if (!day.date) {
-  //     const date =
-  //   }
-  // })
-  return data;
+
+  const firstDayOfWeek = data[0].startDay;
+
+  const dataWithDates = data.map((day, index) => {
+    if (!day.date) {
+      const daysToAdd = index;
+      const date = addDays(firstDayOfWeek, daysToAdd);
+      const formattedDate = format(date, 'iiii, do LLL');
+      day.date = formattedDate;
+    }
+    return day;
+  });
+  return dataWithDates;
 };
 
 export default addRestDays;

@@ -18,6 +18,7 @@ const formatWorkoutWeek = (data, week = 1) => {
       switch (day.day) {
         case 1:
           day.date = format(startDay, 'iiii, do LLL');
+          day.startDay = startDay;
           return day;
         case 2:
           let secondDay = addDays(startDay, 1);
@@ -43,6 +44,7 @@ const formatWorkoutWeek = (data, week = 1) => {
       switch (day.day) {
         case 1:
           day.date = format(startDay, 'iiii, do LLL');
+          day.startDay = startDay;
           return day;
         case 2:
           let secondDay = addDays(startDay, 1);
@@ -64,6 +66,7 @@ const formatWorkoutWeek = (data, week = 1) => {
       switch (day.day) {
         case 1:
           day.date = format(startDay, 'iiii, do LLL');
+          day.startDay = startDay;
           return day;
         case 2:
           let secondDay = addDays(startDay, 2);

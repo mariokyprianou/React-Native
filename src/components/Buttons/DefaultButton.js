@@ -187,6 +187,7 @@ export default function DefaultButton({
     },
     gradient: {
       flex: 1,
+      width: '100%',
       height: getHeight(50),
       justifyContent: 'center',
       alignItems: 'center',

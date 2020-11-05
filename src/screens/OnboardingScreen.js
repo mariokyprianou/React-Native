@@ -10,32 +10,10 @@ import React, {useRef, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
+import useOnboarding from '../hooks/data/useOnboarding';
 import Swiper from 'react-native-swiper';
 import OnboardingSliderItem from '../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../components/Buttons/DefaultButton';
-
-const fake = require('../../assets/fake.png');
-
-const fakeData = [
-  {
-    header: 'Pick your programme',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    image: fake,
-  },
-  {
-    header: 'Plan your workouts',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    image: fake,
-  },
-  {
-    header: 'Train like the best',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    image: fake,
-  },
-];
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -43,6 +21,7 @@ export default function OnboardingScreen() {
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
+  const {onboardingData} = useOnboarding();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -81,7 +60,7 @@ export default function OnboardingScreen() {
     if (direction === 'left' && activeIndex !== 0) {
       onboardSwiper.current.scrollTo(activeIndex - 1, true);
     }
-    if (direction === 'right' && activeIndex !== fakeData.length - 1) {
+    if (direction === 'right' && activeIndex !== onboardingData.length - 1) {
       onboardSwiper.current.scrollTo(activeIndex + 1, true);
     }
   }
@@ -95,7 +74,7 @@ export default function OnboardingScreen() {
         onIndexChanged={(index) => setActiveIndex(index)}
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}>
-        {fakeData.map(({header, text, image}) => (
+        {onboardingData.map(({header, text, image}) => (
           <OnboardingSliderItem
             image={image}
             header={header}

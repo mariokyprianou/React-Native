@@ -12,6 +12,8 @@ import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
 import QuickPicker from 'quick-picker';
+import TDIcon from 'the-core-ui-component-tdicon';
+
 
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
@@ -21,9 +23,9 @@ import useRegistrationData from '../../hooks/data/useRegistrationData';
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {cellFormStyles, dropdownStyle, cellFormConfig, textStyles} = useTheme();
+  const {cellFormStyles, dropdownStyle, cellFormConfig, textStyles, colors} = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
   const { 
     formTitle,
@@ -82,6 +84,10 @@ invalidPassword } = dictionary.RegistrationDict;
         alignSelf: 'center'
       },
     },
+    termsContainerStyle: {flexDirection: 'row', justifyContent: 'space-between'},
+  boxStyle: {width: getWidth(25), height: getWidth(25) , borderWidth: 1, borderColor: colors.black30, borderRadius: 1},
+  iconStyle: {solid: false, size: fontSize(22),color: colors.black30},
+  termsStyle: {...textStyles.regular15_brownishGrey100,alignSelf:'center', marginStart: getWidth(15)},
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -212,16 +218,22 @@ invalidPassword } = dictionary.RegistrationDict;
       name: 'termsAndConditions',
       labelComponent: () => null,
       inputComponent: () => (
-        <View style={{paddingVertical: getHeight(10)}}>
+        
           <TouchableOpacity
-            buttonState={termsAndConditions}
+          style={{marginTop: getHeight(20)}}
             onPress={handleTermsAndConditionsButton}
-            
-            underlineText={true}
+      
           >
-            <Text>TermsAndConditionsText</Text>
+          <View style={styles.termsContainerStyle}>
+          
+            <View style={styles.boxStyle}>
+              {termsAndConditions === 'on' && (<TDIcon input={'check'} 
+            inputStyle={styles.iconStyle} />)}
+            </View>
+            <Text style={styles.termsStyle}>{termsAndConditionsText}</Text>
+            </View>
           </TouchableOpacity>
-        </View>
+       
       ),
     },
    

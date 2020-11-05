@@ -20,7 +20,6 @@ const enGB = {
     termsAndConditionsText: "I accept Power’s Terms & Conditions and Privacy Policy",
     invalidEmail: 'Please enter a valid email',
     invalidPassword: 'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
-
   },
   AppTitle: 'Power',
   ButtonText_AddPhoto: 'ADD PHOTO',

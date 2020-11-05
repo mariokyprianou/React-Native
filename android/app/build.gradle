@@ -135,6 +135,9 @@ android {
         versionCode 1
         versionName "1.0"
 
+        missingDimensionStrategy 'react-native-camera', 'mlkit'   
+        multiDexEnabled true
+
         def envVars = rootProject.file("../env-vars.sh")
         if (envVars.exists()) {
             envVars.readLines().each() {

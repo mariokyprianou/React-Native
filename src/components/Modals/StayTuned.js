@@ -6,8 +6,14 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {TouchableOpacity, View, Text, ImageBackground} from 'react-native';
+import React, {useState} from 'react';
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  ImageBackground,
+  Alert,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -17,12 +23,19 @@ import DefaultButton from '../Buttons/DefaultButton';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function TakeARest({name, date, onPressClose}) {
+export default function TakeARest({name, venue, date, onPressClose, type}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const [reminders, showReminders] = useState(true);
   const {dictionary} = useDictionary();
-  const {TitleText_Stay_Tuned, InfoText_StayTuned} = dictionary;
+  const {
+    TitleText_Stay_Tuned,
+    InfoText_StayTuned,
+    InfoText_ProgrammeComplete,
+    Reminder_Title,
+    Reminder_Text,
+  } = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -74,33 +87,88 @@ export default function TakeARest({name, date, onPressClose}) {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function handleReminders(time) {
+    // set up reminders
+  }
+
   function handlePressRemindMe() {
-    // handle reminders
+    Alert.alert(
+      Reminder_Title,
+      Reminder_Text,
+      [
+        {text: 'Morning', onPress: () => handleReminders('morning')},
+        {text: 'Afternoon', onPress: () => handleReminders('afternoon')},
+        {text: 'Evening', onPress: () => handleReminders('evening')},
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: true},
+    );
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  return (
-    <View>
-      <ImageBackground source={fakeImage} style={styles.image}>
-        <FadingBottomView color="black" height="full" />
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{TitleText_Stay_Tuned}</Text>
-          <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
-            <TDIcon input={'times'} inputStyle={styles.icon} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>{InfoText_StayTuned(name, date)}</Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="remindMe"
-            icon="reminder"
-            variant="white"
-            onPress={handlePressRemindMe}
-          />
-        </View>
-      </ImageBackground>
-    </View>
-  );
+  if (type === 'workoutsComplete') {
+    return (
+      <View>
+        <ImageBackground source={fakeImage} style={styles.image}>
+          <FadingBottomView color="black" height="full" />
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>{TitleText_Stay_Tuned}</Text>
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={onPressClose}>
+              <TDIcon input={'times'} inputStyle={styles.icon} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoText}>
+              {InfoText_StayTuned(name, date)}
+            </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <DefaultButton
+              type="remindMe"
+              icon="reminder"
+              variant="white"
+              onPress={handlePressRemindMe}
+            />
+          </View>
+        </ImageBackground>
+      </View>
+    );
+  }
+
+  if (type === 'programmeComplete') {
+    return (
+      <View>
+        <ImageBackground source={fakeImage} style={styles.image}>
+          <FadingBottomView color="black" height="full" />
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>{TitleText_Stay_Tuned}</Text>
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={onPressClose}>
+              <TDIcon input={'times'} inputStyle={styles.icon} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoText}>
+              {InfoText_ProgrammeComplete(name, venue)}
+            </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <DefaultButton
+              type="remindMe"
+              icon="reminder"
+              variant="white"
+              onPress={handlePressRemindMe}
+            />
+          </View>
+        </ImageBackground>
+      </View>
+    );
+  }
 }

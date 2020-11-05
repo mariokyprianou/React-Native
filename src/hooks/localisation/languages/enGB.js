@@ -50,10 +50,14 @@ const enGB = {
   CardText_BuildMuscle: 'BUILD MUSCLE',
   HeaderText_AllProgrammes: 'ALL PROGRAMMES',
   InfoText_Pluralise: "'s",
+  InfoText_ProgrammeComplete: (name, venue) =>
+    `Congratulations! You’ve completed ${name}’s ${venue} programme on POWER! To be the first to know if we add more workouts with ${name}, just hit the button below!`,
   InfoText_SelectYourProgramme: 'Select your programme',
   InfoText_SuggestedProgramme: (name) =>
     `Based on your answers, we think ${name} would be the best trainer for you.`,
   InfoText_StartedProgramme: (name) => `You've started ${name}'s programme.`,
+  InfoText_StartedProgrammeWithVenue: (name, venue) =>
+    `You’ve started ${name}’s ${venue} programme!`,
   InfoText_StayTuned: (name, date) =>
     `You’ve completed this week’s workouts with ${name}. Get some rest and come back on ${date} for more.`,
   InfoText_TakeARest: (name) =>
@@ -61,6 +65,8 @@ const enGB = {
   InfoText_WeekComplete: (name, weekNumber) =>
     `Congratulations! You just finished week ${weekNumber} with ${name}!`,
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
+  Reminder_Title: 'Set a workout reminder',
+  Reminder_Text: 'Power will remind you to kickstart your workout next week.',
   TabTitle_Profile: 'Profile',
   TabTitle_Progress: 'Progress',
   TabTitle_Workouts: 'Workouts',

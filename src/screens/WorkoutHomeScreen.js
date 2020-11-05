@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
@@ -18,7 +18,6 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
 import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../components/Cards/WorkoutCard';
-import Spacer from '../components/Utility/Spacer';
 import formatWorkoutWeek from '../utils/formatWorkoutWeek';
 import addRestDays from '../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -26,6 +25,7 @@ import ModalCard from '../components/Modals/ModalCard';
 import TakeARest from '../components/Modals/TakeARest';
 import WeekComplete from '../components/Modals/WeekComplete';
 import StayTuned from '../components/Modals/StayTuned';
+import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -40,11 +40,13 @@ export default function WorkoutHomeScreen() {
       currentWeekNumber,
       nextWeek,
       trainerName,
+      venue,
       totalDuration,
       totalReps,
       totalSets,
       completedWorkoutWeek,
       firstWorkoutOfNextWeek,
+      lastWeekOfProgramme,
     },
   } = useWorkoutHome();
   const {takeRestData} = useTakeRest();
@@ -53,7 +55,7 @@ export default function WorkoutHomeScreen() {
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
     completedWorkoutWeek,
   );
-  const [showStayTunedModal, setShowStayTunedModal] = useState(false);
+  const [showStayTunedModal, setShowStayTunedModal] = useState(true);
 
   useEffect(() => {
     // fetch programme from back end with this week and next week
@@ -190,8 +192,15 @@ export default function WorkoutHomeScreen() {
         <StayTuned
           onPressClose={handleCloseStayTunedModal}
           name={trainerName}
+          venue={venue}
           date={firstWorkoutOfNextWeek}
+          type={
+            lastWeekOfProgramme === true
+              ? 'programmeComplete'
+              : 'workoutComplete'
+          }
         />
+        {/* <CongratulatoryModal /> */}
       </ModalCard>
     </SafeAreaView>
   );

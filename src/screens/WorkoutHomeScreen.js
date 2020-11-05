@@ -48,7 +48,7 @@ export default function WorkoutHomeScreen() {
     },
   } = useWorkoutHome();
   const {takeRestData} = useTakeRest();
-  const [workoutsToDisplay, setWorkoutsToDisplay] = useState();
+  const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const [showTakeRestModal, setShowTakeRestModal] = useState(takeRestData);
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
     completedWorkoutWeek,
@@ -56,21 +56,28 @@ export default function WorkoutHomeScreen() {
   const [showStayTunedModal, setShowStayTunedModal] = useState(false);
 
   useEffect(() => {
+    // fetch programme from back end with this week and next week
+    // data will arrive with all workout days and rest days - each has date stamp, order index and isCompleted
     if (weekNumber === 1) {
+      // setWorkoutsToDisplay with this week
+      // format the date
       const thisWeekWorkouts = formatWorkoutWeek(currentWeek, 1);
       const thisWeekWithRests = addRestDays(thisWeekWorkouts);
       setWorkoutsToDisplay(thisWeekWithRests);
     }
     if (weekNumber === 2) {
+      // setWorkoutsToDisplay with next week
+      // format the date
       const nextWeekWorkouts = formatWorkoutWeek(nextWeek, 2);
       const nextWeekWithRests = addRestDays(nextWeekWorkouts);
       setWorkoutsToDisplay(nextWeekWithRests);
     }
   }, [currentWeek, nextWeek, weekNumber]);
 
-  // const draggableData = workoutsToDisplay.map((workout, index) => ({
-  //   key: `item-${index}`,
-  // }));
+  useEffect(() => {
+    console.log(workoutsToDisplay);
+    // change dates on back end too
+  }, [workoutsToDisplay]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -148,40 +155,24 @@ export default function WorkoutHomeScreen() {
           <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
         </TouchableOpacity>
       </View>
-      {/* <ScrollView> */}
-      {/* <DraggableFlatList
-        data={draggableData}
-        keyExtractor={(item, index) => `draggable-item-${item.key}`}
-        onDragEnd={({data}) => setWorkoutsToDisplay({data})}
-        renderItem={({item, index, drag}) => (
-          <WorkoutCard
-            title={item.title}
-            day={item.day}
-            date={item.date}
-            duration={item.duration}
-            intensity={item.intensity}
-            image={item.image}
-            drag={drag}
-          />
-        )}
-      /> */}
-      {/* </ScrollView> */}
-
-      <FlatList
-        data={workoutsToDisplay}
-        ListFooterComponent={<Spacer height={100} />}
-        keyExtractor={(item, index) => index}
-        renderItem={({item}) => (
-          <WorkoutCard
-            title={item.title}
-            day={item.day}
-            date={item.date}
-            duration={item.duration}
-            intensity={item.intensity}
-            image={item.image}
-          />
-        )}
-      />
+      <View>
+        <DraggableFlatList
+          data={workoutsToDisplay}
+          keyExtractor={(item, index) => `${index}`}
+          onDragEnd={({data}) => setWorkoutsToDisplay(data)}
+          renderItem={({item, index, drag, isActive}) => (
+            <WorkoutCard
+              title={item.title}
+              day={item.day}
+              date={item.date}
+              duration={item.duration}
+              intensity={item.intensity}
+              image={item.image}
+              drag={drag}
+            />
+          )}
+        />
+      </View>
       <ModalCard isVisible={showTakeRestModal}>
         <TakeARest onPressClose={handleCloseRestModal} name={trainerName} />
       </ModalCard>

@@ -54,6 +54,8 @@ const enGB = {
   InfoText_SuggestedProgramme: (name) =>
     `Based on your answers, we think ${name} would be the best trainer for you.`,
   InfoText_StartedProgramme: (name) => `You've started ${name}'s programme.`,
+  InfoText_TakeARest: (name) =>
+    `You’ve just completed three workouts back-to-back. Typically, ${name} would recommend a rest day here. Do you want to carry on?`,
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
   TabTitle_Profile: 'Profile',
   TabTitle_Progress: 'Progress',
@@ -62,6 +64,7 @@ const enGB = {
   TitleText_Of: 'OF',
   TitleText_Question: 'QUESTION',
   TitleText_Result: 'RESULT',
+  TitleText_TakeARest: 'Take a rest',
   TitleText_Week: 'Week',
   TitleText_YourFirstWeek: 'Your first week with',
   WorkoutText_RestDay: 'REST DAY',

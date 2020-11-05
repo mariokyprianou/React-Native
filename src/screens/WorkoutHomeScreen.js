@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
 import useWorkoutHome from '../hooks/data/useWorkoutHome';
+import useTakeRest from '../hooks/data/useTakeRest';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import TDIcon from 'the-core-ui-component-tdicon';
 import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
@@ -20,6 +21,8 @@ import Spacer from '../components/Utility/Spacer';
 import formatWorkoutWeek from '../utils/formatWorkoutWeek';
 import addRestDays from '../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import ModalCard from '../components/Modals/ModalCard';
+import TakeARest from '../components/Modals/TakeARest';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -29,7 +32,9 @@ export default function WorkoutHomeScreen() {
   const {TitleText_Week} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
   const {workoutHomeData} = useWorkoutHome();
+  const {takeRestData} = useTakeRest();
   const [formattedWorkouts, setFormattedWorkouts] = useState();
+  const [showTakeRestModal, setShowTakeRestModal] = useState(takeRestData);
 
   useEffect(() => {
     if (weekNumber === 1) {
@@ -88,6 +93,10 @@ export default function WorkoutHomeScreen() {
     if (direction === 'right') setWeekNumber(2);
   }
 
+  function handleCloseRestModal() {
+    setShowTakeRestModal(false);
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <SafeAreaView style={styles.container}>
@@ -144,6 +153,9 @@ export default function WorkoutHomeScreen() {
           />
         )}
       />
+      <ModalCard isVisible={showTakeRestModal}>
+        <TakeARest onPressClose={handleCloseRestModal} />
+      </ModalCard>
     </SafeAreaView>
   );
 }

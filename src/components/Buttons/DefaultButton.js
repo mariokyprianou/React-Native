@@ -64,6 +64,7 @@ export default function DefaultButton({
     ButtonText_StartWorkout,
     ButtonText_TryAgain,
     ButtonText_Pluralise,
+    ButtonText_Skip,
   } = dictionary;
 
   const buttonVariant = {
@@ -130,6 +131,7 @@ export default function DefaultButton({
     startNow: ButtonText_StartNow,
     startWorkout: ButtonText_StartWorkout,
     tryAgain: ButtonText_TryAgain,
+    skip: ButtonText_Skip,
   };
 
   const iconType = {

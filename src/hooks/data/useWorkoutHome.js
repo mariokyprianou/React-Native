@@ -91,6 +91,7 @@ const fakeData = {
   totalSets: 20,
   currentWeekNumber: 1,
   completedWorkoutWeek: false, // from workoutWeek.workouts (T []) - each workout has isCompleted property
+  firstWorkoutOfNextWeek: '3rd July',
 };
 
 export default function useWorkoutHome() {

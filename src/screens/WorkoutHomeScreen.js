@@ -25,6 +25,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import ModalCard from '../components/Modals/ModalCard';
 import TakeARest from '../components/Modals/TakeARest';
 import WeekComplete from '../components/Modals/WeekComplete';
+import StayTuned from '../components/Modals/StayTuned';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -43,29 +44,31 @@ export default function WorkoutHomeScreen() {
       totalReps,
       totalSets,
       completedWorkoutWeek,
+      firstWorkoutOfNextWeek,
     },
   } = useWorkoutHome();
   const {takeRestData} = useTakeRest();
-  const [formattedWorkouts, setFormattedWorkouts] = useState();
+  const [workoutsToDisplay, setWorkoutsToDisplay] = useState();
   const [showTakeRestModal, setShowTakeRestModal] = useState(takeRestData);
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
     completedWorkoutWeek,
   );
+  const [showStayTunedModal, setShowStayTunedModal] = useState(false);
 
   useEffect(() => {
     if (weekNumber === 1) {
       const thisWeekWorkouts = formatWorkoutWeek(currentWeek, 1);
       const thisWeekWithRests = addRestDays(thisWeekWorkouts);
-      setFormattedWorkouts(thisWeekWithRests);
+      setWorkoutsToDisplay(thisWeekWithRests);
     }
     if (weekNumber === 2) {
       const nextWeekWorkouts = formatWorkoutWeek(nextWeek, 2);
       const nextWeekWithRests = addRestDays(nextWeekWorkouts);
-      setFormattedWorkouts(nextWeekWithRests);
+      setWorkoutsToDisplay(nextWeekWithRests);
     }
   }, [currentWeek, nextWeek, weekNumber]);
 
-  // const draggableData = formattedWorkouts.map((workout, index) => ({
+  // const draggableData = workoutsToDisplay.map((workout, index) => ({
   //   key: `item-${index}`,
   // }));
 
@@ -106,7 +109,9 @@ export default function WorkoutHomeScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
     if (direction === 'left') setWeekNumber(1);
-    if (direction === 'right') setWeekNumber(2);
+    if (direction === 'right' && !completedWorkoutWeek) setWeekNumber(2);
+    if (direction === 'right' && completedWorkoutWeek)
+      setShowStayTunedModal(true);
   }
 
   function handleCloseRestModal() {
@@ -115,6 +120,10 @@ export default function WorkoutHomeScreen() {
 
   function handleCloseWeekCompleteModal() {
     setShowWeekCompleteModal(false);
+  }
+
+  function handleCloseStayTunedModal() {
+    setShowStayTunedModal(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -143,7 +152,7 @@ export default function WorkoutHomeScreen() {
       {/* <DraggableFlatList
         data={draggableData}
         keyExtractor={(item, index) => `draggable-item-${item.key}`}
-        onDragEnd={({data}) => setFormattedWorkouts({data})}
+        onDragEnd={({data}) => setWorkoutsToDisplay({data})}
         renderItem={({item, index, drag}) => (
           <WorkoutCard
             title={item.title}
@@ -159,7 +168,7 @@ export default function WorkoutHomeScreen() {
       {/* </ScrollView> */}
 
       <FlatList
-        data={formattedWorkouts}
+        data={workoutsToDisplay}
         ListFooterComponent={<Spacer height={100} />}
         keyExtractor={(item, index) => index}
         renderItem={({item}) => (
@@ -184,6 +193,13 @@ export default function WorkoutHomeScreen() {
           totalDuration={totalDuration}
           totalReps={totalReps}
           totalSets={totalSets}
+        />
+      </ModalCard>
+      <ModalCard isVisible={showStayTunedModal}>
+        <StayTuned
+          onPressClose={handleCloseStayTunedModal}
+          name={trainerName}
+          date={firstWorkoutOfNextWeek}
         />
       </ModalCard>
     </SafeAreaView>

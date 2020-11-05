@@ -15,7 +15,14 @@ import TDIcon from 'the-core-ui-component-tdicon';
 
 // possible type - intensity, workoutComplete
 
-export default function IconTextView({type, duration, intensity, reps, sets}) {
+export default function IconTextView({
+  type,
+  duration,
+  intensity,
+  reps,
+  sets,
+  color = 'grey',
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -64,18 +71,28 @@ export default function IconTextView({type, duration, intensity, reps, sets}) {
       marginRight: getWidth(42),
     },
     icon: {
-      tintColor: colors.brownishGreyTwo100,
       resizeMode: 'contain',
       height: getHeight(15),
       width: getWidth(15),
     },
+    iconColor:
+      color === 'grey'
+        ? {tintColor: colors.brownishGreyTwo100}
+        : {
+            tintColor: colors.white100,
+          },
     repsIcon: {
       height: getHeight(20),
       width: getWidth(20),
     },
-    text: {
-      ...textStyles.medium14_brownishGreyTwo100,
-    },
+    text:
+      color === 'grey'
+        ? {
+            ...textStyles.medium14_brownishGreyTwo100,
+          }
+        : {
+            ...textStyles.medium14_white100,
+          },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -86,13 +103,19 @@ export default function IconTextView({type, duration, intensity, reps, sets}) {
         <View
           style={{...styles.iconTextContainer, ...styles.leftIconContainer}}>
           <View style={styles.iconContainer}>
-            <TDIcon input={timeIcon} inputStyle={{style: styles.icon}} />
+            <TDIcon
+              input={timeIcon}
+              inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
+            />
           </View>
           <Text style={styles.text}>{`${duration} ${CardText_Mins}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
-            <TDIcon input={lightningIcon} inputStyle={{style: styles.icon}} />
+            <TDIcon
+              input={lightningIcon}
+              inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
+            />
           </View>
           <Text
             style={
@@ -112,7 +135,10 @@ export default function IconTextView({type, duration, intensity, reps, sets}) {
             ...styles.leftCompleteContainer,
           }}>
           <View style={styles.iconContainer}>
-            <TDIcon input={timeIcon} inputStyle={{style: styles.icon}} />
+            <TDIcon
+              input={timeIcon}
+              inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
+            />
           </View>
           <Text style={styles.text}>{`${duration} ${CardText_Mins}`}</Text>
         </View>
@@ -124,14 +150,23 @@ export default function IconTextView({type, duration, intensity, reps, sets}) {
           <View style={styles.iconContainer}>
             <TDIcon
               input={repsIcon}
-              inputStyle={{style: {...styles.icon, ...styles.repsIcon}}}
+              inputStyle={{
+                style: {
+                  ...styles.icon,
+                  ...styles.iconColor,
+                  ...styles.repsIcon,
+                },
+              }}
             />
           </View>
           <Text style={styles.text}>{`${reps} ${CardText_Reps}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
-            <TDIcon input={lightningIcon} inputStyle={{style: styles.icon}} />
+            <TDIcon
+              input={lightningIcon}
+              inputStyle={{style: styles.icon, ...styles.iconColor}}
+            />
           </View>
           <Text style={styles.text}>{`${sets} ${CardText_Sets}`}</Text>
         </View>

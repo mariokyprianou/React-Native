@@ -15,6 +15,7 @@ import useWorkoutHome from '../hooks/data/useWorkoutHome';
 import useTakeRest from '../hooks/data/useTakeRest';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import TDIcon from 'the-core-ui-component-tdicon';
+import {format} from 'date-fns';
 import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../components/Cards/WorkoutCard';
 import Spacer from '../components/Utility/Spacer';
@@ -23,6 +24,7 @@ import addRestDays from '../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import ModalCard from '../components/Modals/ModalCard';
 import TakeARest from '../components/Modals/TakeARest';
+import WeekComplete from '../components/Modals/WeekComplete';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -31,23 +33,37 @@ export default function WorkoutHomeScreen() {
   const {dictionary} = useDictionary();
   const {TitleText_Week} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
-  const {workoutHomeData} = useWorkoutHome();
+  const {
+    workoutHomeData: {
+      currentWeek,
+      currentWeekNumber,
+      nextWeek,
+      trainerName,
+      totalDuration,
+      totalReps,
+      totalSets,
+      completedWorkoutWeek,
+    },
+  } = useWorkoutHome();
   const {takeRestData} = useTakeRest();
   const [formattedWorkouts, setFormattedWorkouts] = useState();
   const [showTakeRestModal, setShowTakeRestModal] = useState(takeRestData);
+  const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
+    completedWorkoutWeek,
+  );
 
   useEffect(() => {
     if (weekNumber === 1) {
-      const thisWeek = formatWorkoutWeek(workoutHomeData.currentWeek, 1);
-      const thisWeekWithRests = addRestDays(thisWeek);
+      const thisWeekWorkouts = formatWorkoutWeek(currentWeek, 1);
+      const thisWeekWithRests = addRestDays(thisWeekWorkouts);
       setFormattedWorkouts(thisWeekWithRests);
     }
     if (weekNumber === 2) {
-      const nextWeek = formatWorkoutWeek(workoutHomeData.nextWeek, 2);
-      const nextWeekWithRests = addRestDays(nextWeek);
+      const nextWeekWorkouts = formatWorkoutWeek(nextWeek, 2);
+      const nextWeekWithRests = addRestDays(nextWeekWorkouts);
       setFormattedWorkouts(nextWeekWithRests);
     }
-  }, [workoutHomeData, weekNumber]);
+  }, [currentWeek, nextWeek, weekNumber]);
 
   // const draggableData = formattedWorkouts.map((workout, index) => ({
   //   key: `item-${index}`,
@@ -95,6 +111,10 @@ export default function WorkoutHomeScreen() {
 
   function handleCloseRestModal() {
     setShowTakeRestModal(false);
+  }
+
+  function handleCloseWeekCompleteModal() {
+    setShowWeekCompleteModal(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -154,7 +174,17 @@ export default function WorkoutHomeScreen() {
         )}
       />
       <ModalCard isVisible={showTakeRestModal}>
-        <TakeARest onPressClose={handleCloseRestModal} />
+        <TakeARest onPressClose={handleCloseRestModal} name={trainerName} />
+      </ModalCard>
+      <ModalCard isVisible={showWeekCompleteModal}>
+        <WeekComplete
+          onPressClose={handleCloseWeekCompleteModal}
+          name={trainerName}
+          weekNumber={currentWeekNumber}
+          totalDuration={totalDuration}
+          totalReps={totalReps}
+          totalSets={totalSets}
+        />
       </ModalCard>
     </SafeAreaView>
   );

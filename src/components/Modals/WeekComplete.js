@@ -1,6 +1,6 @@
 /*
  * Jira Ticket:
- * Created Date: Thu, 5th Nov 2020, 08:29:01 am
+ * Created Date: Thu, 5th Nov 2020, 09:46:44 am
  * Author: Jodi Dublon
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
@@ -14,15 +14,23 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
+import IconTextView from '../Infographics/IconTextView';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function TakeARest({name, onPressClose}) {
+export default function TakeARest({
+  name,
+  weekNumber,
+  totalDuration,
+  totalReps,
+  totalSets,
+  onPressClose,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_TakeARest, InfoText_TakeARest} = dictionary;
+  const {TitleText_WeekComplete, InfoText_WeekComplete} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -65,21 +73,21 @@ export default function TakeARest({name, onPressClose}) {
     infoText: {
       ...textStyles.semiBold16_white90,
     },
+    infoIconsContainer: {
+      marginBottom: getHeight(34),
+      alignSelf: 'flex-start',
+    },
     buttonContainer: {
       position: 'absolute',
-      bottom: getHeight(10),
+      bottom: getHeight(30),
       width: '100%',
       alignItems: 'center',
     },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleContinue() {
-    // navigate to next workout
-  }
-
-  function handleGoBack() {
-    onPressClose();
+  function handleShare() {
+    // handle share
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -88,25 +96,31 @@ export default function TakeARest({name, onPressClose}) {
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" height="full" />
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>{TitleText_TakeARest}</Text>
+          <Text style={styles.title}>{TitleText_WeekComplete}</Text>
           <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
             <TDIcon input={'times'} inputStyle={styles.icon} />
           </TouchableOpacity>
         </View>
         <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>{InfoText_TakeARest(name)}</Text>
+          <Text style={styles.infoText}>
+            {InfoText_WeekComplete(name, weekNumber)}
+          </Text>
         </View>
         <View style={styles.buttonContainer}>
+          <View style={styles.infoIconsContainer}>
+            <IconTextView
+              type="workoutComplete"
+              duration={totalDuration}
+              reps={totalReps}
+              sets={totalSets}
+              color="white"
+            />
+          </View>
           <DefaultButton
-            type="continue"
-            icon="chevron"
+            type="share"
+            icon="share"
             variant="white"
-            onPress={handleContinue}
-          />
-          <DefaultButton
-            type="goBack"
-            variant="transparentWhiteText"
-            onPress={handleGoBack}
+            onPress={handleShare}
           />
         </View>
       </ImageBackground>

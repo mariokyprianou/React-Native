@@ -153,7 +153,10 @@ const multipleMonth = [
       'workoutComplete',
   },
   {'Mon Nov 16 2020 12:00:00 GMT+0000 (Greenwich Mean Time)': 'noData'},
-  {'Tue Nov 17 2020 12:00:00 GMT+0000 (Greenwich Mean Time)': 'newWeek'},
+  {
+    'Tue Nov 17 2020 12:00:00 GMT+0000 (Greenwich Mean Time)':
+      'newWeekNewProgramme',
+  },
   {'Wed Nov 18 2020 12:00:00 GMT+0000 (Greenwich Mean Time)': 'noData'},
   {
     'Thu Nov 19 2020 12:00:00 GMT+0000 (Greenwich Mean Time)':

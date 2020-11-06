@@ -21,6 +21,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
 import useRegistrationData from '../../hooks/data/useRegistrationData';
 import Header from '../../components/Headers/Header';
+import StylisedText from '../../components/text/StylisedText';
 
 {/* <AppStack.Screen
         name="Register"
@@ -149,10 +150,18 @@ invalidPassword } = dictionary.RegistrationDict;
   );
 
 
-  
+  const linkText = [
+    {
+      pattern: /Terms & Conditions/,
+      onPress: () => alert('1 pressed')
+    },
+    {
+      pattern: /Privacy Policy/,
+      onPress: () => alert('2 pressed')
+    }
+  ];
 
   
-
   const cells = [
     {
       name: 'registerTitle',
@@ -236,20 +245,24 @@ invalidPassword } = dictionary.RegistrationDict;
       labelComponent: () => null,
       inputComponent: () => (
         
-          <TouchableOpacity
-          style={{marginTop: getHeight(20)}}
-            onPress={handleTermsAndConditionsButton}
-      
-          >
-          <View style={styles.termsContainerStyle}>
+          <View style={{marginTop: getHeight(20)}}>
+          <TouchableOpacity style={styles.termsContainerStyle} onPress={handleTermsAndConditionsButton}>
           
             <View style={styles.boxStyle}>
               {termsAndConditions === 'on' && (<TDIcon input={'check'} 
             inputStyle={styles.iconStyle} />)}
             </View>
-            <Text style={styles.termsStyle}>{termsAndConditionsText}</Text>
-            </View>
-          </TouchableOpacity>
+            <View style={styles.termsStyle}>
+            <StylisedText
+              {...{
+                input: linkText,
+                text: termsAndConditionsText,
+                // If you want to override the main text style
+              
+              }}
+            /></View>
+            </TouchableOpacity>
+          </View>
        
       ),
     },

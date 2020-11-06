@@ -27,6 +27,22 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
  
 
+{/* <AppStack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{
+          header: () => (
+            <Header
+              title={"Privacy"}
+              noSearch
+              showBurger={false}
+              showModalCross
+              
+            />
+          ),
+        }}
+      /> */}
+
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **

@@ -10,6 +10,8 @@ import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
 import WorkoutHomeScreen from './screens/WorkoutHomeScreen';
 import RegistrationScreen from './screens/auth/RegistrationScreen';
+import TermsConditionsScreen from './screens/auth/TermsConditionsScreen';
+import PrivacyPolicyScreen from './screens/auth/PrivacyPolicyScreen';
 import Header from './components/Headers/Header';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen

@@ -22,6 +22,7 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import useRegistrationData from '../../hooks/data/useRegistrationData';
 import Header from '../../components/Headers/Header';
 import StylisedText from '../../components/text/StylisedText';
+import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
 {/* 
    <AppStack.Screen
@@ -149,6 +150,7 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
       textContentType: 'password',
       autoCompleteType: 'password',
       autoCorrect: false,
+      rightAccessory: () => <PasswordEyeIcon />,
       ...cellFormStyles,
     },
     

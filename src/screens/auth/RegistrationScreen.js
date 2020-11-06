@@ -22,6 +22,9 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import useRegistrationData from '../../hooks/data/useRegistrationData';
 import Header from '../../components/Headers/Header';
 import StylisedText from '../../components/text/StylisedText';
+import CalendarIcon from '../../components/cells/CalendarIcon';
+import DropDownIcon from '../../components/cells/DropDownIcon';
+import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
 {/* <AppStack.Screen
         name="Register"
@@ -201,6 +204,7 @@ invalidPassword } = dictionary.RegistrationDict;
       label: passwordLabel,
       textContentType: 'password',
       autoCompleteType: 'password',
+      rightAccessory: () => <PasswordEyeIcon />,
       autoCorrect: false,
       ...cellFormStyles,
     },
@@ -210,6 +214,7 @@ invalidPassword } = dictionary.RegistrationDict;
       label: genderLabel,
       placeholder: registrationData.genders[0],
       data: registrationData.genders,
+       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
@@ -219,6 +224,7 @@ invalidPassword } = dictionary.RegistrationDict;
       label: dobLabel,
       placeholder: "",
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
+      rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
@@ -228,6 +234,7 @@ invalidPassword } = dictionary.RegistrationDict;
       label: countryLabel,
       placeholder: registrationData.countries[0],
       data: registrationData.countries,
+      rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
@@ -237,6 +244,7 @@ invalidPassword } = dictionary.RegistrationDict;
       label: regionLabel,
       placeholder: registrationData.regions[0],
       data: registrationData.regions,
+      rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },

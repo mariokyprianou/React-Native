@@ -17,10 +17,15 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
 
+
+const arrowBackIcon = require('../../../assets/icons/headerBackArrow.png');
+const closeIcon = require('../../../assets/icons/headerClose.png');
+
+
 export default function SearchText({
   title,
   noSearch,
-  showBurger = true,
+  showBurger = false,
   goBack,
   showModalCross = false,
   searchInputChanged
@@ -113,7 +118,7 @@ export default function SearchText({
       {showBurger ? (
         <View style={styles.leftIconContainer}>{renderIcon('bars')}</View>
       ) : goBack ? (
-        <View style={styles.leftIconContainer}>{renderIcon('arrow-left')}</View>
+        <View style={styles.leftIconContainer}>{renderIcon(arrowBackIcon)}</View>
       ) : (
         <View style={styles.leftIconContainer} />
       )}
@@ -123,7 +128,7 @@ export default function SearchText({
       </View>
 
       {showModalCross ? (
-        <View style={styles.rightIconContainer}>{renderIcon('times')}</View>
+        <View style={styles.rightIconContainer}>{renderIcon(closeIcon)}</View>
       ) : !noSearch ? (
         <View style={styles.rightIconContainer}>{renderIcon('search')}</View>
       ) : (
@@ -134,7 +139,7 @@ export default function SearchText({
 
   const renderSearchHeader = () => (
     <View style={styles.container}>
-      <View style={styles.leftIconContainer}>{renderIcon('arrow-left')}</View>
+      <View style={styles.leftIconContainer}>{renderIcon(arrowBackIcon)}</View>
       {renderSearchInput()}
     </View>
   );
@@ -155,7 +160,7 @@ export default function SearchText({
         }}
       />
       <View style={styles.rightIconContainer}>
-        {searchText === null ? null : renderIcon('times')}
+        {searchText === null ? null : renderIcon(closeIcon)}
       </View>
     </>
   );

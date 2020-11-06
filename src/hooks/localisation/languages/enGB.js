@@ -31,6 +31,9 @@ const enGB = {
     termsPattern: /Terms & Conditions/,
     policyPattern: /Privacy Policy/,
   },
+  WorkoutDict: {
+    exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
+  },
   AppTitle: 'Power',
   ButtonText_AddPhoto: 'ADD PHOTO',
   ButtonText_AddResult: 'ADD RESULT',

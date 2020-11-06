@@ -18,8 +18,25 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
-import {emailRegex, E164_VALIDATOR, passwordRegex} from '../../utils/regex';
+import {emailRegex, passwordRegex} from '../../utils/regex';
 import useRegistrationData from '../../hooks/data/useRegistrationData';
+import Header from '../../components/Headers/Header';
+
+{/* <AppStack.Screen
+        name="Register"
+        component={RegistrationScreen}
+        options={{
+          header: () => (
+            <Header
+              title={"Create account"}
+              noSearch
+              showBurger={false}
+              goBack
+            />
+          ),
+        }}
+      /> */}
+
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **

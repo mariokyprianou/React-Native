@@ -296,6 +296,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.black100,
     },
+    semiBold14_aquamarine100: {
+      // fontFamily: 'ProximaNova-Semibold',
+      fontSize: fontSize(14),
+      lineHeight: fontSize(20),
+      color: colors.aquamarine100,
+    },
     semiBold14_black100: {
       // fontFamily: 'ProximaNova-Semibold',
       fontSize: fontSize(14),
@@ -334,7 +340,38 @@ export default function ThemeProvider({children}) {
     },
   };
 
-  const calendarStyles = {
+  const calendarPillStyles = {
+    pillNewWeek: {
+      backgroundColor: '#00d6d6', // change to gradient
+    },
+    pillWorkoutComplete: {
+      backgroundColor: colors.aquamarine15,
+    },
+    pillCurrentDay: {
+      borderColor: colors.aquamarine100,
+      borderWidth: getWidth(2),
+    },
+    noData: {
+      backgroundColor: 'transparent',
+    },
+  };
+
+  const calendarTextStyles = {
+    textNewWeek: {
+      ...textStyles.bold14_white100,
+    },
+    textWorkoutComplete: {
+      ...textStyles.semiBold14_black100,
+    },
+    textCurrentDay: {
+      ...textStyles.semiBold14_aquamarine100,
+    },
+    noData: {
+      ...textStyles.semiBold14_black100,
+    },
+  };
+
+  const singleCalendarStyles = {
     days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
     daysContainerStyles: {
       marginBottom: getHeight(14),
@@ -349,6 +386,28 @@ export default function ThemeProvider({children}) {
     },
     pillWidth: {
       width: getWidth(45),
+    },
+    lookupStyleTable: {
+      newWeek: {
+        pill: calendarPillStyles.pillNewWeek,
+        text: calendarTextStyles.textNewWeek,
+      },
+      newWeekNewProgramme: {
+        pill: calendarPillStyles.pillNewWeek,
+        text: calendarTextStyles.textNewWeek,
+      },
+      workoutComplete: {
+        pill: calendarPillStyles.pillWorkoutComplete,
+        text: calendarTextStyles.textWorkoutComplete,
+      },
+      currentDay: {
+        pill: calendarPillStyles.pillCurrentDay,
+        text: calendarTextStyles.textCurrentDay,
+      },
+      noData: {
+        pill: calendarPillStyles.noData,
+        text: calendarTextStyles.noData,
+      },
     },
   };
 
@@ -450,7 +509,7 @@ export default function ThemeProvider({children}) {
     () => ({
       colors,
       textStyles,
-      calendarStyles,
+      singleCalendarStyles,
       cellFormStyles,
       cellFormConfig,
       dropdownStyle,
@@ -459,7 +518,7 @@ export default function ThemeProvider({children}) {
     [
       colors,
       textStyles,
-      calendarStyles,
+      singleCalendarStyles,
       cellFormStyles,
       cellFormConfig,
       dropdownStyle,

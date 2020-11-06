@@ -22,17 +22,17 @@ const fakeGraph = require('../../assets/fakeGraph.png');
 export default function DefaultScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
-  const {colors, textStyles, calendarStyles} = useTheme();
+  const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {
     days,
     daysTextStyles,
     daysContainerStyles,
     dateCellStyles,
     pillWidth,
-  } = calendarStyles;
+  } = singleCalendarStyles;
   const {dictionary} = useDictionary();
   const {TitleText_Your, TitleText_Progress} = dictionary;
-  const {calendarData} = useCalendar();
+  const {progressCalendarData} = useCalendar();
   const {challengeData} = useProgress();
 
   console.log(challengeData);
@@ -93,7 +93,7 @@ export default function DefaultScreen() {
           showPrevNextDays={false}
           datesSelectable={false}
           dateCellStyles={dateCellStyles}
-          cellData={calendarData}
+          cellData={progressCalendarData}
           pillWidth={pillWidth}
         />
       </View>

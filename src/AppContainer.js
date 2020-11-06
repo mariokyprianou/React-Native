@@ -9,7 +9,7 @@ import React from 'react';
 // import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
 // import TestScreen from './screens/TestScreen';
-import DefaultScreen from './screens/DefaultScreen';
+import CalendarScreen from './screens/CalendarScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container
@@ -33,7 +33,7 @@ export default function AppContainer() {
       /> */}
       <AppStack.Screen
         name="Test"
-        component={DefaultScreen}
+        component={CalendarScreen}
         options={{
           title: false,
         }}

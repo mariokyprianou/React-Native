@@ -11,7 +11,6 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import Timer from '../components/Infographics/Timer';
 
 export default function DefaultScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +25,7 @@ export default function DefaultScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Timer />
+      <Text>Default screen</Text>
     </View>
   );
 }

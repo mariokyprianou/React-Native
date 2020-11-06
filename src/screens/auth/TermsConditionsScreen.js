@@ -26,6 +26,21 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
  
 
+{/* <AppStack.Screen
+        name="TermsConditions"
+        component={TermsConditionsScreen}
+        options={{
+          header: () => (
+            <Header
+              title={"Terms & Conditions"}
+              noSearch
+              showBurger={false}
+              showModalCross
+              
+            />
+          ),
+        }}
+      /> */}
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **

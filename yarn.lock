@@ -9092,8 +9092,8 @@ text-table@^0.2.0:
     lodash "^4.17.15"
 
 "the-core-ui-module-tdslideshow@git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow":
-  version "1.0.0"
-  resolved "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow#02c9bb67316ecb633a08150b3fefbc4156522ba4"
+  version "1.0.1"
+  resolved "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow#c23d4a92dd34c4d571f02b3fc04f4e0ae663b2dd"
   dependencies:
     "@react-native-community/slider" "^3.0.3"
     lodash "^4.17.15"

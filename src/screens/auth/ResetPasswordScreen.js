@@ -5,26 +5,20 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-import {format} from 'date-fns';
-import QuickPicker from 'quick-picker';
-import TDIcon from 'the-core-ui-component-tdicon';
-
 
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
-import useRegistrationData from '../../hooks/data/useRegistrationData';
-import Header from '../../components/Headers/Header';
-import StylisedText from '../../components/text/StylisedText';
+
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
-{/* 
+{
+  /*
    <AppStack.Screen
         name="ForgotPassword"
         component={ResetPasswordScreen}
@@ -39,36 +33,36 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
           ),
         }}
       />
-    */}
-
+    */
+}
 
 export default function Screen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {cellFormStyles, dropdownStyle, cellFormConfig, textStyles, colors} = useTheme();
+  const {
+    cellFormStyles,
+    dropdownStyle,
+    cellFormConfig,
+    textStyles,
+    colors,
+  } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
-  const { 
-    
-    emailLabel,
-    passwordLabel, 
-    forgotPasswordButtonText,  
-invalidPassword,
-invalidResetCode,
-forgotPasswordCodeLabel,
-forgotPasswordLabel,
-resetPasswordDescriptionText } = dictionary.RegistrationDict;
+  const {
+    invalidPassword,
+    invalidResetCode,
+    forgotPasswordCodeLabel,
+    forgotPasswordLabel,
+    resetPasswordDescriptionText,
+  } = dictionary.RegistrationDict;
 
   const [loading, setLoading] = useState(false);
   const [activeReset, setActiveReset] = useState(false);
 
   useEffect(() => {
-    const {
-      code,
-      password, 
-    } = getValues();
-    
-    if (code && password ) {
+    const {code, password} = getValues();
+
+    if (code && password) {
       return setActiveReset(true);
     }
     setActiveReset(false);
@@ -76,26 +70,27 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-   
-      container: {
-        flex: 1,
-      },
-      scrollViewContainer: {
-        paddingHorizontal: getWidth(25),
-        height: '100%',
-        width: '100%',
-      },
-    
-      buttonContainer: {
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
-        marginTop: getHeight(30),
-        marginBottom: getHeight(40),
-        alignItems: 'center'
+    container: {
+      flex: 1,
     },
-    descriptionStyle: {...textStyles.regular15_brownishGrey100, marginTop: getHeight(30)}
- 
+    scrollViewContainer: {
+      paddingHorizontal: getWidth(25),
+      height: '100%',
+      width: '100%',
+    },
+
+    buttonContainer: {
+      width: '100%',
+      position: 'absolute',
+      bottom: 0,
+      marginTop: getHeight(30),
+      marginBottom: getHeight(40),
+      alignItems: 'center',
+    },
+    descriptionStyle: {
+      ...textStyles.regular15_brownishGrey100,
+      marginTop: getHeight(30),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -112,7 +107,7 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
       });
       setLoading(false);
       return;
-    } 
+    }
 
     if (!emailRegex.test(password)) {
       updateError({
@@ -121,16 +116,14 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
       });
       setLoading(false);
       return;
-    } 
+    }
   }
-
 
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const FormFooter = () => (
     <Text style={styles.descriptionStyle}>{resetPasswordDescriptionText}</Text>
   );
-
 
   const cells = [
     {
@@ -142,7 +135,7 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
       textContentType: 'oneTimeCode',
       ...cellFormStyles,
     },
-   {
+    {
       name: 'password',
       type: 'text',
       variant: 'password',
@@ -153,13 +146,11 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
       rightAccessory: () => <PasswordEyeIcon />,
       ...cellFormStyles,
     },
-    
-   
   ];
 
   const config = {
     ...cellFormConfig,
-     formFooter: FormFooter,
+    formFooter: FormFooter,
   };
 
   return (
@@ -168,12 +159,15 @@ resetPasswordDescriptionText } = dictionary.RegistrationDict;
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>
         <Form cells={cells} config={config} />
-        
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <DefaultButton type="changePassword" variant="white" icon="chevron" onPress={handleChangePassword}/>
-        </View>
-     
+        <DefaultButton
+          type="changePassword"
+          variant="white"
+          icon="chevron"
+          onPress={handleChangePassword}
+        />
+      </View>
     </View>
   );
 }

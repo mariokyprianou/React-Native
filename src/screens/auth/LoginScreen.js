@@ -5,68 +5,58 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-
-
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-import {format} from 'date-fns';
-import QuickPicker from 'quick-picker';
-import TDIcon from 'the-core-ui-component-tdicon';
-
 
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
-import useRegistrationData from '../../hooks/data/useRegistrationData';
-import Header from '../../components/Headers/Header';
-import StylisedText from '../../components/text/StylisedText';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
-{/* 
-  <AppStack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{
-          header: () => (
-            <Header
-              title={"Login"}
-              noSearch
-              showBurger={false}
-              goBack
-            />
-          ),
-        }}
-      />
-    */}
-
+// <AppStack.Screen
+//       name="Login"
+//       component={LoginScreen}
+//       options={{
+//         header: () => (
+//           <Header
+//             title={"Login"}
+//             noSearch
+//             showBurger={false}
+//             goBack
+//           />
+//         ),
+//       }}
+//     />
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {cellFormStyles, dropdownStyle, cellFormConfig, textStyles, colors} = useTheme();
+  const {
+    cellFormStyles,
+
+    cellFormConfig,
+    textStyles,
+  } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {dictionary} = useDictionary();
-  const { 
-    
+  const {
     emailLabel,
-    passwordLabel, 
-    forgotPasswordButtonText,  
-  invalidEmail,
-invalidPassword } = dictionary.RegistrationDict;
+    passwordLabel,
+    forgotPasswordButtonText,
+    invalidEmail,
+    invalidPassword,
+  } = dictionary.RegistrationDict;
 
   const [loading, setLoading] = useState(false);
   const [activeLogin, setActiveLogin] = useState(false);
 
   useEffect(() => {
-    const {
-      emailAddress,
-      password, 
-    } = getValues();
-    
-    if (emailAddress && password ) {
+    const {emailAddress, password} = getValues();
+
+    if (emailAddress && password) {
       return setActiveLogin(true);
     }
     setActiveLogin(false);
@@ -74,27 +64,30 @@ invalidPassword } = dictionary.RegistrationDict;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-   
-      container: {
-        flex: 1,
-      },
-      scrollViewContainer: {
-        paddingHorizontal: getWidth(25),
-        height: '100%',
-        width: '100%',
-      },
-    
-      buttonContainer: {
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
-        marginTop: getHeight(30),
-        marginBottom: getHeight(40),
-        alignItems: 'center'
+    container: {
+      flex: 1,
     },
-    forgotPasswordContainerStyle: {flexDirection: 'row', marginTop: getHeight(20), alignSelf:'center', padding: getWidth(2)},
-    forgotPasswordStyle: {...textStyles.semiBold16_brownishGrey100}
- 
+    scrollViewContainer: {
+      paddingHorizontal: getWidth(25),
+      height: '100%',
+      width: '100%',
+    },
+
+    buttonContainer: {
+      width: '100%',
+      position: 'absolute',
+      bottom: 0,
+      marginTop: getHeight(30),
+      marginBottom: getHeight(40),
+      alignItems: 'center',
+    },
+    forgotPasswordContainerStyle: {
+      flexDirection: 'row',
+      marginTop: getHeight(20),
+      alignSelf: 'center',
+      padding: getWidth(2),
+    },
+    forgotPasswordStyle: {...textStyles.semiBold16_brownishGrey100},
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -120,21 +113,20 @@ invalidPassword } = dictionary.RegistrationDict;
       setLoading(false);
       return;
     }
-    
   }
 
-   function forgotPassword() {
-  };
+  function forgotPassword() {}
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const FormFooter = () => (
-    <TouchableOpacity style={styles.forgotPasswordContainerStyle} onPress={forgotPassword}>
-    <Text style={styles.forgotPasswordStyle}>{forgotPasswordButtonText}</Text>
+    <TouchableOpacity
+      style={styles.forgotPasswordContainerStyle}
+      onPress={forgotPassword}>
+      <Text style={styles.forgotPasswordStyle}>{forgotPasswordButtonText}</Text>
     </TouchableOpacity>
   );
 
   const cells = [
-    
     {
       name: 'emailAddress',
       type: 'text',
@@ -169,12 +161,15 @@ invalidPassword } = dictionary.RegistrationDict;
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>
         <Form cells={cells} config={config} />
-        
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <DefaultButton type="login" variant="white" icon="chevron" onPress={handleLogin}/>
-        </View>
-     
+        <DefaultButton
+          type="login"
+          variant="white"
+          icon="chevron"
+          onPress={handleLogin}
+        />
+      </View>
     </View>
   );
 }

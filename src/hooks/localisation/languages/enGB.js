@@ -8,24 +8,28 @@
 
 const enGB = {
   RegistrationDict: {
-    formTitle: "Create your account to start your free trial",
-    firstNameLabel: "FIRST NAME",
-    lastNameLabel: "LAST NAME",
-    emailLabel: "EMAIL",
-    passwordLabel: "PASSWORD",
-    genderLabel: "GENDER",
-    dobLabel: "DATE OF BIRTH",
-    countryLabel: "COUNTRY",
-    regionLabel: "REGION",
-    termsAndConditionsText: "I accept Power’s Terms & Conditions and Privacy Policy",
+    formTitle: 'Create your account to start your free trial',
+    firstNameLabel: 'FIRST NAME',
+    lastNameLabel: 'LAST NAME',
+    emailLabel: 'EMAIL',
+    passwordLabel: 'PASSWORD',
+    genderLabel: 'GENDER',
+    dobLabel: 'DATE OF BIRTH',
+    countryLabel: 'COUNTRY',
+    regionLabel: 'REGION',
+    termsAndConditionsText:
+      'I accept Power’s Terms & Conditions and Privacy Policy',
     invalidEmail: 'Please enter a valid email',
-    invalidPassword: 'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
+    invalidPassword:
+      'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
     forgotPasswordButtonText: 'Forgot Password?',
-    forgotPasswordCodeLabel: "PASSWORD RESET CODE",
-    forgotPasswordLabel: "NEW PASSWORD",
+    forgotPasswordCodeLabel: 'PASSWORD RESET CODE',
+    forgotPasswordLabel: 'NEW PASSWORD',
     invalidResetCode: 'Invalid code',
-    resetPasswordDescriptionText: 'We’ve just emailed you a code to reset your password. Enter the code here, along with a new password to change it.'
-
+    resetPasswordDescriptionText:
+      'We’ve just emailed you a code to reset your password. Enter the code here, along with a new password to change it.',
+    termsPattern: /Terms & Conditions/,
+    policyPattern: /Privacy Policy/,
   },
   AppTitle: 'Power',
   ButtonText_AddPhoto: 'ADD PHOTO',

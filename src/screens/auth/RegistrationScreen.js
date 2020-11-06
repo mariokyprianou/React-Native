@@ -5,28 +5,25 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
-import QuickPicker from 'quick-picker';
 import TDIcon from 'the-core-ui-component-tdicon';
-
 
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
 import useRegistrationData from '../../hooks/data/useRegistrationData';
-import Header from '../../components/Headers/Header';
 import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
-{/* <AppStack.Screen
+{
+  /* <AppStack.Screen
         name="Register"
         component={RegistrationScreen}
         options={{
@@ -39,16 +36,22 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
             />
           ),
         }}
-      /> */}
-
+      /> */
+}
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {cellFormStyles, dropdownStyle, cellFormConfig, textStyles, colors} = useTheme();
+  const {
+    cellFormStyles,
+    dropdownStyle,
+    cellFormConfig,
+    textStyles,
+    colors,
+  } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
-  const { 
+  const {
     formTitle,
     firstNameLabel,
     lastNameLabel,
@@ -59,12 +62,15 @@ export default function RegisterScreen({navigation}) {
     countryLabel,
     regionLabel,
     termsAndConditionsText,
-  invalidEmail,
-invalidPassword } = dictionary.RegistrationDict;
+    invalidEmail,
+    invalidPassword,
+    termsPattern,
+    policyPattern,
+  } = dictionary.RegistrationDict;
 
-  const { registrationData } = useRegistrationData();
+  const {registrationData} = useRegistrationData();
 
-    const [termsAndConditions, setTerms] = useState('off');
+  const [termsAndConditions, setTerms] = useState('off');
   const [loadingRegister, setLoadingRegister] = useState(false);
   const [activeRegister, setActiveRegister] = useState(false);
 
@@ -77,10 +83,17 @@ invalidPassword } = dictionary.RegistrationDict;
       gender,
       birthDate,
       country,
-      region
+      region,
     } = getValues();
-    
-    if (firstName && lastName && emailAddress && password && birthDate && gender) {
+
+    if (
+      firstName &&
+      lastName &&
+      emailAddress &&
+      password &&
+      birthDate &&
+      gender
+    ) {
       return setActiveRegister(true);
     }
     setActiveRegister(false);
@@ -102,13 +115,26 @@ invalidPassword } = dictionary.RegistrationDict;
       container: {
         marginTop: getHeight(30),
         marginBottom: getHeight(40),
-        alignSelf: 'center'
+        alignSelf: 'center',
       },
     },
-    termsContainerStyle: {flexDirection: 'row', justifyContent: 'space-between'},
-  boxStyle: {width: getWidth(25), height: getWidth(25) , borderWidth: 1, borderColor: colors.black30, borderRadius: 1},
-  iconStyle: {solid: false, size: fontSize(22),color: colors.black30},
-  termsStyle: {...textStyles.regular15_brownishGrey100,alignSelf:'center', marginStart: getWidth(15)},
+    termsContainerStyle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    boxStyle: {
+      width: getWidth(25),
+      height: getWidth(25),
+      borderWidth: 1,
+      borderColor: colors.black30,
+      borderRadius: 1,
+    },
+    iconStyle: {solid: false, size: fontSize(22), color: colors.black30},
+    termsStyle: {
+      ...textStyles.regular15_brownishGrey100,
+      alignSelf: 'center',
+      marginStart: getWidth(15),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -134,9 +160,6 @@ invalidPassword } = dictionary.RegistrationDict;
       setLoadingRegister(false);
       return;
     }
-    
-
-    
   }
 
   const handleTermsAndConditionsButton = () => {
@@ -147,29 +170,35 @@ invalidPassword } = dictionary.RegistrationDict;
   // ** ** ** ** ** RENDER ** ** ** ** **
   const FormFooter = () => (
     <View style={styles.formFooter.container}>
-      <DefaultButton type="createAccount" variant="white" icon="chevron"/>
-
+      <DefaultButton type="createAccount" variant="white" icon="chevron" />
     </View>
   );
 
-
   const linkText = [
     {
-      pattern: /Terms & Conditions/,
-      onPress: () => alert('1 pressed')
+      pattern: termsPattern,
+      onPress: () => alert('1 pressed'),
     },
     {
-      pattern: /Privacy Policy/,
-      onPress: () => alert('2 pressed')
-    }
+      pattern: policyPattern,
+      onPress: () => alert('2 pressed'),
+    },
   ];
 
-  
   const cells = [
     {
       name: 'registerTitle',
       labelComponent: () => null,
-      inputComponent: () => <Text style={{...textStyles.regular15_brownishGrey100, marginTop: getHeight(20), marginBottom: getHeight(10)}}>{formTitle}</Text>,
+      inputComponent: () => (
+        <Text
+          style={{
+            ...textStyles.regular15_brownishGrey100,
+            marginTop: getHeight(20),
+            marginBottom: getHeight(10),
+          }}>
+          {formTitle}
+        </Text>
+      ),
     },
     {
       name: 'firstName',
@@ -214,7 +243,7 @@ invalidPassword } = dictionary.RegistrationDict;
       label: genderLabel,
       placeholder: registrationData.genders[0],
       data: registrationData.genders,
-       rightAccessory: () => <DropDownIcon />,
+      rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
@@ -222,13 +251,13 @@ invalidPassword } = dictionary.RegistrationDict;
       name: 'birthDate',
       type: 'calendar',
       label: dobLabel,
-      placeholder: "",
+      placeholder: '',
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
-     {
+    {
       name: 'country',
       type: 'dropdown',
       label: countryLabel,
@@ -238,7 +267,7 @@ invalidPassword } = dictionary.RegistrationDict;
       ...cellFormStyles,
       ...dropdownStyle,
     },
-     {
+    {
       name: 'region',
       type: 'dropdown',
       label: regionLabel,
@@ -252,29 +281,28 @@ invalidPassword } = dictionary.RegistrationDict;
       name: 'termsAndConditions',
       labelComponent: () => null,
       inputComponent: () => (
-        
-          <View style={{marginTop: getHeight(20)}}>
-          <TouchableOpacity style={styles.termsContainerStyle} onPress={handleTermsAndConditionsButton}>
-          
+        <View style={{marginTop: getHeight(20)}}>
+          <TouchableOpacity
+            style={styles.termsContainerStyle}
+            onPress={handleTermsAndConditionsButton}>
             <View style={styles.boxStyle}>
-              {termsAndConditions === 'on' && (<TDIcon input={'check'} 
-            inputStyle={styles.iconStyle} />)}
+              {termsAndConditions === 'on' && (
+                <TDIcon input={'check'} inputStyle={styles.iconStyle} />
+              )}
             </View>
             <View style={styles.termsStyle}>
-            <StylisedText
-              {...{
-                input: linkText,
-                text: termsAndConditionsText,
-                // If you want to override the main text style
-              
-              }}
-            /></View>
-            </TouchableOpacity>
-          </View>
-       
+              <StylisedText
+                {...{
+                  input: linkText,
+                  text: termsAndConditionsText,
+                  // If you want to override the main text style
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
       ),
     },
-   
   ];
 
   const config = {
@@ -289,7 +317,6 @@ invalidPassword } = dictionary.RegistrationDict;
         style={styles.render.scrollViewContainer}>
         <Form cells={cells} config={config} />
       </ScrollView>
-     
     </View>
   );
 }

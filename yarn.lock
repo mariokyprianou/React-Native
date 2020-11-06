@@ -9085,6 +9085,12 @@ text-table@^0.2.0:
   version "1.0.0"
   resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-component-tdicon.git#2ce76527953cfdd4f07c4ec43cd3002cea5b3ae3"
 
+"the-core-ui-module-tdcalendar@git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdcalendar":
+  version "1.0.1"
+  resolved "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdcalendar#7cad1a9d4efa1bd71e784f649bee528b45fc91ba"
+  dependencies:
+    lodash "^4.17.15"
+
 "the-core-ui-module-tdslideshow@git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow":
   version "1.0.0"
   resolved "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow#02c9bb67316ecb633a08150b3fefbc4156522ba4"

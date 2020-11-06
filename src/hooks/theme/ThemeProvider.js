@@ -20,6 +20,12 @@ export default function ThemeProvider({children}) {
   };
 
   const textStyles = {
+    bold10_brownGrey100: {
+      // fontFamily: 'ProximaNova-Bold',
+      fontSize: fontSize(10),
+      lineHeight: fontSize(30),
+      color: colors.brownGrey100,
+    },
     bold12_brownishGrey100: {
       // fontFamily: 'ProximaNova-Bold',
       fontSize: fontSize(12),
@@ -328,6 +334,24 @@ export default function ThemeProvider({children}) {
     },
   };
 
+  const calendarStyles = {
+    days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    daysContainerStyles: {
+      marginBottom: getHeight(14),
+      width: '100%',
+      alignSelf: 'center',
+    },
+    daysTextStyles: {...textStyles.bold10_brownGrey100},
+    dateCellStyles: {
+      width: getWidth(30),
+      height: getWidth(30),
+      borderRadius: radius(14),
+    },
+    pillWidth: {
+      width: getWidth(45),
+    },
+  };
+
   const cellFormStyles = {
     labelContainerStyle: {
       width: '100%',
@@ -426,6 +450,7 @@ export default function ThemeProvider({children}) {
     () => ({
       colors,
       textStyles,
+      calendarStyles,
       cellFormStyles,
       cellFormConfig,
       dropdownStyle,
@@ -434,6 +459,7 @@ export default function ThemeProvider({children}) {
     [
       colors,
       textStyles,
+      calendarStyles,
       cellFormStyles,
       cellFormConfig,
       dropdownStyle,

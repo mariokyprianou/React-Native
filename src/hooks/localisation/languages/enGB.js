@@ -80,6 +80,8 @@ const enGB = {
   TitleText_TakeARest: 'Take a rest',
   TitleText_Week: 'Week',
   TitleText_WeekComplete: 'Week Complete',
+  TitleText_Progress: 'progress',
+  TitleText_Your: 'Your',
   TitleText_YourFirstWeek: 'Your first week with',
   WorkoutText_RestDay: 'REST DAY',
 };

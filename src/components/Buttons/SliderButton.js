@@ -12,11 +12,14 @@ import LinearGradient from 'react-native-linear-gradient';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 const SliderButton = ({onPress}) => {
   // ******* SETUP *******
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
+  const {dictionary} = useDictionary();
+  const {ButtonText_AddPhoto} = dictionary;
 
   // ******* STYLES *******
   const styles = {
@@ -39,6 +42,11 @@ const SliderButton = ({onPress}) => {
       alignSelf: 'center',
       height: getHeight(50),
     },
+    touch: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     buttonText: {
       ...textStyles.bold15_white100,
     },
@@ -55,19 +63,19 @@ const SliderButton = ({onPress}) => {
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={[colors.tealish100, colors.tiffanyBlue100]}>
-        <TouchableOpacity onPress={onPress}>
-          <Text style={styles.buttonText}>ADD PHOTO</Text>
+        <TouchableOpacity onPress={onPress} style={styles.touch}>
+          <Text style={styles.buttonText}>{ButtonText_AddPhoto}</Text>
+          <View style={styles.iconContainer}>
+            <TDIcon
+              input="chevron-right"
+              inputStyle={{
+                size: styles.buttonText.fontSize,
+                color: styles.buttonText.color,
+                solid: true,
+              }}
+            />
+          </View>
         </TouchableOpacity>
-        <View style={styles.iconContainer}>
-          <TDIcon
-            input="chevron-right"
-            inputStyle={{
-              size: styles.buttonText.fontSize,
-              color: styles.buttonText.color,
-              solid: true,
-            }}
-          />
-        </View>
       </LinearGradient>
     </View>
   );

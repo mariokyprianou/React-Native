@@ -14,6 +14,7 @@ import Slideshow from 'the-core-ui-module-tdslideshow';
 import DropDownPicker from 'react-native-dropdown-picker';
 import useTransformation from '../hooks/data/useTransformation';
 import SliderButton from '../components/Buttons/SliderButton';
+import CustomCountdown from '../components/Buttons/CustomCountdown';
 
 const fakeBeforePic =
   'https://cdn.vox-cdn.com/thumbor/wyuKqIJeQwb745RJb5zsK2FCOaY=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19424316/EKo3U_qXkAEK1Fz.jpeg';
@@ -22,7 +23,7 @@ const fakeAfterPic =
 
 const sliderThumb = require('../../assets/icons/transformation-slider.png');
 
-export default function TestScreen() {
+export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors} = useTheme();
@@ -56,8 +57,8 @@ export default function TestScreen() {
       zIndex: 9,
     },
     dropdownContainer: {
-      height: getHeight(28),
-      width: getWidth(112),
+      height: getHeight(30),
+      width: getWidth(125),
     },
     dropdownBox: {
       backgroundColor: colors.white80,
@@ -68,6 +69,11 @@ export default function TestScreen() {
     },
     dropdownList: {
       backgroundColor: colors.white80,
+    },
+    dropdownArrow: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
     },
   };
 
@@ -84,6 +90,8 @@ export default function TestScreen() {
     // if imageToSelect === 'after' setAfterPic(dateItem.imageURL)
   }
 
+  function handleCountdownStart() {}
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
@@ -95,6 +103,7 @@ export default function TestScreen() {
           style={styles.dropdownBox}
           dropDownStyle={styles.dropdownList}
           onChangeItem={(item) => handleSelectDate(item, 'before')}
+          arrowStyle={styles.dropdownArrow}
         />
         <DropDownPicker
           items={transformationImages}
@@ -103,6 +112,7 @@ export default function TestScreen() {
           style={styles.dropdownBox}
           dropDownStyle={styles.dropdownList}
           onChangeItem={(item) => handleSelectDate(item, 'after')}
+          arrowStyle={styles.dropdownArrow}
         />
       </View>
       <Slideshow
@@ -114,6 +124,9 @@ export default function TestScreen() {
         sliderSpacerHeight={styles.spacerHeight}
         sliderStyles={styles.sliderStyles}
         CustomButton={SliderButton}
+        CustomCountdown={() => (
+          <CustomCountdown onPress={handleCountdownStart} />
+        )}
         // sliderIcon={{uri: sliderThumb}}
         // cameraHeaderText={}
         // overlayImage={}

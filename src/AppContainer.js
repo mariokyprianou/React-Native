@@ -35,7 +35,7 @@ export default function AppContainer() {
         name="Test"
         component={TransformationScreen}
         options={{
-          title: false,
+          headerShown: false,
         }}
       />
     </AppStack.Navigator>

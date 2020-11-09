@@ -1,0 +1,212 @@
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
+index a1cee56..92c1919 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
+@@ -16,7 +16,6 @@ import {
+   checkDimensions,
+   checkText,
+   checkStyles,
+-  checkButtonStyles,
+   checkStylesIncHeight,
+   checkImageUrl,
+ } from "./utils";
+@@ -27,9 +26,8 @@ const Slideshow = ({
+   afterPic,
+   imageWidth,
+   imageHeight,
++  CustomButton,
+   buttonText,
+-  buttonStyles,
+-  buttonTextStyles,
+   sliderStyles,
+   sliderSpacerHeight,
+   sliderIcon,
+@@ -40,15 +38,13 @@ const Slideshow = ({
+ }) => {
+   // ******* SETUP *******
+   const [activeViewIndex, setActiveViewIndex] = useState(0);
+-  const [afterImageWidth, setAfterImageWidth] = useState(150);
+-  const [afterImageLeft, setAfterImageLeft] = useState(150);
++  const [afterImageWidth, setAfterImageWidth] = useState(imageWidth / 2);
++  const [afterImageLeft, setAfterImageLeft] = useState(imageWidth / 2);
+ 
+   const {
+     defaultImageWidth,
+     defaultImageHeight,
+     defaultButtonText,
+-    defaultButtonStyles,
+-    defaultButtonTextStyles,
+     defaultSliderStyles,
+     defaultSliderSpacerHeight,
+     defaultCameraHeaderText,
+@@ -59,8 +55,6 @@ const Slideshow = ({
+   imageWidth && checkDimensions(imageWidth);
+   imageHeight && checkDimensions(imageHeight);
+   buttonText && checkText(buttonText);
+-  buttonStyles && checkButtonStyles(buttonStyles);
+-  buttonTextStyles && checkStyles(buttonTextStyles);
+   sliderStyles && checkStylesIncHeight(sliderStyles);
+   sliderSpacerHeight && checkStylesIncHeight(sliderSpacerHeight);
+   sliderIcon && checkImageUrl(sliderIcon);
+@@ -73,6 +67,7 @@ const Slideshow = ({
+ 
+   // ******* FUNCTIONS *******
+   function handleAddPhoto() {
++    console.log("handling");
+     request(
+       Platform.select({
+         ios: PERMISSIONS.IOS.CAMERA,
+@@ -123,9 +118,8 @@ const Slideshow = ({
+         imageHeight={imageHeight || defaultImageHeight}
+         afterImageWidth={afterImageWidth}
+         afterImageLeft={afterImageLeft}
++        CustomButton={ () => <CustomButton onPress={handleAddPhoto}/>}
+         buttonText={buttonText || defaultButtonText}
+-        buttonStyles={buttonStyles || defaultButtonStyles}
+-        buttonTextStyles={buttonTextStyles || defaultButtonTextStyles}
+         sliderStyles={sliderStyles || defaultSliderStyles}
+         sliderSpacerHeight={sliderSpacerHeight || defaultSliderSpacerHeight}
+         sliderIcon={sliderIcon}
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
+index 6867d80..6ff32c0 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
+@@ -19,6 +19,8 @@ import TDIcon from "the-core-ui-component-tdicon";
+ import Slider from "@react-native-community/slider";
+ import { ScaleHook } from "react-native-design-to-component";
+ 
++const sliderThumb = require('../../../../assets/icons/transformation-slider.png');
++
+ const ImageSlider = ({
+   handleAddPhoto,
+   handleSlideChange,
+@@ -28,16 +30,16 @@ const ImageSlider = ({
+   imageHeight,
+   afterImageWidth,
+   afterImageLeft,
++  CustomButton,
+   buttonText,
+-  buttonStyles,
+-  buttonTextStyles,
+   sliderStyles,
++  sliderSpacerHeight,
+   sliderIcon,
+ }) => {
+   // ******* SETUP *******
+   const screenWidth = Dimensions.get("screen").width;
+   const leftAlign = (screenWidth - imageWidth) / 2;
+-  const { getHeight } = ScaleHook();
++  const { getHeight, getWidth, fontSize } = ScaleHook();
+ 
+   // ******* STYLES *******
+   const styles = StyleSheet.create({
+@@ -79,14 +81,31 @@ const ImageSlider = ({
+       alignItems: "center",
+       alignSelf: "center",
+       marginVertical: getHeight(10),
+-      ...buttonStyles,
++      backgroundColor: "white",
++      width: "90%",
++      height: "10%",
++      marginTop: getHeight(35),
+     },
+     buttonText: {
+-      ...buttonTextStyles,
++      fontSize: fontSize(17),
++      fontWeight: "bold",
++      color: "black",
++    },
++    iconContainer: {
++      position: 'absolute',
++      right: getWidth(10),
++    },
++    linearGradientStyle: {
++      flex: 1,
++      flexDirection: "row",
++      justifyContent: "center",
++      alignItems: "center",
++      alignSelf: "center",
++      height: getHeight(50),
+     },
+   });
+ 
+-  const sliderWidth = imageWidth + 27;
++  const sliderWidth = imageWidth + 40;
+ 
+   // ******* FUNCTIONS *******
+   // ******* RENDER *******
+@@ -104,6 +123,7 @@ const ImageSlider = ({
+           )}
+         </View>
+       </View>
++      <View style={sliderSpacerHeight} />
+       <Slider
+         style={{
+           width: sliderWidth,
+@@ -117,21 +137,29 @@ const ImageSlider = ({
+         minimumTrackTintColor={sliderStyles.minimumTrackTintColor}
+         maximumTrackTintColor={sliderStyles.maximumTrackTintColor}
+         onValueChange={(value) => handleSlideChange(value)}
+-        thumbImage={sliderIcon || null}
++        thumbImage={sliderThumb}
+       />
+-      <View style={styles.button}>
+-        <TouchableOpacity onPress={handleAddPhoto}>
+-          <Text style={styles.buttonText}>{buttonText}</Text>
+-        </TouchableOpacity>
+-        <TDIcon
+-          input="chevron-right"
+-          inputStyle={{
+-            size: styles.buttonText.fontSize,
+-            color: styles.buttonText.color,
+-            solid: true,
+-          }}
+-        />
+-      </View>
++      {CustomButton ?
++        <CustomButton />
++        :
++        (
++          <View style={ styles.button }>
++            <TouchableOpacity onPress={handleAddPhoto}>
++              <Text style={styles.buttonText}>{buttonText}</Text>
++            </TouchableOpacity>
++            <View style={styles.iconContainer}>
++              <TDIcon
++              input="chevron-right"
++              inputStyle={{
++                size: styles.buttonText.fontSize,
++                color: styles.buttonText.color,
++                solid: true,
++              }}
++              />
++            </View>
++          </View>
++        )
++      }
+     </View>
+   );
+ };
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
+index 7991319..9e4ed2d 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
+@@ -15,18 +15,6 @@ export function defaultProps() {
+     defaultImageWidth: getWidth(300),
+     defaultImageHeight: getHeight(250),
+     defaultButtonText: "ADD PHOTO",
+-    defaultButtonStyles: {
+-      backgroundColor: "#00cccc",
+-      width: "80%",
+-      height: "10%",
+-      marginTop: getHeight(35),
+-    },
+-    defaultButtonTextStyles: {
+-      fontSize: fontSize(17),
+-      fontWeight: "bold",
+-      color: "white",
+-      marginHorizontal: getWidth(70),
+-    },
+     defaultSliderStyles: {
+       height: getHeight(30),
+       minimumTrackTintColor: "transparent",

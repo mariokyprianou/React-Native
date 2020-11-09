@@ -15,6 +15,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import useTransformation from '../hooks/data/useTransformation';
 import SliderButton from '../components/Buttons/SliderButton';
 import CustomCountdown from '../components/Buttons/CustomCountdown';
+import CustomDateSelectors from '../components/Buttons/CustomDateSelectors';
 
 const fakeBeforePic =
   'https://cdn.vox-cdn.com/thumbor/wyuKqIJeQwb745RJb5zsK2FCOaY=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19424316/EKo3U_qXkAEK1Fz.jpeg';
@@ -47,34 +48,34 @@ export default function TransformationScreen() {
     spacerHeight: {
       height: getHeight(184),
     },
-    dropdown: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '90%',
-      position: 'absolute',
-      top: getHeight(20),
-      left: getWidth(20),
-      zIndex: 9,
-    },
-    dropdownContainer: {
-      height: getHeight(30),
-      width: getWidth(125),
-    },
-    dropdownBox: {
-      backgroundColor: colors.white80,
-      borderTopLeftRadius: radius(18),
-      borderTopRightRadius: radius(18),
-      borderBottomLeftRadius: radius(18),
-      borderBottomRightRadius: radius(18),
-    },
-    dropdownList: {
-      backgroundColor: colors.white80,
-    },
-    dropdownArrow: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-    },
+    // dropdown: {
+    //   flexDirection: 'row',
+    //   justifyContent: 'space-between',
+    //   width: '90%',
+    //   position: 'absolute',
+    //   top: getHeight(20),
+    //   left: getWidth(20),
+    //   zIndex: 9,
+    // },
+    // dropdownContainer: {
+    //   height: getHeight(30),
+    //   width: getWidth(125),
+    // },
+    // dropdownBox: {
+    //   backgroundColor: colors.white80,
+    //   borderTopLeftRadius: radius(18),
+    //   borderTopRightRadius: radius(18),
+    //   borderBottomLeftRadius: radius(18),
+    //   borderBottomRightRadius: radius(18),
+    // },
+    // dropdownList: {
+    //   backgroundColor: colors.white80,
+    // },
+    // dropdownArrow: {
+    //   position: 'absolute',
+    //   top: 0,
+    //   right: 0,
+    // },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -90,12 +91,14 @@ export default function TransformationScreen() {
     // if imageToSelect === 'after' setAfterPic(dateItem.imageURL)
   }
 
-  function handleCountdownStart() {}
+  function handleCountdownStart() {
+    console.log('counting down');
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <View style={styles.dropdown}>
+      {/* <View style={styles.dropdown}>
         <DropDownPicker
           items={transformationImages}
           defaultValue={transformationImages[0].value}
@@ -114,7 +117,7 @@ export default function TransformationScreen() {
           onChangeItem={(item) => handleSelectDate(item, 'after')}
           arrowStyle={styles.dropdownArrow}
         />
-      </View>
+      </View> */}
       <Slideshow
         setPhoto={handlePhoto}
         beforePic={beforePic}
@@ -127,6 +130,7 @@ export default function TransformationScreen() {
         CustomCountdown={() => (
           <CustomCountdown onPress={handleCountdownStart} />
         )}
+        DateSelectors={() => <CustomDateSelectors onPress={handleSelectDate} />}
         // sliderIcon={{uri: sliderThumb}}
         // cameraHeaderText={}
         // overlayImage={}

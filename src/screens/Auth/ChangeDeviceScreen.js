@@ -7,15 +7,15 @@
 
 import React, {useEffect, useState} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import PermissionScreen from './PermissionScreen';
+import PermissionScreenUI from './PermissionScreenUI';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {
-    ChangeDeviceTitle,
-    ChangeDeviceText,
-    ChangeDeviceTextDisabled,
+    ChangeDevice_Title,
+    ChangeDevice_Text,
+    ChangeDevice_TextDisabled,
   } = dictionary;
 
   // MARK: - Local
@@ -37,10 +37,10 @@ export default function ChangeDeviceScreen() {
   };
 
   // MARK: - Render
-  const text = canChangeDevice ? ChangeDeviceText : ChangeDeviceTextDisabled;
+  const text = canChangeDevice ? ChangeDevice_Text : ChangeDevice_TextDisabled;
   return (
-    <PermissionScreen
-      title={ChangeDeviceTitle}
+    <PermissionScreenUI
+      title={ChangeDevice_Title}
       text={text}
       buttonType="changeDevice"
       bottomButtonType="needHelp"

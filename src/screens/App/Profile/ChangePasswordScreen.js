@@ -8,15 +8,15 @@
 import React, {useEffect} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../../hooks/localisation/useDictionary';
-import TwoFieldChangeScreen from './TwoFieldChangeScreen';
+import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 
 export default function ChangePasswordScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {
-    ChangePasswordScreenTitle,
-    ChangePasswordLabel1,
-    ChangePasswordLabel2,
+    ChangePassword_ScreenTitle,
+    ChangePassword_Label1,
+    ChangePassword_Label2,
   } = dictionary;
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
 
@@ -41,10 +41,10 @@ export default function ChangePasswordScreen() {
 
   // MARK: - Render
   return (
-    <TwoFieldChangeScreen
-      screenTitle={ChangePasswordScreenTitle}
-      firstFieldLabel={ChangePasswordLabel1}
-      secondFieldLabel={ChangePasswordLabel2}
+    <TwoFieldChangeScreenUI
+      screenTitle={ChangePassword_ScreenTitle}
+      firstFieldLabel={ChangePassword_Label1}
+      secondFieldLabel={ChangePassword_Label2}
       firstFieldName={firstValueName}
       secondFieldName={secondValueName}
       buttonType={'changePassword'}

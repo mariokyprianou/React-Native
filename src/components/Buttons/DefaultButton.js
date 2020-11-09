@@ -20,7 +20,7 @@ import TDIcon from 'the-core-ui-component-tdicon';
 
 // possible icon - share, reminder, chevron
 
-// possible variant - white, gradient, transparent
+// possible variant - white, gradient, transparentWhiteText, transparentGreyText, transparentBlackBoldText
 
 export default function DefaultButton({
   type,
@@ -30,6 +30,7 @@ export default function DefaultButton({
   trainerName,
   onPress,
   disabled,
+  capitalise,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -67,6 +68,9 @@ export default function DefaultButton({
     ButtonText_Pluralise,
     ButtonText_Skip,
     ButtonText_NeedHelp,
+    ButtonText_SaveChanges,
+    ButtonText_NeedToSignOut,
+    ButtonText_Logout,
   } = dictionary;
 
   const buttonVariant = {
@@ -91,21 +95,30 @@ export default function DefaultButton({
     transparentGreyText: {
       backgroundColor: 'transparent',
     },
+    transparentBlackBoldText: {
+      backgroundColor: 'transparent',
+    },
   };
 
   const buttonTextVariant = {
     white: {
       ...textStyles.bold15_black100,
       color: disabled ? colors.black40 : colors.black100,
+      letterSpacing: 0.75,
     },
     gradient: {
       ...textStyles.bold15_white100,
+      letterSpacing: 0.75,
     },
     transparentWhiteText: {
       ...textStyles.bold15_white100,
     },
     transparentGreyText: {
       ...textStyles.semiBold16_brownishGrey100,
+    },
+    transparentBlackBoldText: {
+      ...textStyles.bold15_black100,
+      letterSpacing: 0.75,
     },
   };
 
@@ -136,6 +149,9 @@ export default function DefaultButton({
     tryAgain: ButtonText_TryAgain,
     skip: ButtonText_Skip,
     needHelp: ButtonText_NeedHelp,
+    saveChanges: ButtonText_SaveChanges,
+    needToSignOut: ButtonText_NeedToSignOut,
+    logout: ButtonText_Logout,
   };
 
   const iconType = {
@@ -210,6 +226,15 @@ export default function DefaultButton({
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
+
+  const text = buttonText[type] || '';
+  const finalText =
+    variant === 'white' ||
+    variant === 'gradient' ||
+    variant === 'transparentBlackBoldText' ||
+    capitalise
+      ? text.toUpperCase()
+      : text;
   if (variant === 'gradient') {
     return (
       <View style={styles.container}>
@@ -219,7 +244,7 @@ export default function DefaultButton({
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             colors={[colors.tealish100, colors.tiffanyBlue100]}>
-            <Text style={styles.text}>{buttonText[type]}</Text>
+            <Text style={styles.text}>{finalText}</Text>
             {icon && (
               <View style={styles.iconContainer}>
                 <TDIcon
@@ -273,14 +298,13 @@ export default function DefaultButton({
     );
   }
   // This ^^ will need different options for pluralising names in Hindi and Urdu
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={onPress}
         style={styles.touch}
         disabled={disabled}>
-        <Text style={styles.text}>{buttonText[type]}</Text>
+        <Text style={styles.text}>{finalText}</Text>
         {icon && (
           <View style={styles.iconContainer}>
             <TDIcon

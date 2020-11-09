@@ -6,12 +6,12 @@
  */
 import React, {useEffect} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import PermissionScreen from './PermissionScreen';
+import PermissionScreenUI from './PermissionScreenUI';
 
 export default function AnalyticsPermissionScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
-  const {AnalyticsPermissionsTitle, AnalyticsPermissionsText} = dictionary;
+  const {AnalyticsPermissions_Title, AnalyticsPermissions_Text} = dictionary;
 
   // MARK: - Logic
 
@@ -25,9 +25,9 @@ export default function AnalyticsPermissionScreen() {
 
   // MARK: - Render
   return (
-    <PermissionScreen
-      title={AnalyticsPermissionsTitle}
-      text={AnalyticsPermissionsText}
+    <PermissionScreenUI
+      title={AnalyticsPermissions_Title}
+      text={AnalyticsPermissions_Text}
       buttonType="allowAnalytics"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}

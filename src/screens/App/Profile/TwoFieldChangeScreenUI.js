@@ -16,7 +16,7 @@ import useTheme from '../../../hooks/theme/UseTheme';
 import Header from '../../../components/Headers/Header';
 import PasswordEyeIcon from '../../../components/cells/PasswordEyeIcon';
 
-const TwoFieldChangeScreen = ({
+const TwoFieldChangeScreenUI = ({
   screenTitle = 'Supply Screen Title',
   firstFieldLabel = 'Supply title 1',
   secondFieldLabel = 'Supply title 2',
@@ -111,4 +111,4 @@ const TwoFieldChangeScreen = ({
   );
 };
 
-export default TwoFieldChangeScreen;
+export default TwoFieldChangeScreenUI;

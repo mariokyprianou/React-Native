@@ -8,16 +8,16 @@
 import React, {useEffect} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useNavigation} from '@react-navigation/native';
 
+import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import Spacer from '../../components/Utility/Spacer';
 
 const defaultImage = require('../../../assets/images/analyticsImage.png');
 
-const PermissionScreen = ({
+const PermissionScreenUI = ({
   title = 'Supply title',
   text = 'Suppply text',
   image = defaultImage,
@@ -33,14 +33,13 @@ const PermissionScreen = ({
   const navigation = useNavigation();
 
   // MARK: - Use Effect
-
   useEffect(() => {
     navigation.setOptions({
       header: () => <Header title={title} showModalCross />,
     });
   }, []);
-  // MARK: - Style
 
+  // MARK: - Style
   const styles = StyleSheet.create({
     constainer: {
       alignItems: 'center',
@@ -68,6 +67,7 @@ const PermissionScreen = ({
       justifyContent: 'flex-end',
     },
   });
+
   // MARK: - Render
   return (
     <View style={styles.constainer}>
@@ -93,4 +93,4 @@ const PermissionScreen = ({
   );
 };
 
-export default PermissionScreen;
+export default PermissionScreenUI;

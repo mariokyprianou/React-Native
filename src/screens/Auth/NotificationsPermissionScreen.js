@@ -7,14 +7,14 @@
 
 import React, {useEffect} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import PermissionScreen from './PermissionScreen';
+import PermissionScreenUI from './PermissionScreenUI';
 
 export default function NotificationPermissionScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {
-    NotificationsPermissionsTitle,
-    NotificationsPermissionsText,
+    NotificationsPermissions_Title,
+    NotificationsPermissions_Text,
   } = dictionary;
 
   // MARK: - Logic
@@ -29,9 +29,9 @@ export default function NotificationPermissionScreen() {
 
   // MARK: - Render
   return (
-    <PermissionScreen
-      title={NotificationsPermissionsTitle}
-      text={NotificationsPermissionsText}
+    <PermissionScreenUI
+      title={NotificationsPermissions_Title}
+      text={NotificationsPermissions_Text}
       buttonType="allowNotifications"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}

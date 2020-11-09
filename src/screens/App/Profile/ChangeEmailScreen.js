@@ -8,15 +8,15 @@
 import React, {useEffect} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../../hooks/localisation/useDictionary';
-import TwoFieldChangeScreen from './TwoFieldChangeScreen';
+import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 
 export default function ChangeEmailScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {
-    ChangeEmailScreenTitle,
-    ChangeEmailLabel1,
-    ChangeEmailLabel2,
+    ChangeEmail_ScreenTitle,
+    ChangeEmail_Label1,
+    ChangeEmail_Label2,
   } = dictionary;
   const {cleanErrors, getValues, updateError} = FormHook();
 
@@ -41,10 +41,10 @@ export default function ChangeEmailScreen() {
 
   // MARK: - Render
   return (
-    <TwoFieldChangeScreen
-      screenTitle={ChangeEmailScreenTitle}
-      firstFieldLabel={ChangeEmailLabel1}
-      secondFieldLabel={ChangeEmailLabel2}
+    <TwoFieldChangeScreenUI
+      screenTitle={ChangeEmail_ScreenTitle}
+      firstFieldLabel={ChangeEmail_Label1}
+      secondFieldLabel={ChangeEmail_Label2}
       secondFieldType="emailAddress"
       firstFieldName={firstValueName}
       secondFieldName={secondValueName}

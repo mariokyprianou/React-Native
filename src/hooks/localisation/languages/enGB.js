@@ -66,6 +66,9 @@ const enGB = {
   ButtonText_Pluralise: "'S",
   ButtonText_Skip: 'Skip',
   ButtonText_NeedHelp: 'Need help?',
+  ButtonText_SaveChanges: 'Save changes',
+  ButtonText_NeedToSignOut: 'Need to sign out?',
+  ButtonText_Logout: 'Logout',
   CardText_Low: 'Low',
   CardText_Medium: 'Medium',
   CardText_High: 'High',
@@ -94,23 +97,34 @@ const enGB = {
   TitleText_Week: 'Week',
   TitleText_YourFirstWeek: 'Your first week with',
   WorkoutText_RestDay: 'REST DAY',
-  AnalyticsPermissionsTitle: 'Analytics',
-  AnalyticsPermissionsText:
+  AnalyticsPermissions_Title: 'Analytics',
+  AnalyticsPermissions_Text:
     'To create the best workout programmes possible and keep improving the POWER experience, we need your permission to collect analytics from the app.',
-  NotificationsPermissionsTitle: 'Notifications',
-  NotificationsPermissionsText:
+  NotificationsPermissions_Title: 'Notifications',
+  NotificationsPermissions_Text:
     'To send you workout updates, we need permission to send push notifications to your device.',
-  ChangeEmailScreenTitle: 'Change email',
-  ChangeEmailLabel1: 'Old password',
-  ChangeEmailLabel2: 'New Email',
-  ChangePasswordScreenTitle: 'Change password',
-  ChangePasswordLabel1: 'Old password',
-  ChangePasswordLabel2: 'New password',
-  ChangeDeviceTitle: 'Change Device',
-  ChangeDeviceText:
+  ChangeEmail_ScreenTitle: 'Change email',
+  ChangeEmail_Label1: 'Old password',
+  ChangeEmail_Label2: 'New Email',
+  ChangePassword_ScreenTitle: 'Change password',
+  ChangePassword_Label1: 'Old password',
+  ChangePassword_Label2: 'New password',
+  ChangeDevice_Title: 'Change Device',
+  ChangeDevice_Text:
     'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
-  ChangeDeviceTextDisabled:
+  ChangeDevice_TextDisabled:
     'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
+  Profile_MemberSince: 'Member since',
+  Profile_WorkoutsComplete: 'Workouts complete',
+  Profile_NotificationsTitle: 'Notifications',
+  Profile_PersonalDetails: 'Personal Details',
+  Profile_FormLabel1: 'FIRST NAME',
+  Profile_FormLabel2: 'LAST NAME',
+  Profile_FormLabel3: 'EMAIL',
+  Profile_FormLabel4: 'GENDER',
+  Profile_FormLabel5: 'DATE OF BIRTH',
+  Profile_FormLabel6: 'COUNTRY',
+  Profile_FormLabel7: 'REGION',
 };
 
 export default enGB;

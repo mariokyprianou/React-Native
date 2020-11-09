@@ -35,7 +35,7 @@ const TwoFieldChangeScreen = ({
   // MARK: - Use Effect
   useEffect(() => {
     navigation.setOptions({
-      header: () => <Header title={screenTitle} goBack white />,
+      header: () => <Header title={screenTitle} goBack />,
     });
   }, []);
 
@@ -85,7 +85,7 @@ const TwoFieldChangeScreen = ({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white100,
+      backgroundColor: colors.offWhite,
       justifyContent: 'space-between',
       paddingBottom: getHeight(40),
       alignItems: 'center',

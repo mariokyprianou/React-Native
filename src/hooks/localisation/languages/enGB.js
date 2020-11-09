@@ -65,6 +65,7 @@ const enGB = {
   ButtonText_TryAgain: 'TRY AGAIN',
   ButtonText_Pluralise: "'S",
   ButtonText_Skip: 'Skip',
+  ButtonText_NeedHelp: 'Need help?',
   CardText_Low: 'Low',
   CardText_Medium: 'Medium',
   CardText_High: 'High',
@@ -105,6 +106,11 @@ const enGB = {
   ChangePasswordScreenTitle: 'Change password',
   ChangePasswordLabel1: 'Old password',
   ChangePasswordLabel2: 'New password',
+  ChangeDeviceTitle: 'Change Device',
+  ChangeDeviceText:
+    'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
+  ChangeDeviceTextDisabled:
+    'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
 };
 
 export default enGB;

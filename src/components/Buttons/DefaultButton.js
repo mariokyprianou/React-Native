@@ -29,6 +29,7 @@ export default function DefaultButton({
   weekNo,
   trainerName,
   onPress,
+  disabled,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -65,6 +66,7 @@ export default function DefaultButton({
     ButtonText_TryAgain,
     ButtonText_Pluralise,
     ButtonText_Skip,
+    ButtonText_NeedHelp,
   } = dictionary;
 
   const buttonVariant = {
@@ -94,6 +96,7 @@ export default function DefaultButton({
   const buttonTextVariant = {
     white: {
       ...textStyles.bold15_black100,
+      color: disabled ? colors.black40 : colors.black100,
     },
     gradient: {
       ...textStyles.bold15_white100,
@@ -132,6 +135,7 @@ export default function DefaultButton({
     startWorkout: ButtonText_StartWorkout,
     tryAgain: ButtonText_TryAgain,
     skip: ButtonText_Skip,
+    needHelp: ButtonText_NeedHelp,
   };
 
   const iconType = {
@@ -272,7 +276,10 @@ export default function DefaultButton({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress} style={styles.touch}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.touch}
+        disabled={disabled}>
         <Text style={styles.text}>{buttonText[type]}</Text>
         {icon && (
           <View style={styles.iconContainer}>

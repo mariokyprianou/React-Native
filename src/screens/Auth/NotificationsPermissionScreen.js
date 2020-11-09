@@ -23,7 +23,7 @@ export default function NotificationPermissionScreen() {
   const onPressButton = () => {
     // TODO: - Allow Notifications
   };
-  const onPressSkip = () => {
+  const onPressBottomButton = () => {
     // TODO: - Skip permission
   };
 
@@ -34,7 +34,7 @@ export default function NotificationPermissionScreen() {
       text={NotificationsPermissionsText}
       buttonType="allowNotifications"
       onPressButton={onPressButton}
-      onPressSkip={onPressSkip}
+      onPressBottomButton={onPressBottomButton}
     />
   );
 }

@@ -22,8 +22,10 @@ const PermissionScreen = ({
   text = 'Suppply text',
   image = defaultImage,
   buttonType = 'allowAnalytics',
+  bottomButtonType = 'skip',
   onPressButton,
-  onPressSkip,
+  onPressBottomButton,
+  disabled = false,
 }) => {
   // MARK: - Hooks
   const {getHeight, getWidth} = ScaleHook();
@@ -79,11 +81,12 @@ const PermissionScreen = ({
           type={buttonType}
           variant="white"
           onPress={onPressButton}
+          disabled={disabled}
         />
         <DefaultButton
-          type="skip"
+          type={bottomButtonType}
           variant="transparent"
-          onPress={onPressSkip}
+          onPress={onPressBottomButton}
         />
       </View>
     </View>

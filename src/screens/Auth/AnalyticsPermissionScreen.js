@@ -19,7 +19,7 @@ export default function AnalyticsPermissionScreen() {
   const onPressButton = () => {
     // TODO: - Allow Analytics
   };
-  const onPressSkip = () => {
+  const onPressBottomButton = () => {
     // TODO: - Skip permission
   };
 
@@ -30,7 +30,7 @@ export default function AnalyticsPermissionScreen() {
       text={AnalyticsPermissionsText}
       buttonType="allowAnalytics"
       onPressButton={onPressButton}
-      onPressSkip={onPressSkip}
+      onPressBottomButton={onPressBottomButton}
     />
   );
 }

@@ -20,8 +20,8 @@ const fakeBeforePic =
 const fakeAfterPic =
   'https://media.wired.com/photos/5cdefb92b86e041493d389df/191:100/w_1280,c_limit/Culture-Grumpy-Cat-487386121.jpg';
 
-const sliderThumb = require('../../assets/icons/transformation-slider.png');
-const cameraButton = require('../../assets/icons/camera-button.png');
+const sliderThumb = require('../../assets/icons/photoSlider.png');
+const cameraButton = require('../../assets/icons/cameraButton.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **

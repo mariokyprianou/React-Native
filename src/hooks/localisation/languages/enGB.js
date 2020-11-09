@@ -99,6 +99,12 @@ const enGB = {
   NotificationsPermissionsTitle: 'Notifications',
   NotificationsPermissionsText:
     'To send you workout updates, we need permission to send push notifications to your device.',
+  ChangeEmailScreenTitle: 'Change email',
+  ChangeEmailLabel1: 'Old password',
+  ChangeEmailLabel2: 'New Email',
+  ChangePasswordScreenTitle: 'Change password',
+  ChangePasswordLabel1: 'Old password',
+  ChangePasswordLabel2: 'New password',
 };
 
 export default enGB;

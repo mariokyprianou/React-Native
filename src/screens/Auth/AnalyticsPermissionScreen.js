@@ -29,8 +29,8 @@ export default function AnalyticsPermissionScreen() {
       title={AnalyticsPermissionsTitle}
       text={AnalyticsPermissionsText}
       buttonType="allowAnalytics"
-      onPressButton
-      onPressSkip
+      onPressButton={onPressButton}
+      onPressSkip={onPressSkip}
     />
   );
 }

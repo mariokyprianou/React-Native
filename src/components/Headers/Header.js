@@ -28,6 +28,7 @@ export default function SearchText({
   right,
   rightAction,
   customTitle,
+  white,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getWidth, fontSize} = ScaleHook();
@@ -47,7 +48,7 @@ export default function SearchText({
       height,
       flexDirection: 'row',
       alignItems: 'flex-end',
-      backgroundColor: colors.offWhite100,
+      backgroundColor: white ? colors.white100 : colors.offWhite100,
       width: '100%',
     },
     titleContainer: {

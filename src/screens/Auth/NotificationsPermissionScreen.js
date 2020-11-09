@@ -33,8 +33,8 @@ export default function NotificationPermissionScreen() {
       title={NotificationsPermissionsTitle}
       text={NotificationsPermissionsText}
       buttonType="allowNotifications"
-      onPressButton
-      onPressSkip
+      onPressButton={onPressButton}
+      onPressSkip={onPressSkip}
     />
   );
 }

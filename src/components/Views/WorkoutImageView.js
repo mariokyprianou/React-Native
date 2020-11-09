@@ -28,7 +28,6 @@ export default function ({
     container: {
       width: '100%',
       height: getHeight(300),
-      backgroundColor: 'red',
     },
     imageStyle: {
       width: '100%',

@@ -5,7 +5,6 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Input} from 'react-native-elements';
@@ -17,18 +16,16 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
 
-
 const arrowBackIcon = require('../../../assets/icons/headerBackArrow.png');
 const closeIcon = require('../../../assets/icons/headerClose.png');
 
-
 export default function SearchText({
   title,
-  noSearch,
+  showSearch = false,
   showBurger = false,
   goBack,
   showModalCross = false,
-  searchInputChanged
+  searchInputChanged,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getWidth, fontSize} = ScaleHook();
@@ -58,7 +55,7 @@ export default function SearchText({
     },
     titleStyle: {
       ...textStyles.bold22_black100,
-      textAlign: 'center' ,
+      textAlign: 'center',
     },
     leftButtonContainer: {
       height,
@@ -118,7 +115,9 @@ export default function SearchText({
       {showBurger ? (
         <View style={styles.leftIconContainer}>{renderIcon('bars')}</View>
       ) : goBack ? (
-        <View style={styles.leftIconContainer}>{renderIcon(arrowBackIcon)}</View>
+        <View style={styles.leftIconContainer}>
+          {renderIcon(arrowBackIcon)}
+        </View>
       ) : (
         <View style={styles.leftIconContainer} />
       )}
@@ -129,7 +128,7 @@ export default function SearchText({
 
       {showModalCross ? (
         <View style={styles.rightIconContainer}>{renderIcon(closeIcon)}</View>
-      ) : !noSearch ? (
+      ) : showSearch ? (
         <View style={styles.rightIconContainer}>{renderIcon('search')}</View>
       ) : (
         <View style={styles.rightIconContainer} />
@@ -150,7 +149,7 @@ export default function SearchText({
         containerStyle={styles.searchInputContainer}
         inputContainerStyle={styles.searchInputContainerInput}
         inputStyle={styles.searchInputTextStyle}
-        placeholder={"Search.."}
+        placeholder={'Search..'}
         value={searchText}
         onChangeText={(e) => {
           setSearchText(e);
@@ -187,7 +186,7 @@ export default function SearchText({
           style={styles.rightButtonContainer}
           onPress={() => navigation.goBack()}
         />
-      ) : !noSearch ? (
+      ) : showSearch ? (
         <TouchableOpacity
           style={styles.rightButtonContainer}
           onPress={

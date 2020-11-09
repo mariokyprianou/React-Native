@@ -9,10 +9,8 @@
 import React, {useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
 import Slideshow from 'the-core-ui-module-tdslideshow';
-import DropDownPicker from 'react-native-dropdown-picker';
-import useTransformation from '../hooks/data/useTransformation';
+import useDictionary from '../hooks/localisation/useDictionary';
 import SliderButton from '../components/Buttons/SliderButton';
 import CustomCountdown from '../components/Buttons/CustomCountdown';
 import CustomDateSelectors from '../components/Buttons/CustomDateSelectors';
@@ -23,14 +21,15 @@ const fakeAfterPic =
   'https://media.wired.com/photos/5cdefb92b86e041493d389df/191:100/w_1280,c_limit/Culture-Grumpy-Cat-487386121.jpg';
 
 const sliderThumb = require('../../assets/icons/transformation-slider.png');
+const cameraButton = require('../../assets/icons/camera-button.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius} = ScaleHook();
-  const {colors} = useTheme();
-  const {transformationImages} = useTransformation();
+  const {getHeight} = ScaleHook();
   const [beforePic, setBeforePic] = useState(fakeBeforePic);
   const [afterPic, setAfterPic] = useState(fakeAfterPic);
+  const {dictionary} = useDictionary();
+  const {TitleText_Upload} = dictionary;
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -48,34 +47,6 @@ export default function TransformationScreen() {
     spacerHeight: {
       height: getHeight(184),
     },
-    // dropdown: {
-    //   flexDirection: 'row',
-    //   justifyContent: 'space-between',
-    //   width: '90%',
-    //   position: 'absolute',
-    //   top: getHeight(20),
-    //   left: getWidth(20),
-    //   zIndex: 9,
-    // },
-    // dropdownContainer: {
-    //   height: getHeight(30),
-    //   width: getWidth(125),
-    // },
-    // dropdownBox: {
-    //   backgroundColor: colors.white80,
-    //   borderTopLeftRadius: radius(18),
-    //   borderTopRightRadius: radius(18),
-    //   borderBottomLeftRadius: radius(18),
-    //   borderBottomRightRadius: radius(18),
-    // },
-    // dropdownList: {
-    //   backgroundColor: colors.white80,
-    // },
-    // dropdownArrow: {
-    //   position: 'absolute',
-    //   top: 0,
-    //   right: 0,
-    // },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -98,26 +69,6 @@ export default function TransformationScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      {/* <View style={styles.dropdown}>
-        <DropDownPicker
-          items={transformationImages}
-          defaultValue={transformationImages[0].value}
-          containerStyle={styles.dropdownContainer}
-          style={styles.dropdownBox}
-          dropDownStyle={styles.dropdownList}
-          onChangeItem={(item) => handleSelectDate(item, 'before')}
-          arrowStyle={styles.dropdownArrow}
-        />
-        <DropDownPicker
-          items={transformationImages}
-          defaultValue={transformationImages[0].value}
-          containerStyle={styles.dropdownContainer}
-          style={styles.dropdownBox}
-          dropDownStyle={styles.dropdownList}
-          onChangeItem={(item) => handleSelectDate(item, 'after')}
-          arrowStyle={styles.dropdownArrow}
-        />
-      </View> */}
       <Slideshow
         setPhoto={handlePhoto}
         beforePic={beforePic}
@@ -131,11 +82,11 @@ export default function TransformationScreen() {
           <CustomCountdown onPress={handleCountdownStart} />
         )}
         DateSelectors={() => <CustomDateSelectors onPress={handleSelectDate} />}
+        cameraButtonImage={cameraButton}
+        cameraHeaderText={TitleText_Upload}
         // sliderIcon={{uri: sliderThumb}}
-        // cameraHeaderText={}
         // overlayImage={}
         // overlayStyles={}
-        // cameraButtonStyles={}
       />
     </View>
   );

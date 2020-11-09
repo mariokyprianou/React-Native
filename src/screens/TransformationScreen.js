@@ -6,13 +6,13 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
 import Slideshow from 'the-core-ui-module-tdslideshow';
 import DropDownPicker from 'react-native-dropdown-picker';
+import useTransformation from '../hooks/data/useTransformation';
 import SliderButton from '../components/Buttons/SliderButton';
 
 const fakeBeforePic =
@@ -22,26 +22,13 @@ const fakeAfterPic =
 
 const sliderThumb = require('../../assets/icons/transformation-slider.png');
 
-const imageDates = [
-  {
-    label: '25/08/2020',
-    value: '2020-08-25T09:18:44.579Z',
-  },
-  {
-    label: '01/09/2020',
-    value: '2020-09-01T09:18:44.579Z',
-  },
-  {
-    label: '10/09/2020',
-    value: '2020-09-10T09:18:44.579Z',
-  },
-];
-
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
+  const {getHeight, getWidth, radius} = ScaleHook();
+  const {colors} = useTheme();
+  const {transformationImages} = useTransformation();
+  const [beforePic, setBeforePic] = useState(fakeBeforePic);
+  const [afterPic, setAfterPic] = useState(fakeAfterPic);
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -87,7 +74,14 @@ export default function TestScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePhoto() {
     console.log('set photo');
-    // send to back end with today's date
+    // send to back end with today's date, format ProgressImage
+  }
+
+  function handleSelectDate(dateItem, imageToSelect) {
+    console.log(dateItem);
+    // retrieve ProgressImage from back end using date
+    // if imageToSelect === 'before' setBeforePic(dateItem.imageURL)
+    // if imageToSelect === 'after' setAfterPic(dateItem.imageURL)
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -95,26 +89,26 @@ export default function TestScreen() {
     <View>
       <View style={styles.dropdown}>
         <DropDownPicker
-          items={imageDates}
-          defaultValue={imageDates[0].value}
+          items={transformationImages}
+          defaultValue={transformationImages[0].value}
           containerStyle={styles.dropdownContainer}
           style={styles.dropdownBox}
           dropDownStyle={styles.dropdownList}
-          onChangeItem={(item) => console.log(item)}
+          onChangeItem={(item) => handleSelectDate(item, 'before')}
         />
         <DropDownPicker
-          items={imageDates}
-          defaultValue={imageDates[0].value}
+          items={transformationImages}
+          defaultValue={transformationImages[0].value}
           containerStyle={styles.dropdownContainer}
           style={styles.dropdownBox}
           dropDownStyle={styles.dropdownList}
-          onChangeItem={(item) => console.log(item)}
+          onChangeItem={(item) => handleSelectDate(item, 'after')}
         />
       </View>
       <Slideshow
         setPhoto={handlePhoto}
-        beforePic={fakeBeforePic}
-        afterPic={fakeAfterPic}
+        beforePic={beforePic}
+        afterPic={afterPic}
         imageWidth={styles.image.width}
         imageHeight={styles.image.height}
         sliderSpacerHeight={styles.spacerHeight}

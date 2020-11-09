@@ -33,7 +33,7 @@ const Colors = {
   white80: 'rgba(255, 255, 255, 0.8)',
   white90: 'rgba(255, 255, 255, 0.9)',
   white100: 'rgba(255, 255, 255, 1)',
-  offWhite100: 'rgba(242,242,242,1)',
+  offWhite100: 'rgba(252,252,252,1)',
 
   dividerBrownishGrey80: 'rgba(208, 208, 208, 1)',
 };

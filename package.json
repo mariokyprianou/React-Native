@@ -38,6 +38,7 @@
     "react-native-camera": "^3.40.0",
     "react-native-design-to-component": "^1.0.0",
     "react-native-draggable-flatlist": "^2.5.0",
+    "react-native-dropdown-picker": "^3.7.1",
     "react-native-elements": "1.2.7",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-crop-picker": "^0.35.1",

@@ -21,11 +21,13 @@ const closeIcon = require('../../../assets/icons/headerClose.png');
 
 export default function SearchText({
   title,
-  showSearch = false,
-  showBurger = false,
   goBack,
   showModalCross = false,
-  searchInputChanged,
+  left,
+  leftAction,
+  right,
+  rightAction,
+  customTitle,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getWidth, fontSize} = ScaleHook();
@@ -112,8 +114,8 @@ export default function SearchText({
 
   const renderDefaultHeader = () => (
     <View style={styles.container}>
-      {showBurger ? (
-        <View style={styles.leftIconContainer}>{renderIcon('bars')}</View>
+      {left && leftAction ? (
+        <View style={styles.leftIconContainer}>{renderIcon(left)}</View>
       ) : goBack ? (
         <View style={styles.leftIconContainer}>
           {renderIcon(arrowBackIcon)}
@@ -122,82 +124,50 @@ export default function SearchText({
         <View style={styles.leftIconContainer} />
       )}
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleStyle}>{title}</Text>
-      </View>
+      {customTitle || (
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleStyle}>{title}</Text>
+        </View>
+      )}
 
-      {showModalCross ? (
+      {right && rightAction ? (
+        <View style={styles.rightIconContainer}>{renderIcon(right)}</View>
+      ) : showModalCross ? (
         <View style={styles.rightIconContainer}>{renderIcon(closeIcon)}</View>
-      ) : showSearch ? (
-        <View style={styles.rightIconContainer}>{renderIcon('search')}</View>
       ) : (
         <View style={styles.rightIconContainer} />
       )}
     </View>
   );
 
-  const renderSearchHeader = () => (
-    <View style={styles.container}>
-      <View style={styles.leftIconContainer}>{renderIcon(arrowBackIcon)}</View>
-      {renderSearchInput()}
-    </View>
-  );
-
-  const renderSearchInput = () => (
-    <>
-      <Input
-        containerStyle={styles.searchInputContainer}
-        inputContainerStyle={styles.searchInputContainerInput}
-        inputStyle={styles.searchInputTextStyle}
-        placeholder={'Search..'}
-        value={searchText}
-        onChangeText={(e) => {
-          setSearchText(e);
-          if (searchInputChanged) {
-            searchInputChanged(e);
-          }
-        }}
-      />
-      <View style={styles.rightIconContainer}>
-        {searchText === null ? null : renderIcon(closeIcon)}
-      </View>
-    </>
-  );
-
   return (
     <>
-      {isSearching ? renderSearchHeader() : renderDefaultHeader()}
+      {renderDefaultHeader()}
 
-      <TouchableOpacity
-        style={styles.leftButtonContainer}
-        onPress={
-          !showBurger
-            ? showModalCross
-              ? () => null
-              : () => navigation.goBack()
-            : isSearching
-            ? () => setIsSearching(false)
-            : () => navigation.toggleDrawer()
-        }
-      />
-
-      {showModalCross ? (
+      {(left && leftAction) || goBack ? (
         <TouchableOpacity
-          style={styles.rightButtonContainer}
-          onPress={() => navigation.goBack()}
+          style={styles.leftButtonContainer}
+          onPress={
+            leftAction
+              ? () => leftAction()
+              : goBack
+              ? () => navigation.goBack()
+              : () => null
+          }
         />
-      ) : showSearch ? (
+      ) : (
+        <View style={styles.leftButtonContainer} />
+      )}
+
+      {(right && rightAction) || showModalCross ? (
         <TouchableOpacity
           style={styles.rightButtonContainer}
           onPress={
-            isSearching
-              ? () => {
-                  setSearchText(null);
-                  if (searchInputChanged) {
-                    searchInputChanged(null);
-                  }
-                }
-              : () => setIsSearching(true)
+            rightAction
+              ? () => rightAction()
+              : showModalCross
+              ? () => navigation.goBack()
+              : () => null
           }
         />
       ) : (

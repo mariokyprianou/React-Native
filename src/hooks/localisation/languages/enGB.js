@@ -66,6 +66,12 @@ const enGB = {
   TitleText_Week: 'Week',
   TitleText_YourFirstWeek: 'Your first week with',
   WorkoutText_RestDay: 'REST DAY',
+  AnalyticsPermissionsTitle: 'Analytics',
+  AnalyticsPermissionsText:
+    'To create the best workout programmes possible and keep improving the POWER experience, we need your permission to collect analytics from the app.',
+  NotificationsPermissionsTitle: 'Notifications',
+  NotificationsPermissionsText:
+    'To send you workout updates, we need permission to send push notifications to your device.',
 };
 
 export default enGB;

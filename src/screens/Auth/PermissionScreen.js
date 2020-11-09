@@ -5,11 +5,12 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import ModalHeader from '../../components/Headers/ModalHeader';
+import {useNavigation} from '@react-navigation/native';
 
 import useTheme from '../../hooks/theme/UseTheme';
 
@@ -26,7 +27,15 @@ const PermissionScreen = ({
   // MARK: - Hooks
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const navigation = useNavigation();
 
+  // MARK: - Use Effect
+
+  useEffect(() => {
+    navigation.setOptions({
+      // header: () => <Header title={'Create account'} goBack />,
+    });
+  }, []);
   // MARK: - Style
 
   const styles = StyleSheet.create({

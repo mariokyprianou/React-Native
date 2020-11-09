@@ -6,12 +6,14 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {View, StatusBar} from 'react-native';
 import ThemeProvider from './hooks/theme/ThemeProvider';
 import DictionaryProvider from './hooks/localisation/DictionaryProvider';
 import {ApolloProvider} from 'react-apollo';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScaleProvider} from 'react-native-design-to-component';
+import { FormProvider} from 'the-core-ui-module-tdforms';
+import QuickPicker from 'quick-picker';
 
 import ApolloClient from './apollo/ApolloClient';
 import Theme from './styles/AppTheme';
@@ -41,7 +43,7 @@ const App = () => {
     if (!client) {
       setupApollo();
     }
-
+  StatusBar.setBarStyle('dark-content');
     validateChecksum();
   }, [client]);
 
@@ -54,17 +56,24 @@ const App = () => {
   // }
 
   return (
+    <>
+       {Platform.OS === 'android' && <StatusBar translucent backgroundColor="transparent" />}
+
     <ScaleProvider config={{height: 667, width: 375}}>
       <ThemeProvider>
         <DictionaryProvider>
           {/* <ApolloProvider client={client}> */}
           <NavigationContainer>
+          <FormProvider>
             <AppContainer />
+            </FormProvider>
           </NavigationContainer>
           {/* </ApolloProvider> */}
         </DictionaryProvider>
       </ThemeProvider>
     </ScaleProvider>
+     <QuickPicker />
+     </>
   );
 };
 

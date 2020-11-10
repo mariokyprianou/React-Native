@@ -26,7 +26,7 @@ export default function TestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Timer />
+      <Text>Test screen</Text>
     </View>
   );
 }

@@ -65,6 +65,7 @@ const enGB = {
   ButtonText_SendResetRequest: 'SEND RESET REQUEST',
   ButtonText_SetLanguage: 'SET LANGUAGE',
   ButtonText_Share: 'SHARE',
+  ButtonText_Start: 'START',
   ButtonText_StartNow: 'START NOW',
   ButtonText_StartWorkout: 'START WORKOUT',
   ButtonText_TryAgain: 'TRY AGAIN',

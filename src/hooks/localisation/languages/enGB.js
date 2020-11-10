@@ -53,6 +53,10 @@ const enGB = {
   CardText_FatLoss: 'FAT LOSS',
   CardText_Fitness: 'FITNESS',
   CardText_BuildMuscle: 'BUILD MUSCLE',
+  DropdownText_English: 'English',
+  DropdownText_Hindi: 'Hindi',
+  DropdownText_SelectLanguage: 'SELECT LANGUAGE',
+  DropdownText_Urdu: 'Urdu',
   HeaderText_AllProgrammes: 'ALL PROGRAMMES',
   InfoText_Pluralise: "'s",
   InfoText_ProgrammeComplete: (name, venue) =>

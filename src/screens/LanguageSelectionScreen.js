@@ -20,6 +20,12 @@ export default function LanguageSelectionScreen() {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
+  const {
+    DropdownText_English,
+    DropdownText_Hindi,
+    DropdownText_SelectLanguage,
+    DropdownText_Urdu,
+  } = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

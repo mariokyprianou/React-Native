@@ -1,8 +1,8 @@
 /*
  * Jira Ticket:
- * Created Date: Thu, 23rd Jul 2020, 08:33:36 am
- * Author: Harry Crank
- * Email: harry.crank@thedistance.co.uk
+ * Created Date: Tue, 10th Nov 2020, 10:17:26 am
+ * Author: Jodi Dublon
+ * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
 
@@ -11,9 +11,8 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import Timer from '../components/Infographics/Timer';
 
-export default function TestScreen() {
+export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -26,7 +25,7 @@ export default function TestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Timer />
+      <Text>Default screen</Text>
     </View>
   );
 }

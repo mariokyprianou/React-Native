@@ -8,8 +8,8 @@
 import React from 'react';
 // import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
-// import TestScreen from './screens/TestScreen';
-import WorkoutHomeScreen from './screens/WorkoutHomeScreen';
+import TestScreen from './screens/TestScreen';
+import TransformationScreen from './screens/TransformationScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container
@@ -24,18 +24,11 @@ export default function AppContainer() {
           headerShown: false,
         }}
       /> */}
-      {/* <AppStack.Screen
-        name="Test"
-        component={TestScreen}
-        options={{
-          title: false,
-        }}
-      /> */}
       <AppStack.Screen
         name="Test"
-        component={WorkoutHomeScreen}
+        component={TransformationScreen}
         options={{
-          headerShown: false,
+          title: false,
         }}
       />
     </AppStack.Navigator>

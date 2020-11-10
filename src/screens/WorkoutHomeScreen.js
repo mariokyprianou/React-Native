@@ -189,7 +189,7 @@ export default function WorkoutHomeScreen() {
         />
       </ModalCard>
       <ModalCard isVisible={showStayTunedModal}>
-        {/* <StayTuned
+        <StayTuned
           onPressClose={handleCloseStayTunedModal}
           name={trainerName}
           venue={venue}
@@ -199,12 +199,12 @@ export default function WorkoutHomeScreen() {
               ? 'programmeComplete'
               : 'workoutComplete'
           }
-        /> */}
-        <CongratulatoryModal
+        />
+        {/* <CongratulatoryModal        <--------should be in 1.10.1 screen but no ticket for it yet
           onPressClose={handleCloseStayTunedModal}
           name={trainerName}
           venue={venue}
-        />
+        /> */}
       </ModalCard>
     </SafeAreaView>
   );

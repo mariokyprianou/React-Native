@@ -146,6 +146,19 @@ const enGB = {
   Settings_AnalyticsText:
     'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
   Settings_Language: 'Language',
+  PurchaseModal_Info:
+    'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
+  PurchaseModal_YearlyButtonTitle: (price) => `YEARLY \u2022 £${price} / month`,
+  PurchaseModal_YearlyButtonSubTitle: (price) =>
+    `£${price} / year billed annually`,
+  PurchaseModal_MonthlyButtonTitle: (price) =>
+    `MONTHLY \u2022 £${price} / month`,
+  PurchaseModal_SavePrompt: (percentage) => `Save ${percentage}%`,
+  PurchaseModal_MonthlyButtonSubTitle: 'billed monthly',
+  PurchaseModal_RestorePurchaseButton: 'Restore purchases',
+  PurchaseModal_SubscriptionTermsTitle: 'Subscription terms',
+  PurchaseModal_SubscriptionTermsText:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
 };
 
 export default enGB;

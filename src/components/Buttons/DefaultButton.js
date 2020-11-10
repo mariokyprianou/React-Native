@@ -31,6 +31,9 @@ export default function DefaultButton({
   onPress,
   disabled,
   capitalise,
+  customText,
+  customSubtext,
+  promptText,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -122,6 +125,29 @@ export default function DefaultButton({
     },
   };
 
+  const buttonSubtextVariant = {
+    white: {
+      ...textStyles.regular14_black100,
+      color: disabled ? colors.black40 : colors.black100,
+      letterSpacing: 0.75,
+    },
+    gradient: {
+      ...textStyles.regular14_white100,
+      letterSpacing: 0.75,
+    },
+    transparentWhiteText: {
+      ...textStyles.regular14_white100,
+    },
+    transparentGreyText: {
+      ...textStyles.regular14_white100,
+      color: colors.brownishGrey100,
+    },
+    transparentBlackBoldText: {
+      ...textStyles.regular14_black100,
+      letterSpacing: 0.75,
+    },
+  };
+
   const buttonText = {
     addPhoto: ButtonText_AddPhoto,
     addResult: ButtonText_AddResult,
@@ -152,6 +178,7 @@ export default function DefaultButton({
     saveChanges: ButtonText_SaveChanges,
     needToSignOut: ButtonText_NeedToSignOut,
     logout: ButtonText_Logout,
+    customText: customText,
   };
 
   const iconType = {
@@ -195,7 +222,7 @@ export default function DefaultButton({
   const styles = {
     container: {
       width: '90%',
-      height: getHeight(50),
+      height: getHeight(customSubtext ? 75 : 50),
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -204,15 +231,15 @@ export default function DefaultButton({
     touch: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
-      height: getHeight(50),
+      alignItems: customSubtext ? undefined : 'center',
+      height: getHeight(customSubtext ? 75 : 50),
     },
     gradient: {
       flex: 1,
       width: '100%',
-      height: getHeight(50),
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: customSubtext ? undefined : 'center',
+      height: getHeight(customSubtext ? 75 : 50),
       flexDirection: 'row',
     },
     text: {
@@ -221,6 +248,27 @@ export default function DefaultButton({
     iconContainer: {
       position: 'absolute',
       right: getWidth(15),
+    },
+    textContainer: {
+      flex: 1,
+      marginLeft: getWidth(20),
+      marginRight: getWidth(icon ? 40 : 20),
+      justifyContent: 'center',
+    },
+    subText: {
+      ...buttonSubtextVariant[variant],
+    },
+    promptContainer: {
+      backgroundColor: colors.blueGreen100,
+      position: 'absolute',
+      height: getHeight(24),
+      right: getWidth(15),
+      paddingHorizontal: getWidth(12),
+      top: -getHeight(12),
+      justifyContent: 'center',
+    },
+    promptTextStyle: {
+      ...textStyles.medium14_white100,
     },
   };
 
@@ -235,6 +283,27 @@ export default function DefaultButton({
     capitalise
       ? text.toUpperCase()
       : text;
+
+  const renderButtonText = () => {
+    if (customSubtext) {
+      return (
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{finalText}</Text>
+          <Text style={styles.subText}>{customSubtext}</Text>
+        </View>
+      );
+    }
+    return <Text style={styles.text}>{finalText}</Text>;
+  };
+
+  const renderPrompt = () => {
+    return (
+      <View style={styles.promptContainer}>
+        <Text style={styles.promptTextStyle}>{promptText}</Text>
+      </View>
+    );
+  };
+
   if (variant === 'gradient') {
     return (
       <View style={styles.container}>
@@ -244,7 +313,7 @@ export default function DefaultButton({
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             colors={[colors.tealish100, colors.tiffanyBlue100]}>
-            <Text style={styles.text}>{finalText}</Text>
+            {renderButtonText()}
             {icon && (
               <View style={styles.iconContainer}>
                 <TDIcon
@@ -258,6 +327,7 @@ export default function DefaultButton({
               </View>
             )}
           </LinearGradient>
+          {promptText && renderPrompt()}
         </TouchableOpacity>
       </View>
     );
@@ -304,7 +374,7 @@ export default function DefaultButton({
         onPress={onPress}
         style={styles.touch}
         disabled={disabled}>
-        <Text style={styles.text}>{finalText}</Text>
+        {renderButtonText()}
         {icon && (
           <View style={styles.iconContainer}>
             <TDIcon

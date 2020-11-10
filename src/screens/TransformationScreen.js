@@ -22,6 +22,7 @@ const fakeAfterPic =
 
 const sliderThumb = require('../../assets/icons/photoSlider.png');
 const cameraButton = require('../../assets/icons/cameraButton.png');
+const overlay = require('../../assets/images/cameraPerson.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -46,6 +47,11 @@ export default function TransformationScreen() {
     },
     spacerHeight: {
       height: getHeight(184),
+    },
+    overlay: {
+      height: getHeight(470),
+      top: getHeight(-50),
+      resizeMode: 'contain',
     },
   };
 
@@ -84,9 +90,9 @@ export default function TransformationScreen() {
         DateSelectors={() => <CustomDateSelectors onPress={handleSelectDate} />}
         cameraButtonImage={cameraButton}
         cameraHeaderText={TitleText_Upload}
+        overlayStyles={styles.overlay}
         // sliderIcon={{uri: sliderThumb}}
-        // overlayImage={}
-        // overlayStyles={}
+        // overlayImage={overlay}
       />
     </View>
   );

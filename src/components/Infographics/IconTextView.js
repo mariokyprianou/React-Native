@@ -16,12 +16,21 @@ import TDIcon from 'the-core-ui-component-tdicon';
 // possible type - intensity, workoutComplete
 
 export default function IconTextView({
+<<<<<<< HEAD
   type,
   duration,
   intensity,
   reps,
   sets,
   color = 'grey',
+=======
+  type = 'workoutComplete',
+  duration = 10,
+  intensity = 'medium',
+  reps = 8,
+  sets = 4,
+  color,
+>>>>>>> develop
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -52,10 +61,16 @@ export default function IconTextView({
   const styles = {
     container: {
       flexDirection: 'row',
-      width: '100%',
+      alignSelf: 'flex-start',
+      marginStart: getWidth(25),
+      marginEnd: getWidth(25),
     },
     completeContainer: {
-      justifyContent: 'center',
+      flexDirection: 'row',
+      width: '100%',
+      alignSelf: 'center',
+      // justifyContent: 'center',
+      justifyContent: 'space-evenly',
     },
     iconTextContainer: {
       flexDirection: 'row',
@@ -68,9 +83,14 @@ export default function IconTextView({
       marginRight: getWidth(33),
     },
     leftCompleteContainer: {
-      marginRight: getWidth(42),
+      // marginRight: getWidth(42),
     },
     icon: {
+<<<<<<< HEAD
+=======
+      tintColor: color || colors.brownishGreyTwo100,
+
+>>>>>>> develop
       resizeMode: 'contain',
       height: getHeight(15),
       width: getWidth(15),
@@ -85,6 +105,7 @@ export default function IconTextView({
       height: getHeight(20),
       width: getWidth(20),
     },
+<<<<<<< HEAD
     text:
       color === 'grey'
         ? {
@@ -93,6 +114,12 @@ export default function IconTextView({
         : {
             ...textStyles.medium14_white100,
           },
+=======
+    text: {
+      ...textStyles.medium14_brownishGreyTwo100,
+      color: color || colors.brownishGreyTwo100,
+    },
+>>>>>>> develop
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **

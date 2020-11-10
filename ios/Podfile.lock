@@ -239,6 +239,7 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
   - React-jsinspector (0.62.2)
+<<<<<<< HEAD
   - react-native-camera (3.40.0):
     - React-Core
     - react-native-camera/RCT (= 3.40.0)
@@ -247,6 +248,8 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.40.0):
     - React-Core
+=======
+>>>>>>> develop
   - react-native-geolocation (2.0.2):
     - React
   - react-native-netinfo (5.9.4):
@@ -324,6 +327,7 @@ PODS:
     - React
   - RNDateTimePicker (3.0.4):
     - React-Core
+<<<<<<< HEAD
   - RNGestureHandler (1.6.1):
     - React
   - RNImageCropPicker (0.35.1):
@@ -337,6 +341,10 @@ PODS:
     - TOCropViewController
   - RNPermissions (2.2.2):
     - React-Core
+=======
+  - RNPermissions (2.0.8):
+    - React
+>>>>>>> develop
   - RNReanimated (1.9.0):
     - React
   - RNScreens (2.9.0):
@@ -388,7 +396,10 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+<<<<<<< HEAD
   - react-native-camera (from `../node_modules/react-native-camera`)
+=======
+>>>>>>> develop
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -409,8 +420,11 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+<<<<<<< HEAD
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+=======
+>>>>>>> develop
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -470,8 +484,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+<<<<<<< HEAD
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+=======
+>>>>>>> develop
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-netinfo:
@@ -510,10 +527,13 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+<<<<<<< HEAD
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+=======
+>>>>>>> develop
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -554,7 +574,10 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
+<<<<<<< HEAD
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
+=======
+>>>>>>> develop
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-netinfo: cd479ab1b67cdd1cb1403a99ecdb24190a6dd7ef
   react-native-safe-area-context: ef6f16c66b0797ecae1bf86c103dfb3dc16fc33d
@@ -573,10 +596,15 @@ SPEC CHECKSUMS:
   RNBundleChecksum: f71b71393a64b777a25859bb6d524935362e7aa0
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
+<<<<<<< HEAD
   RNDateTimePicker: 3d1931e387248cb8f1d1d33740d4a1a82dfe622a
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNImageCropPicker: 16951bc02411f50c4d197488ed6406a23dc3b5f1
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
+=======
+  RNDateTimePicker: 6f62fd42ac8b58bcc30c43ac3620e5097e8a227f
+  RNPermissions: 923c1506d0bde387fbcfc18a8f87945806d03c19
+>>>>>>> develop
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
@@ -587,4 +615,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c096ee7d06bcc0bb61c04ff7e1647cc893f31826
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.8.4

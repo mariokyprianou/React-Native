@@ -91,8 +91,8 @@ export default function TransformationScreen() {
         cameraButtonImage={cameraButton}
         cameraHeaderText={TitleText_Upload}
         overlayStyles={styles.overlay}
-        // sliderIcon={{uri: sliderThumb}}
-        // overlayImage={overlay}
+        sliderIcon={sliderThumb}
+        overlayImage={overlay}
       />
     </View>
   );

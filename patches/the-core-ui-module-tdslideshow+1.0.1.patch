@@ -1,27 +1,34 @@
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
-index a1cee56..92c1919 100644
+index a1cee56..e6bf299 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
-@@ -16,7 +16,6 @@ import {
+@@ -15,8 +15,6 @@ import { defaultProps } from "./defaultProps";
+ import {
    checkDimensions,
    checkText,
-   checkStyles,
+-  checkStyles,
 -  checkButtonStyles,
    checkStylesIncHeight,
    checkImageUrl,
  } from "./utils";
-@@ -27,9 +26,8 @@ const Slideshow = ({
+@@ -27,52 +25,48 @@ const Slideshow = ({
    afterPic,
    imageWidth,
    imageHeight,
 +  CustomButton,
++  CustomCountdown,
    buttonText,
 -  buttonStyles,
 -  buttonTextStyles,
    sliderStyles,
    sliderSpacerHeight,
    sliderIcon,
-@@ -40,15 +38,13 @@ const Slideshow = ({
+   cameraHeaderText,
+   overlayImage,
+   overlayStyles,
+-  cameraButtonStyles,
++  DateSelectors,
++  cameraButtonImage,
  }) => {
    // ******* SETUP *******
    const [activeViewIndex, setActiveViewIndex] = useState(0);
@@ -39,7 +46,10 @@ index a1cee56..92c1919 100644
      defaultSliderStyles,
      defaultSliderSpacerHeight,
      defaultCameraHeaderText,
-@@ -59,8 +55,6 @@ const Slideshow = ({
+     defaultOverlayStyles,
+-    defaultCameraButtonStyles,
+   } = defaultProps();
+ 
    imageWidth && checkDimensions(imageWidth);
    imageHeight && checkDimensions(imageHeight);
    buttonText && checkText(buttonText);
@@ -48,7 +58,12 @@ index a1cee56..92c1919 100644
    sliderStyles && checkStylesIncHeight(sliderStyles);
    sliderSpacerHeight && checkStylesIncHeight(sliderSpacerHeight);
    sliderIcon && checkImageUrl(sliderIcon);
-@@ -73,6 +67,7 @@ const Slideshow = ({
+   cameraHeaderText && checkText(cameraHeaderText);
+   overlayImage && checkImageUrl(overlayImage);
+   overlayStyles && checkStylesIncHeight(overlayStyles);
+-  cameraButtonStyles && checkStyles(cameraButtonStyles);
+ 
+   // ******* STYLES *******
  
    // ******* FUNCTIONS *******
    function handleAddPhoto() {
@@ -56,7 +71,7 @@ index a1cee56..92c1919 100644
      request(
        Platform.select({
          ios: PERMISSIONS.IOS.CAMERA,
-@@ -123,9 +118,8 @@ const Slideshow = ({
+@@ -123,12 +117,12 @@ const Slideshow = ({
          imageHeight={imageHeight || defaultImageHeight}
          afterImageWidth={afterImageWidth}
          afterImageLeft={afterImageLeft}
@@ -66,21 +81,124 @@ index a1cee56..92c1919 100644
 -        buttonTextStyles={buttonTextStyles || defaultButtonTextStyles}
          sliderStyles={sliderStyles || defaultSliderStyles}
          sliderSpacerHeight={sliderSpacerHeight || defaultSliderSpacerHeight}
-         sliderIcon={sliderIcon}
+-        sliderIcon={sliderIcon}
++        sliderIcon={ sliderIcon }
++        DateSelectors={DateSelectors}
+       />
+     );
+   }
+@@ -142,7 +136,8 @@ const Slideshow = ({
+         cameraHeaderText={cameraHeaderText || defaultCameraHeaderText}
+         overlayImage={overlayImage || null}
+         overlayStyles={overlayStyles || defaultOverlayStyles}
+-        cameraButtonStyles={cameraButtonStyles || defaultCameraButtonStyles}
++        CustomCountdown={ CustomCountdown }
++        cameraButtonImage={cameraButtonImage}
+       />
+     );
+   }
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
+index 8a1d93e..ee43fa4 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
+@@ -15,19 +15,24 @@ import TDIcon from "the-core-ui-component-tdicon";
+ import Header from "./Header";
+ import { ScaleHook } from "react-native-design-to-component";
+ 
++const overlay = require('../../../../assets/images/cameraPerson.png');
++
+ const AddPhoto = ({
+   handlePhotoClick,
+   setActiveViewIndex,
+   setPhoto,
+   cameraHeaderText,
+-  overlayImage,
++  // overlayImage,
+   overlayStyles,
+-  cameraButtonStyles,
++  CustomCountdown,
++  cameraButtonImage,
+ }) => {
+   // ******* SETUP *******
+   const [cameraRef, setCameraRef] = useState();
+   const [cameraType, setCameraType] = useState("back");
+-  const { getHeight, fontSize } = ScaleHook();
++  const { getHeight, fontSize, getWidth } = ScaleHook();
++
++  const overlayImage = overlay;
+ 
+   // ******* STYLES *******
+   const styles = {
+@@ -62,9 +67,16 @@ const AddPhoto = ({
+       backgroundColor: "white",
+     },
+     rotateButton: {
+-      size: fontSize(45),
++      size: fontSize(24),
++      color: "black",
++    },
++    cameraButton: {
++      size: fontSize(60),
+       color: "black",
+     },
++    sideButtons: {
++      width: getWidth(50),
++    }
+   };
+ 
+   // ******* FUNCTIONS *******
+@@ -97,6 +109,8 @@ const AddPhoto = ({
+     if (cameraType === "back") setCameraType("front");
+     if (cameraType === "front") setCameraType("back");
+   }
++
++  function handleTimerStart() {}
+   // ******* RENDER *******
+ 
+   return (
+@@ -121,13 +135,23 @@ const AddPhoto = ({
+             }
+           }}
+         </RNCamera>
+-        <View style={styles.buttonContainer}>
++        <View style={ styles.buttonContainer }>
++          { CustomCountdown && (
++              <View style={styles.sideButtons}>
++                <CustomCountdown />
++              </View>
++          )}
+           <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
+-            <TDIcon input="dot-circle" inputStyle={cameraButtonStyles} />
+-          </TouchableOpacity>
+-          <TouchableOpacity onPress={handleSwitchView}>
+-            <TDIcon input="sync" inputStyle={styles.rotateButton} />
++            <TDIcon
++              input={ cameraButtonImage ? cameraButtonImage : "dot-circle" }
++              inputStyle={ cameraButtonImage ? null : styles.cameraButton }
++            />
+           </TouchableOpacity>
++          <View style={styles.sideButtons}>
++            <TouchableOpacity onPress={handleSwitchView}>
++              <TDIcon input="sync" inputStyle={styles.rotateButton} />
++            </TouchableOpacity>
++          </View>
+         </View>
+       </View>
+     </View>
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 6867d80..6ff32c0 100644
+index 6867d80..45c929f 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 @@ -19,6 +19,8 @@ import TDIcon from "the-core-ui-component-tdicon";
  import Slider from "@react-native-community/slider";
  import { ScaleHook } from "react-native-design-to-component";
  
-+const sliderThumb = require('../../../../assets/icons/transformation-slider.png');
++const sliderThumb = require('../../../../assets/icons/photoSlider.png');
 +
  const ImageSlider = ({
    handleAddPhoto,
    handleSlideChange,
-@@ -28,16 +30,16 @@ const ImageSlider = ({
+@@ -28,16 +30,17 @@ const ImageSlider = ({
    imageHeight,
    afterImageWidth,
    afterImageLeft,
@@ -91,6 +209,7 @@ index 6867d80..6ff32c0 100644
    sliderStyles,
 +  sliderSpacerHeight,
    sliderIcon,
++  DateSelectors
  }) => {
    // ******* SETUP *******
    const screenWidth = Dimensions.get("screen").width;
@@ -100,7 +219,7 @@ index 6867d80..6ff32c0 100644
  
    // ******* STYLES *******
    const styles = StyleSheet.create({
-@@ -79,14 +81,31 @@ const ImageSlider = ({
+@@ -79,20 +82,38 @@ const ImageSlider = ({
        alignItems: "center",
        alignSelf: "center",
        marginVertical: getHeight(10),
@@ -135,7 +254,15 @@ index 6867d80..6ff32c0 100644
  
    // ******* FUNCTIONS *******
    // ******* RENDER *******
-@@ -104,6 +123,7 @@ const ImageSlider = ({
+   return (
+     <View>
+-      <View style={styles.imagesContainer}>
++      <View style={ styles.imagesContainer }>
++        {DateSelectors && <DateSelectors />}
+         <View style={styles.beforeContainer}>
+           {beforePic && (
+             <Image source={{ uri: beforePic }} style={styles.beforeImage} />
+@@ -104,6 +125,7 @@ const ImageSlider = ({
            )}
          </View>
        </View>
@@ -143,7 +270,7 @@ index 6867d80..6ff32c0 100644
        <Slider
          style={{
            width: sliderWidth,
-@@ -117,21 +137,29 @@ const ImageSlider = ({
+@@ -117,21 +139,29 @@ const ImageSlider = ({
          minimumTrackTintColor={sliderStyles.minimumTrackTintColor}
          maximumTrackTintColor={sliderStyles.maximumTrackTintColor}
          onValueChange={(value) => handleSlideChange(value)}
@@ -188,7 +315,7 @@ index 6867d80..6ff32c0 100644
    );
  };
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
-index 7991319..9e4ed2d 100644
+index 7991319..e0ddc2b 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
 @@ -15,18 +15,6 @@ export function defaultProps() {
@@ -210,3 +337,29 @@ index 7991319..9e4ed2d 100644
      defaultSliderStyles: {
        height: getHeight(30),
        minimumTrackTintColor: "transparent",
+@@ -41,9 +29,5 @@ export function defaultProps() {
+       top: getHeight(-50),
+       resizeMode: "contain",
+     },
+-    defaultCameraButtonStyles: {
+-      size: fontSize(60),
+-      color: "aqua",
+-    },
+   };
+ }
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js b/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
+index feb6def..b82e620 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
+@@ -15,11 +15,6 @@ export function checkText(text) {
+   if (typeof text !== "string") throw new Error("Text should be a string");
+ }
+ 
+-export function checkStyles(styles) {
+-  if (typeof styles !== "object" || Array.isArray(styles))
+-    throw new Error("Styles must be an object");
+-}
+-
+ export function checkButtonStyles(styles) {
+   if (typeof styles !== "object" || Array.isArray(styles))
+     throw new Error("Styles must be an object");

@@ -8,7 +8,7 @@
 import React from 'react';
 import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
-import ChallengeScreen from './screens/ChallengeScreen';
+import ChallengeEndScreen from './screens/ChallengeEndScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container
@@ -25,7 +25,7 @@ export default function AppContainer() {
       /> */}
       <AppStack.Screen
         name="Test"
-        component={ChallengeScreen}
+        component={ChallengeEndScreen}
         options={{
           title: false,
         }}

@@ -11,18 +11,18 @@ const iOSSecretsManager = NativeModules.iOSSecretsManager;
 const AndroidSecretsManager = NativeModules.AndroidSecretsManager;
 
 export default function fetchSecrets(environment) {
-  return true;
-  // if (Platform.OS === 'ios') {
-  //   try {
-  //     const secrets = iOSSecretsManager.fetch(environment);
-  //     return secrets;
-  //   } catch (error) {
-  //     console.error(error);
-  //     return null;
-  //   }
-  // } else if (Platform.OS === 'android') {
-  //   const secrets = AndroidSecretsManager.fetch(environment);
-  //   return secrets;
-  // }
-  // return null;
+  // return true;
+  if (Platform.OS === 'ios') {
+    try {
+      const secrets = iOSSecretsManager.fetch(environment);
+      return secrets;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  } else if (Platform.OS === 'android') {
+    const secrets = AndroidSecretsManager.fetch(environment);
+    return secrets;
+  }
+  return null;
 }

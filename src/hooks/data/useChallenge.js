@@ -15,7 +15,8 @@ const fakeChallengeData =
     'Start the timer and see how many 4kg squats you can do in 60 seconds!',
   timeLimit: 60,
   answerBoxLabel: 'NUMBER OF SQUATS',
-    result: 23,
+  result: '23 SQUATS',
+    trainerName: 'Katrina',
   };
 
 export default function useOnboarding() {

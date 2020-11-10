@@ -6,19 +6,22 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useChallenge from '../hooks/data/useChallenge';
 import DefaultButton from '../components/Buttons/DefaultButton';
+import ModalCard from '../components/Modals/ModalCard';
+import ChallengeCompletionModal from '../components/Modals/ChallengeCompletionModal';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const { challengeData } = useChallenge();
-  const { name, description, answerBoxLabel, result } = challengeData;
+  const { name, description, answerBoxLabel, result, trainerName } = challengeData;
+  const [showCompletionModal, setShowCompletionModal] = useState(true);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -76,6 +79,10 @@ export default function ChallengeScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleAddResult() { }
 
+  function handleCloseCompletionModal() {
+    setShowCompletionModal(false);
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={ styles.container }>
@@ -98,7 +105,14 @@ export default function ChallengeScreen() {
           onPress={handleAddResult}
         />
       </View>
-      
+      <ModalCard isVisible={showCompletionModal}>
+        <ChallengeCompletionModal
+          onPressClose={ handleCloseCompletionModal }
+          result={ result }
+          challengeName={ name }
+          trainerName={trainerName}
+        />
+      </ModalCard>
     </View>
   );
 }

@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
 import DefaultButton from '../components/Buttons/DefaultButton';
+import {Form, FormHook} from 'the-core-ui-module-tdforms';
 
 const splashImage = require('../../assets/images/splash.png');
 

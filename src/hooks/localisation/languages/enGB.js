@@ -13,6 +13,7 @@ const enGB = {
   ButtonText_AddWeight: 'ADD WEIGHT',
   ButtonText_AllowAnalytics: 'ALLOW ANALYTICS',
   ButtonText_AllowNotifications: 'ALLOW NOTIFICATIONS',
+  ButtonText_Cancel: 'CANCEL',
   ButtonText_CantChoose: "CAN'T CHOOSE?",
   ButtonText_Challenge: 'CHALLENGE',
   ButtonText_ChangeDevice: 'CHANGE DEVICE',
@@ -26,6 +27,7 @@ const enGB = {
   ButtonText_GoBack: 'GO BACK',
   ButtonText_Gym: 'GYM',
   ButtonText_Home: 'HOME',
+  ButtonText_JumpIn: 'JUMP IN',
   ButtonText_Login: 'LOGIN',
   ButtonText_Pluralise: "'S",
   ButtonText_Programme: 'PROGRAMME',
@@ -63,6 +65,7 @@ const enGB = {
     `You’ve started ${name}’s ${venue} programme!`,
   InfoText_StayTuned: (name, date) =>
     `You’ve completed this week’s workouts with ${name}. Get some rest and come back on ${date} for more.`,
+  InfoText_SwitchedByMistake: 'Switched by mistake?',
   InfoText_TakeARest: (name) =>
     `You’ve just completed three workouts back-to-back. Typically, ${name} would recommend a rest day here. Do you want to carry on?`,
   InfoText_WeekComplete: (name, weekNumber) =>

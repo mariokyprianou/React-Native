@@ -17,7 +17,7 @@ import DefaultButton from '../Buttons/DefaultButton';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function TakeARest({name, venue, onPressClose}) {
+export default function CongratulatoryModal({name, venue, onPressClose}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -26,6 +26,7 @@ export default function TakeARest({name, venue, onPressClose}) {
   const {
     TitleText_Congratulations,
     InfoText_StartedProgrammeWithVenue,
+    InfoText_SwitchedByMistake,
   } = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -75,11 +76,20 @@ export default function TakeARest({name, venue, onPressClose}) {
       width: '100%',
       alignItems: 'center',
     },
+    switchedText: {
+      ...textStyles.regular15_white100,
+      marginTop: getHeight(20),
+      marginBottom: getHeight(5),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePressRemindMe() {
-    // handle reminders
+  function handlePressJumpIn() {
+    // navigate to start of programme
+  }
+
+  function handleCancel() {
+    onPressClose();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -101,10 +111,16 @@ export default function TakeARest({name, venue, onPressClose}) {
         </View>
         <View style={styles.buttonContainer}>
           <DefaultButton
-            type="remindMe"
-            icon="reminder"
+            type="jumpIn"
+            icon="chevron"
             variant="white"
-            onPress={handlePressRemindMe}
+            onPress={handlePressJumpIn}
+          />
+          <Text style={styles.switchedText}>{InfoText_SwitchedByMistake}</Text>
+          <DefaultButton
+            type="cancel"
+            variant="transparentWhiteText"
+            onPress={handleCancel}
           />
         </View>
       </ImageBackground>

@@ -11,7 +11,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import Header from '../../components/Headers/Header';
-import VideoView from '../../components/Views/VideoView';
+import ExerciseVideoView from '../../components/Views/ExerciseVideoView';
 import ExerciseCell from '../../components/cells/ExerciseCell';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
@@ -54,23 +54,12 @@ export default function Screen({navigation}) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
 
-  const ExerciseList = React.memo(({exercises}) => {
-    return (
-      <View style={{paddingBottom: getHeight(150)}}>
-        {exercises.map((departure, index) => (
-          <ExerciseCell key={index} item={departure} />
-        ))}
-      </View>
-    );
-  });
-
   return (
     <View>
       <ScrollView
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>
-        <VideoView />
-        {/* <ExerciseList exercises={[{}, {}, {}, {}]} /> */}
+        <ExerciseVideoView />
       </ScrollView>
       <View style={styles.buttonContainer}>
         <DefaultButton type="startWorkout" variant="gradient" icon="chevron" />

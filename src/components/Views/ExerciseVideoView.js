@@ -5,12 +5,12 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, Image, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
-import SliderProgressView from '../Views/SliderProgressView';
+import SliderProgressView from './SliderProgressView';
 import {
   FileManager,
   VideoView,
@@ -64,14 +64,18 @@ export default function ({}) {
     renderToolbar: () => <View />,
   };
 
+  const [paused, setPaused] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={{height: getHeight(300)}}>
-        <VideoView {...videoProps} />
+        <VideoView {...videoProps} paused={paused} setPaused={setPaused} />
 
         <SliderProgressView />
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() => {
+            setPaused(!paused);
+          }}
           style={{
             alignSelf: 'center',
             position: 'absolute',

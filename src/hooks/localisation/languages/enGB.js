@@ -125,6 +125,27 @@ const enGB = {
   Profile_FormLabel5: 'DATE OF BIRTH',
   Profile_FormLabel6: 'COUNTRY',
   Profile_FormLabel7: 'REGION',
+  Settings_ScreenTitle: 'Settings',
+  Settings_VersionText: 'Power App - Version',
+  Settings_MarketingPreferences: 'Marketing preferences',
+  Settings_AppSettings: 'App Settings',
+  Settings_MarketingPrefEmail: 'Email',
+  Settings_MarketingPrefNotifications: 'Notifications',
+  Settings_DownloadWorkouts: 'Download workouts',
+  Settings_DownloadWorkoutsText:
+    'Download this week’s workouts so you can train even without an internet connection.',
+  Settings_DownloadWorkoutsQuality: 'Download quality',
+  Settings_DownloadWorkoutsTimeZone: 'Time zone',
+  Settings_DataCollection: 'Data collection',
+  Settings_DataCollectionText:
+    'We collect data on the usage of the POWER app to understand how we can make it better. All the data we collect is completely anonymous and cannot be traced to you.',
+  Settings_ErrorReports: 'Error reports',
+  Settings_ErrorReportsText:
+    'We collect anonymous error reports to fix any issues quickly.',
+  Settings_Analytics: 'Analytics',
+  Settings_AnalyticsText:
+    'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
+  Settings_Language: 'Language',
 };
 
 export default enGB;

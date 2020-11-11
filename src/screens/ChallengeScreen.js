@@ -20,7 +20,7 @@ export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {challengeData} = useChallenge();
+  const {challengeData, challengeHistoryData} = useChallenge();
   const {name, description, timeLimit} = challengeData;
 
   const formattedSeconds = new Date(timeLimit * 1000)
@@ -79,7 +79,7 @@ export default function ChallengeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <ProgressChart />
+        <ProgressChart data={challengeHistoryData} />
       </View>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>

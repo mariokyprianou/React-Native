@@ -12,32 +12,23 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {BarChart} from 'react-native-chart-kit';
 
-const data = {
-  labels: [
-    '10/07',
-    '11/07',
-    '12/07',
-    '13/07',
-    '14/07',
-    '15/07',
-    '16/07',
-    '17/07',
-    '18/07',
-    '19/07',
-    '20/07',
-    '21/07',
-  ],
-  datasets: [
-    {
-      data: [5, 10, 15, 5, 10, 15, 22, 10, 15, 25, 10, 5],
-    },
-  ],
-};
-
-export default function ProgressChart() {
+export default function ProgressChart({data}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
+
+  const labels = data.map((challenge) => challenge.date);
+  const results = data.map((challenge) => challenge.value);
+  const suffix = ` ${data[0].unit}`;
+
+  const viableData = {
+    labels: labels,
+    datasets: [
+      {
+        data: results,
+      },
+    ],
+  };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -52,21 +43,20 @@ export default function ProgressChart() {
     <View>
       <ScrollView horizontal={true} style={styles.scroll}>
         <BarChart
-          data={data}
+          data={viableData}
           width={getWidth(600)}
           height={getHeight(200)}
-          yAxisSuffix="kg"
+          yAxisSuffix={suffix}
           chartConfig={{
             backgroundGradientFrom: colors.white100,
             backgroundGradientTo: colors.white100,
             decimalPlaces: 0,
-            fillShadowGradient: colors.tealish100,
             fillShadowGradientOpacity: 1,
-            color: () => colors.tiffanyBlue100,
+            color: () => colors.tealish100,
             labelColor: () => colors.brownGrey100,
             barPercentage: 0.2,
             propsForHorizontalLabels: {
-              x: 40,
+              x: 45,
             },
           }}
           fromZero={true}

@@ -21,6 +21,7 @@ export default function ChallengeCompletionModal({
   result,
   challengeName,
   trainerName,
+  data,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
@@ -119,7 +120,7 @@ export default function ChallengeCompletionModal({
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart />
+        <ProgressChart data={data} />
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{TitleText_Today}</Text>

@@ -5,19 +5,13 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {View, TouchableOpacity, Text, Image, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
 import SliderProgressView from './SliderProgressView';
-import {
-  FileManager,
-  VideoView,
-  TestData,
-} from 'the-core-ui-module-tdmediamanager';
-
-const fakeImage = require('../../../assets/images/fake.png');
+import {VideoView, TestData} from 'the-core-ui-module-tdmediamanager';
 
 const playIcon = require('../../../assets/icons/play.png');
 let ScreenHeight = Dimensions.get('window').height;
@@ -26,10 +20,15 @@ export default function ({}) {
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
+  const [videoDuration, setVideoDuration] = useState(100);
+  const [currentProgress, setCurrentProgress] = useState(0);
+
+  const videoRef = useRef();
+
   const styles = {
     container: {
       width: '100%',
-      height: getHeight(ScreenHeight),
+      //height: getHeight(ScreenHeight),
     },
     imageStyle: {
       width: '100%',
@@ -48,33 +47,33 @@ export default function ({}) {
     height: getHeight(300),
     url: TestData[0],
     skipCache: true,
-    startInFullScreen: false,
-    volume: 10,
-    controlsColor: '#932',
-    onLoadStart: () => console.log('Start loading video'),
-    onLoadEnd: () => console.log('Finished loading video'),
+    autoplay: false,
+
+    onLoadEnd: (duration) => {
+      console.log('Total time:', duration);
+      setVideoDuration(duration);
+    },
     onError: (error) => console.log('Error loading video:', error),
-    onProgress: (currentTime) => console.log('Video playing at: ', currentTime),
-    onReplay: () => console.log('Replay video'),
-    onPaused: () => console.log('Play/Pause'),
+    onProgress: (currentTime) => {
+      console.log('Video playing at: ', currentTime);
+      setCurrentProgress(currentTime);
+    },
+    onPaused: (paused) => console.log('Paused:', paused),
     onEnd: () => console.log('End'),
-    onFullScreen: () => console.log('Fullscreen changed'),
 
     customControls: <></>,
     renderToolbar: () => <View />,
   };
 
-  const [paused, setPaused] = useState(false);
-
   return (
     <View style={styles.container}>
       <View style={{height: getHeight(300)}}>
-        <VideoView {...videoProps} paused={paused} setPaused={setPaused} />
+        <VideoView {...videoProps} ref={videoRef} />
 
-        <SliderProgressView />
+        <SliderProgressView max={videoDuration} progress={currentProgress} />
         <TouchableOpacity
           onPress={() => {
-            setPaused(!paused);
+            videoRef.current.pause();
           }}
           style={{
             alignSelf: 'center',

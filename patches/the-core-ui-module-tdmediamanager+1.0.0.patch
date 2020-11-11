@@ -1,0 +1,96 @@
+diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
+index c1656ea..3b974a3 100644
+--- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
++++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
+@@ -5,18 +5,24 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import React, { Component, useLayoutEffect, useEffect, useRef, useState } from 'react';
++import React, { Component, useLayoutEffect, useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
+ import { Text, StyleSheet, Image, View, Dimensions } from 'react-native';
+ import * as R from 'ramda';
+ import Video from 'react-native-video';
+ import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
+ import FileManager from '../utilities/FileManager';
+ 
+-export default function VideoView(props) {
++export function CustomVideoView(props, ref) {
+ 	const { getLocalFile } = FileManager;
+ 
+ 	const videoPlayer = useRef(null);
+ 
++	useImperativeHandle(ref, () => ({
++    pause: () => {
++			onPaused()
++    }
++  }));
++
+ 	const [containerHeight, setContainerHeight] = useState('31%');
+ 	const [currentTime, setCurrentTime] = useState(0);
+ 	const [duration, setDuration] = useState(0);
+@@ -28,6 +34,9 @@ export default function VideoView(props) {
+ 	const [url, setUrl] = useState(null);
+ 
+ 	useEffect(() => {
++		if (props.autoplay) {
++			setPaused(!props.autoplay)
++		}
+ 		if (props.startInFullScreen) {
+ 			onFullScreen();
+ 		}
+@@ -57,7 +66,7 @@ export default function VideoView(props) {
+ 		setPaused(!paused);
+ 		setPlayerState(newPlayerState);
+ 
+-		props.onPaused && props.onPaused();
++		props.onPaused && props.onPaused(!paused);
+ 	};
+ 
+ 	const onReplay = () => {
+@@ -79,7 +88,7 @@ export default function VideoView(props) {
+ 		setDuration(data.duration);
+ 		setIsLoading(false);
+ 
+-		props.onLoadEnd && props.onLoadEnd();
++		props.onLoadEnd && props.onLoadEnd(data.duration);
+ 	};
+ 
+ 	const onLoadStart = (data) => {
+@@ -120,7 +129,7 @@ export default function VideoView(props) {
+ 	const renderToolbar = () => <></>;
+ 
+ 	return (
+-		<View style={{ height: containerHeight }}>
++		<View style={{ height: props.height || containerHeight }}>
+ 			<Video
+ 				onEnd={onEnd}
+ 				onLoad={onLoad}
+@@ -137,7 +146,8 @@ export default function VideoView(props) {
+ 				volume={props.volume || 13}
+ 			/>
+ 
+-			<MediaControls
++			{props.customControls ? props.customControls : (
++				<MediaControls
+ 				isFullScreen={isFullScreen}
+ 				duration={duration}
+ 				isLoading={isLoading}
+@@ -153,6 +163,8 @@ export default function VideoView(props) {
+ 				fadeOutDelay={3000}
+ 				showOnStart={false}
+ 			/>
++			)}
++			
+ 		</View>
+ 	);
+ }
+@@ -177,3 +189,7 @@ const styles = StyleSheet.create({
+ 		backgroundColor: 'black',
+ 	},
+ });
++
++CustomVideoView = forwardRef(CustomVideoView);
++
++export default CustomVideoView;
+\ No newline at end of file

@@ -72,7 +72,7 @@ export default function DefaultScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (buttonState === 'ready') {
     return (
-      <Animatable.View style={styles.largerButton} animation="fadeInRight">
+      <Animatable.View style={styles.largerButton} animation="slideInRight">
         <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
         <View style={{...styles.button, ...styles.darkerButton}}>
           <Text style={styles.readyQuestionMark}>

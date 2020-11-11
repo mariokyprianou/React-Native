@@ -24,9 +24,16 @@ export default function AppContainer() {
           headerShown: false,
         }}
       /> */}
-      <AppStack.Screen
+      {/* <AppStack.Screen
         name="Test"
         component={TestScreen}
+        options={{
+          title: false,
+        }}
+      /> */}
+      <AppStack.Screen
+        name="Test"
+        component={ChallengeEndScreen}
         options={{
           title: false,
         }}

@@ -1,5 +1,5 @@
 /*
- * Jira Ticket: 
+ * Jira Ticket:
  * Created Date: Tue, 10th Nov 2020, 16:13:18 pm
  * Author: Jodi Dublon
  * Email: jodi.dublon@thedistance.co.uk
@@ -14,13 +14,23 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import DefaultButton from '../Buttons/DefaultButton';
 import Spacer from '../Utility/Spacer';
+import ProgressChart from '../Infographics/ProgressChart';
 
-export default function ChallengeCompletionModal({onPressClose, result, challengeName, trainerName}) {
+export default function ChallengeCompletionModal({
+  onPressClose,
+  result,
+  challengeName,
+  trainerName,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const { dictionary } = useDictionary();
-  const { TitleText_ChallengeComplete, InfoText_ChallengeComplete, TitleText_Today } = dictionary;
+  const {dictionary} = useDictionary();
+  const {
+    TitleText_ChallengeComplete,
+    InfoText_ChallengeComplete,
+    TitleText_Today,
+  } = dictionary;
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -67,8 +77,7 @@ export default function ChallengeCompletionModal({onPressClose, result, challeng
     },
     card: {
       height: getHeight(220),
-      width: (screenWidth * 0.95) - getWidth(170),
-      backgroundColor: colors.veryLightPink100,
+      width: screenWidth * 0.95 - getWidth(170),
       position: 'absolute',
       top: getHeight(200),
     },
@@ -91,10 +100,10 @@ export default function ChallengeCompletionModal({onPressClose, result, challeng
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleShare() { }
-  
-  function handleDone() { }
-  
+  function handleShare() {}
+
+  function handleDone() {}
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -105,14 +114,16 @@ export default function ChallengeCompletionModal({onPressClose, result, challeng
         </TouchableOpacity>
       </View>
       <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>{ InfoText_ChallengeComplete(challengeName, trainerName) }</Text>   
+        <Text style={styles.description}>
+          {InfoText_ChallengeComplete(challengeName, trainerName)}
+        </Text>
       </View>
       <View style={styles.card}>
-        <Text>Component here</Text>
+        <ProgressChart />
       </View>
-      <View style={ styles.resultContainer}>
-        <Text style={styles.resultTitle}>{ TitleText_Today }</Text>
-        <Text style={styles.resultText}>{ result}</Text>
+      <View style={styles.resultContainer}>
+        <Text style={styles.resultTitle}>{TitleText_Today}</Text>
+        <Text style={styles.resultText}>{result}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton
@@ -121,7 +132,7 @@ export default function ChallengeCompletionModal({onPressClose, result, challeng
           variant="gradient"
           onPress={handleShare}
         />
-        <Spacer height={ 20}/>
+        <Spacer height={20} />
         <DefaultButton
           type="done"
           icon="chevron"

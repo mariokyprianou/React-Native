@@ -1,5 +1,5 @@
 /*
- * Jira Ticket: 
+ * Jira Ticket:
  * Created Date: Tue, 10th Nov 2020, 15:44:55 pm
  * Author: Jodi Dublon
  * Email: jodi.dublon@thedistance.co.uk
@@ -14,13 +14,20 @@ import useChallenge from '../hooks/data/useChallenge';
 import DefaultButton from '../components/Buttons/DefaultButton';
 import ModalCard from '../components/Modals/ModalCard';
 import ChallengeCompletionModal from '../components/Modals/ChallengeCompletionModal';
+import ProgressChart from '../components/Infographics/ProgressChart';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const { challengeData } = useChallenge();
-  const { name, description, answerBoxLabel, result, trainerName } = challengeData;
+  const {challengeData} = useChallenge();
+  const {
+    name,
+    description,
+    answerBoxLabel,
+    result,
+    trainerName,
+  } = challengeData;
   const [showCompletionModal, setShowCompletionModal] = useState(true);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -73,11 +80,11 @@ export default function ChallengeScreen() {
       width: '100%',
       alignItems: 'center',
       bottom: getHeight(40),
-    }
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleAddResult() { }
+  function handleAddResult() {}
 
   function handleCloseCompletionModal() {
     setShowCompletionModal(false);
@@ -85,17 +92,17 @@ export default function ChallengeScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={ styles.container }>
+    <View style={styles.container}>
       <View style={styles.card}>
-        <Text>Component here</Text>
+        <ProgressChart />
       </View>
       <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>{ description}</Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
       <View style={styles.answerBoxContainer}>
-        <Text style={ styles.answerLabel }>{ answerBoxLabel }</Text>
-        <Text style={ styles.result }>{ result }</Text>
-        <View style={ styles.line}/>
+        <Text style={styles.answerLabel}>{answerBoxLabel}</Text>
+        <Text style={styles.result}>{result}</Text>
+        <View style={styles.line} />
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton
@@ -107,9 +114,9 @@ export default function ChallengeScreen() {
       </View>
       <ModalCard isVisible={showCompletionModal}>
         <ChallengeCompletionModal
-          onPressClose={ handleCloseCompletionModal }
-          result={ result }
-          challengeName={ name }
+          onPressClose={handleCloseCompletionModal}
+          result={result}
+          challengeName={name}
           trainerName={trainerName}
         />
       </ModalCard>

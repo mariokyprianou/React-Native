@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {BarChart} from 'react-native-chart-kit';
@@ -43,7 +43,6 @@ export default function ProgressChart() {
   const styles = StyleSheet.create({
     scroll: {
       backgroundColor: colors.white100,
-      // padding: 20,
     },
   });
 
@@ -51,12 +50,11 @@ export default function ProgressChart() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Text>Bar chart</Text>
       <ScrollView horizontal={true} style={styles.scroll}>
         <BarChart
           data={data}
           width={getWidth(600)}
-          height={getHeight(220)}
+          height={getHeight(200)}
           yAxisSuffix="kg"
           chartConfig={{
             backgroundGradientFrom: colors.white100,

@@ -11,19 +11,24 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useChallenge from '../hooks/data/useChallenge';
-import { useTimer } from 'the-core-ui-module-tdcountdown';
+import {useTimer} from 'the-core-ui-module-tdcountdown';
 import DefaultButton from '../components/Buttons/DefaultButton';
 import Spacer from '../components/Utility/Spacer';
+import ProgressChart from '../components/Infographics/ProgressChart';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const { challengeData } = useChallenge();
-  const { name, description, timeLimit } = challengeData;
-  
-  const formattedSeconds = new Date(timeLimit * 1000).toISOString().substr(11, 8);
-  const { remaining, remainingMS, toggle, active, reset } = useTimer({ timer: formattedSeconds });
+  const {challengeData} = useChallenge();
+  const {name, description, timeLimit} = challengeData;
+
+  const formattedSeconds = new Date(timeLimit * 1000)
+    .toISOString()
+    .substr(11, 8);
+  const {remaining, remainingMS, toggle, active, reset} = useTimer({
+    timer: formattedSeconds,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -58,24 +63,28 @@ export default function ChallengeScreen() {
       width: '100%',
       alignItems: 'center',
       bottom: getHeight(40),
-    }
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePressStart() { }
-  
-  function handlePressDone() {}
+  function handlePressStart() {
+    // start timer
+  }
+
+  function handlePressDone() {
+    // redirect to challenge end screen
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={ styles.container }>
+    <View style={styles.container}>
       <View style={styles.card}>
-        <Text>Component here</Text>
+        <ProgressChart />
       </View>
       <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>{ description}</Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
-      <Text style={ styles.timerText }>{ remaining }</Text>
+      <Text style={styles.timerText}>{remaining}</Text>
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="start"
@@ -91,7 +100,6 @@ export default function ChallengeScreen() {
           onPress={handlePressDone}
         />
       </View>
-      
     </View>
   );
 }

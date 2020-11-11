@@ -39,6 +39,7 @@
     "react-native": "0.62.2",
     "react-native-bundle-checksum": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdchecksum.git#develop",
     "react-native-camera": "^3.40.0",
+    "react-native-chart-kit": "^6.6.1",
     "react-native-design-to-component": "^1.0.0",
     "react-native-draggable-flatlist": "^2.5.0",
     "react-native-dropdown-picker": "^3.7.1",

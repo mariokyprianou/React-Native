@@ -11,27 +11,7 @@ import {StyleSheet, View, Text, Animated} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-
-const FadeInView = (props) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 10000,
-    }).start();
-  }, [fadeAnim]);
-
-  return (
-    <Animated.View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,
-      }}>
-      {props.children}
-    </Animated.View>
-  );
-};
+import * as Animatable from 'react-native-animatable';
 
 export default function DefaultScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -50,8 +30,8 @@ export default function DefaultScreen() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     button: {
-      width: getWidth(20),
-      height: getWidth(20),
+      width: getHeight(28),
+      height: getHeight(28),
       backgroundColor: colors.white80,
       borderRadius: radius(14),
       alignItems: 'center',
@@ -70,6 +50,8 @@ export default function DefaultScreen() {
     },
     darkerButton: {
       backgroundColor: colors.brownishGrey100,
+      width: getWidth(20),
+      height: getWidth(20),
     },
     largerText: {
       ...textStyles.bold15_brownishGrey100,
@@ -90,16 +72,17 @@ export default function DefaultScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (buttonState === 'ready') {
     return (
-      <FadeInView style={styles.largerButton}>
+      <Animatable.View style={styles.largerButton} animation="fadeInRight">
         <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
         <View style={{...styles.button, ...styles.darkerButton}}>
           <Text style={styles.readyQuestionMark}>
             {ButtonText_QuestionMark}
           </Text>
         </View>
-      </FadeInView>
+      </Animatable.View>
     );
   }
+
   return (
     <View style={styles.button}>
       <Text style={styles.questionMark}>{ButtonText_QuestionMark}</Text>

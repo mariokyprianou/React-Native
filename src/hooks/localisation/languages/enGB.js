@@ -125,6 +125,7 @@ const enGB = {
   Profile_FormLabel5: 'DATE OF BIRTH',
   Profile_FormLabel6: 'COUNTRY',
   Profile_FormLabel7: 'REGION',
+  Profile_DeleteNotificationButtonTitle: 'Delete',
   Settings_ScreenTitle: 'Settings',
   Settings_VersionText: 'Power App - Version',
   Settings_MarketingPreferences: 'Marketing preferences',

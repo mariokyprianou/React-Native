@@ -21,17 +21,39 @@ import DropDownIcon from '../../../components/cells/DropDownIcon';
 import useRegistrationData from '../../../hooks/data/useRegistrationData';
 import CalendarIcon from '../../../components/cells/CalendarIcon';
 import ProfileUserCard from '../../../components/Views/ProfileUserCard';
+import {FlatList} from 'react-native-gesture-handler';
+import NotificationCell from '../../../components/cells/NotificationCell';
 
-export default function ProfileScreenUI({onSaveChanges}) {
+const notifications = [
+  {
+    id: 789789787,
+    subject: 'Subject',
+    message: 'Message',
+    sentAt: new Date(),
+    readAt: undefined,
+  },
+  {
+    id: 78789789789,
+    subject: 'Very Very Very Loooooooooooooooooooong Subject',
+    message: 'Message Full Of Infoooooooooooooooooooooooooooooooooooooooooo',
+    sentAt: new Date(),
+    readAt: undefined,
+  },
+];
+
+export default function ProfileScreenUI({
+  onSaveChanges,
+  onPressNeedHelp,
+  onPressLogout,
+  onPressNeedToSignOut,
+}) {
   // MARK: - Hooks
   const {
-    colors,
     cellFormConfig,
     cellFormStyles,
     textStyles,
     dropdownStyle,
   } = useTheme();
-  const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
@@ -50,16 +72,13 @@ export default function ProfileScreenUI({onSaveChanges}) {
   const {registrationData} = useRegistrationData();
 
   // MARK: - Local
-  const [userName, setUserName] = useState('John Appleased');
 
   // MARK: - Logic
 
   // MARK: - Use Effect
-  useEffect(() => {}, []);
 
   // MARK: - Actions
   const onPressChangePassword = () => {};
-  // const onPressChangePassword = () => {};
 
   // MARK: - Styles
   const styles = {
@@ -70,7 +89,7 @@ export default function ProfileScreenUI({onSaveChanges}) {
       alignItems: 'center',
     },
     notificationsContainer: {
-      width: '90%',
+      width: '100%',
       marginTop: getHeight(30),
     },
     title: {...textStyles.bold20_black100},
@@ -104,17 +123,33 @@ export default function ProfileScreenUI({onSaveChanges}) {
   };
 
   // MARK - Notifications UI
-
-  const notifications = () => {
+  const notificationsUI = () => {
+    const renderNotificationCell = ({item, index}) => {
+      return (
+        <NotificationCell
+          {...item}
+          index={index}
+          // onPress={() => readNotificationAction(item.id)}
+          // onDelete={() => deleteNotificationAction(item.id)}
+        />
+      );
+    };
     return (
       <View style={styles.notificationsContainer}>
-        <Text style={styles.title}>{Profile_NotificationsTitle}</Text>
+        <Text
+          style={{
+            ...styles.title,
+            marginLeft: getWidth(20),
+            marginBottom: getHeight(10),
+          }}>
+          {Profile_NotificationsTitle}
+        </Text>
+        <FlatList data={notifications} renderItem={renderNotificationCell} />
       </View>
     );
   };
 
   // MARK: - Form
-
   const cells = [
     {
       name: 'profileTitle',
@@ -224,19 +259,19 @@ export default function ProfileScreenUI({onSaveChanges}) {
       <DefaultButton
         type={'needHelp'}
         variant="gradient"
-        onPress={onPressChangePassword}
+        onPress={onPressNeedHelp}
         icon={'chevron'}
       />
       <Spacer height={20} />
       <DefaultButton
         type={'needToSignOut'}
         variant="transparentGreyText"
-        onPress={onPressChangePassword}
+        onPress={onPressNeedToSignOut}
       />
       <DefaultButton
         type={'logout'}
         variant="transparentBlackBoldText"
-        onPress={onPressChangePassword}
+        onPress={onPressLogout}
       />
     </View>
   );
@@ -249,7 +284,7 @@ export default function ProfileScreenUI({onSaveChanges}) {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
       {userCard()}
-      {notifications()}
+      {notificationsUI()}
       {form()}
       {buttons()}
     </ScrollView>

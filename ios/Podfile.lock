@@ -343,6 +343,8 @@ PODS:
     - React
   - RNScreens (2.13.0):
     - React-Core
+  - RNSVG (12.1.0):
+    - React
   - RNVectorIcons (6.7.0):
     - React
   - Sourcery (0.18.0)
@@ -419,6 +421,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Sourcery
   - "toolbar-android (from `../node_modules/@react-native-community/toolbar-android`)"
@@ -528,6 +531,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   toolbar-android:
@@ -590,6 +595,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
   RNScreens: 13f23e5498fb4aa749d19a5eda7f8792fbb9d01f
+  RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
   Sourcery: e0e8658a1ce6d9f475156ad3ffce4c68f1261b3e
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe

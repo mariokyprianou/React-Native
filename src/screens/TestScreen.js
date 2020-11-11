@@ -11,6 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
+import ProgressChart from '../components/Infographics/ProgressChart';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -25,7 +26,7 @@ export default function TestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Text>Test screen</Text>
+      <ProgressChart />
     </View>
   );
 }

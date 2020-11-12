@@ -19,12 +19,18 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 
 const playIcon = require('../../../assets/icons/play.png');
+const pauseIcon = require('../../../assets/icons/pauseIcon.png');
 const easierIcon = require('../../../assets/icons/easierVideo.png');
 const harderIcon = require('../../../assets/icons/videoHarder.png');
 
 let ScreenHeight = Dimensions.get('window').height;
 
-export default function ({easierOnPress, harderOnPress, pauseOnPress, pause}) {
+export default function ({
+  easierOnPress,
+  harderOnPress,
+  pauseOnPress,
+  isPaused,
+}) {
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
@@ -33,20 +39,6 @@ export default function ({easierOnPress, harderOnPress, pauseOnPress, pause}) {
   const {easierSwitchText, harderSwitchText} = dictionary.WorkoutDict;
 
   const styles = {
-    container: {
-      width: '100%',
-    },
-    imageStyle: {
-      width: '100%',
-      height: '100%',
-    },
-    contentStyle: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      marginBottom: getHeight(15),
-    },
     controlsContainerStyle: {
       alignSelf: 'center',
       position: 'absolute',
@@ -80,10 +72,11 @@ export default function ({easierOnPress, harderOnPress, pauseOnPress, pause}) {
         <Text style={styles.controlTextStyle}>{easierSwitchText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
+        style={{width: getWidth(30)}}
         onPress={() => {
           pauseOnPress();
         }}>
-        <Image source={playIcon} />
+        <Image source={isPaused ? playIcon : pauseIcon} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={harderOnPress}

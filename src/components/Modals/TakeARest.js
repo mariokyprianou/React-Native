@@ -86,7 +86,7 @@ export default function TakeARest({name, onPressClose}) {
   return (
     <View>
       <ImageBackground source={fakeImage} style={styles.image}>
-        <FadingBottomView color="black" height="full" />
+        <FadingBottomView color="black" />
         <View style={styles.headerContainer}>
           <Text style={styles.title}>{TitleText_TakeARest}</Text>
           <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>

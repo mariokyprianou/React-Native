@@ -114,7 +114,7 @@ export default function TakeARest({name, venue, date, onPressClose, type}) {
     return (
       <View>
         <ImageBackground source={fakeImage} style={styles.image}>
-          <FadingBottomView color="black" height="full" />
+          <FadingBottomView color="black" />
           <View style={styles.headerContainer}>
             <Text style={styles.title}>{TitleText_Stay_Tuned}</Text>
             <TouchableOpacity

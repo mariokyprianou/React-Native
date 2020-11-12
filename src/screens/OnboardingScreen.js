@@ -14,14 +14,34 @@ import useOnboarding from '../hooks/data/useOnboarding';
 import Swiper from 'react-native-swiper';
 import OnboardingSliderItem from '../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../components/Buttons/DefaultButton';
+import Header from '../components/Headers/Header';
 
-export default function OnboardingScreen() {
+export default function OnboardingScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
   const {onboardingData} = useOnboarding();
+
+  const Login = () => {
+    return (
+      <View>
+        <Text style={{color: 'black'}}>LOGIN</Text>
+      </View>
+    );
+  };
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={''}
+        goBack
+        // right={Login}
+        // rightAction={() => console.log('login')}
+      />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

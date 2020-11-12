@@ -19,7 +19,7 @@ import Calendar from 'the-core-ui-module-tdcalendar';
 const fakeImage = require('../../assets/fake2.png');
 const fakeGraph = require('../../assets/fakeGraph.png');
 
-export default function DefaultScreen() {
+export default function ProgressScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
@@ -35,7 +35,9 @@ export default function DefaultScreen() {
   const {progressCalendarData} = useCalendar();
   const {challengeData} = useProgress();
 
-  console.log(challengeData);
+  navigation.setOptions({
+    header: () => null,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -46,7 +48,8 @@ export default function DefaultScreen() {
     },
     titleContainer: {
       flexDirection: 'row',
-      marginVertical: getHeight(15),
+      marginTop: getHeight(50),
+      marginBottom: getHeight(15),
       width: '100%',
       alignSelf: 'center',
     },

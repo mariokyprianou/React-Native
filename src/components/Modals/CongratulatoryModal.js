@@ -97,7 +97,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
   return (
     <View>
       <ImageBackground source={fakeImage} style={styles.image}>
-        <FadingBottomView color="black" height="full" />
+        <FadingBottomView color="black" />
         <View style={styles.headerContainer}>
           <Text style={styles.title}>{TitleText_Congratulations}</Text>
           <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>

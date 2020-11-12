@@ -74,7 +74,7 @@ export default function CongratulationsScreen({navigation, name = 'Katrina'}) {
     <View>
       <View style={styles.imageContainer}>
         <Image source={fakeImage} style={styles.image} />
-        <FadingBottomView color="black" height="full" />
+        <FadingBottomView color="black" />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.title}>{TitleText_Congratulations}</Text>

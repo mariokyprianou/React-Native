@@ -94,7 +94,7 @@ export default function TakeARest({
   return (
     <View>
       <ImageBackground source={fakeImage} style={styles.image}>
-        <FadingBottomView color="black" height="full" />
+        <FadingBottomView color="black" />
         <View style={styles.headerContainer}>
           <Text style={styles.title}>{TitleText_WeekComplete}</Text>
           <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>

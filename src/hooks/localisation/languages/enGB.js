@@ -113,6 +113,7 @@ const enGB = {
   TabTitle_Workouts: 'Workouts',
   TitleText_ChallengeComplete: 'Challenge Complete',
   TitleText_Congratulations: 'Congratulations!',
+  TitleText_HelpMeChoose: 'Help me choose',
   TitleText_Of: 'OF',
   TitleText_Question: 'QUESTION',
   TitleText_Result: 'RESULT',

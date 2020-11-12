@@ -6,14 +6,14 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, Animated} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import * as Animatable from 'react-native-animatable';
 
-export default function DefaultScreen() {
+export default function CantChooseButton({onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -29,6 +29,12 @@ export default function DefaultScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    touch: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
     button: {
       width: getHeight(28),
       height: getHeight(28),
@@ -73,19 +79,23 @@ export default function DefaultScreen() {
   if (buttonState === 'ready') {
     return (
       <Animatable.View style={styles.largerButton} animation="slideInRight">
-        <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
-        <View style={{...styles.button, ...styles.darkerButton}}>
-          <Text style={styles.readyQuestionMark}>
-            {ButtonText_QuestionMark}
-          </Text>
-        </View>
+        <TouchableOpacity style={styles.touch} onPress={onPress}>
+          <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
+          <View style={{...styles.button, ...styles.darkerButton}}>
+            <Text style={styles.readyQuestionMark}>
+              {ButtonText_QuestionMark}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </Animatable.View>
     );
   }
 
   return (
     <View style={styles.button}>
-      <Text style={styles.questionMark}>{ButtonText_QuestionMark}</Text>
+      <TouchableOpacity style={styles.touch} onPress={onPress}>
+        <Text style={styles.questionMark}>{ButtonText_QuestionMark}</Text>
+      </TouchableOpacity>
     </View>
   );
 }

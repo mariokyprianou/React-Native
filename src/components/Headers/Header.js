@@ -28,6 +28,7 @@ export default function SearchText({
   right,
   rightAction,
   customTitle,
+  componentRight,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getWidth, fontSize} = ScaleHook();
@@ -137,6 +138,12 @@ export default function SearchText({
       ) : (
         <View style={styles.rightIconContainer} />
       )}
+
+      {componentRight && rightAction && (
+        <View style={styles.rightIconContainer}>
+          <Text>Hello</Text>
+        </View>
+      )}
     </View>
   );
 
@@ -159,7 +166,9 @@ export default function SearchText({
         <View style={styles.leftButtonContainer} />
       )}
 
-      {(right && rightAction) || showModalCross ? (
+      {(right && rightAction) ||
+      (componentRight && rightAction) ||
+      showModalCross ? (
         <TouchableOpacity
           style={styles.rightButtonContainer}
           onPress={

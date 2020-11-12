@@ -37,7 +37,7 @@ export default function OnboardingScreen({navigation}) {
       <Header
         title={''}
         goBack
-        // right={Login}
+        // componentRight={() => <Login />}
         // rightAction={() => console.log('login')}
       />
     ),

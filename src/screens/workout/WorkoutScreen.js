@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -39,19 +39,6 @@ export default function Screen({navigation}) {
       width: '100%',
       backgroundColor: colors.white100,
     },
-    buttonContainer: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      marginBottom: getHeight(40),
-      alignItems: 'center',
-    },
-    fadeContainer: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -61,8 +48,15 @@ export default function Screen({navigation}) {
     <View>
       <ScrollView
         keyboardShouldPersistTaps="handled"
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={20} //how often we update the position of the indicator bar
+        pagingEnabled
+        bounces={false}
+        overScrollMode={'never'}
         style={styles.scrollViewContainer}>
-        <ExerciseView />
+        {workout.exercises.map((screen, index) => (
+          <ExerciseView />
+        ))}
       </ScrollView>
     </View>
   );

@@ -6,13 +6,14 @@
  */
 
 import React from 'react';
-import {View, TouchableOpacity, Text, Image} from 'react-native';
+import {View, TouchableOpacity, Text, Image, StatusBar} from 'react-native';
 import RepCell from '../cells/RepCell';
 
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import ExerciseVideoView from './ExerciseVideoView';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useSafeArea} from 'react-native-safe-area-context';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -24,6 +25,7 @@ export default function () {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
+  const insets = useSafeArea();
 
   const {weightText, notesText, setsText} = dictionary.WorkoutDict;
   const exerciseTitle = 'Lateral lunges';
@@ -33,11 +35,6 @@ export default function () {
   const reps = [{}, {}, {}, {}, {}];
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    scrollViewContainer: {
-      height: '100%',
-      width: '100%',
-      backgroundColor: colors.white100,
-    },
     contentStyle: {
       margin: getWidth(20),
     },
@@ -114,7 +111,7 @@ export default function () {
   });
 
   return (
-    <View style={{flex: 1, height: '100%'}}>
+    <View style={{height: getHeight(667 - 56 - insets.top)}}>
       <ExerciseVideoView />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>

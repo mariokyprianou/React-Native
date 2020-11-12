@@ -18,6 +18,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 
 const arrowBackIcon = require('../../../assets/icons/headerBackArrow.png');
 const closeIcon = require('../../../assets/icons/headerClose.png');
+const shareIcon = require('../../../assets/icons/share.png');
 
 export default function SearchText({
   title,
@@ -31,7 +32,7 @@ export default function SearchText({
   componentRight,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getWidth, fontSize} = ScaleHook();
+  const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
@@ -105,13 +106,24 @@ export default function SearchText({
       size: fontSize(20),
       color: colors.black100,
     },
+    shareIconStyle: {
+      height: getHeight(18),
+      width: getWidth(18),
+      tintColor: colors.black100,
+      resizeMode: 'contain',
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
-  const renderIcon = (icon) => (
-    <TDIcon input={icon} inputStyle={styles.iconStyle} />
-  );
+  const renderIcon = (icon) => {
+    if (icon === 'shareIcon') {
+      return (
+        <TDIcon input={shareIcon} inputStyle={{style: styles.shareIconStyle}} />
+      );
+    }
+    return <TDIcon input={icon} inputStyle={styles.iconStyle} />;
+  };
 
   const renderDefaultHeader = () => (
     <View style={styles.container}>

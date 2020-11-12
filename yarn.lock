@@ -9200,15 +9200,11 @@ text-table@^0.2.0:
   dependencies:
     lodash "^4.17.15"
 
-"the-core-ui-module-tdslideshow@git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow":
-  version "1.0.1"
-  resolved "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow#c23d4a92dd34c4d571f02b3fc04f4e0ae663b2dd"
+"the-core-ui-module-tdslideshow@git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow.git":
+  version "1.0.2"
+  resolved "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow.git#d77a068020b0c84094ebdf4dd68e51de3ba74e04"
   dependencies:
-    "@react-native-community/slider" "^3.0.3"
     lodash "^4.17.15"
-    react-native-camera "^3.40.0"
-    react-native-image-crop-picker "^0.35.1"
-    react-native-permissions "^2.2.2"
 
 "the-core-ui-theme-base@git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git":
   version "1.0.0"

@@ -108,6 +108,7 @@ const enGB = {
   Reminder_Title: 'Set a workout reminder',
   Reminder_Text: 'Power will remind you to kickstart your workout next week.',
   ScreenHeader_YourWorkouts: 'Your Workouts',
+  ScreenHeader_YourTransformation: 'Your transformation',
   TabTitle_Profile: 'Profile',
   TabTitle_Progress: 'Progress',
   TabTitle_Workouts: 'Workouts',

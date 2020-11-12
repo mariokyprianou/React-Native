@@ -15,8 +15,9 @@ import DefaultButton from '../components/Buttons/DefaultButton';
 import ModalCard from '../components/Modals/ModalCard';
 import ChallengeCompletionModal from '../components/Modals/ChallengeCompletionModal';
 import ProgressChart from '../components/Infographics/ProgressChart';
+import Header from '../components/Headers/Header';
 
-export default function ChallengeScreen() {
+export default function ChallengeEndScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -28,7 +29,11 @@ export default function ChallengeScreen() {
     result,
     trainerName,
   } = challengeData;
-  const [showCompletionModal, setShowCompletionModal] = useState(true);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
+
+  navigation.setOptions({
+    header: () => <Header title={name} goBack />,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

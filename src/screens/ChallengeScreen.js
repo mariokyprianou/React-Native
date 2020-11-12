@@ -15,8 +15,9 @@ import {useTimer} from 'the-core-ui-module-tdcountdown';
 import DefaultButton from '../components/Buttons/DefaultButton';
 import Spacer from '../components/Utility/Spacer';
 import ProgressChart from '../components/Infographics/ProgressChart';
+import Header from '../components/Headers/Header';
 
-export default function ChallengeScreen() {
+export default function ChallengeScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -28,6 +29,10 @@ export default function ChallengeScreen() {
     .substr(11, 8);
   const {remaining, remainingMS, toggle, active, reset} = useTimer({
     timer: formattedSeconds,
+  });
+
+  navigation.setOptions({
+    header: () => <Header title={name} goBack />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

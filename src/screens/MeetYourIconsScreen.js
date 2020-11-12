@@ -29,9 +29,9 @@ import CantChooseButton from '../components/Buttons/CantChooseButton';
 
 const fakeImage = require('../../assets/fake2.png');
 
-export default function MeetYourIconsScreen() {
+export default function MeetYourIconsScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const iconsSwiper = useRef();
@@ -49,6 +49,10 @@ export default function MeetYourIconsScreen() {
   const screenWidth = Dimensions.get('screen').width;
 
   const logo = require('../../assets/images/logo.png');
+
+  navigation.setOptions({
+    header: () => null,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

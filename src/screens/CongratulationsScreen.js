@@ -16,12 +16,16 @@ import FadingBottomView from '../components/Views/FadingBottomView';
 
 const fakeImage = require('../../assets/fake2.png');
 
-export default function CongratulationsScreen({name = 'Katrina'}) {
+export default function CongratulationsScreen({navigation, name = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {TitleText_Congratulations, InfoText_StartedProgramme} = dictionary;
+
+  navigation.setOptions({
+    header: () => null,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

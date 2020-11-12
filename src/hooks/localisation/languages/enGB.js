@@ -86,7 +86,8 @@ const enGB = {
   DropdownText_SelectLanguage: 'SELECT LANGUAGE',
   DropdownText_Urdu: 'Urdu',
   HeaderText_AllProgrammes: 'ALL PROGRAMMES',
-  InfoText_ChallengeComplete: (challengeName, trainerName) => `You just completed ${challengeName} as part of ${trainerName}'s POWER programme!`,
+  InfoText_ChallengeComplete: (challengeName, trainerName) =>
+    `You just completed ${challengeName} as part of ${trainerName}'s POWER programme!`,
   InfoText_Pluralise: "'s",
   InfoText_ProgrammeComplete: (name, venue) =>
     `Congratulations! You’ve completed ${name}’s ${venue} programme on POWER! To be the first to know if we add more workouts with ${name}, just hit the button below!`,
@@ -106,6 +107,7 @@ const enGB = {
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
   Reminder_Title: 'Set a workout reminder',
   Reminder_Text: 'Power will remind you to kickstart your workout next week.',
+  ScreenHeader_YourWorkouts: 'Your Workouts',
   TabTitle_Profile: 'Profile',
   TabTitle_Progress: 'Progress',
   TabTitle_Workouts: 'Workouts',
@@ -116,7 +118,7 @@ const enGB = {
   TitleText_Result: 'RESULT',
   TitleText_Stay_Tuned: 'Stay Tuned',
   TitleText_TakeARest: 'Take a rest',
-  TitleText_Today: "TODAY",
+  TitleText_Today: 'TODAY',
   TitleText_Week: 'Week',
   TitleText_WeekComplete: 'Week Complete',
   TitleText_Progress: 'progress',

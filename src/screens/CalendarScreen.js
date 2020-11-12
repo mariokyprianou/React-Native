@@ -9,10 +9,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import useTheme from '../hooks/theme/UseTheme';
+import useDictionary from '../hooks/localisation/useDictionary';
 import useCalendar from '../hooks/data/useCalendar';
 import Calendar from 'the-core-ui-module-tdcalendar';
+import Header from '../components/Headers/Header';
 
-export default function DefaultScreen() {
+export default function DefaultScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {singleCalendarStyles} = useTheme();
   const {
@@ -24,6 +26,12 @@ export default function DefaultScreen() {
     lookupStyleTable,
   } = singleCalendarStyles;
   const {calendarScreenData} = useCalendar();
+  const {dictionary} = useDictionary();
+  const {ScreenHeader_YourWorkouts} = dictionary;
+
+  navigation.setOptions({
+    header: () => <Header title={ScreenHeader_YourWorkouts} goBack />,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

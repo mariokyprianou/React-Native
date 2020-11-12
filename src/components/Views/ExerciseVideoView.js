@@ -12,8 +12,12 @@ import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
 import SliderProgressView from './SliderProgressView';
 import {VideoView, TestData} from 'the-core-ui-module-tdmediamanager';
+import ControlsView from './ControlsView';
 
 const playIcon = require('../../../assets/icons/play.png');
+const easierIcon = require('../../../assets/icons/easierVideo.png');
+const harderIcon = require('../../../assets/icons/videoHarder.png');
+
 let ScreenHeight = Dimensions.get('window').height;
 
 export default function ({}) {
@@ -28,7 +32,6 @@ export default function ({}) {
   const styles = {
     container: {
       width: '100%',
-      //height: getHeight(ScreenHeight),
     },
     imageStyle: {
       width: '100%',
@@ -40,6 +43,15 @@ export default function ({}) {
       left: 0,
       right: 0,
       marginBottom: getHeight(15),
+    },
+    controlsContainerStyle: {
+      alignSelf: 'center',
+      position: 'absolute',
+      top: getHeight(ScreenHeight / 6),
+      flexDirection: 'row',
+    },
+    controlTextStyle: {
+      ...textStyles.bold16_white100,
     },
   };
 
@@ -65,23 +77,16 @@ export default function ({}) {
     renderToolbar: () => <View />,
   };
 
+  const controls = () => (
+    <ControlsView pauseOnPress={() => videoRef.current.pause()} />
+  );
+
   return (
     <View style={styles.container}>
       <View style={{height: getHeight(300)}}>
         <VideoView {...videoProps} ref={videoRef} />
-
         <SliderProgressView max={videoDuration} progress={currentProgress} />
-        <TouchableOpacity
-          onPress={() => {
-            videoRef.current.pause();
-          }}
-          style={{
-            alignSelf: 'center',
-            position: 'absolute',
-            top: getHeight(ScreenHeight / 6),
-          }}>
-          <Image source={playIcon} />
-        </TouchableOpacity>
+        {controls()}
       </View>
       <View style={styles.contentStyle} />
     </View>

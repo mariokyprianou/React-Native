@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -26,6 +26,10 @@ export default function HelpMeChooseBar({
   const {TitleText_Question, TitleText_Of} = dictionary;
 
   const [currentProgress, setCurrentProgress] = useState(progress);
+
+  useEffect(() => {
+    setCurrentProgress(progress);
+  });
 
   const activeWidth = (currentProgress / max) * 100;
   const inactiveWidth = 100 - activeWidth;

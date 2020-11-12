@@ -25,11 +25,20 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      height: getHeight(50),
+      height: getHeight(80),
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      backgroundColor: colors.white100,
+    },
+    innerContainer: {
+      width: '100%',
+      height: getHeight(40),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: getWidth(20),
+      paddingBottom: getHeight(10),
+      backgroundColor: colors.white100,
     },
     leftContainer: {
       flexDirection: 'row',
@@ -41,10 +50,6 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
     name: {
       ...textStyles.bold22_black100,
       marginLeft: getWidth(10),
-    },
-    touch: {
-      // flexDirection: 'row',
-      // alignItems: 'center',
     },
     link: {
       ...textStyles.semiBold14_black100,
@@ -59,13 +64,15 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <View style={styles.leftContainer}>
-        <Image source={fakeHeadshot} style={styles.headshot} />
-        <Text style={styles.name}>{name}</Text>
+      <View style={styles.innerContainer}>
+        <View style={styles.leftContainer}>
+          <Image source={fakeHeadshot} style={styles.headshot} />
+          <Text style={styles.name}>{name}</Text>
+        </View>
+        <TouchableOpacity onPress={handlePress}>
+          <Text style={styles.link}>{HeaderText_AllProgrammes}</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={handlePress} style={styles.touch}>
-        <Text style={styles.link}>{HeaderText_AllProgrammes}</Text>
-      </TouchableOpacity>
     </View>
   );
 }

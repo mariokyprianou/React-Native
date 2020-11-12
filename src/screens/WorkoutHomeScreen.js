@@ -27,7 +27,7 @@ import WeekComplete from '../components/Modals/WeekComplete';
 import StayTuned from '../components/Modals/StayTuned';
 import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
-export default function WorkoutHomeScreen() {
+export default function WorkoutHomeScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles} = useTheme();
@@ -56,6 +56,10 @@ export default function WorkoutHomeScreen() {
     completedWorkoutWeek,
   );
   const [showStayTunedModal, setShowStayTunedModal] = useState(false);
+
+  navigation.setOptions({
+    header: () => null,
+  });
 
   useEffect(() => {
     // fetch programme from back end with this week and next week
@@ -137,7 +141,7 @@ export default function WorkoutHomeScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <WorkoutHomeHeader />
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
@@ -206,6 +210,6 @@ export default function WorkoutHomeScreen() {
           venue={venue}
         /> */}
       </ModalCard>
-    </SafeAreaView>
+    </View>
   );
 }

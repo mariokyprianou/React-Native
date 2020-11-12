@@ -55,7 +55,7 @@ export default function WorkoutHomeScreen() {
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
     completedWorkoutWeek,
   );
-  const [showStayTunedModal, setShowStayTunedModal] = useState(true);
+  const [showStayTunedModal, setShowStayTunedModal] = useState(false);
 
   useEffect(() => {
     // fetch programme from back end with this week and next week

@@ -8,8 +8,9 @@
 import React from 'react';
 import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
+import TabContainer from './routes/TabContainer';
 import TestScreen from './screens/TestScreen';
-import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
+import ProgressScreen from './screens/ProgressScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container
@@ -31,11 +32,18 @@ export default function AppContainer() {
           title: false,
         }}
       /> */}
-      <AppStack.Screen
+      {/* <AppStack.Screen
         name="Test"
-        component={MeetYourIconsScreen}
+        component={ProgressScreen}
         options={{
           title: false,
+        }}
+      /> */}
+      <AppStack.Screen
+        name="TabBar"
+        component={TabContainer}
+        options={{
+          headerShown: false,
         }}
       />
     </AppStack.Navigator>

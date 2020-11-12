@@ -7,16 +7,17 @@
  */
 
 import React from 'react';
-import WorkoutStack from '../navigation';
+import {WorkoutStack} from '../navigation';
+import WorkoutHomeScreen from '../screens/WorkoutHomeScreen';
 
 export default function WorkoutContainer(props) {
   return (
     <WorkoutStack.Navigator>
-      {/* <WorkoutStack.Screen
+      <WorkoutStack.Screen
         name="WorkoutHome"
-        component={Login}
+        component={WorkoutHomeScreen}
         options={{headerShown: false}}
-      /> */}
+      />
     </WorkoutStack.Navigator>
   );
 }

@@ -7,20 +7,35 @@
  */
 
 import React from 'react';
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet, Platform, View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
-import {useTheme, useDictionary} from '../../hooks';
+import useTheme from '../hooks/theme/UseTheme';
+import useDictionary from '../hooks/localisation/useDictionary';
 import {BottomTab} from '../navigation';
+import WorkoutContainer from './WorkoutContainer';
+import ProgressContainer from './ProgressContainer';
+import ProfileContainer from './ProfileContainer';
+import ProgressScreen from '../screens/ProgressScreen';
+import DefaultScreen from '../screens/DefaultScreen';
 
 // contains workout container (opens on workout home screen), progress container, profile container
 
+const notificationCount = 2;
+
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {fontSize} = ScaleHook();
+  const {fontSize, getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {TabTitle_Profile, TabTitle_Progress, TabTitle_Workouts} = dictionary;
+
+  const tabIcons = {
+    workout: require('../../assets/icons/workout.png'),
+    progress: require('../../assets/icons/progress.png'),
+    profile: require('../../assets/icons/profile.png'),
+  };
+  const notificationDot = require('../../assets/icons/notificationDot.png');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -34,16 +49,33 @@ export default function TabContainer() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function renderIcon(color, name) {
+  const TabIcon = ({color, name}) => {
     return (
-      <TDIcon
-        {...{
-          input: name,
-          inputStyle: {color, size: fontSize(17)},
-        }}
-      />
+      <View style={{position: 'relative'}}>
+        <TDIcon
+          input={tabIcons[name]}
+          inputStyle={{
+            style: {
+              height: getHeight(18),
+              width: getWidth(18),
+              resizeMode: 'contain',
+              tintColor: color,
+            },
+          }}
+        />
+        {notificationCount > 0 && name === 'profile' && (
+          <Image
+            source={notificationDot}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: -6,
+            }}
+          />
+        )}
+      </View>
     );
-  }
+  };
 
   function getTabBarVisibility(route) {
     const routeName = route.state
@@ -53,12 +85,7 @@ export default function TabContainer() {
     // Hide the tab bar on these screens/routes - onboarding screen, switch trainer stack, auth stack,
     // workout screen, exercise screen, calendar screen, transformation screen, challenge screen,
     // change password screen, change email screen, settings screen
-    if (
-      routeName === 'Filter' ||
-      routeName === 'ArticleDetail' ||
-      routeName === 'Email' ||
-      routeName === 'FindAUnion'
-    ) {
+    if (routeName === 'Onboarding' || routeName === 'Challenge') {
       return false;
     }
 
@@ -72,8 +99,8 @@ export default function TabContainer() {
       tabBarOptions={{
         style: styles.tabBarOptionStyles,
         labelStyle: styles.labelStyle,
-        activeTintColor: colors.darkBlueGrey100,
-        inactiveTintColor: colors.veryLightPink100,
+        activeTintColor: colors.black100,
+        inactiveTintColor: colors.black30,
         ...Platform.select({
           android: {
             safeAreaInsets: {
@@ -82,31 +109,31 @@ export default function TabContainer() {
           },
         }),
       }}>
-      {/* <BottomTab.Screen
+      <BottomTab.Screen
         name="Tab1"
-        component={NewsContainer}
+        component={WorkoutContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => renderIcon(color, 'newspaper'),
+          tabBarIcon: ({color}) => <TabIcon name="workout" color={color} />,
           tabBarLabel: TabTitle_Workouts,
         })}
       />
       <BottomTab.Screen
         name="Tab2"
-        component={HealthContainer}
+        component={ProgressContainer}
         options={{
-          tabBarIcon: ({color}) => renderIcon(color, 'heart'),
+          tabBarIcon: ({color}) => <TabIcon name="progress" color={color} />,
           tabBarLabel: TabTitle_Progress,
         }}
       />
       <BottomTab.Screen
         name="Tab3"
-        component={ResourcesContainer}
+        component={ProfileContainer}
         options={{
-          tabBarIcon: ({color}) => renderIcon(color, 'books'),
+          tabBarIcon: ({color}) => <TabIcon name="profile" color={color} />,
           tabBarLabel: TabTitle_Profile,
         }}
-      /> */}
+      />
     </BottomTab.Navigator>
   );
 }

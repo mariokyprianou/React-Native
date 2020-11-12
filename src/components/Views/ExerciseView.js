@@ -12,12 +12,25 @@ import RepCell from '../cells/RepCell';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import ExerciseVideoView from './ExerciseVideoView';
+import useDictionary from '../../hooks/localisation/useDictionary';
+
+const completeIcon = require('../../../assets/icons/completeExercise.png');
+const checkIcon = require('../../../assets/icons/check.png');
+const weightIcon = require('../../../assets/icons/weight.png');
+const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function () {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const {dictionary} = useDictionary();
 
+  const {weightText, notesText, setsText} = dictionary.WorkoutDict;
+  const exerciseTitle = 'Lateral lunges';
+  const exerciseDescription =
+    'Keep your front knee in line with your toes, with your back neutral and upright lorem ipsum dolor sit amet';
+
+  const reps = [{}, {}, {}, {}, {}];
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     scrollViewContainer: {
@@ -25,44 +38,123 @@ export default function () {
       width: '100%',
       backgroundColor: colors.white100,
     },
-    buttonContainer: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      marginBottom: getHeight(40),
+    contentStyle: {
+      margin: getWidth(20),
+    },
+    titleContainerStyle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+
       alignItems: 'center',
     },
-    fadeContainer: {
+    exerciseTitleStyle: {
+      ...textStyles.bold21_black100,
+    },
+    exerciseDescriptionStyle: {
+      marginTop: getHeight(10),
+      ...textStyles.regular15_brownishGrey100,
+    },
+    competedSetsTitleStyle: {
+      ...textStyles.bold18_brownishGrey100,
+      lineHeight: getHeight(20),
+    },
+    competedSetsTextStyle: {
+      ...textStyles.bold16_brownishGrey100,
+    },
+    checkIconStyle: {
+      tintColor: colors.brownishGrey100,
       position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
+      alignSelf: 'center',
+      margin: getWidth(4),
+    },
+    setsContainerStyle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    extraTextStyle: {
+      ...textStyles.semiBold14_black100,
+      marginStart: getWidth(6),
+    },
+    extraContainerStyle: {
+      flexDirection: 'row',
+      marginTop: getHeight(16),
+      marginBottom: getHeight(20),
+    },
+    weightTouchStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    setsCompletedContainerStyle: {
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const onExerciseCompleted = () => {};
+  const onWeightsPressed = () => {};
+  const onNotesPressed = () => {};
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const RepsList = React.memo(({reps}) => {
     return (
-      <View style={{flexDirection: 'row', flex: 1, width: '70%'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          marginStart: getWidth(10),
+          justifyContent: 'space-evenly',
+        }}>
         {reps.map((index) => (
-          <View style={{flex: 1 / reps.length}}>
-            <RepCell key={index} />
-          </View>
+          <RepCell key={index} />
         ))}
       </View>
     );
   });
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, height: '100%'}}>
       <ExerciseVideoView />
+      <View style={styles.contentStyle}>
+        <View style={styles.titleContainerStyle}>
+          <Text style={styles.exerciseTitleStyle}>{exerciseTitle}</Text>
 
-      <Text>Lateral lunges</Text>
+          <TouchableOpacity onPress={onExerciseCompleted}>
+            <Image source={completeIcon} />
+            <Image style={styles.checkIconStyle} source={checkIcon} />
+          </TouchableOpacity>
+        </View>
 
-      <View>
-        <RepsList reps={[{}, {}, {}, {}]} />
+        <Text style={styles.exerciseDescriptionStyle}>
+          {exerciseDescription}
+        </Text>
+
+        <View style={styles.extraContainerStyle}>
+          <TouchableOpacity
+            style={styles.weightTouchStyle}
+            onPress={onWeightsPressed}>
+            <Image source={weightIcon} />
+            <Text style={styles.extraTextStyle}>{weightText}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.weightTouchStyle,
+              marginStart: getWidth(40),
+            }}
+            onPress={onNotesPressed}>
+            <Image source={notesIcon} />
+            <Text style={styles.extraTextStyle}>{notesText}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.setsContainerStyle}>
+          <View style={styles.setsCompletedContainerStyle}>
+            <Text style={styles.competedSetsTitleStyle}>2/5</Text>
+            <Text style={styles.competedSetsTextStyle}>{setsText}</Text>
+          </View>
+          <RepsList reps={reps} />
+        </View>
       </View>
     </View>
   );

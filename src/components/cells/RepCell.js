@@ -12,7 +12,11 @@ import useTheme from '../../hooks/theme/UseTheme';
 import LinearGradient from 'react-native-linear-gradient';
 
 const completedIcon = require('../../../assets/icons/completedSet.png');
-export default function ({onPress = () => {}, value = '8', state = 'active'}) {
+export default function ({
+  onPress = () => {},
+  value = '8',
+  state = 'inactive',
+}) {
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
 

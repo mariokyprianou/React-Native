@@ -16,6 +16,7 @@ import React, {useState, useRef} from 'react';
 import {View, TouchableOpacity, Text, Image, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 const playIcon = require('../../../assets/icons/play.png');
 const easierIcon = require('../../../assets/icons/easierVideo.png');
@@ -26,6 +27,10 @@ let ScreenHeight = Dimensions.get('window').height;
 export default function ({easierOnPress, harderOnPress, pauseOnPress, pause}) {
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
+
+  const {dictionary} = useDictionary();
+
+  const {easierSwitchText, harderSwitchText} = dictionary.WorkoutDict;
 
   const styles = {
     container: {
@@ -72,7 +77,7 @@ export default function ({easierOnPress, harderOnPress, pauseOnPress, pause}) {
         onPress={easierOnPress}
         style={styles.easierTouchableStyle}>
         <Image style={styles.intensityIconStyle} source={easierIcon} />
-        <Text style={styles.controlTextStyle}>EASIER</Text>
+        <Text style={styles.controlTextStyle}>{easierSwitchText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -83,7 +88,7 @@ export default function ({easierOnPress, harderOnPress, pauseOnPress, pause}) {
       <TouchableOpacity
         onPress={harderOnPress}
         style={styles.harderTouchableStyle}>
-        <Text style={styles.controlTextStyle}>HARDER</Text>
+        <Text style={styles.controlTextStyle}>{harderSwitchText}</Text>
         <Image style={styles.intensityIconStyle} source={harderIcon} />
       </TouchableOpacity>
     </View>

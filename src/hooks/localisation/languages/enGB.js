@@ -33,6 +33,11 @@ const enGB = {
   },
   WorkoutDict: {
     exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
+    weightText: 'WEIGHT',
+    notesText: 'NOTES',
+    setsText: 'Sets',
+    easierSwitchText: 'EASIER',
+    harderSwitchText: 'HARDER',
   },
   AppTitle: 'Power',
   ButtonText_AddPhoto: 'ADD PHOTO',

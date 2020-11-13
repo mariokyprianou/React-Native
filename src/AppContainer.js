@@ -12,7 +12,7 @@ import TabContainer from './routes/TabContainer';
 import TransformationScreen from './screens/TransformationScreen';
 
 import Header from './components/Headers/Header';
-import RegistrationScreen from './screens/auth/RegistrationScreen';
+import RegistrationScreen from './screens/workout/WorkoutScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container

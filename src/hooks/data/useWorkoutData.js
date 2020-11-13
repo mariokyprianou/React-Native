@@ -30,6 +30,58 @@ const data = {
       sets: [{amount: '5', restTime: undefined}],
       additionalInfo: '',
     },
+    {
+      id: '2',
+      exercise: {
+        id: '1',
+        name: 'WALKING LUNGES',
+        coachingTips: '',
+        notes: '',
+        videos: [{id: '1', url: '', difficulty: 'MEDIUM'}],
+      },
+      setType: 'REPETITIONS',
+      sets: [{amount: '5', restTime: undefined}],
+      additionalInfo: '',
+    },
+    {
+      id: '3',
+      exercise: {
+        id: '1',
+        name: 'WALKING LUNGES',
+        coachingTips: '',
+        notes: '',
+        videos: [{id: '1', url: '', difficulty: 'MEDIUM'}],
+      },
+      setType: 'REPETITIONS',
+      sets: [{amount: '5', restTime: undefined}],
+      additionalInfo: '',
+    },
+    {
+      id: '4',
+      exercise: {
+        id: '1',
+        name: 'WALKING LUNGES',
+        coachingTips: '',
+        notes: '',
+        videos: [{id: '1', url: '', difficulty: 'MEDIUM'}],
+      },
+      setType: 'REPETITIONS',
+      sets: [{amount: '5', restTime: undefined}],
+      additionalInfo: '',
+    },
+    {
+      id: '5',
+      exercise: {
+        id: '1',
+        name: 'WALKING LUNGES',
+        coachingTips: '',
+        notes: '',
+        videos: [{id: '1', url: '', difficulty: 'MEDIUM'}],
+      },
+      setType: 'REPETITIONS',
+      sets: [{amount: '5', restTime: undefined}],
+      additionalInfo: '',
+    },
   ],
 };
 

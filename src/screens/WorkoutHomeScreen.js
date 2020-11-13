@@ -25,7 +25,6 @@ import ModalCard from '../components/Modals/ModalCard';
 import TakeARest from '../components/Modals/TakeARest';
 import WeekComplete from '../components/Modals/WeekComplete';
 import StayTuned from '../components/Modals/StayTuned';
-import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
 export default function WorkoutHomeScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -204,11 +203,6 @@ export default function WorkoutHomeScreen({navigation}) {
               : 'workoutComplete'
           }
         />
-        {/* <CongratulatoryModal        <--------should be in 1.10.1 screen but no ticket for it yet
-          onPressClose={handleCloseStayTunedModal}
-          name={trainerName}
-          venue={venue}
-        /> */}
       </ModalCard>
     </View>
   );

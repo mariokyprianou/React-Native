@@ -28,6 +28,7 @@ import Spacer from '../components/Utility/Spacer';
 import CantChooseButton from '../components/Buttons/CantChooseButton';
 import ModalCard from '../components/Modals/ModalCard';
 import HelpMeChooseModal from '../components/Modals/HelpMeChooseModal';
+import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
 const fakeImage = require('../../assets/fake2.png');
 
@@ -46,7 +47,11 @@ export default function MeetYourIconsScreen({
   const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
   const {currentTrainer, currentWeek} = userProgrammeData;
   const [showHelpMeChooseModal, setShowHelpMeChooseModal] = useState(false);
-  const [trainerOnSlider, setTrainerOnSlider] = useState('');
+  const [trainerOnSlider, setTrainerOnSlider] = useState(
+    meetYourIconsData[0].name,
+  );
+  const [showCongratulatoryModal, setShowCongratulatoryModal] = useState(false);
+  const [venue, setVenue] = useState('gym');
 
   const connected = true; // change to check connection
 
@@ -149,6 +154,7 @@ export default function MeetYourIconsScreen({
       alignItems: 'center',
       position: 'absolute',
       bottom: getHeight(70),
+      paddingVertical: getHeight(20),
     },
     singleButtonContainer: {
       width: '100%',
@@ -188,6 +194,18 @@ export default function MeetYourIconsScreen({
 
   function handleCloseHelpMeChooseModal() {
     setShowHelpMeChooseModal(false);
+  }
+
+  function handleCloseCongratulatoryModal() {
+    setShowCongratulatoryModal(false);
+  }
+
+  function handleStartNewProgramme() {
+    setShowCongratulatoryModal(true);
+  }
+
+  function handleChangeVenue(venue) {
+    setVenue(venue);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -270,6 +288,7 @@ export default function MeetYourIconsScreen({
                     buildMuscle={buildMuscle}
                     name={name}
                     image={image}
+                    onPressGymHome={handleChangeVenue}
                   />
                 </View>
                 <Spacer height={30} />
@@ -319,7 +338,12 @@ export default function MeetYourIconsScreen({
         </View>
       ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
         <View style={styles.singleButtonContainer}>
-          <DefaultButton type="start" icon="chevron" variant="gradient" />
+          <DefaultButton
+            type="start"
+            icon="chevron"
+            variant="gradient"
+            onPress={handleStartNewProgramme}
+          />
         </View>
       ) : (
         <View style={styles.buttonContainer}>
@@ -328,9 +352,15 @@ export default function MeetYourIconsScreen({
           <DefaultButton type="login" variant="grey" />
         </View>
       )}
-
       <ModalCard isVisible={showHelpMeChooseModal}>
         <HelpMeChooseModal onPressClose={handleCloseHelpMeChooseModal} />
+      </ModalCard>
+      <ModalCard isVisible={showCongratulatoryModal}>
+        <CongratulatoryModal
+          onPressClose={handleCloseCongratulatoryModal}
+          name={trainerOnSlider}
+          venue={venue}
+        />
       </ModalCard>
     </View>
   );

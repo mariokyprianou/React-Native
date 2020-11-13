@@ -7,38 +7,6 @@
  */
 
 const enGB = {
-  RegistrationDict: {
-    formTitle: 'Create your account to start your free trial',
-    firstNameLabel: 'FIRST NAME',
-    lastNameLabel: 'LAST NAME',
-    emailLabel: 'EMAIL',
-    passwordLabel: 'PASSWORD',
-    genderLabel: 'GENDER',
-    dobLabel: 'DATE OF BIRTH',
-    countryLabel: 'COUNTRY',
-    regionLabel: 'REGION',
-    termsAndConditionsText:
-      'I accept Power’s Terms & Conditions and Privacy Policy',
-    invalidEmail: 'Please enter a valid email',
-    invalidPassword:
-      'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
-    forgotPasswordButtonText: 'Forgot Password?',
-    forgotPasswordCodeLabel: 'PASSWORD RESET CODE',
-    forgotPasswordLabel: 'NEW PASSWORD',
-    invalidResetCode: 'Invalid code',
-    resetPasswordDescriptionText:
-      'We’ve just emailed you a code to reset your password. Enter the code here, along with a new password to change it.',
-    termsPattern: /Terms & Conditions/,
-    policyPattern: /Privacy Policy/,
-  },
-  WorkoutDict: {
-    exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
-    weightText: 'WEIGHT',
-    notesText: 'NOTES',
-    setsText: 'Sets',
-    easierSwitchText: 'EASIER',
-    harderSwitchText: 'HARDER',
-  },
   AppTitle: 'Power',
   ButtonText_AddPhoto: 'ADD PHOTO',
   ButtonText_AddResult: 'ADD RESULT',
@@ -92,6 +60,17 @@ const enGB = {
   CardText_FatLoss: 'FAT LOSS',
   CardText_Fitness: 'FITNESS',
   CardText_BuildMuscle: 'BUILD MUSCLE',
+  ChangeEmail_ScreenTitle: 'Change email',
+  ChangeEmail_Label1: 'Old password',
+  ChangeEmail_Label2: 'New Email',
+  ChangePassword_ScreenTitle: 'Change password',
+  ChangePassword_Label1: 'Old password',
+  ChangePassword_Label2: 'New password',
+  ChangeDevice_Title: 'Change Device',
+  ChangeDevice_Text:
+    'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
+  ChangeDevice_TextDisabled:
+    'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
   DropdownText_English: 'English',
   DropdownText_Hindi: 'Hindi',
   DropdownText_SelectLanguage: 'SELECT LANGUAGE',
@@ -116,6 +95,30 @@ const enGB = {
   InfoText_WeekComplete: (name, weekNumber) =>
     `Congratulations! You just finished week ${weekNumber} with ${name}!`,
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
+  RegistrationDict: {
+    formTitle: 'Create your account to start your free trial',
+    firstNameLabel: 'FIRST NAME',
+    lastNameLabel: 'LAST NAME',
+    emailLabel: 'EMAIL',
+    passwordLabel: 'PASSWORD',
+    genderLabel: 'GENDER',
+    dobLabel: 'DATE OF BIRTH',
+    countryLabel: 'COUNTRY',
+    regionLabel: 'REGION',
+    termsAndConditionsText:
+      'I accept Power’s Terms & Conditions and Privacy Policy',
+    invalidEmail: 'Please enter a valid email',
+    invalidPassword:
+      'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
+    forgotPasswordButtonText: 'Forgot Password?',
+    forgotPasswordCodeLabel: 'PASSWORD RESET CODE',
+    forgotPasswordLabel: 'NEW PASSWORD',
+    invalidResetCode: 'Invalid code',
+    resetPasswordDescriptionText:
+      'We’ve just emailed you a code to reset your password. Enter the code here, along with a new password to change it.',
+    termsPattern: /Terms & Conditions/,
+    policyPattern: /Privacy Policy/,
+  },
   Reminder_Title: 'Set a workout reminder',
   Reminder_Text: 'Power will remind you to kickstart your workout next week.',
   ScreenHeader_YourWorkouts: 'Your Workouts',
@@ -134,6 +137,7 @@ const enGB = {
   TitleText_Today: 'TODAY',
   TitleText_Week: 'Week',
   TitleText_WeekComplete: 'Week Complete',
+  TitleText_Weights: 'Weights',
   TitleText_Progress: 'progress',
   TitleText_Upload: 'Upload',
   TitleText_Your: 'Your',
@@ -145,17 +149,7 @@ const enGB = {
   NotificationsPermissions_Title: 'Notifications',
   NotificationsPermissions_Text:
     'To send you workout updates, we need permission to send push notifications to your device.',
-  ChangeEmail_ScreenTitle: 'Change email',
-  ChangeEmail_Label1: 'Old password',
-  ChangeEmail_Label2: 'New Email',
-  ChangePassword_ScreenTitle: 'Change password',
-  ChangePassword_Label1: 'Old password',
-  ChangePassword_Label2: 'New password',
-  ChangeDevice_Title: 'Change Device',
-  ChangeDevice_Text:
-    'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
-  ChangeDevice_TextDisabled:
-    'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
+
   Profile_MemberSince: 'Member since',
   Profile_WorkoutsComplete: 'Workouts complete',
   Profile_NotificationsTitle: 'Notifications',
@@ -168,6 +162,19 @@ const enGB = {
   Profile_FormLabel6: 'COUNTRY',
   Profile_FormLabel7: 'REGION',
   Profile_DeleteNotificationButtonTitle: 'Delete',
+  PurchaseModal_Info:
+    'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
+  PurchaseModal_YearlyButtonTitle: (price) => `YEARLY \u2022 £${price} / month`,
+  PurchaseModal_YearlyButtonSubTitle: (price) =>
+    `£${price} / year billed annually`,
+  PurchaseModal_MonthlyButtonTitle: (price) =>
+    `MONTHLY \u2022 £${price} / month`,
+  PurchaseModal_SavePrompt: (percentage) => `Save ${percentage}%`,
+  PurchaseModal_MonthlyButtonSubTitle: 'billed monthly',
+  PurchaseModal_RestorePurchaseButton: 'Restore purchases',
+  PurchaseModal_SubscriptionTermsTitle: 'Subscription terms',
+  PurchaseModal_SubscriptionTermsText:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   Settings_ScreenTitle: 'Settings',
   Settings_VersionText: 'Power App - Version',
   Settings_MarketingPreferences: 'Marketing preferences',
@@ -189,19 +196,17 @@ const enGB = {
   Settings_AnalyticsText:
     'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
   Settings_Language: 'Language',
-  PurchaseModal_Info:
-    'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
-  PurchaseModal_YearlyButtonTitle: (price) => `YEARLY \u2022 £${price} / month`,
-  PurchaseModal_YearlyButtonSubTitle: (price) =>
-    `£${price} / year billed annually`,
-  PurchaseModal_MonthlyButtonTitle: (price) =>
-    `MONTHLY \u2022 £${price} / month`,
-  PurchaseModal_SavePrompt: (percentage) => `Save ${percentage}%`,
-  PurchaseModal_MonthlyButtonSubTitle: 'billed monthly',
-  PurchaseModal_RestorePurchaseButton: 'Restore purchases',
-  PurchaseModal_SubscriptionTermsTitle: 'Subscription terms',
-  PurchaseModal_SubscriptionTermsText:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  WeightTable_SetText: 'Set',
+  WeightTable_RepsText: 'reps',
+  WeightTable_WeightText: 'kg',
+  WorkoutDict: {
+    exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
+    weightText: 'WEIGHT',
+    notesText: 'NOTES',
+    setsText: 'Sets',
+    easierSwitchText: 'EASIER',
+    harderSwitchText: 'HARDER',
+  },
 };
 
 export default enGB;

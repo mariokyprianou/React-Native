@@ -421,7 +421,7 @@ export default function ThemeProvider({children}) {
     },
     iconTintColor: colors.black100,
     style: {
-    ...textStyles.medium14_brownishGrey100,
+      ...textStyles.medium14_brownishGrey100,
       flex: 1,
     },
     inputContainerStyle: {

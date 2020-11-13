@@ -20,7 +20,7 @@ import DefaultButton from '../Buttons/DefaultButton';
 import SetsTable from '../Infographics/SetsTable';
 import format from 'date-fns/format';
 
-export default function WeightCaptureModal({navigation}) {
+export default function WeightCaptureModal({navigation, onPressClose}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -29,7 +29,13 @@ export default function WeightCaptureModal({navigation}) {
   const {challengeHistoryData, repsHistoryData} = useChallenge();
 
   navigation.setOptions({
-    header: () => <Header title={TitleText_Weights} showModalCross />,
+    header: () => (
+      <Header
+        title={TitleText_Weights}
+        right="times"
+        rightAction={onPressClose}
+      />
+    ),
   });
 
   const today = new Date();

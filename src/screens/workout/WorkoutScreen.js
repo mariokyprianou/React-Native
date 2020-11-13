@@ -10,14 +10,8 @@ import {StyleSheet, View, Text, ScrollView, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import Header from '../../components/Headers/Header';
+import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
-
-import ExerciseVideoView from '../../components/Views/ExerciseVideoView';
-import ExerciseCell from '../../components/cells/ExerciseCell';
-import RepCell from '../../components/cells/RepCell';
-import DefaultButton from '../../components/Buttons/DefaultButton';
-import FadingBottomView from '../../components/Views/FadingBottomView';
 import useWorkoutData from '../../hooks/data/useWorkoutData';
 
 export default function Screen({navigation}) {
@@ -29,7 +23,7 @@ export default function Screen({navigation}) {
   const {workout} = useWorkoutData();
 
   navigation.setOptions({
-    header: () => <Header title={'Workout Name'} goBack />,
+    header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

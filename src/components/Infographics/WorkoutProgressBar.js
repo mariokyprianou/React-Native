@@ -13,19 +13,14 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function HelpMeChooseBar({
-  currentQuestion,
-  totalQuestions,
-  questionText,
-  showText = true,
-}) {
+export default function HelpMeChooseBar({index, max, questionText}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {TitleText_Question, TitleText_Of} = dictionary;
 
-  const activeWidth = (currentQuestion / totalQuestions) * 100;
+  const activeWidth = (index / max) * 100;
   const inactiveWidth = 100 - activeWidth;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -37,7 +32,7 @@ export default function HelpMeChooseBar({
     barContainer: {
       flexDirection: 'row',
       width: '100%',
-      height: getHeight(4),
+      height: getHeight(22),
     },
     activeBar: {
       width: `${activeWidth}%`,
@@ -56,13 +51,6 @@ export default function HelpMeChooseBar({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      {showText && (
-        <Text
-          style={
-            styles.title
-          }>{`${TitleText_Question} ${currentQuestion} ${TitleText_Of} ${totalQuestions}`}</Text>
-      )}
-
       <View style={styles.barContainer}>
         <LinearGradient
           style={styles.activeBar}

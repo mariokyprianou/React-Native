@@ -30,6 +30,7 @@ export default function SearchText({
   right,
   rightAction,
   customTitle,
+  customLeft,
   componentRight,
   white,
   transparent,
@@ -132,33 +133,37 @@ export default function SearchText({
 
   const renderDefaultHeader = () => (
     <View style={styles.container}>
-      {left && leftAction ? (
-        <View style={styles.leftIconContainer}>{renderIcon(left)}</View>
-      ) : goBack ? (
-        <View style={styles.leftIconContainer}>
-          {renderIcon(arrowBackIcon)}
-        </View>
-      ) : (
-        <View style={styles.leftIconContainer} />
-      )}
+      <View style={styles.leftIconContainer}>
+        {customLeft ? (
+          customLeft()
+        ) : left && leftAction ? (
+          renderIcon(left)
+        ) : goBack ? (
+          renderIcon(arrowBackIcon)
+        ) : (
+          <></>
+        )}
+      </View>
 
-      {customTitle || (
-        <View style={styles.titleContainer}>
+      <View style={styles.titleContainer}>
+        {customTitle ? (
+          customTitle()
+        ) : (
           <Text style={styles.titleStyle}>{title}</Text>
-        </View>
-      )}
+        )}
+      </View>
 
-      {componentRight ? (
-        componentRight()
-      ) : right && rightAction ? (
-        <View style={styles.rightIconContainer}>{renderIcon(right)}</View>
-      ) : showModalCross ? (
-        <View style={styles.rightIconContainer}>
-          {renderIcon(white ? closeIconWhite : closeIcon)}
-        </View>
-      ) : (
-        <View style={styles.rightIconContainer} />
-      )}
+      <View style={styles.rightIconContainer}>
+        {componentRight ? (
+          componentRight()
+        ) : right && rightAction ? (
+          renderIcon(right)
+        ) : showModalCross ? (
+          renderIcon(white ? closeIconWhite : closeIcon)
+        ) : (
+          <></>
+        )}
+      </View>
     </View>
   );
 

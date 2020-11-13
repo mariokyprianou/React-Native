@@ -18,6 +18,7 @@ export default function HelpMeChooseBar({
   progress = 50,
   max = 100,
   slider = false,
+  height,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
@@ -43,8 +44,8 @@ export default function HelpMeChooseBar({
     barContainer: {
       flexDirection: 'row',
       width: '100%',
-      height: getHeight(4),
       position: 'absolute',
+      height: height || getHeight(4),
     },
     activeBar: {
       width: `${activeWidth}%`,
@@ -59,7 +60,7 @@ export default function HelpMeChooseBar({
     },
     sliderContainer: {
       width: '100%',
-      height: getHeight(4),
+      height: height || getHeight(4),
       alignItems: 'stretch',
       justifyContent: 'center',
       alignContent: 'center',

@@ -67,7 +67,11 @@ export default function ({}) {
     <View style={styles.container}>
       <View style={{height: getHeight(300)}}>
         <VideoView {...videoProps} ref={videoRef} />
-        <SliderProgressView max={videoDuration} progress={currentProgress} />
+        <SliderProgressView
+          max={videoDuration}
+          progress={currentProgress}
+          height={getHeight(4)}
+        />
         {controls()}
       </View>
     </View>

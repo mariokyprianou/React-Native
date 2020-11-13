@@ -35,6 +35,7 @@ const enGB = {
   ButtonText_QuestionMark: '?',
   ButtonText_RemindMe: 'REMIND ME',
   ButtonText_Restart: 'RESTART',
+  ButtonText_RestartProgramme: `RESTART PROGRAMME`,
   ButtonText_SendResetRequest: 'SEND RESET REQUEST',
   ButtonText_SetLanguage: 'SET LANGUAGE',
   ButtonText_Share: 'SHARE',

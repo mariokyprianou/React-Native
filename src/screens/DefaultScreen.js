@@ -25,7 +25,7 @@ export default function DefaultScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Text>Default component</Text>
+      <Text>Default screen</Text>
     </View>
   );
 }

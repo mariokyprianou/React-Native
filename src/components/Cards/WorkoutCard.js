@@ -25,13 +25,13 @@ export default function WorkoutCard({
   intensity,
   image,
   drag,
+  status,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const [workoutDay, setWorkoutDay] = useState(day);
-  const [status, setStatus] = useState();
 
   const {CardText_Day, WorkoutText_RestDay} = dictionary;
 

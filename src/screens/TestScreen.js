@@ -11,6 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
+import ProgressChart from '../components/Infographics/ProgressChart';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -24,14 +25,8 @@ export default function TestScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View
-      style={{
-        marginVertical: getHeight(50),
-        alignItems: 'center',
-        flex: 1,
-        // backgroundColor: '#00008B',
-      }}>
-      <Text style={{marginBottom: 50}}>Test components here</Text>
+    <View>
+      <ProgressChart />
     </View>
   );
 }

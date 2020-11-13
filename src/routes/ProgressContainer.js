@@ -7,16 +7,17 @@
  */
 
 import React from 'react';
-import ProgressStack from '../navigation';
+import {ProgressStack} from '../navigation';
+import ProgressScreen from '../screens/ProgressScreen';
 
 export default function ProgressContainer(props) {
   return (
     <ProgressStack.Navigator>
-      {/* <ProgressStack.Screen
+      <ProgressStack.Screen
         name="Progress"
         component={ProgressScreen}
         options={{headerShown: false}}
-      /> */}
+      />
     </ProgressStack.Navigator>
   );
 }

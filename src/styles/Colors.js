@@ -28,6 +28,7 @@ const Colors = {
   paleBlue100: 'rgba(223, 232, 238, 1)',
   paleTurquoise0: 'rgba(191, 226, 224, 0)',
   paleTurquoise100: 'rgba(191, 226, 224, 1)',
+  veryLightPink100: 'rgba(241, 241, 241, 1)',
   white0: 'rgba(255, 255, 255, 0)',
   white75: 'rgba(255, 255, 255, 0.75)',
   white80: 'rgba(255, 255, 255, 0.8)',

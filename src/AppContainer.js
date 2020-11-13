@@ -8,10 +8,8 @@
 import React from 'react';
 import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
-import WorkoutHomeScreen from './screens/WorkoutHomeScreen';
-import RegistrationScreen from './screens/auth/RegistrationScreen';
-import TermsConditionsScreen from './screens/auth/TermsConditionsScreen';
-import PrivacyPolicyScreen from './screens/auth/PrivacyPolicyScreen';
+import TabContainer from './routes/TabContainer';
+import TransformationScreen from './screens/TransformationScreen';
 import Header from './components/Headers/Header';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
@@ -27,28 +25,14 @@ export default function AppContainer() {
           headerShown: false,
         }}
       /> */}
+      <AppStack.Screen name="Test" component={TransformationScreen} />
       {/* <AppStack.Screen
-        name="Test"
-        component={WorkoutHomeScreen}
+        name="TabBar"
+        component={TabContainer}
         options={{
-          title: false,
+          headerShown: false,
         }}
       /> */}
-
-      <AppStack.Screen
-        name="Register"
-        component={RegistrationScreen}
-        options={{
-          header: () => (
-            <Header
-              title={"Create account"}
-              noSearch
-              showBurger={false}
-              goBack
-            />
-          ),
-        }}
-      />
     </AppStack.Navigator>
   );
 }

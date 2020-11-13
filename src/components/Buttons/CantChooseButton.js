@@ -6,34 +6,14 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, Animated} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import * as Animatable from 'react-native-animatable';
 
-const FadeInView = (props) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 10000,
-    }).start();
-  }, [fadeAnim]);
-
-  return (
-    <Animated.View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,
-      }}>
-      {props.children}
-    </Animated.View>
-  );
-};
-
-export default function DefaultScreen() {
+export default function CantChooseButton({onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -49,9 +29,15 @@ export default function DefaultScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    touch: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
     button: {
-      width: getWidth(20),
-      height: getWidth(20),
+      width: getHeight(28),
+      height: getHeight(28),
       backgroundColor: colors.white80,
       borderRadius: radius(14),
       alignItems: 'center',
@@ -70,6 +56,8 @@ export default function DefaultScreen() {
     },
     darkerButton: {
       backgroundColor: colors.brownishGrey100,
+      width: getWidth(20),
+      height: getWidth(20),
     },
     largerText: {
       ...textStyles.bold15_brownishGrey100,
@@ -90,19 +78,24 @@ export default function DefaultScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (buttonState === 'ready') {
     return (
-      <FadeInView style={styles.largerButton}>
-        <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
-        <View style={{...styles.button, ...styles.darkerButton}}>
-          <Text style={styles.readyQuestionMark}>
-            {ButtonText_QuestionMark}
-          </Text>
-        </View>
-      </FadeInView>
+      <Animatable.View style={styles.largerButton} animation="slideInRight">
+        <TouchableOpacity style={styles.touch} onPress={onPress}>
+          <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
+          <View style={{...styles.button, ...styles.darkerButton}}>
+            <Text style={styles.readyQuestionMark}>
+              {ButtonText_QuestionMark}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Animatable.View>
     );
   }
+
   return (
     <View style={styles.button}>
-      <Text style={styles.questionMark}>{ButtonText_QuestionMark}</Text>
+      <TouchableOpacity style={styles.touch} onPress={onPress}>
+        <Text style={styles.questionMark}>{ButtonText_QuestionMark}</Text>
+      </TouchableOpacity>
     </View>
   );
 }

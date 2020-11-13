@@ -7,16 +7,17 @@
  */
 
 import React from 'react';
-import ProfileStack from '../navigation';
+import {ProfileStack} from '../navigation';
+import DefaultScreen from '../screens/DefaultScreen';
 
 export default function ProfileContainer(props) {
   return (
     <ProfileStack.Navigator>
-      {/* <ProfileStack.Screen
+      <ProfileStack.Screen
         name="Profile"
-        component={Profile}
+        component={DefaultScreen}
         options={{headerShown: false}}
-      /> */}
+      />
     </ProfileStack.Navigator>
   );
 }

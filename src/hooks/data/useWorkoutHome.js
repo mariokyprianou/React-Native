@@ -85,6 +85,15 @@ const fakeData = {
     //   image: fakeImage,
     // },
   ],
+  trainerName: 'Katrina',
+  venue: 'home',
+  totalDuration: 150,
+  totalReps: 90,
+  totalSets: 20,
+  currentWeekNumber: 1,
+  completedWorkoutWeek: false, // from workoutWeek.workouts (T []) - each workout has isCompleted property
+  firstWorkoutOfNextWeek: '3rd July',
+  lastWeekOfProgramme: true,
 };
 
 export default function useWorkoutHome() {

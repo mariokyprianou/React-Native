@@ -12,7 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function FadingBottomView({color = 'white', height = 337}) {
+export default function FadingBottomView({color = 'white', height}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors} = useTheme();
@@ -20,7 +20,7 @@ export default function FadingBottomView({color = 'white', height = 337}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     fadeContainer: {
-      height: height === 337 ? getHeight(337) : '100%',
+      height: height ? getHeight(height) : '100%',
       width: '100%',
     },
     fade: {

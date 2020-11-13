@@ -11,17 +11,40 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useOnboarding from '../hooks/data/useOnboarding';
+import useDictionary from '../hooks/localisation/useDictionary';
 import Swiper from 'react-native-swiper';
 import OnboardingSliderItem from '../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../components/Buttons/DefaultButton';
+import Header from '../components/Headers/Header';
 
-export default function OnboardingScreen() {
+export default function OnboardingScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
   const {onboardingData} = useOnboarding();
+  const {dictionary} = useDictionary();
+  const {ButtonText_Login} = dictionary;
+
+  const Login = () => {
+    return (
+      <View>
+        <Text style={styles.loginText}>{ButtonText_Login}</Text>
+      </View>
+    );
+  };
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={''}
+        goBack
+        componentRight={() => <Login />}
+        rightAction={() => console.log('login')}
+      />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -52,6 +75,9 @@ export default function OnboardingScreen() {
       width: getHeight(8),
       borderRadius: radius(14),
       marginHorizontal: getWidth(3),
+    },
+    loginText: {
+      ...textStyles.bold15_black100,
     },
   });
 

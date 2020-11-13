@@ -26,17 +26,20 @@ import WorkoutCard from '../components/Cards/WorkoutCard';
 import DefaultButton from '../components/Buttons/DefaultButton';
 import Spacer from '../components/Utility/Spacer';
 import CantChooseButton from '../components/Buttons/CantChooseButton';
+import ModalCard from '../components/Modals/ModalCard';
+import HelpMeChooseModal from '../components/Modals/HelpMeChooseModal';
 
 const fakeImage = require('../../assets/fake2.png');
 
-export default function MeetYourIconsScreen() {
+export default function MeetYourIconsScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
   const {meetYourIconsData} = useMeetYourIcons();
+  const [showHelpMeChooseModal, setShowHelpMeChooseModal] = useState(false);
 
   const connected = true; // change to check connection
 
@@ -50,6 +53,10 @@ export default function MeetYourIconsScreen() {
 
   const logo = require('../../assets/images/logo.png');
 
+  navigation.setOptions({
+    header: () => null,
+  });
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
@@ -60,7 +67,7 @@ export default function MeetYourIconsScreen() {
       width: '100%',
       height: getHeight(70),
       position: 'absolute',
-      top: 0,
+      top: getHeight(30),
       zIndex: 9,
       marginTop: getHeight(20),
       flexDirection: 'row',
@@ -159,6 +166,14 @@ export default function MeetYourIconsScreen() {
     }
   }
 
+  function handlePressHelp() {
+    setShowHelpMeChooseModal(true);
+  }
+
+  function handleCloseHelpMeChooseModal() {
+    setShowHelpMeChooseModal(false);
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (!connected) {
     return (
@@ -171,7 +186,10 @@ export default function MeetYourIconsScreen() {
             </Text>
           </View>
           <View style={styles.cantChooseContainer}>
-            <CantChooseButton />
+            <CantChooseButton
+              onPress={handlePressHelp}
+              navigation={navigation}
+            />
           </View>
         </View>
         <Image source={fakeImage} style={styles.zeroImage} />
@@ -214,7 +232,10 @@ export default function MeetYourIconsScreen() {
                   </Text>
                 </View>
                 <View style={styles.cantChooseContainer}>
-                  <CantChooseButton />
+                  <CantChooseButton
+                    onPress={handlePressHelp}
+                    navigation={navigation}
+                  />
                 </View>
               </View>
               <View style={styles.iconContainer}>
@@ -268,6 +289,9 @@ export default function MeetYourIconsScreen() {
         <DefaultButton type="login" variant="transparentGreyText" />
         <Spacer height={10} />
       </View>
+      <ModalCard isVisible={showHelpMeChooseModal}>
+        <HelpMeChooseModal onPressClose={handleCloseHelpMeChooseModal} />
+      </ModalCard>
     </View>
   );
 }

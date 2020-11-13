@@ -8142,6 +8142,13 @@ react-native-svg@^12.1.0:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
 
+react-native-swipeable@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-swipeable/-/react-native-swipeable-0.6.0.tgz#0fe551330018b83c754d27f505709a594f554370"
+  integrity sha512-OJUmOtPAZ3s6OHdbmGdGBq3oNZaUFOV81UMQfO2fvIF2cUOMbjUKQCRU7EhijEyufiaMAlSu/VguCRAdLRLk3w==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-swiper@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.6.0.tgz#59fdbdf95addee49630312f27077622c27776819"
@@ -8176,6 +8183,11 @@ react-native-vector-icons@^7.0.0:
     lodash.template "^4.5.0"
     prop-types "^15.7.2"
     yargs "^15.0.2"
+
+react-native-version-number@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-version-number/-/react-native-version-number-0.3.6.tgz#dd8b1435fc217df0a166d7e4a61fdc993f3e7437"
+  integrity sha512-TdyXiK90NiwmSbmAUlUBOV6WI1QGoqtvZZzI5zQY4fKl67B3ZrZn/h+Wy/OYIKKFMfePSiyfeIs8LtHGOZ/NgA==
 
 react-native-webview@9.1.1:
   version "9.1.1"
@@ -9199,6 +9211,10 @@ text-table@^0.2.0:
   resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdforms.git#6a5ed5ee3cd88b5cc16511287917d57eb1a20d84"
   dependencies:
     lodash "^4.17.15"
+
+"the-core-ui-module-tdsettings@git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdsettings.git":
+  version "1.0.2"
+  resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdsettings.git#26492e0faf055faa5040f09707363547a9b3a190"
 
 "the-core-ui-module-tdslideshow@git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow.git":
   version "1.0.2"

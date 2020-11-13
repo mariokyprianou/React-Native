@@ -20,7 +20,7 @@ import TDIcon from 'the-core-ui-component-tdicon';
 
 // possible icon - share, reminder, chevron
 
-// possible variant - white, gradient, transparent
+// possible variant - white, gradient, transparentWhiteText, transparentGreyText, transparentBlackBoldText
 
 export default function DefaultButton({
   type,
@@ -29,6 +29,11 @@ export default function DefaultButton({
   weekNo,
   trainerName,
   onPress,
+  disabled,
+  capitalise,
+  customText,
+  customSubtext,
+  promptText,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -67,6 +72,11 @@ export default function DefaultButton({
     ButtonText_StartWorkout,
     ButtonText_TryAgain,
     ButtonText_Pluralise,
+    ButtonText_Skip,
+    ButtonText_NeedHelp,
+    ButtonText_SaveChanges,
+    ButtonText_NeedToSignOut,
+    ButtonText_Logout,
   } = dictionary;
 
   const buttonVariant = {
@@ -91,20 +101,53 @@ export default function DefaultButton({
     transparentGreyText: {
       backgroundColor: 'transparent',
     },
+    transparentBlackBoldText: {
+      backgroundColor: 'transparent',
+    },
   };
 
   const buttonTextVariant = {
     white: {
       ...textStyles.bold15_black100,
+      color: disabled ? colors.black40 : colors.black100,
+      letterSpacing: 0.75,
     },
     gradient: {
       ...textStyles.bold15_white100,
+      letterSpacing: 0.75,
     },
     transparentWhiteText: {
       ...textStyles.bold15_white100,
     },
     transparentGreyText: {
       ...textStyles.semiBold16_brownishGrey100,
+    },
+    transparentBlackBoldText: {
+      ...textStyles.bold15_black100,
+      letterSpacing: 0.75,
+    },
+  };
+
+  const buttonSubtextVariant = {
+    white: {
+      ...textStyles.regular14_black100,
+      color: disabled ? colors.black40 : colors.black100,
+      letterSpacing: 0.75,
+    },
+    gradient: {
+      ...textStyles.regular14_white100,
+      letterSpacing: 0.75,
+    },
+    transparentWhiteText: {
+      ...textStyles.regular14_white100,
+    },
+    transparentGreyText: {
+      ...textStyles.regular14_white100,
+      color: colors.brownishGrey100,
+    },
+    transparentBlackBoldText: {
+      ...textStyles.regular14_black100,
+      letterSpacing: 0.75,
     },
   };
 
@@ -136,6 +179,12 @@ export default function DefaultButton({
     startNow: ButtonText_StartNow,
     startWorkout: ButtonText_StartWorkout,
     tryAgain: ButtonText_TryAgain,
+    skip: ButtonText_Skip,
+    needHelp: ButtonText_NeedHelp,
+    saveChanges: ButtonText_SaveChanges,
+    needToSignOut: ButtonText_NeedToSignOut,
+    logout: ButtonText_Logout,
+    customText: customText,
   };
 
   const iconType = {
@@ -179,7 +228,7 @@ export default function DefaultButton({
   const styles = {
     container: {
       width: '90%',
-      height: getHeight(50),
+      height: getHeight(customSubtext ? 75 : 50),
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -188,15 +237,15 @@ export default function DefaultButton({
     touch: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
-      height: getHeight(50),
+      alignItems: customSubtext ? undefined : 'center',
+      height: getHeight(customSubtext ? 75 : 50),
     },
     gradient: {
       flex: 1,
       width: '100%',
-      height: getHeight(50),
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: customSubtext ? undefined : 'center',
+      height: getHeight(customSubtext ? 75 : 50),
       flexDirection: 'row',
     },
     text: {
@@ -206,10 +255,61 @@ export default function DefaultButton({
       position: 'absolute',
       right: getWidth(15),
     },
+    textContainer: {
+      flex: 1,
+      marginLeft: getWidth(20),
+      marginRight: getWidth(icon ? 40 : 20),
+      justifyContent: 'center',
+    },
+    subText: {
+      ...buttonSubtextVariant[variant],
+    },
+    promptContainer: {
+      backgroundColor: colors.blueGreen100,
+      position: 'absolute',
+      height: getHeight(24),
+      right: getWidth(15),
+      paddingHorizontal: getWidth(12),
+      top: -getHeight(12),
+      justifyContent: 'center',
+    },
+    promptTextStyle: {
+      ...textStyles.medium14_white100,
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
+
+  const text = buttonText[type] || '';
+  const finalText =
+    variant === 'white' ||
+    variant === 'gradient' ||
+    variant === 'transparentBlackBoldText' ||
+    capitalise
+      ? text.toUpperCase()
+      : text;
+
+  const renderButtonText = () => {
+    if (customSubtext) {
+      return (
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{finalText}</Text>
+          <Text style={styles.subText}>{customSubtext}</Text>
+        </View>
+      );
+    }
+    return <Text style={styles.text}>{finalText}</Text>;
+  };
+
+  const renderPrompt = () => {
+    return (
+      <View style={styles.promptContainer}>
+        <Text style={styles.promptTextStyle}>{promptText}</Text>
+      </View>
+    );
+  };
+
   if (variant === 'gradient') {
     return (
       <View style={styles.container}>
@@ -219,7 +319,7 @@ export default function DefaultButton({
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             colors={[colors.tealish100, colors.tiffanyBlue100]}>
-            <Text style={styles.text}>{buttonText[type]}</Text>
+            {renderButtonText()}
             {icon && (
               <View style={styles.iconContainer}>
                 <TDIcon
@@ -233,6 +333,7 @@ export default function DefaultButton({
               </View>
             )}
           </LinearGradient>
+          {promptText && renderPrompt()}
         </TouchableOpacity>
       </View>
     );
@@ -273,11 +374,13 @@ export default function DefaultButton({
     );
   }
   // This ^^ will need different options for pluralising names in Hindi and Urdu
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress} style={styles.touch}>
-        <Text style={styles.text}>{buttonText[type]}</Text>
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.touch}
+        disabled={disabled}>
+        {renderButtonText()}
         {icon && (
           <View style={styles.iconContainer}>
             <TDIcon

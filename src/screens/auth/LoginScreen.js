@@ -15,24 +15,15 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
-
-// <AppStack.Screen
-//       name="Login"
-//       component={LoginScreen}
-//       options={{
-//         header: () => (
-//           <Header
-//             title={"Login"}
-//             noSearch
-//             showBurger={false}
-//             goBack
-//           />
-//         ),
-//       }}
-//     />
+import Header from '../../components/Headers/Header';
 
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
+
+  navigation.setOptions({
+    header: () => <Header title={'Login'} noSearch showBurger={false} goBack />,
+  });
+
   const {
     cellFormStyles,
 

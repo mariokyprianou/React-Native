@@ -10,7 +10,9 @@ import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
 import TabContainer from './routes/TabContainer';
 import TransformationScreen from './screens/TransformationScreen';
+
 import Header from './components/Headers/Header';
+import RegistrationScreen from './screens/auth/RegistrationScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container
@@ -20,12 +22,12 @@ export default function AppContainer() {
     <AppStack.Navigator>
       {/* <AppStack.Screen
         name="Initial Release"
-        component={InitialReleaseScreen}
+        component={AnalyticsPermissionScreen}
         options={{
           headerShown: false,
         }}
       /> */}
-      <AppStack.Screen name="Test" component={TransformationScreen} />
+      <AppStack.Screen name="Test" component={RegistrationScreen} />
       {/* <AppStack.Screen
         name="TabBar"
         component={TabContainer}

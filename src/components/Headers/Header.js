@@ -19,6 +19,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 const arrowBackIcon = require('../../../assets/icons/headerBackArrow.png');
 const closeIcon = require('../../../assets/icons/headerClose.png');
 const shareIcon = require('../../../assets/icons/share.png');
+const closeIconWhite = require('../../../assets/icons/closeWhite.png');
 
 export default function SearchText({
   title,
@@ -30,6 +31,8 @@ export default function SearchText({
   rightAction,
   customTitle,
   componentRight,
+  white,
+  transparent,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getWidth, fontSize, getHeight} = ScaleHook();
@@ -49,8 +52,9 @@ export default function SearchText({
       height,
       flexDirection: 'row',
       alignItems: 'flex-end',
-      backgroundColor: colors.offWhite100,
+      backgroundColor: transparent ? undefined : colors.offWhite100,
       width: '100%',
+      position: transparent ? 'absolute' : undefined,
     },
     titleContainer: {
       height: height - insets.top,
@@ -104,7 +108,8 @@ export default function SearchText({
     iconStyle: {
       solid: true,
       size: fontSize(20),
-      color: colors.black100,
+      color: white ? colors.white100 : colors.black100,
+      tintColor: white ? colors.white100 : colors.black100,
     },
     shareIconStyle: {
       height: getHeight(18),
@@ -143,18 +148,16 @@ export default function SearchText({
         </View>
       )}
 
-      {right && rightAction ? (
+      {componentRight ? (
+        componentRight()
+      ) : right && rightAction ? (
         <View style={styles.rightIconContainer}>{renderIcon(right)}</View>
       ) : showModalCross ? (
-        <View style={styles.rightIconContainer}>{renderIcon(closeIcon)}</View>
+        <View style={styles.rightIconContainer}>
+          {renderIcon(white ? closeIconWhite : closeIcon)}
+        </View>
       ) : (
         <View style={styles.rightIconContainer} />
-      )}
-
-      {componentRight && rightAction && (
-        <View style={styles.rightIconContainer}>
-          <Text>Hello</Text>
-        </View>
       )}
     </View>
   );
@@ -178,9 +181,7 @@ export default function SearchText({
         <View style={styles.leftButtonContainer} />
       )}
 
-      {(right && rightAction) ||
-      (componentRight && rightAction) ||
-      showModalCross ? (
+      {(right && rightAction) || showModalCross ? (
         <TouchableOpacity
           style={styles.rightButtonContainer}
           onPress={

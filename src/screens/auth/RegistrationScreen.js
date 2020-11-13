@@ -11,6 +11,7 @@ import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
 import TDIcon from 'the-core-ui-component-tdicon';
+import Header from '../../components/Headers/Header';
 
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
@@ -22,25 +23,15 @@ import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
-{
-  /* <AppStack.Screen
-        name="Register"
-        component={RegistrationScreen}
-        options={{
-          header: () => (
-            <Header
-              title={"Create account"}
-              noSearch
-              showBurger={false}
-              goBack
-            />
-          ),
-        }}
-      /> */
-}
-
 export default function RegisterScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
+
+  navigation.setOptions({
+    header: () => (
+      <Header title={'Create account'} noSearch showBurger={false} goBack />
+    ),
+  });
+
   const {
     cellFormStyles,
     dropdownStyle,

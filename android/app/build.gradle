@@ -137,6 +137,7 @@ android {
         multiDexEnabled true
 
 
+
         missingDimensionStrategy 'react-native-camera', 'mlkit'   
         multiDexEnabled true
 

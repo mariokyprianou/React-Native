@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, Text, Image, StatusBar} from 'react-native';
 import RepCell from '../cells/RepCell';
 
@@ -14,6 +14,8 @@ import useTheme from '../../hooks/theme/UseTheme';
 import ExerciseVideoView from './ExerciseVideoView';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useSafeArea} from 'react-native-safe-area-context';
+import {useTimer} from 'the-core-ui-module-tdcountdown';
+import {msToHMS} from '../../utils/dateTimeUtils';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -26,6 +28,11 @@ export default function () {
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const insets = useSafeArea();
+  const {remaining, remainingMS, toggle, active, reset} = useTimer({
+    timer: '00:60',
+  });
+
+  const [countDown, setCountDown] = useState(false);
 
   const {weightText, notesText, setsText} = dictionary.WorkoutDict;
   const exerciseTitle = 'Lateral lunges';
@@ -35,10 +42,10 @@ export default function () {
   const reps = [{}, {}, {}, {}, {}];
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    contentStyle: {
-      margin: getWidth(20),
-    },
+    contentStyle: {},
     titleContainerStyle: {
+      marginTop: getWidth(20),
+      marginHorizontal: getWidth(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
 
@@ -49,6 +56,7 @@ export default function () {
     },
     exerciseDescriptionStyle: {
       marginTop: getHeight(10),
+      marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
     },
     competedSetsTitleStyle: {
@@ -65,6 +73,7 @@ export default function () {
       margin: getWidth(4),
     },
     setsContainerStyle: {
+      marginHorizontal: getWidth(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -77,6 +86,7 @@ export default function () {
       flexDirection: 'row',
       marginTop: getHeight(16),
       marginBottom: getHeight(20),
+      marginHorizontal: getWidth(20),
     },
     weightTouchStyle: {
       flexDirection: 'row',
@@ -86,29 +96,66 @@ export default function () {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    repsContainerStyle: {
+      flexDirection: 'row',
+      flex: 1,
+      marginStart: getWidth(10),
+      justifyContent: 'space-evenly',
+    },
+    timerContainer: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.white90,
+      justifyContent: 'center',
+    },
+    timerTextStyle: {
+      ...textStyles.bold76_black100,
+      alignSelf: 'center',
+      lineHeight: getHeight(80),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const onExerciseCompleted = () => {};
+  const onExerciseCompleted = () => {
+    if (countDown) {
+      reset();
+      setCountDown(false);
+    } else {
+    }
+  };
   const onWeightsPressed = () => {};
   const onNotesPressed = () => {};
+  const onSetCompleted = () => {
+    setCountDown(true);
+    reset();
+    toggle();
+  };
+
+  useEffect(() => {
+    if (remainingMS === 0) {
+      toggle();
+    }
+  }, [remainingMS, toggle]);
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const RepsList = React.memo(({reps}) => {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          flex: 1,
-          marginStart: getWidth(10),
-          justifyContent: 'space-evenly',
-        }}>
+      <View style={styles.repsContainerStyle}>
         {reps.map((index) => (
-          <RepCell key={index} />
+          <RepCell key={index} onPress={() => onSetCompleted(index)} />
         ))}
       </View>
     );
   });
+
+  const renderCountDown = () => {
+    return (
+      <View style={styles.timerContainer}>
+        <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={{height: getHeight(667 - 56 - insets.top)}}>
@@ -117,7 +164,7 @@ export default function () {
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exerciseTitle}</Text>
 
-          <TouchableOpacity onPress={onExerciseCompleted}>
+          <TouchableOpacity style={{zIndex: 1}} onPress={onExerciseCompleted}>
             <Image source={completeIcon} />
             <Image style={styles.checkIconStyle} source={checkIcon} />
           </TouchableOpacity>
@@ -152,6 +199,8 @@ export default function () {
           </View>
           <RepsList reps={reps} />
         </View>
+
+        {countDown && renderCountDown()}
       </View>
     </View>
   );

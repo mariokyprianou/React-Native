@@ -43,7 +43,7 @@ const App = () => {
     if (!client) {
       setupApollo();
     }
-  StatusBar.setBarStyle('dark-content');
+    StatusBar.setBarStyle('dark-content');
     validateChecksum();
   }, [client]);
 
@@ -57,12 +57,14 @@ const App = () => {
 
   return (
     <>
-       {Platform.OS === 'android' && <StatusBar translucent backgroundColor="transparent" />}
+      {Platform.OS === 'android' && (
+        <StatusBar translucent backgroundColor="transparent" />
+      )}
 
-    <ScaleProvider config={{height: 667, width: 375}}>
-      <ThemeProvider>
-        <DictionaryProvider>
-          {/* <ApolloProvider client={client}> */}
+      <ScaleProvider config={{height: 667, width: 375}}>
+        <ThemeProvider>
+          <DictionaryProvider>
+            {/* <ApolloProvider client={client}> */}
             <NavigationContainer>
               <TDCountdown>
                 <FormProvider>
@@ -70,12 +72,12 @@ const App = () => {
                 </FormProvider>
               </TDCountdown>
             </NavigationContainer>
-          {/* </ApolloProvider> */}
-        </DictionaryProvider>
-      </ThemeProvider>
-    </ScaleProvider>
-     <QuickPicker />
-     </>
+            {/* </ApolloProvider> */}
+          </DictionaryProvider>
+        </ThemeProvider>
+      </ScaleProvider>
+      <QuickPicker />
+    </>
   );
 };
 

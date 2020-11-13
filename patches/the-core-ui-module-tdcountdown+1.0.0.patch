@@ -1,0 +1,13 @@
+diff --git a/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js b/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js
+index 5161f5a..9fac292 100644
+--- a/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js
++++ b/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js
+@@ -12,7 +12,7 @@ const GlobalTimeContext = React.createContext();
+ function GlobalTimer(props) {
+   const [date, setDate] = useState(Date.now());
+ 
+-  useInterval(() => setDate(Date.now()), 100);
++  useInterval(() => setDate(Date.now()), 500);
+ 
+   return (
+     <GlobalTimeContext.Provider value={date}>

@@ -47,10 +47,7 @@ export default function ({
   const content = () => <Text style={styles.textStyle}>{value}</Text>;
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={onPress}
-      style={styles.containerStyle}>
+    <TouchableOpacity onPress={onPress} style={styles.containerStyle}>
       {state === 'completed' ? (
         <Image source={completedIcon} style={styles.imageStyle} />
       ) : state === 'active' ? (

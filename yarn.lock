@@ -9280,7 +9280,7 @@ text-table@^0.2.0:
   dependencies:
     lodash "^4.17.15"
 
-"the-core-ui-module-tdmediamanager@git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git":
+"the-core-ui-module-tdmediamanager@git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git#v1.0.0":
   version "1.0.0"
   resolved "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git#d10775a7c6aa46f624e45d322b9253f59d0e677a"
 

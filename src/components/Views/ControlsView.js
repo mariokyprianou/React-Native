@@ -31,7 +31,7 @@ export default function ({
   pauseOnPress,
   isPaused,
 }) {
-  const {getWidth, fontSize, getHeight} = ScaleHook();
+  const {getWidth, fontSize, getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   const {dictionary} = useDictionary();
@@ -40,10 +40,11 @@ export default function ({
 
   const styles = {
     controlsContainerStyle: {
-      alignSelf: 'center',
-      position: 'absolute',
+      alignItems: 'center',
       top: getHeight(ScreenHeight / 6),
       flexDirection: 'row',
+      alignSelf: 'center',
+      position: 'absolute',
     },
     controlTextStyle: {
       ...textStyles.bold16_white100,

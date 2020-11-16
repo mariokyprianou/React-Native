@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /*
  * Jira Ticket:
  * Created Date: Thu, 29th Oct 2020, 11:51:42 am
@@ -421,7 +422,7 @@ export default function ThemeProvider({children}) {
     },
     iconTintColor: colors.black100,
     style: {
-    ...textStyles.medium14_brownishGrey100,
+      ...textStyles.medium14_brownishGrey100,
       flex: 1,
     },
     inputContainerStyle: {
@@ -488,6 +489,81 @@ export default function ThemeProvider({children}) {
     headerBackTitle: '',
   };
 
+  const exerciseViewStyle = {
+    contentStyle: {},
+    titleContainerStyle: {
+      marginTop: getWidth(20),
+      marginHorizontal: getWidth(20),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+
+      alignItems: 'center',
+    },
+    exerciseTitleStyle: {
+      ...textStyles.bold21_black100,
+    },
+    exerciseDescriptionStyle: {
+      marginTop: getHeight(10),
+      marginHorizontal: getWidth(20),
+      ...textStyles.regular15_brownishGrey100,
+    },
+    competedSetsTitleStyle: {
+      ...textStyles.bold18_brownishGrey100,
+      lineHeight: getHeight(20),
+    },
+    competedSetsTextStyle: {
+      ...textStyles.bold16_brownishGrey100,
+    },
+    checkIconStyle: {
+      tintColor: colors.brownishGrey100,
+      position: 'absolute',
+      alignSelf: 'center',
+      margin: getWidth(4),
+    },
+    setsContainerStyle: {
+      marginHorizontal: getWidth(20),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    extraTextStyle: {
+      ...textStyles.semiBold14_black100,
+      marginStart: getWidth(6),
+    },
+    extraContainerStyle: {
+      flexDirection: 'row',
+      marginTop: getHeight(16),
+      marginBottom: getHeight(20),
+      marginHorizontal: getWidth(20),
+    },
+    weightTouchStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    setsCompletedContainerStyle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    repsContainerStyle: {
+      flexDirection: 'row',
+      flex: 1,
+      marginStart: getWidth(10),
+      justifyContent: 'space-evenly',
+    },
+    timerContainer: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.white90,
+      justifyContent: 'center',
+    },
+    timerTextStyle: {
+      ...textStyles.bold76_black100,
+      alignSelf: 'center',
+      lineHeight: getHeight(80),
+    },
+  };
+
   const publicMethods = React.useMemo(
     () => ({
       colors,
@@ -497,6 +573,7 @@ export default function ThemeProvider({children}) {
       cellFormConfig,
       dropdownStyle,
       headerButtonConfig,
+      exerciseViewStyle,
     }),
     [
       colors,
@@ -506,6 +583,7 @@ export default function ThemeProvider({children}) {
       cellFormConfig,
       dropdownStyle,
       headerButtonConfig,
+      exerciseViewStyle,
     ],
   );
 

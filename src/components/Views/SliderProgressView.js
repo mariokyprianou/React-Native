@@ -6,10 +6,9 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from 'react-native-slider';
 
@@ -19,17 +18,19 @@ export default function HelpMeChooseBar({
   max = 100,
   slider = false,
   height,
+  rounded = false,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const {TitleText_Question, TitleText_Of} = dictionary;
 
+  console.log('progress', progress);
   const [currentProgress, setCurrentProgress] = useState(progress);
 
   useEffect(() => {
-    setCurrentProgress(progress);
+    if (!slider) {
+      setCurrentProgress(progress);
+    }
   });
 
   const activeWidth = (currentProgress / max) * 100;
@@ -46,6 +47,8 @@ export default function HelpMeChooseBar({
       width: '100%',
       position: 'absolute',
       height: height || getHeight(4),
+      borderRadius: rounded ? radius(10) : radius(0),
+      overflow: 'hidden',
     },
     activeBar: {
       width: `${activeWidth}%`,

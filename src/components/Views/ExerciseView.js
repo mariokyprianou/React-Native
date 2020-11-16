@@ -16,6 +16,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
+import SliderProgressView from './SliderProgressView';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -25,10 +26,12 @@ const notesIcon = require('../../../assets/icons/notes.png');
 export default function () {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, exerciseViewStyle} = useTheme();
+  const styles = exerciseViewStyle;
+
   const {dictionary} = useDictionary();
   const insets = useSafeArea();
-  const {remaining, remainingMS, toggle, active, reset} = useTimer({
+  const {remainingMS, toggle, reset} = useTimer({
     timer: '00:60',
   });
 
@@ -40,81 +43,6 @@ export default function () {
     'Keep your front knee in line with your toes, with your back neutral and upright lorem ipsum dolor sit amet';
 
   const reps = [{}, {}, {}, {}, {}];
-  // ** ** ** ** ** STYLES ** ** ** ** **
-  const styles = {
-    contentStyle: {},
-    titleContainerStyle: {
-      marginTop: getWidth(20),
-      marginHorizontal: getWidth(20),
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-
-      alignItems: 'center',
-    },
-    exerciseTitleStyle: {
-      ...textStyles.bold21_black100,
-    },
-    exerciseDescriptionStyle: {
-      marginTop: getHeight(10),
-      marginHorizontal: getWidth(20),
-      ...textStyles.regular15_brownishGrey100,
-    },
-    competedSetsTitleStyle: {
-      ...textStyles.bold18_brownishGrey100,
-      lineHeight: getHeight(20),
-    },
-    competedSetsTextStyle: {
-      ...textStyles.bold16_brownishGrey100,
-    },
-    checkIconStyle: {
-      tintColor: colors.brownishGrey100,
-      position: 'absolute',
-      alignSelf: 'center',
-      margin: getWidth(4),
-    },
-    setsContainerStyle: {
-      marginHorizontal: getWidth(20),
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    extraTextStyle: {
-      ...textStyles.semiBold14_black100,
-      marginStart: getWidth(6),
-    },
-    extraContainerStyle: {
-      flexDirection: 'row',
-      marginTop: getHeight(16),
-      marginBottom: getHeight(20),
-      marginHorizontal: getWidth(20),
-    },
-    weightTouchStyle: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    setsCompletedContainerStyle: {
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    repsContainerStyle: {
-      flexDirection: 'row',
-      flex: 1,
-      marginStart: getWidth(10),
-      justifyContent: 'space-evenly',
-    },
-    timerContainer: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      backgroundColor: colors.white90,
-      justifyContent: 'center',
-    },
-    timerTextStyle: {
-      ...textStyles.bold76_black100,
-      alignSelf: 'center',
-      lineHeight: getHeight(80),
-    },
-  };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onExerciseCompleted = () => {

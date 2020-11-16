@@ -5,8 +5,15 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useRef} from 'react';
-import {View, TouchableOpacity, Text, Image, Dimensions} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Dimensions,
+  Animated,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import SliderProgressView from './SliderProgressView';
@@ -21,7 +28,11 @@ export default function ({}) {
 
   const [videoDuration, setVideoDuration] = useState(100);
   const [currentProgress, setCurrentProgress] = useState(0);
+
   const [isPaused, setIsPaused] = useState(true);
+
+  const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
+  const [showControls, setShowControls] = useState(false);
 
   const videoRef = useRef();
 
@@ -38,35 +49,80 @@ export default function ({}) {
     autoplay: false,
 
     onLoadEnd: (duration) => {
-      console.log('Total time:', duration);
       setVideoDuration(duration);
     },
-    onError: (error) => console.log('Error loading video:', error),
+
     onProgress: (currentTime) => {
-      console.log('Video playing at: ', currentTime);
       setCurrentProgress(currentTime);
     },
     onPaused: (paused) => {
-      console.log('Paused:', paused);
       setIsPaused(paused);
     },
-    onEnd: () => console.log('End'),
+    onEnd: () => {
+      setCurrentProgress(videoDuration);
+    },
+
+    onError: (error) => console.log('Error loading video:', error),
 
     customControls: <></>,
-    renderToolbar: () => <View />,
+    renderToolbar: () => <></>,
   };
 
+  useEffect(() => {
+    if (showControls) {
+      Animated.timing(fadeAnimation, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+
+      setTimeout(() => {
+        Animated.timing(fadeAnimation, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+        setShowControls(false);
+      }, 4000);
+    }
+  }, [showControls, fadeAnimation]);
+
   const controls = () => (
-    <ControlsView
-      pauseOnPress={() => videoRef.current.pause()}
-      isPaused={isPaused}
-    />
+    <Animated.View
+      style={{
+        opacity: fadeAnimation,
+        alignSelf: 'center',
+        position: 'absolute',
+        height: showControls ? '100%' : 0,
+        width: showControls ? '100%' : 0,
+        backgroundColor: colors.black10,
+      }}>
+      <ControlsView
+        pauseOnPress={() => {
+          videoRef.current.pause();
+        }}
+        isPaused={isPaused}
+      />
+    </Animated.View>
   );
 
   return (
     <View style={styles.container}>
       <View style={{height: getHeight(300)}}>
         <VideoView {...videoProps} ref={videoRef} />
+        {!showControls && (
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+            }}
+            activeOpacity={1}
+            onPress={() => {
+              setShowControls(!showControls);
+            }}
+          />
+        )}
         <SliderProgressView
           max={videoDuration}
           progress={currentProgress}

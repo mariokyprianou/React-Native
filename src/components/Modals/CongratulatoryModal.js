@@ -7,13 +7,13 @@
  */
 
 import React, {useState} from 'react';
-import {TouchableOpacity, View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import TDIcon from 'the-core-ui-component-tdicon';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
+import Header from '../Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -98,12 +98,13 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
     <View>
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" />
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{TitleText_Congratulations}</Text>
-          <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
-            <TDIcon input={'times'} inputStyle={styles.icon} />
-          </TouchableOpacity>
-        </View>
+        <Header
+          title={TitleText_Congratulations}
+          right="times"
+          rightAction={onPressClose}
+          white
+          transparent
+        />
         <View style={styles.infoTextContainer}>
           <Text style={styles.infoText}>
             {InfoText_StartedProgrammeWithVenue(name, venue)}

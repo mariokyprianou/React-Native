@@ -19,6 +19,7 @@ import useWorkoutData from '../../hooks/data/useWorkoutData';
 import ModalCard from '../../components/Modals/ModalCard';
 import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
 import NotesModal from '../../components/Modals/NotesModal';
+import WeekCompleteModal from '../../components/Modals/WeekComplete';
 
 export default function Screen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +27,8 @@ export default function Screen({navigation}) {
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {workout} = useWorkoutData();
-  const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(true);
+  const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(false);
+  const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(true);
   const [showNotesModal, setShowNotesModal] = useState(false);
 
   navigation.setOptions({
@@ -63,6 +65,10 @@ export default function Screen({navigation}) {
     setShowNotesModal(false);
   }
 
+  function handleCloseWeekCompleteModal() {
+    setShowWeekCompleteModal(false);
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const ExerciseList = React.memo(({exercises}) => {
@@ -97,6 +103,14 @@ export default function Screen({navigation}) {
       </ModalCard>
       <ModalCard isVisible={showNotesModal}>
         <NotesModal onPressClose={handleCloseNotesModal} />
+      </ModalCard>
+      <ModalCard isVisible={showWeekCompleteModal}>
+        <WeekCompleteModal
+          onPressClose={handleCloseWeekCompleteModal}
+          totalDuration={30}
+          totalReps={100}
+          totalSets={50}
+        />
       </ModalCard>
     </View>
   );

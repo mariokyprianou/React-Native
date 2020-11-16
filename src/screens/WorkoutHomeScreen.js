@@ -13,7 +13,6 @@ import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
 import useWorkoutHome from '../hooks/data/useWorkoutHome';
 import useTakeRest from '../hooks/data/useTakeRest';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
 import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
@@ -80,7 +79,6 @@ export default function WorkoutHomeScreen({navigation}) {
   }, [currentWeek, nextWeek, weekNumber]);
 
   useEffect(() => {
-    console.log(workoutsToDisplay);
     // change dates on back end too
   }, [workoutsToDisplay]);
 

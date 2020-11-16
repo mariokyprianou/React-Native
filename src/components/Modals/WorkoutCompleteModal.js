@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -17,10 +17,11 @@ import DefaultButton from '../Buttons/DefaultButton';
 import SliderProgressView from '../Views/SliderProgressView';
 import IconTextView from '../Infographics/IconTextView';
 import FadingBottomView from '../Views/FadingBottomView';
+import Spacer from '../Utility/Spacer';
 
 export default function WorkoutCompleteModal() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {TitleText_WorkoutComplete, CardText_HowIntense} = dictionary;
@@ -32,11 +33,14 @@ export default function WorkoutCompleteModal() {
       width: '100%',
       backgroundColor: colors.veryLightPink100,
     },
+    scroll: {
+      flex: 1,
+    },
     imageContainer: {
       height: getHeight(337),
       width: '100%',
       position: 'absolute',
-      top: getHeight(90),
+      top: 0,
     },
     image: {
       height: getHeight(337),
@@ -51,7 +55,7 @@ export default function WorkoutCompleteModal() {
     },
     iconContainer: {
       position: 'absolute',
-      top: getHeight(380),
+      top: getHeight(300),
     },
     contentContainer: {
       width: '90%',
@@ -67,10 +71,9 @@ export default function WorkoutCompleteModal() {
       marginBottom: getHeight(28),
     },
     buttonContainer: {
-      position: 'absolute',
-      bottom: getHeight(40),
       width: '100%',
       alignItems: 'center',
+      marginTop: getHeight(30),
     },
   });
 
@@ -85,40 +88,43 @@ export default function WorkoutCompleteModal() {
         right="times"
         rightAction={handleClose}
       />
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../../../assets/fakeWorkout.png')}
-          style={styles.image}
-        />
-        <View style={styles.fadeContainer}>
-          <FadingBottomView height={getHeight(250)} color="black" />
-        </View>
-      </View>
-      <View style={styles.iconContainer}>
-        <IconTextView
-          type="workoutComplete"
-          duration={30}
-          reps={20}
-          sets={17}
-          color="white"
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <Text style={styles.question}>{CardText_HowIntense}</Text>
-        <View style={styles.sliderContainer}>
-          <SliderProgressView
-            slider={true}
-            max={100}
-            progress={30}
-            height={getHeight(4)}
-            rounded={true}
+      <ScrollView style={styles.scroll}>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require('../../../assets/fakeWorkout.png')}
+            style={styles.image}
           />
+          <View style={styles.fadeContainer}>
+            <FadingBottomView height={337} color="black" />
+          </View>
+          <View style={styles.iconContainer}>
+            <IconTextView
+              type="workoutComplete"
+              duration={30}
+              reps={20}
+              sets={17}
+              color="white"
+            />
+          </View>
         </View>
-        <EmojiSelection />
-      </View>
-      <View style={styles.buttonContainer}>
-        <DefaultButton type="done" variant="white" icon="chevron" />
-      </View>
+        <View style={styles.contentContainer}>
+          <Text style={styles.question}>{CardText_HowIntense}</Text>
+          <View style={styles.sliderContainer}>
+            <SliderProgressView
+              slider={true}
+              max={100}
+              progress={30}
+              height={getHeight(4)}
+              rounded={true}
+            />
+          </View>
+          <EmojiSelection />
+        </View>
+        <View style={styles.buttonContainer}>
+          <DefaultButton type="done" variant="white" icon="chevron" />
+        </View>
+        <Spacer height={50} />
+      </ScrollView>
     </View>
   );
 }

@@ -16,6 +16,7 @@ import EmojiSelection from '../Infographics/EmojiSelection';
 import DefaultButton from '../Buttons/DefaultButton';
 import SliderProgressView from '../Views/SliderProgressView';
 import IconTextView from '../Infographics/IconTextView';
+import FadingBottomView from '../Views/FadingBottomView';
 
 export default function WorkoutCompleteModal() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -31,10 +32,22 @@ export default function WorkoutCompleteModal() {
       width: '100%',
       backgroundColor: colors.veryLightPink100,
     },
-    image: {
+    imageContainer: {
       height: getHeight(337),
       width: '100%',
+      position: 'absolute',
+      top: getHeight(90),
+    },
+    image: {
+      height: getHeight(337),
+      position: 'absolute',
+      width: '100%',
       resizeMode: 'cover',
+    },
+    fadeContainer: {
+      height: getHeight(337),
+      position: 'absolute',
+      width: '100%',
     },
     iconContainer: {
       position: 'absolute',
@@ -71,16 +84,23 @@ export default function WorkoutCompleteModal() {
         right="times"
         rightAction={handleClose}
       />
-      <Image
-        source={require('../../../assets/fakeWorkout.png')}
-        style={styles.image}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../../../assets/fakeWorkout.png')}
+          style={styles.image}
+        />
+        <View style={styles.fadeContainer}>
+          <FadingBottomView height={getHeight(337)} />
+        </View>
+      </View>
+
       <View style={styles.iconContainer}>
         <IconTextView
           type="workoutComplete"
           duration={30}
           reps={20}
           sets={17}
+          color="white"
         />
       </View>
       <View style={styles.contentContainer}>

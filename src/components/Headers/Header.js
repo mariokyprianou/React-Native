@@ -106,7 +106,7 @@ export default function SearchText({
       ...textStyles.medium20white,
     },
     iconStyle: {
-      solid: true,
+      solid: right === 'times' ? false : true,
       size: fontSize(20),
       color: white ? colors.white100 : colors.black100,
       tintColor: white ? colors.white100 : colors.black100,

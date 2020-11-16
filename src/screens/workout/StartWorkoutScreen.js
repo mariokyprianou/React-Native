@@ -18,6 +18,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import useWorkoutData from '../../hooks/data/useWorkoutData';
 import ModalCard from '../../components/Modals/ModalCard';
 import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
+import NotesModal from '../../components/Modals/NotesModal';
 
 export default function Screen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,6 +27,7 @@ export default function Screen({navigation}) {
   const {dictionary} = useDictionary();
   const {workout} = useWorkoutData();
   const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(true);
+  const [showNotesModal, setShowNotesModal] = useState(false);
 
   navigation.setOptions({
     header: () => <Header title={'Workout Name'} goBack />,
@@ -55,6 +57,10 @@ export default function Screen({navigation}) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleCloseWeightCaptureModal() {
     setShowWeightCaptureModal(false);
+  }
+
+  function handleCloseNotesModal() {
+    setShowNotesModal(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -88,6 +94,9 @@ export default function Screen({navigation}) {
           onPressClose={handleCloseWeightCaptureModal}
           navigation={navigation}
         />
+      </ModalCard>
+      <ModalCard isVisible={showNotesModal}>
+        <NotesModal onPressClose={handleCloseNotesModal} />
       </ModalCard>
     </View>
   );

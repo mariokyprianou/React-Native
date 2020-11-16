@@ -16,6 +16,8 @@ const fakeChallengeData = {
   answerBoxLabel: 'NUMBER OF SQUATS',
   result: '23 SQUATS',
   trainerName: 'Katrina',
+  notes:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
 };
 
 const fakeChallengeHistoryData = [

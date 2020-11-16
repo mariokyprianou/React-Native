@@ -15,6 +15,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
 import HelpMeChooseBar from '../Infographics/HelpMeChooseBar';
 import Spacer from '../Utility/Spacer';
+import Header from '../Headers/Header';
 import HelpMeChooseButton from '../Buttons/HelpMeChooseButton';
 import HelpMeChooseResultsModal from './HelpMeChooseResultsModal';
 
@@ -38,26 +39,7 @@ export default function HelpMeChooseModal({onPressClose}) {
     container: {
       width: '90%',
       alignSelf: 'center',
-    },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-      top: getHeight(35),
-    },
-    title: {
-      ...textStyles.bold22_black100,
-    },
-    iconContainer: {
-      position: 'absolute',
-      right: getWidth(20),
-      alignItems: 'center',
-    },
-    icon: {
-      size: fontSize(22),
-      color: colors.black100,
+      paddingTop: getHeight(20),
     },
     answersContainer: {
       flexDirection: 'row',
@@ -87,14 +69,12 @@ export default function HelpMeChooseModal({onPressClose}) {
 
   return (
     <View style={styles.card}>
+      <Header
+        title={TitleText_HelpMeChoose}
+        right="times"
+        rightAction={onPressClose}
+      />
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{TitleText_HelpMeChoose}</Text>
-          <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
-            <TDIcon input={'times'} inputStyle={styles.icon} />
-          </TouchableOpacity>
-        </View>
-        <Spacer height={90} />
         <HelpMeChooseBar
           currentQuestion={currentQuestion}
           totalQuestions={helpMeChooseData.length}

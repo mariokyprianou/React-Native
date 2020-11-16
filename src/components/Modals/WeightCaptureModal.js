@@ -20,7 +20,7 @@ import DefaultButton from '../Buttons/DefaultButton';
 import SetsTable from '../Infographics/SetsTable';
 import format from 'date-fns/format';
 
-export default function WeightCaptureModal({navigation, onPressClose}) {
+export default function WeightCaptureModal({onPressClose}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -28,26 +28,15 @@ export default function WeightCaptureModal({navigation, onPressClose}) {
   const {TitleText_Weights} = dictionary;
   const {challengeHistoryData, repsHistoryData} = useChallenge();
 
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={TitleText_Weights}
-        right="times"
-        rightAction={onPressClose}
-      />
-    ),
-  });
-
   const today = new Date();
   const date = format(today, 'do LLL yyyy');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     card: {
-      backgroundColor: colors.white100,
+      backgroundColor: colors.veryLightPink100,
       height: '100%',
       width: '100%',
-      paddingTop: 90,
     },
     titleContainer: {
       flexDirection: 'row',
@@ -70,11 +59,11 @@ export default function WeightCaptureModal({navigation, onPressClose}) {
       width: getWidth(95),
     },
     dropdownBox: {
-      backgroundColor: colors.white100,
-      borderColor: colors.white100,
+      backgroundColor: colors.veryLightPink100,
+      borderColor: colors.veryLightPink100,
     },
     dropdownList: {
-      backgroundColor: colors.white100,
+      backgroundColor: colors.veryLightPink100,
     },
     dropdownArrow: {
       position: 'absolute',
@@ -107,6 +96,11 @@ export default function WeightCaptureModal({navigation, onPressClose}) {
 
   return (
     <View style={styles.card}>
+      <Header
+        title={TitleText_Weights}
+        right="times"
+        rightAction={onPressClose}
+      />
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Exercise name -</Text>

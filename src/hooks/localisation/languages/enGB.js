@@ -130,6 +130,7 @@ const enGB = {
   TitleText_ChallengeComplete: 'Challenge Complete',
   TitleText_Congratulations: 'Congratulations!',
   TitleText_HelpMeChoose: 'Help me choose',
+  TitleText_Notes: 'Notes',
   TitleText_Of: 'OF',
   TitleText_Question: 'QUESTION',
   TitleText_Result: 'RESULT',
@@ -143,6 +144,7 @@ const enGB = {
   TitleText_Upload: 'Upload',
   TitleText_Your: 'Your',
   TitleText_YourFirstWeek: 'Your first week with',
+  TitleText_YourNotes: 'YOUR NOTES',
   WorkoutText_RestDay: 'REST DAY',
   AnalyticsPermissions_Title: 'Analytics',
   AnalyticsPermissions_Text:

@@ -7,14 +7,14 @@
  */
 
 import React from 'react';
-import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import TDIcon from 'the-core-ui-component-tdicon';
 import DefaultButton from '../Buttons/DefaultButton';
 import Spacer from '../Utility/Spacer';
 import ProgressChart from '../Infographics/ProgressChart';
+import Header from '../Headers/Header';
 
 export default function ChallengeCompletionModal({
   onPressClose,
@@ -40,34 +40,14 @@ export default function ChallengeCompletionModal({
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor: colors.white100,
-    },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-      top: getHeight(45),
-    },
-    title: {
-      ...textStyles.bold22_black100,
-    },
-    iconContainer: {
-      position: 'absolute',
-      right: getWidth(20),
-      alignItems: 'center',
-    },
-    icon: {
-      size: fontSize(24),
-      color: colors.black100,
+      backgroundColor: colors.veryLightPink100,
     },
     descriptionContainer: {
       width: '90%',
       alignSelf: 'center',
     },
     description: {
-      marginTop: getHeight(96),
+      marginTop: getHeight(20),
       ...textStyles.semiBold16_brownishGrey100,
     },
     buttonContainer: {
@@ -83,7 +63,7 @@ export default function ChallengeCompletionModal({
       top: getHeight(200),
     },
     resultContainer: {
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.paleBlue100,
       borderRadius: radius(15),
       width: getWidth(170),
       height: getHeight(110),
@@ -108,12 +88,11 @@ export default function ChallengeCompletionModal({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.title}>{TitleText_ChallengeComplete}</Text>
-        <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
-          <TDIcon input={'times'} inputStyle={styles.icon} />
-        </TouchableOpacity>
-      </View>
+      <Header
+        title={TitleText_ChallengeComplete}
+        right="times"
+        rightAction={onPressClose}
+      />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
           {InfoText_ChallengeComplete(challengeName, trainerName)}

@@ -84,6 +84,7 @@ const enGB = {
   CardText_Low: 'Low',
   CardText_Medium: 'Medium',
   CardText_High: 'High',
+  CardText_HowDoYouFeel: 'How do you feel?',
   CardText_Intensity: 'intensity',
   CardText_Mins: 'mins',
   CardText_Reps: 'reps',

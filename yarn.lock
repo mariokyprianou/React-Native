@@ -6710,6 +6710,11 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
+lodash.toarray@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/lodash.toarray/-/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
+  integrity sha1-JMS/zWsvuji/0FlNsRedjptlZWE=
+
 lodash.uniqby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.uniqby/-/lodash.uniqby-4.7.0.tgz#d99c07a669e9e6d24e1362dfe266c67616af1302"
@@ -7282,6 +7287,13 @@ nise@^1.5.2:
     just-extend "^4.0.2"
     lolex "^5.0.1"
     path-to-regexp "^1.7.0"
+
+node-emoji@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/node-emoji/-/node-emoji-1.10.0.tgz#8886abd25d9c7bb61802a658523d1f8d2a89b2da"
+  integrity sha512-Yt3384If5H6BYGVHiHwTL+99OzJKHhgp82S8/dktEK73T26BazdgZ4JZh92xSVtGNJvz9UbXdNAc5hcrXV42vw==
+  dependencies:
+    lodash.toarray "^4.4.0"
 
 node-fetch@^1.0.1:
   version "1.7.3"
@@ -8051,6 +8063,13 @@ react-native-elements@^3.0.0-alpha.1:
     react-native-ratings "^7.3.0"
     react-native-size-matters "^0.3.1"
     react-native-status-bar-height "^2.5.0"
+
+react-native-emoji@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-emoji/-/react-native-emoji-1.8.0.tgz#9fe5d97dbb84b102c9b1a68eb3f8e1bf4c1f6173"
+  integrity sha512-VunKOtYes6eymyWwE7QS3mhmNXksTt2AN92PcGRtmDKLDPjuKrwd5tcJckFUekAK3H+6AMpwYy30CsiCJrDdFQ==
+  dependencies:
+    node-emoji "1.10.0"
 
 react-native-gesture-handler@^1.6.1:
   version "1.8.0"

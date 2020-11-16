@@ -51,11 +51,12 @@ export default function WorkoutCompleteModal() {
     },
     iconContainer: {
       position: 'absolute',
-      top: getHeight(370),
+      top: getHeight(380),
     },
     contentContainer: {
       width: '90%',
       alignSelf: 'center',
+      marginTop: getHeight(345),
     },
     question: {
       ...textStyles.regular15_brownishGrey100,
@@ -90,10 +91,9 @@ export default function WorkoutCompleteModal() {
           style={styles.image}
         />
         <View style={styles.fadeContainer}>
-          <FadingBottomView height={getHeight(337)} />
+          <FadingBottomView height={getHeight(250)} color="black" />
         </View>
       </View>
-
       <View style={styles.iconContainer}>
         <IconTextView
           type="workoutComplete"

@@ -11,7 +11,8 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import WeightSelection from '../components/Infographics/WeightSelection';
+import SetCompletionModal from '../components/Modals/SetCompletionModal';
+import ModalCard from '../components/Modals/ModalCard';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +27,9 @@ export default function TestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <WeightSelection />
+      <ModalCard isVisible={true}>
+        <SetCompletionModal />
+      </ModalCard>
     </View>
   );
 }

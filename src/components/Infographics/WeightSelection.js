@@ -25,11 +25,11 @@ const fakeWeights = [
   '10kg',
 ];
 
-export default function DefaultScreen() {
+export default function WeightSelection() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const swiperRef = useRef();
-  const {colors, textStyles} = useTheme();
+  const {textStyles} = useTheme();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -87,8 +87,8 @@ export default function DefaultScreen() {
         renderItem={renderItem}
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
-        sliderWidth={getWidth(370)}
-        itemWidth={getWidth(80)}
+        sliderWidth={getWidth(350)}
+        itemWidth={getWidth(75)}
         hasParallaxImages={true}
         onSnapToItem={(index) => setSelectedIndex(index)}
         windowSize={1}

@@ -11,7 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import SetCompletionModal from '../components/Modals/SetCompletionModal';
+import WorkoutCompleteModal from '../components/Modals/WorkoutCompleteModal';
 import ModalCard from '../components/Modals/ModalCard';
 
 export default function TestScreen() {
@@ -28,7 +28,7 @@ export default function TestScreen() {
   return (
     <View>
       <ModalCard isVisible={true}>
-        <SetCompletionModal />
+        <WorkoutCompleteModal />
       </ModalCard>
     </View>
   );

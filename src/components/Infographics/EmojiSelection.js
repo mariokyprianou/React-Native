@@ -33,6 +33,9 @@ export default function EmojiSelection() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    container: {
+      height: getHeight(55),
+    },
     text: {
       ...textStyles.regular15_brownishGrey100,
       marginBottom: getHeight(10),
@@ -64,7 +67,7 @@ export default function EmojiSelection() {
   console.log(selected);
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.text}>{CardText_HowDoYouFeel}</Text>
       <View style={styles.emojiContainer}>
         {emojis.map((emoji, index) => (

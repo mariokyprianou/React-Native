@@ -20,13 +20,14 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
+import Header from '../Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
 export default function TakeARest({name, venue, date, onPressClose, type}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+  const {textStyles} = useTheme();
   const [reminders, showReminders] = useState(true);
   const {dictionary} = useDictionary();
   const {
@@ -48,26 +49,6 @@ export default function TakeARest({name, venue, date, onPressClose, type}) {
     image: {
       width: '100%',
       height: '100%',
-    },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-      top: getHeight(45),
-    },
-    title: {
-      ...textStyles.bold22_white100,
-    },
-    iconContainer: {
-      position: 'absolute',
-      right: getWidth(20),
-      alignItems: 'center',
-    },
-    icon: {
-      size: fontSize(24),
-      color: colors.white100,
     },
     infoTextContainer: {
       position: 'absolute',
@@ -115,14 +96,13 @@ export default function TakeARest({name, venue, date, onPressClose, type}) {
       <View>
         <ImageBackground source={fakeImage} style={styles.image}>
           <FadingBottomView color="black" />
-          <View style={styles.headerContainer}>
-            <Text style={styles.title}>{TitleText_Stay_Tuned}</Text>
-            <TouchableOpacity
-              style={styles.iconContainer}
-              onPress={onPressClose}>
-              <TDIcon input={'times'} inputStyle={styles.icon} />
-            </TouchableOpacity>
-          </View>
+          <Header
+            title={TitleText_Stay_Tuned}
+            right="times"
+            rightAction={onPressClose}
+            white
+            transparent
+          />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
               {InfoText_StayTuned(name, date)}

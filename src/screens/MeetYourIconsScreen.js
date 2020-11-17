@@ -28,18 +28,30 @@ import Spacer from '../components/Utility/Spacer';
 import CantChooseButton from '../components/Buttons/CantChooseButton';
 import ModalCard from '../components/Modals/ModalCard';
 import HelpMeChooseModal from '../components/Modals/HelpMeChooseModal';
+import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
 const fakeImage = require('../../assets/fake2.png');
 
-export default function MeetYourIconsScreen({navigation}) {
+// IF NAVIGATING HERE TO SWITCH PROGRAMMES: please pass switchProgramme === true
+
+export default function MeetYourIconsScreen({
+  navigation,
+  switchProgramme = true,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
-  const {meetYourIconsData} = useMeetYourIcons();
+  const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
+  const {currentTrainer, currentWeek} = userProgrammeData;
   const [showHelpMeChooseModal, setShowHelpMeChooseModal] = useState(false);
+  const [trainerOnSlider, setTrainerOnSlider] = useState(
+    meetYourIconsData[0].name,
+  );
+  const [showCongratulatoryModal, setShowCongratulatoryModal] = useState(false);
+  const [venue, setVenue] = useState('gym');
 
   const connected = true; // change to check connection
 
@@ -138,10 +150,18 @@ export default function MeetYourIconsScreen({navigation}) {
     },
     buttonContainer: {
       width: '100%',
-      backgroundColor: 'transparent',
+      backgroundColor: colors.paleTurquoise100,
       alignItems: 'center',
       position: 'absolute',
-      bottom: 0,
+      bottom: getHeight(70),
+      paddingVertical: getHeight(20),
+    },
+    singleButtonContainer: {
+      width: '100%',
+      backgroundColor: colors.paleTurquoise100,
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: getHeight(130),
     },
     zeroButtonContainer: {
       backgroundColor: 'transparent',
@@ -160,9 +180,11 @@ export default function MeetYourIconsScreen({navigation}) {
   function handlePress(direction) {
     if (direction === 'left' && activeIndex !== 0) {
       iconsSwiper.current.scrollTo(activeIndex - 1, true);
+      setTrainerOnSlider(meetYourIconsData[activeIndex - 1].name);
     }
     if (direction === 'right' && activeIndex !== meetYourIconsData.length - 1) {
       iconsSwiper.current.scrollTo(activeIndex + 1, true);
+      setTrainerOnSlider(meetYourIconsData[activeIndex + 1].name);
     }
   }
 
@@ -172,6 +194,18 @@ export default function MeetYourIconsScreen({navigation}) {
 
   function handleCloseHelpMeChooseModal() {
     setShowHelpMeChooseModal(false);
+  }
+
+  function handleCloseCongratulatoryModal() {
+    setShowCongratulatoryModal(false);
+  }
+
+  function handleStartNewProgramme() {
+    setShowCongratulatoryModal(true);
+  }
+
+  function handleChangeVenue(venue) {
+    setVenue(venue);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -222,75 +256,111 @@ export default function MeetYourIconsScreen({navigation}) {
             text,
             liveWeeks,
             firstWeek,
-          }) => (
-            <ScrollView style={styles.sliderContainer}>
-              <View style={styles.headerContainer}>
-                <View>
-                  <Image source={logo} style={styles.image} />
-                  <Text style={styles.selectText}>
-                    {InfoText_SelectYourProgramme}
-                  </Text>
+          }) => {
+            return (
+              <ScrollView style={styles.sliderContainer}>
+                <View style={styles.headerContainer}>
+                  <View>
+                    <Image source={logo} style={styles.image} />
+                    <Text style={styles.selectText}>
+                      {InfoText_SelectYourProgramme}
+                    </Text>
+                  </View>
+                  <View style={styles.cantChooseContainer}>
+                    <CantChooseButton
+                      onPress={handlePressHelp}
+                      navigation={navigation}
+                    />
+                  </View>
                 </View>
-                <View style={styles.cantChooseContainer}>
-                  <CantChooseButton
-                    onPress={handlePressHelp}
-                    navigation={navigation}
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={() => handlePress('left')}>
+                    <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handlePress('right')}>
+                    <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.cardContainer}>
+                  <TrainerCard
+                    fatLoss={fatLoss}
+                    fitness={fitness}
+                    buildMuscle={buildMuscle}
+                    name={name}
+                    image={image}
+                    onPressGymHome={handleChangeVenue}
                   />
                 </View>
-              </View>
-              <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={() => handlePress('left')}>
-                  <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handlePress('right')}>
-                  <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.cardContainer}>
-                <TrainerCard
-                  fatLoss={fatLoss}
-                  fitness={fitness}
-                  buildMuscle={buildMuscle}
-                  name={name}
-                  image={image}
-                />
-              </View>
-              <Spacer height={30} />
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>{text}</Text>
-                <Text
-                  style={
-                    styles.heading
-                  }>{`${TitleText_YourFirstWeek} ${name}`}</Text>
-                <Text
-                  style={
-                    styles.weeksText
-                  }>{`${liveWeeks} ${InfoText_WeeksOfTraining}`}</Text>
-              </View>
-              <View style={styles.workoutContainer}>
-                {firstWeek.map(({title, day, date, duration, intensity}) => (
-                  <WorkoutCard
-                    title={title}
-                    day={day}
-                    date={date}
-                    duration={duration}
-                    intensity={intensity}
-                  />
-                ))}
-              </View>
-              <Spacer height={90} />
-            </ScrollView>
-          ),
+                <Spacer height={30} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>{text}</Text>
+                  <Text
+                    style={
+                      styles.heading
+                    }>{`${TitleText_YourFirstWeek} ${name}`}</Text>
+                  <Text
+                    style={
+                      styles.weeksText
+                    }>{`${liveWeeks} ${InfoText_WeeksOfTraining}`}</Text>
+                </View>
+                <View style={styles.workoutContainer}>
+                  {firstWeek.map(({title, day, date, duration, intensity}) => (
+                    <WorkoutCard
+                      title={title}
+                      day={day}
+                      date={date}
+                      duration={duration}
+                      intensity={intensity}
+                    />
+                  ))}
+                </View>
+                <Spacer height={90} />
+              </ScrollView>
+            );
+          },
         )}
       </Swiper>
-      <View style={styles.buttonContainer}>
-        <DefaultButton type="startNow" icon="chevron" variant="gradient" />
-        <Spacer height={10} />
-        <DefaultButton type="login" variant="transparentGreyText" />
-        <Spacer height={10} />
-      </View>
+      {switchProgramme === true && trainerOnSlider === currentTrainer ? (
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="restartProgramme"
+            icon="chevron"
+            variant="gradient"
+            trainerName="KATRINA"
+          />
+          <Spacer height={20} />
+          <DefaultButton
+            type="continueFromWeek"
+            icon="chevron"
+            variant="white"
+            weekNo={currentWeek}
+          />
+        </View>
+      ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
+        <View style={styles.singleButtonContainer}>
+          <DefaultButton
+            type="start"
+            icon="chevron"
+            variant="gradient"
+            onPress={handleStartNewProgramme}
+          />
+        </View>
+      ) : (
+        <View style={styles.buttonContainer}>
+          <DefaultButton type="startNow" icon="chevron" variant="gradient" />
+          <Spacer height={20} />
+          <DefaultButton type="login" variant="grey" />
+        </View>
+      )}
       <ModalCard isVisible={showHelpMeChooseModal}>
         <HelpMeChooseModal onPressClose={handleCloseHelpMeChooseModal} />
+      </ModalCard>
+      <ModalCard isVisible={showCongratulatoryModal}>
+        <CongratulatoryModal
+          onPressClose={handleCloseCongratulatoryModal}
+          name={trainerOnSlider}
+          venue={venue}
+        />
       </ModalCard>
     </View>
   );

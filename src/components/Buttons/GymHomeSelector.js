@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-export default function GymHomeSelector() {
+export default function GymHomeSelector({onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -49,9 +49,14 @@ export default function GymHomeSelector() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleSelect() {
-    if (buttonText === ButtonText_Gym) setButtonText(ButtonText_Home);
-    if (buttonText === ButtonText_Home) setButtonText(ButtonText_Gym);
-    console.log(buttonText);
+    if (buttonText === ButtonText_Gym) {
+      setButtonText(ButtonText_Home);
+      onPress('home');
+    }
+    if (buttonText === ButtonText_Home) {
+      setButtonText(ButtonText_Gym);
+      onPress('gym');
+    }
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

@@ -15,6 +15,7 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import LinearGradient from 'react-native-linear-gradient';
 import DefaultButton from '../Buttons/DefaultButton';
 import FadingBottomView from '../Views/FadingBottomView';
+import Header from '../Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -39,7 +40,7 @@ export default function HelpMeChooseResultsModal({
     card: {
       width: '100%',
       height: '100%',
-      backgroundColor: colors.white100,
+      backgroundColor: colors.veryLightPink100,
     },
     imageContainer: {
       width: '100%',
@@ -117,15 +118,14 @@ export default function HelpMeChooseResultsModal({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
+      <Header
+        title={TitleText_HelpMeChoose}
+        right="times"
+        rightAction={onPressClose}
+      />
       <View style={styles.imageContainer}>
         <Image source={fakeImage} style={styles.image} />
         <FadingBottomView color="black" height={565} />
-      </View>
-      <View style={styles.headerContainer}>
-        <Text style={styles.modalTitle}>{TitleText_HelpMeChoose}</Text>
-        <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
-          <TDIcon input={'times'} inputStyle={styles.icon} />
-        </TouchableOpacity>
       </View>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{TitleText_Result}</Text>

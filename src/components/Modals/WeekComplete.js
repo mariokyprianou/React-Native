@@ -7,18 +7,18 @@
  */
 
 import React from 'react';
-import {TouchableOpacity, View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import TDIcon from 'the-core-ui-component-tdicon';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
 import IconTextView from '../Infographics/IconTextView';
+import Header from '../Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function TakeARest({
+export default function WeekComplete({
   name,
   weekNumber,
   totalDuration,
@@ -44,26 +44,6 @@ export default function TakeARest({
       width: '100%',
       height: '100%',
     },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-      top: getHeight(45),
-    },
-    title: {
-      ...textStyles.bold22_white100,
-    },
-    iconContainer: {
-      position: 'absolute',
-      right: getWidth(20),
-      alignItems: 'center',
-    },
-    icon: {
-      size: fontSize(24),
-      color: colors.white100,
-    },
     infoTextContainer: {
       position: 'absolute',
       top: getHeight(90),
@@ -75,7 +55,7 @@ export default function TakeARest({
     },
     infoIconsContainer: {
       marginBottom: getHeight(34),
-      alignSelf: 'flex-start',
+      alignSelf: 'center',
     },
     buttonContainer: {
       position: 'absolute',
@@ -95,12 +75,13 @@ export default function TakeARest({
     <View>
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" />
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{TitleText_WeekComplete}</Text>
-          <TouchableOpacity style={styles.iconContainer} onPress={onPressClose}>
-            <TDIcon input={'times'} inputStyle={styles.icon} />
-          </TouchableOpacity>
-        </View>
+        <Header
+          title={TitleText_WeekComplete}
+          right="times"
+          rightAction={onPressClose}
+          white
+          transparent
+        />
         <View style={styles.infoTextContainer}>
           <Text style={styles.infoText}>
             {InfoText_WeekComplete(name, weekNumber)}

@@ -13,7 +13,6 @@ import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
 import useWorkoutHome from '../hooks/data/useWorkoutHome';
 import useTakeRest from '../hooks/data/useTakeRest';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
 import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
@@ -25,7 +24,6 @@ import ModalCard from '../components/Modals/ModalCard';
 import TakeARest from '../components/Modals/TakeARest';
 import WeekComplete from '../components/Modals/WeekComplete';
 import StayTuned from '../components/Modals/StayTuned';
-import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
 export default function WorkoutHomeScreen({navigation}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -81,7 +79,6 @@ export default function WorkoutHomeScreen({navigation}) {
   }, [currentWeek, nextWeek, weekNumber]);
 
   useEffect(() => {
-    console.log(workoutsToDisplay);
     // change dates on back end too
   }, [workoutsToDisplay]);
 
@@ -204,11 +201,6 @@ export default function WorkoutHomeScreen({navigation}) {
               : 'workoutComplete'
           }
         />
-        {/* <CongratulatoryModal        <--------should be in 1.10.1 screen but no ticket for it yet
-          onPressClose={handleCloseStayTunedModal}
-          name={trainerName}
-          venue={venue}
-        /> */}
       </ModalCard>
     </View>
   );

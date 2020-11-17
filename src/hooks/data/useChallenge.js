@@ -16,6 +16,8 @@ const fakeChallengeData = {
   answerBoxLabel: 'NUMBER OF SQUATS',
   result: '23 SQUATS',
   trainerName: 'Katrina',
+  notes:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
 };
 
 const fakeChallengeHistoryData = [
@@ -33,11 +35,19 @@ const fakeChallengeHistoryData = [
   {date: '21/07', value: 10, unit: 'reps'},
 ];
 
+const fakeRepsData = fakeChallengeHistoryData
+  .map((item) => item.value)
+  .filter((value, index, self) => self.indexOf(value) === index)
+  .map((item) => {
+    return {label: item.toString(), value: item};
+  });
+
 export default function useOnboarding() {
   const [challengeData, setChallengeData] = useState(fakeChallengeData);
   const [challengeHistoryData, setChallengeHistoryData] = useState(
     fakeChallengeHistoryData,
   );
+  const [repsHistoryData, setRepsHistoryData] = useState(fakeRepsData);
 
-  return {challengeData, challengeHistoryData};
+  return {challengeData, challengeHistoryData, repsHistoryData};
 }

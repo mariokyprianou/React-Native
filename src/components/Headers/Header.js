@@ -64,6 +64,7 @@ export default function SearchText({
     },
     titleStyle: {
       ...textStyles.bold22_black100,
+      color: white ? colors.white100 : colors.black100,
       textAlign: 'center',
     },
     leftButtonContainer: {

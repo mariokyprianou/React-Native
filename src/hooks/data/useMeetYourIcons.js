@@ -87,8 +87,14 @@ const fakeData = [
   },
 ];
 
+const fakeUserData = {
+  currentTrainer: 'Katrina',
+  currentWeek: 7,
+};
+
 export default function useMeetYourIcons() {
   const [meetYourIconsData, setMeetYourIconsData] = useState(fakeData);
+  const [userProgrammeData, setUserProgrammeData] = useState(fakeUserData);
 
-  return {meetYourIconsData};
+  return {meetYourIconsData, userProgrammeData};
 }

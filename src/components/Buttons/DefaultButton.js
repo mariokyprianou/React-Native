@@ -14,14 +14,6 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-// possible type - addPhoto, addResult, addWeight, allowAnalytics, allowNotifications, changeDevice, changeEmail,
-// changePassword, continue, continueFromWeek, createAccount, done, getStarted, goBack, login, programme, remindMe,
-// restart, sendResetRequest, setLanguage, share, startNow, startWorkout, tryAgain, pluralise
-
-// possible icon - share, reminder, chevron
-
-// possible variant - white, gradient, transparentWhiteText, transparentGreyText, transparentBlackBoldText
-
 export default function DefaultButton({
   type,
   icon,
@@ -31,7 +23,6 @@ export default function DefaultButton({
   onPress,
   disabled,
   capitalise,
-  customText,
   customSubtext,
   promptText,
 }) {
@@ -64,6 +55,7 @@ export default function DefaultButton({
     ButtonText_Programme,
     ButtonText_RemindMe,
     ButtonText_Restart,
+    ButtonText_RestartProgramme,
     ButtonText_SendResetRequest,
     ButtonText_SetLanguage,
     ButtonText_Share,
@@ -104,6 +96,9 @@ export default function DefaultButton({
     transparentBlackBoldText: {
       backgroundColor: 'transparent',
     },
+    grey: {
+      backgroundColor: colors.paleTurquoise100,
+    },
   };
 
   const buttonTextVariant = {
@@ -125,6 +120,9 @@ export default function DefaultButton({
     transparentBlackBoldText: {
       ...textStyles.bold15_black100,
       letterSpacing: 0.75,
+    },
+    grey: {
+      ...textStyles.bold15_white100,
     },
   };
 
@@ -172,6 +170,7 @@ export default function DefaultButton({
     programme: ButtonText_Programme,
     remindMe: ButtonText_RemindMe,
     restart: ButtonText_Restart,
+    restartProgramme: ButtonText_RestartProgramme,
     resetRequest: ButtonText_SendResetRequest,
     setLanguage: ButtonText_SetLanguage,
     share: ButtonText_Share,
@@ -184,7 +183,6 @@ export default function DefaultButton({
     saveChanges: ButtonText_SaveChanges,
     needToSignOut: ButtonText_NeedToSignOut,
     logout: ButtonText_Logout,
-    customText: customText,
   };
 
   const iconType = {
@@ -374,6 +372,7 @@ export default function DefaultButton({
     );
   }
   // This ^^ will need different options for pluralising names in Hindi and Urdu
+
   return (
     <View style={styles.container}>
       <TouchableOpacity

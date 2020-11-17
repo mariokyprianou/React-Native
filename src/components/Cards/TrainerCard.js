@@ -21,6 +21,7 @@ export default function TrainerCard({
   fitness,
   buildMuscle,
   image,
+  onPressGymHome,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
@@ -79,7 +80,7 @@ export default function TrainerCard({
       <View style={styles.overlay}>
         <View style={styles.titleContainer}>
           <Text style={styles.nameText}>{name}</Text>
-          <GymHomeSelector />
+          <GymHomeSelector onPress={onPressGymHome} />
         </View>
         <View style={styles.barsContainer}>
           <PercentageBar

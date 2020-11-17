@@ -1,0 +1,114 @@
+diff --git a/node_modules/react-native-spring-scrollview/SpringScrollView.js b/node_modules/react-native-spring-scrollview/SpringScrollView.js
+index 7a40801..898e709 100644
+--- a/node_modules/react-native-spring-scrollview/SpringScrollView.js
++++ b/node_modules/react-native-spring-scrollview/SpringScrollView.js
+@@ -21,7 +21,7 @@ import {
+   ViewStyle,
+   ScrollView
+ } from "react-native";
+-import * as TextInputState from "react-native/lib/TextInputState";
++import * as TextInputState from "react-native/Libraries/Components/TextInput/TextInputState";
+ import { FooterStatus } from "./LoadingFooter";
+ import { NormalHeader } from "./NormalHeader";
+ import { NormalFooter } from "./NormalFooter";
+diff --git a/node_modules/react-native-spring-scrollview/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml b/node_modules/react-native-spring-scrollview/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..ea4a285
+--- /dev/null
++++ b/node_modules/react-native-spring-scrollview/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.bolan9999" >
++
++    <uses-sdk
++        android:minSdkVersion="21"
++        android:targetSdkVersion="28" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-spring-scrollview/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output.json b/node_modules/react-native-spring-scrollview/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output.json
+new file mode 100644
+index 0000000..0706aa1
+--- /dev/null
++++ b/node_modules/react-native-spring-scrollview/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output.json
+@@ -0,0 +1 @@
++[{"outputType":{"type":"AAPT_FRIENDLY_MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":-1,"enabled":true,"outputFile":"react-native-spring-scrollview-release.aar","fullName":"release","baseName":"release"},"path":"AndroidManifest.xml","properties":{"packageId":"com.bolan9999","split":""}}]
+\ No newline at end of file
+diff --git a/node_modules/react-native-spring-scrollview/android/build/intermediates/library_manifest/release/AndroidManifest.xml b/node_modules/react-native-spring-scrollview/android/build/intermediates/library_manifest/release/AndroidManifest.xml
+new file mode 100644
+index 0000000..ea4a285
+--- /dev/null
++++ b/node_modules/react-native-spring-scrollview/android/build/intermediates/library_manifest/release/AndroidManifest.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.bolan9999" >
++
++    <uses-sdk
++        android:minSdkVersion="21"
++        android:targetSdkVersion="28" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-spring-scrollview/android/build/intermediates/merged_manifests/release/output.json b/node_modules/react-native-spring-scrollview/android/build/intermediates/merged_manifests/release/output.json
+new file mode 100644
+index 0000000..c7b6cb0
+--- /dev/null
++++ b/node_modules/react-native-spring-scrollview/android/build/intermediates/merged_manifests/release/output.json
+@@ -0,0 +1 @@
++[{"outputType":{"type":"MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":-1,"enabled":true,"outputFile":"react-native-spring-scrollview-release.aar","fullName":"release","baseName":"release"},"path":"../../library_manifest/release/AndroidManifest.xml","properties":{"packageId":"com.bolan9999","split":""}}]
+\ No newline at end of file
+diff --git a/node_modules/react-native-spring-scrollview/android/build/outputs/logs/manifest-merger-release-report.txt b/node_modules/react-native-spring-scrollview/android/build/outputs/logs/manifest-merger-release-report.txt
+new file mode 100644
+index 0000000..c8b3d77
+--- /dev/null
++++ b/node_modules/react-native-spring-scrollview/android/build/outputs/logs/manifest-merger-release-report.txt
+@@ -0,0 +1,25 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml:2:1-5:12
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml:2:1-5:12
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml:2:1-5:12
++	package
++		ADDED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml:3:11-34
++		INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++	xmlns:android
++		ADDED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml:2:11-69
++uses-sdk
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++		ADDED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++		ADDED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/josephclough/projects/thedistance/bsr-react-native/node_modules/react-native-spring-scrollview/android/src/main/AndroidManifest.xml
+diff --git a/node_modules/react-native-spring-scrollview/android/src/main/java/com/bolan9999/SpringScrollView.java b/node_modules/react-native-spring-scrollview/android/src/main/java/com/bolan9999/SpringScrollView.java
+index 2b1bb84..4e2890b 100644
+--- a/node_modules/react-native-spring-scrollview/android/src/main/java/com/bolan9999/SpringScrollView.java
++++ b/node_modules/react-native-spring-scrollview/android/src/main/java/com/bolan9999/SpringScrollView.java
+@@ -2,7 +2,7 @@ package com.bolan9999;
+ 
+ import android.content.Context;
+ import android.os.Build;
+-import android.support.annotation.NonNull;
++//import android.support.annotation.NonNull;
+ import android.view.MotionEvent;
+ import android.view.VelocityTracker;
+ import android.view.ViewGroup;
+@@ -32,7 +32,7 @@ public class SpringScrollView extends ReactViewGroup implements View.OnTouchList
+     private Point lastPoint, beginPoint;
+     private EdgeInsets contentInsets;
+ 
+-    public SpringScrollView(@NonNull Context context) {
++    public SpringScrollView(Context context) {
+         super(context);
+         refreshStatus = loadingStatus = "waiting";
+         initContentOffset = new Offset();

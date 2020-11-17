@@ -11,9 +11,8 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import IntercomModal from '../components/Modals/IntercomModal';
 import ModalCard from '../components/Modals/ModalCard';
-import ProgressChart from '../components/Infographics/ProgressChart';
+import EmailVerificationModal from '../components/Modals/EmailVerificationModal';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,11 +26,10 @@ export default function TestScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={{width: getWidth(335), height: getHeight(200)}}>
-      <ProgressChart />
-      {/* <ModalCard isVisible={true}>
-        <IntercomModal />
-      </ModalCard> */}
+    <View>
+      <ModalCard isVisible={true}>
+        <EmailVerificationModal />
+      </ModalCard>
     </View>
   );
 }

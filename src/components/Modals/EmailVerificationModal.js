@@ -8,18 +8,15 @@
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import Header from '../Headers/Header';
-import DefaultButton from '../Buttons/DefaultButton';
+import PermissionScreenUI from '../../screens/auth/PermissionScreenUI';
 
 export default function EmailVerificationModal() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_VerifyEmail} = dictionary;
+  const {TitleText_VerifyEmail, InfoText_VerifyEmail} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -28,28 +25,28 @@ export default function EmailVerificationModal() {
       width: '100%',
       backgroundColor: colors.veryLightPink100,
     },
-    buttonContainer: {
-      width: '100%',
-      alignItems: 'center',
-      position: 'absolute',
-      bottom: getHeight(40),
-    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function onPressButton() {
+    // TO DO - resend
+  }
+
+  function onPressBottomButton() {
+    // TO DO - go back
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      <Header
+      <PermissionScreenUI
         title={TitleText_VerifyEmail}
-        right="times"
-        rightAction={() => console.log('close modal')}
+        text={InfoText_VerifyEmail}
+        buttonType="resend"
+        bottomButtonType="goBack"
+        onPressButton={onPressButton}
+        onPressBottomButton={onPressBottomButton}
       />
-      <View style={styles.buttonContainer}>
-        <DefaultButton type="resend" variant="white" />
-        <DefaultButton type="goBack" variant="transparentGreyText" />
-      </View>
     </View>
   );
 }

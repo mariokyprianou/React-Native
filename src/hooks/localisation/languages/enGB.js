@@ -118,6 +118,8 @@ const enGB = {
   InfoText_SwitchedByMistake: 'Switched by mistake?',
   InfoText_TakeARest: (name) =>
     `You’ve just completed three workouts back-to-back. Typically, ${name} would recommend a rest day here. Do you want to carry on?`,
+  InfoText_VerifyEmail:
+    'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
   InfoText_WeekComplete: (name, weekNumber) =>
     `Congratulations! You just finished week ${weekNumber} with ${name}!`,
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',

@@ -78,9 +78,9 @@
     "the-core-ui-module-tdcountdown": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdcountdown.git",
     "the-core-ui-module-tdforms": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdforms.git#v1.1.8",
     "the-core-ui-module-tdlist": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdlist.git",
-    "the-core-ui-module-tdmediamanager": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git",
-    "the-core-ui-module-tdsettings": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdsettings.git",
     "the-core-ui-module-tdslideshow": "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow.git",
+    "the-core-ui-module-tdsettings": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdsettings.git",
+    "the-core-ui-module-tdmediamanager": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git#v1.0.0",
     "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git"
   },
   "devDependencies": {

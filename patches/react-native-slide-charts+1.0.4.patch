@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-slide-charts/src/lib/SlideBarChart.tsx b/node_modules/react-native-slide-charts/src/lib/SlideBarChart.tsx
+index b2a779c..8218ff1 100644
+--- a/node_modules/react-native-slide-charts/src/lib/SlideBarChart.tsx
++++ b/node_modules/react-native-slide-charts/src/lib/SlideBarChart.tsx
+@@ -388,7 +388,7 @@ class SlideBarChart extends Component<SlideBarChartComponentProps, State> {
+         <PanGestureHandler
+           shouldCancelWhenOutside={shouldCancelWhenOutside}
+           minPointers={0}
+-          activeOffsetX={[-3, 3]}
++          activeOffsetX={[-100, 100]}
+           failOffsetY={scrollable ? [-6, 6] : undefined}
+           onGestureEvent={Animated.event([{ nativeEvent: { x } }], { useNativeDriver: true })}
+ 

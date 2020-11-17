@@ -102,7 +102,7 @@ export default function ProgressChart() {
             width={fakeData.length * 50}
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
-            height={getHeight(180)}
+            height={getHeight(200)}
             yAxisProps={{
               numberOfTicks: ticks,
               interval: 5,

@@ -9,7 +9,7 @@ import React from 'react';
 import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
 import TabContainer from './routes/TabContainer';
-import LoginScreen from './screens/auth/LoginScreen';
+import TestScreen from './screens/TestScreen';
 
 // onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
 // tab container
@@ -24,7 +24,7 @@ export default function AppContainer() {
           headerShown: false,
         }}
       /> */}
-      <AppStack.Screen name="Login" component={LoginScreen} />
+      <AppStack.Screen name="Test" component={TestScreen} />
       {/* <AppStack.Screen
         name="TabBar"
         component={TabContainer}

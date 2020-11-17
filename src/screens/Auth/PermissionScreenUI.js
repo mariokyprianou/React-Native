@@ -35,7 +35,13 @@ const PermissionScreenUI = ({
   // MARK: - Use Effect
   useEffect(() => {
     navigation.setOptions({
-      header: () => <Header title={title} showModalCross />,
+      header: () => (
+        <Header
+          title={title}
+          right="times"
+          rightAction={() => console.log('close!')}
+        />
+      ),
     });
   }, []);
 

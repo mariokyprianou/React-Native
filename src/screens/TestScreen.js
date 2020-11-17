@@ -11,8 +11,6 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
-import ModalCard from '../components/Modals/ModalCard';
-import EmailVerificationModal from '../components/Modals/EmailVerificationModal';
 
 export default function TestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,9 +25,7 @@ export default function TestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <ModalCard isVisible={true}>
-        <EmailVerificationModal />
-      </ModalCard>
+      <Text>Hello</Text>
     </View>
   );
 }

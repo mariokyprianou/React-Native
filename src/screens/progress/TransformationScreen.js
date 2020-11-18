@@ -9,29 +9,31 @@
 import React, {useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 import Slideshow from 'the-core-ui-module-tdslideshow';
-import useDictionary from '../hooks/localisation/useDictionary';
-import SliderButton from '../components/Buttons/SliderButton';
-import CustomCountdown from '../components/Buttons/CustomCountdown';
-import CustomDateSelectors from '../components/Buttons/CustomDateSelectors';
-import Header from '../components/Headers/Header';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import SliderButton from '../../components/Buttons/SliderButton';
+import CustomCountdown from '../../components/Buttons/CustomCountdown';
+import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
+import Header from '../../components/Headers/Header';
 
 const fakeBeforePic =
   'https://cdn.vox-cdn.com/thumbor/wyuKqIJeQwb745RJb5zsK2FCOaY=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19424316/EKo3U_qXkAEK1Fz.jpeg';
 const fakeAfterPic =
   'https://media.wired.com/photos/5cdefb92b86e041493d389df/191:100/w_1280,c_limit/Culture-Grumpy-Cat-487386121.jpg';
 
-const sliderThumb = require('../../assets/icons/photoSlider.png');
-const cameraButton = require('../../assets/icons/cameraButton.png');
-const overlay = require('../../assets/images/cameraPerson.png');
+const sliderThumb = require('../../../assets/icons/photoSlider.png');
+const cameraButton = require('../../../assets/icons/cameraButton.png');
+const overlay = require('../../../assets/images/cameraPerson.png');
 
-export default function TransformationScreen({navigation}) {
+export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [beforePic, setBeforePic] = useState(fakeBeforePic);
   const [afterPic, setAfterPic] = useState(fakeAfterPic);
   const {dictionary} = useDictionary();
   const {TitleText_Upload, ScreenHeader_YourTransformation} = dictionary;
+  const navigation = useNavigation();
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -55,13 +57,13 @@ export default function TransformationScreen({navigation}) {
     },
     image: {
       width: screenWidth,
-      height: getHeight(470),
+      height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(184),
+      height: getHeight(174),
     },
     overlay: {
-      height: getHeight(470),
+      height: getHeight(440),
       top: getHeight(-50),
       resizeMode: 'contain',
     },

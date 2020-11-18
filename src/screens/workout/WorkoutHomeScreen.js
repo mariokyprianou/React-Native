@@ -9,22 +9,22 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
-import useWorkoutHome from '../hooks/data/useWorkoutHome';
-import useTakeRest from '../hooks/data/useTakeRest';
+import useWorkoutHome from '../../hooks/data/useWorkoutHome';
+import useTakeRest from '../../hooks/data/useTakeRest';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
-import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
-import WorkoutCard from '../components/Cards/WorkoutCard';
-import formatWorkoutWeek from '../utils/formatWorkoutWeek';
-import addRestDays from '../utils/addRestDays';
+import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
+import WorkoutCard from '../../components/Cards/WorkoutCard';
+import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
+import addRestDays from '../../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import ModalCard from '../components/Modals/ModalCard';
-import TakeARest from '../components/Modals/TakeARest';
-import WeekComplete from '../components/Modals/WeekComplete';
-import StayTuned from '../components/Modals/StayTuned';
+import ModalCard from '../../components/Modals/ModalCard';
+import TakeARest from '../../components/Modals/TakeARest';
+import WeekComplete from '../../components/Modals/WeekComplete';
+import StayTuned from '../../components/Modals/StayTuned';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -44,6 +44,7 @@ export default function WorkoutHomeScreen() {
       totalReps,
       totalSets,
       completedWorkoutWeek,
+      threeWorkoutsInRow,
       firstWorkoutOfNextWeek,
       lastWeekOfProgramme,
     },
@@ -83,6 +84,13 @@ export default function WorkoutHomeScreen() {
   useEffect(() => {
     // change dates on back end too
   }, [workoutsToDisplay]);
+
+  useEffect(() => {
+    if (threeWorkoutsInRow === true) {
+      setShowTakeRestModal(true);
+    }
+    // deps array left blank so this only appears the first time the page is loaded
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -162,6 +170,7 @@ export default function WorkoutHomeScreen() {
               intensity={item.intensity}
               image={item.image}
               drag={drag}
+              onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
             />
           )}
         />

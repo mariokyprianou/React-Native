@@ -8,9 +8,9 @@
 
 import React from 'react';
 import {AuthStack} from '../navigation';
-import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
-import OnboardingScreen from '../screens/OnboardingScreen';
-import MeetYourIconsScreen from '../screens/MeetYourIconsScreen';
+import LanguageSelectionScreen from '../screens/auth/LanguageSelectionScreen';
+import OnboardingScreen from '../screens/auth/OnboardingScreen';
+import MeetYourIconsScreen from '../screens/auth/MeetYourIconsScreen';
 import RegistrationScreen from '../screens/auth/RegistrationScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 

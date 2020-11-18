@@ -9,15 +9,16 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useChallenge from '../hooks/data/useChallenge';
-import DefaultButton from '../components/Buttons/DefaultButton';
-import ModalCard from '../components/Modals/ModalCard';
-import ChallengeCompletionModal from '../components/Modals/ChallengeCompletionModal';
-import ProgressChart from '../components/Infographics/ProgressChart';
-import Header from '../components/Headers/Header';
+import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
+import useChallenge from '../../hooks/data/useChallenge';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import ModalCard from '../../components/Modals/ModalCard';
+import ChallengeCompletionModal from '../../components/Modals/ChallengeCompletionModal';
+import ProgressChart from '../../components/Infographics/ProgressChart';
+import Header from '../../components/Headers/Header';
 
-export default function ChallengeEndScreen({navigation}) {
+export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -30,6 +31,7 @@ export default function ChallengeEndScreen({navigation}) {
     trainerName,
   } = challengeData;
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
@@ -89,7 +91,9 @@ export default function ChallengeEndScreen({navigation}) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleAddResult() {}
+  function handleAddResult() {
+    setShowCompletionModal(true);
+  }
 
   function handleCloseCompletionModal() {
     setShowCompletionModal(false);

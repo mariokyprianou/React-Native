@@ -7,19 +7,20 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import useCalendar from '../hooks/data/useCalendar';
-import useProgress from '../hooks/data/useProgress';
-import TransformationChallenge from '../components/Buttons/TransformationChallenge';
+import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import useCalendar from '../../hooks/data/useCalendar';
+import useProgress from '../../hooks/data/useProgress';
+import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 
-const fakeImage = require('../../assets/fake2.png');
-const fakeGraph = require('../../assets/fakeGraph.png');
+const fakeImage = require('../../../assets/fake2.png');
+const fakeGraph = require('../../../assets/fakeGraph.png');
 
-export default function ProgressScreen({navigation}) {
+export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
@@ -34,6 +35,7 @@ export default function ProgressScreen({navigation}) {
   const {TitleText_Your, TitleText_Progress} = dictionary;
   const {progressCalendarData} = useCalendar();
   const {challengeData} = useProgress();
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => null,
@@ -88,23 +90,26 @@ export default function ProgressScreen({navigation}) {
         <Text style={styles.progressTitle}>{` ${TitleText_Progress}`}</Text>
       </View>
       <View style={styles.calendarContainer}>
-        <Calendar
-          days={days}
-          daysTextStyles={daysTextStyles}
-          daysContainerStyles={daysContainerStyles}
-          firstDayOfWeek="Monday"
-          showPrevNextDays={false}
-          datesSelectable={false}
-          dateCellStyles={dateCellStyles}
-          cellData={progressCalendarData}
-          pillWidth={pillWidth}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+          <Calendar
+            days={days}
+            daysTextStyles={daysTextStyles}
+            daysContainerStyles={daysContainerStyles}
+            firstDayOfWeek="Monday"
+            showPrevNextDays={false}
+            datesSelectable={false}
+            dateCellStyles={dateCellStyles}
+            cellData={progressCalendarData}
+            pillWidth={pillWidth}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.boxWrapper}>
         <TransformationChallenge
           type="progress"
           title="Transformation"
           image={fakeImage}
+          onPress={() => navigation.navigate('Transformation')}
         />
         {challengeData.map((challenge, index) => {
           const {name, image} = challenge;
@@ -114,6 +119,7 @@ export default function ProgressScreen({navigation}) {
               type="challenge"
               title={name}
               image={fakeGraph}
+              onPress={() => navigation.navigate('Challenge')}
             />
           );
         })}

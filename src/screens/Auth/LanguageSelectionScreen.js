@@ -9,14 +9,14 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
-import DefaultButton from '../components/Buttons/DefaultButton';
+import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-const splashImage = require('../../assets/images/splash.png');
+const splashImage = require('../../../assets/images/splash.png');
 
 export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **

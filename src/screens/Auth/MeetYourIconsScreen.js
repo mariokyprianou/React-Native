@@ -17,21 +17,21 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import useMeetYourIcons from '../hooks/data/useMeetYourIcons';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import useMeetYourIcons from '../../hooks/data/useMeetYourIcons';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
-import TrainerCard from '../components/Cards/TrainerCard';
-import WorkoutCard from '../components/Cards/WorkoutCard';
-import DefaultButton from '../components/Buttons/DefaultButton';
-import Spacer from '../components/Utility/Spacer';
-import CantChooseButton from '../components/Buttons/CantChooseButton';
-import ModalCard from '../components/Modals/ModalCard';
-import HelpMeChooseModal from '../components/Modals/HelpMeChooseModal';
-import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
+import TrainerCard from '../../components/Cards/TrainerCard';
+import WorkoutCard from '../../components/Cards/WorkoutCard';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Spacer from '../../components/Utility/Spacer';
+import CantChooseButton from '../../components/Buttons/CantChooseButton';
+import ModalCard from '../../components/Modals/ModalCard';
+import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
+import CongratulatoryModal from '../../components/Modals/CongratulatoryModal';
 
-const fakeImage = require('../../assets/fake2.png');
+const fakeImage = require('../../../assets/fake2.png');
 
 export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -60,7 +60,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
 
   const screenWidth = Dimensions.get('screen').width;
 
-  const logo = require('../../assets/images/logo.png');
+  const logo = require('../../../assets/images/logo.png');
 
   navigation.setOptions({
     header: () => null,

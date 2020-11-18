@@ -6,19 +6,28 @@
  */
 
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, ScrollView, Dimensions} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useWorkoutData from '../../hooks/data/useWorkoutData';
+import ModalCard from '../../components/Modals/ModalCard';
+import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
+import NotesModal from '../../components/Modals/NotesModal';
+import WeekCompleteModal from '../../components/Modals/WeekComplete';
 
-export default function Screen({navigation}) {
+export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
+  const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(false);
+  const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(false);
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const navigation = useNavigation();
 
   const {workout} = useWorkoutData();
 
@@ -49,9 +58,29 @@ export default function Screen({navigation}) {
         overScrollMode={'never'}
         style={styles.scrollViewContainer}>
         {workout.exercises.map((screen, index) => (
-          <ExerciseView />
+          <ExerciseView
+            onPressWeights={() => setShowWeightCaptureModal(true)}
+            onPressNotes={() => setShowNotesModal(true)}
+          />
         ))}
       </ScrollView>
+      <ModalCard isVisible={showWeightCaptureModal}>
+        <WeightCaptureModal
+          onPressClose={() => setShowWeightCaptureModal(false)}
+          navigation={navigation}
+        />
+      </ModalCard>
+      <ModalCard isVisible={showNotesModal}>
+        <NotesModal onPressClose={() => setShowNotesModal(false)} />
+      </ModalCard>
+      <ModalCard isVisible={showWeekCompleteModal}>
+        <WeekCompleteModal
+          onPressClose={() => setShowWeekCompleteModal(false)}
+          totalDuration={30}
+          totalReps={100}
+          totalSets={50}
+        />
+      </ModalCard>
     </View>
   );
 }

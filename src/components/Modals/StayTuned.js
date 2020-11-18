@@ -24,7 +24,7 @@ import Header from '../Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function TakeARest({name, venue, date, onPressClose, type}) {
+export default function StayTuned({name, venue, date, onPressClose, type}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
@@ -70,6 +70,7 @@ export default function TakeARest({name, venue, date, onPressClose, type}) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleReminders(time) {
     // set up reminders
+    onPressClose();
   }
 
   function handlePressRemindMe() {

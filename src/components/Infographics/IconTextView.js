@@ -60,8 +60,8 @@ export default function IconTextView({
       flexDirection: 'row',
       width: '100%',
       alignSelf: 'center',
-      // justifyContent: 'center',
       justifyContent: 'space-evenly',
+      marginStart: 0,
     },
     iconTextContainer: {
       flexDirection: 'row',

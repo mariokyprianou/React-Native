@@ -34,6 +34,7 @@ const enGB = {
   ButtonText_Progress: 'PROGRESS',
   ButtonText_QuestionMark: '?',
   ButtonText_RemindMe: 'REMIND ME',
+  ButtonText_Resend: 'RESEND',
   ButtonText_Restart: 'RESTART',
   ButtonText_RestartProgramme: `RESTART PROGRAMME`,
   ButtonText_SendResetRequest: 'SEND RESET REQUEST',
@@ -50,9 +51,12 @@ const enGB = {
   ButtonText_SaveChanges: 'Save changes',
   ButtonText_NeedToSignOut: 'Need to sign out?',
   ButtonText_Logout: 'Logout',
+  CardText_GreatJob: 'Great job! Have a rest',
   CardText_Low: 'Low',
   CardText_Medium: 'Medium',
   CardText_High: 'High',
+  CardText_HowDoYouFeel: 'How do you feel?',
+  CardText_HowIntense: 'How intense was the workout?',
   CardText_Intensity: 'intensity',
   CardText_Mins: 'mins',
   CardText_Reps: 'reps',
@@ -72,6 +76,7 @@ const enGB = {
     'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
   ChangeDevice_TextDisabled:
     'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
+  CardText_WhichWeight: 'Which weight did you use for this exercise?',
   DropdownText_English: 'English',
   DropdownText_Hindi: 'Hindi',
   DropdownText_SelectLanguage: 'SELECT LANGUAGE',
@@ -93,6 +98,8 @@ const enGB = {
   InfoText_SwitchedByMistake: 'Switched by mistake?',
   InfoText_TakeARest: (name) =>
     `You’ve just completed three workouts back-to-back. Typically, ${name} would recommend a rest day here. Do you want to carry on?`,
+  InfoText_VerifyEmail:
+    'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
   InfoText_WeekComplete: (name, weekNumber) =>
     `Congratulations! You just finished week ${weekNumber} with ${name}!`,
   InfoText_WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
@@ -140,8 +147,10 @@ const enGB = {
   TitleText_Week: 'Week',
   TitleText_WeekComplete: 'Week Complete',
   TitleText_Weights: 'Weights',
+  TitleText_WorkoutComplete: 'Workout Complete',
   TitleText_Progress: 'progress',
   TitleText_Upload: 'Upload',
+  TitleText_VerifyEmail: 'Verify email',
   TitleText_Your: 'Your',
   TitleText_YourFirstWeek: 'Your first week with',
   TitleText_YourNotes: 'YOUR NOTES',

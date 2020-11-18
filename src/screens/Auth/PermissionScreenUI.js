@@ -19,7 +19,7 @@ const defaultImage = require('../../../assets/images/analyticsImage.png');
 
 const PermissionScreenUI = ({
   title = 'Supply title',
-  text = 'Suppply text',
+  text = 'Supply text',
   image = defaultImage,
   buttonType = 'allowAnalytics',
   bottomButtonType = 'skip',
@@ -35,13 +35,19 @@ const PermissionScreenUI = ({
   // MARK: - Use Effect
   useEffect(() => {
     navigation.setOptions({
-      header: () => <Header title={title} showModalCross />,
+      header: () => (
+        <Header
+          title={title}
+          right="times"
+          rightAction={() => console.log('close!')}
+        />
+      ),
     });
   }, []);
 
   // MARK: - Style
   const styles = StyleSheet.create({
-    constainer: {
+    container: {
       alignItems: 'center',
       justifyContent: 'space-between',
       flex: 1,
@@ -70,7 +76,7 @@ const PermissionScreenUI = ({
 
   // MARK: - Render
   return (
-    <View style={styles.constainer}>
+    <View style={styles.container}>
       <Image style={styles.imageView} source={image} resizeMode={'contain'} />
       <View style={styles.bottomContainer}>
         <View style={styles.textContainer}>

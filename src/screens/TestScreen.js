@@ -25,7 +25,7 @@ export default function TestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <Text>Hello</Text>
+      <Text>Hello, here is a sentence</Text>
     </View>
   );
 }

@@ -7,9 +7,8 @@
  */
 
 import React, {useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text} from 'react-native';
+import {View, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import TDIcon from 'the-core-ui-component-tdicon';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
@@ -19,12 +18,12 @@ import Header from '../Headers/Header';
 import HelpMeChooseButton from '../Buttons/HelpMeChooseButton';
 import HelpMeChooseResultsModal from './HelpMeChooseResultsModal';
 
-export default function HelpMeChooseModal({onPressClose}) {
+export default function HelpMeChooseModal({onPressClose, onFinish}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const {helpMeChooseData} = useHelpMeChoose();
-  const {colors, textStyles} = useTheme();
+  const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {TitleText_HelpMeChoose} = dictionary;
   const [showResultScreen, setShowResultScreen] = useState(false);
@@ -62,9 +61,25 @@ export default function HelpMeChooseModal({onPressClose}) {
     }
   }
 
+  function handleCloseResults() {
+    setShowResultScreen(false);
+    onPressClose();
+  }
+
+  function handleSelectProgramme() {
+    setShowResultScreen(false);
+    onPressClose();
+    onFinish();
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (showResultScreen === true) {
-    return <HelpMeChooseResultsModal onPressClose={onPressClose} />;
+    return (
+      <HelpMeChooseResultsModal
+        onPressClose={handleCloseResults}
+        onSelectProgramme={handleSelectProgramme}
+      />
+    );
   }
 
   return (

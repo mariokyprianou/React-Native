@@ -11,6 +11,7 @@ import {View, Text, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
 import Header from '../Headers/Header';
@@ -28,6 +29,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
     InfoText_StartedProgrammeWithVenue,
     InfoText_SwitchedByMistake,
   } = dictionary;
+  const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -85,10 +87,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressJumpIn() {
-    // navigate to start of programme
-  }
-
-  function handleCancel() {
+    navigation.navigate('WorkoutHome');
     onPressClose();
   }
 
@@ -121,7 +120,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
           <DefaultButton
             type="cancel"
             variant="transparentWhiteText"
-            onPress={handleCancel}
+            onPress={onPressClose}
           />
         </View>
       </ImageBackground>

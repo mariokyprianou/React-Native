@@ -15,6 +15,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useDictionary from '../hooks/localisation/useDictionary';
@@ -34,10 +35,7 @@ const fakeImage = require('../../assets/fake2.png');
 
 // IF NAVIGATING HERE TO SWITCH PROGRAMMES: please pass switchProgramme === true
 
-export default function MeetYourIconsScreen({
-  navigation,
-  switchProgramme = true,
-}) {
+export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -52,6 +50,7 @@ export default function MeetYourIconsScreen({
   );
   const [showCongratulatoryModal, setShowCongratulatoryModal] = useState(false);
   const [venue, setVenue] = useState('gym');
+  const navigation = useNavigation();
 
   const connected = true; // change to check connection
 
@@ -188,26 +187,6 @@ export default function MeetYourIconsScreen({
     }
   }
 
-  function handlePressHelp() {
-    setShowHelpMeChooseModal(true);
-  }
-
-  function handleCloseHelpMeChooseModal() {
-    setShowHelpMeChooseModal(false);
-  }
-
-  function handleCloseCongratulatoryModal() {
-    setShowCongratulatoryModal(false);
-  }
-
-  function handleStartNewProgramme() {
-    setShowCongratulatoryModal(true);
-  }
-
-  function handleChangeVenue(venue) {
-    setVenue(venue);
-  }
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (!connected) {
     return (
@@ -221,7 +200,7 @@ export default function MeetYourIconsScreen({
           </View>
           <View style={styles.cantChooseContainer}>
             <CantChooseButton
-              onPress={handlePressHelp}
+              onPress={() => setShowHelpMeChooseModal(true)}
               navigation={navigation}
             />
           </View>
@@ -268,7 +247,7 @@ export default function MeetYourIconsScreen({
                   </View>
                   <View style={styles.cantChooseContainer}>
                     <CantChooseButton
-                      onPress={handlePressHelp}
+                      onPress={() => setShowHelpMeChooseModal(true)}
                       navigation={navigation}
                     />
                   </View>
@@ -288,7 +267,7 @@ export default function MeetYourIconsScreen({
                     buildMuscle={buildMuscle}
                     name={name}
                     image={image}
-                    onPressGymHome={handleChangeVenue}
+                    onPressGymHome={() => setVenue(venue)}
                   />
                 </View>
                 <Spacer height={30} />
@@ -327,6 +306,7 @@ export default function MeetYourIconsScreen({
             icon="chevron"
             variant="gradient"
             trainerName="KATRINA"
+            onPress={() => navigation.navigate('WorkoutHome')}
           />
           <Spacer height={20} />
           <DefaultButton
@@ -334,6 +314,7 @@ export default function MeetYourIconsScreen({
             icon="chevron"
             variant="white"
             weekNo={currentWeek}
+            onPress={() => navigation.navigate('WorkoutHome')}
           />
         </View>
       ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
@@ -342,7 +323,7 @@ export default function MeetYourIconsScreen({
             type="start"
             icon="chevron"
             variant="gradient"
-            onPress={handleStartNewProgramme}
+            onPress={() => setShowCongratulatoryModal(true)}
           />
         </View>
       ) : (
@@ -353,11 +334,14 @@ export default function MeetYourIconsScreen({
         </View>
       )}
       <ModalCard isVisible={showHelpMeChooseModal}>
-        <HelpMeChooseModal onPressClose={handleCloseHelpMeChooseModal} />
+        <HelpMeChooseModal
+          onPressClose={() => setShowHelpMeChooseModal(false)}
+          onFinish={() => navigation.navigate('WorkoutHome')}
+        />
       </ModalCard>
       <ModalCard isVisible={showCongratulatoryModal}>
         <CongratulatoryModal
-          onPressClose={handleCloseCongratulatoryModal}
+          onPressClose={() => setShowCongratulatoryModal(false)}
           name={trainerOnSlider}
           venue={venue}
         />

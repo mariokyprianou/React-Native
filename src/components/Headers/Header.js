@@ -21,7 +21,7 @@ const closeIcon = require('../../../assets/icons/headerClose.png');
 const shareIcon = require('../../../assets/icons/share.png');
 const closeIconWhite = require('../../../assets/icons/closeWhite.png');
 
-export default function SearchText({
+export default function Header({
   title,
   goBack,
   showModalCross = false,
@@ -132,41 +132,43 @@ export default function SearchText({
     return <TDIcon input={icon} inputStyle={styles.iconStyle} />;
   };
 
-  const renderDefaultHeader = () => (
-    <View style={styles.container}>
-      <View style={styles.leftIconContainer}>
-        {customLeft ? (
-          customLeft()
-        ) : left && leftAction ? (
-          renderIcon(left)
-        ) : goBack ? (
-          renderIcon(arrowBackIcon)
-        ) : (
-          <></>
-        )}
-      </View>
+  const renderDefaultHeader = () => {
+    return (
+      <View style={styles.container}>
+        <View style={styles.leftIconContainer}>
+          {customLeft ? (
+            customLeft()
+          ) : left && leftAction ? (
+            renderIcon(left)
+          ) : goBack ? (
+            renderIcon(arrowBackIcon)
+          ) : (
+            <></>
+          )}
+        </View>
 
-      <View style={styles.titleContainer}>
-        {customTitle ? (
-          customTitle()
-        ) : (
-          <Text style={styles.titleStyle}>{title}</Text>
-        )}
-      </View>
+        <View style={styles.titleContainer}>
+          {customTitle ? (
+            customTitle()
+          ) : (
+            <Text style={styles.titleStyle}>{title}</Text>
+          )}
+        </View>
 
-      <View style={styles.rightIconContainer}>
-        {componentRight ? (
-          componentRight()
-        ) : right && rightAction ? (
-          renderIcon(right)
-        ) : showModalCross ? (
-          renderIcon(white ? closeIconWhite : closeIcon)
-        ) : (
-          <></>
-        )}
+        <View style={styles.rightIconContainer}>
+          {componentRight ? (
+            componentRight()
+          ) : right && rightAction ? (
+            renderIcon(right)
+          ) : showModalCross ? (
+            renderIcon(white ? closeIconWhite : closeIcon)
+          ) : (
+            <></>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <>

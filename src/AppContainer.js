@@ -6,36 +6,29 @@
  */
 
 import React from 'react';
-import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
-import TabContainer from './routes/TabContainer';
+import OnboardingScreen from './screens/OnboardingScreen';
 import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
-import EmailVerificationScreen from './screens/auth/EmailVerificationScreen';
-
-// onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
-// tab container
+import RegistrationScreen from './screens/auth/RegistrationScreen';
+import LoginScreen from './screens/auth/LoginScreen';
+import WorkoutHomeScreen from './screens/WorkoutHomeScreen';
+import TabContainer from './routes/TabContainer';
 
 export default function AppContainer() {
   return (
-    <AppStack.Navigator>
-      {/* <AppStack.Screen
-        name="Initial Release"
-        component={AnalyticsPermissionScreen}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
+    <AppStack.Navigator headerMode="screen">
+      <AppStack.Screen name="Onboarding" component={OnboardingScreen} />
+      <AppStack.Screen name="MeetYourIcons" component={MeetYourIconsScreen} />
+      <AppStack.Screen name="Registration" component={RegistrationScreen} />
+      <AppStack.Screen name="Login" component={LoginScreen} />
+      <AppStack.Screen name="WorkoutHome" component={WorkoutHomeScreen} />
       <AppStack.Screen
-        name="EmailVerification"
-        component={EmailVerificationScreen}
-      />
-      {/* <AppStack.Screen
         name="TabBar"
         component={TabContainer}
         options={{
           headerShown: false,
         }}
-      /> */}
+      />
     </AppStack.Navigator>
   );
 }

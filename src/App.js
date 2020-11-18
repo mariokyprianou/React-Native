@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, StatusBar, Platform} from 'react-native';
+import {View, StatusBar, Platform, I18nManager} from 'react-native';
 import ThemeProvider from './hooks/theme/ThemeProvider';
 import DictionaryProvider from './hooks/localisation/DictionaryProvider';
 import {ApolloProvider} from 'react-apollo';
@@ -45,6 +45,8 @@ const App = () => {
     }
     StatusBar.setBarStyle('dark-content');
     validateChecksum();
+
+    languageRestart();
   }, [client]);
 
   if (!validChecksum) {
@@ -54,6 +56,22 @@ const App = () => {
   // if (loading) {
   //   return <View />;
   // }
+
+  // const selectedLanguage = 'LTR';
+
+  const languageRestart = async () => {
+    //changing language based on what was chosen
+    // if (selectedLanguage === 'LTR') {
+    //   if (I18nManager.isRTL) {
+    await I18nManager.forceRTL(false);
+    //   }
+    // } else {
+    //   if (!I18nManager.isRTL) {
+    // await I18nManager.forceRTL(true);
+    //     }
+    // }
+    // RNRestart.Restart();
+  };
 
   return (
     <>

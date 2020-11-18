@@ -16,10 +16,6 @@ import {BottomTab} from '../navigation';
 import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
-import ProgressScreen from '../screens/ProgressScreen';
-import DefaultScreen from '../screens/DefaultScreen';
-
-// contains workout container (opens on workout home screen), progress container, profile container
 
 const notificationCount = 2;
 
@@ -85,7 +81,7 @@ export default function TabContainer() {
     // Hide the tab bar on these screens/routes - onboarding screen, switch trainer stack, auth stack,
     // workout screen, exercise screen, calendar screen, transformation screen, challenge screen,
     // change password screen, change email screen, settings screen
-    if (routeName === 'Onboarding' || routeName === 'Challenge') {
+    if (routeName === 'Onboarding') {
       return false;
     }
 

@@ -7,17 +7,18 @@
  */
 
 import React, {useRef, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
 import useOnboarding from '../hooks/data/useOnboarding';
 import useDictionary from '../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import OnboardingSliderItem from '../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../components/Buttons/DefaultButton';
 import Header from '../components/Headers/Header';
 
-export default function OnboardingScreen({navigation}) {
+export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -26,14 +27,7 @@ export default function OnboardingScreen({navigation}) {
   const {onboardingData} = useOnboarding();
   const {dictionary} = useDictionary();
   const {ButtonText_Login} = dictionary;
-
-  const Login = () => {
-    return (
-      <View>
-        <Text style={styles.loginText}>{ButtonText_Login}</Text>
-      </View>
-    );
-  };
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => (
@@ -76,12 +70,25 @@ export default function OnboardingScreen({navigation}) {
       borderRadius: radius(14),
       marginHorizontal: getWidth(3),
     },
+    loginContainer: {
+      width: getWidth(100),
+    },
     loginText: {
       ...textStyles.bold15_black100,
     },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const Login = () => {
+    return (
+      <View style={styles.loginContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.loginText}>{ButtonText_Login}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   function handlePress(direction) {
     if (direction === 'left' && activeIndex !== 0) {
       onboardSwiper.current.scrollTo(activeIndex - 1, true);
@@ -89,6 +96,10 @@ export default function OnboardingScreen({navigation}) {
     if (direction === 'right' && activeIndex !== onboardingData.length - 1) {
       onboardSwiper.current.scrollTo(activeIndex + 1, true);
     }
+  }
+
+  function handlePressGetStarted() {
+    navigation.navigate('MeetYourIcons');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -109,7 +120,12 @@ export default function OnboardingScreen({navigation}) {
           />
         ))}
       </Swiper>
-      <DefaultButton type="getStarted" icon="chevron" variant="white" />
+      <DefaultButton
+        type="getStarted"
+        icon="chevron"
+        variant="white"
+        onPress={handlePressGetStarted}
+      />
     </View>
   );
 }

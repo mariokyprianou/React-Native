@@ -7,11 +7,10 @@
  */
 
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import TDIcon from 'the-core-ui-component-tdicon';
 import LinearGradient from 'react-native-linear-gradient';
 import DefaultButton from '../Buttons/DefaultButton';
 import FadingBottomView from '../Views/FadingBottomView';
@@ -21,6 +20,7 @@ const fakeImage = require('../../../assets/fake2.png');
 
 export default function HelpMeChooseResultsModal({
   onPressClose,
+  onSelectProgramme,
   name = 'Katrina',
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -42,10 +42,22 @@ export default function HelpMeChooseResultsModal({
       height: '100%',
       backgroundColor: colors.veryLightPink100,
     },
+    headerContainer: {
+      position: 'absolute',
+      top: 0,
+      zIndex: 9,
+      backgroundColor: 'green',
+    },
     imageContainer: {
       width: '100%',
-      height: '100%',
+      height: getHeight(420),
       position: 'absolute',
+      top: getHeight(145),
+      zIndex: 0,
+    },
+    fadeContainer: {
+      width: '100%',
+      height: getHeight(420),
       top: 0,
     },
     image: {
@@ -53,7 +65,7 @@ export default function HelpMeChooseResultsModal({
       height: getHeight(420),
       resizeMode: 'cover',
       position: 'absolute',
-      top: getHeight(145),
+      top: 0,
     },
     headerContainer: {
       flexDirection: 'row',
@@ -110,10 +122,6 @@ export default function HelpMeChooseResultsModal({
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePress() {
-    console.log('selected!');
-    // navigate to programme
-  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
@@ -125,7 +133,9 @@ export default function HelpMeChooseResultsModal({
       />
       <View style={styles.imageContainer}>
         <Image source={fakeImage} style={styles.image} />
-        <FadingBottomView color="black" height={565} />
+        <View style={styles.fadeContainer}>
+          <FadingBottomView color="black" height={420} />
+        </View>
       </View>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{TitleText_Result}</Text>
@@ -146,7 +156,7 @@ export default function HelpMeChooseResultsModal({
           trainerName={capitalizedName}
           icon="chevron"
           variant="white"
-          onPress={handlePress}
+          onPress={onSelectProgramme}
         />
       </View>
     </View>

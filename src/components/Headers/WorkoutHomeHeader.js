@@ -11,6 +11,7 @@ import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 
 const fakeHeadshot = require('../../../assets/fakeHeadshot.png');
 
@@ -20,6 +21,7 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {HeaderText_AllProgrammes} = dictionary;
+  const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -58,7 +60,7 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress() {
-    // navigate to meet your icons
+    navigation.navigate('MeetYourIcons', {switchProgramme: true});
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

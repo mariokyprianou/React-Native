@@ -32,7 +32,7 @@ import TermsPolicyContentView from '../../components/Views/TermsPolicyContentVie
       /> */
 }
 
-export default function RegisterScreen({navigation}) {
+export default function TermsConditionsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {
     cellFormStyles,

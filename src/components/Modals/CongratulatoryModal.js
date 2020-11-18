@@ -22,7 +22,6 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const [reminders, showReminders] = useState(false);
   const {dictionary} = useDictionary();
   const {
     TitleText_Congratulations,
@@ -87,8 +86,14 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressJumpIn() {
-    navigation.navigate('WorkoutHome');
-    onPressClose();
+    // check if user is already registered - if not, do
+    // navigation.navigate('Registration')
+    // otherwise:
+
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

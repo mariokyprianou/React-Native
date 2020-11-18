@@ -12,7 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Header from '../../components/Headers/Header';
-
+import {useNavigation} from '@react-navigation/native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -23,8 +23,9 @@ import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => (

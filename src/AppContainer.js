@@ -7,23 +7,21 @@
 
 import React from 'react';
 import {AppStack} from './navigation';
-import OnboardingScreen from './screens/OnboardingScreen';
-import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
-import RegistrationScreen from './screens/auth/RegistrationScreen';
-import LoginScreen from './screens/auth/LoginScreen';
-import WorkoutHomeScreen from './screens/WorkoutHomeScreen';
+import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
 
 export default function AppContainer() {
   return (
     <AppStack.Navigator headerMode="screen">
-      <AppStack.Screen name="Onboarding" component={OnboardingScreen} />
-      <AppStack.Screen name="MeetYourIcons" component={MeetYourIconsScreen} />
-      <AppStack.Screen name="Registration" component={RegistrationScreen} />
-      <AppStack.Screen name="Login" component={LoginScreen} />
-      <AppStack.Screen name="WorkoutHome" component={WorkoutHomeScreen} />
       <AppStack.Screen
-        name="TabBar"
+        name="AuthContainer"
+        component={AuthContainer}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <AppStack.Screen
+        name="TabContainer"
         component={TabContainer}
         options={{
           headerShown: false,

@@ -33,8 +33,6 @@ import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
 
 const fakeImage = require('../../assets/fake2.png');
 
-// IF NAVIGATING HERE TO SWITCH PROGRAMMES: please pass switchProgramme === true
-
 export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -187,6 +185,13 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     }
   }
 
+  function navigateToWorkoutHome() {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (!connected) {
     return (
@@ -211,7 +216,12 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             Lorem ipsum dolor sit amet, consectetur
           </Text>
           {/* change ^^ to zero state info text */}
-          <DefaultButton type="tryAgain" icon="chevron" variant="white" />
+          <DefaultButton
+            type="tryAgain"
+            icon="chevron"
+            variant="white"
+            onPress={() => console.log('try again')}
+          />
           <Spacer height={30} />
         </View>
       </View>
@@ -306,7 +316,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             icon="chevron"
             variant="gradient"
             trainerName="KATRINA"
-            onPress={() => navigation.navigate('WorkoutHome')}
+            onPress={navigateToWorkoutHome}
           />
           <Spacer height={20} />
           <DefaultButton
@@ -314,7 +324,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             icon="chevron"
             variant="white"
             weekNo={currentWeek}
-            onPress={() => navigation.navigate('WorkoutHome')}
+            onPress={navigateToWorkoutHome}
           />
         </View>
       ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
@@ -328,15 +338,24 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
         </View>
       ) : (
         <View style={styles.buttonContainer}>
-          <DefaultButton type="startNow" icon="chevron" variant="gradient" />
+          <DefaultButton
+            type="startNow"
+            icon="chevron"
+            variant="gradient"
+            onPress={() => navigation.navigate('Registration')}
+          />
           <Spacer height={20} />
-          <DefaultButton type="login" variant="grey" />
+          <DefaultButton
+            type="login"
+            variant="grey"
+            onPress={() => navigation.navigate('Login')}
+          />
         </View>
       )}
       <ModalCard isVisible={showHelpMeChooseModal}>
         <HelpMeChooseModal
           onPressClose={() => setShowHelpMeChooseModal(false)}
-          onFinish={() => navigation.navigate('WorkoutHome')}
+          onFinish={navigateToWorkoutHome}
         />
       </ModalCard>
       <ModalCard isVisible={showCongratulatoryModal}>

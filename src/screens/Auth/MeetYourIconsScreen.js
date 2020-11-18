@@ -29,11 +29,10 @@ import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import ModalCard from '../../components/Modals/ModalCard';
 import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
-import CongratulatoryModal from '../../components/Modals/CongratulatoryModal';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function MeetYourIconsScreen({switchProgramme = true}) {
+export default function MeetYourIconsScreen({switchProgramme = false}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -46,7 +45,6 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   const [trainerOnSlider, setTrainerOnSlider] = useState(
     meetYourIconsData[0].name,
   );
-  const [showCongratulatoryModal, setShowCongratulatoryModal] = useState(false);
   const [venue, setVenue] = useState('gym');
   const navigation = useNavigation();
 
@@ -333,7 +331,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             type="start"
             icon="chevron"
             variant="gradient"
-            onPress={() => setShowCongratulatoryModal(true)}
+            onPress={() => navigation.navigate('Congratulations')} // add params to say which trainer selected
           />
         </View>
       ) : (
@@ -356,13 +354,6 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
         <HelpMeChooseModal
           onPressClose={() => setShowHelpMeChooseModal(false)}
           onFinish={navigateToWorkoutHome}
-        />
-      </ModalCard>
-      <ModalCard isVisible={showCongratulatoryModal}>
-        <CongratulatoryModal
-          onPressClose={() => setShowCongratulatoryModal(false)}
-          name={trainerOnSlider}
-          venue={venue}
         />
       </ModalCard>
     </View>

@@ -7,7 +7,7 @@
 
 import React, {useEffect} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
-import useDictionary from '../../../hooks/localisation/useDictionary';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 
 export default function ChangePasswordScreen() {

@@ -11,10 +11,10 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
 
-import DefaultButton from '../../../components/Buttons/DefaultButton';
-import useTheme from '../../../hooks/theme/UseTheme';
-import Header from '../../../components/Headers/Header';
-import PasswordEyeIcon from '../../../components/cells/PasswordEyeIcon';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import useTheme from '../../hooks/theme/UseTheme';
+import Header from '../../components/Headers/Header';
+import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
 const TwoFieldChangeScreenUI = ({
   screenTitle = 'Supply Screen Title',

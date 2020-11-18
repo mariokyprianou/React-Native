@@ -13,6 +13,7 @@ import OnboardingScreen from '../screens/auth/OnboardingScreen';
 import MeetYourIconsScreen from '../screens/auth/MeetYourIconsScreen';
 import RegistrationScreen from '../screens/auth/RegistrationScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
+import CongratulationsScreen from '../screens/auth/CongratulationsScreen';
 
 export default function AuthContainer(props) {
   return (
@@ -25,6 +26,10 @@ export default function AuthContainer(props) {
       <AuthStack.Screen name="MeetYourIcons" component={MeetYourIconsScreen} />
       <AuthStack.Screen name="Registration" component={RegistrationScreen} />
       <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen
+        name="Congratulations"
+        component={CongratulationsScreen}
+      />
     </AuthStack.Navigator>
   );
 }

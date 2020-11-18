@@ -9,19 +9,21 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import DefaultButton from '../components/Buttons/DefaultButton';
-import FadingBottomView from '../components/Views/FadingBottomView';
+import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import FadingBottomView from '../../components/Views/FadingBottomView';
 
-const fakeImage = require('../../assets/fake2.png');
+const fakeImage = require('../../../assets/fake2.png');
 
-export default function CongratulationsScreen({navigation, name = 'Katrina'}) {
+export default function CongratulationsScreen({name = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {TitleText_Congratulations, InfoText_StartedProgramme} = dictionary;
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => null,
@@ -67,7 +69,12 @@ export default function CongratulationsScreen({navigation, name = 'Katrina'}) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressShare() {}
 
-  function handlePressStart() {}
+  function handlePressStart() {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

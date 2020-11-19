@@ -87,7 +87,7 @@ const TwoFieldChangeScreenUI = ({
       flex: 1,
       backgroundColor: colors.offWhite,
       justifyContent: 'space-between',
-      paddingBottom: getHeight(40),
+      paddingVertical: getHeight(40),
       alignItems: 'center',
     },
     formContainer: {

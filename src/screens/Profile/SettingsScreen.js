@@ -117,7 +117,7 @@ const SettingsScreen = ({}) => {
       alignItems: 'center',
       backgroundColor: colors.offWhite,
       justifyContent: 'space-between',
-      paddingBottom: getHeight(40),
+      paddingVertical: getHeight(40),
     },
     formContainer: {
       width: '90%',

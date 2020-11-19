@@ -78,7 +78,9 @@ export default function ProfileScreenUI({
   // MARK: - Use Effect
 
   // MARK: - Actions
-  const onPressChangePassword = () => {};
+  const onPressChangePassword = () => {
+    navigation.navigate('ChangePassword');
+  };
 
   // MARK: - Styles
   const styles = {
@@ -108,7 +110,7 @@ export default function ProfileScreenUI({
   const userCard = () => {
     return (
       <>
-        <Spacer height={30} />
+        <Spacer height={50} />
         <ProfileUserCard
           firstName={'Johny'}
           lastName={'Appleased'}

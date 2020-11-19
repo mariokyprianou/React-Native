@@ -26,6 +26,7 @@ export default function WorkoutCard({
   image,
   drag,
   status,
+  onPressCard,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -109,7 +110,10 @@ export default function WorkoutCard({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      <TouchableOpacity style={styles.touch} onLongPress={drag}>
+      <TouchableOpacity
+        style={styles.touch}
+        onLongPress={drag}
+        onPress={title === WorkoutText_RestDay ? null : onPressCard}>
         {date === formattedToday && (
           <Image source={image} style={styles.image} />
         )}

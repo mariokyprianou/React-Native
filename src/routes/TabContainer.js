@@ -16,10 +16,6 @@ import {BottomTab} from '../navigation';
 import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
-import ProgressScreen from '../screens/ProgressScreen';
-import DefaultScreen from '../screens/DefaultScreen';
-
-// contains workout container (opens on workout home screen), progress container, profile container
 
 const notificationCount = 2;
 
@@ -82,14 +78,15 @@ export default function TabContainer() {
       ? route.state.routes[route.state.index].name
       : route.name;
 
-    // Hide the tab bar on these screens/routes - onboarding screen, switch trainer stack, auth stack,
-    // workout screen, exercise screen, calendar screen, transformation screen, challenge screen,
-    // change password screen, change email screen, settings screen
-    if (routeName === 'Onboarding' || routeName === 'Challenge') {
+    if (
+      routeName === 'Calendar' ||
+      routeName === 'Transformation' ||
+      routeName === 'Transformation' ||
+      routeName === 'Challenge' ||
+      routeName === 'ChallengeEnd'
+    ) {
       return false;
     }
-
-    // Show the tab bar on all other screens/routes.
     return true;
   }
 
@@ -121,18 +118,20 @@ export default function TabContainer() {
       <BottomTab.Screen
         name="Tab2"
         component={ProgressContainer}
-        options={{
+        options={({route}) => ({
+          tabBarVisible: getTabBarVisibility(route),
           tabBarIcon: ({color}) => <TabIcon name="progress" color={color} />,
           tabBarLabel: TabTitle_Progress,
-        }}
+        })}
       />
       <BottomTab.Screen
         name="Tab3"
         component={ProfileContainer}
-        options={{
+        options={({route}) => ({
+          tabBarVisible: getTabBarVisibility(route),
           tabBarIcon: ({color}) => <TabIcon name="profile" color={color} />,
           tabBarLabel: TabTitle_Profile,
-        }}
+        })}
       />
     </BottomTab.Navigator>
   );

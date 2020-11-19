@@ -15,29 +15,24 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import useMeetYourIcons from '../hooks/data/useMeetYourIcons';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import useMeetYourIcons from '../../hooks/data/useMeetYourIcons';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
-import TrainerCard from '../components/Cards/TrainerCard';
-import WorkoutCard from '../components/Cards/WorkoutCard';
-import DefaultButton from '../components/Buttons/DefaultButton';
-import Spacer from '../components/Utility/Spacer';
-import CantChooseButton from '../components/Buttons/CantChooseButton';
-import ModalCard from '../components/Modals/ModalCard';
-import HelpMeChooseModal from '../components/Modals/HelpMeChooseModal';
-import CongratulatoryModal from '../components/Modals/CongratulatoryModal';
+import TrainerCard from '../../components/Cards/TrainerCard';
+import WorkoutCard from '../../components/Cards/WorkoutCard';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Spacer from '../../components/Utility/Spacer';
+import CantChooseButton from '../../components/Buttons/CantChooseButton';
+import ModalCard from '../../components/Modals/ModalCard';
+import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
 
-const fakeImage = require('../../assets/fake2.png');
+const fakeImage = require('../../../assets/fake2.png');
 
-// IF NAVIGATING HERE TO SWITCH PROGRAMMES: please pass switchProgramme === true
-
-export default function MeetYourIconsScreen({
-  navigation,
-  switchProgramme = true,
-}) {
+export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -50,8 +45,8 @@ export default function MeetYourIconsScreen({
   const [trainerOnSlider, setTrainerOnSlider] = useState(
     meetYourIconsData[0].name,
   );
-  const [showCongratulatoryModal, setShowCongratulatoryModal] = useState(false);
   const [venue, setVenue] = useState('gym');
+  const navigation = useNavigation();
 
   const connected = true; // change to check connection
 
@@ -63,7 +58,7 @@ export default function MeetYourIconsScreen({
 
   const screenWidth = Dimensions.get('screen').width;
 
-  const logo = require('../../assets/images/logo.png');
+  const logo = require('../../../assets/images/logo.png');
 
   navigation.setOptions({
     header: () => null,
@@ -188,24 +183,11 @@ export default function MeetYourIconsScreen({
     }
   }
 
-  function handlePressHelp() {
-    setShowHelpMeChooseModal(true);
-  }
-
-  function handleCloseHelpMeChooseModal() {
-    setShowHelpMeChooseModal(false);
-  }
-
-  function handleCloseCongratulatoryModal() {
-    setShowCongratulatoryModal(false);
-  }
-
-  function handleStartNewProgramme() {
-    setShowCongratulatoryModal(true);
-  }
-
-  function handleChangeVenue(venue) {
-    setVenue(venue);
+  function navigateToWorkoutHome() {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -221,7 +203,7 @@ export default function MeetYourIconsScreen({
           </View>
           <View style={styles.cantChooseContainer}>
             <CantChooseButton
-              onPress={handlePressHelp}
+              onPress={() => setShowHelpMeChooseModal(true)}
               navigation={navigation}
             />
           </View>
@@ -232,7 +214,12 @@ export default function MeetYourIconsScreen({
             Lorem ipsum dolor sit amet, consectetur
           </Text>
           {/* change ^^ to zero state info text */}
-          <DefaultButton type="tryAgain" icon="chevron" variant="white" />
+          <DefaultButton
+            type="tryAgain"
+            icon="chevron"
+            variant="white"
+            onPress={() => console.log('try again')}
+          />
           <Spacer height={30} />
         </View>
       </View>
@@ -268,7 +255,7 @@ export default function MeetYourIconsScreen({
                   </View>
                   <View style={styles.cantChooseContainer}>
                     <CantChooseButton
-                      onPress={handlePressHelp}
+                      onPress={() => setShowHelpMeChooseModal(true)}
                       navigation={navigation}
                     />
                   </View>
@@ -288,7 +275,7 @@ export default function MeetYourIconsScreen({
                     buildMuscle={buildMuscle}
                     name={name}
                     image={image}
-                    onPressGymHome={handleChangeVenue}
+                    onPressGymHome={() => setVenue(venue)}
                   />
                 </View>
                 <Spacer height={30} />
@@ -327,6 +314,7 @@ export default function MeetYourIconsScreen({
             icon="chevron"
             variant="gradient"
             trainerName="KATRINA"
+            onPress={navigateToWorkoutHome}
           />
           <Spacer height={20} />
           <DefaultButton
@@ -334,6 +322,7 @@ export default function MeetYourIconsScreen({
             icon="chevron"
             variant="white"
             weekNo={currentWeek}
+            onPress={navigateToWorkoutHome}
           />
         </View>
       ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
@@ -342,24 +331,29 @@ export default function MeetYourIconsScreen({
             type="start"
             icon="chevron"
             variant="gradient"
-            onPress={handleStartNewProgramme}
+            onPress={() => navigation.navigate('Congratulations')} // add params to say which trainer selected
           />
         </View>
       ) : (
         <View style={styles.buttonContainer}>
-          <DefaultButton type="startNow" icon="chevron" variant="gradient" />
+          <DefaultButton
+            type="startNow"
+            icon="chevron"
+            variant="gradient"
+            onPress={() => navigation.navigate('Registration')}
+          />
           <Spacer height={20} />
-          <DefaultButton type="login" variant="grey" />
+          <DefaultButton
+            type="login"
+            variant="grey"
+            onPress={() => navigation.navigate('Login')}
+          />
         </View>
       )}
       <ModalCard isVisible={showHelpMeChooseModal}>
-        <HelpMeChooseModal onPressClose={handleCloseHelpMeChooseModal} />
-      </ModalCard>
-      <ModalCard isVisible={showCongratulatoryModal}>
-        <CongratulatoryModal
-          onPressClose={handleCloseCongratulatoryModal}
-          name={trainerOnSlider}
-          venue={venue}
+        <HelpMeChooseModal
+          onPressClose={() => setShowHelpMeChooseModal(false)}
+          onFinish={navigateToWorkoutHome}
         />
       </ModalCard>
     </View>

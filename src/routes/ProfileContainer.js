@@ -8,14 +8,32 @@
 
 import React from 'react';
 import {ProfileStack} from '../navigation';
-import DefaultScreen from '../screens/DefaultScreen';
+import ProfileScreen from '../screens/Profile/ProfileScreen';
+import ChangePasswordScreen from '../screens/Profile/ChangePasswordScreen';
+import SettingsScreen from '../screens/Profile/SettingsScreen';
+import ChangeEmailScreen from '../screens/Profile/ChangeEmailScreen';
 
 export default function ProfileContainer(props) {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator headerMode="screen">
       <ProfileStack.Screen
         name="Profile"
-        component={DefaultScreen}
+        component={ProfileScreen}
+        options={{headerShown: false}}
+      />
+      <ProfileStack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
+        options={{headerShown: false}}
+      />
+      <ProfileStack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{headerShown: false}}
+      />
+      <ProfileStack.Screen
+        name="ChangeEmail"
+        component={ChangeEmailScreen}
         options={{headerShown: false}}
       />
     </ProfileStack.Navigator>

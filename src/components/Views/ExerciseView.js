@@ -23,7 +23,7 @@ const checkIcon = require('../../../assets/icons/check.png');
 const weightIcon = require('../../../assets/icons/weight.png');
 const notesIcon = require('../../../assets/icons/notes.png');
 
-export default function () {
+export default function ExerciseView({onPressWeights, onPressNotes}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles, exerciseViewStyle} = useTheme();
@@ -52,8 +52,15 @@ export default function () {
     } else {
     }
   };
-  const onWeightsPressed = () => {};
-  const onNotesPressed = () => {};
+
+  const onWeightsPressed = () => {
+    onPressWeights();
+  };
+
+  const onNotesPressed = () => {
+    onPressNotes();
+  };
+
   const onSetCompleted = () => {
     setCountDown(true);
     reset();

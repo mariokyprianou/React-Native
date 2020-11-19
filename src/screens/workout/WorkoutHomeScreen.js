@@ -9,23 +9,24 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import useWorkoutHome from '../hooks/data/useWorkoutHome';
-import useTakeRest from '../hooks/data/useTakeRest';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
+import useWorkoutHome from '../../hooks/data/useWorkoutHome';
+import useTakeRest from '../../hooks/data/useTakeRest';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
-import WorkoutHomeHeader from '../components/Headers/WorkoutHomeHeader';
-import WorkoutCard from '../components/Cards/WorkoutCard';
-import formatWorkoutWeek from '../utils/formatWorkoutWeek';
-import addRestDays from '../utils/addRestDays';
+import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
+import WorkoutCard from '../../components/Cards/WorkoutCard';
+import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
+import addRestDays from '../../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import ModalCard from '../components/Modals/ModalCard';
-import TakeARest from '../components/Modals/TakeARest';
-import WeekComplete from '../components/Modals/WeekComplete';
-import StayTuned from '../components/Modals/StayTuned';
+import ModalCard from '../../components/Modals/ModalCard';
+import TakeARest from '../../components/Modals/TakeARest';
+import WeekComplete from '../../components/Modals/WeekComplete';
+import StayTuned from '../../components/Modals/StayTuned';
 
-export default function WorkoutHomeScreen({navigation}) {
+export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles} = useTheme();
@@ -43,6 +44,7 @@ export default function WorkoutHomeScreen({navigation}) {
       totalReps,
       totalSets,
       completedWorkoutWeek,
+      threeWorkoutsInRow,
       firstWorkoutOfNextWeek,
       lastWeekOfProgramme,
     },
@@ -54,6 +56,7 @@ export default function WorkoutHomeScreen({navigation}) {
     completedWorkoutWeek,
   );
   const [showStayTunedModal, setShowStayTunedModal] = useState(false);
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => null,
@@ -81,6 +84,13 @@ export default function WorkoutHomeScreen({navigation}) {
   useEffect(() => {
     // change dates on back end too
   }, [workoutsToDisplay]);
+
+  useEffect(() => {
+    if (threeWorkoutsInRow === true) {
+      setShowTakeRestModal(true);
+    }
+    // deps array left blank so this only appears the first time the page is loaded
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -124,18 +134,6 @@ export default function WorkoutHomeScreen({navigation}) {
       setShowStayTunedModal(true);
   }
 
-  function handleCloseRestModal() {
-    setShowTakeRestModal(false);
-  }
-
-  function handleCloseWeekCompleteModal() {
-    setShowWeekCompleteModal(false);
-  }
-
-  function handleCloseStayTunedModal() {
-    setShowStayTunedModal(false);
-  }
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -172,16 +170,20 @@ export default function WorkoutHomeScreen({navigation}) {
               intensity={item.intensity}
               image={item.image}
               drag={drag}
+              onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
             />
           )}
         />
       </View>
       <ModalCard isVisible={showTakeRestModal}>
-        <TakeARest onPressClose={handleCloseRestModal} name={trainerName} />
+        <TakeARest
+          onPressClose={() => setShowTakeRestModal(false)}
+          name={trainerName}
+        />
       </ModalCard>
       <ModalCard isVisible={showWeekCompleteModal}>
         <WeekComplete
-          onPressClose={handleCloseWeekCompleteModal}
+          onPressClose={() => setShowWeekCompleteModal(false)}
           name={trainerName}
           weekNumber={currentWeekNumber}
           totalDuration={totalDuration}
@@ -191,7 +193,7 @@ export default function WorkoutHomeScreen({navigation}) {
       </ModalCard>
       <ModalCard isVisible={showStayTunedModal}>
         <StayTuned
-          onPressClose={handleCloseStayTunedModal}
+          onPressClose={() => setShowStayTunedModal(false)}
           name={trainerName}
           venue={venue}
           date={firstWorkoutOfNextWeek}

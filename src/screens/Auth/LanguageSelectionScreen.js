@@ -9,13 +9,14 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import DefaultButton from '../components/Buttons/DefaultButton';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
+import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-const splashImage = require('../../assets/images/splash.png');
+const splashImage = require('../../../assets/images/splash.png');
 
 export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,6 +34,11 @@ export default function LanguageSelectionScreen() {
     DropdownText_Hindi,
     DropdownText_Urdu,
   ];
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => null,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -89,7 +95,11 @@ export default function LanguageSelectionScreen() {
       <Image source={splashImage} style={styles.image} />
       <View style={styles.buttonContainer}>
         <Form {...{cells, config}} />
-        <DefaultButton type="setLanguage" variant="white" />
+        <DefaultButton
+          type="setLanguage"
+          variant="white"
+          onPress={() => navigation.navigate('Onboarding')}
+        />
       </View>
     </View>
   );

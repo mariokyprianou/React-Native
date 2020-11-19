@@ -12,17 +12,17 @@ import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
 import {format} from 'date-fns';
 
-import useDictionary from '../../../hooks/localisation/useDictionary';
-import DefaultButton from '../../../components/Buttons/DefaultButton';
-import Spacer from '../../../components/Utility/Spacer';
-import useTheme from '../../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Spacer from '../../components/Utility/Spacer';
+import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
-import DropDownIcon from '../../../components/cells/DropDownIcon';
-import useRegistrationData from '../../../hooks/data/useRegistrationData';
-import CalendarIcon from '../../../components/cells/CalendarIcon';
-import ProfileUserCard from '../../../components/Views/ProfileUserCard';
+import DropDownIcon from '../../components/cells/DropDownIcon';
+import useRegistrationData from '../../hooks/data/useRegistrationData';
+import CalendarIcon from '../../components/cells/CalendarIcon';
+import ProfileUserCard from '../../components/Views/ProfileUserCard';
 import {FlatList} from 'react-native-gesture-handler';
-import NotificationCell from '../../../components/cells/NotificationCell';
+import NotificationCell from '../../components/cells/NotificationCell';
 
 const notifications = [
   {
@@ -78,7 +78,9 @@ export default function ProfileScreenUI({
   // MARK: - Use Effect
 
   // MARK: - Actions
-  const onPressChangePassword = () => {};
+  const onPressChangePassword = () => {
+    navigation.navigate('ChangePassword');
+  };
 
   // MARK: - Styles
   const styles = {
@@ -108,7 +110,7 @@ export default function ProfileScreenUI({
   const userCard = () => {
     return (
       <>
-        <Spacer height={30} />
+        <Spacer height={50} />
         <ProfileUserCard
           firstName={'Johny'}
           lastName={'Appleased'}

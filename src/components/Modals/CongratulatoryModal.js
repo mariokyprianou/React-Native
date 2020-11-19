@@ -11,6 +11,7 @@ import {View, Text, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
 import Header from '../Headers/Header';
@@ -21,13 +22,13 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const [reminders, showReminders] = useState(false);
   const {dictionary} = useDictionary();
   const {
     TitleText_Congratulations,
     InfoText_StartedProgrammeWithVenue,
     InfoText_SwitchedByMistake,
   } = dictionary;
+  const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -85,11 +86,14 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressJumpIn() {
-    // navigate to start of programme
-  }
+    // check if user is already registered - if not, do
+    // navigation.navigate('Registration')
+    // otherwise:
 
-  function handleCancel() {
-    onPressClose();
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -121,7 +125,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
           <DefaultButton
             type="cancel"
             variant="transparentWhiteText"
-            onPress={handleCancel}
+            onPress={onPressClose}
           />
         </View>
       </ImageBackground>

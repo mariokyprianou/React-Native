@@ -9,6 +9,7 @@
 import React from 'react';
 import {View, Text, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../Buttons/DefaultButton';
@@ -32,6 +33,7 @@ export default function ChallengeCompletionModal({
     InfoText_ChallengeComplete,
     TitleText_Today,
   } = dictionary;
+  const navigation = useNavigation();
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -83,7 +85,10 @@ export default function ChallengeCompletionModal({
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleShare() {}
 
-  function handleDone() {}
+  function handleDone() {
+    navigation.navigate('Progress');
+    onPressClose();
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

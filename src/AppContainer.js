@@ -6,36 +6,27 @@
  */
 
 import React from 'react';
-import InitialReleaseScreen from './screens/InitialReleaseScreen';
 import {AppStack} from './navigation';
+import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
-import MeetYourIconsScreen from './screens/MeetYourIconsScreen';
-import EmailVerificationScreen from './screens/auth/EmailVerificationScreen';
-
-// onboarding screen, switch trainer screen, congratulatory screen, registration screen, login screen
-// tab container
 
 export default function AppContainer() {
   return (
-    <AppStack.Navigator>
-      {/* <AppStack.Screen
-        name="Initial Release"
-        component={AnalyticsPermissionScreen}
+    <AppStack.Navigator headerMode="screen">
+      <AppStack.Screen
+        name="AuthContainer"
+        component={AuthContainer}
         options={{
           headerShown: false,
         }}
-      /> */}
-      <AppStack.Screen
-        name="EmailVerification"
-        component={EmailVerificationScreen}
       />
-      {/* <AppStack.Screen
-        name="TabBar"
+      <AppStack.Screen
+        name="TabContainer"
         component={TabContainer}
         options={{
           headerShown: false,
         }}
-      /> */}
+      />
     </AppStack.Navigator>
   );
 }

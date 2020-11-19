@@ -92,6 +92,7 @@ const fakeData = {
   totalSets: 20,
   currentWeekNumber: 1,
   completedWorkoutWeek: false, // from workoutWeek.workouts (T []) - each workout has isCompleted property
+  threeWorkoutsInRow: false,
   firstWorkoutOfNextWeek: '3rd July',
   lastWeekOfProgramme: true,
 };

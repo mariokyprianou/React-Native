@@ -10,13 +10,13 @@ import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 
-import DefaultButton from '../../../components/Buttons/DefaultButton';
-import useTheme from '../../../hooks/theme/UseTheme';
-import Header from '../../../components/Headers/Header';
-import Spacer from '../../../components/Utility/Spacer';
-import useDictionary from '../../../hooks/localisation/useDictionary';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import useTheme from '../../hooks/theme/UseTheme';
+import Header from '../../components/Headers/Header';
+import Spacer from '../../components/Utility/Spacer';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
-const purchaseImage = require('../../../../assets/images/powerPurchaseImage.png');
+const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
 
 const PurchaseModalScreen = ({}) => {
   // MARK: - Hooks

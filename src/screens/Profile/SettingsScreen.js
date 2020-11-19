@@ -14,11 +14,11 @@ import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 
-import useTheme from '../../../hooks/theme/UseTheme';
-import Header from '../../../components/Headers/Header';
-import useDictionary from '../../../hooks/localisation/useDictionary';
-import DropDownIcon from '../../../components/cells/DropDownIcon';
-import Spacer from '../../../components/Utility/Spacer';
+import useTheme from '../../hooks/theme/UseTheme';
+import Header from '../../components/Headers/Header';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import DropDownIcon from '../../components/cells/DropDownIcon';
+import Spacer from '../../components/Utility/Spacer';
 
 const SettingsScreen = ({}) => {
   // MARK: - Hooks
@@ -117,7 +117,7 @@ const SettingsScreen = ({}) => {
       alignItems: 'center',
       backgroundColor: colors.offWhite,
       justifyContent: 'space-between',
-      paddingBottom: getHeight(40),
+      paddingVertical: getHeight(40),
     },
     formContainer: {
       width: '90%',

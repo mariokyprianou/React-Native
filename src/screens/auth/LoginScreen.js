@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-
+import {useNavigation} from '@react-navigation/native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -17,8 +17,9 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => <Header title={'Login'} noSearch showBurger={false} goBack />,
@@ -104,6 +105,10 @@ export default function RegisterScreen({navigation}) {
       setLoading(false);
       return;
     }
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
   }
 
   function forgotPassword() {}

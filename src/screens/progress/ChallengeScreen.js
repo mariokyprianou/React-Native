@@ -9,20 +9,22 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import useTheme from '../hooks/theme/UseTheme';
-import useChallenge from '../hooks/data/useChallenge';
+import useTheme from '../../hooks/theme/UseTheme';
+import {useNavigation} from '@react-navigation/native';
+import useChallenge from '../../hooks/data/useChallenge';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
-import DefaultButton from '../components/Buttons/DefaultButton';
-import Spacer from '../components/Utility/Spacer';
-import ProgressChart from '../components/Infographics/ProgressChart';
-import Header from '../components/Headers/Header';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Spacer from '../../components/Utility/Spacer';
+import ProgressChart from '../../components/Infographics/ProgressChart';
+import Header from '../../components/Headers/Header';
 
-export default function ChallengeScreen({navigation}) {
+export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {challengeData, challengeHistoryData} = useChallenge();
   const {name, description, timeLimit} = challengeData;
+  const navigation = useNavigation();
 
   const formattedSeconds = new Date(timeLimit * 1000)
     .toISOString()
@@ -76,10 +78,6 @@ export default function ChallengeScreen({navigation}) {
     // start timer
   }
 
-  function handlePressDone() {
-    // redirect to challenge end screen
-  }
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -102,7 +100,7 @@ export default function ChallengeScreen({navigation}) {
           type="done"
           icon="chevron"
           variant="white"
-          onPress={handlePressDone}
+          onPress={() => navigation.navigate('ChallengeEnd')}
         />
       </View>
     </View>

@@ -8,13 +8,14 @@
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import useTheme from '../hooks/theme/UseTheme';
-import useDictionary from '../hooks/localisation/useDictionary';
-import useCalendar from '../hooks/data/useCalendar';
+import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import useCalendar from '../../hooks/data/useCalendar';
 import Calendar from 'the-core-ui-module-tdcalendar';
-import Header from '../components/Headers/Header';
+import Header from '../../components/Headers/Header';
 
-export default function DefaultScreen({navigation}) {
+export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {singleCalendarStyles} = useTheme();
   const {
@@ -28,6 +29,7 @@ export default function DefaultScreen({navigation}) {
   const {calendarScreenData} = useCalendar();
   const {dictionary} = useDictionary();
   const {ScreenHeader_YourWorkouts} = dictionary;
+  const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => <Header title={ScreenHeader_YourWorkouts} goBack />,
@@ -36,6 +38,7 @@ export default function DefaultScreen({navigation}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
+      height: '100%',
       width: '90%',
       alignSelf: 'center',
     },

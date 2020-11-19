@@ -7,11 +7,11 @@
  */
 
 import React from 'react';
-import {TouchableOpacity, View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import TDIcon from 'the-core-ui-component-tdicon';
 import FadingBottomView from '../Views/FadingBottomView';
 import DefaultButton from '../Buttons/DefaultButton';
 import Header from '../Headers/Header';
@@ -24,6 +24,7 @@ export default function TakeARest({name, onPressClose}) {
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {TitleText_TakeARest, InfoText_TakeARest} = dictionary;
+  const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -56,10 +57,7 @@ export default function TakeARest({name, onPressClose}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleContinue() {
-    // navigate to next workout
-  }
-
-  function handleGoBack() {
+    navigation.navigate('StartWorkout');
     onPressClose();
   }
 
@@ -88,7 +86,7 @@ export default function TakeARest({name, onPressClose}) {
           <DefaultButton
             type="goBack"
             variant="transparentWhiteText"
-            onPress={handleGoBack}
+            onPress={() => onPressClose()}
           />
         </View>
       </ImageBackground>

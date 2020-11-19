@@ -121,6 +121,10 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
+    dexOptions {
+        javaMaxHeapSize "4G"
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -193,6 +197,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('power-release.keystore')
+            storePassword 'K15oIEvqLclwTaNF9yus905i0S7TCWPpoaehpcLe7uJtlNI0F/9ZZe2A/YntwXTP'
+            keyAlias 'release'
+            keyPassword 'K15oIEvqLclwTaNF9yus905i0S7TCWPpoaehpcLe7uJtlNI0F/9ZZe2A/YntwXTP'
+        }
     }
     buildTypes {
         debug {
@@ -204,6 +214,7 @@ android {
             // signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 

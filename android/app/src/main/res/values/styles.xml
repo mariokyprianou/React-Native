@@ -6,6 +6,7 @@
     </style>
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
 	    <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
 </resources>

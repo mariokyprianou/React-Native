@@ -16,28 +16,18 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
 
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
+import {useNavigation} from '@react-navigation/native';
+import Header from '../../components/Headers/Header';
 
-{
-  /*
-   <AppStack.Screen
-        name="ForgotPassword"
-        component={ResetPasswordScreen}
-        options={{
-          header: () => (
-            <Header
-              title={"Forgot password"}
-              noSearch
-              showBurger={false}
-              goBack
-            />
-          ),
-        }}
-      />
-    */
-}
-
-export default function Screen({navigation}) {
+export default function Screen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => <Header title={'Forgot password'} goBack />,
+  });
+
   const {
     cellFormStyles,
     dropdownStyle,
@@ -95,6 +85,8 @@ export default function Screen({navigation}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleChangePassword() {
+    navigation.navigate('Login');
+
     setLoading(true);
     cleanErrors();
 

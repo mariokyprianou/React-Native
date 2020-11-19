@@ -21,18 +21,10 @@ export default function WorkoutContainer(props) {
         component={WorkoutHomeScreen}
         options={{headerShown: false}}
       />
-      <WorkoutStack.Screen
-        name="StartWorkout"
-        component={StartWorkoutScreen}
-        options={{headerShown: false}}
-      />
+      <WorkoutStack.Screen name="StartWorkout" component={StartWorkoutScreen} />
       <WorkoutStack.Screen
         name="Workout"
         component={WorkoutScreen}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.ModalSlideFromBottomIOS,
-        }}
         mode="modal"
       />
     </WorkoutStack.Navigator>

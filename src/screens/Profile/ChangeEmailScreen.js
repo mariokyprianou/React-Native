@@ -9,9 +9,17 @@ import React, {useEffect} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
+import {useNavigation} from '@react-navigation/native';
+import Header from '../../components/Headers/Header';
 
 export default function ChangeEmailScreen() {
   // MARK: - Hooks
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => <Header title={'Change Email'} goBack />,
+  });
+
   const {dictionary} = useDictionary();
   const {
     ChangeEmail_ScreenTitle,
@@ -27,6 +35,8 @@ export default function ChangeEmailScreen() {
   // MARK: - Logic
   const changeEmail = (newEmail) => {
     // TODO: - Logic
+
+    navigation.navigate('Profile');
   };
 
   // MARK: - Actions

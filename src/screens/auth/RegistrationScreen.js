@@ -28,9 +28,7 @@ export default function RegisterScreen() {
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () => (
-      <Header title={'Create account'} noSearch showBurger={false} goBack />
-    ),
+    header: () => <Header title={'Create account'} goBack />,
   });
 
   const {
@@ -125,7 +123,7 @@ export default function RegisterScreen() {
     termsStyle: {
       ...textStyles.regular15_brownishGrey100,
       alignSelf: 'center',
-      marginStart: getWidth(15),
+      marginHorizontal: getWidth(15),
     },
   };
 
@@ -162,18 +160,23 @@ export default function RegisterScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   const FormFooter = () => (
     <View style={styles.formFooter.container}>
-      <DefaultButton type="createAccount" variant="white" icon="chevron" />
+      <DefaultButton
+        type="createAccount"
+        variant="white"
+        icon="chevron"
+        onPress={() => navigation.navigate('TabContainer')}
+      />
     </View>
   );
 
   const linkText = [
     {
       pattern: termsPattern,
-      onPress: () => alert('1 pressed'),
+      onPress: () => navigation.navigate('TermsAndConditions'),
     },
     {
       pattern: policyPattern,
-      onPress: () => alert('2 pressed'),
+      onPress: () => navigation.navigate('PrivacyPolicy'),
     },
   ];
 

@@ -14,6 +14,11 @@ import MeetYourIconsScreen from '../screens/auth/MeetYourIconsScreen';
 import RegistrationScreen from '../screens/auth/RegistrationScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import CongratulationsScreen from '../screens/auth/CongratulationsScreen';
+import TermsAndConditionsScreen from '../screens/auth/TermsConditionsScreen';
+import PrivacyPolicyScreen from '../screens/auth/PrivacyPolicyScreen';
+
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 
 // Ts & Cs, Privacy, and Email Verification will all need to slide up from the bottom
 // Do this by adding the following to each screen below:
@@ -35,6 +40,16 @@ export default function AuthContainer(props) {
         name="Congratulations"
         component={CongratulationsScreen}
       />
+      <AuthStack.Screen
+        name="TermsAndConditions"
+        component={TermsAndConditionsScreen}
+      />
+      <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <AuthStack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
+      />
+      <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     </AuthStack.Navigator>
   );
 }

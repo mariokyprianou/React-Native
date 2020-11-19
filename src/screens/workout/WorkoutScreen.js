@@ -18,6 +18,7 @@ import ModalCard from '../../components/Modals/ModalCard';
 import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
 import NotesModal from '../../components/Modals/NotesModal';
 import WeekCompleteModal from '../../components/Modals/WeekComplete';
+import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,6 +34,7 @@ export default function WorkoutScreen() {
 
   navigation.setOptions({
     header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,
+    ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

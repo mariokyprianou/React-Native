@@ -8,32 +8,22 @@
 import React, {useState, useEffect} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import useTermsPolicyData from '../../hooks/data/useTermsPolicyData';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
-
-{
-  /* <AppStack.Screen
-        name="TermsConditions"
-        component={TermsConditionsScreen}
-        options={{
-          header: () => (
-            <Header
-              title={"Terms & Conditions"}
-              noSearch
-              showBurger={false}
-              showModalCross
-
-            />
-          ),
-        }}
-      /> */
-}
+import Header from '../../components/Headers/Header';
 
 export default function TermsConditionsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => <Header title={'Terms & Conditions'} goBack />,
+  });
+
   const {
     cellFormStyles,
     dropdownStyle,
@@ -70,7 +60,12 @@ export default function TermsConditionsScreen() {
     <View style={styles.render.container}>
       <TermsPolicyContentView isHtml={isHtml} content={termsAndConditions} />
       <View style={styles.buttonContainer}>
-        <DefaultButton type="done" variant="white" icon="chevron" />
+        <DefaultButton
+          type="done"
+          variant="white"
+          icon="chevron"
+          onPress={() => navigation.goBack()}
+        />
       </View>
     </View>
   );

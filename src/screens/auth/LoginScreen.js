@@ -84,6 +84,7 @@ export default function RegisterScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleLogin() {
+    navigation.navigate('MeetYourIcons');
     setLoading(true);
     cleanErrors();
 
@@ -111,7 +112,9 @@ export default function RegisterScreen() {
     });
   }
 
-  function forgotPassword() {}
+  function forgotPassword() {
+    navigation.navigate('ForgotPassword');
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const FormFooter = () => (

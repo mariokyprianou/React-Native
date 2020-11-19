@@ -8,9 +8,11 @@
 import React, {useEffect} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
+import {useNavigation} from '@react-navigation/native';
 
 export default function ProfileScreen() {
   // MARK: - Hooks
+  const navigation = useNavigation();
   const {cleanErrors, getValues, updateError} = FormHook();
 
   // MARK: - Local
@@ -37,6 +39,8 @@ export default function ProfileScreen() {
 
   const onPressLogout = () => {
     console.log('TODO: - onPressLogout');
+
+    navigation.navigate('Onboarding');
   };
 
   const onPressNeedToSignOut = () => {

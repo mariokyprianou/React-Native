@@ -9,32 +9,23 @@ import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import useTermsPolicyData from '../../hooks/data/useTermsPolicyData';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
+import Header from '../../components/Headers/Header';
 
-{
-  /* <AppStack.Screen
-        name="PrivacyPolicy"
-        component={PrivacyPolicyScreen}
-        options={{
-          header: () => (
-            <Header
-              title={"Privacy"}
-              noSearch
-              showBurger={false}
-              showModalCross
-
-            />
-          ),
-        }}
-      /> */
-}
-
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => <Header title={'Terms & Conditions'} goBack />,
+  });
+
   const {textStyles, colors} = useTheme();
   const {getHeight} = ScaleHook();
 
@@ -65,7 +56,12 @@ export default function RegisterScreen({navigation}) {
     <View style={styles.render.container}>
       <TermsPolicyContentView isHtml={isHtml} content={privacyPolicy} />
       <View style={styles.buttonContainer}>
-        <DefaultButton type="done" variant="white" icon="chevron" />
+        <DefaultButton
+          type="done"
+          variant="white"
+          icon="chevron"
+          onPress={() => navigation.goBack()}
+        />
       </View>
     </View>
   );

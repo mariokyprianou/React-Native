@@ -22,6 +22,12 @@ import Spacer from '../../components/Utility/Spacer';
 
 const SettingsScreen = ({}) => {
   // MARK: - Hooks
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => <Header title={'Settings'} goBack />,
+  });
+
   const {getHeight, getWidth} = ScaleHook();
   const {
     colors,
@@ -31,7 +37,6 @@ const SettingsScreen = ({}) => {
     dropdownStyle,
   } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
-  const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {
     Settings_ScreenTitle,
@@ -117,14 +122,13 @@ const SettingsScreen = ({}) => {
       alignItems: 'center',
       backgroundColor: colors.offWhite,
       justifyContent: 'space-between',
-      paddingVertical: getHeight(40),
+      paddingVertical: getHeight(20),
     },
     formContainer: {
       width: '90%',
     },
     headerTextStyle: {
       ...textStyles.bold20_black100,
-      marginTop: getHeight(20),
       marginBottom: getHeight(10),
     },
     versionTextStyle: {

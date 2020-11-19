@@ -24,18 +24,9 @@ export default function ProfileContainer(props) {
       <ProfileStack.Screen
         name="ChangePassword"
         component={ChangePasswordScreen}
-        options={{headerShown: false}}
       />
-      <ProfileStack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{headerShown: false}}
-      />
-      <ProfileStack.Screen
-        name="ChangeEmail"
-        component={ChangeEmailScreen}
-        options={{headerShown: false}}
-      />
+      <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+      <ProfileStack.Screen name="ChangeEmail" component={ChangeEmailScreen} />
     </ProfileStack.Navigator>
   );
 }

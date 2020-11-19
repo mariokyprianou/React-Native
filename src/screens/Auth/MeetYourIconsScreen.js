@@ -32,7 +32,7 @@ import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function MeetYourIconsScreen({switchProgramme = true}) {
+export default function MeetYourIconsScreen({switchProgramme = false}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -42,9 +42,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
   const {currentTrainer, currentWeek} = userProgrammeData;
   const [showHelpMeChooseModal, setShowHelpMeChooseModal] = useState(false);
-  const [trainerOnSlider, setTrainerOnSlider] = useState(
-    meetYourIconsData[0].name,
-  );
+  const [trainerOnSlider, setTrainerOnSlider] = useState();
   const [venue, setVenue] = useState('gym');
   const navigation = useNavigation();
 
@@ -141,22 +139,21 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     workoutContainer: {
       width: '100%',
       alignItems: 'center',
-      paddingBottom: getHeight(50),
     },
     buttonContainer: {
       width: '100%',
-      backgroundColor: colors.paleTurquoise100,
-      alignItems: 'center',
       position: 'absolute',
-      bottom: getHeight(70),
-      paddingVertical: getHeight(20),
+      bottom: 0,
+      marginTop: getHeight(30),
+      marginBottom: getHeight(40),
+      alignItems: 'center',
     },
     singleButtonContainer: {
       width: '100%',
       backgroundColor: colors.paleTurquoise100,
       alignItems: 'center',
       position: 'absolute',
-      bottom: getHeight(130),
+      bottom: getHeight(40),
     },
     zeroButtonContainer: {
       backgroundColor: 'transparent',
@@ -184,10 +181,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   }
 
   function navigateToWorkoutHome() {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'TabContainer'}],
-    });
+    navigation.navigate('TabContainer');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -301,7 +295,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
                     />
                   ))}
                 </View>
-                <Spacer height={90} />
+                <Spacer height={180} />
               </ScrollView>
             );
           },
@@ -316,7 +310,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             trainerName="KATRINA"
             onPress={navigateToWorkoutHome}
           />
-          <Spacer height={20} />
+          {/* <Spacer height={20} /> */}
           <DefaultButton
             type="continueFromWeek"
             icon="chevron"
@@ -326,7 +320,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
           />
         </View>
       ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
-        <View style={styles.singleButtonContainer}>
+        <View style={styles.buttonContainer}>
           <DefaultButton
             type="start"
             icon="chevron"
@@ -342,7 +336,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             variant="gradient"
             onPress={() => navigation.navigate('Registration')}
           />
-          <Spacer height={20} />
+          {/* <Spacer height={20} /> */}
           <DefaultButton
             type="login"
             variant="grey"

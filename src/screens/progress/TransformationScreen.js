@@ -60,7 +60,7 @@ export default function TransformationScreen() {
       height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(174),
+      height: getHeight(170),
     },
     overlay: {
       height: getHeight(440),

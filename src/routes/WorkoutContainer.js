@@ -11,6 +11,7 @@ import {WorkoutStack} from '../navigation';
 import WorkoutHomeScreen from '../screens/workout/WorkoutHomeScreen';
 import StartWorkoutScreen from '../screens/workout/StartWorkoutScreen';
 import WorkoutScreen from '../screens/workout/WorkoutScreen';
+import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutContainer(props) {
   return (
@@ -28,7 +29,11 @@ export default function WorkoutContainer(props) {
       <WorkoutStack.Screen
         name="Workout"
         component={WorkoutScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          ...TransitionPresets.ModalSlideFromBottomIOS,
+        }}
+        mode="modal"
       />
     </WorkoutStack.Navigator>
   );

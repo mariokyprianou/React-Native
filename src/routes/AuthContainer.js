@@ -15,6 +15,11 @@ import RegistrationScreen from '../screens/auth/RegistrationScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import CongratulationsScreen from '../screens/auth/CongratulationsScreen';
 
+// Ts & Cs, Privacy, and Email Verification will all need to slide up from the bottom
+// Do this by adding the following to each screen below:
+// options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+// E.g. WorkoutContainer > WorkoutScreen
+
 export default function AuthContainer(props) {
   return (
     <AuthStack.Navigator headerMode="screen">

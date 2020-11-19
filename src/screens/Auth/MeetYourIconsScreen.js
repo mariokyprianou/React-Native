@@ -32,7 +32,7 @@ import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function MeetYourIconsScreen({switchProgramme = false}) {
+export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();

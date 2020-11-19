@@ -96,6 +96,7 @@ export default function ProgressScreen() {
             daysTextStyles={daysTextStyles}
             daysContainerStyles={daysContainerStyles}
             firstDayOfWeek="Monday"
+            calendarType="single-month"
             showPrevNextDays={false}
             datesSelectable={false}
             dateCellStyles={dateCellStyles}

@@ -9,18 +9,10 @@ import React from 'react';
 import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
-import ProgressScreen from './screens/progress/ProgressScreen';
 
 export default function AppContainer() {
   return (
     <AppStack.Navigator headerMode="screen">
-      <AppStack.Screen
-        name="Progress"
-        component={ProgressScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
       <AppStack.Screen
         name="AuthContainer"
         component={AuthContainer}

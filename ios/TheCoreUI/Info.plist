@@ -37,8 +37,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow access</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Please allow access</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please allow access</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome5_Pro_Brands.ttf</string>
@@ -83,11 +89,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Please allow access</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Please allow access</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Please allow access</string>
 </dict>
 </plist>

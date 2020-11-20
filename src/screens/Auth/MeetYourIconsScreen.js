@@ -29,6 +29,8 @@ import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import ModalCard from '../../components/Modals/ModalCard';
 import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
+import isRTL from '../../utils/isRTL';
+import FadingBottomView from '../../components/Views/FadingBottomView';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -128,13 +130,16 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
     text: {
       ...textStyles.medium15_white100,
       marginTop: getHeight(5),
+      textAlign: 'left',
     },
     heading: {
       ...textStyles.bold24_white100,
       marginTop: getHeight(20),
+      textAlign: 'left',
     },
     weeksText: {
       ...textStyles.bold14_white100,
+      textAlign: 'left',
     },
     workoutContainer: {
       width: '100%',
@@ -256,10 +261,16 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
                 </View>
                 <View style={styles.iconContainer}>
                   <TouchableOpacity onPress={() => handlePress('left')}>
-                    <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
+                    <TDIcon
+                      input={isRTL() ? 'chevron-right' : 'chevron-left'}
+                      inputStyle={styles.icon}
+                    />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handlePress('right')}>
-                    <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
+                    <TDIcon
+                      input={isRTL() ? 'chevron-left' : 'chevron-right'}
+                      inputStyle={styles.icon}
+                    />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.cardContainer}>
@@ -301,6 +312,9 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
           },
         )}
       </Swiper>
+      <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
+        <FadingBottomView color="blue" height={250} />
+      </View>
       {switchProgramme === true && trainerOnSlider === currentTrainer ? (
         <View style={styles.buttonContainer}>
           <DefaultButton

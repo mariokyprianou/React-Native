@@ -11,6 +11,7 @@ import {Dimensions, View, Image, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TDIcon from 'the-core-ui-component-tdicon';
+import isRTL from '../../utils/isRTL';
 
 export default function OnboardingSliderItem({
   image,
@@ -69,10 +70,16 @@ export default function OnboardingSliderItem({
     <View style={styles.container}>
       <View style={styles.iconContainer}>
         <TouchableOpacity onPress={() => handlePress('left')}>
-          <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
+          <TDIcon
+            input={isRTL() ? 'chevron-right' : 'chevron-left'}
+            inputStyle={styles.icon}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress('right')}>
-          <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
+          <TDIcon
+            input={isRTL() ? 'chevron-left' : 'chevron-right'}
+            inputStyle={styles.icon}
+          />
         </TouchableOpacity>
       </View>
       <Image source={image} style={styles.image} />

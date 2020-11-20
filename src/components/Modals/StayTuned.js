@@ -58,6 +58,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
     },
     infoText: {
       ...textStyles.semiBold16_white90,
+      textAlign: 'left',
     },
     buttonContainer: {
       position: 'absolute',

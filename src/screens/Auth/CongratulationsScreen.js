@@ -53,10 +53,12 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
     title: {
       ...textStyles.bold30_white100,
       marginBottom: getHeight(4),
+      textAlign: 'left',
     },
     text: {
       ...textStyles.semiBold16_white90,
       marginBottom: getHeight(400),
+      textAlign: 'left',
     },
     buttonContainer: {
       width: '100%',

@@ -13,6 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 import TDIcon from 'the-core-ui-component-tdicon';
+import isRTL from '../../utils/isRTL';
 
 export default function DefaultButton({
   type,
@@ -190,7 +191,7 @@ export default function DefaultButton({
   const iconType = {
     share: shareIcon,
     reminder: reminderIcon,
-    chevron: 'chevron-right',
+    chevron: isRTL() ? 'chevron-left' : 'chevron-right',
   };
 
   const iconStyles = {
@@ -250,6 +251,7 @@ export default function DefaultButton({
     },
     text: {
       ...buttonTextVariant[variant],
+      textAlign: 'left',
     },
     iconContainer: {
       position: 'absolute',
@@ -263,6 +265,7 @@ export default function DefaultButton({
     },
     subText: {
       ...buttonSubtextVariant[variant],
+      textAlign: 'left',
     },
     promptContainer: {
       backgroundColor: colors.blueGreen100,
@@ -275,6 +278,7 @@ export default function DefaultButton({
     },
     promptTextStyle: {
       ...textStyles.medium14_white100,
+      textAlign: 'left',
     },
   };
 
@@ -346,7 +350,7 @@ export default function DefaultButton({
           <Text style={styles.text}>{`${buttonText[type]} ${weekNo}`}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
-              input={'chevron-right'}
+              input={iconType[icon]}
               inputStyle={{...iconStyles[icon], ...iconVariant[variant]}}
             />
           </View>
@@ -365,7 +369,7 @@ export default function DefaultButton({
             }>{`${trainerName}${ButtonText_Pluralise} ${buttonText[type]}`}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
-              input={'chevron-right'}
+              input={iconType[icon]}
               inputStyle={{...iconStyles[icon], ...iconVariant[variant]}}
             />
           </View>

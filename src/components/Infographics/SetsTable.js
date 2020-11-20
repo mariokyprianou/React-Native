@@ -25,7 +25,6 @@ export default function SetsTable({date}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
-      paddingHorizontal: getWidth(15),
       height: '100%',
       width: '100%',
       backgroundColor: colors.white100,
@@ -36,10 +35,12 @@ export default function SetsTable({date}) {
       minHeight: getHeight(220),
       alignSelf: 'center',
       paddingBottom: getHeight(20),
+      paddingHorizontal: getWidth(15),
     },
     title: {
       ...textStyles.bold20_black100,
       marginVertical: getHeight(20),
+      textAlign: 'left',
     },
     separator: {
       height: getHeight(1),

@@ -17,6 +17,7 @@ import Swiper from 'react-native-swiper';
 import OnboardingSliderItem from '../../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
+import isRTL from '../../utils/isRTL';
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -30,14 +31,7 @@ export default function OnboardingScreen() {
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={''}
-        goBack
-        componentRight={() => <Login />}
-        rightAction={() => console.log('login')}
-      />
-    ),
+    header: () => <Header title={''} goBack componentRight={() => <Login />} />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -75,6 +69,7 @@ export default function OnboardingScreen() {
     },
     loginText: {
       ...textStyles.bold15_black100,
+      textAlign: 'left',
     },
   });
 
@@ -106,9 +101,13 @@ export default function OnboardingScreen() {
   return (
     <View style={styles.container}>
       <Swiper
+        style={{flexDirection: isRTL ? 'row-reverse' : 'row'}}
         ref={onboardSwiper}
         loop={false}
-        onIndexChanged={(index) => setActiveIndex(index)}
+        onIndexChanged={(index) => {
+          console.log(index);
+          setActiveIndex(index);
+        }}
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}>
         {onboardingData.map(({header, text, image}) => (

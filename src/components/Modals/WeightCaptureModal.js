@@ -49,6 +49,7 @@ export default function WeightCaptureModal({onPressClose}) {
     },
     title: {
       ...textStyles.bold20_black100,
+      textAlign: 'left',
     },
     dropdown: {
       flexDirection: 'row',
@@ -108,7 +109,10 @@ export default function WeightCaptureModal({onPressClose}) {
             items={repsHistoryData}
             defaultValue={null}
             placeholder="Reps"
-            placeholderStyle={{...textStyles.bold20_black100}}
+            placeholderStyle={{
+              ...textStyles.bold20_black100,
+              textAlign: 'left',
+            }}
             containerStyle={styles.dropdownContainer}
             style={styles.dropdownBox}
             dropDownStyle={styles.dropdownList}

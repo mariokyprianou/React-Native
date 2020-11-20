@@ -14,6 +14,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
 import IconTextView from '../Infographics/IconTextView';
+import isRTL from '../../utils/isRTL';
 
 // possible status' - currentDay, complete, todo
 
@@ -92,6 +93,7 @@ export default function WorkoutCard({
     },
     title: {
       ...textStyles.semiBold14_black100,
+      textAlign: 'left',
     },
     dayContainer: {
       flexDirection: 'row',
@@ -100,9 +102,12 @@ export default function WorkoutCard({
     },
     workoutDay: {
       ...textStyles.medium14_aquamarine100,
+      marginRight: getWidth(2),
+      textAlign: 'left',
     },
     date: {
       ...textStyles.medium14_brownishGrey100,
+      textAlign: 'left',
     },
   };
 
@@ -132,10 +137,11 @@ export default function WorkoutCard({
               </View>
             )}
             {title !== WorkoutText_RestDay && (
-              <Text
-                style={
-                  styles.workoutDay
-                }>{`${CardText_Day} ${workoutDay}: `}</Text>
+              <Text style={styles.workoutDay}>
+                {isRTL()
+                  ? `:${CardText_Day} ${workoutDay} `
+                  : `${CardText_Day} ${workoutDay}: `}
+              </Text>
             )}
             <Text style={styles.date}>{date}</Text>
           </View>

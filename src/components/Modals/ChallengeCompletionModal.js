@@ -51,6 +51,7 @@ export default function ChallengeCompletionModal({
     description: {
       marginTop: getHeight(20),
       ...textStyles.semiBold16_brownishGrey100,
+      textAlign: 'left',
     },
     buttonContainer: {
       position: 'absolute',
@@ -76,9 +77,11 @@ export default function ChallengeCompletionModal({
     },
     resultTitle: {
       ...textStyles.medium14_brownishGrey100,
+      textAlign: 'left',
     },
     resultText: {
       ...textStyles.bold34_black100,
+      textAlign: 'left',
     },
   };
 

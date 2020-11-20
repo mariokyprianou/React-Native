@@ -25,6 +25,7 @@ import ModalCard from '../../components/Modals/ModalCard';
 import TakeARest from '../../components/Modals/TakeARest';
 import WeekComplete from '../../components/Modals/WeekComplete';
 import StayTuned from '../../components/Modals/StayTuned';
+import isRTL from '../../utils/isRTL';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -110,9 +111,12 @@ export default function WorkoutHomeScreen() {
     },
     weekText: {
       ...textStyles.bold24_black100,
+      textAlign: 'left',
+      marginRight: getWidth(6),
     },
     numberText: {
       ...textStyles.bold24_aquamarine100,
+      textAlign: 'left',
     },
     touch: {
       marginRight: getWidth(30),
@@ -128,10 +132,15 @@ export default function WorkoutHomeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
-    if (direction === 'left') setWeekNumber(1);
-    if (direction === 'right' && !completedWorkoutWeek) setWeekNumber(2);
-    if (direction === 'right' && completedWorkoutWeek)
+    if (direction === 'left') {
+      setWeekNumber(1);
+    }
+    if (direction === 'right' && !completedWorkoutWeek) {
+      setWeekNumber(2);
+    }
+    if (direction === 'right' && completedWorkoutWeek) {
       setShowStayTunedModal(true);
+    }
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -141,19 +150,25 @@ export default function WorkoutHomeScreen() {
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{TitleText_Week}</Text>
-          <Text style={styles.numberText}>{` ${weekNumber}`}</Text>
+          <Text style={styles.numberText}>{`${weekNumber}`}</Text>
         </View>
         <TouchableOpacity
           style={styles.touch}
           onPress={() => handlePress('left')}
           disabled={weekNumber === 1 ? true : false}>
-          <TDIcon input={'chevron-left'} inputStyle={styles.icon} />
+          <TDIcon
+            input={isRTL() ? 'chevron-right' : 'chevron-left'}
+            inputStyle={styles.icon}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.touch}
           onPress={() => handlePress('right')}
           disabled={weekNumber === 2 ? true : false}>
-          <TDIcon input={'chevron-right'} inputStyle={styles.icon} />
+          <TDIcon
+            input={isRTL() ? 'chevron-left' : 'chevron-right'}
+            inputStyle={styles.icon}
+          />
         </TouchableOpacity>
       </View>
       <View>

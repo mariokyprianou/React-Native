@@ -39,11 +39,13 @@ export default function NotesModal({onPressClose}) {
     },
     description: {
       ...textStyles.regular15_brownishGrey100,
+      textAlign: 'left',
     },
     subtitle: {
       ...textStyles.medium14_black100,
       marginTop: getHeight(30),
       marginBottom: getHeight(13),
+      textAlign: 'left',
     },
     line: {
       backgroundColor: colors.black30,

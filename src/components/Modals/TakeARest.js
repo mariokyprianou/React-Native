@@ -46,6 +46,7 @@ export default function TakeARest({name, onPressClose}) {
     },
     infoText: {
       ...textStyles.semiBold16_white90,
+      textAlign: 'left',
     },
     buttonContainer: {
       position: 'absolute',

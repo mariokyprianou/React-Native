@@ -30,9 +30,8 @@ export default function TransformationChallenge({type, title, image, onPress}) {
   const styles = {
     box: {
       height: getHeight(130),
-      width: getHeight(130),
-      marginBottom: getHeight(15),
-      justifyContent: 'flex-end',
+      width: '48%',
+      marginBottom: '3%',
     },
     challengeBox: {
       backgroundColor: colors.white100,
@@ -47,15 +46,19 @@ export default function TransformationChallenge({type, title, image, onPress}) {
     },
     progressTitle: {
       ...textStyles.bold12_white100,
+      textAlign: 'left',
     },
     progressText: {
       ...textStyles.bold15_white100,
+      textAlign: 'left',
     },
     challengeTitle: {
       ...textStyles.bold12_brownishGrey100,
+      textAlign: 'left',
     },
     challengeText: {
       ...textStyles.bold15_black100,
+      textAlign: 'left',
     },
     photoImage: {
       height: '100%',
@@ -72,10 +75,11 @@ export default function TransformationChallenge({type, title, image, onPress}) {
       backgroundColor: colors.black40,
     },
     challengeImage: {
-      width: getWidth(120),
-      height: getHeight(50),
+      width: '90%',
+      height: '50%',
       alignSelf: 'center',
-      marginBottom: getHeight(5),
+
+      marginVertical: getHeight(5),
     },
     iconContainer: {
       position: 'absolute',
@@ -91,10 +95,10 @@ export default function TransformationChallenge({type, title, image, onPress}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (type === 'progress') {
-    return (
-      <View style={styles.box}>
-        <TouchableOpacity onPress={onPress}>
+  return (
+    <View style={{...styles.box, ...styles.challengeBox}}>
+      <TouchableOpacity style={{flex: 1}} onPress={onPress}>
+        {type === 'progress' ? (
           <ImageBackground source={image} style={styles.photoImage}>
             <View style={styles.overlay} />
             <View style={styles.iconContainer}>
@@ -105,24 +109,16 @@ export default function TransformationChallenge({type, title, image, onPress}) {
               <Text style={styles.progressText}>{title}</Text>
             </View>
           </ImageBackground>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-  if (type === 'challenge') {
-    return (
-      <View
-        style={{
-          ...styles.box,
-          ...styles.textContainer,
-          ...styles.challengeBox,
-        }}>
-        <TouchableOpacity onPress={onPress}>
-          <Image source={image} style={styles.challengeImage} />
-          <Text style={styles.challengeTitle}>{ButtonText_Challenge}</Text>
-          <Text style={styles.challengeText}>{title}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+        ) : (
+          <>
+            <Image source={image} style={styles.challengeImage} />
+            <View style={styles.textContainer}>
+              <Text style={styles.challengeTitle}>{ButtonText_Challenge}</Text>
+              <Text style={styles.challengeText}>{title}</Text>
+            </View>
+          </>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
 }

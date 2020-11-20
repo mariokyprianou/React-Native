@@ -58,13 +58,17 @@ export default function ProfileUserCard({
       justifyContent: 'space-between',
       flex: 1,
     },
-    title: {...textStyles.bold34_black100},
-    titleBlue: {...textStyles.bold34_aquamarine100},
+    title: {...textStyles.bold34_black100, textAlign: 'left'},
+    titleBlue: {...textStyles.bold34_aquamarine100, textAlign: 'left'},
     icon: {
       size: 15,
       solid: true,
     },
-    header: {...textStyles.bold14_black20, color: colors.brownishGrey100},
+    header: {
+      ...textStyles.bold14_black20,
+      color: colors.brownishGrey100,
+      textAlign: 'left',
+    },
   };
 
   // MARK: - Render

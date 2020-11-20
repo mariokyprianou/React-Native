@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import * as Animatable from 'react-native-animatable';
+import isRTL from '../../utils/isRTL';
 
 export default function CantChooseButton({onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -78,7 +79,9 @@ export default function CantChooseButton({onPress}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (buttonState === 'ready') {
     return (
-      <Animatable.View style={styles.largerButton} animation="slideInRight">
+      <Animatable.View
+        style={styles.largerButton}
+        animation={isRTL() ? 'slideInLeft' : 'slideInRight'}>
         <TouchableOpacity style={styles.touch} onPress={onPress}>
           <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
           <View style={{...styles.button, ...styles.darkerButton}}>

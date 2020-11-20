@@ -64,7 +64,6 @@ export default function Screen() {
       flex: 1,
     },
     scrollViewContainer: {
-      paddingHorizontal: getWidth(25),
       height: '100%',
       width: '100%',
     },
@@ -80,6 +79,7 @@ export default function Screen() {
     descriptionStyle: {
       ...textStyles.regular15_brownishGrey100,
       marginTop: getHeight(30),
+      textAlign: 'left',
     },
   };
 
@@ -150,7 +150,9 @@ export default function Screen() {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>
-        <Form cells={cells} config={config} />
+        <View style={{marginHorizontal: getWidth(25)}}>
+          <Form cells={cells} config={config} />
+        </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
         <DefaultButton

@@ -70,6 +70,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
     },
     infoText: {
       ...textStyles.semiBold16_white90,
+      textAlign: 'left',
     },
     buttonContainer: {
       position: 'absolute',
@@ -81,6 +82,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
       ...textStyles.regular15_white100,
       marginTop: getHeight(20),
       marginBottom: getHeight(5),
+      textAlign: 'left',
     },
   };
 

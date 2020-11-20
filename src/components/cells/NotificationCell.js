@@ -70,13 +70,17 @@ export default function NotificationCell({
     subjectTextStyle: {
       ...textStyles.medium14_brownishGrey100,
       flex: 0.7,
+      textAlign: 'left',
     },
     textStyle: {
       ...textStyles.regular15_brownishGrey80,
+      textAlign: 'left',
     },
     dateStyle: {
       ...textStyles.regular15_brownishGrey80,
       flex: 0.3,
+      textAlign: 'left',
+      marginLeft: getWidth(10),
     },
     rightAction: {
       flex: 1,
@@ -87,6 +91,7 @@ export default function NotificationCell({
     actionText: {
       ...textStyles.medium14_white100,
       paddingLeft: getWidth(5),
+      textAlign: 'left',
     },
   };
 

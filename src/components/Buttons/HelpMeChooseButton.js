@@ -53,15 +53,19 @@ export default function HelpMeChooseButton({
     },
     selectedLetterText: {
       ...textStyles.bold14_white100,
+      textAlign: 'left',
     },
     selectedBodyText: {
       ...textStyles.bold16_white100,
+      textAlign: 'left',
     },
     unselectedLetterText: {
       ...textStyles.semiBold14_black100,
+      textAlign: 'left',
     },
     unselectedBodyText: {
       ...textStyles.medium15_black100,
+      textAlign: 'left',
     },
   });
 

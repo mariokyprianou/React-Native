@@ -11,6 +11,7 @@ import React from 'react';
 import {ScaleHook} from 'react-native-design-to-component';
 
 import Colors from '../../styles/Colors';
+import isRTL from '../../utils/isRTL';
 import ThemeContext from './ThemeContext';
 
 export default function ThemeProvider({children}) {
@@ -427,6 +428,7 @@ export default function ThemeProvider({children}) {
     },
     labelTextStyle: {
       ...textStyles.medium14_brownishGrey100,
+      textAlign: 'left',
     },
     iconTintColor: colors.black100,
     style: {
@@ -436,14 +438,16 @@ export default function ThemeProvider({children}) {
     inputContainerStyle: {
       padding: 0,
       margin: 0,
-      paddingRight: getWidth(6),
+      paddingHorizontal: getWidth(6),
     },
     inputStyle: {
       ...textStyles.regular16_black100,
       flex: 1,
       paddingHorizontal: 0,
       margin: 0,
+      textAlign: 'left',
     },
+    writingDirection: isRTL() ? 'rtl' : 'ltr',
   };
 
   const cellFormConfig = {
@@ -509,18 +513,22 @@ export default function ThemeProvider({children}) {
     },
     exerciseTitleStyle: {
       ...textStyles.bold21_black100,
+      textAlign: 'left',
     },
     exerciseDescriptionStyle: {
       marginTop: getHeight(10),
       marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
+      textAlign: 'left',
     },
     competedSetsTitleStyle: {
       ...textStyles.bold18_brownishGrey100,
       lineHeight: getHeight(20),
+      textAlign: 'left',
     },
     competedSetsTextStyle: {
       ...textStyles.bold16_brownishGrey100,
+      textAlign: 'left',
     },
     checkIconStyle: {
       tintColor: colors.brownishGrey100,

@@ -60,7 +60,9 @@ export default function RegisterScreen() {
       flex: 1,
     },
     scrollViewContainer: {
-      paddingHorizontal: getWidth(25),
+      alignSelf: 'center',
+
+      alignContent: 'center',
       height: '100%',
       width: '100%',
     },
@@ -159,7 +161,9 @@ export default function RegisterScreen() {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>
-        <Form cells={cells} config={config} />
+        <View style={{marginHorizontal: getWidth(25)}}>
+          <Form cells={cells} config={config} />
+        </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
         <DefaultButton

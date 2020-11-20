@@ -130,13 +130,16 @@ const SettingsScreen = ({}) => {
     headerTextStyle: {
       ...textStyles.bold20_black100,
       marginBottom: getHeight(10),
+      textAlign: 'left',
     },
     versionTextStyle: {
       ...textStyles.semiBold12_black100,
+      textAlign: 'left',
     },
     switchTitleStyle: {
       ...textStyles.semiBold14_brownishGrey100,
       alignSelf: 'center',
+      textAlign: 'left',
     },
     switchTitleContainerStyle: {
       flexDirection: 'row',
@@ -147,6 +150,7 @@ const SettingsScreen = ({}) => {
     switchDescriptionStyle: {
       ...textStyles.regular15_brownishGrey100,
       marginBottom: getHeight(16),
+      textAlign: 'left',
     },
     switchStyle: {
       //   trackColorOff: colors.aquamarine100,

@@ -11,6 +11,7 @@ import {View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TDIcon from 'the-core-ui-component-tdicon';
+import {color} from 'react-native-reanimated';
 
 // possible icons - lightning, heartRate, weight
 
@@ -44,8 +45,13 @@ export default function PercentageBar({icon, text, percentage}) {
     },
     icon: {
       color: colors.white100,
+      tintColor: colors.white100,
+      tint: colors.white100,
       size: fontSize(22),
       solid: true,
+      style: {
+        tintColor: colors.white100,
+      },
     },
     textContainer: {
       flexDirection: 'column',
@@ -54,6 +60,7 @@ export default function PercentageBar({icon, text, percentage}) {
     },
     text: {
       ...textStyles.bold12_white100,
+      textAlign: 'left',
     },
     barContainer: {
       flexDirection: 'row',

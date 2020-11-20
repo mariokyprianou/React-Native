@@ -77,6 +77,7 @@ export default function HelpMeChooseResultsModal({
     },
     modalTitle: {
       ...textStyles.bold22_black100,
+      textAlign: 'left',
     },
     titleContainer: {
       width: '90%',
@@ -97,6 +98,7 @@ export default function HelpMeChooseResultsModal({
     title: {
       ...textStyles.semiBold14_black100,
       marginTop: getHeight(30),
+      textAlign: 'left',
     },
     barContainer: {
       width: '100%',
@@ -115,9 +117,11 @@ export default function HelpMeChooseResultsModal({
     name: {
       ...textStyles.bold18_white100,
       marginTop: getHeight(340),
+      textAlign: 'left',
     },
     result: {
       ...textStyles.regular15_white100,
+      textAlign: 'left',
     },
   };
 

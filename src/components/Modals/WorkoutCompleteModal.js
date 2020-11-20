@@ -65,6 +65,7 @@ export default function WorkoutCompleteModal() {
     question: {
       ...textStyles.regular15_brownishGrey100,
       marginTop: getHeight(20),
+      textAlign: 'left',
     },
     sliderContainer: {
       marginTop: getHeight(20),

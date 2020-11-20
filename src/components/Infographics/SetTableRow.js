@@ -31,6 +31,7 @@ export default function SetTableRow({setNumber, reps, weight}) {
     },
     text: {
       ...textStyles.medium14_brownishGrey100,
+      textAlign: 'left',
       flex: 0.4,
     },
   });

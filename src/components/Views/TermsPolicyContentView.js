@@ -31,11 +31,12 @@ export default function TermsPolicyContentView({isHtml, content}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     scrollViewContainer: {
-      paddingHorizontal: getWidth(25),
       height: '100%',
       width: '100%',
     },
     webViewContainer: {
+      paddingHorizontal: getWidth(25),
+
       flex: 1,
       width: '100%',
       minHeight: getHeight(1050),

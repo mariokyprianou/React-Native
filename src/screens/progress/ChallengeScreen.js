@@ -61,6 +61,7 @@ export default function ChallengeScreen() {
     },
     description: {
       ...textStyles.regular15_brownishGrey100,
+      textAlign: 'left',
     },
     timerText: {
       ...textStyles.bold34_black100,

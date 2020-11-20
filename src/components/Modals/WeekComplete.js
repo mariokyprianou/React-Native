@@ -52,6 +52,7 @@ export default function WeekComplete({
     },
     infoText: {
       ...textStyles.semiBold16_white90,
+      textAlign: 'left',
     },
     infoIconsContainer: {
       marginBottom: getHeight(34),

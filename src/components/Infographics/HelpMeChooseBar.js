@@ -33,6 +33,7 @@ export default function HelpMeChooseBar({
     title: {
       ...textStyles.semiBold14_black100,
       marginBottom: getHeight(5),
+      textAlign: 'left',
     },
     barContainer: {
       flexDirection: 'row',
@@ -49,6 +50,7 @@ export default function HelpMeChooseBar({
     text: {
       ...textStyles.light15_black100,
       marginTop: getHeight(14),
+      textAlign: 'left',
     },
   });
 

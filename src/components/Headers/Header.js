@@ -15,6 +15,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
+import isRTL from '../../utils/isRTL';
 
 const arrowBackIcon = require('../../../assets/icons/headerBackArrow.png');
 const closeIcon = require('../../../assets/icons/headerClose.png');
@@ -112,6 +113,7 @@ export default function Header({
       size: fontSize(20),
       color: white ? colors.white100 : colors.black100,
       tintColor: white ? colors.white100 : colors.black100,
+      transform: [{scaleX: isRTL() ? -1 : 1}],
     },
     shareIconStyle: {
       height: getHeight(18),

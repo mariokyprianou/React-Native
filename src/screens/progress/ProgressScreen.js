@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -22,7 +22,7 @@ const fakeGraph = require('../../../assets/fakeGraph.png');
 
 export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {
     days,
@@ -57,12 +57,15 @@ export default function ProgressScreen() {
     },
     yourTitle: {
       ...textStyles.bold34_black100,
+      textAlign: 'left',
+      marginRight: getWidth(6),
     },
     progressTitle: {
       ...textStyles.bold34_aquamarine100,
+      textAlign: 'left',
     },
     calendarContainer: {
-      height: getHeight(280),
+      height: Platform.OS === 'android' ? getHeight(300) : getHeight(280),
       width: '100%',
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -78,6 +81,7 @@ export default function ProgressScreen() {
       flexWrap: 'wrap',
       justifyContent: 'space-between',
       alignSelf: 'center',
+      flex: 1,
     },
   });
 
@@ -87,7 +91,7 @@ export default function ProgressScreen() {
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.yourTitle}>{TitleText_Your}</Text>
-        <Text style={styles.progressTitle}>{` ${TitleText_Progress}`}</Text>
+        <Text style={styles.progressTitle}>{`${TitleText_Progress}`}</Text>
       </View>
       <View style={styles.calendarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>

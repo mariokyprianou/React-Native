@@ -94,7 +94,10 @@ export default function ProfileScreenUI({
       width: '100%',
       marginTop: getHeight(30),
     },
-    title: {...textStyles.bold20_black100},
+    title: {
+      ...textStyles.bold20_black100,
+      textAlign: 'left',
+    },
     formContainer: {
       width: '90%',
       marginTop: getHeight(30),
@@ -162,6 +165,7 @@ export default function ProfileScreenUI({
             ...textStyles.bold20_black100,
             marginTop: getHeight(20),
             marginBottom: getHeight(10),
+            textAlign: 'left',
           }}>
           {Profile_PersonalDetails}
         </Text>

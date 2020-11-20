@@ -10,7 +10,7 @@ import React, {useCallback, useState, useEffect} from 'react';
 import {useAsyncStorage} from '@react-native-community/async-storage';
 
 import DictionaryContext from './DictionaryContext';
-import {enGB} from './languages';
+import {enGB, hiIN, urIN} from './languages';
 
 const DictionaryProvider = ({children}) => {
   const [dictionaryLoading, setDictionaryLoading] = useState(true);
@@ -21,7 +21,7 @@ const DictionaryProvider = ({children}) => {
     // console.log('Dictionary - fetchLanguage - FETCHING');
     try {
       const language = await getItem();
-      // console.log('Dictionary - fetchLanguage - language: ', language);
+      console.log('Dictionary - fetchLanguage - language: ', language);
       setLocale(language || 'en-GB');
       setDictionaryLoading(false);
     } catch (e) {
@@ -51,11 +51,11 @@ const DictionaryProvider = ({children}) => {
     // console.log('Dictionary - setLanguage - language: ', language);
     const languageMap = {
       English: 'en-GB',
-      // Hindi: 'hi-IN',
-      // Urdu: 'ur-IN',
+      Hindi: 'hi-IN',
+      Urdu: 'ur-IN',
     };
     const value = languageMap[language];
-    // console.log('Dictionary - setLanguage - value: ', value);
+    console.log('Dictionary - setLanguage - value: ', value);
     setLocale(value);
     saveLanguage(value);
   }, []);
@@ -65,8 +65,8 @@ const DictionaryProvider = ({children}) => {
     // Populates the dropdown text.
     const languageMap = {
       'en-GB': 'English',
-      // 'hi-IN': 'Hindi',
-      // ur-IN: 'Urdu',
+      'hi-IN': 'Hindi',
+      'ur-IN': 'Urdu',
     };
 
     const value = languageMap[locale];
@@ -76,8 +76,8 @@ const DictionaryProvider = ({children}) => {
 
   const translateMap = {
     'en-GB': enGB,
-    // 'hi-IN': hiIN,
-    // ur-IN: urIN,
+    'hi-IN': hiIN,
+    'ur-IN': urIN,
   };
 
   const dictionary = translateMap[locale];

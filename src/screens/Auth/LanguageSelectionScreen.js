@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
+import {languageRestart} from '../../utils/languageRestart';
 
 const splashImage = require('../../../assets/images/splash.png');
 
@@ -22,19 +23,21 @@ export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
+  const {dictionary, setLanguage, getLanguage} = useDictionary();
   const {
     DropdownText_English,
     DropdownText_Hindi,
     DropdownText_SelectLanguage,
     DropdownText_Urdu,
   } = dictionary;
+
   const dropdownData = [
     DropdownText_English,
     DropdownText_Hindi,
     DropdownText_Urdu,
   ];
   const navigation = useNavigation();
+  const {getValues} = FormHook();
 
   navigation.setOptions({
     header: () => null,
@@ -72,7 +75,7 @@ export default function LanguageSelectionScreen() {
       type: 'dropdown',
       label: DropdownText_SelectLanguage,
       labelTextStyle: styles.labelText,
-      placeholder: DropdownText_English,
+      placeholder: getLanguage() || dropdownData[0],
       data: dropdownData,
       rightAccessory: () => (
         <View style={styles.iconContainer}>
@@ -98,7 +101,19 @@ export default function LanguageSelectionScreen() {
         <DefaultButton
           type="setLanguage"
           variant="white"
-          onPress={() => navigation.navigate('Onboarding')}
+          onPress={async () => {
+            const language = getValues().language || getLanguage();
+
+            setLanguage(language);
+
+            const navigate = await languageRestart(
+              language === 'Urdu' ? 'rtl' : 'ltr',
+            );
+
+            if (navigate === true) {
+              navigation.navigate('Onboarding');
+            }
+          }}
         />
       </View>
     </View>

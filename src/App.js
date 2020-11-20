@@ -21,11 +21,14 @@ import isValidChecksum from './utils/checksumValidation';
 import {Navigator as AppNavigator, Screen} from './navigation/AppStack';
 import AppContainer from './AppContainer';
 import SplashScreen from 'react-native-splash-screen';
+import {useAsyncStorage} from '@react-native-community/async-storage';
+import {languageRestart} from './utils/languageRestart';
 
 const App = () => {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [validChecksum, setValidChecksum] = useState(true);
+  const {getItem, setItem} = useAsyncStorage('@language');
 
   const setupApollo = async () => {
     const newClient = await ApolloClient();
@@ -46,7 +49,7 @@ const App = () => {
     StatusBar.setBarStyle('dark-content');
     validateChecksum();
 
-    languageRestart();
+    languageSet();
   }, [client]);
 
   if (!validChecksum) {
@@ -59,18 +62,18 @@ const App = () => {
 
   // const selectedLanguage = 'LTR';
 
-  const languageRestart = async () => {
-    //changing language based on what was chosen
-    // if (selectedLanguage === 'LTR') {
-    //   if (I18nManager.isRTL) {
-    await I18nManager.forceRTL(false);
-    //   }
-    // } else {
-    //   if (!I18nManager.isRTL) {
-    // await I18nManager.forceRTL(true);
-    //     }
-    // }
-    // RNRestart.Restart();
+  const languageSet = async () => {
+    const language = await getItem();
+
+    if (language === 'ur-IN') {
+      if (!I18nManager.isRTL) {
+        I18nManager.forceRTL(true);
+      }
+    } else {
+      if (I18nManager.isRTL) {
+        I18nManager.forceRTL(false);
+      }
+    }
   };
 
   return (

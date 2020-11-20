@@ -7,5 +7,7 @@
  */
 
 import enGB from './enGB';
+import hiIN from './hiIN';
+import urIN from './urIN';
 
-export {enGB};
+export {enGB, hiIN, urIN};

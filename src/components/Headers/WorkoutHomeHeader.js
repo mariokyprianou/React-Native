@@ -60,7 +60,7 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress() {
-    navigation.navigate('MeetYourIcons', {switchProgramme: true});
+    navigation.navigate('MeetYourIcons');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

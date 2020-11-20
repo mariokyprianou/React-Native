@@ -8,8 +8,11 @@
 import React, {useEffect} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import PermissionScreenUI from './PermissionScreenUI';
+import Header from '../../components/Headers/Header';
+import {useNavigation} from '@react-navigation/native';
+import {TransitionPresets} from '@react-navigation/stack';
 
-export default function NotificationPermissionScreen({navigation}) {
+export default function NotificationPermissionScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {
@@ -17,26 +20,23 @@ export default function NotificationPermissionScreen({navigation}) {
     NotificationsPermissions_Text,
   } = dictionary;
 
+  const navigation = useNavigation();
+
   navigation.setOptions({
-    header: () => (
-      <Header
-              title={'Create account'}
-              noSearch
-              showBurger={false}
-              goBack
-            />
-    ),
+    header: () => <Header title={'Notifications'} showModalCross={true} />,
+    ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 
- 
   // MARK: - Logic
 
   // MARK: - Actions
   const onPressButton = () => {
     // TODO: - Allow Notifications
+    navigation.navigate('Analytics');
   };
   const onPressBottomButton = () => {
     // TODO: - Skip permission
+    navigation.navigate('Analytics');
   };
 
   // MARK: - Render

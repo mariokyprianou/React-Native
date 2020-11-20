@@ -19,6 +19,8 @@ import PrivacyPolicyScreen from '../screens/auth/PrivacyPolicyScreen';
 
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
+import AnalyticsPermissionScreen from '../screens/auth/AnalyticsPermissionScreen';
+import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissionScreen';
 
 // Ts & Cs, Privacy, and Email Verification will all need to slide up from the bottom
 // Do this by adding the following to each screen below:
@@ -50,6 +52,16 @@ export default function AuthContainer(props) {
         component={ForgotPasswordScreen}
       />
       <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <AuthStack.Screen
+        name="Analytics"
+        component={AnalyticsPermissionScreen}
+        mode="modal"
+      />
+      <AuthStack.Screen
+        name="Notifications"
+        component={NotificationsPermissionScreen}
+        mode="modal"
+      />
     </AuthStack.Navigator>
   );
 }

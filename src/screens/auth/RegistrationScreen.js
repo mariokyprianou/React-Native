@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {ScrollView, View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
@@ -164,7 +164,13 @@ export default function RegisterScreen() {
         type="createAccount"
         variant="white"
         icon="chevron"
-        onPress={() => navigation.navigate('TabContainer')}
+        onPress={() => {
+          if (Platform.OS === 'android') {
+            navigation.navigate('TabContainer');
+          } else {
+            navigation.navigate('Notifications');
+          }
+        }}
       />
     </View>
   );

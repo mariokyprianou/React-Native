@@ -24,8 +24,11 @@ export default function Screen() {
 
   const navigation = useNavigation();
 
+  const {dictionary} = useDictionary();
+  const {AuthDict} = dictionary;
+
   navigation.setOptions({
-    header: () => <Header title={'Forgot password'} goBack />,
+    header: () => <Header title={AuthDict.ResetPasswordScreenTitle} goBack />,
   });
 
   const {
@@ -37,14 +40,6 @@ export default function Screen() {
   } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {dictionary} = useDictionary();
-  const {
-    invalidPassword,
-    invalidResetCode,
-    forgotPasswordCodeLabel,
-    forgotPasswordLabel,
-    resetPasswordDescriptionText,
-  } = dictionary.RegistrationDict;
 
   const [loading, setLoading] = useState(false);
   const [activeReset, setActiveReset] = useState(false);
@@ -95,7 +90,7 @@ export default function Screen() {
     if (!code || code.length < 6) {
       updateError({
         name: 'code',
-        value: invalidResetCode,
+        value: AuthDict.InvalidResetCode,
       });
       setLoading(false);
       return;
@@ -104,7 +99,7 @@ export default function Screen() {
     if (!emailRegex.test(password)) {
       updateError({
         name: 'password',
-        value: invalidPassword,
+        value: AuthDict.InvalidPassword,
       });
       setLoading(false);
       return;
@@ -114,7 +109,9 @@ export default function Screen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const FormFooter = () => (
-    <Text style={styles.descriptionStyle}>{resetPasswordDescriptionText}</Text>
+    <Text style={styles.descriptionStyle}>
+      {AuthDict.ResetPasswordDescriptionText}
+    </Text>
   );
 
   const cells = [
@@ -122,7 +119,7 @@ export default function Screen() {
       type: 'text',
       variant: 'number',
       name: 'code',
-      label: forgotPasswordCodeLabel,
+      label: AuthDict.ForgotPasswordCodeLabel,
       placeholder: '123456',
       textContentType: 'oneTimeCode',
       ...cellFormStyles,
@@ -131,7 +128,7 @@ export default function Screen() {
       name: 'password',
       type: 'text',
       variant: 'password',
-      label: forgotPasswordLabel,
+      label: AuthDict.ForgotPasswordLabel,
       textContentType: 'password',
       autoCompleteType: 'password',
       autoCorrect: false,

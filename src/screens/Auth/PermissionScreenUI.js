@@ -14,6 +14,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import Spacer from '../../components/Utility/Spacer';
+import {TransitionPresets} from '@react-navigation/stack';
 
 const defaultImage = require('../../../assets/images/analyticsImage.png');
 
@@ -32,18 +33,12 @@ const PermissionScreenUI = ({
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
 
+  navigation.setOptions({
+    header: () => <Header title={title} showModalCross={true} />,
+    ...TransitionPresets.ModalSlideFromBottomIOS,
+  });
+
   // MARK: - Use Effect
-  useEffect(() => {
-    navigation.setOptions({
-      header: () => (
-        <Header
-          title={title}
-          right="times"
-          rightAction={() => console.log('close!')}
-        />
-      ),
-    });
-  }, []);
 
   // MARK: - Style
   const styles = StyleSheet.create({

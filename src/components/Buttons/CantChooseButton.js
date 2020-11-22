@@ -19,7 +19,7 @@ export default function CantChooseButton({onPress}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {ButtonText_CantChoose, ButtonText_QuestionMark} = dictionary;
+  const {ButtonDict} = dictionary;
   const [buttonState, setButtonState] = useState();
 
   useEffect(() => {
@@ -83,10 +83,10 @@ export default function CantChooseButton({onPress}) {
         style={styles.largerButton}
         animation={isRTL() ? 'slideInLeft' : 'slideInRight'}>
         <TouchableOpacity style={styles.touch} onPress={onPress}>
-          <Text style={styles.largerText}>{ButtonText_CantChoose}</Text>
+          <Text style={styles.largerText}>{ButtonDict.CantChoose}</Text>
           <View style={{...styles.button, ...styles.darkerButton}}>
             <Text style={styles.readyQuestionMark}>
-              {ButtonText_QuestionMark}
+              {ButtonDict.QuestionMark}
             </Text>
           </View>
         </TouchableOpacity>
@@ -97,7 +97,7 @@ export default function CantChooseButton({onPress}) {
   return (
     <View style={styles.button}>
       <TouchableOpacity style={styles.touch} onPress={onPress}>
-        <Text style={styles.questionMark}>{ButtonText_QuestionMark}</Text>
+        <Text style={styles.questionMark}>{ButtonDict.QuestionMark}</Text>
       </TouchableOpacity>
     </View>
   );

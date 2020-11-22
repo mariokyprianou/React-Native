@@ -50,11 +50,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
 
   const connected = true; // change to check connection
 
-  const {
-    TitleText_YourFirstWeek,
-    InfoText_WeeksOfTraining,
-    InfoText_SelectYourProgramme,
-  } = dictionary;
+  const {MeetYourIconsDict} = dictionary;
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -197,7 +193,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
           <View>
             <Image source={logo} style={styles.image} />
             <Text style={styles.selectText}>
-              {InfoText_SelectYourProgramme}
+              {MeetYourIconsDict.SelectYourProgramme}
             </Text>
           </View>
           <View style={styles.cantChooseContainer}>
@@ -210,7 +206,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
         <Image source={fakeImage} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>
           <Text style={styles.zeroInfoText}>
-            Lorem ipsum dolor sit amet, consectetur
+            {MeetYourIconsDict.ZeroStateText}
           </Text>
           {/* change ^^ to zero state info text */}
           <DefaultButton
@@ -249,7 +245,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
                   <View>
                     <Image source={logo} style={styles.image} />
                     <Text style={styles.selectText}>
-                      {InfoText_SelectYourProgramme}
+                      {MeetYourIconsDict.SelectYourProgramme}
                     </Text>
                   </View>
                   <View style={styles.cantChooseContainer}>
@@ -289,11 +285,11 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
                   <Text
                     style={
                       styles.heading
-                    }>{`${TitleText_YourFirstWeek} ${name}`}</Text>
+                    }>{`${MeetYourIconsDict.YourFirstWeek} ${name}`}</Text>
                   <Text
                     style={
                       styles.weeksText
-                    }>{`${liveWeeks} ${InfoText_WeeksOfTraining}`}</Text>
+                    }>{`${liveWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
                 </View>
                 <View style={styles.workoutContainer}>
                   {firstWeek.map(({title, day, date, duration, intensity}) => (

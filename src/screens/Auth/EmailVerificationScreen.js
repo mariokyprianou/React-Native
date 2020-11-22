@@ -13,7 +13,7 @@ import PermissionScreenUI from './PermissionScreenUI';
 export default function EmailVerificationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {dictionary} = useDictionary();
-  const {TitleText_VerifyEmail, InfoText_VerifyEmail} = dictionary;
+  const {AuthDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -28,8 +28,8 @@ export default function EmailVerificationScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <PermissionScreenUI
-      title={TitleText_VerifyEmail}
-      text={InfoText_VerifyEmail}
+      title={AuthDict.VerifyEmailTitle}
+      text={AuthDict.VerifyEmail}
       buttonType="resend"
       bottomButtonType="goBack"
       onPressButton={onPressButton}

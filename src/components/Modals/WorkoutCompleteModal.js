@@ -24,7 +24,7 @@ export default function WorkoutCompleteModal() {
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_WorkoutComplete, CardText_HowIntense} = dictionary;
+  const {WorkoutDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -85,7 +85,7 @@ export default function WorkoutCompleteModal() {
   return (
     <View style={styles.container}>
       <Header
-        title={TitleText_WorkoutComplete}
+        title={WorkoutDict.WorkoutComplete}
         right="times"
         rightAction={handleClose}
       />
@@ -109,7 +109,7 @@ export default function WorkoutCompleteModal() {
           </View>
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.question}>{CardText_HowIntense}</Text>
+          <Text style={styles.question}>{WorkoutDict.HowIntense}</Text>
           <View style={styles.sliderContainer}>
             <SliderProgressView
               slider={true}

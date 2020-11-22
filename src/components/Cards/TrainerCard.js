@@ -28,7 +28,7 @@ export default function TrainerCard({
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
 
-  const {CardText_FatLoss, CardText_Fitness, CardText_BuildMuscle} = dictionary;
+  const {MeetYourIconsDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -85,17 +85,17 @@ export default function TrainerCard({
         <View style={styles.barsContainer}>
           <PercentageBar
             icon="lightning"
-            text={CardText_FatLoss}
+            text={MeetYourIconsDict.FatLoss}
             percentage={fatLoss}
           />
           <PercentageBar
             icon="heartRate"
-            text={CardText_Fitness}
+            text={MeetYourIconsDict.Fitness}
             percentage={fitness}
           />
           <PercentageBar
             icon="weight"
-            text={CardText_BuildMuscle}
+            text={MeetYourIconsDict.BuildMuscle}
             percentage={buildMuscle}
           />
         </View>

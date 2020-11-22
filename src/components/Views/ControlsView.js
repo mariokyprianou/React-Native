@@ -36,7 +36,7 @@ export default function ({
 
   const {dictionary} = useDictionary();
 
-  const {easierSwitchText, harderSwitchText} = dictionary.WorkoutDict;
+  const {WorkoutDict} = dictionary;
 
   const styles = {
     controlsContainerStyle: {
@@ -70,7 +70,9 @@ export default function ({
         onPress={easierOnPress}
         style={styles.easierTouchableStyle}>
         <Image style={styles.intensityIconStyle} source={easierIcon} />
-        <Text style={styles.controlTextStyle}>{easierSwitchText}</Text>
+        <Text style={styles.controlTextStyle}>
+          {WorkoutDict.EasierSwitchText}
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{width: getWidth(30)}}
@@ -82,7 +84,9 @@ export default function ({
       <TouchableOpacity
         onPress={harderOnPress}
         style={styles.harderTouchableStyle}>
-        <Text style={styles.controlTextStyle}>{harderSwitchText}</Text>
+        <Text style={styles.controlTextStyle}>
+          {WorkoutDict.HarderSwitchText}
+        </Text>
         <Image style={styles.intensityIconStyle} source={harderIcon} />
       </TouchableOpacity>
     </View>

@@ -28,11 +28,7 @@ export default function ChallengeCompletionModal({
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {
-    TitleText_ChallengeComplete,
-    InfoText_ChallengeComplete,
-    TitleText_Today,
-  } = dictionary;
+  const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
 
   const screenWidth = Dimensions.get('screen').width;
@@ -97,20 +93,20 @@ export default function ChallengeCompletionModal({
   return (
     <View style={styles.container}>
       <Header
-        title={TitleText_ChallengeComplete}
+        title={WorkoutDict.ChallengeCompleteTitle}
         right="times"
         rightAction={onPressClose}
       />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
-          {InfoText_ChallengeComplete(challengeName, trainerName)}
+          {WorkoutDict.ChallengeComplete(challengeName, trainerName)}
         </Text>
       </View>
       <View style={styles.card}>
         <ProgressChart data={data} />
       </View>
       <View style={styles.resultContainer}>
-        <Text style={styles.resultTitle}>{TitleText_Today}</Text>
+        <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
         <Text style={styles.resultText}>{result}</Text>
       </View>
       <View style={styles.buttonContainer}>

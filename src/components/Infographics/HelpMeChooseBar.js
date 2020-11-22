@@ -23,7 +23,7 @@ export default function HelpMeChooseBar({
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_Question, TitleText_Of} = dictionary;
+  const {HelpMeChooseDict} = dictionary;
 
   const activeWidth = (currentQuestion / totalQuestions) * 100;
   const inactiveWidth = 100 - activeWidth;
@@ -62,7 +62,7 @@ export default function HelpMeChooseBar({
         <Text
           style={
             styles.title
-          }>{`${TitleText_Question} ${currentQuestion} ${TitleText_Of} ${totalQuestions}`}</Text>
+          }>{`${HelpMeChooseDict.Question} ${currentQuestion} ${HelpMeChooseDict.Of} ${totalQuestions}`}</Text>
       )}
 
       <View style={styles.barContainer}>

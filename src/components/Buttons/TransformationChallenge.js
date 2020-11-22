@@ -24,7 +24,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {ButtonText_Progress, ButtonText_Challenge} = dictionary;
+  const {ButtonDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -105,7 +105,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
               <TDIcon input={'camera'} inputStyle={styles.icon} />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.progressTitle}>{ButtonText_Progress}</Text>
+              <Text style={styles.progressTitle}>{ButtonDict.Progress}</Text>
               <Text style={styles.progressText}>{title}</Text>
             </View>
           </ImageBackground>
@@ -113,7 +113,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
           <>
             <Image source={image} style={styles.challengeImage} />
             <View style={styles.textContainer}>
-              <Text style={styles.challengeTitle}>{ButtonText_Challenge}</Text>
+              <Text style={styles.challengeTitle}>{ButtonDict.Challenge}</Text>
               <Text style={styles.challengeText}>{title}</Text>
             </View>
           </>

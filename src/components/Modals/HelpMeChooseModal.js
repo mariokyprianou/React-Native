@@ -25,7 +25,7 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
   const {helpMeChooseData} = useHelpMeChoose();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_HelpMeChoose} = dictionary;
+  const {HelpMeChooseDict} = dictionary;
   const [showResultScreen, setShowResultScreen] = useState(false);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -85,7 +85,7 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
   return (
     <View style={styles.card}>
       <Header
-        title={TitleText_HelpMeChoose}
+        title={HelpMeChooseDict.HelpMeChoose}
         right="times"
         rightAction={onPressClose}
       />

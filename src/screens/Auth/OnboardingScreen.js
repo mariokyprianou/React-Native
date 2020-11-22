@@ -27,7 +27,7 @@ export default function OnboardingScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const {onboardingData} = useOnboarding();
   const {dictionary} = useDictionary();
-  const {ButtonText_Login} = dictionary;
+  const {ButtonDict} = dictionary;
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -78,7 +78,7 @@ export default function OnboardingScreen() {
     return (
       <View style={styles.loginContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.loginText}>{ButtonText_Login}</Text>
+          <Text style={styles.loginText}>{ButtonDict.Login}</Text>
         </TouchableOpacity>
       </View>
     );

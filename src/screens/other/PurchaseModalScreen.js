@@ -24,17 +24,7 @@ const PurchaseModalScreen = ({}) => {
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {
-    PurchaseModal_Info,
-    PurchaseModal_YearlyButtonTitle,
-    PurchaseModal_YearlyButtonSubTitle,
-    PurchaseModal_MonthlyButtonTitle,
-    PurchaseModal_MonthlyButtonSubTitle,
-    PurchaseModal_RestorePurchaseButton,
-    PurchaseModal_SubscriptionTermsTitle = '',
-    PurchaseModal_SubscriptionTermsText,
-    PurchaseModal_SavePrompt,
-  } = dictionary;
+  const {PurchaseDict} = dictionary;
 
   // MARK: - Local
   const [yearlyMonthPrice, setYearlyMonthPrice] = useState(2);
@@ -116,16 +106,16 @@ const PurchaseModalScreen = ({}) => {
         resizeMode={'cover'}
       />
       <View style={styles.textContainer}>
-        <Text style={styles.termsText}>{PurchaseModal_Info}</Text>
+        <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
       </View>
       <DefaultButton
         type={'customText'}
         variant="gradient"
         icon="chevron"
         onPress={onPressFirstButton}
-        customText={PurchaseModal_YearlyButtonTitle(yearlyMonthPrice)}
-        customSubtext={PurchaseModal_YearlyButtonSubTitle(yearlyYearPrice)}
-        promptText={PurchaseModal_SavePrompt(savingsPercentage)}
+        customText={PurchaseDict.YearlyButtonTitle(yearlyMonthPrice)}
+        customSubtext={PurchaseDict.YearlyButtonSubTitle(yearlyYearPrice)}
+        promptText={PurchaseDict.SavePrompt(savingsPercentage)}
       />
       <Spacer height={20} />
       <DefaultButton
@@ -133,22 +123,22 @@ const PurchaseModalScreen = ({}) => {
         variant="white"
         icon="chevron"
         onPress={onPressSecondButton}
-        customText={PurchaseModal_MonthlyButtonTitle(monthlyMonthPrice)}
-        customSubtext={PurchaseModal_MonthlyButtonSubTitle}
+        customText={PurchaseDict.MonthlyButtonTitle(monthlyMonthPrice)}
+        customSubtext={PurchaseDict.MonthlyButtonSubTitle}
       />
       <Spacer height={15} />
       <DefaultButton
         type={'customText'}
         variant="transparentGreyText"
         onPress={onPressThirdButton}
-        customText={PurchaseModal_RestorePurchaseButton}
+        customText={PurchaseDict.RestorePurchaseButton}
       />
       <View style={styles.textContainer}>
         <Text style={styles.termsTitle}>
-          {PurchaseModal_SubscriptionTermsTitle.toUpperCase()}
+          {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
         </Text>
         <Text style={styles.termsText}>
-          {PurchaseModal_SubscriptionTermsText}
+          {PurchaseDict.SubscriptionTermsText}
         </Text>
       </View>
     </ScrollView>

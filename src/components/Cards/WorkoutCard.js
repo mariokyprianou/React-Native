@@ -35,7 +35,7 @@ export default function WorkoutCard({
   const {dictionary} = useDictionary();
   const [workoutDay, setWorkoutDay] = useState(day);
 
-  const {CardText_Day, WorkoutText_RestDay} = dictionary;
+  const {WorkoutDict} = dictionary;
 
   const today = new Date();
   const formattedToday = format(today, 'iiii, do LLL');
@@ -44,7 +44,7 @@ export default function WorkoutCard({
   const styles = {
     card: {
       width: getWidth(335),
-      height: title === WorkoutText_RestDay ? getHeight(66) : getHeight(100),
+      height: title === WorkoutDict.RestDay ? getHeight(66) : getHeight(100),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -63,7 +63,7 @@ export default function WorkoutCard({
     completeOverlay: {
       backgroundColor: colors.white75,
       width: getWidth(335),
-      height: title === WorkoutText_RestDay ? getHeight(66) : getHeight(100),
+      height: title === WorkoutDict.RestDay ? getHeight(66) : getHeight(100),
       position: 'absolute',
       top: 0,
       left: 0,
@@ -118,7 +118,7 @@ export default function WorkoutCard({
       <TouchableOpacity
         style={styles.touch}
         onLongPress={drag}
-        onPress={title === WorkoutText_RestDay ? null : onPressCard}>
+        onPress={title === WorkoutDict.RestDay ? null : onPressCard}>
         {date === formattedToday && (
           <Image source={image} style={styles.image} />
         )}
@@ -136,16 +136,16 @@ export default function WorkoutCard({
                 />
               </View>
             )}
-            {title !== WorkoutText_RestDay && (
+            {title !== WorkoutDict.RestDay && (
               <Text style={styles.workoutDay}>
                 {isRTL()
-                  ? `:${CardText_Day} ${workoutDay} `
-                  : `${CardText_Day} ${workoutDay}: `}
+                  ? `:${WorkoutDict.Day} ${workoutDay} `
+                  : `${WorkoutDict.Day} ${workoutDay}: `}
               </Text>
             )}
             <Text style={styles.date}>{date}</Text>
           </View>
-          {title !== WorkoutText_RestDay && (
+          {title !== WorkoutDict.RestDay && (
             <IconTextView
               type="intensity"
               duration={duration}

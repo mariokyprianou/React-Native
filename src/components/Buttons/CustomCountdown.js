@@ -17,7 +17,7 @@ const reminder = require('../../../assets/icons/reminder.png');
 const CustomCountdown = ({onPress}) => {
   const {getHeight} = ScaleHook();
   const {dictionary} = useDictionary();
-  const {ButtonText_3secs} = dictionary;
+  const {ButtonDict} = dictionary;
 
   const styles = {
     countdownStyle: {
@@ -36,7 +36,7 @@ const CustomCountdown = ({onPress}) => {
       <View style={styles.iconContainer}>
         <TDIcon input={reminder} inputStyle={{style: styles.countdownStyle}} />
       </View>
-      <Text style={styles.text}>{ButtonText_3secs}</Text>
+      <Text style={styles.text}>{ButtonDict.ThreeSecs}</Text>
     </TouchableOpacity>
   );
 };

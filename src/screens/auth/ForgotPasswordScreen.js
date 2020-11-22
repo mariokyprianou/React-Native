@@ -36,7 +36,7 @@ export default function Screen() {
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
-  const {emailLabel, invalidEmail} = dictionary.RegistrationDict;
+  const {AuthDict} = dictionary;
 
   const [loading, setLoading] = useState(false);
   const [activeReset, setActiveReset] = useState(false);
@@ -88,7 +88,7 @@ export default function Screen() {
     if (!emailRegex.test(emailAddress)) {
       updateError({
         name: 'emailAddress',
-        value: invalidEmail,
+        value: AuthDict.InvalidEmail,
       });
       setLoading(false);
       return;
@@ -101,7 +101,7 @@ export default function Screen() {
       name: 'emailAddress',
       type: 'text',
       variant: 'email',
-      label: emailLabel,
+      label: AuthDict.EmailLabel,
       placeholder: '',
       textContentType: 'emailAddress',
       autoCompleteType: 'email',

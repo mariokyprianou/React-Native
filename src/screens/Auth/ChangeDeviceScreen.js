@@ -12,11 +12,7 @@ import PermissionScreenUI from './PermissionScreenUI';
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
-  const {
-    ChangeDevice_Title,
-    ChangeDevice_Text,
-    ChangeDevice_TextDisabled,
-  } = dictionary;
+  const {ChangeDeviceDict} = dictionary;
 
   // MARK: - Local
   const [canChangeDevice, setCanChangeDevice] = useState(false);
@@ -37,10 +33,12 @@ export default function ChangeDeviceScreen() {
   };
 
   // MARK: - Render
-  const text = canChangeDevice ? ChangeDevice_Text : ChangeDevice_TextDisabled;
+  const text = canChangeDevice
+    ? ChangeDeviceDict.ActiveText
+    : ChangeDeviceDict.DisabledText;
   return (
     <PermissionScreenUI
-      title={ChangeDevice_Title}
+      title={ChangeDeviceDict.Title}
       text={text}
       buttonType="changeDevice"
       bottomButtonType="needHelp"

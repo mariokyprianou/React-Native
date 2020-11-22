@@ -30,13 +30,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
   const {textStyles} = useTheme();
   const [reminders, showReminders] = useState(true);
   const {dictionary} = useDictionary();
-  const {
-    TitleText_Stay_Tuned,
-    InfoText_StayTuned,
-    InfoText_ProgrammeComplete,
-    Reminder_Title,
-    Reminder_Text,
-  } = dictionary;
+  const {WorkoutDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -76,8 +70,8 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
 
   function handlePressRemindMe() {
     Alert.alert(
-      Reminder_Title,
-      Reminder_Text,
+      WorkoutDict.ReminderTitle,
+      WorkoutDict.ReminderText,
       [
         {text: 'Morning', onPress: () => handleReminders('morning')},
         {text: 'Afternoon', onPress: () => handleReminders('afternoon')},
@@ -99,7 +93,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
         <ImageBackground source={fakeImage} style={styles.image}>
           <FadingBottomView color="black" />
           <Header
-            title={TitleText_Stay_Tuned}
+            title={WorkoutDict.StayTunedTitle}
             right="times"
             rightAction={onPressClose}
             white
@@ -107,7 +101,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
           />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
-              {InfoText_StayTuned(name, date)}
+              {WorkoutDict.StayTuned(name, date)}
             </Text>
           </View>
           <View style={styles.buttonContainer}>
@@ -129,7 +123,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
         <ImageBackground source={fakeImage} style={styles.image}>
           <FadingBottomView color="black" height="full" />
           <View style={styles.headerContainer}>
-            <Text style={styles.title}>{TitleText_Stay_Tuned}</Text>
+            <Text style={styles.title}>{WorkoutDict.StayTunedTitle}</Text>
             <TouchableOpacity
               style={styles.iconContainer}
               onPress={onPressClose}>
@@ -138,7 +132,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
           </View>
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
-              {InfoText_ProgrammeComplete(name, venue)}
+              {WorkoutDict.ProgrammeComplete(name, venue)}
             </Text>
           </View>
           <View style={styles.buttonContainer}>

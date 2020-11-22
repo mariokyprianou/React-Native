@@ -24,7 +24,7 @@ export default function TabContainer() {
   const {fontSize, getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
-  const {TabTitle_Profile, TabTitle_Progress, TabTitle_Workouts} = dictionary;
+  const {TabsTitleDict} = dictionary;
 
   const tabIcons = {
     workout: require('../../assets/icons/workout.png'),
@@ -112,7 +112,7 @@ export default function TabContainer() {
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
           tabBarIcon: ({color}) => <TabIcon name="workout" color={color} />,
-          tabBarLabel: TabTitle_Workouts,
+          tabBarLabel: TabsTitleDict.Workouts,
         })}
       />
       <BottomTab.Screen
@@ -121,7 +121,7 @@ export default function TabContainer() {
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
           tabBarIcon: ({color}) => <TabIcon name="progress" color={color} />,
-          tabBarLabel: TabTitle_Progress,
+          tabBarLabel: TabsTitleDict.Progress,
         })}
       />
       <BottomTab.Screen
@@ -130,7 +130,7 @@ export default function TabContainer() {
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
           tabBarIcon: ({color}) => <TabIcon name="profile" color={color} />,
-          tabBarLabel: TabTitle_Profile,
+          tabBarLabel: TabsTitleDict.Profile,
         })}
       />
     </BottomTab.Navigator>

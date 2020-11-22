@@ -19,7 +19,7 @@ const SliderButton = ({onPress}) => {
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
   const {dictionary} = useDictionary();
-  const {ButtonText_AddPhoto} = dictionary;
+  const {ButtonDict} = dictionary;
 
   // ******* STYLES *******
   const styles = {
@@ -64,7 +64,7 @@ const SliderButton = ({onPress}) => {
         end={{x: 1, y: 0}}
         colors={[colors.tealish100, colors.tiffanyBlue100]}>
         <TouchableOpacity onPress={onPress} style={styles.touch}>
-          <Text style={styles.buttonText}>{ButtonText_AddPhoto}</Text>
+          <Text style={styles.buttonText}>{ButtonDict.AddPhoto}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
               input="chevron-right"

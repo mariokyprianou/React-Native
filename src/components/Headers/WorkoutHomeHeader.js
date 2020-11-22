@@ -20,7 +20,7 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {HeaderText_AllProgrammes} = dictionary;
+  const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -72,7 +72,7 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
           <Text style={styles.name}>{name}</Text>
         </View>
         <TouchableOpacity onPress={handlePress}>
-          <Text style={styles.link}>{HeaderText_AllProgrammes}</Text>
+          <Text style={styles.link}>{WorkoutDict.AllProgrammes}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -35,43 +35,7 @@ export default function DefaultButton({
   const reminderIcon = require('../../../assets/icons/reminder.png');
   const shareIcon = require('../../../assets/icons/share.png');
 
-  const {
-    ButtonText_AddPhoto,
-    ButtonText_AddResult,
-    ButtonText_AddWeight,
-    ButtonText_AllowAnalytics,
-    ButtonText_AllowNotifications,
-    ButtonText_Cancel,
-    ButtonText_ChangeDevice,
-    ButtonText_ChangeEmail,
-    ButtonText_ChangePassword,
-    ButtonText_Continue,
-    ButtonText_ContinueFromWeek,
-    ButtonText_CreateAccount,
-    ButtonText_Done,
-    ButtonText_GetStarted,
-    ButtonText_GoBack,
-    ButtonText_JumpIn,
-    ButtonText_Login,
-    ButtonText_Programme,
-    ButtonText_RemindMe,
-    ButtonText_Resend,
-    ButtonText_Restart,
-    ButtonText_RestartProgramme,
-    ButtonText_SendResetRequest,
-    ButtonText_SetLanguage,
-    ButtonText_Share,
-    ButtonText_Start,
-    ButtonText_StartNow,
-    ButtonText_StartWorkout,
-    ButtonText_TryAgain,
-    ButtonText_Pluralise,
-    ButtonText_Skip,
-    ButtonText_NeedHelp,
-    ButtonText_SaveChanges,
-    ButtonText_NeedToSignOut,
-    ButtonText_Logout,
-  } = dictionary;
+  const {ButtonDict} = dictionary;
 
   const buttonVariant = {
     white: {
@@ -152,40 +116,40 @@ export default function DefaultButton({
   };
 
   const buttonText = {
-    addPhoto: ButtonText_AddPhoto,
-    addResult: ButtonText_AddResult,
-    addWeight: ButtonText_AddWeight,
-    allowAnalytics: ButtonText_AllowAnalytics,
-    allowNotifications: ButtonText_AllowNotifications,
-    cancel: ButtonText_Cancel,
-    changeDevice: ButtonText_ChangeDevice,
-    changeEmail: ButtonText_ChangeEmail,
-    changePassword: ButtonText_ChangePassword,
-    continue: ButtonText_Continue,
-    continueFromWeek: ButtonText_ContinueFromWeek,
-    createAccount: ButtonText_CreateAccount,
-    done: ButtonText_Done,
-    getStarted: ButtonText_GetStarted,
-    goBack: ButtonText_GoBack,
-    jumpIn: ButtonText_JumpIn,
-    login: ButtonText_Login,
-    programme: ButtonText_Programme,
-    remindMe: ButtonText_RemindMe,
-    resend: ButtonText_Resend,
-    restart: ButtonText_Restart,
-    restartProgramme: ButtonText_RestartProgramme,
-    resetRequest: ButtonText_SendResetRequest,
-    setLanguage: ButtonText_SetLanguage,
-    share: ButtonText_Share,
-    start: ButtonText_Start,
-    startNow: ButtonText_StartNow,
-    startWorkout: ButtonText_StartWorkout,
-    tryAgain: ButtonText_TryAgain,
-    skip: ButtonText_Skip,
-    needHelp: ButtonText_NeedHelp,
-    saveChanges: ButtonText_SaveChanges,
-    needToSignOut: ButtonText_NeedToSignOut,
-    logout: ButtonText_Logout,
+    addPhoto: ButtonDict.AddPhoto,
+    addResult: ButtonDict.AddResult,
+    addWeight: ButtonDict.AddWeight,
+    allowAnalytics: ButtonDict.AllowAnalytics,
+    allowNotifications: ButtonDict.AllowNotifications,
+    cancel: ButtonDict.Cancel,
+    changeDevice: ButtonDict.ChangeDevice,
+    changeEmail: ButtonDict.ChangeEmail,
+    changePassword: ButtonDict.ChangePassword,
+    continue: ButtonDict.Continue,
+    continueFromWeek: ButtonDict.ContinueFromWeek,
+    createAccount: ButtonDict.CreateAccount,
+    done: ButtonDict.Done,
+    getStarted: ButtonDict.GetStarted,
+    goBack: ButtonDict.GoBack,
+    jumpIn: ButtonDict.JumpIn,
+    login: ButtonDict.Login,
+    programme: ButtonDict.Programme,
+    remindMe: ButtonDict.RemindMe,
+    resend: ButtonDict.Resend,
+    restart: ButtonDict.Restart,
+    restartProgramme: ButtonDict.RestartProgramme,
+    resetRequest: ButtonDict.SendResetRequest,
+    setLanguage: ButtonDict.SetLanguage,
+    share: ButtonDict.Share,
+    start: ButtonDict.Start,
+    startNow: ButtonDict.StartNow,
+    startWorkout: ButtonDict.StartWorkout,
+    tryAgain: ButtonDict.TryAgain,
+    skip: ButtonDict.Skip,
+    needHelp: ButtonDict.NeedHelp,
+    saveChanges: ButtonDict.SaveChanges,
+    needToSignOut: ButtonDict.NeedToSignOut,
+    logout: ButtonDict.Logout,
   };
 
   const iconType = {
@@ -366,7 +330,7 @@ export default function DefaultButton({
           <Text
             style={
               styles.text
-            }>{`${trainerName}${ButtonText_Pluralise} ${buttonText[type]}`}</Text>
+            }>{`${trainerName}${ButtonDict.Pluralise} ${buttonText[type]}`}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
               input={iconType[icon]}

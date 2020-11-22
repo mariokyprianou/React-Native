@@ -21,26 +21,23 @@ export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
 
+  const {dictionary} = useDictionary();
+  const {AuthDict} = dictionary;
+
   navigation.setOptions({
-    header: () => <Header title={'Login'} noSearch showBurger={false} goBack />,
+    header: () => (
+      <Header
+        title={AuthDict.LoginScreenTitle}
+        noSearch
+        showBurger={false}
+        goBack
+      />
+    ),
   });
 
-  const {
-    cellFormStyles,
-
-    cellFormConfig,
-    textStyles,
-  } = useTheme();
+  const {cellFormStyles, cellFormConfig, textStyles} = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth} = ScaleHook();
-  const {dictionary} = useDictionary();
-  const {
-    emailLabel,
-    passwordLabel,
-    forgotPasswordButtonText,
-    invalidEmail,
-    invalidPassword,
-  } = dictionary.RegistrationDict;
 
   const [loading, setLoading] = useState(false);
   const [activeLogin, setActiveLogin] = useState(false);
@@ -95,7 +92,7 @@ export default function RegisterScreen() {
     if (!emailRegex.test(emailAddress)) {
       updateError({
         name: 'emailAddress',
-        value: invalidEmail,
+        value: AuthDict.InvalidEmail,
       });
       setLoading(false);
       return;
@@ -103,7 +100,7 @@ export default function RegisterScreen() {
     if (!passwordRegex.test(password)) {
       updateError({
         name: 'password',
-        value: invalidPassword,
+        value: AuthDict.InvalidPassword,
       });
       setLoading(false);
       return;
@@ -123,7 +120,9 @@ export default function RegisterScreen() {
     <TouchableOpacity
       style={styles.forgotPasswordContainerStyle}
       onPress={forgotPassword}>
-      <Text style={styles.forgotPasswordStyle}>{forgotPasswordButtonText}</Text>
+      <Text style={styles.forgotPasswordStyle}>
+        {AuthDict.ForgotPasswordButtonText}
+      </Text>
     </TouchableOpacity>
   );
 
@@ -132,7 +131,7 @@ export default function RegisterScreen() {
       name: 'emailAddress',
       type: 'text',
       variant: 'email',
-      label: emailLabel,
+      label: AuthDict.EmailLabel,
       placeholder: '',
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
@@ -142,7 +141,7 @@ export default function RegisterScreen() {
       name: 'password',
       type: 'text',
       variant: 'password',
-      label: passwordLabel,
+      label: AuthDict.PasswordLabel,
       textContentType: 'password',
       autoCompleteType: 'password',
       autoCorrect: false,

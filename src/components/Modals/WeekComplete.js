@@ -30,7 +30,7 @@ export default function WeekComplete({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_WeekComplete, InfoText_WeekComplete} = dictionary;
+  const {WorkoutDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -77,7 +77,7 @@ export default function WeekComplete({
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" />
         <Header
-          title={TitleText_WeekComplete}
+          title={WorkoutDict.WeekCompleteTitle}
           right="times"
           rightAction={onPressClose}
           white
@@ -85,7 +85,7 @@ export default function WeekComplete({
         />
         <View style={styles.infoTextContainer}>
           <Text style={styles.infoText}>
-            {InfoText_WeekComplete(name, weekNumber)}
+            {WorkoutDict.WeekComplete(name, weekNumber)}
           </Text>
         </View>
         <View style={styles.buttonContainer}>

@@ -37,7 +37,7 @@ export default function ExerciseView({onPressWeights, onPressNotes}) {
 
   const [countDown, setCountDown] = useState(false);
 
-  const {weightText, notesText, setsText} = dictionary.WorkoutDict;
+  const {WorkoutDict} = dictionary;
   const exerciseTitle = 'Lateral lunges';
   const exerciseDescription =
     'Keep your front knee in line with your toes, with your back neutral and upright lorem ipsum dolor sit amet';
@@ -114,7 +114,7 @@ export default function ExerciseView({onPressWeights, onPressNotes}) {
             style={styles.weightTouchStyle}
             onPress={onWeightsPressed}>
             <Image source={weightIcon} />
-            <Text style={styles.extraTextStyle}>{weightText}</Text>
+            <Text style={styles.extraTextStyle}>{WorkoutDict.WeightText}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -123,14 +123,16 @@ export default function ExerciseView({onPressWeights, onPressNotes}) {
             }}
             onPress={onNotesPressed}>
             <Image source={notesIcon} />
-            <Text style={styles.extraTextStyle}>{notesText}</Text>
+            <Text style={styles.extraTextStyle}>{WorkoutDict.NotesText}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.setsContainerStyle}>
           <View style={styles.setsCompletedContainerStyle}>
             <Text style={styles.competedSetsTitleStyle}>2/5</Text>
-            <Text style={styles.competedSetsTextStyle}>{setsText}</Text>
+            <Text style={styles.competedSetsTextStyle}>
+              {WorkoutDict.SetsText}
+            </Text>
           </View>
           <RepsList reps={reps} />
         </View>

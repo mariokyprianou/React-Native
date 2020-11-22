@@ -25,7 +25,7 @@ export default function WeightCaptureModal({onPressClose}) {
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_Weights} = dictionary;
+  const {WorkoutDict} = dictionary;
   const {challengeHistoryData, repsHistoryData} = useChallenge();
 
   const today = new Date();
@@ -98,7 +98,7 @@ export default function WeightCaptureModal({onPressClose}) {
   return (
     <View style={styles.card}>
       <Header
-        title={TitleText_Weights}
+        title={WorkoutDict.WeightsTitle}
         right="times"
         rightAction={onPressClose}
       />

@@ -15,13 +15,19 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useTermsPolicyData from '../../hooks/data/useTermsPolicyData';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
 import Header from '../../components/Headers/Header';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function TermsConditionsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
 
+  const {dictionary} = useDictionary();
+  const {AuthDict} = dictionary;
+
   navigation.setOptions({
-    header: () => <Header title={'Terms & Conditions'} goBack />,
+    header: () => (
+      <Header title={AuthDict.TermsAndConditionsScreenTitle} goBack />
+    ),
   });
 
   const {

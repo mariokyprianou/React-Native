@@ -37,7 +37,8 @@ export default function ProfileUserCard({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {Profile_MemberSince = '', Profile_WorkoutsComplete = ''} = dictionary;
+
+  const {ProfileDict} = dictionary;
 
   // MARK: - Styles
 
@@ -89,12 +90,14 @@ export default function ProfileUserCard({
       <Spacer height={20} />
       <View style={styles.rowContainer}>
         <View>
-          <Text style={styles.header}>{Profile_MemberSince.toUpperCase()}</Text>
+          <Text style={styles.header}>
+            {ProfileDict.MemberSince.toUpperCase()}
+          </Text>
           <Text style={styles.title}>{memberSince}</Text>
         </View>
         <View>
           <Text style={styles.header}>
-            {Profile_WorkoutsComplete.toUpperCase()}
+            {ProfileDict.WorkoutsComplete.toUpperCase()}
           </Text>
           <Text style={styles.title}>{workoutsComplete}</Text>
         </View>

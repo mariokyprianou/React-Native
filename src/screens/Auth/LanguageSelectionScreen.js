@@ -24,17 +24,12 @@ export default function LanguageSelectionScreen() {
   const {getHeight, fontSize} = ScaleHook();
   const {cellFormStyles, cellFormConfig, colors, textStyles} = useTheme();
   const {dictionary, setLanguage, getLanguage} = useDictionary();
-  const {
-    DropdownText_English,
-    DropdownText_Hindi,
-    DropdownText_SelectLanguage,
-    DropdownText_Urdu,
-  } = dictionary;
+  const {LanguageDict} = dictionary;
 
   const dropdownData = [
-    DropdownText_English,
-    DropdownText_Hindi,
-    DropdownText_Urdu,
+    LanguageDict.English,
+    LanguageDict.Hindi,
+    LanguageDict.Urdu,
   ];
   const navigation = useNavigation();
   const {getValues} = FormHook();
@@ -73,7 +68,7 @@ export default function LanguageSelectionScreen() {
     {
       name: 'language',
       type: 'dropdown',
-      label: DropdownText_SelectLanguage,
+      label: LanguageDict.SelectLanguage,
       labelTextStyle: styles.labelText,
       placeholder: getLanguage() || dropdownData[0],
       data: dropdownData,
@@ -108,7 +103,7 @@ export default function LanguageSelectionScreen() {
             setLanguage(language);
 
             const navigate = await languageRestart(
-              language === 'Urdu' ? 'rtl' : 'ltr',
+              language === LanguageDict.Urdu ? 'rtl' : 'ltr',
             );
 
             if (navigate === true) {

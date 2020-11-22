@@ -13,11 +13,7 @@ import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 export default function ChangePasswordScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
-  const {
-    ChangePassword_ScreenTitle,
-    ChangePassword_Label1,
-    ChangePassword_Label2,
-  } = dictionary;
+  const {ProfileDict} = dictionary;
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
 
   // MARK: - Local
@@ -42,9 +38,9 @@ export default function ChangePasswordScreen() {
   // MARK: - Render
   return (
     <TwoFieldChangeScreenUI
-      screenTitle={ChangePassword_ScreenTitle}
-      firstFieldLabel={ChangePassword_Label1}
-      secondFieldLabel={ChangePassword_Label2}
+      screenTitle={ProfileDict.ChangePasswordScreenTitle}
+      firstFieldLabel={ProfileDict.ChangePasswordLabel1}
+      secondFieldLabel={ProfileDict.ChangePasswordLabel2}
       firstFieldName={firstValueName}
       secondFieldName={secondValueName}
       buttonType={'changePassword'}

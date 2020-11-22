@@ -9,19 +9,13 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import PermissionScreenUI from './PermissionScreenUI';
 import Header from '../../components/Headers/Header';
 import {useNavigation} from '@react-navigation/native';
-import {TransitionPresets} from '@react-navigation/stack';
 
 export default function AnalyticsPermissionScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
-  const {AnalyticsPermissions_Title, AnalyticsPermissions_Text} = dictionary;
+  const {AuthDict} = dictionary;
 
   const navigation = useNavigation();
-
-  navigation.setOptions({
-    header: () => <Header title={'Analytics'} showModalCross={true} />,
-    ...TransitionPresets.ModalSlideFromBottomIOS,
-  });
 
   // MARK: - Logic
 
@@ -36,8 +30,8 @@ export default function AnalyticsPermissionScreen() {
   // MARK: - Render
   return (
     <PermissionScreenUI
-      title={AnalyticsPermissions_Title}
-      text={AnalyticsPermissions_Text}
+      title={AuthDict.AnalyticsPermissionsScreenTitle}
+      text={AuthDict.AnalyticsPermissionsText}
       buttonType="allowAnalytics"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}

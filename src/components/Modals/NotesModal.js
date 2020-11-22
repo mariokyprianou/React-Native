@@ -20,7 +20,7 @@ export default function NotesModal({onPressClose}) {
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_Notes, TitleText_YourNotes} = dictionary;
+  const {WorkoutDict} = dictionary;
   const {
     challengeData: {description, notes},
   } = useChallenge();
@@ -66,13 +66,13 @@ export default function NotesModal({onPressClose}) {
   return (
     <View style={styles.card}>
       <Header
-        title={TitleText_Notes}
+        title={WorkoutDict.Notes}
         right="times"
         rightAction={onPressClose}
       />
       <View style={styles.contentContainer}>
         <Text style={styles.description}>{description}</Text>
-        <Text style={styles.subtitle}>{TitleText_YourNotes}</Text>
+        <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
         <Text style={styles.description}>{notes}</Text>
         <View style={styles.line} />
       </View>

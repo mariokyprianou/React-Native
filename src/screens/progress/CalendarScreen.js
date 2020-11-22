@@ -28,11 +28,11 @@ export default function CalendarScreen() {
   } = singleCalendarStyles;
   const {calendarScreenData} = useCalendar();
   const {dictionary} = useDictionary();
-  const {ScreenHeader_YourWorkouts} = dictionary;
+  const {ProgressDict} = dictionary;
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () => <Header title={ScreenHeader_YourWorkouts} goBack />,
+    header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

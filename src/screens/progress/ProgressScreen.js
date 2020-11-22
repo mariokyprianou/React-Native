@@ -32,9 +32,11 @@ export default function ProgressScreen() {
     pillWidth,
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
-  const {TitleText_Your, TitleText_Progress} = dictionary;
+  const {ProgressDict} = dictionary;
+
   const {progressCalendarData} = useCalendar();
   const {challengeData} = useProgress();
+
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -90,8 +92,8 @@ export default function ProgressScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.yourTitle}>{TitleText_Your}</Text>
-        <Text style={styles.progressTitle}>{`${TitleText_Progress}`}</Text>
+        <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
+        <Text style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
       </View>
       <View style={styles.calendarContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>

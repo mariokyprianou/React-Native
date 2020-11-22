@@ -22,7 +22,7 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_Congratulations, InfoText_StartedProgramme} = dictionary;
+  const {MeetYourIconsDict} = dictionary;
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -86,8 +86,12 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
         <FadingBottomView color="black" />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{TitleText_Congratulations}</Text>
-        <Text style={styles.text}>{InfoText_StartedProgramme(name)}</Text>
+        <Text style={styles.title}>
+          {MeetYourIconsDict.CongratulationsTitle}
+        </Text>
+        <Text style={styles.text}>
+          {MeetYourIconsDict.StartedProgramme(name)}
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

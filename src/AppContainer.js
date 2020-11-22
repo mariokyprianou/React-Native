@@ -9,14 +9,13 @@ import React from 'react';
 import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
-import PurchaseScreen from './screens/other/PurchaseModalScreen';
 
 export default function AppContainer() {
   return (
     <AppStack.Navigator headerMode="screen">
       <AppStack.Screen
         name="AuthContainer"
-        component={PurchaseScreen}
+        component={AuthContainer}
         options={{
           headerShown: false,
         }}

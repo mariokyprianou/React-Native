@@ -17,11 +17,7 @@ export default function SetTableRow({setNumber, reps, weight}) {
   const {getWidth} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {
-    WeightTable_SetText,
-    WeightTable_RepsText,
-    WeightTable_WeightText,
-  } = dictionary;
+  const {WorkoutDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -40,9 +36,14 @@ export default function SetTableRow({setNumber, reps, weight}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.row}>
-      <Text style={styles.text}>{`${WeightTable_SetText} ${setNumber}`}</Text>
-      <Text style={styles.text}>{`${reps} ${WeightTable_RepsText}`}</Text>
-      <Text style={styles.text}>{`${weight} ${WeightTable_WeightText}`}</Text>
+      <Text
+        style={
+          styles.text
+        }>{`${WorkoutDict.WeightsSetText} ${setNumber}`}</Text>
+      <Text
+        style={styles.text}>{`${reps} ${WorkoutDict.WeightsRepsText}`}</Text>
+      <Text
+        style={styles.text}>{`${weight} ${WorkoutDict.WeightsUnitText}`}</Text>
     </View>
   );
 }

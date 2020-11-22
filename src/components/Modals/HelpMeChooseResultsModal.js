@@ -27,11 +27,7 @@ export default function HelpMeChooseResultsModal({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {
-    TitleText_Result,
-    InfoText_SuggestedProgramme,
-    TitleText_HelpMeChoose,
-  } = dictionary;
+  const {HelpMeChooseDict} = dictionary;
 
   const capitalizedName = name.toUpperCase();
 
@@ -131,7 +127,7 @@ export default function HelpMeChooseResultsModal({
   return (
     <View style={styles.card}>
       <Header
-        title={TitleText_HelpMeChoose}
+        title={HelpMeChooseDict.HelpMeChoose}
         right="times"
         rightAction={onPressClose}
       />
@@ -142,7 +138,7 @@ export default function HelpMeChooseResultsModal({
         </View>
       </View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{TitleText_Result}</Text>
+        <Text style={styles.title}>{HelpMeChooseDict.Result}</Text>
         <View style={styles.barContainer}>
           <LinearGradient
             style={styles.bar}
@@ -152,7 +148,9 @@ export default function HelpMeChooseResultsModal({
           />
         </View>
         <Text style={styles.name}>{capitalizedName}</Text>
-        <Text style={styles.result}>{InfoText_SuggestedProgramme(name)}</Text>
+        <Text style={styles.result}>
+          {HelpMeChooseDict.SuggestedProgramme(name)}
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

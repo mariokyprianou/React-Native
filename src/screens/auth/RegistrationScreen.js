@@ -26,9 +26,11 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
+  const {dictionary} = useDictionary();
+  const {AuthDict} = dictionary;
 
   navigation.setOptions({
-    header: () => <Header title={'Create account'} goBack />,
+    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
   });
 
   const {
@@ -40,23 +42,6 @@ export default function RegisterScreen() {
   } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {dictionary} = useDictionary();
-  const {
-    formTitle,
-    firstNameLabel,
-    lastNameLabel,
-    emailLabel,
-    passwordLabel,
-    genderLabel,
-    dobLabel,
-    countryLabel,
-    regionLabel,
-    termsAndConditionsText,
-    invalidEmail,
-    invalidPassword,
-    termsPattern,
-    policyPattern,
-  } = dictionary.RegistrationDict;
 
   const {registrationData} = useRegistrationData();
 
@@ -136,7 +121,7 @@ export default function RegisterScreen() {
     if (!emailRegex.test(emailAddress)) {
       updateError({
         name: 'emailAddress',
-        value: invalidEmail,
+        value: AuthDict.InvalidEmail,
       });
       setLoadingRegister(false);
       return;
@@ -144,7 +129,7 @@ export default function RegisterScreen() {
     if (!passwordRegex.test(password)) {
       updateError({
         name: 'password',
-        value: invalidPassword,
+        value: AuthDict.InvalidPassword,
       });
       setLoadingRegister(false);
       return;
@@ -176,11 +161,11 @@ export default function RegisterScreen() {
 
   const linkText = [
     {
-      pattern: termsPattern,
+      pattern: AuthDict.TermsPattern,
       onPress: () => navigation.navigate('TermsAndConditions'),
     },
     {
-      pattern: policyPattern,
+      pattern: AuthDict.PolicyPattern,
       onPress: () => navigation.navigate('PrivacyPolicy'),
     },
   ];
@@ -196,14 +181,14 @@ export default function RegisterScreen() {
             marginTop: getHeight(20),
             marginBottom: getHeight(10),
           }}>
-          {formTitle}
+          {AuthDict.FormTitle}
         </Text>
       ),
     },
     {
       name: 'firstName',
       type: 'text',
-      label: firstNameLabel,
+      label: AuthDict.FirstNameLabel,
       placeholder: '',
       textContentType: 'name',
       ...cellFormStyles,
@@ -211,7 +196,7 @@ export default function RegisterScreen() {
     {
       name: 'lastName',
       type: 'text',
-      label: lastNameLabel,
+      label: AuthDict.LastNameLabel,
       placeholder: '',
       textContentType: 'name',
       ...cellFormStyles,
@@ -220,7 +205,7 @@ export default function RegisterScreen() {
       name: 'emailAddress',
       type: 'text',
       variant: 'email',
-      label: emailLabel,
+      label: AuthDict.EmailLabel,
       placeholder: '',
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
@@ -230,7 +215,7 @@ export default function RegisterScreen() {
       name: 'password',
       type: 'text',
       variant: 'password',
-      label: passwordLabel,
+      label: AuthDict.PasswordLabel,
       textContentType: 'password',
       autoCompleteType: 'password',
       rightAccessory: () => <PasswordEyeIcon />,
@@ -240,7 +225,7 @@ export default function RegisterScreen() {
     {
       name: 'gender',
       type: 'dropdown',
-      label: genderLabel,
+      label: AuthDict.GenderLabel,
       placeholder: registrationData.genders[0],
       data: registrationData.genders,
       rightAccessory: () => <DropDownIcon />,
@@ -250,7 +235,7 @@ export default function RegisterScreen() {
     {
       name: 'birthDate',
       type: 'calendar',
-      label: dobLabel,
+      label: AuthDict.DobLabel,
       placeholder: '',
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,
@@ -260,7 +245,7 @@ export default function RegisterScreen() {
     {
       name: 'country',
       type: 'dropdown',
-      label: countryLabel,
+      label: AuthDict.CountryLabel,
       placeholder: registrationData.countries[0],
       data: registrationData.countries,
       rightAccessory: () => <DropDownIcon />,
@@ -270,7 +255,7 @@ export default function RegisterScreen() {
     {
       name: 'region',
       type: 'dropdown',
-      label: regionLabel,
+      label: AuthDict.RegionLabel,
       placeholder: registrationData.regions[0],
       data: registrationData.regions,
       rightAccessory: () => <DropDownIcon />,
@@ -294,7 +279,7 @@ export default function RegisterScreen() {
               <StylisedText
                 {...{
                   input: linkText,
-                  text: termsAndConditionsText,
+                  text: AuthDict.TermsAndConditionsText,
                   // If you want to override the main text style
                 }}
               />

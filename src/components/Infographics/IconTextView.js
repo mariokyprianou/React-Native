@@ -28,24 +28,16 @@ export default function IconTextView({
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
 
-  const {
-    CardText_Low,
-    CardText_Medium,
-    CardText_High,
-    CardText_Intensity,
-    CardText_Mins,
-    CardText_Reps,
-    CardText_Sets,
-  } = dictionary;
+  const {WorkoutDict} = dictionary;
 
   const timeIcon = require('../../../assets/icons/reminder.png');
   const lightningIcon = require('../../../assets/icons/lightning.png');
   const repsIcon = require('../../../assets/icons/weight.png');
 
   const intensityRef = {
-    low: CardText_Low,
-    medium: CardText_Medium,
-    high: CardText_High,
+    low: WorkoutDict.Low,
+    medium: WorkoutDict.Medium,
+    high: WorkoutDict.High,
   };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -115,7 +107,7 @@ export default function IconTextView({
               inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
             />
           </View>
-          <Text style={styles.text}>{`${duration} ${CardText_Mins}`}</Text>
+          <Text style={styles.text}>{`${duration} ${WorkoutDict.Mins}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
@@ -127,7 +119,7 @@ export default function IconTextView({
           <Text
             style={
               styles.text
-            }>{`${intensityRef[intensity]} ${CardText_Intensity}`}</Text>
+            }>{`${intensityRef[intensity]} ${WorkoutDict.Intensity}`}</Text>
         </View>
       </View>
     );
@@ -147,7 +139,7 @@ export default function IconTextView({
               inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
             />
           </View>
-          <Text style={styles.text}>{`${duration} ${CardText_Mins}`}</Text>
+          <Text style={styles.text}>{`${duration} ${WorkoutDict.Mins}`}</Text>
         </View>
         <View
           style={{
@@ -166,7 +158,7 @@ export default function IconTextView({
               }}
             />
           </View>
-          <Text style={styles.text}>{`${reps} ${CardText_Reps}`}</Text>
+          <Text style={styles.text}>{`${reps} ${WorkoutDict.Reps}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
@@ -175,7 +167,7 @@ export default function IconTextView({
               inputStyle={{style: styles.icon, ...styles.iconColor}}
             />
           </View>
-          <Text style={styles.text}>{`${sets} ${CardText_Sets}`}</Text>
+          <Text style={styles.text}>{`${sets} ${WorkoutDict.Sets}`}</Text>
         </View>
       </View>
     );

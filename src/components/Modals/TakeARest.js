@@ -23,7 +23,7 @@ export default function TakeARest({name, onPressClose}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_TakeARest, InfoText_TakeARest} = dictionary;
+  const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -68,14 +68,14 @@ export default function TakeARest({name, onPressClose}) {
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" />
         <Header
-          title={TitleText_TakeARest}
+          title={WorkoutDict.TakeARestTitle}
           right="times"
           rightAction={onPressClose}
           white
           transparent
         />
         <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>{InfoText_TakeARest(name)}</Text>
+          <Text style={styles.infoText}>{WorkoutDict.TakeARest(name)}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <DefaultButton

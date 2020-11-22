@@ -18,7 +18,7 @@ export default function EmojiSelection() {
   const {getHeight, fontSize} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {CardText_HowDoYouFeel} = dictionary;
+  const {WorkoutDict} = dictionary;
   const [selected, setSelected] = useState([]);
 
   const emojis = [
@@ -68,7 +68,7 @@ export default function EmojiSelection() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{CardText_HowDoYouFeel}</Text>
+      <Text style={styles.text}>{WorkoutDict.HowDoYouFeel}</Text>
       <View style={styles.emojiContainer}>
         {emojis.map((emoji, index) => (
           <TouchableOpacity onPress={() => handleSelect(emoji)}>

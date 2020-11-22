@@ -22,7 +22,7 @@ export default function SetCompletionModal() {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {CardText_GreatJob, CardText_WhichWeight} = dictionary;
+  const {WorkoutDict} = dictionary;
 
   const formattedSeconds = new Date(restTime * 1000)
     .toISOString()
@@ -87,9 +87,9 @@ export default function SetCompletionModal() {
     <View style={styles.container}>
       <View style={styles.card}>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>{CardText_GreatJob}</Text>
+          <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
           <Text style={styles.timerText}>{remaining}</Text>
-          <Text style={styles.text}>{CardText_WhichWeight}</Text>
+          <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
           <View style={styles.weightSelectionContainer}>
             <WeightSelection />
           </View>

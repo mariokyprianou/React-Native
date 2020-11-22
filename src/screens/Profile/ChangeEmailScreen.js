@@ -16,16 +16,9 @@ export default function ChangeEmailScreen() {
   // MARK: - Hooks
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => <Header title={'Change Email'} goBack />,
-  });
-
   const {dictionary} = useDictionary();
-  const {
-    ChangeEmail_ScreenTitle,
-    ChangeEmail_Label1,
-    ChangeEmail_Label2,
-  } = dictionary;
+  const {ProfileDict} = dictionary;
+
   const {cleanErrors, getValues, updateError} = FormHook();
 
   // MARK: - Local
@@ -52,9 +45,9 @@ export default function ChangeEmailScreen() {
   // MARK: - Render
   return (
     <TwoFieldChangeScreenUI
-      screenTitle={ChangeEmail_ScreenTitle}
-      firstFieldLabel={ChangeEmail_Label1}
-      secondFieldLabel={ChangeEmail_Label2}
+      screenTitle={ProfileDict.ChangeEmailScreenTitle}
+      firstFieldLabel={ProfileDict.ChangeEmailLabel1}
+      secondFieldLabel={ProfileDict.ChangeEmailLabel2}
       secondFieldType="emailAddress"
       firstFieldName={firstValueName}
       secondFieldName={secondValueName}

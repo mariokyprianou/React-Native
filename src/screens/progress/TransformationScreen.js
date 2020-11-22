@@ -32,7 +32,7 @@ export default function TransformationScreen() {
   const [beforePic, setBeforePic] = useState(fakeBeforePic);
   const [afterPic, setAfterPic] = useState(fakeAfterPic);
   const {dictionary} = useDictionary();
-  const {TitleText_Upload, ScreenHeader_YourTransformation} = dictionary;
+  const {ProgressDict} = dictionary;
   const navigation = useNavigation();
 
   const screenWidth = Dimensions.get('screen').width;
@@ -40,7 +40,7 @@ export default function TransformationScreen() {
   navigation.setOptions({
     header: () => (
       <Header
-        title={ScreenHeader_YourTransformation}
+        title={ProgressDict.TransformationScreenTitle}
         goBack
         right="shareIcon"
         rightAction={handleShare}
@@ -105,7 +105,7 @@ export default function TransformationScreen() {
         )}
         DateSelectors={() => <CustomDateSelectors onPress={handleSelectDate} />}
         cameraButtonImage={cameraButton}
-        cameraHeaderText={TitleText_Upload}
+        cameraHeaderText={ProgressDict.Upload}
         overlayStyles={styles.overlay}
         sliderIcon={sliderThumb}
         overlayImage={overlay}

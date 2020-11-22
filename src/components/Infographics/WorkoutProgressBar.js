@@ -17,8 +17,6 @@ export default function HelpMeChooseBar({index, max, questionText}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const {TitleText_Question, TitleText_Of} = dictionary;
 
   const activeWidth = (index / max) * 100;
   const inactiveWidth = 100 - activeWidth;

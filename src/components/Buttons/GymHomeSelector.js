@@ -18,8 +18,8 @@ export default function GymHomeSelector({onPress}) {
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {ButtonText_Gym, ButtonText_Home} = dictionary;
-  const [buttonText, setButtonText] = useState(ButtonText_Gym);
+  const {ButtonDict} = dictionary;
+  const [buttonText, setButtonText] = useState(ButtonDict.Gym);
   const buttonIcon = require('../../../assets/icons/reverse.png');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -49,12 +49,12 @@ export default function GymHomeSelector({onPress}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleSelect() {
-    if (buttonText === ButtonText_Gym) {
-      setButtonText(ButtonText_Home);
+    if (buttonText === ButtonDict.Gym) {
+      setButtonText(ButtonDict.Home);
       onPress('home');
     }
-    if (buttonText === ButtonText_Home) {
-      setButtonText(ButtonText_Gym);
+    if (buttonText === ButtonDict.Home) {
+      setButtonText(ButtonDict.Gym);
       onPress('gym');
     }
   }

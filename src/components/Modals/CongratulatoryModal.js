@@ -23,11 +23,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {
-    TitleText_Congratulations,
-    InfoText_StartedProgrammeWithVenue,
-    InfoText_SwitchedByMistake,
-  } = dictionary;
+  const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -105,7 +101,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" />
         <Header
-          title={TitleText_Congratulations}
+          title={WorkoutDict.CongratulationsTitle}
           right="times"
           rightAction={onPressClose}
           white
@@ -113,7 +109,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
         />
         <View style={styles.infoTextContainer}>
           <Text style={styles.infoText}>
-            {InfoText_StartedProgrammeWithVenue(name, venue)}
+            {WorkoutDict.StartedProgrammeWithVenue(name, venue)}
           </Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -123,7 +119,9 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
             variant="white"
             onPress={handlePressJumpIn}
           />
-          <Text style={styles.switchedText}>{InfoText_SwitchedByMistake}</Text>
+          <Text style={styles.switchedText}>
+            {WorkoutDict.SwitchedByMistake}
+          </Text>
           <DefaultButton
             type="cancel"
             variant="transparentWhiteText"

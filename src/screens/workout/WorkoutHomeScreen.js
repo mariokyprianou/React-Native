@@ -32,7 +32,7 @@ export default function WorkoutHomeScreen() {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {TitleText_Week} = dictionary;
+  const {WorkoutDict} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
   const {
     workoutHomeData: {
@@ -149,7 +149,7 @@ export default function WorkoutHomeScreen() {
       <WorkoutHomeHeader />
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
-          <Text style={styles.weekText}>{TitleText_Week}</Text>
+          <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
           <Text style={styles.numberText}>{`${weekNumber}`}</Text>
         </View>
         <TouchableOpacity

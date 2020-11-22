@@ -24,8 +24,18 @@ const SettingsScreen = ({}) => {
   // MARK: - Hooks
   const navigation = useNavigation();
 
+  const {cleanErrors, getValues, updateError} = FormHook();
+  const {dictionary, getLanguage} = useDictionary();
+  const {SettingsDict, LanguageDict} = dictionary;
+
+  const dropdownData = [
+    LanguageDict.English,
+    LanguageDict.Hindi,
+    LanguageDict.Urdu,
+  ];
+
   navigation.setOptions({
-    header: () => <Header title={'Settings'} goBack />,
+    header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
   });
 
   const {getHeight, getWidth} = ScaleHook();
@@ -36,27 +46,7 @@ const SettingsScreen = ({}) => {
     textStyles,
     dropdownStyle,
   } = useTheme();
-  const {cleanErrors, getValues, updateError} = FormHook();
-  const {dictionary} = useDictionary();
-  const {
-    Settings_ScreenTitle,
-    Settings_VersionText,
-    Settings_MarketingPreferences,
-    Settings_AppSettings,
-    Settings_MarketingPrefEmail = '',
-    Settings_MarketingPrefNotifications = '',
-    Settings_DownloadWorkouts = '',
-    Settings_DownloadWorkoutsText,
-    Settings_DownloadWorkoutsQuality,
-    Settings_DownloadWorkoutsTimeZone,
-    Settings_DataCollection = '',
-    Settings_DataCollectionText,
-    Settings_ErrorReports = '',
-    Settings_ErrorReportsText,
-    Settings_Analytics = '',
-    Settings_AnalyticsText,
-    Settings_Language,
-  } = dictionary;
+
   const {
     settings_downloadsQuality,
     settings_timeZone,
@@ -75,7 +65,7 @@ const SettingsScreen = ({}) => {
   // MARK: - Use Effect
   useEffect(() => {
     navigation.setOptions({
-      header: () => <Header title={Settings_ScreenTitle} goBack />,
+      header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
     });
   }, []);
 
@@ -179,14 +169,14 @@ const SettingsScreen = ({}) => {
     {
       customComponent: () => (
         <Text style={styles.headerTextStyle}>
-          {Settings_MarketingPreferences}
+          {SettingsDict.MarketingPreferences}
         </Text>
       ),
     },
     {
       customComponent: () => (
         <SettingsCell
-          title={Settings_MarketingPrefEmail.toUpperCase()}
+          title={SettingsDict.MarketingPrefEmail.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
@@ -199,7 +189,7 @@ const SettingsScreen = ({}) => {
     {
       customComponent: () => (
         <SettingsCell
-          title={Settings_MarketingPrefNotifications.toUpperCase()}
+          title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
@@ -211,13 +201,13 @@ const SettingsScreen = ({}) => {
     },
     {
       customComponent: () => (
-        <Text style={styles.headerTextStyle}>{Settings_AppSettings}</Text>
+        <Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text>
       ),
     },
     {
       customComponent: () => (
         <SettingsCell
-          title={Settings_DownloadWorkouts.toUpperCase()}
+          title={SettingsDict.DownloadWorkouts.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
@@ -225,7 +215,7 @@ const SettingsScreen = ({}) => {
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleDownloadWorkouts}
           descriptionTextStyle={styles.switchDescriptionStyle}
-          description={Settings_DownloadWorkoutsText}
+          description={SettingsDict.DownloadWorkoutsText}
         />
       ),
     },
@@ -235,7 +225,7 @@ const SettingsScreen = ({}) => {
     {
       name: 'settings_downloadsQuality',
       type: 'dropdown',
-      label: Settings_DownloadWorkoutsQuality,
+      label: SettingsDict.DownloadWorkoutsQuality,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
@@ -245,7 +235,7 @@ const SettingsScreen = ({}) => {
     {
       name: 'settings_timeZone',
       type: 'dropdown',
-      label: Settings_DownloadWorkoutsTimeZone,
+      label: SettingsDict.DownloadWorkoutsTimeZone,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
@@ -257,18 +247,18 @@ const SettingsScreen = ({}) => {
     {
       customComponent: () => (
         <SettingsCell
-          title={Settings_DataCollection.toUpperCase()}
+          title={SettingsDict.DataCollection.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           descriptionTextStyle={styles.switchDescriptionStyle}
-          description={Settings_DataCollectionText}
+          description={SettingsDict.DataCollectionText}
         />
       ),
     },
     {
       customComponent: () => (
         <SettingsCell
-          title={Settings_ErrorReports.toUpperCase()}
+          title={SettingsDict.ErrorReports.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
@@ -276,14 +266,14 @@ const SettingsScreen = ({}) => {
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleErrorReports}
           descriptionTextStyle={styles.switchDescriptionStyle}
-          description={Settings_ErrorReportsText}
+          description={SettingsDict.ErrorReportsText}
         />
       ),
     },
     {
       customComponent: () => (
         <SettingsCell
-          title={Settings_Analytics.toUpperCase()}
+          title={SettingsDict.Analytics.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
@@ -291,7 +281,7 @@ const SettingsScreen = ({}) => {
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleAnalytics}
           descriptionTextStyle={styles.switchDescriptionStyle}
-          description={Settings_AnalyticsText}
+          description={SettingsDict.AnalyticsText}
         />
       ),
     },
@@ -301,12 +291,12 @@ const SettingsScreen = ({}) => {
     {
       name: 'settings_language',
       type: 'dropdown',
-      label: Settings_Language,
+      label: SettingsDict.Language,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      //   placeholder: registrationData.countries[0],
-      //   data: registrationData.countries,
+      placeholder: getLanguage() || dropdownData[0],
+      data: dropdownData,
     },
   ];
 
@@ -327,7 +317,7 @@ const SettingsScreen = ({}) => {
       <Form cells={cells4} config={formConfig} />
       <Spacer height={25} />
       <VersionCell
-        versionText={Settings_VersionText}
+        versionText={SettingsDict.VersionText}
         versionTextStyle={styles.versionTextStyle}
         versionContainerStyle={{}}
       />

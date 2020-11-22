@@ -57,17 +57,7 @@ export default function ProfileScreenUI({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {
-    Profile_PersonalDetails,
-    Profile_NotificationsTitle,
-    Profile_FormLabel1,
-    Profile_FormLabel2,
-    Profile_FormLabel3,
-    Profile_FormLabel4,
-    Profile_FormLabel5,
-    Profile_FormLabel6,
-    Profile_FormLabel7,
-  } = dictionary;
+  const {ProfileDict} = dictionary;
 
   const {registrationData} = useRegistrationData();
 
@@ -147,7 +137,7 @@ export default function ProfileScreenUI({
             marginLeft: getWidth(20),
             marginBottom: getHeight(10),
           }}>
-          {Profile_NotificationsTitle}
+          {ProfileDict.NotificationsTitle}
         </Text>
         <FlatList data={notifications} renderItem={renderNotificationCell} />
       </View>
@@ -167,26 +157,26 @@ export default function ProfileScreenUI({
             marginBottom: getHeight(10),
             textAlign: 'left',
           }}>
-          {Profile_PersonalDetails}
+          {ProfileDict.PersonalDetails}
         </Text>
       ),
     },
     {
       name: 'profile_firstName',
       type: 'text',
-      label: Profile_FormLabel1,
+      label: ProfileDict.FormLabel1,
       ...cellFormStyles,
     },
     {
       name: 'profile_lastName',
       type: 'text',
-      label: Profile_FormLabel2,
+      label: ProfileDict.FormLabel2,
       ...cellFormStyles,
     },
     {
       name: 'profile_email',
       type: 'dropdown',
-      label: Profile_FormLabel3,
+      label: ProfileDict.FormLabel3,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
@@ -197,7 +187,7 @@ export default function ProfileScreenUI({
     {
       name: 'profile_gender',
       type: 'dropdown',
-      label: Profile_FormLabel4,
+      label: ProfileDict.FormLabel4,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
@@ -207,7 +197,7 @@ export default function ProfileScreenUI({
     {
       name: 'profile_dateOfBirth',
       type: 'calendar',
-      label: Profile_FormLabel5,
+      label: ProfileDict.FormLabel5,
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
@@ -216,7 +206,7 @@ export default function ProfileScreenUI({
     {
       name: 'profile_country',
       type: 'dropdown',
-      label: Profile_FormLabel6,
+      label: ProfileDict.FormLabel6,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
@@ -226,7 +216,7 @@ export default function ProfileScreenUI({
     {
       name: 'profile_region',
       type: 'dropdown',
-      label: Profile_FormLabel7,
+      label: ProfileDict.FormLabel7,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,

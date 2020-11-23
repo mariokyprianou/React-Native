@@ -47,7 +47,7 @@ export default function DefaultButton({
       elevation: 3,
     },
     gradient: {
-      shadowColor: colors.black10,
+      shadowColor: colors.black20,
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,

@@ -38,7 +38,7 @@ export default function ChallengeCompletionModal({
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
     },
     descriptionContainer: {
       width: '90%',

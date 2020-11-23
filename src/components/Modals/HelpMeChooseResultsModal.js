@@ -36,7 +36,7 @@ export default function HelpMeChooseResultsModal({
     card: {
       width: '100%',
       height: '100%',
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
     },
     headerContainer: {
       position: 'absolute',

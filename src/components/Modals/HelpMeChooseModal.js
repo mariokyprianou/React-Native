@@ -33,7 +33,7 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
     card: {
       width: '100%',
       height: '100%',
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
     },
     container: {
       width: '90%',

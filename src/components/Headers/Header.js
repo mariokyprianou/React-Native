@@ -54,7 +54,7 @@ export default function Header({
       height,
       flexDirection: 'row',
       alignItems: 'flex-end',
-      backgroundColor: transparent ? undefined : colors.offWhite100,
+      backgroundColor: transparent ? undefined : colors.backgroundWhite100,
       width: '100%',
       position: transparent ? 'absolute' : undefined,
     },

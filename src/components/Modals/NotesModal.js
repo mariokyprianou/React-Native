@@ -30,7 +30,7 @@ export default function NotesModal({onPressClose}) {
     card: {
       width: '100%',
       height: '100%',
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
     },
     contentContainer: {
       width: '90%',

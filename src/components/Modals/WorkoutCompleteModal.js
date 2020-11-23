@@ -31,7 +31,7 @@ export default function WorkoutCompleteModal() {
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
     },
     scroll: {
       flex: 1,

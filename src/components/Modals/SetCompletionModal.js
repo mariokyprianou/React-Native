@@ -41,7 +41,7 @@ export default function SetCompletionModal() {
     card: {
       height: getHeight(349),
       width: '100%',
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(15),
       borderTopRightRadius: radius(15),
       paddingTop: getHeight(23),

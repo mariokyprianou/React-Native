@@ -32,7 +32,7 @@ import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 
-const fakeImage = require('../../../assets/fake2.png');
+const fakeImage = require('../../../assets/images/trainerCarousel.png');
 
 export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -167,6 +167,12 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     zeroInfoText: {
       ...textStyles.regular15_white100,
       marginBottom: getHeight(80),
+    },
+    fadeContainer: {
+      position: 'absolute',
+      bottom: 70,
+      left: 0,
+      right: 0,
     },
   };
 
@@ -309,8 +315,8 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
           },
         )}
       </Swiper>
-      <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
-        <FadingBottomView color="blue" height={250} />
+      <View style={styles.fadeContainer}>
+        <FadingBottomView color="blue" height={70} />
       </View>
       {switchProgramme === true && trainerOnSlider === currentTrainer ? (
         <View style={styles.buttonContainer}>

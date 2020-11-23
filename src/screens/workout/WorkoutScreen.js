@@ -27,7 +27,7 @@ export default function WorkoutScreen() {
   const {dictionary} = useDictionary();
   const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(false);
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(false);
-  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [showNotesModal, setShowNotesModal] = useState(true);
   const navigation = useNavigation();
 
   const {workout} = useWorkoutData();

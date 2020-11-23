@@ -14,11 +14,13 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useChallenge from '../../hooks/data/useChallenge';
 import Header from '../Headers/Header';
 import DefaultButton from '../Buttons/DefaultButton';
+import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import Spacer from '../Utility/Spacer';
 
 export default function NotesModal({onPressClose}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const {
@@ -47,12 +49,6 @@ export default function NotesModal({onPressClose}) {
       marginBottom: getHeight(13),
       textAlign: 'left',
     },
-    line: {
-      backgroundColor: colors.black30,
-      height: getHeight(1),
-      width: '100%',
-      marginTop: getHeight(100),
-    },
     buttonContainer: {
       position: 'absolute',
       bottom: getHeight(40),
@@ -63,6 +59,19 @@ export default function NotesModal({onPressClose}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
+  const cells = [
+    {
+      name: 'notes',
+      type: 'text',
+      placeholder: '',
+      ...cellFormStyles,
+    },
+  ];
+
+  const config = {
+    ...cellFormConfig,
+  };
+
   return (
     <View style={styles.card}>
       <Header
@@ -74,7 +83,8 @@ export default function NotesModal({onPressClose}) {
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
         <Text style={styles.description}>{notes}</Text>
-        <View style={styles.line} />
+        <Spacer height={70} />
+        <Form cells={cells} config={config} />
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton type="done" variant="white" icon="chevron" />

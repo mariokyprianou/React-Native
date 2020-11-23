@@ -212,7 +212,7 @@ const enGB = {
     WeightsUnitText: 'kg',
 
     RestDay: 'REST DAY',
-    Day: 'DAY',
+    Day: 'Day',
 
     YourNotes: 'YOUR NOTES',
     Notes: 'Notes',

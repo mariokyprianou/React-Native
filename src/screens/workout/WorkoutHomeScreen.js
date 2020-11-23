@@ -26,6 +26,7 @@ import TakeARest from '../../components/Modals/TakeARest';
 import WeekComplete from '../../components/Modals/WeekComplete';
 import StayTuned from '../../components/Modals/StayTuned';
 import isRTL from '../../utils/isRTL';
+import Spacer from '../../components/Utility/Spacer';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -129,6 +130,9 @@ export default function WorkoutHomeScreen() {
       width: '100%',
       alignItems: 'center',
     },
+    draggableContainer: {
+      paddingBottom: getHeight(245),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -172,7 +176,7 @@ export default function WorkoutHomeScreen() {
           />
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={styles.draggableContainer}>
         <DraggableFlatList
           data={workoutsToDisplay}
           keyExtractor={(item, index) => `${index}`}

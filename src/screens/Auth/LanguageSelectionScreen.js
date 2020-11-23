@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -32,6 +32,8 @@ export default function LanguageSelectionScreen() {
   const {dictionary, setLanguage, getLanguage} = useDictionary();
   const {LanguageDict} = dictionary;
 
+  const screenHeight = Dimensions.get('screen').height;
+
   const dropdownData = [
     LanguageDict.English,
     LanguageDict.Hindi,
@@ -54,7 +56,7 @@ export default function LanguageSelectionScreen() {
     },
     image: {
       position: 'absolute',
-      top: getHeight(270),
+      top: screenHeight / 2 - 26,
     },
     buttonContainer: {
       marginBottom: getHeight(40),

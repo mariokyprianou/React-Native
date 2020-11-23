@@ -51,7 +51,7 @@ export default function DefaultButton({
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,
-      elevation: 3,
+      elevation: 4,
     },
     transparentWhiteText: {
       backgroundColor: 'transparent',

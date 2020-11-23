@@ -34,7 +34,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function MeetYourIconsScreen({switchProgramme = true}) {
+export default function MeetYourIconsScreen({switchProgramme = false}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -146,15 +146,16 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
       position: 'absolute',
       bottom: 0,
       marginTop: getHeight(30),
-      marginBottom: getHeight(10),
+      paddingBottom: getHeight(25),
       alignItems: 'center',
+      backgroundColor: colors.paleTurquoise100,
     },
     singleButtonContainer: {
       width: '100%',
       backgroundColor: colors.paleTurquoise100,
       alignItems: 'center',
       position: 'absolute',
-      bottom: getHeight(40),
+      bottom: getHeight(25),
     },
     zeroButtonContainer: {
       backgroundColor: 'transparent',
@@ -320,7 +321,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             trainerName="KATRINA"
             onPress={navigateToWorkoutHome}
           />
-          {/* <Spacer height={20} /> */}
+          <Spacer height={20} />
           <DefaultButton
             type="continueFromWeek"
             icon="chevron"

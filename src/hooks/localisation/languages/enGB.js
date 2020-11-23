@@ -62,7 +62,7 @@ const enGB = {
     InvalidPassword:
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
 
-    ForgotPasswordButtonText: 'Forgot Password?',
+    ForgotPasswordButtonText: 'Forgot password?',
     ForgotPasswordCodeLabel: 'PASSWORD RESET CODE',
     ForgotPasswordLabel: 'NEW PASSWORD',
     InvalidResetCode: 'Invalid code',
@@ -137,7 +137,7 @@ const enGB = {
   ProfileDict: {
     ChangeEmailScreenTitle: 'Change email',
     ChangeEmailLabel1: 'Old password',
-    ChangeEmailLabel2: 'New Email',
+    ChangeEmailLabel2: 'New email',
     ChangePasswordScreenTitle: 'Change password',
     ChangePasswordLabel1: 'Old password',
     ChangePasswordLabel2: 'New password',
@@ -147,7 +147,7 @@ const enGB = {
     WorkoutsComplete: 'Workouts complete',
     NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: 'Notifications',
-    PersonalDetails: 'Personal Details',
+    PersonalDetails: 'Personal details',
     FormLabel1: 'FIRST NAME',
     FormLabel2: 'LAST NAME',
     FormLabel3: 'EMAIL',
@@ -161,7 +161,7 @@ const enGB = {
     ScreenTitle: 'Settings',
     VersionText: 'Power App - Version',
     MarketingPreferences: 'Marketing preferences',
-    AppSettings: 'App Settings',
+    AppSettings: 'App settings',
     MarketingPrefEmail: 'Email',
     MarketingPrefNotifications: 'Notifications',
     DownloadWorkouts: 'Download workouts',
@@ -185,7 +185,7 @@ const enGB = {
     YourWorkouts: 'Your workouts',
 
     Your: 'Your',
-    Progress: 'Progress',
+    Progress: 'progress',
 
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',

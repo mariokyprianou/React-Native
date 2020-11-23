@@ -90,6 +90,7 @@ export default function LanguageSelectionScreen() {
     },
   ];
   const config = {
+    turnOffQuickPicker: true,
     editedColor: colors.brownishGrey100,
     inactiveColor: colors.brownishGrey100,
     activeColor: colors.brownishGrey100,

@@ -7,7 +7,14 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -95,7 +102,7 @@ export default function ProgressScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
@@ -138,6 +145,6 @@ export default function ProgressScreen() {
           })}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

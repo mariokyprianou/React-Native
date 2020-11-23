@@ -17,6 +17,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
+import {msToHMSFull} from '../../utils/dateTimeUtils';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -29,7 +30,8 @@ export default function ChallengeScreen() {
   const formattedSeconds = new Date(timeLimit * 1000)
     .toISOString()
     .substr(11, 8);
-  const {remaining, remainingMS, toggle, active, reset} = useTimer({
+
+  const {remainingMS, toggle, reset} = useTimer({
     timer: formattedSeconds,
   });
 
@@ -89,7 +91,7 @@ export default function ChallengeScreen() {
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
       </View>
-      <Text style={styles.timerText}>{remaining}</Text>
+      <Text style={styles.timerText}>{msToHMSFull(remainingMS)}</Text>
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="start"

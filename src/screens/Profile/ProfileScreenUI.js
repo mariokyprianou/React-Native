@@ -45,7 +45,6 @@ export default function ProfileScreenUI({
   onSaveChanges,
   onPressNeedHelp,
   onPressLogout,
-  onPressNeedToSignOut,
 }) {
   // MARK: - Hooks
   const {
@@ -99,6 +98,9 @@ export default function ProfileScreenUI({
       alignItems: 'center',
       marginTop: getHeight(35),
       marginBottom: getHeight(15),
+    },
+    signOut: {
+      ...textStyles.semiBold14_brownishGrey100,
     },
   };
 
@@ -260,17 +262,14 @@ export default function ProfileScreenUI({
         onPress={onPressNeedHelp}
         icon={'chevron'}
       />
-      <Spacer height={20} />
-      <DefaultButton
-        type={'needToSignOut'}
-        variant="transparentGreyText"
-        onPress={onPressNeedToSignOut}
-      />
+      <Spacer height={30} />
+      <Text style={styles.signOut}>{ProfileDict.NeedToSignOut}</Text>
       <DefaultButton
         type={'logout'}
         variant="transparentBlackBoldText"
         onPress={onPressLogout}
       />
+      <Spacer height={20} />
     </View>
   );
 

@@ -16,16 +16,11 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import CongratulationsScreen from '../screens/auth/CongratulationsScreen';
 import TermsAndConditionsScreen from '../screens/auth/TermsConditionsScreen';
 import PrivacyPolicyScreen from '../screens/auth/PrivacyPolicyScreen';
-
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import AnalyticsPermissionScreen from '../screens/auth/AnalyticsPermissionScreen';
 import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissionScreen';
-
-// Ts & Cs, Privacy, and Email Verification will all need to slide up from the bottom
-// Do this by adding the following to each screen below:
-// options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-// E.g. WorkoutContainer > WorkoutScreen
+import {TransitionPresets} from '@react-navigation/stack';
 
 export default function AuthContainer(props) {
   return (
@@ -34,7 +29,11 @@ export default function AuthContainer(props) {
         name="LanguageSelection"
         component={LanguageSelectionScreen}
       />
-      <AuthStack.Screen name="Onboarding" component={OnboardingScreen} />
+      <AuthStack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+        options={{...TransitionPresets.DefaultTransition}}
+      />
       <AuthStack.Screen name="MeetYourIcons" component={MeetYourIconsScreen} />
       <AuthStack.Screen name="Registration" component={RegistrationScreen} />
       <AuthStack.Screen name="Login" component={LoginScreen} />
@@ -45,8 +44,13 @@ export default function AuthContainer(props) {
       <AuthStack.Screen
         name="TermsAndConditions"
         component={TermsAndConditionsScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
-      <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <AuthStack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
       <AuthStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}

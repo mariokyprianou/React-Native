@@ -145,6 +145,7 @@ const enGB = {
     DeleteNotificationButtonTitle: 'Delete',
     MemberSince: 'Member since',
     WorkoutsComplete: 'Workouts complete',
+    NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: 'Notifications',
     PersonalDetails: 'Personal Details',
     FormLabel1: 'FIRST NAME',

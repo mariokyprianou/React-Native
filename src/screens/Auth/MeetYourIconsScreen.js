@@ -34,7 +34,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function MeetYourIconsScreen({switchProgramme = true}) {
+export default function MeetYourIconsScreen({switchProgramme = false}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();

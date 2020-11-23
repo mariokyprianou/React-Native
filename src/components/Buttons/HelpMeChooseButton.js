@@ -46,7 +46,7 @@ export default function HelpMeChooseButton({
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,
-      elevation: 6,
+      elevation: 3,
     },
     linearGradientStyle: {
       flex: 1,

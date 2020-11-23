@@ -22,7 +22,13 @@ const splashImage = require('../../../assets/images/splash.png');
 export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, fontSize} = ScaleHook();
-  const {cellFormStyles, cellFormConfig, colors, textStyles} = useTheme();
+  const {
+    cellFormStyles,
+    cellFormConfig,
+    colors,
+    textStyles,
+    dropdownStyle,
+  } = useTheme();
   const {dictionary, setLanguage, getLanguage} = useDictionary();
   const {LanguageDict} = dictionary;
 
@@ -80,6 +86,7 @@ export default function LanguageSelectionScreen() {
       ),
       iconTintColor: colors.black100,
       ...cellFormStyles,
+      ...dropdownStyle,
     },
   ];
   const config = {

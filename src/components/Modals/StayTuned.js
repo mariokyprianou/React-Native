@@ -94,7 +94,7 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
           <FadingBottomView color="black" />
           <Header
             title={WorkoutDict.StayTunedTitle}
-            right="times"
+            right="crossIcon"
             rightAction={onPressClose}
             white
             transparent
@@ -121,15 +121,14 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
     return (
       <View>
         <ImageBackground source={fakeImage} style={styles.image}>
-          <FadingBottomView color="black" height="full" />
-          <View style={styles.headerContainer}>
-            <Text style={styles.title}>{WorkoutDict.StayTunedTitle}</Text>
-            <TouchableOpacity
-              style={styles.iconContainer}
-              onPress={onPressClose}>
-              <TDIcon input={'times'} inputStyle={styles.icon} />
-            </TouchableOpacity>
-          </View>
+          <FadingBottomView color="black" />
+          <Header
+            title={WorkoutDict.StayTunedTitle}
+            right="crossIcon"
+            rightAction={onPressClose}
+            white
+            transparent
+          />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
               {WorkoutDict.ProgrammeComplete(name, venue)}

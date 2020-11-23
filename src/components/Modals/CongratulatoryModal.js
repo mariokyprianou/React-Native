@@ -102,7 +102,7 @@ export default function CongratulatoryModal({name, venue, onPressClose}) {
         <FadingBottomView color="black" />
         <Header
           title={WorkoutDict.CongratulationsTitle}
-          right="times"
+          right="crossIcon"
           rightAction={onPressClose}
           white
           transparent

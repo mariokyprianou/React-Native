@@ -76,7 +76,7 @@ export default function NotesModal({onPressClose}) {
     <View style={styles.card}>
       <Header
         title={WorkoutDict.Notes}
-        right="times"
+        right="crossIcon"
         rightAction={onPressClose}
       />
       <View style={styles.contentContainer}>

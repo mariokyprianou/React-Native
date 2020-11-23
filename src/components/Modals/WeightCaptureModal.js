@@ -99,7 +99,7 @@ export default function WeightCaptureModal({onPressClose}) {
     <View style={styles.card}>
       <Header
         title={WorkoutDict.WeightsTitle}
-        right="times"
+        right="crossIcon"
         rightAction={onPressClose}
       />
       <View style={styles.container}>

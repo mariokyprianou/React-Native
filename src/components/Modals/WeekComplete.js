@@ -78,7 +78,7 @@ export default function WeekComplete({
         <FadingBottomView color="black" />
         <Header
           title={WorkoutDict.WeekCompleteTitle}
-          right="times"
+          right="crossIcon"
           rightAction={onPressClose}
           white
           transparent

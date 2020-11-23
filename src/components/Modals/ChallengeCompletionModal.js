@@ -94,7 +94,7 @@ export default function ChallengeCompletionModal({
     <View style={styles.container}>
       <Header
         title={WorkoutDict.ChallengeCompleteTitle}
-        right="times"
+        right="crossIcon"
         rightAction={onPressClose}
       />
       <View style={styles.descriptionContainer}>

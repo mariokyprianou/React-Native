@@ -86,7 +86,7 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
     <View style={styles.card}>
       <Header
         title={HelpMeChooseDict.HelpMeChoose}
-        right="times"
+        right="crossIcon"
         rightAction={onPressClose}
       />
       <View style={styles.container}>

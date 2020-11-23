@@ -86,7 +86,7 @@ export default function WorkoutCompleteModal() {
     <View style={styles.container}>
       <Header
         title={WorkoutDict.WorkoutComplete}
-        right="times"
+        right="crossIcon"
         rightAction={handleClose}
       />
       <ScrollView style={styles.scroll}>

@@ -69,7 +69,7 @@ export default function TakeARest({name, onPressClose}) {
         <FadingBottomView color="black" />
         <Header
           title={WorkoutDict.TakeARestTitle}
-          right="times"
+          right="crossIcon"
           rightAction={onPressClose}
           white
           transparent

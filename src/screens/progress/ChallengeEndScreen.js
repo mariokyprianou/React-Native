@@ -43,6 +43,7 @@ export default function ChallengeEndScreen() {
       width: '100%',
       height: '100%',
       alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
     },
     card: {
       backgroundColor: colors.white100,

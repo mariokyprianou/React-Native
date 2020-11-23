@@ -110,7 +110,7 @@ const SettingsScreen = ({}) => {
     },
     contentContainer: {
       alignItems: 'center',
-      backgroundColor: colors.offWhite,
+      backgroundColor: colors.backgroundWhite100,
       justifyContent: 'space-between',
       paddingVertical: getHeight(20),
     },

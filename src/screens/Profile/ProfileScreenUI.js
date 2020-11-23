@@ -53,6 +53,7 @@ export default function ProfileScreenUI({
     cellFormStyles,
     textStyles,
     dropdownStyle,
+    colors,
   } = useTheme();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
@@ -79,6 +80,7 @@ export default function ProfileScreenUI({
     },
     contentContainer: {
       alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
     },
     notificationsContainer: {
       width: '100%',

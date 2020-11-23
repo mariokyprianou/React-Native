@@ -10,6 +10,7 @@ import React, {useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
 import Slideshow from 'the-core-ui-module-tdslideshow';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import SliderButton from '../../components/Buttons/SliderButton';
@@ -34,6 +35,7 @@ export default function TransformationScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
+  const {colors} = useTheme();
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -50,6 +52,11 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
+    container: {
+      height: '100%',
+      width: '100%',
+      backgroundColor: colors.backgroundWhite100,
+    },
     sliderStyles: {
       height: getHeight(10),
       minimumTrackTintColor: 'transparent',
@@ -90,7 +97,7 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
+    <View style={styles.container}>
       <Slideshow
         setPhoto={handlePhoto}
         beforePic={beforePic}

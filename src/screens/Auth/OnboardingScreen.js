@@ -40,6 +40,7 @@ export default function OnboardingScreen() {
       width: '100%',
       height: '90%',
       alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
     },
     title: {
       ...textStyles.bold24_black100,

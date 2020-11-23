@@ -42,7 +42,7 @@ export default function WorkoutScreen() {
     scrollViewContainer: {
       height: '100%',
       width: '100%',
-      backgroundColor: colors.white100,
+      backgroundColor: colors.backgroundWhite100,
     },
   });
 

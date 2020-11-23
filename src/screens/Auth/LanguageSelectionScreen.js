@@ -44,6 +44,7 @@ export default function LanguageSelectionScreen() {
       alignItems: 'center',
       height: '100%',
       justifyContent: 'flex-end',
+      backgroundColor: colors.backgroundWhite100,
     },
     image: {
       position: 'absolute',

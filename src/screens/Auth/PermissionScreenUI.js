@@ -46,6 +46,7 @@ const PermissionScreenUI = ({
       alignItems: 'center',
       justifyContent: 'space-between',
       flex: 1,
+      backgroundColor: colors.backgroundWhite100,
     },
     textContainer: {
       width: '90%',

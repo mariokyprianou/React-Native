@@ -9,6 +9,7 @@ import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import WorkoutImageView from '../../components/Views/WorkoutImageView';
 import ExerciseCell from '../../components/cells/ExerciseCell';
@@ -21,6 +22,7 @@ export default function StartWorkoutScreen() {
   const {getHeight} = ScaleHook();
   const {workout} = useWorkoutData();
   const navigation = useNavigation();
+  const {colors} = useTheme();
 
   navigation.setOptions({
     header: () => <Header title={'Workout Name'} goBack />,
@@ -31,6 +33,7 @@ export default function StartWorkoutScreen() {
     scrollViewContainer: {
       height: '100%',
       width: '100%',
+      backgroundColor: colors.backgroundWhite100,
     },
     buttonContainer: {
       position: 'absolute',

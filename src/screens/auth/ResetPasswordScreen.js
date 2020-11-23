@@ -57,6 +57,7 @@ export default function Screen() {
   const styles = {
     container: {
       flex: 1,
+      backgroundColor: colors.backgroundWhite100,
     },
     scrollViewContainer: {
       height: '100%',

@@ -30,7 +30,7 @@ import isRTL from '../../utils/isRTL';
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {textStyles} = useTheme();
+  const {textStyles, colors} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
@@ -97,6 +97,7 @@ export default function WorkoutHomeScreen() {
   const styles = {
     container: {
       alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
     },
     titleContainer: {
       flexDirection: 'row',

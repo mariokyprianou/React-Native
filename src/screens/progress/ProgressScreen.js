@@ -45,6 +45,11 @@ export default function ProgressScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    screen: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.backgroundWhite100,
+    },
     container: {
       width: '90%',
       height: '100%',
@@ -90,46 +95,48 @@ export default function ProgressScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
-        <Text style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
-      </View>
-      <View style={styles.calendarContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-          <Calendar
-            days={days}
-            daysTextStyles={daysTextStyles}
-            daysContainerStyles={daysContainerStyles}
-            firstDayOfWeek="Monday"
-            calendarType="single-month"
-            showPrevNextDays={false}
-            datesSelectable={false}
-            dateCellStyles={dateCellStyles}
-            cellData={progressCalendarData}
-            pillWidth={pillWidth}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.boxWrapper}>
-        <TransformationChallenge
-          type="progress"
-          title="Transformation"
-          image={fakeImage}
-          onPress={() => navigation.navigate('Transformation')}
-        />
-        {challengeData.map((challenge, index) => {
-          const {name, image} = challenge;
-          return (
-            <TransformationChallenge
-              key={index}
-              type="challenge"
-              title={name}
-              image={fakeGraph}
-              onPress={() => navigation.navigate('Challenge')}
+    <View style={styles.screen}>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
+          <Text style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
+        </View>
+        <View style={styles.calendarContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+            <Calendar
+              days={days}
+              daysTextStyles={daysTextStyles}
+              daysContainerStyles={daysContainerStyles}
+              firstDayOfWeek="Monday"
+              calendarType="single-month"
+              showPrevNextDays={false}
+              datesSelectable={false}
+              dateCellStyles={dateCellStyles}
+              cellData={progressCalendarData}
+              pillWidth={pillWidth}
             />
-          );
-        })}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.boxWrapper}>
+          <TransformationChallenge
+            type="progress"
+            title="Transformation"
+            image={fakeImage}
+            onPress={() => navigation.navigate('Transformation')}
+          />
+          {challengeData.map((challenge, index) => {
+            const {name, image} = challenge;
+            return (
+              <TransformationChallenge
+                key={index}
+                type="challenge"
+                title={name}
+                image={fakeGraph}
+                onPress={() => navigation.navigate('Challenge')}
+              />
+            );
+          })}
+        </View>
       </View>
     </View>
   );

@@ -43,6 +43,7 @@ export default function OnboardingSliderItem({
       height: getHeight(309),
       width: getWidth(196),
       position: 'absolute',
+      resizeMode: 'contain',
       top: 0,
       left: screenWidth / 2 - getWidth(196) / 2,
     },

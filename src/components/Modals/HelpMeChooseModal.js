@@ -45,7 +45,6 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
       justifyContent: 'space-between',
       flexWrap: 'wrap',
       height: getHeight(500),
-      backgroundColor: 'pink',
     },
     columnWrapperStyle: {
       justifyContent: 'space-between',

@@ -7,12 +7,11 @@
  */
 
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import Modal from 'react-native-modal';
-import CardContainer from '../Cards/CardContainer';
 
-export default function ModalCard({isVisible, children, containerStyle}) {
+export default function ModalCard({isVisible, children}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
 
@@ -20,7 +19,6 @@ export default function ModalCard({isVisible, children, containerStyle}) {
   const styles = StyleSheet.create({
     container: {
       margin: 0,
-      ...containerStyle,
     },
   });
 
@@ -28,7 +26,7 @@ export default function ModalCard({isVisible, children, containerStyle}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <Modal isVisible={isVisible} style={styles.container}>
-      <CardContainer>{children}</CardContainer>
+      <View style={{flex: 1}}>{children}</View>
     </Modal>
   );
 }

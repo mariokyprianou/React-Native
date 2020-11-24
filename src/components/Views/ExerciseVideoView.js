@@ -47,6 +47,7 @@ export default function ({}) {
     url: TestData[0],
     skipCache: true,
     autoplay: false,
+    muted: true,
 
     onLoadEnd: (duration) => {
       setVideoDuration(duration);

@@ -24,7 +24,6 @@ export default function HelpMeChooseBar({
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
-  console.log('progress', progress);
   const [currentProgress, setCurrentProgress] = useState(progress);
 
   useEffect(() => {

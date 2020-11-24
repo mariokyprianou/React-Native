@@ -9,12 +9,12 @@ import React from 'react';
 import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
-import WorkoutScreen from './screens/workout/WorkoutScreen';
+// import WorkoutHomeScreen from './screens/workout/WorkoutHomeScreen';
 
 export default function AppContainer() {
   return (
     <AppStack.Navigator headerMode="screen">
-      <AppStack.Screen name="Test" component={WorkoutScreen} />
+      {/* <AppStack.Screen name="Test" component={WorkoutHomeScreen} /> */}
       <AppStack.Screen
         name="AuthContainer"
         component={AuthContainer}

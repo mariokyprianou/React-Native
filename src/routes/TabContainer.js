@@ -46,6 +46,7 @@ export default function TabContainer() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const TabIcon = ({color, name}) => {
+    console.log(color);
     return (
       <View style={{position: 'relative'}}>
         <TDIcon

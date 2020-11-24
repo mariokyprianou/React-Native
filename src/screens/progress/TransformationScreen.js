@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react';
-import {View, Dimensions, Platform} from 'react-native';
+import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -18,10 +18,8 @@ import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
 
-const fakeBeforePic =
-  'https://cdn.vox-cdn.com/thumbor/wyuKqIJeQwb745RJb5zsK2FCOaY=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19424316/EKo3U_qXkAEK1Fz.jpeg';
-const fakeAfterPic =
-  'https://media.wired.com/photos/5cdefb92b86e041493d389df/191:100/w_1280,c_limit/Culture-Grumpy-Cat-487386121.jpg';
+const fakeBeforePic = require('../../../assets/fakeBefore.png');
+const fakeAfterPic = require('../../../assets/fakeAfter.png');
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const cameraButton = require('../../../assets/icons/cameraButton.png');

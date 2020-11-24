@@ -25,7 +25,7 @@ export default function StartWorkoutScreen() {
   const {colors} = useTheme();
 
   navigation.setOptions({
-    header: () => <Header title={'Workout Name'} goBack />,
+    header: () => <Header title={'Upper body'} goBack />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -39,12 +39,13 @@ export default function StartWorkoutScreen() {
       position: 'absolute',
       bottom: 0,
       width: '100%',
-      marginBottom: getHeight(40),
+      paddingBottom: getHeight(40),
       alignItems: 'center',
+      backgroundColor: colors.white100,
     },
     fadeContainer: {
       position: 'absolute',
-      bottom: 0,
+      bottom: getHeight(70),
       left: 0,
       right: 0,
     },
@@ -72,6 +73,9 @@ export default function StartWorkoutScreen() {
         <WorkoutImageView />
         <ExerciseList exercises={[{}, {}, {}, {}]} />
       </ScrollView>
+      <View style={styles.fadeContainer}>
+        <FadingBottomView height={100} />
+      </View>
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="startWorkout"
@@ -79,9 +83,6 @@ export default function StartWorkoutScreen() {
           icon="chevron"
           onPress={() => navigation.navigate('Workout')}
         />
-      </View>
-      <View style={styles.fadeContainer}>
-        <FadingBottomView />
       </View>
     </View>
   );

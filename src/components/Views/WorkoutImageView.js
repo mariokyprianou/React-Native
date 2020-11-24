@@ -50,6 +50,7 @@ export default function ({
           reps={reps}
           sets={sets}
           duration={duration}
+          intensity={intensity}
           color={colors.white100}
         />
       </View>

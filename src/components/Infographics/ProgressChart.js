@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
 
-export default function ProgressChart() {
+export default function ProgressChart({axis = true, selectable = false}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -94,7 +94,9 @@ export default function ProgressChart() {
             barSpacing={40}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
-              defaultSelectedBarFillGradient(props)
+              selectable
+                ? defaultBarChartFillGradient(props)
+                : defaultSelectedBarFillGradient(props)
             }
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
@@ -104,7 +106,7 @@ export default function ProgressChart() {
             axisHeight={getHeight(35)}
             height={getHeight(200)}
             yAxisProps={{
-              numberOfTicks: ticks,
+              numberOfTicks: axis ? ticks : 0,
               interval: 5,
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,

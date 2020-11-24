@@ -30,7 +30,7 @@ export default function ChallengeEndScreen() {
     result,
     trainerName,
   } = challengeData;
-  const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const [showCompletionModal, setShowCompletionModal] = useState(true);
   const navigation = useNavigation();
 
   navigation.setOptions({

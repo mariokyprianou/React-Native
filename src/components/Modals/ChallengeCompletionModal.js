@@ -57,13 +57,14 @@ export default function ChallengeCompletionModal({
     },
     card: {
       height: getHeight(220),
-      width: screenWidth * 0.95 - getWidth(170),
+      width: screenWidth * 0.95 - getWidth(175),
       position: 'absolute',
       top: getHeight(200),
     },
     resultContainer: {
       backgroundColor: colors.paleBlue100,
       borderRadius: radius(15),
+      borderTopLeftRadius: 0,
       width: getWidth(170),
       height: getHeight(110),
       padding: getHeight(10),
@@ -78,6 +79,12 @@ export default function ChallengeCompletionModal({
     resultText: {
       ...textStyles.bold34_black100,
       textAlign: 'left',
+    },
+    line: {
+      height: getHeight(1),
+      width: '100%',
+      backgroundColor: colors.veryLightPink100,
+      marginTop: getHeight(280),
     },
   };
 
@@ -103,12 +110,13 @@ export default function ChallengeCompletionModal({
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart data={data} />
+        <ProgressChart data={data} axis={false} />
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
         <Text style={styles.resultText}>{result}</Text>
       </View>
+      <View style={styles.line} />
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="share"

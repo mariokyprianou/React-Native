@@ -9,12 +9,12 @@ import React from 'react';
 import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
-import ChangePasswordScreen from './screens/Profile/ChangePasswordScreen';
+import ChallengeEndScreen from './screens/progress/ChallengeEndScreen';
 
 export default function AppContainer() {
   return (
     <AppStack.Navigator headerMode="screen">
-      <AppStack.Screen name="Test" component={ChangePasswordScreen} />
+      <AppStack.Screen name="Test" component={ChallengeEndScreen} />
       <AppStack.Screen
         name="AuthContainer"
         component={AuthContainer}

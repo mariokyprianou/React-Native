@@ -21,6 +21,7 @@ import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import AnalyticsPermissionScreen from '../screens/auth/AnalyticsPermissionScreen';
 import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissionScreen';
+import {TransitionPresets} from '@react-navigation/stack';
 
 // Ts & Cs, Privacy, and Email Verification will all need to slide up from the bottom
 // Do this by adding the following to each screen below:
@@ -29,7 +30,13 @@ import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissi
 
 export default function AuthContainer(props) {
   return (
-    <AuthStack.Navigator headerMode="screen">
+    <AuthStack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        gestureEnabled: false,
+        gestureDirection: 'horizontal',
+        ...TransitionPresets.SlideFromRightIOS,
+      }}>
       <AuthStack.Screen
         name="LanguageSelection"
         component={LanguageSelectionScreen}

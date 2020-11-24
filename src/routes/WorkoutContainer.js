@@ -15,7 +15,13 @@ import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutContainer(props) {
   return (
-    <WorkoutStack.Navigator headerMode="screen">
+    <WorkoutStack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        gestureEnabled: false,
+        gestureDirection: 'horizontal',
+        ...TransitionPresets.SlideFromRightIOS,
+      }}>
       <WorkoutStack.Screen
         name="WorkoutHome"
         component={WorkoutHomeScreen}

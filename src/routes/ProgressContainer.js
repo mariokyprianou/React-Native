@@ -13,10 +13,17 @@ import CalendarScreen from '../screens/progress/CalendarScreen';
 import TransformationScreen from '../screens/progress/TransformationScreen';
 import ChallengeScreen from '../screens/progress/ChallengeScreen';
 import ChallengeEndScreen from '../screens/progress/ChallengeEndScreen';
+import {TransitionPresets} from '@react-navigation/stack';
 
 export default function ProgressContainer(props) {
   return (
-    <ProgressStack.Navigator headerMode="screen">
+    <ProgressStack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        gestureEnabled: false,
+        gestureDirection: 'horizontal',
+        ...TransitionPresets.SlideFromRightIOS,
+      }}>
       <ProgressStack.Screen
         name="Progress"
         component={ProgressScreen}

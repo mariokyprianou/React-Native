@@ -55,7 +55,6 @@ export default function TransformationScreen() {
     container: {
       height: '100%',
       width: '100%',
-      // backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
       height: getHeight(10),
@@ -67,12 +66,12 @@ export default function TransformationScreen() {
       height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(160),
+      height: getHeight(110),
     },
     overlay: {
-      height: getHeight(440),
-      top: getHeight(-50),
-      resizeMode: 'contain',
+      height: '100%',
+      top: 0,
+      resizeMode: 'cover',
     },
   };
 
@@ -116,6 +115,14 @@ export default function TransformationScreen() {
         overlayStyles={styles.overlay}
         sliderIcon={sliderThumb}
         overlayImage={overlay}
+        CustomHeader={() => (
+          <Header
+            title={ProgressDict.TransformationScreenTitle}
+            goBack
+            right="shareIcon"
+            rightAction={handleShare}
+          />
+        )}
       />
     </View>
   );

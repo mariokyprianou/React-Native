@@ -32,7 +32,7 @@ const SliderButton = ({onPress}) => {
       marginVertical: getHeight(10),
       width: '90%',
       height: getHeight(50),
-      marginTop: getHeight(35),
+      marginTop: getHeight(40),
     },
     linearGradientStyle: {
       flex: 1,

@@ -41,6 +41,7 @@ export default function ({
       marginBottom: getHeight(15),
     },
   };
+
   return (
     <View style={styles.container}>
       <Image source={fakeImage} style={styles.imageStyle} />

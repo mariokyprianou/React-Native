@@ -87,7 +87,10 @@ export default function ProgressChart({axis = true, selectable = false}) {
   return (
     <View>
       {/* with scroll */}
-      <ScrollView horizontal={true} style={styles.scroll}>
+      <ScrollView
+        horizontal={true}
+        style={styles.scroll}
+        contentContainerStyle={{alignItems: 'flex-end'}}>
         <View>
           <SlideBarChart
             data={fakeData}
@@ -111,7 +114,11 @@ export default function ProgressChart({axis = true, selectable = false}) {
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
-              markerChartOffset: getWidth(20),
+              markerChartOffset: getWidth(10),
+              // axisLabel: 'kg',
+              // axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
+              // axisLabelAlignment: 'bottom',
+              // labelTopPadding: getHeight(0),
             }}
             xAxisProps={{
               axisMarkerLabels: xLabels,

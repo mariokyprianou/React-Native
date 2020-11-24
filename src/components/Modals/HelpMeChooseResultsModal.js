@@ -16,7 +16,7 @@ import DefaultButton from '../Buttons/DefaultButton';
 import FadingBottomView from '../Views/FadingBottomView';
 import Header from '../Headers/Header';
 
-const fakeImage = require('../../../assets/fake2.png');
+const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
 export default function HelpMeChooseResultsModal({
   onPressClose,

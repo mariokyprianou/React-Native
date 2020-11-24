@@ -127,7 +127,7 @@ export default function ({}) {
         <SliderProgressView
           max={videoDuration}
           progress={currentProgress}
-          height={getHeight(4)}
+          height={getHeight(5)}
         />
         {controls()}
       </View>

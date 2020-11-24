@@ -45,6 +45,7 @@ export default function ChangeDeviceScreen() {
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}
       disabled={!canChangeDevice}
+      icon="chevron"
     />
   );
 }

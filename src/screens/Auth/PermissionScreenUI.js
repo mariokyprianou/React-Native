@@ -23,6 +23,7 @@ const PermissionScreenUI = ({
   text = 'Supply text',
   image = defaultImage,
   buttonType = 'allowAnalytics',
+  icon,
   bottomButtonType = 'skip',
   onPressButton,
   onPressBottomButton,
@@ -84,6 +85,7 @@ const PermissionScreenUI = ({
           variant="white"
           onPress={onPressButton}
           disabled={disabled}
+          icon={icon}
         />
         <DefaultButton
           type={bottomButtonType}

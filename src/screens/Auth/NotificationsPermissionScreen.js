@@ -37,6 +37,7 @@ export default function NotificationPermissionScreen() {
       buttonType="allowNotifications"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}
+      icon="chevron"
     />
   );
 }

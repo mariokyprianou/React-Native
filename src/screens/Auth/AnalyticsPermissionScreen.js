@@ -35,6 +35,7 @@ export default function AnalyticsPermissionScreen() {
       buttonType="allowAnalytics"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}
+      icon="chevron"
     />
   );
 }

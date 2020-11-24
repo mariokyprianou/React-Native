@@ -136,11 +136,11 @@ const enGB = {
 
   ProfileDict: {
     ChangeEmailScreenTitle: 'Change email',
-    ChangeEmailLabel1: 'Old password',
-    ChangeEmailLabel2: 'New email',
+    ChangeEmailLabel1: 'OLD PASSWORD',
+    ChangeEmailLabel2: 'NEW EMAIL',
     ChangePasswordScreenTitle: 'Change password',
-    ChangePasswordLabel1: 'Old password',
-    ChangePasswordLabel2: 'New password',
+    ChangePasswordLabel1: 'OLD PASSWORD',
+    ChangePasswordLabel2: 'NEW PASSWORD',
 
     DeleteNotificationButtonTitle: 'Delete',
     MemberSince: 'Member since',

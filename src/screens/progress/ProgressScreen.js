@@ -80,7 +80,7 @@ export default function ProgressScreen() {
       textAlign: 'left',
     },
     calendarContainer: {
-      height: Platform.OS === 'android' ? getHeight(300) : getHeight(280),
+      // height: Platform.OS === 'android' ? getHeight(330) : getHeight(310),
       width: '100%',
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -90,6 +90,12 @@ export default function ProgressScreen() {
       backgroundColor: colors.white100,
       marginBottom: getHeight(10),
       alignSelf: 'center',
+    },
+    calendarTitle: {
+      ...textStyles.bold20_black100,
+      marginTop: getHeight(17),
+      marginBottom: getHeight(7),
+      marginLeft: getWidth(24),
     },
     boxWrapper: {
       flexDirection: 'row',
@@ -111,6 +117,9 @@ export default function ProgressScreen() {
         </View>
         <View style={styles.calendarContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+            <Text style={styles.calendarTitle}>
+              {ProgressDict.YourWorkouts}
+            </Text>
             <Calendar
               days={days}
               daysTextStyles={daysTextStyles}

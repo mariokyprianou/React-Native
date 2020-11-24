@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react';
-import {View, Dimensions} from 'react-native';
+import {View, Dimensions, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -40,14 +40,7 @@ export default function TransformationScreen() {
   const screenWidth = Dimensions.get('screen').width;
 
   navigation.setOptions({
-    header: () =>
-      // <Header
-      //   title={ProgressDict.TransformationScreenTitle}
-      //   goBack
-      //   right="shareIcon"
-      //   rightAction={handleShare}
-      // />
-      null,
+    header: () => null,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -58,6 +51,7 @@ export default function TransformationScreen() {
     },
     sliderStyles: {
       height: getHeight(10),
+      width: '92%',
       minimumTrackTintColor: 'transparent',
       maximumTrackTintColor: 'transparent',
     },
@@ -66,7 +60,7 @@ export default function TransformationScreen() {
       height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(110),
+      height: getHeight(113),
     },
     overlay: {
       height: '100%',

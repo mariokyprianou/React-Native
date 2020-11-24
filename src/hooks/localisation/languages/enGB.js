@@ -38,7 +38,7 @@ const enGB = {
     StartNow: 'START NOW',
     StartWorkout: 'START WORKOUT',
     TryAgain: 'TRY AGAIN',
-    ThreeSecs: '3 SECS',
+    ThreeSecs: '3s',
     Skip: 'Skip',
     NeedHelp: 'Need help?',
     SaveChanges: 'Save changes',

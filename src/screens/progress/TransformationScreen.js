@@ -40,14 +40,14 @@ export default function TransformationScreen() {
   const screenWidth = Dimensions.get('screen').width;
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={ProgressDict.TransformationScreenTitle}
-        goBack
-        right="shareIcon"
-        rightAction={handleShare}
-      />
-    ),
+    header: () =>
+      // <Header
+      //   title={ProgressDict.TransformationScreenTitle}
+      //   goBack
+      //   right="shareIcon"
+      //   rightAction={handleShare}
+      // />
+      null,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -55,7 +55,7 @@ export default function TransformationScreen() {
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor: colors.backgroundWhite100,
+      // backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
       height: getHeight(10),
@@ -67,7 +67,7 @@ export default function TransformationScreen() {
       height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(170),
+      height: getHeight(160),
     },
     overlay: {
       height: getHeight(440),

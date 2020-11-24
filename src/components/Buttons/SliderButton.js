@@ -32,7 +32,7 @@ const SliderButton = ({onPress}) => {
       marginVertical: getHeight(10),
       width: '90%',
       height: getHeight(50),
-      marginTop: getHeight(20),
+      marginTop: getHeight(35),
     },
     linearGradientStyle: {
       flex: 1,
@@ -52,7 +52,7 @@ const SliderButton = ({onPress}) => {
     },
     iconContainer: {
       position: 'absolute',
-      right: getWidth(10),
+      right: getWidth(15),
     },
   };
 

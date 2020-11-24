@@ -57,7 +57,7 @@ export default function WorkoutHomeScreen() {
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
     completedWorkoutWeek,
   );
-  const [showStayTunedModal, setShowStayTunedModal] = useState(true);
+  const [showStayTunedModal, setShowStayTunedModal] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({

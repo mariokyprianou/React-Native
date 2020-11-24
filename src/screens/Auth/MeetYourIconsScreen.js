@@ -27,8 +27,6 @@ import WorkoutCard from '../../components/Cards/WorkoutCard';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
-import ModalCard from '../../components/Modals/ModalCard';
-import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 
@@ -43,7 +41,6 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
   const {currentTrainer, currentWeek} = userProgrammeData;
-  const [showHelpMeChooseModal, setShowHelpMeChooseModal] = useState(false);
   const [trainerOnSlider, setTrainerOnSlider] = useState();
   const [venue, setVenue] = useState('gym');
   const navigation = useNavigation();
@@ -205,7 +202,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
           </View>
           <View style={styles.cantChooseContainer}>
             <CantChooseButton
-              onPress={() => setShowHelpMeChooseModal(true)}
+              onPress={() => navigation.navigate('HelpMeChoose')}
               navigation={navigation}
             />
           </View>
@@ -257,7 +254,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
                   </View>
                   <View style={styles.cantChooseContainer}>
                     <CantChooseButton
-                      onPress={() => setShowHelpMeChooseModal(true)}
+                      onPress={() => navigation.navigate('HelpMeChoose')}
                       navigation={navigation}
                     />
                   </View>
@@ -361,12 +358,6 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
           />
         </View>
       )}
-      <ModalCard isVisible={showHelpMeChooseModal}>
-        <HelpMeChooseModal
-          onPressClose={() => setShowHelpMeChooseModal(false)}
-          onFinish={navigateToWorkoutHome}
-        />
-      </ModalCard>
     </View>
   );
 }

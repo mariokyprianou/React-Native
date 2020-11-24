@@ -9,16 +9,17 @@
 import React, {useState} from 'react';
 import {View, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
-import HelpMeChooseBar from '../Infographics/HelpMeChooseBar';
-import Spacer from '../Utility/Spacer';
-import Header from '../Headers/Header';
-import HelpMeChooseButton from '../Buttons/HelpMeChooseButton';
-import HelpMeChooseResultsModal from './HelpMeChooseResultsModal';
+import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
+import Spacer from '../../components/Utility/Spacer';
+import Header from '../../components/Headers/Header';
+import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
+// import HelpMeChooseResultsModal from '../../components/Modals/HelpMeChooseResultsModal';
 
-export default function HelpMeChooseModal({onPressClose, onFinish}) {
+export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -26,7 +27,14 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
-  const [showResultScreen, setShowResultScreen] = useState(false);
+  // const [showResultScreen, setShowResultScreen] = useState(false);
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => (
+      <Header title={HelpMeChooseDict.HelpMeChoose} showModalCross />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -54,40 +62,33 @@ export default function HelpMeChooseModal({onPressClose, onFinish}) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress() {
     if (currentQuestion === helpMeChooseData.length) {
-      setShowResultScreen(true);
+      navigation.navigate('HelpMeChooseResults');
     } else {
       setCurrentQuestion(currentQuestion + 1);
     }
   }
 
-  function handleCloseResults() {
-    setShowResultScreen(false);
-    onPressClose();
-  }
+  // function handleCloseResults() {
+  //   setShowResultScreen(false);
+  //   onPressClose();
+  // }
 
-  function handleSelectProgramme() {
-    setShowResultScreen(false);
-    onPressClose();
-    onFinish();
-  }
+  // function handleSelectProgramme() {
+  //   setShowResultScreen(false);
+  // }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (showResultScreen === true) {
-    return (
-      <HelpMeChooseResultsModal
-        onPressClose={handleCloseResults}
-        onSelectProgramme={handleSelectProgramme}
-      />
-    );
-  }
+  // if (showResultScreen === true) {
+  //   return (
+  //     <HelpMeChooseResultsModal
+  //       onPressClose={handleCloseResults}
+  //       onSelectProgramme={handleSelectProgramme}
+  //     />
+  //   );
+  // }
 
   return (
     <View style={styles.card}>
-      <Header
-        title={HelpMeChooseDict.HelpMeChoose}
-        right="crossIcon"
-        rightAction={onPressClose}
-      />
       <View style={styles.container}>
         <HelpMeChooseBar
           currentQuestion={currentQuestion}

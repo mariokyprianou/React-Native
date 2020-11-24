@@ -11,25 +11,33 @@ import {View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import DefaultButton from '../Buttons/DefaultButton';
-import FadingBottomView from '../Views/FadingBottomView';
-import Header from '../Headers/Header';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import FadingBottomView from '../../components/Views/FadingBottomView';
+import Header from '../../components/Headers/Header';
 
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
-export default function HelpMeChooseResultsModal({
-  onPressClose,
-  onSelectProgramme,
-  name = 'Katrina',
-}) {
+export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
+  const navigation = useNavigation();
 
   const capitalizedName = name.toUpperCase();
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={HelpMeChooseDict.HelpMeChoose}
+        right="crossIcon"
+        rightAction={() => navigation.navigate('MeetYourIcons')}
+      />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -38,17 +46,11 @@ export default function HelpMeChooseResultsModal({
       height: '100%',
       backgroundColor: colors.backgroundWhite100,
     },
-    headerContainer: {
-      position: 'absolute',
-      top: 0,
-      zIndex: 9,
-      backgroundColor: 'green',
-    },
     imageContainer: {
       width: '100%',
       height: getHeight(420),
       position: 'absolute',
-      top: getHeight(145),
+      top: getHeight(69),
       zIndex: 0,
     },
     fadeContainer: {
@@ -63,33 +65,12 @@ export default function HelpMeChooseResultsModal({
       position: 'absolute',
       top: 0,
     },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-      top: getHeight(35),
-    },
-    modalTitle: {
-      ...textStyles.bold22_black100,
-      textAlign: 'left',
-    },
     titleContainer: {
       width: '90%',
       height: getHeight(480),
       alignSelf: 'center',
       position: 'absolute',
-      top: getHeight(70),
-    },
-    iconContainer: {
-      position: 'absolute',
-      right: getWidth(20),
-      alignItems: 'center',
-    },
-    icon: {
-      size: fontSize(22),
-      color: colors.black100,
+      top: getHeight(0),
     },
     title: {
       ...textStyles.semiBold14_black100,
@@ -126,11 +107,6 @@ export default function HelpMeChooseResultsModal({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      <Header
-        title={HelpMeChooseDict.HelpMeChoose}
-        right="crossIcon"
-        rightAction={onPressClose}
-      />
       <View style={styles.imageContainer}>
         <Image source={fakeImage} style={styles.image} />
         <View style={styles.fadeContainer}>
@@ -158,7 +134,12 @@ export default function HelpMeChooseResultsModal({
           trainerName={capitalizedName}
           icon="chevron"
           variant="transparentBlackBoldText"
-          onPress={onSelectProgramme}
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'TabContainer'}],
+            })
+          }
         />
       </View>
     </View>

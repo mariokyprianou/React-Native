@@ -12,24 +12,33 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import DefaultButton from '../Buttons/DefaultButton';
-import Spacer from '../Utility/Spacer';
-import ProgressChart from '../Infographics/ProgressChart';
-import Header from '../Headers/Header';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Spacer from '../../components/Utility/Spacer';
+import ProgressChart from '../../components/Infographics/ProgressChart';
+import Header from '../../components/Headers/Header';
 
-export default function ChallengeCompletionModal({
-  onPressClose,
-  result,
-  challengeName,
-  trainerName,
+export default function ChallengeCompletionScreen({
+  result = '20 squats',
+  challengeName = '60-second squats',
+  trainerName = 'Katrina',
   data,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={WorkoutDict.ChallengeCompleteTitle}
+        right="crossIcon"
+        rightAction={() => navigation.navigate('Progress')}
+      />
+    ),
+  });
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -59,7 +68,7 @@ export default function ChallengeCompletionModal({
       height: getHeight(220),
       width: screenWidth * 0.95 - getWidth(175),
       position: 'absolute',
-      top: getHeight(200),
+      top: getHeight(120),
     },
     resultContainer: {
       backgroundColor: colors.paleBlue100,
@@ -70,7 +79,7 @@ export default function ChallengeCompletionModal({
       padding: getHeight(10),
       position: 'absolute',
       right: getWidth(20),
-      top: getHeight(200),
+      top: getHeight(120),
     },
     resultTitle: {
       ...textStyles.medium14_brownishGrey100,
@@ -93,17 +102,11 @@ export default function ChallengeCompletionModal({
 
   function handleDone() {
     navigation.navigate('Progress');
-    onPressClose();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <Header
-        title={WorkoutDict.ChallengeCompleteTitle}
-        right="crossIcon"
-        rightAction={onPressClose}
-      />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
           {WorkoutDict.ChallengeComplete(challengeName, trainerName)}

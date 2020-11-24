@@ -20,6 +20,8 @@ import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import AnalyticsPermissionScreen from '../screens/auth/AnalyticsPermissionScreen';
 import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissionScreen';
+import HelpMeChooseScreen from '../screens/auth/HelpMeChooseScreen';
+import HelpMeChooseResultsScreen from '../screens/auth/HelpMeChooseResultsScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function AuthContainer(props) {
@@ -29,11 +31,7 @@ export default function AuthContainer(props) {
         name="LanguageSelection"
         component={LanguageSelectionScreen}
       />
-      <AuthStack.Screen
-        name="Onboarding"
-        component={OnboardingScreen}
-        options={{...TransitionPresets.DefaultTransition}}
-      />
+      <AuthStack.Screen name="Onboarding" component={OnboardingScreen} />
       <AuthStack.Screen name="MeetYourIcons" component={MeetYourIconsScreen} />
       <AuthStack.Screen name="Registration" component={RegistrationScreen} />
       <AuthStack.Screen name="Login" component={LoginScreen} />
@@ -59,12 +57,22 @@ export default function AuthContainer(props) {
       <AuthStack.Screen
         name="Analytics"
         component={AnalyticsPermissionScreen}
-        mode="modal"
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
       <AuthStack.Screen
         name="Notifications"
         component={NotificationsPermissionScreen}
-        mode="modal"
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
+      <AuthStack.Screen
+        name="HelpMeChoose"
+        component={HelpMeChooseScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
+      <AuthStack.Screen
+        name="HelpMeChooseResults"
+        component={HelpMeChooseResultsScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
     </AuthStack.Navigator>
   );

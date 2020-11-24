@@ -9,12 +9,12 @@ import React from 'react';
 import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
-import SettingsScreen from './screens/Profile/SettingsScreen';
+// import SettingsScreen from './screens/Profile/SettingsScreen';
 
 export default function AppContainer() {
   return (
     <AppStack.Navigator headerMode="screen">
-      <AppStack.Screen name="Test" component={SettingsScreen} />
+      {/* <AppStack.Screen name="Test" component={SettingsScreen} /> */}
       <AppStack.Screen
         name="AuthContainer"
         component={AuthContainer}

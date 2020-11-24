@@ -13,8 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useChallenge from '../../hooks/data/useChallenge';
 import DefaultButton from '../../components/Buttons/DefaultButton';
-import ModalCard from '../../components/Modals/ModalCard';
-import ChallengeCompletionModal from '../../components/Modals/ChallengeCompletionModal';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 
@@ -30,7 +28,6 @@ export default function ChallengeEndScreen() {
     result,
     trainerName,
   } = challengeData;
-  const [showCompletionModal, setShowCompletionModal] = useState(true);
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -94,11 +91,7 @@ export default function ChallengeEndScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleAddResult() {
-    setShowCompletionModal(true);
-  }
-
-  function handleCloseCompletionModal() {
-    setShowCompletionModal(false);
+    navigation.navigate('ChallengeComplete');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -123,15 +116,6 @@ export default function ChallengeEndScreen() {
           onPress={handleAddResult}
         />
       </View>
-      <ModalCard isVisible={showCompletionModal}>
-        <ChallengeCompletionModal
-          onPressClose={handleCloseCompletionModal}
-          result={result}
-          challengeName={name}
-          trainerName={trainerName}
-          data={challengeHistoryData}
-        />
-      </ModalCard>
     </View>
   );
 }

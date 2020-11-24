@@ -157,7 +157,7 @@ export default function HelpMeChooseResultsModal({
           type="programme"
           trainerName={capitalizedName}
           icon="chevron"
-          variant="white"
+          variant="transparentBlackBoldText"
           onPress={onSelectProgramme}
         />
       </View>

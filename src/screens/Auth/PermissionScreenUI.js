@@ -87,7 +87,7 @@ const PermissionScreenUI = ({
         />
         <DefaultButton
           type={bottomButtonType}
-          variant="transparent"
+          variant="transparentGreyText"
           onPress={onPressBottomButton}
         />
       </View>

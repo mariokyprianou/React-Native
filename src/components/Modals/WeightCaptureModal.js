@@ -44,7 +44,6 @@ export default function WeightCaptureModal({onPressClose}) {
       height: getHeight(40),
       width: '90%',
       alignSelf: 'center',
-      marginBottom: getHeight(20),
       zIndex: 9,
     },
     title: {
@@ -70,6 +69,14 @@ export default function WeightCaptureModal({onPressClose}) {
       position: 'absolute',
       top: 0,
       right: 0,
+    },
+    subtitleContainer: {
+      width: '90%',
+      alignSelf: 'center',
+      marginBottom: getHeight(15),
+    },
+    subtitle: {
+      ...textStyles.regular15_brownishGrey100,
     },
     chartCard: {
       height: getHeight(200),
@@ -104,11 +111,11 @@ export default function WeightCaptureModal({onPressClose}) {
       />
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Exercise name -</Text>
+          <Text style={styles.title}>Squats -</Text>
           <DropDownPicker
             items={repsHistoryData}
             defaultValue={null}
-            placeholder="Reps"
+            placeholder={WorkoutDict.Reps_}
             placeholderStyle={{
               ...textStyles.bold20_black100,
               textAlign: 'left',
@@ -119,6 +126,9 @@ export default function WeightCaptureModal({onPressClose}) {
             onChangeItem={(item) => onPress(item, 'after')}
             arrowStyle={styles.dropdownArrow}
           />
+        </View>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.subtitle}>{WorkoutDict.PickAWeight}</Text>
         </View>
         <View style={styles.chartCard}>
           <ProgressChart data={challengeHistoryData} />

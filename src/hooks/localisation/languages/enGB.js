@@ -203,7 +203,7 @@ const enGB = {
     exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
-    SetsText: 'Sets',
+    SetsText: 'sets',
     EasierSwitchText: 'EASIER',
     HarderSwitchText: 'HARDER',
 
@@ -237,12 +237,14 @@ const enGB = {
     CongratulationsTitle: 'Congratulations!',
     StartedProgrammeWithVenue: (name, venue) =>
       `You’ve started ${name}’s ${venue} programme!`,
+    PickAWeight: 'Pick a weight that lorem ipsum dolor',
     ProgrammeComplete: (name, venue) =>
       `Congratulations! You’ve completed ${name}’s ${venue} programme on POWER! To be the first to know if we add more workouts with ${name}, just hit the button below!`,
     SwitchedByMistake: 'Switched by mistake?',
 
     ReminderTitle: 'Set a workout reminder',
     ReminderText: 'Power will remind you to kickstart your workout next week.',
+    Reps_: 'Reps',
     StayTunedTitle: 'Stay tuned',
     StayTuned: (name, date) =>
       `You’ve completed this week’s workouts with ${name}. Get some rest and come back on ${date} for more.`,

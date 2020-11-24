@@ -143,9 +143,9 @@ const SettingsScreen = ({}) => {
       textAlign: 'left',
     },
     switchStyle: {
-      //   trackColorOff: colors.aquamarine100,
       trackColorOn: colors.aquamarine100,
       thumbTintColorOn: colors.white100,
+      thumbTintColorOff: colors.white100,
       ios_backgroundColor: colors.aquamarine100,
     },
   };

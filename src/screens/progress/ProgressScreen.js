@@ -36,6 +36,7 @@ export default function ProgressScreen() {
     daysTextStyles,
     daysContainerStyles,
     dateCellStyles,
+    lookupStyleTable,
     pillWidth,
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
@@ -121,6 +122,7 @@ export default function ProgressScreen() {
               dateCellStyles={dateCellStyles}
               cellData={progressCalendarData}
               pillWidth={pillWidth}
+              lookupStyleTable={lookupStyleTable}
             />
           </TouchableOpacity>
         </View>

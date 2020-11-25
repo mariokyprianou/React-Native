@@ -9,24 +9,14 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query ProgressMonths {
-    progressMonths {
+  query ProgressHistory {
+    progressHistory {
       progress {
         startOfMonth
         days {
           id
           date
           type
-        }
-      }
-      progressHistory {
-        progress {
-          startOfMonth
-          days {
-            id
-            date
-            type
-          }
         }
       }
     }

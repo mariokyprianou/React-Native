@@ -85,7 +85,7 @@ const TwoFieldChangeScreenUI = ({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.offWhite,
+      backgroundColor: colors.backgroundWhite100,
       justifyContent: 'space-between',
       paddingVertical: getHeight(40),
       alignItems: 'center',

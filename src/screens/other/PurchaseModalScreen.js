@@ -68,6 +68,7 @@ const PurchaseModalScreen = ({}) => {
     },
     contentContainer: {
       alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
     },
     textContainer: {
       width: '90%',

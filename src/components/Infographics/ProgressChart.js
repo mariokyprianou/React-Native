@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
 
-export default function ProgressChart() {
+export default function ProgressChart({axis = true, selectable = false}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -87,14 +87,19 @@ export default function ProgressChart() {
   return (
     <View>
       {/* with scroll */}
-      <ScrollView horizontal={true} style={styles.scroll}>
+      <ScrollView
+        horizontal={true}
+        style={styles.scroll}
+        contentContainerStyle={{alignItems: 'flex-end'}}>
         <View>
           <SlideBarChart
             data={fakeData}
             barSpacing={40}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
-              defaultSelectedBarFillGradient(props)
+              selectable
+                ? defaultBarChartFillGradient(props)
+                : defaultSelectedBarFillGradient(props)
             }
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
@@ -104,12 +109,16 @@ export default function ProgressChart() {
             axisHeight={getHeight(35)}
             height={getHeight(200)}
             yAxisProps={{
-              numberOfTicks: ticks,
+              numberOfTicks: axis ? ticks : 0,
               interval: 5,
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
-              markerChartOffset: getWidth(20),
+              markerChartOffset: getWidth(10),
+              // axisLabel: 'kg',
+              // axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
+              // axisLabelAlignment: 'bottom',
+              // labelTopPadding: getHeight(0),
             }}
             xAxisProps={{
               axisMarkerLabels: xLabels,

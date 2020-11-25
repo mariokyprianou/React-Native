@@ -79,6 +79,7 @@ export default function RegisterScreen() {
     render: {
       container: {
         flex: 1,
+        backgroundColor: colors.backgroundWhite100,
       },
       scrollViewContainer: {
         height: '100%',

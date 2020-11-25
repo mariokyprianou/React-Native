@@ -8,7 +8,7 @@
 
 import {useState} from 'react';
 
-const fakeImage = require('../../../assets/fake2.png');
+const fakeImage = require('../../../assets/images/trainerCarousel.png');
 
 const fakeData = [
   {

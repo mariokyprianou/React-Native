@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, StatusBar, Platform, I18nManager} from 'react-native';
+import {View, StatusBar, Platform, I18nManager, Alert} from 'react-native';
 import ThemeProvider from './hooks/theme/ThemeProvider';
 import DictionaryProvider from './hooks/localisation/DictionaryProvider';
 import {ApolloProvider} from 'react-apollo';
@@ -48,16 +48,25 @@ const App = () => {
       setupApollo();
     }
     StatusBar.setBarStyle('dark-content');
+    let screenshotListener;
 
-    const screenshotListener = ScreenCapture.addScreenshotListener(() => {
-      console.log('Screenshoted!');
-    });
-
+    if (Platform.OS === 'ios') {
+      screenshotListener = ScreenCapture.addScreenshotListener(() => {
+        Alert.alert(
+          'Oops!',
+          'You cannot screen record or take screenshots whilst using the Power application. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+          [{text: 'OK'}],
+          {cancelable: false},
+        );
+      });
+    }
     validateChecksum();
     languageSet();
 
     return () => {
-      screenshotListener.remove();
+      if (Platform.OS === 'ios') {
+        screenshotListener.remove();
+      }
     };
   }, [client]);
 

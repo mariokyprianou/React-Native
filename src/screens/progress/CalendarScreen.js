@@ -17,7 +17,7 @@ import Header from '../../components/Headers/Header';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {singleCalendarStyles} = useTheme();
+  const {singleCalendarStyles, colors} = useTheme();
   const {
     days,
     daysTextStyles,
@@ -37,6 +37,11 @@ export default function CalendarScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    screen: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.backgroundWhite100,
+    },
     container: {
       height: '100%',
       width: '90%',
@@ -47,20 +52,22 @@ export default function CalendarScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.container}>
-      <Calendar
-        days={days}
-        daysTextStyles={daysTextStyles}
-        daysContainerStyles={daysContainerStyles}
-        firstDayOfWeek="Monday"
-        showPrevNextDays={false}
-        datesSelectable={false}
-        dateCellStyles={dateCellStyles}
-        cellData={calendarScreenData}
-        pillWidth={pillWidth}
-        calendarType="multiple-month"
-        lookupStyleTable={lookupStyleTable}
-      />
+    <View style={styles.screen}>
+      <View style={styles.container}>
+        <Calendar
+          days={days}
+          daysTextStyles={daysTextStyles}
+          daysContainerStyles={daysContainerStyles}
+          firstDayOfWeek="Monday"
+          showPrevNextDays={false}
+          datesSelectable={false}
+          dateCellStyles={dateCellStyles}
+          cellData={calendarScreenData}
+          pillWidth={pillWidth}
+          calendarType="multiple-month"
+          lookupStyleTable={lookupStyleTable}
+        />
+      </View>
     </View>
   );
 }

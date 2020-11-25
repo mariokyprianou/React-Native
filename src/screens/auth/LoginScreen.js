@@ -20,7 +20,7 @@ import Header from '../../components/Headers/Header';
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-
+  const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
 
@@ -55,6 +55,7 @@ export default function RegisterScreen() {
   const styles = {
     container: {
       flex: 1,
+      backgroundColor: colors.backgroundWhite100,
     },
     scrollViewContainer: {
       alignSelf: 'center',

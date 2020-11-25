@@ -8,26 +8,32 @@
 
 import {useState} from 'react';
 
-const fake = require('../../../assets/fake.png');
+const onboardingImage = require('../../../assets/images/onboardingImage.png');
 
 const fakeData = [
   {
-    header: 'Pick your programme',
+    header: 'Transform your life',
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    image: fake,
-  },
-  {
-    header: 'Plan your workouts',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    image: fake,
+    image: onboardingImage,
   },
   {
     header: 'Train like the best',
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    image: fake,
+    image: onboardingImage,
+  },
+  {
+    header: 'Plan your workouts',
+    text:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+    image: onboardingImage,
+  },
+  {
+    header: 'Pick your programme',
+    text:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+    image: onboardingImage,
   },
 ];
 

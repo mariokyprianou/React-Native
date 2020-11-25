@@ -43,6 +43,7 @@ export default function OnboardingSliderItem({
       height: getHeight(309),
       width: getWidth(196),
       position: 'absolute',
+      resizeMode: 'contain',
       top: 0,
       left: screenWidth / 2 - getWidth(196) / 2,
     },
@@ -50,15 +51,14 @@ export default function OnboardingSliderItem({
       size: fontSize(18),
       color: colors.black100,
     },
-    textContainer: {
-      alignItems: 'center',
-    },
     header: {
       ...textStyles.bold24_black100,
+      textAlign: 'center',
       marginTop: getHeight(36),
     },
     text: {
       ...textStyles.medium15_brownishGrey100,
+      textAlign: 'center',
       marginTop: getHeight(6),
       marginBottom: getHeight(10),
     },
@@ -83,10 +83,8 @@ export default function OnboardingSliderItem({
         </TouchableOpacity>
       </View>
       <Image source={image} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Text style={styles.header}>{header}</Text>
-        <Text style={styles.text}>{text}</Text>
-      </View>
+      <Text style={styles.header}>{header}</Text>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 }

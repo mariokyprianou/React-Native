@@ -41,6 +41,7 @@ export default function ({
       marginBottom: getHeight(15),
     },
   };
+
   return (
     <View style={styles.container}>
       <Image source={fakeImage} style={styles.imageStyle} />
@@ -50,6 +51,7 @@ export default function ({
           reps={reps}
           sets={sets}
           duration={duration}
+          intensity={intensity}
           color={colors.white100}
         />
       </View>

@@ -75,7 +75,7 @@ export default function TrainerCard({
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
         <Image source={image} style={styles.image} />
-        <FadingBottomView color="blue" height={337} />
+        <FadingBottomView color="blue" height={250} />
       </View>
       <View style={styles.overlay}>
         <View style={styles.titleContainer}>

@@ -14,27 +14,15 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useWorkoutData from '../../hooks/data/useWorkoutData';
-import ModalCard from '../../components/Modals/ModalCard';
-import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
-import NotesModal from '../../components/Modals/NotesModal';
-import WeekCompleteModal from '../../components/Modals/WeekComplete';
-import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(false);
-  const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(false);
-  const [showNotesModal, setShowNotesModal] = useState(false);
+  const {colors} = useTheme();
   const navigation = useNavigation();
-
   const {workout} = useWorkoutData();
 
   navigation.setOptions({
     header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,
-    ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -42,7 +30,7 @@ export default function WorkoutScreen() {
     scrollViewContainer: {
       height: '100%',
       width: '100%',
-      backgroundColor: colors.white100,
+      backgroundColor: colors.backgroundWhite100,
     },
   });
 
@@ -60,29 +48,9 @@ export default function WorkoutScreen() {
         overScrollMode={'never'}
         style={styles.scrollViewContainer}>
         {workout.exercises.map((screen, index) => (
-          <ExerciseView
-            onPressWeights={() => setShowWeightCaptureModal(true)}
-            onPressNotes={() => setShowNotesModal(true)}
-          />
+          <ExerciseView />
         ))}
       </ScrollView>
-      <ModalCard isVisible={showWeightCaptureModal}>
-        <WeightCaptureModal
-          onPressClose={() => setShowWeightCaptureModal(false)}
-          navigation={navigation}
-        />
-      </ModalCard>
-      <ModalCard isVisible={showNotesModal}>
-        <NotesModal onPressClose={() => setShowNotesModal(false)} />
-      </ModalCard>
-      <ModalCard isVisible={showWeekCompleteModal}>
-        <WeekCompleteModal
-          onPressClose={() => setShowWeekCompleteModal(false)}
-          totalDuration={30}
-          totalReps={100}
-          totalSets={50}
-        />
-      </ModalCard>
     </View>
   );
 }

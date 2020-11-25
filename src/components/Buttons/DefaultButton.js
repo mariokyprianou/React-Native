@@ -44,14 +44,14 @@ export default function DefaultButton({
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,
-      elevation: 6,
+      elevation: 3,
     },
     gradient: {
-      shadowColor: colors.black10,
+      shadowColor: colors.black20,
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,
-      elevation: 6,
+      elevation: 4,
     },
     transparentWhiteText: {
       backgroundColor: 'transparent',

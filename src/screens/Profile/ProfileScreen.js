@@ -53,7 +53,6 @@ export default function ProfileScreen() {
       onSaveChange={onSaveChanges}
       onPressNeedHelp={onPressNeedHelp}
       onPressLogout={onPressLogout}
-      onPressNeedToSignOut={onPressNeedToSignOut}
     />
   );
 }

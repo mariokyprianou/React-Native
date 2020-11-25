@@ -13,6 +13,7 @@ import CalendarScreen from '../screens/progress/CalendarScreen';
 import TransformationScreen from '../screens/progress/TransformationScreen';
 import ChallengeScreen from '../screens/progress/ChallengeScreen';
 import ChallengeEndScreen from '../screens/progress/ChallengeEndScreen';
+import ChallengeCompletionScreen from '../screens/progress/ChallengeCompletionScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function ProgressContainer(props) {
@@ -38,6 +39,11 @@ export default function ProgressContainer(props) {
       <ProgressStack.Screen
         name="ChallengeEnd"
         component={ChallengeEndScreen}
+      />
+      <ProgressStack.Screen
+        name="ChallengeComplete"
+        component={ChallengeCompletionScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
     </ProgressStack.Navigator>
   );

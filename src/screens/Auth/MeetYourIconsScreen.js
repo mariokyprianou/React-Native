@@ -27,14 +27,12 @@ import WorkoutCard from '../../components/Cards/WorkoutCard';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
-import ModalCard from '../../components/Modals/ModalCard';
-import HelpMeChooseModal from '../../components/Modals/HelpMeChooseModal';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 
-const fakeImage = require('../../../assets/fake2.png');
+const fakeImage = require('../../../assets/images/trainerCarousel.png');
 
-export default function MeetYourIconsScreen({switchProgramme = false}) {
+export default function MeetYourIconsScreen({switchProgramme = true}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -43,7 +41,6 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
   const {currentTrainer, currentWeek} = userProgrammeData;
-  const [showHelpMeChooseModal, setShowHelpMeChooseModal] = useState(false);
   const [trainerOnSlider, setTrainerOnSlider] = useState();
   const [venue, setVenue] = useState('gym');
   const navigation = useNavigation();
@@ -146,15 +143,16 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
       position: 'absolute',
       bottom: 0,
       marginTop: getHeight(30),
-      marginBottom: getHeight(40),
+      paddingBottom: getHeight(25),
       alignItems: 'center',
+      backgroundColor: colors.paleTurquoise100,
     },
     singleButtonContainer: {
       width: '100%',
       backgroundColor: colors.paleTurquoise100,
       alignItems: 'center',
       position: 'absolute',
-      bottom: getHeight(40),
+      bottom: getHeight(25),
     },
     zeroButtonContainer: {
       backgroundColor: 'transparent',
@@ -166,6 +164,12 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
     zeroInfoText: {
       ...textStyles.regular15_white100,
       marginBottom: getHeight(80),
+    },
+    fadeContainer: {
+      position: 'absolute',
+      bottom: 70,
+      left: 0,
+      right: 0,
     },
   };
 
@@ -198,7 +202,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
           </View>
           <View style={styles.cantChooseContainer}>
             <CantChooseButton
-              onPress={() => setShowHelpMeChooseModal(true)}
+              onPress={() => navigation.navigate('HelpMeChoose')}
               navigation={navigation}
             />
           </View>
@@ -250,7 +254,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
                   </View>
                   <View style={styles.cantChooseContainer}>
                     <CantChooseButton
-                      onPress={() => setShowHelpMeChooseModal(true)}
+                      onPress={() => navigation.navigate('HelpMeChoose')}
                       navigation={navigation}
                     />
                   </View>
@@ -308,8 +312,8 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
           },
         )}
       </Swiper>
-      <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
-        <FadingBottomView color="blue" height={250} />
+      <View style={styles.fadeContainer}>
+        <FadingBottomView color="blue" height={70} />
       </View>
       {switchProgramme === true && trainerOnSlider === currentTrainer ? (
         <View style={styles.buttonContainer}>
@@ -320,7 +324,7 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
             trainerName="KATRINA"
             onPress={navigateToWorkoutHome}
           />
-          {/* <Spacer height={20} /> */}
+          <Spacer height={20} />
           <DefaultButton
             type="continueFromWeek"
             icon="chevron"
@@ -354,12 +358,6 @@ export default function MeetYourIconsScreen({switchProgramme = false}) {
           />
         </View>
       )}
-      <ModalCard isVisible={showHelpMeChooseModal}>
-        <HelpMeChooseModal
-          onPressClose={() => setShowHelpMeChooseModal(false)}
-          onFinish={navigateToWorkoutHome}
-        />
-      </ModalCard>
     </View>
   );
 }

@@ -8,7 +8,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, Text, Image, StatusBar} from 'react-native';
 import RepCell from '../cells/RepCell';
-
+import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import ExerciseVideoView from './ExerciseVideoView';
@@ -23,11 +23,12 @@ const checkIcon = require('../../../assets/icons/check.png');
 const weightIcon = require('../../../assets/icons/weight.png');
 const notesIcon = require('../../../assets/icons/notes.png');
 
-export default function ExerciseView({onPressWeights, onPressNotes}) {
+export default function ExerciseView() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles, exerciseViewStyle} = useTheme();
   const styles = exerciseViewStyle;
+  const navigation = useNavigation();
 
   const {dictionary} = useDictionary();
   const insets = useSafeArea();
@@ -51,14 +52,6 @@ export default function ExerciseView({onPressWeights, onPressNotes}) {
       setCountDown(false);
     } else {
     }
-  };
-
-  const onWeightsPressed = () => {
-    onPressWeights();
-  };
-
-  const onNotesPressed = () => {
-    onPressNotes();
   };
 
   const onSetCompleted = () => {
@@ -112,7 +105,7 @@ export default function ExerciseView({onPressWeights, onPressNotes}) {
         <View style={styles.extraContainerStyle}>
           <TouchableOpacity
             style={styles.weightTouchStyle}
-            onPress={onWeightsPressed}>
+            onPress={() => navigation.navigate('WeightCapture')}>
             <Image source={weightIcon} />
             <Text style={styles.extraTextStyle}>{WorkoutDict.WeightText}</Text>
           </TouchableOpacity>
@@ -121,7 +114,7 @@ export default function ExerciseView({onPressWeights, onPressNotes}) {
               ...styles.weightTouchStyle,
               marginStart: getWidth(40),
             }}
-            onPress={onNotesPressed}>
+            onPress={() => navigation.navigate('Notes')}>
             <Image source={notesIcon} />
             <Text style={styles.extraTextStyle}>{WorkoutDict.NotesText}</Text>
           </TouchableOpacity>

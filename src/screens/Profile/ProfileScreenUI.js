@@ -45,7 +45,6 @@ export default function ProfileScreenUI({
   onSaveChanges,
   onPressNeedHelp,
   onPressLogout,
-  onPressNeedToSignOut,
 }) {
   // MARK: - Hooks
   const {
@@ -53,6 +52,7 @@ export default function ProfileScreenUI({
     cellFormStyles,
     textStyles,
     dropdownStyle,
+    colors,
   } = useTheme();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
@@ -79,6 +79,7 @@ export default function ProfileScreenUI({
     },
     contentContainer: {
       alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
     },
     notificationsContainer: {
       width: '100%',
@@ -97,6 +98,9 @@ export default function ProfileScreenUI({
       alignItems: 'center',
       marginTop: getHeight(35),
       marginBottom: getHeight(15),
+    },
+    signOut: {
+      ...textStyles.semiBold14_brownishGrey100,
     },
   };
 
@@ -258,17 +262,14 @@ export default function ProfileScreenUI({
         onPress={onPressNeedHelp}
         icon={'chevron'}
       />
-      <Spacer height={20} />
-      <DefaultButton
-        type={'needToSignOut'}
-        variant="transparentGreyText"
-        onPress={onPressNeedToSignOut}
-      />
+      <Spacer height={30} />
+      <Text style={styles.signOut}>{ProfileDict.NeedToSignOut}</Text>
       <DefaultButton
         type={'logout'}
         variant="transparentBlackBoldText"
         onPress={onPressLogout}
       />
+      <Spacer height={20} />
     </View>
   );
 

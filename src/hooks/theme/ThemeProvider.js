@@ -469,7 +469,7 @@ export default function ThemeProvider({children}) {
       width: getWidth(300),
     },
     buttonContainer: {
-      backgroundColor: colors.skyBlue100,
+      backgroundColor: colors.tealish100,
       marginTop: getHeight(15),
       marginBottom: getHeight(15),
       padding: getWidth(15),

@@ -46,6 +46,7 @@ export default function TermsConditionsScreen() {
     render: {
       container: {
         flex: 1,
+        backgroundColor: colors.backgroundWhite100,
       },
     },
 

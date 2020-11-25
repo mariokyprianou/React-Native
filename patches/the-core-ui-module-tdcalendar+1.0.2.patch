@@ -1,0 +1,50 @@
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
+index 9c9dad3..4729705 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
+@@ -10,6 +10,7 @@ import React from "react";
+ import { View, Text } from "react-native";
+ import TDIcon from "the-core-ui-component-tdicon";
+ import { ScaleHook } from "react-native-design-to-component";
++import LinearGradient from 'react-native-linear-gradient';
+ 
+ export default function DateCell({
+   date,
+@@ -41,6 +42,9 @@ export default function DateCell({
+       solid: true,
+       color: "#ffffff",
+     },
++    gradient: {
++      flex: 1,
++    }
+   };
+ 
+   const { pill, text } = lookupStyleTable[status];
+@@ -49,13 +53,21 @@ export default function DateCell({
+   // ** ** ** ** ** RENDER ** ** ** ** **
+   return (
+     <View style={{ ...sharedStyle, ...pill }}>
+-      {status === "newWeekNewProgramme" ? (
+-        <View style={styles.newProgramme}>
+-          <Text style={text}>{date}</Text>
+-          <View style={styles.iconContainer}>
+-            <TDIcon input="star" inputStyle={styles.icon} />
++      {status === "newWeekNewProgramme" || status === "newWeek" ? (
++        <LinearGradient
++          style={{...styles.gradient, ...sharedStyle, ...pill}}
++          start={{x: 0, y: 0}}
++          end={{x: 1, y: 0}}
++          colors={['rgba(116, 235, 231, 1)', 'rgba(46, 193, 187, 1)']}>
++          <View style={styles.newProgramme}>
++            <Text style={ text }>{ date }</Text>
++            { status === "newWeekNewProgramme" && 
++              <View style={styles.iconContainer}>
++                <TDIcon input="star" inputStyle={styles.icon} />
++              </View>
++            }
+           </View>
+-        </View>
++        </LinearGradient>
+       ) : (
+         <Text style={text}>{date}</Text>
+       )}

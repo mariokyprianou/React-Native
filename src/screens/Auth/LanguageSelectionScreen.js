@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -22,9 +22,17 @@ const splashImage = require('../../../assets/images/splash.png');
 export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, fontSize} = ScaleHook();
-  const {cellFormStyles, cellFormConfig, colors, textStyles} = useTheme();
+  const {
+    cellFormStyles,
+    cellFormConfig,
+    colors,
+    textStyles,
+    dropdownStyle,
+  } = useTheme();
   const {dictionary, setLanguage, getLanguage} = useDictionary();
   const {LanguageDict} = dictionary;
+
+  const screenHeight = Dimensions.get('screen').height;
 
   const dropdownData = [
     LanguageDict.English,
@@ -44,10 +52,11 @@ export default function LanguageSelectionScreen() {
       alignItems: 'center',
       height: '100%',
       justifyContent: 'flex-end',
+      backgroundColor: colors.backgroundWhite100,
     },
     image: {
       position: 'absolute',
-      top: getHeight(270),
+      top: screenHeight / 2 - 26,
     },
     buttonContainer: {
       marginBottom: getHeight(40),
@@ -79,9 +88,11 @@ export default function LanguageSelectionScreen() {
       ),
       iconTintColor: colors.black100,
       ...cellFormStyles,
+      ...dropdownStyle,
     },
   ];
   const config = {
+    turnOffQuickPicker: true,
     editedColor: colors.brownishGrey100,
     inactiveColor: colors.brownishGrey100,
     activeColor: colors.brownishGrey100,

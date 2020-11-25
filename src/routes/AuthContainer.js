@@ -16,17 +16,13 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import CongratulationsScreen from '../screens/auth/CongratulationsScreen';
 import TermsAndConditionsScreen from '../screens/auth/TermsConditionsScreen';
 import PrivacyPolicyScreen from '../screens/auth/PrivacyPolicyScreen';
-
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import AnalyticsPermissionScreen from '../screens/auth/AnalyticsPermissionScreen';
 import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissionScreen';
 import {TransitionPresets} from '@react-navigation/stack';
-
-// Ts & Cs, Privacy, and Email Verification will all need to slide up from the bottom
-// Do this by adding the following to each screen below:
-// options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-// E.g. WorkoutContainer > WorkoutScreen
+import HelpMeChooseScreen from '../screens/auth/HelpMeChooseScreen';
+import HelpMeChooseResultsScreen from '../screens/auth/HelpMeChooseResultsScreen';
 
 export default function AuthContainer(props) {
   return (
@@ -52,8 +48,13 @@ export default function AuthContainer(props) {
       <AuthStack.Screen
         name="TermsAndConditions"
         component={TermsAndConditionsScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
-      <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <AuthStack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
       <AuthStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
@@ -62,12 +63,22 @@ export default function AuthContainer(props) {
       <AuthStack.Screen
         name="Analytics"
         component={AnalyticsPermissionScreen}
-        mode="modal"
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
       <AuthStack.Screen
         name="Notifications"
         component={NotificationsPermissionScreen}
-        mode="modal"
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
+      <AuthStack.Screen
+        name="HelpMeChoose"
+        component={HelpMeChooseScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
+      <AuthStack.Screen
+        name="HelpMeChooseResults"
+        component={HelpMeChooseResultsScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
     </AuthStack.Navigator>
   );

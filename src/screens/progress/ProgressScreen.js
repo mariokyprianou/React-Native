@@ -7,7 +7,14 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -29,6 +36,7 @@ export default function ProgressScreen() {
     daysTextStyles,
     daysContainerStyles,
     dateCellStyles,
+    lookupStyleTable,
     pillWidth,
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
@@ -45,6 +53,11 @@ export default function ProgressScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    screen: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.backgroundWhite100,
+    },
     container: {
       width: '90%',
       height: '100%',
@@ -67,7 +80,7 @@ export default function ProgressScreen() {
       textAlign: 'left',
     },
     calendarContainer: {
-      height: Platform.OS === 'android' ? getHeight(300) : getHeight(280),
+      // height: Platform.OS === 'android' ? getHeight(330) : getHeight(310),
       width: '100%',
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -77,6 +90,12 @@ export default function ProgressScreen() {
       backgroundColor: colors.white100,
       marginBottom: getHeight(10),
       alignSelf: 'center',
+    },
+    calendarTitle: {
+      ...textStyles.bold20_black100,
+      marginTop: getHeight(17),
+      marginBottom: getHeight(7),
+      marginLeft: getWidth(24),
     },
     boxWrapper: {
       flexDirection: 'row',
@@ -90,47 +109,53 @@ export default function ProgressScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
-        <Text style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
-      </View>
-      <View style={styles.calendarContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-          <Calendar
-            days={days}
-            daysTextStyles={daysTextStyles}
-            daysContainerStyles={daysContainerStyles}
-            firstDayOfWeek="Monday"
-            calendarType="single-month"
-            showPrevNextDays={false}
-            datesSelectable={false}
-            dateCellStyles={dateCellStyles}
-            cellData={progressCalendarData}
-            pillWidth={pillWidth}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.boxWrapper}>
-        <TransformationChallenge
-          type="progress"
-          title="Transformation"
-          image={fakeImage}
-          onPress={() => navigation.navigate('Transformation')}
-        />
-        {challengeData.map((challenge, index) => {
-          const {name, image} = challenge;
-          return (
-            <TransformationChallenge
-              key={index}
-              type="challenge"
-              title={name}
-              image={fakeGraph}
-              onPress={() => navigation.navigate('Challenge')}
+    <ScrollView style={styles.screen}>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
+          <Text style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
+        </View>
+        <View style={styles.calendarContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+            <Text style={styles.calendarTitle}>
+              {ProgressDict.YourWorkouts}
+            </Text>
+            <Calendar
+              days={days}
+              daysTextStyles={daysTextStyles}
+              daysContainerStyles={daysContainerStyles}
+              firstDayOfWeek="Monday"
+              calendarType="single-month"
+              showPrevNextDays={false}
+              datesSelectable={false}
+              dateCellStyles={dateCellStyles}
+              cellData={progressCalendarData}
+              pillWidth={pillWidth}
+              lookupStyleTable={lookupStyleTable}
             />
-          );
-        })}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.boxWrapper}>
+          <TransformationChallenge
+            type="progress"
+            title="Transformation"
+            image={fakeImage}
+            onPress={() => navigation.navigate('Transformation')}
+          />
+          {challengeData.map((challenge, index) => {
+            const {name, image} = challenge;
+            return (
+              <TransformationChallenge
+                key={index}
+                type="challenge"
+                title={name}
+                image={fakeGraph}
+                onPress={() => navigation.navigate('Challenge')}
+              />
+            );
+          })}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

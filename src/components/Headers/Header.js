@@ -54,7 +54,7 @@ export default function Header({
       height,
       flexDirection: 'row',
       alignItems: 'flex-end',
-      backgroundColor: transparent ? undefined : colors.offWhite100,
+      backgroundColor: transparent ? undefined : colors.backgroundWhite100,
       width: '100%',
       position: transparent ? 'absolute' : undefined,
     },
@@ -109,7 +109,6 @@ export default function Header({
       ...textStyles.medium20white,
     },
     iconStyle: {
-      solid: right === 'times' ? false : true,
       size: fontSize(20),
       color: white ? colors.white100 : colors.black100,
       tintColor: white ? colors.white100 : colors.black100,
@@ -121,6 +120,12 @@ export default function Header({
       tintColor: colors.black100,
       resizeMode: 'contain',
     },
+    crossIconStyle: {
+      height: getHeight(15),
+      width: getWidth(15),
+      tintColor: white ? colors.white100 : colors.black100,
+      resizeMode: 'contain',
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -129,6 +134,11 @@ export default function Header({
     if (icon === 'shareIcon') {
       return (
         <TDIcon input={shareIcon} inputStyle={{style: styles.shareIconStyle}} />
+      );
+    }
+    if (icon === 'crossIcon') {
+      return (
+        <TDIcon input={closeIcon} inputStyle={{style: styles.crossIconStyle}} />
       );
     }
     return <TDIcon input={icon} inputStyle={styles.iconStyle} />;

@@ -53,7 +53,7 @@ export default function WorkoutCard({
       shadowRadius: 6,
       shadowOpacity: 1,
       elevation: 6,
-      marginTop: getHeight(27),
+      marginTop: getHeight(15),
     },
     touch: {
       flex: 1,

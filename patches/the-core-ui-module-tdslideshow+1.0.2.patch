@@ -1,8 +1,32 @@
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
+index 82dabb6..f490044 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
+@@ -31,6 +31,8 @@ const Slideshow = ({
+   CustomCountdown,
+   DateSelectors,
+   cameraButtonImage,
++  //patch
++  CustomHeader,
+ }) => {
+   // ******* SETUP *******
+   const [activeViewIndex, setActiveViewIndex] = useState(0);
+@@ -114,7 +116,9 @@ const Slideshow = ({
+         sliderStyles={sliderStyles || defaultSliderStyles}
+         sliderSpacerHeight={sliderSpacerHeight || defaultSliderSpacerHeight}
+         sliderIcon={sliderIcon}
+-        DateSelectors={DateSelectors}
++        DateSelectors={ DateSelectors }
++        //patch
++        CustomHeader={CustomHeader}
+       />
+     );
+   }
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..e8454fa 100644
+index f41ddff..f701143 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -28,7 +28,7 @@ const AddPhoto = ({
+@@ -28,12 +28,14 @@ const AddPhoto = ({
    // ******* SETUP *******
    const [cameraRef, setCameraRef] = useState();
    const [cameraType, setCameraType] = useState("back");
@@ -11,15 +35,95 @@ index f41ddff..e8454fa 100644
  
    // ******* STYLES *******
    const styles = {
+     pageContainer: {
+       height: "100%",
++      // patch
++      backgroundColor: 'rgba(252, 252, 252, 1)',
+     },
+     cameraContainer: {
+       height: getHeight(550),
+@@ -44,9 +46,9 @@ const AddPhoto = ({
+       flex: 1,
+     },
+     overlay: {
+-      flex: 1,
+       position: "absolute",
+-      top: getHeight(50),
++      // patch
++      // top: getHeight(50),
+       left: 0,
+       width: "100%",
+       height: "100%",
+@@ -60,7 +62,8 @@ const AddPhoto = ({
+       alignItems: "center",
+       justifyContent: "space-around",
+       paddingVertical: getHeight(15),
+-      backgroundColor: "white",
++      // patch
++      backgroundColor: 'rgba(252, 252, 252, 1)',
+     },
+     rotateButton: {
+       size: fontSize(24),
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
+index 507924f..338407b 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
+@@ -11,6 +11,8 @@ import { View, TouchableOpacity, Text } from "react-native";
+ import TDIcon from "the-core-ui-component-tdicon";
+ import { ScaleHook } from "react-native-design-to-component";
+ 
++const photoSelect = require('../../../../assets/icons/photoSelect.png');  // patch
++
+ const Header = ({
+   setActiveViewIndex,
+   handleSelectPhoto,
+@@ -23,8 +25,11 @@ const Header = ({
+   const styles = {
+     container: {
+       flexDirection: "row",
+-      alignItems: "center",
+-      height: getHeight(50),
++      alignItems: "flex-end",
++      // patch
++      backgroundColor: 'rgba(252, 252, 252, 1)',
++      paddingBottom: getHeight(15),
++      height: getHeight(90),
+       justifyContent: "space-between",
+     },
+     leftContainer: {
+@@ -37,6 +42,12 @@ const Header = ({
+       size: fontSize(20),
+       color: "#3a3a3a",
+     },
++    photoIconStyle: {
++      // patch
++      height: getHeight(23),
++      width: getWidth(17),
++      resizeMode: 'contain',
++    },
+     titleTextStyle: {
+       fontSize: fontSize(20),
+       fontWeight: "bold",
+@@ -65,7 +76,7 @@ const Header = ({
+       <Text style={styles.titleTextStyle}>{cameraHeaderText}</Text>
+       <View style={styles.rightContainer}>
+         <TouchableOpacity onPress={handleSelectPhoto} activeOpacity={1}>
+-          <TDIcon input="images" inputStyle={styles.iconStyle} />
++          <TDIcon input={photoSelect} inputStyle={styles.photoIconStyle} />    
+         </TouchableOpacity>
+       </View>
+     </View>
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 1bbdec1..2e8d616 100644
+index 1bbdec1..87a186d 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-@@ -33,11 +33,12 @@ const ImageSlider = ({
+@@ -33,11 +33,14 @@ const ImageSlider = ({
    sliderSpacerHeight,
    sliderIcon,
    DateSelectors,
-+  CustomButton
++  CustomButton,
++  // patch
++  CustomHeader,
  }) => {
    // ******* SETUP *******
    const screenWidth = Dimensions.get("screen").width;
@@ -29,3 +133,37 @@ index 1bbdec1..2e8d616 100644
  
    // ******* STYLES *******
    const styles = StyleSheet.create({
+@@ -99,16 +102,20 @@ const ImageSlider = ({
+   // ******* RENDER *******
+   return (
+     <View>
++      {/* patch */}
++      {CustomHeader && (
++        <CustomHeader />
++      )}
+       <View style={styles.imagesContainer}>
+         {DateSelectors && <DateSelectors />}
+         <View style={styles.beforeContainer}>
+           {beforePic && (
+-            <Image source={{ uri: beforePic }} style={styles.beforeImage} />
++            <Image source={beforePic} style={styles.beforeImage} />
+           )}
+         </View>
+         <View style={styles.afterContainer}>
+           {afterPic && (
+-            <Image source={{ uri: afterPic }} style={styles.afterImage} />
++            <Image source={afterPic} style={styles.afterImage} />
+           )}
+         </View>
+       </View>
+@@ -119,8 +126,8 @@ const ImageSlider = ({
+           height: sliderStyles.height,
+           alignSelf: "center",
+         }}
+-        minimumValue={0}
+-        maximumValue={imageWidth}
++        minimumValue={imageWidth / 10}
++        maximumValue={(imageWidth / 10) * 9}
+         step={imageWidth / 10}
+         value={imageWidth / 2}
+         minimumTrackTintColor={sliderStyles.minimumTrackTintColor}

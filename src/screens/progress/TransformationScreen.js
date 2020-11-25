@@ -10,6 +10,7 @@ import React, {useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import useTheme from '../../hooks/theme/UseTheme';
 import Slideshow from 'the-core-ui-module-tdslideshow';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import SliderButton from '../../components/Buttons/SliderButton';
@@ -17,10 +18,8 @@ import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
 
-const fakeBeforePic =
-  'https://cdn.vox-cdn.com/thumbor/wyuKqIJeQwb745RJb5zsK2FCOaY=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19424316/EKo3U_qXkAEK1Fz.jpeg';
-const fakeAfterPic =
-  'https://media.wired.com/photos/5cdefb92b86e041493d389df/191:100/w_1280,c_limit/Culture-Grumpy-Cat-487386121.jpg';
+const fakeBeforePic = require('../../../assets/fakeBefore.png');
+const fakeAfterPic = require('../../../assets/fakeAfter.png');
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const cameraButton = require('../../../assets/icons/cameraButton.png');
@@ -34,24 +33,23 @@ export default function TransformationScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
+  const {colors} = useTheme();
 
   const screenWidth = Dimensions.get('screen').width;
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={ProgressDict.TransformationScreenTitle}
-        goBack
-        right="shareIcon"
-        rightAction={handleShare}
-      />
-    ),
+    header: () => null,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
+    container: {
+      height: '100%',
+      width: '100%',
+    },
     sliderStyles: {
       height: getHeight(10),
+      width: '92%',
       minimumTrackTintColor: 'transparent',
       maximumTrackTintColor: 'transparent',
     },
@@ -60,12 +58,12 @@ export default function TransformationScreen() {
       height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(170),
+      height: getHeight(113),
     },
     overlay: {
-      height: getHeight(440),
-      top: getHeight(-50),
-      resizeMode: 'contain',
+      height: '100%',
+      top: 0,
+      resizeMode: 'cover',
     },
   };
 
@@ -90,7 +88,7 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
+    <View style={styles.container}>
       <Slideshow
         setPhoto={handlePhoto}
         beforePic={beforePic}
@@ -109,6 +107,14 @@ export default function TransformationScreen() {
         overlayStyles={styles.overlay}
         sliderIcon={sliderThumb}
         overlayImage={overlay}
+        CustomHeader={() => (
+          <Header
+            title={ProgressDict.TransformationScreenTitle}
+            goBack
+            right="shareIcon"
+            rightAction={handleShare}
+          />
+        )}
       />
     </View>
   );

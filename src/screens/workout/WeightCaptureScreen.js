@@ -11,6 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ProgressChart from '../Infographics/ProgressChart';
@@ -20,16 +21,21 @@ import DefaultButton from '../Buttons/DefaultButton';
 import SetsTable from '../Infographics/SetsTable';
 import format from 'date-fns/format';
 
-export default function WeightCaptureModal({onPressClose}) {
+export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const {challengeHistoryData, repsHistoryData} = useChallenge();
+  const navigation = useNavigation();
 
   const today = new Date();
   const date = format(today, 'do LLL yyyy');
+
+  navigation.setOptions({
+    header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -104,11 +110,6 @@ export default function WeightCaptureModal({onPressClose}) {
 
   return (
     <View style={styles.card}>
-      <Header
-        title={WorkoutDict.WeightsTitle}
-        right="crossIcon"
-        rightAction={onPressClose}
-      />
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Squats -</Text>

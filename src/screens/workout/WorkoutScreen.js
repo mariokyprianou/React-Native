@@ -16,18 +16,14 @@ import ExerciseView from '../../components/Views/ExerciseView';
 import useWorkoutData from '../../hooks/data/useWorkoutData';
 import ModalCard from '../../components/Modals/ModalCard';
 import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
-import NotesModal from '../../components/Modals/NotesModal';
 import WeekCompleteModal from '../../components/Modals/WeekComplete';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
+  const {colors} = useTheme();
   const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(false);
   const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(false);
-  const [showNotesModal, setShowNotesModal] = useState(false);
   const navigation = useNavigation();
 
   const {workout} = useWorkoutData();
@@ -60,21 +56,9 @@ export default function WorkoutScreen() {
         overScrollMode={'never'}
         style={styles.scrollViewContainer}>
         {workout.exercises.map((screen, index) => (
-          <ExerciseView
-            onPressWeights={() => setShowWeightCaptureModal(true)}
-            onPressNotes={() => setShowNotesModal(true)}
-          />
+          <ExerciseView />
         ))}
       </ScrollView>
-      <ModalCard isVisible={showWeightCaptureModal}>
-        <WeightCaptureModal
-          onPressClose={() => setShowWeightCaptureModal(false)}
-          navigation={navigation}
-        />
-      </ModalCard>
-      <ModalCard isVisible={showNotesModal}>
-        <NotesModal onPressClose={() => setShowNotesModal(false)} />
-      </ModalCard>
       <ModalCard isVisible={showWeekCompleteModal}>
         <WeekCompleteModal
           onPressClose={() => setShowWeekCompleteModal(false)}

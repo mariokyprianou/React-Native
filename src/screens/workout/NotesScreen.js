@@ -13,10 +13,10 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import useChallenge from '../../hooks/data/useChallenge';
-import Header from '../Headers/Header';
-import DefaultButton from '../Buttons/DefaultButton';
+import Header from '../../components/Headers/Header';
+import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
-import Spacer from '../Utility/Spacer';
+import Spacer from '../../components/Utility/Spacer';
 
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **

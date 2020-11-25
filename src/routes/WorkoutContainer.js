@@ -11,6 +11,8 @@ import {WorkoutStack} from '../navigation';
 import WorkoutHomeScreen from '../screens/workout/WorkoutHomeScreen';
 import StartWorkoutScreen from '../screens/workout/StartWorkoutScreen';
 import WorkoutScreen from '../screens/workout/WorkoutScreen';
+import NotesScreen from '../screens/workout/NotesScreen';
+import WeightCaptureScreen from '../screens/workout/WeightCaptureScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutContainer(props) {
@@ -25,6 +27,16 @@ export default function WorkoutContainer(props) {
       <WorkoutStack.Screen
         name="Workout"
         component={WorkoutScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
+      <WorkoutStack.Screen
+        name="Notes"
+        component={NotesScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
+      <WorkoutStack.Screen
+        name="WeightCapture"
+        component={WeightCaptureScreen}
         options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
     </WorkoutStack.Navigator>

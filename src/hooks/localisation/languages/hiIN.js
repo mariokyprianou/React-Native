@@ -194,7 +194,7 @@ const hiIN = {
 
   TabsTitleDict: {
     Profile: 'Profile',
-    TWorkouts: 'Workouts',
+    Workouts: 'Workouts',
     Progress: 'Progress',
   },
 

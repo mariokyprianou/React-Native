@@ -195,7 +195,7 @@ const enGB = {
 
   TabsTitleDict: {
     Profile: 'Profile',
-    TWorkouts: 'Workouts',
+    Workouts: 'Workouts',
     Progress: 'Progress',
   },
 

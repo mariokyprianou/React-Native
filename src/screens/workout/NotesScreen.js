@@ -11,21 +11,27 @@ import {View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import useChallenge from '../../hooks/data/useChallenge';
 import Header from '../Headers/Header';
 import DefaultButton from '../Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import Spacer from '../Utility/Spacer';
 
-export default function NotesModal({onPressClose}) {
+export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const navigation = useNavigation();
   const {
     challengeData: {description, notes},
   } = useChallenge();
+
+  navigation.setOptions({
+    header: () => <Header title={WorkoutDict.Notes} showModalCross />,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -74,11 +80,6 @@ export default function NotesModal({onPressClose}) {
 
   return (
     <View style={styles.card}>
-      <Header
-        title={WorkoutDict.Notes}
-        right="crossIcon"
-        rightAction={onPressClose}
-      />
       <View style={styles.contentContainer}>
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>

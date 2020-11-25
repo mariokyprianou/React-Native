@@ -25,7 +25,7 @@ export default function WorkoutContainer(props) {
       <WorkoutStack.Screen
         name="Workout"
         component={WorkoutScreen}
-        mode="modal"
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
     </WorkoutStack.Navigator>
   );

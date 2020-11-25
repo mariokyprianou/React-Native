@@ -84,7 +84,8 @@ export default function TabContainer() {
       routeName === 'Transformation' ||
       routeName === 'Challenge' ||
       routeName === 'ChallengeEnd' ||
-      routeName === 'ChallengeComplete'
+      routeName === 'ChallengeComplete' ||
+      routeName === 'StartWorkout'
     ) {
       return false;
     }

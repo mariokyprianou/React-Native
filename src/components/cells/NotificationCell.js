@@ -24,7 +24,7 @@ export default function NotificationCell({
 }) {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
-  const {Profile_DeleteNotificationButtonTitle} = dictionary;
+  const {ProfileDict} = dictionary;
   const {textStyles, colors} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
 
@@ -109,7 +109,7 @@ export default function NotificationCell({
   const rightButtons = [
     <TouchableOpacity style={styles.rightAction} onPress={onDelete}>
       <Animated.Text style={styles.actionText}>
-        {Profile_DeleteNotificationButtonTitle}
+        {ProfileDict.NotificationDelete}
       </Animated.Text>
     </TouchableOpacity>,
   ];

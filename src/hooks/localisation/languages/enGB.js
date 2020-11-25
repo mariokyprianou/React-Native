@@ -155,6 +155,8 @@ const enGB = {
     FormLabel5: 'DATE OF BIRTH',
     FormLabel6: 'COUNTRY',
     FormLabel7: 'REGION',
+
+    NotificationDelete: 'Delete',
   },
 
   SettingsDict: {

@@ -15,6 +15,8 @@ import {ScaleProvider} from 'react-native-design-to-component';
 import {FormProvider} from 'the-core-ui-module-tdforms';
 import QuickPicker from 'quick-picker';
 import {TDCountdown} from 'the-core-ui-module-tdcountdown';
+import * as ScreenCapture from 'expo-screen-capture';
+
 import ApolloClient from './apollo/ApolloClient';
 import Theme from './styles/AppTheme';
 import isValidChecksum from './utils/checksumValidation';
@@ -22,7 +24,6 @@ import {Navigator as AppNavigator, Screen} from './navigation/AppStack';
 import AppContainer from './AppContainer';
 import SplashScreen from 'react-native-splash-screen';
 import {useAsyncStorage} from '@react-native-community/async-storage';
-import {languageRestart} from './utils/languageRestart';
 
 const App = () => {
   const [client, setClient] = useState(null);
@@ -47,9 +48,17 @@ const App = () => {
       setupApollo();
     }
     StatusBar.setBarStyle('dark-content');
-    validateChecksum();
 
+    const screenshotListener = ScreenCapture.addScreenshotListener(() => {
+      console.log('Screenshoted!');
+    });
+
+    validateChecksum();
     languageSet();
+
+    return () => {
+      screenshotListener.remove();
+    };
   }, [client]);
 
   if (!validChecksum) {

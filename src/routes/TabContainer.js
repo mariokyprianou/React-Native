@@ -88,7 +88,11 @@ export default function TabContainer() {
       routeName === 'StartWorkout' ||
       routeName === 'Notes' ||
       routeName === 'Workout' ||
-      routeName === 'WeightCapture'
+      routeName === 'WeightCapture' ||
+      routeName === 'WeekComplete' ||
+      routeName === 'TakeARest' ||
+      routeName === 'WorkoutComplete' ||
+      routeName === 'SetCompletion'
     ) {
       return false;
     }

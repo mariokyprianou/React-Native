@@ -11,18 +11,24 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import WeightSelection from '../Infographics/WeightSelection';
-import DefaultButton from '../Buttons/DefaultButton';
+import WeightSelection from '../../components/Infographics/WeightSelection';
+import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
+import {useNavigation} from '@react-navigation/native';
 
 const restTime = 10;
 
-export default function SetCompletionModal() {
+export default function SetCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => null,
+  });
 
   const formattedSeconds = new Date(restTime * 1000)
     .toISOString()

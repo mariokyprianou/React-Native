@@ -1,6 +1,6 @@
 /*
  * Jira Ticket:
- * Created Date: Thu, 5th Nov 2020, 09:46:44 am
+ * Created Date: Thu, 5th Nov 2020, 08:29:01 am
  * Author: Jodi Dublon
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
@@ -9,28 +9,33 @@
 import React from 'react';
 import {View, Text, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import FadingBottomView from '../Views/FadingBottomView';
-import DefaultButton from '../Buttons/DefaultButton';
-import IconTextView from '../Infographics/IconTextView';
-import Header from '../Headers/Header';
+import FadingBottomView from '../../components/Views/FadingBottomView';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Header from '../../components/Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function WeekComplete({
-  name,
-  weekNumber,
-  totalDuration,
-  totalReps,
-  totalSets,
-  onPressClose,
-}) {
+export default function TakeARestScreen({name}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={WorkoutDict.TakeARestTitle}
+        showModalCross
+        white
+        transparent
+      />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -54,21 +59,17 @@ export default function WeekComplete({
       ...textStyles.semiBold16_white90,
       textAlign: 'left',
     },
-    infoIconsContainer: {
-      marginBottom: getHeight(34),
-      alignSelf: 'center',
-    },
     buttonContainer: {
       position: 'absolute',
-      bottom: getHeight(30),
+      bottom: getHeight(10),
       width: '100%',
       alignItems: 'center',
     },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleShare() {
-    // handle share
+  function handleContinue() {
+    navigation.navigate('StartWorkout');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -76,33 +77,20 @@ export default function WeekComplete({
     <View>
       <ImageBackground source={fakeImage} style={styles.image}>
         <FadingBottomView color="black" />
-        <Header
-          title={WorkoutDict.WeekCompleteTitle}
-          right="crossIcon"
-          rightAction={onPressClose}
-          white
-          transparent
-        />
         <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>
-            {WorkoutDict.WeekComplete(name, weekNumber)}
-          </Text>
+          <Text style={styles.infoText}>{WorkoutDict.TakeARest(name)}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <View style={styles.infoIconsContainer}>
-            <IconTextView
-              type="workoutComplete"
-              duration={totalDuration}
-              reps={totalReps}
-              sets={totalSets}
-              color="white"
-            />
-          </View>
           <DefaultButton
-            type="share"
-            icon="share"
+            type="continue"
+            icon="chevron"
             variant="white"
-            onPress={handleShare}
+            onPress={handleContinue}
+          />
+          <DefaultButton
+            type="goBack"
+            variant="transparentWhiteText"
+            onPress={() => navigation.goBack()}
           />
         </View>
       </ImageBackground>

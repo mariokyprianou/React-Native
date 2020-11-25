@@ -21,12 +21,7 @@ import WorkoutCard from '../../components/Cards/WorkoutCard';
 import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
 import addRestDays from '../../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import ModalCard from '../../components/Modals/ModalCard';
-import TakeARest from '../../components/Modals/TakeARest';
-import WeekComplete from '../../components/Modals/WeekComplete';
-import StayTuned from '../../components/Modals/StayTuned';
 import isRTL from '../../utils/isRTL';
-import Spacer from '../../components/Utility/Spacer';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -53,11 +48,6 @@ export default function WorkoutHomeScreen() {
   } = useWorkoutHome();
   const {takeRestData} = useTakeRest();
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
-  const [showTakeRestModal, setShowTakeRestModal] = useState(takeRestData);
-  const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(
-    completedWorkoutWeek,
-  );
-  const [showStayTunedModal, setShowStayTunedModal] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -89,7 +79,20 @@ export default function WorkoutHomeScreen() {
 
   useEffect(() => {
     if (threeWorkoutsInRow === true) {
-      setShowTakeRestModal(true);
+      navigation.navigate('TakeARest', {name: 'Katrina'});
+    }
+    // deps array left blank so this only appears the first time the page is loaded
+  }, []);
+
+  useEffect(() => {
+    if (completedWorkoutWeek === true) {
+      navigation.navigate('WeekComplete', {
+        name: trainerName,
+        weekNumber: currentWeekNumber,
+        totalDuration: totalDuration,
+        totalReps: totalReps,
+        totalSets: totalSets,
+      });
     }
     // deps array left blank so this only appears the first time the page is loaded
   }, []);
@@ -144,7 +147,15 @@ export default function WorkoutHomeScreen() {
       setWeekNumber(2);
     }
     if (direction === 'right' && completedWorkoutWeek) {
-      setShowStayTunedModal(true);
+      navigation.navigate('StayTuned', {
+        name: trainerName,
+        venue: venue,
+        date: firstWorkoutOfNextWeek,
+        type:
+          lastWeekOfProgramme === true
+            ? 'programmeComplete'
+            : 'workoutComplete',
+      });
     }
   }
 
@@ -195,35 +206,6 @@ export default function WorkoutHomeScreen() {
           )}
         />
       </View>
-      <ModalCard isVisible={showTakeRestModal}>
-        <TakeARest
-          onPressClose={() => setShowTakeRestModal(false)}
-          name={trainerName}
-        />
-      </ModalCard>
-      <ModalCard isVisible={showWeekCompleteModal}>
-        <WeekComplete
-          onPressClose={() => setShowWeekCompleteModal(false)}
-          name={trainerName}
-          weekNumber={currentWeekNumber}
-          totalDuration={totalDuration}
-          totalReps={totalReps}
-          totalSets={totalSets}
-        />
-      </ModalCard>
-      <ModalCard isVisible={showStayTunedModal}>
-        <StayTuned
-          onPressClose={() => setShowStayTunedModal(false)}
-          name={trainerName}
-          venue={venue}
-          date={firstWorkoutOfNextWeek}
-          type={
-            lastWeekOfProgramme === true
-              ? 'programmeComplete'
-              : 'workoutComplete'
-          }
-        />
-      </ModalCard>
     </View>
   );
 }

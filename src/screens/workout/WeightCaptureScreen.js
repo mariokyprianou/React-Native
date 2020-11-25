@@ -14,11 +14,11 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import DropDownPicker from 'react-native-dropdown-picker';
-import ProgressChart from '../Infographics/ProgressChart';
+import ProgressChart from '../../components/Infographics/ProgressChart';
 import useChallenge from '../../hooks/data/useChallenge';
-import Spacer from '../Utility/Spacer';
-import DefaultButton from '../Buttons/DefaultButton';
-import SetsTable from '../Infographics/SetsTable';
+import Spacer from '../../components/Utility/Spacer';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import SetsTable from '../../components/Infographics/SetsTable';
 import format from 'date-fns/format';
 
 export default function WeightCaptureScreen() {

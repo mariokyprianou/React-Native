@@ -11,20 +11,26 @@ import {StyleSheet, View, Text, Image, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import Header from '../Headers/Header';
-import EmojiSelection from '../Infographics/EmojiSelection';
-import DefaultButton from '../Buttons/DefaultButton';
-import SliderProgressView from '../Views/SliderProgressView';
-import IconTextView from '../Infographics/IconTextView';
-import FadingBottomView from '../Views/FadingBottomView';
-import Spacer from '../Utility/Spacer';
+import {useNavigation} from '@react-navigation/native';
+import Header from '../../components/Headers/Header';
+import EmojiSelection from '../../components/Infographics/EmojiSelection';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import SliderProgressView from '../../components/Views/SliderProgressView';
+import IconTextView from '../../components/Infographics/IconTextView';
+import FadingBottomView from '../../components/Views/FadingBottomView';
+import Spacer from '../../components/Utility/Spacer';
 
-export default function WorkoutCompleteModal() {
+export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => <Header title={WorkoutDict.WorkoutComplete} showModalCross />,
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -79,16 +85,10 @@ export default function WorkoutCompleteModal() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleClose() {}
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <Header
-        title={WorkoutDict.WorkoutComplete}
-        right="crossIcon"
-        rightAction={handleClose}
-      />
       <ScrollView style={styles.scroll}>
         <View style={styles.imageContainer}>
           <Image

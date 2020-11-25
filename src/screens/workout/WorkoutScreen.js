@@ -14,23 +14,15 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useWorkoutData from '../../hooks/data/useWorkoutData';
-import ModalCard from '../../components/Modals/ModalCard';
-import WeightCaptureModal from '../../components/Modals/WeightCaptureModal';
-import WeekCompleteModal from '../../components/Modals/WeekComplete';
-import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {colors} = useTheme();
-  const [showWeightCaptureModal, setShowWeightCaptureModal] = useState(false);
-  const [showWeekCompleteModal, setShowWeekCompleteModal] = useState(false);
   const navigation = useNavigation();
-
   const {workout} = useWorkoutData();
 
   navigation.setOptions({
     header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,
-    ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -59,14 +51,6 @@ export default function WorkoutScreen() {
           <ExerciseView />
         ))}
       </ScrollView>
-      <ModalCard isVisible={showWeekCompleteModal}>
-        <WeekCompleteModal
-          onPressClose={() => setShowWeekCompleteModal(false)}
-          totalDuration={30}
-          totalReps={100}
-          totalSets={50}
-        />
-      </ModalCard>
     </View>
   );
 }

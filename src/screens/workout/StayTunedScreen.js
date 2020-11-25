@@ -17,20 +17,33 @@ import {
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import TDIcon from 'the-core-ui-component-tdicon';
-import FadingBottomView from '../Views/FadingBottomView';
-import DefaultButton from '../Buttons/DefaultButton';
-import Header from '../Headers/Header';
+import FadingBottomView from '../../components/Views/FadingBottomView';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import Header from '../../components/Headers/Header';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function StayTuned({name, venue, date, onPressClose, type}) {
+export default function StayTuned({name, venue, date, type}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const [reminders, showReminders] = useState(true);
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={WorkoutDict.StayTunedTitle}
+        showModalCross
+        white
+        transparent
+      />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -65,7 +78,6 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleReminders(time) {
     // set up reminders
-    onPressClose();
   }
 
   function handlePressRemindMe() {
@@ -92,13 +104,6 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
       <View>
         <ImageBackground source={fakeImage} style={styles.image}>
           <FadingBottomView color="black" />
-          <Header
-            title={WorkoutDict.StayTunedTitle}
-            right="crossIcon"
-            rightAction={onPressClose}
-            white
-            transparent
-          />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
               {WorkoutDict.StayTuned(name, date)}
@@ -122,13 +127,6 @@ export default function StayTuned({name, venue, date, onPressClose, type}) {
       <View>
         <ImageBackground source={fakeImage} style={styles.image}>
           <FadingBottomView color="black" />
-          <Header
-            title={WorkoutDict.StayTunedTitle}
-            right="crossIcon"
-            rightAction={onPressClose}
-            white
-            transparent
-          />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
               {WorkoutDict.ProgrammeComplete(name, venue)}

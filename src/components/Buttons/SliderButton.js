@@ -13,6 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import isRTL from '../../utils/isRTL';
 
 const SliderButton = ({onPress}) => {
   // ******* SETUP *******
@@ -67,7 +68,7 @@ const SliderButton = ({onPress}) => {
           <Text style={styles.buttonText}>{ButtonDict.AddPhoto}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
-              input="chevron-right"
+              input={isRTL() ? 'chevron-left' : 'chevron-right'}
               inputStyle={{
                 size: styles.buttonText.fontSize,
                 color: styles.buttonText.color,

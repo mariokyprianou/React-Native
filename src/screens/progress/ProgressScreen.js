@@ -80,7 +80,6 @@ export default function ProgressScreen() {
       textAlign: 'left',
     },
     calendarContainer: {
-      // height: Platform.OS === 'android' ? getHeight(330) : getHeight(310),
       width: '100%',
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -93,9 +92,10 @@ export default function ProgressScreen() {
     },
     calendarTitle: {
       ...textStyles.bold20_black100,
+      textAlign: 'left',
       marginTop: getHeight(17),
       marginBottom: getHeight(7),
-      marginLeft: getWidth(24),
+      marginHorizontal: getWidth(24),
     },
     boxWrapper: {
       flexDirection: 'row',

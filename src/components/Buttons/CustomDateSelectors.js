@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import DropDownPicker from 'react-native-dropdown-picker';
 import useTheme from '../../hooks/theme/UseTheme';
 import useTransformation from '../../hooks/data/useTransformation';
+import isRTL from '../../utils/isRTL';
 
 const CustomDateSelectors = ({onPress}) => {
   const {getHeight, getWidth, radius} = ScaleHook();
@@ -45,7 +46,7 @@ const CustomDateSelectors = ({onPress}) => {
     dropdownArrow: {
       position: 'absolute',
       top: 0,
-      right: 0,
+      right: isRTL() ? 90 : 0,
     },
   };
 

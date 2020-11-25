@@ -25,6 +25,7 @@
     "aws-amplify": "^3.0.18",
     "color": "^3.1.2",
     "date-fns": "^2.14.0",
+    "expo-screen-capture": "^1.1.1",
     "graphql": "^15.2.0",
     "graphql-tag": "^2.10.3",
     "patch-package": "^6.2.2",
@@ -49,6 +50,7 @@
     "react-native-splash-screen": "^3.2.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^2.14.4",
+    "react-native-unimodules": "^0.11.0",
     "react-native-vector-icons": "^6.6.0",
     "the-core-ui-component-tdicon": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-component-tdicon.git",
     "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git"

@@ -12,6 +12,7 @@ import DictionaryProvider from './hooks/localisation/DictionaryProvider';
 import {ApolloProvider} from 'react-apollo';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScaleProvider} from 'react-native-design-to-component';
+import * as ScreenCapture from 'expo-screen-capture';
 
 import ApolloClient from './apollo/ApolloClient';
 import Theme from './styles/AppTheme';
@@ -42,7 +43,15 @@ const App = () => {
       setupApollo();
     }
 
+    const screenshotListener = ScreenCapture.addScreenshotListener(() => {
+      console.log('Screenshoted!');
+    });
+
     validateChecksum();
+
+    return () => {
+      screenshotListener.remove();
+    };
   }, [client]);
 
   if (!validChecksum) {

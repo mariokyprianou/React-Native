@@ -19,8 +19,9 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useCalendar from '../../hooks/data/useCalendar';
-import useProgress from '../../hooks/data/useProgress';
+import useData from '../../hooks/data/UseData';
+// import useCalendar from '../../hooks/data/useCalendar';
+// import useProgress from '../../hooks/data/useProgress';
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 
@@ -42,9 +43,20 @@ export default function ProgressScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
 
-  const {progressCalendarData} = useCalendar();
-  const {challengeData} = useProgress();
-
+  // const {progressCalendarData} = useCalendar();
+  // const {challengeData} = useProgress();
+  const [
+    progress,
+    getProgress,
+    challenges,
+    getChallenges,
+    challengeHistory,
+    getChallengeHistory,
+    progressHistory,
+    getProgressHistory,
+    progressImages,
+    getProgressImages,
+  ] = useData();
   const navigation = useNavigation();
 
   navigation.setOptions({

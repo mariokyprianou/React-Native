@@ -100,24 +100,24 @@ const App = () => {
       {Platform.OS === 'android' && (
         <StatusBar translucent backgroundColor="transparent" />
       )}
-
       <ScaleProvider config={{height: 667, width: 375}}>
-        <DataProvider>
-          <ThemeProvider>
-            <DictionaryProvider>
-              {/* <ApolloProvider client={client}> */}
-              <NavigationContainer>
-                <TDCountdown>
-                  <FormProvider>
-                    <AppContainer />
-                  </FormProvider>
-                </TDCountdown>
-              </NavigationContainer>
-              {/* </ApolloProvider> */}
-            </DictionaryProvider>
-          </ThemeProvider>
-        </DataProvider>
+        {/* <ApolloProvider client={client}> */}
+        {/* <DataProvider> */}
+        <ThemeProvider>
+          <DictionaryProvider>
+            <NavigationContainer>
+              <TDCountdown>
+                <FormProvider>
+                  <AppContainer />
+                </FormProvider>
+              </TDCountdown>
+            </NavigationContainer>
+          </DictionaryProvider>
+        </ThemeProvider>
+        {/* </DataProvider> */}
+        {/* </ApolloProvider> */}
       </ScaleProvider>
+
       <QuickPicker />
     </>
   );

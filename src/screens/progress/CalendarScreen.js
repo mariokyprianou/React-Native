@@ -11,9 +11,10 @@ import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useCalendar from '../../hooks/data/useCalendar';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import Header from '../../components/Headers/Header';
+import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
+import processProgressData from '../../utils/processProgressData';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +27,6 @@ export default function CalendarScreen() {
     pillWidth,
     lookupStyleTable,
   } = singleCalendarStyles;
-  const {calendarScreenData} = useCalendar();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
@@ -34,6 +34,14 @@ export default function CalendarScreen() {
   navigation.setOptions({
     header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
   });
+
+  const {fakeProgressHistory} = fakeProgressData();
+
+  const progressHistoryData = fakeProgressHistory
+    .map((month) => {
+      return processProgressData(month.days);
+    })
+    .flat();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -62,7 +70,7 @@ export default function CalendarScreen() {
           showPrevNextDays={false}
           datesSelectable={false}
           dateCellStyles={dateCellStyles}
-          cellData={calendarScreenData}
+          cellData={progressHistoryData}
           pillWidth={pillWidth}
           calendarType="multiple-month"
           lookupStyleTable={lookupStyleTable}

@@ -20,10 +20,11 @@ import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useData from '../../hooks/data/UseData';
-// import useCalendar from '../../hooks/data/useCalendar';
-// import useProgress from '../../hooks/data/useProgress';
+import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
+import useProgress from '../../hooks/data/useProgress';
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
+import processProgressData from '../../utils/processProgressData';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -43,20 +44,23 @@ export default function ProgressScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
 
-  // const {progressCalendarData} = useCalendar();
-  // const {challengeData} = useProgress();
-  const [
-    progress,
-    getProgress,
-    challenges,
-    getChallenges,
-    challengeHistory,
-    getChallengeHistory,
-    progressHistory,
-    getProgressHistory,
-    progressImages,
-    getProgressImages,
-  ] = useData();
+  const {challengeData} = useProgress();
+  // const [
+  //   progress,
+  //   // getProgress,
+  //   // challenges,
+  //   // getChallenges,
+  //   // challengeHistory,
+  //   // getChallengeHistory,
+  //   // progressHistory,
+  //   // getProgressHistory,
+  //   // progressImages,
+  //   // getProgressImages,
+  // ] = useData();
+  // console.log(progress);
+  const {fakeProgress, fakeChallenges} = fakeProgressData();
+  const progressData = processProgressData(fakeProgress.days);
+
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -141,7 +145,7 @@ export default function ProgressScreen() {
               showPrevNextDays={false}
               datesSelectable={false}
               dateCellStyles={dateCellStyles}
-              cellData={progressCalendarData}
+              cellData={progressData}
               pillWidth={pillWidth}
               lookupStyleTable={lookupStyleTable}
             />

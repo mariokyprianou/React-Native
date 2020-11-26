@@ -13,6 +13,7 @@ import {ApolloProvider} from 'react-apollo';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScaleProvider} from 'react-native-design-to-component';
 import {FormProvider} from 'the-core-ui-module-tdforms';
+import DataProvider from './hooks/data/DataProvider';
 import QuickPicker from 'quick-picker';
 import {TDCountdown} from 'the-core-ui-module-tdcountdown';
 import * as ScreenCapture from 'expo-screen-capture';
@@ -101,19 +102,21 @@ const App = () => {
       )}
 
       <ScaleProvider config={{height: 667, width: 375}}>
-        <ThemeProvider>
-          <DictionaryProvider>
-            {/* <ApolloProvider client={client}> */}
-            <NavigationContainer>
-              <TDCountdown>
-                <FormProvider>
-                  <AppContainer />
-                </FormProvider>
-              </TDCountdown>
-            </NavigationContainer>
-            {/* </ApolloProvider> */}
-          </DictionaryProvider>
-        </ThemeProvider>
+        <DataProvider>
+          <ThemeProvider>
+            <DictionaryProvider>
+              {/* <ApolloProvider client={client}> */}
+              <NavigationContainer>
+                <TDCountdown>
+                  <FormProvider>
+                    <AppContainer />
+                  </FormProvider>
+                </TDCountdown>
+              </NavigationContainer>
+              {/* </ApolloProvider> */}
+            </DictionaryProvider>
+          </ThemeProvider>
+        </DataProvider>
       </ScaleProvider>
       <QuickPicker />
     </>

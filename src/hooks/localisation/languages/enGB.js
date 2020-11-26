@@ -185,12 +185,11 @@ const enGB = {
 
   ProgressDict: {
     YourWorkouts: 'Your workouts',
-
     Your: 'Your',
     Progress: 'progress',
-
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
+    ChallengeTime: 'TIME',
   },
 
   TabsTitleDict: {

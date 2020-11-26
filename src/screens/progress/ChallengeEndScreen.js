@@ -16,19 +16,24 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+  const {dictionary} = useDictionary();
+  const {
+    ProgressDict: {ChallengeTime},
+  } = dictionary;
   const {updateValue} = FormHook();
   const {
     params: {
       challenge: {name, description, answerBoxLabel},
       historyData,
+      elapsed,
     },
-  } = useRoute(); // result/elapsedMS should come from here also
-  const result = 30;
+  } = useRoute();
 
   const navigation = useNavigation();
 
@@ -37,10 +42,10 @@ export default function ChallengeEndScreen() {
   });
 
   useEffect(() => {
-    if (result) {
-      updateValue({name: 'result', value: `${result}`});
+    if (elapsed) {
+      updateValue({name: 'result', value: elapsed});
     }
-  }, [result]);
+  }, [elapsed]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -99,6 +104,7 @@ export default function ChallengeEndScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleAddResult() {
+    // send latest result to back end and update historyData
     navigation.navigate('ChallengeComplete', {historyData, name});
   }
 
@@ -136,7 +142,9 @@ export default function ChallengeEndScreen() {
         <Text style={styles.description}>{description}</Text>
       </View>
       <View style={styles.answerBoxContainer}>
-        <Text style={styles.answerLabel}>{answerBoxLabel}</Text>
+        <Text style={styles.answerLabel}>
+          {elapsed ? ChallengeTime : answerBoxLabel}
+        </Text>
         <Form cells={cells} config={config} />
       </View>
       <View style={styles.buttonContainer}>

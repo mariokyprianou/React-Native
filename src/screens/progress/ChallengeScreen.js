@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -19,6 +19,8 @@ import Header from '../../components/Headers/Header';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
 import {useRoute} from '@react-navigation/core';
 import processChallengeHistory from '../../utils/processChallengeHistory';
+import handleTimer from '../../utils/handleTimer';
+import handleStopwatch from '../../utils/handleStopwatch';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 
 export default function ChallengeScreen() {
@@ -26,13 +28,14 @@ export default function ChallengeScreen() {
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
+  const [countdownInfo, setCountdownInfo] = useState();
   const {
     params: {challenge},
   } = useRoute();
-  const {description, name, timeLimit, timerType} = challenge;
+  const {description, name, timeLimit} = challenge;
   const {fakeChallengeHistory} = fakeProgressData();
   const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
-
+  const timerType = 'STOPWATCH';
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
   });
@@ -41,11 +44,8 @@ export default function ChallengeScreen() {
     .toISOString()
     .substr(11, 8);
 
-  const {remainingMS, toggle, reset} = useTimer({
-    timer: formattedSeconds,
-  });
-
-  // const {elapsedMS, toggle, reset} = useStopwatch();
+  const timerData = handleTimer(formattedSeconds);
+  const stopwatchData = handleStopwatch();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -87,16 +87,25 @@ export default function ChallengeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressStart() {
-    toggle();
+    if (timerType === 'COUNTDOWN') timerData.toggle();
+    if (timerType === 'STOPWATCH') stopwatchData.toggle();
   }
 
   function handlePressDone() {
+    const {elapsedMS} = stopwatchData;
+    const elapsed = msToHMSFull(elapsedMS);
     if (timerType === 'COUNTDOWN') {
       navigation.navigate('ChallengeEnd', {challenge, historyData});
+      timerData.reset();
     } else if (timerType === 'STOPWATCH') {
-      navigation.navigate('ChallengeEnd', {challenge, historyData, elapsedMS});
+      navigation.navigate('ChallengeEnd', {
+        challenge,
+        historyData,
+        elapsed,
+        elapsedMS,
+      });
+      stopwatchData.reset();
     }
-    reset();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -110,8 +119,8 @@ export default function ChallengeScreen() {
       </View>
       <Text style={styles.timerText}>
         {timerType === 'COUNTDOWN'
-          ? msToHMSFull(remainingMS)
-          : msToHMSFull(elapsedMS)}
+          ? msToHMSFull(timerData.remainingMS)
+          : msToHMSFull(stopwatchData.elapsedMS)}
       </Text>
       <View style={styles.buttonContainer}>
         <DefaultButton

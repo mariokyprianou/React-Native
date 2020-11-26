@@ -544,5 +544,19 @@ export default function FakeProgressData() {
         ],
       },
     ],
+    fakeProgressImages: [
+      {
+        takenAt: '2020-11-02T10:54:50.221Z',
+        imageUrl: 'www.google.com',
+      },
+      {
+        takenAt: '2020-11-13T10:54:50.221Z',
+        imageUrl: 'www.google.com',
+      },
+      {
+        takenAt: '2020-11-19T10:54:50.221Z',
+        imageUrl: 'www.google.com',
+      },
+    ],
   };
 }

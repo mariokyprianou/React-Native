@@ -10,13 +10,13 @@ import React, {useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
-import useTheme from '../../hooks/theme/UseTheme';
 import Slideshow from 'the-core-ui-module-tdslideshow';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import SliderButton from '../../components/Buttons/SliderButton';
 import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
+import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
@@ -33,13 +33,11 @@ export default function TransformationScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
-  const {colors} = useTheme();
-
-  const screenWidth = Dimensions.get('screen').width;
-
   navigation.setOptions({
     header: () => null,
   });
+  const {fakeProgressImages} = fakeProgressData();
+  const screenWidth = Dimensions.get('screen').width;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -101,7 +99,12 @@ export default function TransformationScreen() {
         CustomCountdown={() => (
           <CustomCountdown onPress={handleCountdownStart} />
         )}
-        DateSelectors={() => <CustomDateSelectors onPress={handleSelectDate} />}
+        DateSelectors={() => (
+          <CustomDateSelectors
+            onPress={handleSelectDate}
+            images={fakeProgressImages}
+          />
+        )}
         cameraButtonImage={cameraButton}
         cameraHeaderText={ProgressDict.Upload}
         overlayStyles={styles.overlay}

@@ -15,11 +15,12 @@ import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ProgressChart from '../../components/Infographics/ProgressChart';
-import useChallenge from '../../hooks/data/useChallenge';
 import Spacer from '../../components/Utility/Spacer';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import SetsTable from '../../components/Infographics/SetsTable';
 import format from 'date-fns/format';
+import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
+import processChallengeHistory from '../../utils/processChallengeHistory';
 
 export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,7 +28,6 @@ export default function WeightCaptureScreen() {
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const {challengeHistoryData, repsHistoryData} = useChallenge();
   const navigation = useNavigation();
 
   const today = new Date();
@@ -35,6 +35,13 @@ export default function WeightCaptureScreen() {
 
   navigation.setOptions({
     header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
+  });
+
+  const {fakeChallengeHistory} = fakeProgressData();
+  const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
+
+  const dropdownData = historyData.map((event) => {
+    return {label: `${event.value}`, value: event.value};
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -114,7 +121,7 @@ export default function WeightCaptureScreen() {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Squats -</Text>
           <DropDownPicker
-            items={repsHistoryData}
+            items={dropdownData}
             defaultValue={null}
             placeholder={WorkoutDict.Reps_}
             placeholderStyle={{
@@ -132,7 +139,7 @@ export default function WeightCaptureScreen() {
           <Text style={styles.subtitle}>{WorkoutDict.PickAWeight}</Text>
         </View>
         <View style={styles.chartCard}>
-          <ProgressChart data={challengeHistoryData} />
+          <ProgressChart data={historyData} />
         </View>
         <Spacer height={30} />
         <View style={{...styles.chartCard, ...styles.scrollCard}}>

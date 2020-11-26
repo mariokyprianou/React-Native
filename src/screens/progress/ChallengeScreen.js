@@ -11,7 +11,6 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
-import useChallenge from '../../hooks/data/useChallenge';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
@@ -19,6 +18,8 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
 import {useRoute} from '@react-navigation/core';
+import processChallengeHistory from '../../utils/processChallengeHistory';
+import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,11 +27,11 @@ export default function ChallengeScreen() {
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
   const {
-    params: {
-      challenge: {description, name, timeLimit},
-    },
+    params: {challenge},
   } = useRoute();
-  const {challengeHistoryData} = useChallenge();
+  const {description, name, timeLimit} = challenge;
+  const {fakeChallengeHistory} = fakeProgressData();
+  const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
 
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
@@ -90,7 +91,7 @@ export default function ChallengeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <ProgressChart data={challengeHistoryData} />
+        <ProgressChart data={historyData} />
       </View>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
@@ -108,7 +109,9 @@ export default function ChallengeScreen() {
           type="done"
           icon="chevron"
           variant="white"
-          onPress={() => navigation.navigate('ChallengeEnd')}
+          onPress={() =>
+            navigation.navigate('ChallengeEnd', {challenge, historyData})
+          }
         />
       </View>
     </View>

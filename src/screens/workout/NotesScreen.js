@@ -27,7 +27,7 @@ export default function NotesScreen() {
   const navigation = useNavigation();
   const {
     challengeData: {description, notes},
-  } = useChallenge();
+  } = useChallenge(); // replace with workout data
 
   navigation.setOptions({
     header: () => <Header title={WorkoutDict.Notes} showModalCross />,

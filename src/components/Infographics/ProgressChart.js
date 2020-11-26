@@ -13,43 +13,21 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
 
-export default function ProgressChart({axis = true, selectable = false}) {
+export default function ProgressChart({axis = true, selectable = false, data}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
-  const fakeData = [
-    {x: 1, y: 5},
-    {x: 2, y: 8},
-    {x: 3, y: 13},
-    {x: 4, y: 24},
-    {x: 5, y: 16},
-    {x: 6, y: 18},
-    {x: 7, y: 9},
-    {x: 8, y: 3},
-    {x: 9, y: 7},
-    {x: 10, y: 4},
-    {x: 11, y: 10},
-    {x: 12, y: 20},
-  ];
+  const dataPoints = data.map((event, index) => {
+    return {x: index + 1, y: event.value};
+  });
 
-  const highestValue = Math.max(...fakeData.map((point) => point.y));
+  const highestValue = Math.max(...dataPoints.map((point) => point.y));
   const ticks = Math.ceil(highestValue / 5);
 
-  const xLabels = [
-    '26/06',
-    '27/06',
-    '28/06',
-    '29/06',
-    '30/06',
-    '01/07',
-    '02/07',
-    '03/07',
-    '04/07',
-    '05/07',
-    '06/07',
-    '07/07',
-  ];
+  const xLabels = data.map((event) => {
+    return event.date;
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -93,7 +71,7 @@ export default function ProgressChart({axis = true, selectable = false}) {
         contentContainerStyle={{alignItems: 'flex-end'}}>
         <View>
           <SlideBarChart
-            data={fakeData}
+            data={dataPoints}
             barSpacing={40}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
@@ -104,7 +82,7 @@ export default function ProgressChart({axis = true, selectable = false}) {
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={fakeData.length * 50}
+            width={dataPoints.length * 50}
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}
@@ -133,7 +111,7 @@ export default function ProgressChart({axis = true, selectable = false}) {
       {/* without scroll */}
       {/* <View style={styles.nonScrollContainer}>
         <SlideBarChart
-          data={fakeData}
+          data={dataPoints}
           barSpacing={40}
           selectionChangedCallback={(barIndex) => console.log(barIndex)}
           renderFillGradient={(props) => defaultBarChartFillGradient(props)}

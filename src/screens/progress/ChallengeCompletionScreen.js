@@ -16,18 +16,20 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
+import {useRoute} from '@react-navigation/core';
 
 export default function ChallengeCompletionScreen({
   result = '20 squats',
-  challengeName = '60-second squats',
   trainerName = 'Katrina',
-  data,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const {
+    params: {historyData, name},
+  } = useRoute(); // bring result in too
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -109,11 +111,11 @@ export default function ChallengeCompletionScreen({
     <View style={styles.container}>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
-          {WorkoutDict.ChallengeComplete(challengeName, trainerName)}
+          {WorkoutDict.ChallengeComplete(name, trainerName)}
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart data={data} axis={false} />
+        <ProgressChart data={historyData} axis={false} />
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>

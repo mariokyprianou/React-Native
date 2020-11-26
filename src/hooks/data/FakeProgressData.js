@@ -506,5 +506,43 @@ export default function FakeProgressData() {
         timeLimit: 60,
       },
     ],
+    fakeChallengeHistory: [
+      {
+        challenge: {
+          id: '1',
+          timerType: 'COUNTDOWN',
+          name: '60-second squats',
+          description: 'See how many squats you can do in 60 seconds!',
+          answerBoxLabel: 'NUMBER OF SQUATS',
+          timeLimit: 60,
+        },
+        history: [
+          {
+            id: '100',
+            date: '2020-11-04T10:54:50.221Z',
+            value: 5,
+            unit: 'reps',
+          },
+          {
+            id: '101',
+            date: '2020-11-10T10:54:50.221Z',
+            value: 10,
+            unit: 'reps',
+          },
+          {
+            id: '102',
+            date: '2020-11-19T10:54:50.221Z',
+            value: 15,
+            unit: 'reps',
+          },
+          {
+            id: '103',
+            date: '2020-11-20T10:54:50.221Z',
+            value: 20,
+            unit: 'reps',
+          },
+        ],
+      },
+    ],
   };
 }

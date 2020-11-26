@@ -6,28 +6,28 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
-import useChallenge from '../../hooks/data/useChallenge';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
+import {useRoute} from '@react-navigation/core';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {challengeData, challengeHistoryData} = useChallenge();
   const {
-    name,
-    description,
-    answerBoxLabel,
-    result,
-    trainerName,
-  } = challengeData;
+    params: {
+      challenge: {name, description, answerBoxLabel},
+      historyData,
+    },
+  } = useRoute(); // result should come from here also
+  const result = 30;
+
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -91,14 +91,14 @@ export default function ChallengeEndScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleAddResult() {
-    navigation.navigate('ChallengeComplete');
+    navigation.navigate('ChallengeComplete', {historyData, name});
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <ProgressChart data={challengeHistoryData} />
+        <ProgressChart data={historyData} />
       </View>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>

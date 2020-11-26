@@ -500,9 +500,9 @@ export default function FakeProgressData() {
       {
         id: '3',
         timerType: 'COUNTDOWN',
-        name: '60-second jumping jacks',
+        name: '60-second jacks',
         description: 'See how many jumping jacks you can do in 60 seconds!',
-        answerBoxLabel: 'NUMBER OF JUMPING JACKS',
+        answerBoxLabel: 'NUMBER OF JACKS',
         timeLimit: 60,
       },
     ],

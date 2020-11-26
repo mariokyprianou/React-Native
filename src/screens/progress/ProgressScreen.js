@@ -21,7 +21,6 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useData from '../../hooks/data/UseData';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
-import useProgress from '../../hooks/data/useProgress';
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import processProgressData from '../../utils/processProgressData';
@@ -44,7 +43,6 @@ export default function ProgressScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
 
-  const {challengeData} = useProgress();
   // const [
   //   progress,
   //   // getProgress,
@@ -158,15 +156,15 @@ export default function ProgressScreen() {
             image={fakeImage}
             onPress={() => navigation.navigate('Transformation')}
           />
-          {challengeData.map((challenge, index) => {
-            const {name, image} = challenge;
+          {fakeChallenges.map((challenge, index) => {
+            const {name} = challenge;
             return (
               <TransformationChallenge
                 key={index}
                 type="challenge"
                 title={name}
                 image={fakeGraph}
-                onPress={() => navigation.navigate('Challenge')}
+                onPress={() => navigation.navigate('Challenge', {challenge})}
               />
             );
           })}

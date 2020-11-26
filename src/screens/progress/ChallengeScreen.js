@@ -18,25 +18,29 @@ import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
+import {useRoute} from '@react-navigation/core';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {challengeData, challengeHistoryData} = useChallenge();
-  const {name, description, timeLimit} = challengeData;
   const navigation = useNavigation();
+  const {
+    params: {
+      challenge: {description, name, timeLimit},
+    },
+  } = useRoute();
+  const {challengeHistoryData} = useChallenge();
+
+  navigation.setOptions({
+    header: () => <Header title={name} goBack />,
+  });
 
   const formattedSeconds = new Date(timeLimit * 1000)
     .toISOString()
     .substr(11, 8);
-
   const {remainingMS, toggle, reset} = useTimer({
     timer: formattedSeconds,
-  });
-
-  navigation.setOptions({
-    header: () => <Header title={name} goBack />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

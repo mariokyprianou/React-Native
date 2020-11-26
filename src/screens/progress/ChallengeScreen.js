@@ -11,7 +11,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
-import {useTimer} from 'the-core-ui-module-tdcountdown';
+import {useTimer, useStopwatch} from 'the-core-ui-module-tdcountdown';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
@@ -29,7 +29,7 @@ export default function ChallengeScreen() {
   const {
     params: {challenge},
   } = useRoute();
-  const {description, name, timeLimit} = challenge;
+  const {description, name, timeLimit, timerType} = challenge;
   const {fakeChallengeHistory} = fakeProgressData();
   const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
 
@@ -40,9 +40,12 @@ export default function ChallengeScreen() {
   const formattedSeconds = new Date(timeLimit * 1000)
     .toISOString()
     .substr(11, 8);
+
   const {remainingMS, toggle, reset} = useTimer({
     timer: formattedSeconds,
   });
+
+  // const {elapsedMS, toggle, reset} = useStopwatch();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -84,7 +87,16 @@ export default function ChallengeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressStart() {
-    // start timer
+    toggle();
+  }
+
+  function handlePressDone() {
+    if (timerType === 'COUNTDOWN') {
+      navigation.navigate('ChallengeEnd', {challenge, historyData});
+    } else if (timerType === 'STOPWATCH') {
+      navigation.navigate('ChallengeEnd', {challenge, historyData, elapsedMS});
+    }
+    reset();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -96,7 +108,11 @@ export default function ChallengeScreen() {
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
       </View>
-      <Text style={styles.timerText}>{msToHMSFull(remainingMS)}</Text>
+      <Text style={styles.timerText}>
+        {timerType === 'COUNTDOWN'
+          ? msToHMSFull(remainingMS)
+          : msToHMSFull(elapsedMS)}
+      </Text>
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="start"
@@ -109,9 +125,7 @@ export default function ChallengeScreen() {
           type="done"
           icon="chevron"
           variant="white"
-          onPress={() =>
-            navigation.navigate('ChallengeEnd', {challenge, historyData})
-          }
+          onPress={handlePressDone}
         />
       </View>
     </View>

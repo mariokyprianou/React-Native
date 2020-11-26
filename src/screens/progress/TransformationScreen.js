@@ -68,6 +68,7 @@ export default function TransformationScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePhoto() {
     console.log('set photo');
+    const takenAt = new Date();
     // send to back end with today's date, format ProgressImage
   }
 

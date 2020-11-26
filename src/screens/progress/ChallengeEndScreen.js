@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -15,17 +15,19 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
+import {Form, FormHook} from 'the-core-ui-module-tdforms';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+  const {updateValue} = FormHook();
   const {
     params: {
       challenge: {name, description, answerBoxLabel},
       historyData,
     },
-  } = useRoute(); // result should come from here also
+  } = useRoute(); // result/elapsedMS should come from here also
   const result = 30;
 
   const navigation = useNavigation();
@@ -33,6 +35,12 @@ export default function ChallengeEndScreen() {
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
   });
+
+  useEffect(() => {
+    if (result) {
+      updateValue({name: 'result', value: `${result}`});
+    }
+  }, [result]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -95,6 +103,30 @@ export default function ChallengeEndScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+  const cells = [
+    {
+      name: 'result',
+      type: 'text',
+      placeholder: '',
+      ...cellFormStyles,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.black30,
+      marginTop: getHeight(-60),
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+      },
+      style: {
+        ...textStyles.regular16_black100,
+        width: '100%',
+        paddingBottom: getHeight(13),
+      },
+    },
+  ];
+
+  const config = {
+    ...cellFormConfig,
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -105,8 +137,7 @@ export default function ChallengeEndScreen() {
       </View>
       <View style={styles.answerBoxContainer}>
         <Text style={styles.answerLabel}>{answerBoxLabel}</Text>
-        <Text style={styles.result}>{result}</Text>
-        <View style={styles.line} />
+        <Form cells={cells} config={config} />
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

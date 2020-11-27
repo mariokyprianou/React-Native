@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,19 +17,19 @@ import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
+import {FormHook} from 'the-core-ui-module-tdforms';
 
-export default function ChallengeCompletionScreen({
-  result = '20 squats',
-  trainerName = 'Katrina',
-}) {
+export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
+  const [challengeResult, setChallengeResult] = useState();
+  const {getValues, cleanValues} = FormHook();
   const {WorkoutDict} = dictionary;
   const {
-    params: {historyData, name},
-  } = useRoute(); // bring result in too
+    params: {historyData, name, elapsed},
+  } = useRoute();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -43,6 +43,16 @@ export default function ChallengeCompletionScreen({
   });
 
   const screenWidth = Dimensions.get('screen').width;
+
+  useEffect(() => {
+    if (elapsed) {
+      setChallengeResult(elapsed);
+    } else {
+      const result = getValues('result').result;
+      setChallengeResult(result);
+    }
+    cleanValues();
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -87,6 +97,10 @@ export default function ChallengeCompletionScreen({
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
     },
+    timeResult: {
+      ...textStyles.bold30_black100,
+      textAlign: 'left',
+    },
     resultText: {
       ...textStyles.bold34_black100,
       textAlign: 'left',
@@ -119,7 +133,9 @@ export default function ChallengeCompletionScreen({
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
-        <Text style={styles.resultText}>{result}</Text>
+        <Text style={elapsed ? styles.timeResult : styles.resultText}>
+          {challengeResult}
+        </Text>
       </View>
       <View style={styles.line} />
       <View style={styles.buttonContainer}>

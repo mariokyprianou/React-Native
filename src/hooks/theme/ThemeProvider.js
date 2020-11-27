@@ -162,6 +162,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(35),
       color: colors.white100,
     },
+    bold30_black100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(30),
+      lineHeight: fontSize(36),
+      color: colors.black100,
+    },
     bold34_aquamarine100: {
       fontFamily: fonts.bold,
       fontSize: fontSize(34),

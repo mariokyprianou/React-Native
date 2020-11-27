@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -32,9 +32,9 @@ export default function ChallengeEndScreen() {
       challenge: {name, description, answerBoxLabel},
       historyData,
       elapsed,
+      elapsedMS,
     },
   } = useRoute();
-
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -103,9 +103,14 @@ export default function ChallengeEndScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+
   function handleAddResult() {
-    // send latest result to back end and update historyData
-    navigation.navigate('ChallengeComplete', {historyData, name});
+    // send latest result to back end and update historyData using elapsedMS
+    navigation.navigate('ChallengeComplete', {
+      historyData,
+      name,
+      elapsed,
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

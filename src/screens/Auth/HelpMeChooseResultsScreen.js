@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, ImageBackground} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import Header from '../../components/Headers/Header';
+import isIPhoneX from '../../utils/isIphoneX';
 
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
@@ -47,11 +48,9 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
       backgroundColor: colors.backgroundWhite100,
     },
     imageContainer: {
-      width: '100%',
-      height: getHeight(420),
-      position: 'absolute',
-      top: getHeight(69),
-      zIndex: 0,
+      width: '90%',
+      height: getHeight(70),
+      alignSelf: 'center',
     },
     fadeContainer: {
       width: '100%',
@@ -62,15 +61,13 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
       width: '100%',
       height: getHeight(420),
       resizeMode: 'cover',
-      position: 'absolute',
-      top: 0,
+      backgroundColor: 'red',
     },
     titleContainer: {
-      width: '90%',
-      height: getHeight(470),
-      alignSelf: 'center',
       position: 'absolute',
-      top: getHeight(0),
+      width: '90%',
+      bottom: getHeight(30),
+      marginHorizontal: getWidth(20),
     },
     title: {
       ...textStyles.semiBold14_black100,
@@ -87,15 +84,14 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
     },
     buttonContainer: {
       width: '100%',
-      alignItems: 'center',
-      position: 'absolute',
-      bottom: getHeight(30),
-      backgroundColor: 'transparent',
+      flex: 1,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      marginBottom: isIPhoneX() ? getHeight(8) : 0,
     },
     name: {
       ...textStyles.bold18_white100,
       letterSpacing: 0.9,
-      marginTop: getHeight(340),
       textAlign: 'left',
     },
     result: {
@@ -110,13 +106,8 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
-        <Image source={fakeImage} style={styles.image} />
-        <View style={styles.fadeContainer}>
-          <FadingBottomView color="black" height={420} />
-        </View>
-      </View>
-      <View style={styles.titleContainer}>
         <Text style={styles.title}>{HelpMeChooseDict.Result}</Text>
+
         <View style={styles.barContainer}>
           <LinearGradient
             style={styles.bar}
@@ -125,11 +116,19 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
             colors={[colors.tiffanyBlue100, colors.tealish100]}
           />
         </View>
-        <Text style={styles.name}>{capitalizedName}</Text>
-        <Text style={styles.result}>
-          {HelpMeChooseDict.SuggestedProgramme(name)}
-        </Text>
       </View>
+
+      <ImageBackground source={fakeImage} style={styles.image}>
+        <FadingBottomView color="black" height={420} />
+
+        <View style={styles.titleContainer}>
+          <Text style={styles.name}>{capitalizedName}</Text>
+          <Text style={styles.result}>
+            {HelpMeChooseDict.SuggestedProgramme(name)}
+          </Text>
+        </View>
+      </ImageBackground>
+
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="programme"

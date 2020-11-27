@@ -30,7 +30,7 @@ export default function FadingBottomView({color = 'white', height}) {
 
   const fadeStyles = {
     white: [colors.white0, colors.white100],
-    blue: [colors.paleTurquoise0, colors.paleTurquoise100],
+    blue: [colors.powderBlue0, colors.powderBlue100],
     black: [colors.black0, colors.black0point5],
   };
 

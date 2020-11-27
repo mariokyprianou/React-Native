@@ -17,7 +17,7 @@ import {color} from 'react-native-reanimated';
 
 export default function PercentageBar({icon, text, percentage}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   const lightningIcon = require('../../../assets/icons/lightning.png');
@@ -68,6 +68,7 @@ export default function PercentageBar({icon, text, percentage}) {
     bar: {
       height: getHeight(4),
       marginBottom: getHeight(4),
+      borderRadius: radius(2),
     },
     activeBar: {
       backgroundColor: colors.white100,

@@ -7,11 +7,12 @@
  */
 
 import React from 'react';
-import {Dimensions, View, Image, Text, TouchableOpacity} from 'react-native';
+import {View, Image, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TDIcon from 'the-core-ui-component-tdicon';
 import isRTL from '../../utils/isRTL';
+import FadingBottomView from '../Views/FadingBottomView';
 
 export default function OnboardingSliderItem({
   image,
@@ -22,8 +23,6 @@ export default function OnboardingSliderItem({
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-
-  const screenWidth = Dimensions.get('screen').width;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -39,13 +38,21 @@ export default function OnboardingSliderItem({
       alignItems: 'flex-end',
       paddingBottom: getHeight(93),
     },
+    imagesContainer: {
+      height: getHeight(310),
+      width: getWidth(210),
+      position: 'absolute',
+      top: 0,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      alignSelf: 'center',
+    },
     image: {
-      height: getHeight(309),
+      height: getHeight(330),
       width: getWidth(196),
       position: 'absolute',
       resizeMode: 'contain',
       top: 0,
-      left: screenWidth / 2 - getWidth(196) / 2,
     },
     icon: {
       size: fontSize(18),
@@ -82,7 +89,10 @@ export default function OnboardingSliderItem({
           />
         </TouchableOpacity>
       </View>
-      <Image source={image} style={styles.image} />
+      <View style={styles.imagesContainer}>
+        <Image source={image} style={styles.image} />
+        <FadingBottomView color="white" height={80} />
+      </View>
       <Text style={styles.header}>{header}</Text>
       <Text style={styles.text}>{text}</Text>
     </View>

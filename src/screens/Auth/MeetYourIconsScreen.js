@@ -29,6 +29,7 @@ import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
+import {format} from 'date-fns';
 
 const fakeImage = require('../../../assets/images/trainerCarousel.png');
 
@@ -97,7 +98,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
       height: getHeight(150),
       position: 'absolute',
       left: screenWidth * 0.05,
-      top: getHeight(130),
+      top: getHeight(110),
       zIndex: 9,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -110,7 +111,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     },
     sliderContainer: {
       flex: 1,
-      backgroundColor: colors.paleTurquoise100,
+      backgroundColor: colors.powderBlue100,
     },
     cardContainer: {
       height: getHeight(410),
@@ -145,11 +146,11 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
       marginTop: getHeight(30),
       paddingBottom: getHeight(25),
       alignItems: 'center',
-      backgroundColor: colors.paleTurquoise100,
+      backgroundColor: colors.powderBlue100,
     },
     singleButtonContainer: {
       width: '100%',
-      backgroundColor: colors.paleTurquoise100,
+      backgroundColor: colors.powderBlue100,
       alignItems: 'center',
       position: 'absolute',
       bottom: getHeight(25),
@@ -296,15 +297,21 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
                     }>{`${liveWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
                 </View>
                 <View style={styles.workoutContainer}>
-                  {firstWeek.map(({title, day, date, duration, intensity}) => (
-                    <WorkoutCard
-                      title={title}
-                      day={day}
-                      date={date}
-                      duration={duration}
-                      intensity={intensity}
-                    />
-                  ))}
+                  {firstWeek.map(({title, day, date, duration, intensity}) => {
+                    const formattedDate = format(
+                      new Date(date),
+                      'eeee, eo LLL',
+                    );
+                    return (
+                      <WorkoutCard
+                        title={title}
+                        day={day}
+                        date={formattedDate}
+                        duration={duration}
+                        intensity={intensity}
+                      />
+                    );
+                  })}
                 </View>
                 <Spacer height={180} />
               </ScrollView>
@@ -336,7 +343,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
       ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
-            type="start"
+            type="startNow"
             icon="chevron"
             variant="gradient"
             onPress={() => navigation.navigate('Congratulations')} // add params to say which trainer selected

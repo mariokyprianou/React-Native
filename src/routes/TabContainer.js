@@ -39,7 +39,7 @@ export default function TabContainer() {
       justifyContent: 'center',
     },
     labelStyle: {
-      // fontFamily: 'Poppins-SemiBold',
+      fontFamily: 'proximanova-semibold',
       fontSize: fontSize(10),
     },
   });

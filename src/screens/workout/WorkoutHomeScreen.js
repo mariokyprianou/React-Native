@@ -124,10 +124,11 @@ export default function WorkoutHomeScreen() {
       textAlign: 'left',
     },
     touch: {
-      marginRight: getWidth(30),
+      marginRight: getWidth(25),
     },
     icon: {
       size: fontSize(16),
+      color: colors.black100,
     },
     cardContainer: {
       width: '100%',

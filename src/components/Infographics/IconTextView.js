@@ -22,6 +22,7 @@ export default function IconTextView({
   reps,
   sets,
   color = 'grey',
+  alignLeft,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -45,7 +46,7 @@ export default function IconTextView({
     container: {
       flexDirection: 'row',
       alignSelf: 'flex-start',
-      marginStart: getWidth(25),
+      marginStart: alignLeft ? 0 : getWidth(25),
       marginEnd: getWidth(25),
     },
     completeContainer: {
@@ -69,7 +70,12 @@ export default function IconTextView({
       // marginRight: getWidth(42),
     },
     icon: {
-      tintColor: color || colors.brownishGreyTwo100,
+      tintColor:
+        color === 'grey'
+          ? {tintColor: colors.brownishGreyTwo100}
+          : {
+              tintColor: colors.white100,
+            },
       resizeMode: 'contain',
       height: getHeight(15),
       width: getWidth(15),

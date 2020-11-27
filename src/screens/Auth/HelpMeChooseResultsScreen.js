@@ -67,14 +67,15 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
     },
     titleContainer: {
       width: '90%',
-      height: getHeight(480),
+      height: getHeight(470),
       alignSelf: 'center',
       position: 'absolute',
       top: getHeight(0),
     },
     title: {
       ...textStyles.semiBold14_black100,
-      marginTop: getHeight(30),
+      marginTop: getHeight(20),
+      marginBottom: getHeight(5),
       textAlign: 'left',
     },
     barContainer: {
@@ -88,11 +89,12 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
       width: '100%',
       alignItems: 'center',
       position: 'absolute',
-      bottom: getHeight(40),
+      bottom: getHeight(30),
       backgroundColor: 'transparent',
     },
     name: {
       ...textStyles.bold18_white100,
+      letterSpacing: 0.9,
       marginTop: getHeight(340),
       textAlign: 'left',
     },

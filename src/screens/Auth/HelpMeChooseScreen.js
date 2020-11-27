@@ -17,7 +17,6 @@ import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
 import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
 import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
-// import HelpMeChooseResultsModal from '../../components/Modals/HelpMeChooseResultsModal';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,7 +26,6 @@ export default function HelpMeChooseScreen() {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
-  // const [showResultScreen, setShowResultScreen] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -67,25 +65,6 @@ export default function HelpMeChooseScreen() {
       setCurrentQuestion(currentQuestion + 1);
     }
   }
-
-  // function handleCloseResults() {
-  //   setShowResultScreen(false);
-  //   onPressClose();
-  // }
-
-  // function handleSelectProgramme() {
-  //   setShowResultScreen(false);
-  // }
-
-  // ** ** ** ** ** RENDER ** ** ** ** **
-  // if (showResultScreen === true) {
-  //   return (
-  //     <HelpMeChooseResultsModal
-  //       onPressClose={handleCloseResults}
-  //       onSelectProgramme={handleSelectProgramme}
-  //     />
-  //   );
-  // }
 
   return (
     <View style={styles.card}>

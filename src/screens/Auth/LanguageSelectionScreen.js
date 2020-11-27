@@ -89,6 +89,12 @@ export default function LanguageSelectionScreen() {
       iconTintColor: colors.black100,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+      },
+      inputStyle: {
+        ...textStyles.regular16_brownishGrey100,
+      },
     },
   ];
   const config = {

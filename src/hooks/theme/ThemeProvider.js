@@ -64,6 +64,7 @@ export default function ThemeProvider({children}) {
       fontFamily: fonts.bold,
       fontSize: fontSize(15),
       lineHeight: fontSize(20),
+      letterSpacing: 0.75,
       color: colors.black100,
     },
     bold15_brownishGrey80: {
@@ -191,6 +192,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(15),
       lineHeight: fontSize(20),
       color: colors.black100,
+    },
+    medium10_brownishGrey100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(10),
+      lineHeight: fontSize(12),
+      color: colors.brownishGrey100,
     },
     medium12_brownishGrey100: {
       fontFamily: fonts.medium,

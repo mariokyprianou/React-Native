@@ -11,53 +11,55 @@ import {useState} from 'react';
 const fakeData = [
   {
     key: '1',
-    questionText: 'This is the first question.',
+    questionText:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     answers: [
       {
         key: '11',
         answerLetter: 'A',
-        answerText: 'Answer one',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
       {
         key: '12',
         answerLetter: 'B',
-        answerText: 'Answer two',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
       {
         key: '13',
         answerLetter: 'C',
-        answerText: 'Answer three',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
       {
         key: '14',
         answerLetter: 'D',
-        answerText: 'Answer four',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
     ],
   },
   {
     key: '2',
-    questionText: 'This is the second question.',
+    questionText:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     answers: [
       {
         key: '15',
         answerLetter: 'A',
-        answerText: 'Answer one',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
       {
         key: '16',
         answerLetter: 'B',
-        answerText: 'Answer two',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
       {
         key: '17',
         answerLetter: 'C',
-        answerText: 'Answer three',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
       {
         key: '18',
         answerLetter: 'D',
-        answerText: 'Answer four',
+        answerText: 'Lorem ipsum dolor sit amet',
       },
     ],
   },

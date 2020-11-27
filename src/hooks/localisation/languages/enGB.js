@@ -221,7 +221,7 @@ const enGB = {
     Low: 'Low',
     Medium: 'Medium',
     High: 'High',
-    Intensity: 'intensity',
+    Intensity: 'Intensity',
     Mins: 'mins',
     Reps: 'reps',
     Sets: 'sets',

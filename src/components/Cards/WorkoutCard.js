@@ -40,6 +40,10 @@ export default function WorkoutCard({
   const today = new Date();
   const formattedToday = format(today, 'iiii, do LLL');
 
+  const datePart1 = date.slice(0, -6);
+  const dateSuperscript = date.slice(-6, -4);
+  const datePart2 = date.slice(-4);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
@@ -105,9 +109,15 @@ export default function WorkoutCard({
       marginRight: getWidth(2),
       textAlign: 'left',
     },
+    dateContainer: {
+      flexDirection: 'row',
+    },
     date: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
+    },
+    dateSuperscript: {
+      ...textStyles.medium10_brownishGrey100,
     },
   };
 
@@ -143,13 +153,18 @@ export default function WorkoutCard({
                   : `${WorkoutDict.Day} ${workoutDay}: `}
               </Text>
             )}
-            <Text style={styles.date}>{date}</Text>
+            <View style={styles.dateContainer}>
+              <Text style={styles.date}>{datePart1}</Text>
+              <Text style={styles.dateSuperscript}>{dateSuperscript}</Text>
+              <Text style={styles.date}>{datePart2}</Text>
+            </View>
           </View>
           {title !== WorkoutDict.RestDay && (
             <IconTextView
               type="intensity"
               duration={duration}
               intensity={intensity}
+              alignLeft
             />
           )}
         </View>

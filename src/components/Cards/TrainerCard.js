@@ -14,6 +14,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
 import PercentageBar from '../Infographics/PercentageBar';
+import Spacer from '../Utility/Spacer';
 
 export default function TrainerCard({
   name,
@@ -51,7 +52,7 @@ export default function TrainerCard({
     },
     overlay: {
       width: '100%',
-      bottom: getHeight(120),
+      bottom: getHeight(140),
     },
     titleContainer: {
       width: '90%',
@@ -88,11 +89,13 @@ export default function TrainerCard({
             text={MeetYourIconsDict.FatLoss}
             percentage={fatLoss}
           />
+          <Spacer height={10} />
           <PercentageBar
             icon="heartRate"
             text={MeetYourIconsDict.Fitness}
             percentage={fitness}
           />
+          <Spacer height={10} />
           <PercentageBar
             icon="weight"
             text={MeetYourIconsDict.BuildMuscle}

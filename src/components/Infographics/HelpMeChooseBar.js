@@ -20,7 +20,7 @@ export default function HelpMeChooseBar({
   showText = true,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
@@ -42,10 +42,14 @@ export default function HelpMeChooseBar({
     },
     activeBar: {
       width: `${activeWidth}%`,
+      borderBottomLeftRadius: radius(2),
+      borderTopLeftRadius: radius(2),
     },
     inactiveBar: {
       width: `${inactiveWidth}%`,
       backgroundColor: colors.paleTurquoise100,
+      borderBottomRightRadius: radius(2),
+      borderTopRightRadius: radius(2),
     },
     text: {
       ...textStyles.light15_black100,

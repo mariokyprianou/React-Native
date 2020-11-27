@@ -36,11 +36,15 @@ export default function TabContainer() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     tabBarOptionStyles: {
-      justifyContent: 'center',
+      justifyContent: 'space-between',
+      paddingTop: getHeight(20),
+      paddingBottom: getHeight(20),
+      height: getHeight(68),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',
       fontSize: fontSize(10),
+      marginTop: getHeight(12),
     },
   });
 
@@ -107,13 +111,6 @@ export default function TabContainer() {
         labelStyle: styles.labelStyle,
         activeTintColor: colors.black100,
         inactiveTintColor: colors.black30,
-        ...Platform.select({
-          android: {
-            safeAreaInsets: {
-              bottom: 10,
-            },
-          },
-        }),
       }}>
       <BottomTab.Screen
         name="Tab1"

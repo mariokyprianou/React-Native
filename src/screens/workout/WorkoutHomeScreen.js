@@ -100,7 +100,9 @@ export default function WorkoutHomeScreen() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
+      flex: 1,
       alignItems: 'center',
+      width: '100%',
       backgroundColor: colors.backgroundWhite100,
     },
     titleContainer: {
@@ -138,6 +140,7 @@ export default function WorkoutHomeScreen() {
       alignItems: 'center',
     },
     draggableContainer: {
+      //paddingHorizontal: 20,
       paddingBottom: getHeight(245),
     },
   };
@@ -191,12 +194,18 @@ export default function WorkoutHomeScreen() {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.draggableContainer}>
-        <DraggableFlatList
-          data={workoutsToDisplay}
-          keyExtractor={(item, index) => `${index}`}
-          onDragEnd={({data}) => setWorkoutsToDisplay(data)}
-          renderItem={({item, index, drag, isActive}) => (
+
+      <DraggableFlatList
+        data={workoutsToDisplay}
+        keyExtractor={(item, index) => `${index}`}
+        onDragEnd={({data}) => setWorkoutsToDisplay(data)}
+        renderItem={({item, index, drag, isActive}) => (
+          <View
+            style={{
+              width: '100%',
+              paddingHorizontal: getWidth(20),
+              paddingTop: index === 0 ? getHeight(20) : 0,
+            }}>
             <WorkoutCard
               title={item.title}
               day={item.day}
@@ -207,9 +216,9 @@ export default function WorkoutHomeScreen() {
               drag={drag}
               onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
             />
-          )}
-        />
-      </View>
+          </View>
+        )}
+      />
     </View>
   );
 }

@@ -57,7 +57,7 @@ export default function WorkoutCard({
       shadowRadius: 6,
       shadowOpacity: 1,
       elevation: 6,
-      marginTop: getHeight(15),
+      marginBottom: getHeight(15),
     },
     touch: {
       flex: 1,
@@ -73,18 +73,18 @@ export default function WorkoutCard({
       left: 0,
     },
     image: {
+      width: '100%',
       height: '100%',
       opacity: 0.2,
       position: 'absolute',
-      right: 0,
     },
     iconContainer: {
       marginLeft: getWidth(10),
-      marginRight: getWidth(20),
     },
     icon: {
       solid: true,
-      size: fontSize(14),
+      color: colors.black100,
+      size: fontSize(12),
     },
     completeIconContainer: {
       marginRight: getWidth(7),
@@ -132,44 +132,50 @@ export default function WorkoutCard({
         {date === formattedToday && (
           <Image source={image} style={styles.image} />
         )}
-        <View style={styles.iconContainer}>
-          <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <View style={styles.dayContainer}>
-            {status === 'complete' && (
-              <View style={styles.completeIconContainer}>
-                <TDIcon
-                  input={'check-circle'}
-                  inputStyle={{...styles.icon, ...styles.completeIcon}}
-                />
-              </View>
-            )}
-            {title !== WorkoutDict.RestDay && (
-              <Text style={styles.workoutDay}>
-                {isRTL()
-                  ? `:${WorkoutDict.Day} ${workoutDay} `
-                  : `${WorkoutDict.Day} ${workoutDay}: `}
-              </Text>
-            )}
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>{datePart1}</Text>
-              <Text style={styles.dateSuperscript}>{dateSuperscript}</Text>
-              <Text style={styles.date}>{datePart2}</Text>
-            </View>
+
+        {drag && (
+          <View style={styles.iconContainer}>
+            <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
           </View>
-          {title !== WorkoutDict.RestDay && (
-            <IconTextView
-              type="intensity"
-              duration={duration}
-              intensity={intensity}
-              alignLeft
-            />
-          )}
+        )}
+
+        <View style={{padding: getWidth(20)}}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{title}</Text>
+            <View style={styles.dayContainer}>
+              {status === 'complete' && (
+                <View style={styles.completeIconContainer}>
+                  <TDIcon
+                    input={'check-circle'}
+                    inputStyle={styles.completeIcon}
+                  />
+                </View>
+              )}
+              {title !== WorkoutDict.RestDay && (
+                <Text style={styles.workoutDay}>
+                  {isRTL()
+                    ? `:${WorkoutDict.Day} ${workoutDay} `
+                    : `${WorkoutDict.Day} ${workoutDay}: `}
+                </Text>
+              )}
+              <View style={styles.dateContainer}>
+                <Text style={styles.date}>{datePart1}</Text>
+                <Text style={styles.dateSuperscript}>{dateSuperscript}</Text>
+                <Text style={styles.date}>{datePart2}</Text>
+              </View>
+            </View>
+            {title !== WorkoutDict.RestDay && (
+              <IconTextView
+                type="intensity"
+                duration={duration}
+                intensity={intensity}
+                alignLeft
+              />
+            )}
+          </View>
         </View>
-        {status === 'complete' && <View style={styles.completeOverlay} />}
       </TouchableOpacity>
+      {status === 'complete' && <View style={styles.completeOverlay} />}
     </View>
   );
 }

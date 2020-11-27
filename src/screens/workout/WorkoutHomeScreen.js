@@ -112,7 +112,7 @@ export default function WorkoutHomeScreen() {
     },
     titleLeftContainer: {
       flexDirection: 'row',
-      marginRight: getWidth(35),
+      marginRight: getWidth(30),
     },
     weekText: {
       ...textStyles.bold24_black100,
@@ -124,7 +124,10 @@ export default function WorkoutHomeScreen() {
       textAlign: 'left',
     },
     touch: {
-      marginRight: getWidth(25),
+      width: getWidth(23),
+      height: getHeight(30),
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     icon: {
       size: fontSize(16),

@@ -34,7 +34,7 @@ export default function CantChooseButton({onPress}) {
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
     },
     button: {
       width: getHeight(28),
@@ -45,7 +45,6 @@ export default function CantChooseButton({onPress}) {
       justifyContent: 'center',
     },
     largerButton: {
-      width: getWidth(175),
       height: getHeight(28),
       backgroundColor: colors.white80,
       borderRadius: radius(18),
@@ -62,6 +61,7 @@ export default function CantChooseButton({onPress}) {
     },
     largerText: {
       ...textStyles.bold15_brownishGrey100,
+      marginRight: getWidth(10),
     },
     questionMark: {
       color: colors.brownishGrey100,

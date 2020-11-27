@@ -66,18 +66,15 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     },
     headerContainer: {
       width: '100%',
-      height: getHeight(70),
+      height: getHeight(75),
       position: 'absolute',
-      top: getHeight(30),
+      top: getHeight(35),
       zIndex: 9,
-      marginTop: getHeight(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
     },
     image: {
-      height: getHeight(29),
-      width: getWidth(158),
       marginLeft: getWidth(18),
     },
     zeroImage: {
@@ -91,7 +88,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     cantChooseContainer: {
       alignSelf: 'flex-start',
       position: 'absolute',
-      right: 10,
+      right: getWidth(15),
     },
     iconContainer: {
       width: '90%',

@@ -44,6 +44,7 @@ export default function AuthContainer(props) {
       <AuthStack.Screen
         name="Congratulations"
         component={CongratulationsScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
       <AuthStack.Screen
         name="TermsAndConditions"

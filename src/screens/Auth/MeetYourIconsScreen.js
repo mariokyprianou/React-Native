@@ -350,7 +350,9 @@ export default function MeetYourIconsScreen() {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() => navigation.navigate('Congratulations')} // add params to say which trainer selected
+            onPress={() =>
+              navigation.navigate('Congratulations', {switchProgramme: true})
+            } // add params to say which trainer selected
           />
         </View>
       ) : (

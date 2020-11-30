@@ -25,10 +25,9 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
-  // const {
-  //   params: {switchProgramme},
-  // } = useRoute();
-  const switchProgramme = true;
+  const {
+    params: {switchProgramme},
+  } = useRoute();
   const navigation = useNavigation();
 
   navigation.setOptions({

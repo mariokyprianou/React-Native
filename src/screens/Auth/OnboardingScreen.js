@@ -95,7 +95,7 @@ export default function OnboardingScreen() {
   }
 
   function handlePressGetStarted() {
-    navigation.navigate('MeetYourIcons');
+    navigation.navigate('MeetYourIcons', {switchProgramme: false});
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

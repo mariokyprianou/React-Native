@@ -30,10 +30,11 @@ import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import {format} from 'date-fns';
+import {useRoute} from '@react-navigation/core';
 
 const fakeImage = require('../../../assets/images/trainerCarousel.png');
 
-export default function MeetYourIconsScreen({switchProgramme = true}) {
+export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -44,6 +45,9 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   const {currentTrainer, currentWeek} = userProgrammeData;
   const [trainerOnSlider, setTrainerOnSlider] = useState();
   const [venue, setVenue] = useState('gym');
+  const {
+    params: {switchProgramme},
+  } = useRoute();
   const navigation = useNavigation();
 
   const connected = true; // change to check connection
@@ -360,7 +364,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
           {/* <Spacer height={20} /> */}
           <DefaultButton
             type="login"
-            variant="grey"
+            variant="transparentWhiteText"
             onPress={() => navigation.navigate('Login')}
           />
         </View>

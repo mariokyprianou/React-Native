@@ -371,6 +371,8 @@ PODS:
     - React
   - RNScreens (2.13.0):
     - React-Core
+  - RNShare (4.1.0):
+    - React-Core
   - RNSpringScrollView (2.0.23):
     - React
   - RNSVG (12.1.0):
@@ -478,6 +480,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNShare (from `../node_modules/react-native-share`)
   - RNSpringScrollView (from `../node_modules/react-native-spring-scrollview/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -622,6 +625,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNSpringScrollView:
     :path: "../node_modules/react-native-spring-scrollview/ios"
   RNSVG:
@@ -724,6 +729,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
   RNScreens: 13f23e5498fb4aa749d19a5eda7f8792fbb9d01f
+  RNShare: 106a76243ac90f43ddb9028dcb78ade406b8adff
   RNSpringScrollView: 8b0af44fda8b131d845b93bf5b1d0710152e4e61
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d

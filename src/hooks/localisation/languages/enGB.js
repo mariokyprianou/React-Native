@@ -159,6 +159,12 @@ const enGB = {
     NotificationDelete: 'Delete',
   },
 
+  ShareDict: {
+    ShareProgress: 'Share your progress now!',
+    Cancel: 'Cancel',
+    Message: 'Share',
+  },
+
   SettingsDict: {
     ScreenTitle: 'Settings',
     VersionText: 'Power App - Version',

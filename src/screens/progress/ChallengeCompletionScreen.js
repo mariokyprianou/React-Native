@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, Platform, ActionSheetIOS} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -18,6 +18,7 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {FormHook} from 'the-core-ui-module-tdforms';
+import Share from 'react-native-share';
 
 export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +27,7 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   const {dictionary} = useDictionary();
   const [challengeResult, setChallengeResult] = useState();
   const {getValues, cleanValues} = FormHook();
-  const {WorkoutDict} = dictionary;
+  const {WorkoutDict, ShareDict} = dictionary;
   const {
     params: {historyData, name, elapsed},
   } = useRoute();
@@ -114,7 +115,59 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleShare() {}
+  const url = 'www.google.com';
+  const shareOptions = Platform.select({
+    ios: {
+      activityItemSources: [
+        {
+          // For sharing url with custom title.
+          placeholderItem: {
+            type: 'url',
+            content: url,
+          },
+          item: {
+            default: {type: 'url', content: url},
+          },
+          subject: {
+            default: ShareDict.ShareProgress,
+          },
+          linkMetadata: {
+            originalUrl: url,
+            url,
+            title: ShareDict.ShareProgress,
+          },
+        },
+      ],
+    },
+    default: {
+      title: ShareDict.ShareProgress,
+      subject: ShareDict.ShareProgress,
+      message: `${ShareDict.Message} ${url}`,
+    },
+  });
+
+  function handleShare() {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showShareActionSheetWithOptions(
+        {
+          url: '',
+          message: ShareDict.ShareProgress,
+        },
+        (error) => console.log(error),
+        (success, method) => {
+          if (success) console.log('Successfully shared', success);
+        },
+      );
+    } else {
+      Share.open({shareOptions})
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          err && console.log(err);
+        });
+    }
+  }
 
   function handleDone() {
     navigation.navigate('Progress');

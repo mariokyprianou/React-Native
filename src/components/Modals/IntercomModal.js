@@ -19,12 +19,23 @@ export default function IntercomModal() {
   const {dictionary} = useDictionary();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
-  const styles = StyleSheet.create({});
+  const styles = StyleSheet.create({
+    container: {
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
+      height: '90%',
+      backgroundColor: colors.backgroundWhite100,
+      borderTopLeftRadius: radius(15),
+      borderTopRightRadius: radius(15),
+      padding: getHeight(15),
+    },
+  });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Intercom modal</Text>
     </View>
   );

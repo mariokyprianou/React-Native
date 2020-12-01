@@ -5,21 +5,19 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
+import Modal from 'react-native-modal';
+import IntercomModal from '../../components/Modals/IntercomModal';
 
 export default function ProfileScreen() {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {cleanErrors, getValues, updateError} = FormHook();
+  const [shareModalVisible, setShareModalVisible] = useState(false);
 
-  // MARK: - Local
-
-  // MARK: - Logic
-
-  // MARK: - Actions
   const onSaveChanges = () => {
     const {
       profile_firstName,
@@ -33,8 +31,21 @@ export default function ProfileScreen() {
     // TODO: - Verify Values
   };
 
+  // ** ** ** ** ** STYLES ** ** ** ** **
+  const styles = {
+    view: {
+      justifyContent: 'flex-end',
+      margin: 0,
+    },
+  };
+
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressNeedHelp = () => {
-    console.log('TODO: - onPressNeedHelp');
+    setShareModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setShareModalVisible(false);
   };
 
   const onPressLogout = () => {
@@ -47,12 +58,22 @@ export default function ProfileScreen() {
     console.log('TODO: - onPressNeedToSignOut');
   };
 
-  // MARK: - Render
+  // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <ProfileScreenUI
-      onSaveChange={onSaveChanges}
-      onPressNeedHelp={onPressNeedHelp}
-      onPressLogout={onPressLogout}
-    />
+    <>
+      <ProfileScreenUI
+        onSaveChange={onSaveChanges}
+        onPressNeedHelp={onPressNeedHelp}
+        onPressLogout={onPressLogout}
+      />
+      <Modal
+        style={styles.view}
+        isVisible={shareModalVisible}
+        onBackdropPress={handleCancel}
+        onBackButtonPress={handleCancel}
+        backdropOpacity={0.5}>
+        <IntercomModal />
+      </Modal>
+    </>
   );
 }

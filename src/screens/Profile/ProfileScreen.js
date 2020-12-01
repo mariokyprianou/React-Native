@@ -9,14 +9,12 @@ import React, {useState} from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
-import Modal from 'react-native-modal';
-import IntercomModal from '../../components/Modals/IntercomModal';
+import Intercom from 'react-native-intercom';
 
 export default function ProfileScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {cleanErrors, getValues, updateError} = FormHook();
-  const [shareModalVisible, setShareModalVisible] = useState(false);
 
   const onSaveChanges = () => {
     const {
@@ -41,21 +39,13 @@ export default function ProfileScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressNeedHelp = () => {
-    setShareModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setShareModalVisible(false);
+    Intercom.displayMessenger();
   };
 
   const onPressLogout = () => {
     console.log('TODO: - onPressLogout');
 
     navigation.navigate('Onboarding');
-  };
-
-  const onPressNeedToSignOut = () => {
-    console.log('TODO: - onPressNeedToSignOut');
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -66,14 +56,6 @@ export default function ProfileScreen() {
         onPressNeedHelp={onPressNeedHelp}
         onPressLogout={onPressLogout}
       />
-      <Modal
-        style={styles.view}
-        isVisible={shareModalVisible}
-        onBackdropPress={handleCancel}
-        onBackButtonPress={handleCancel}
-        backdropOpacity={0.5}>
-        <IntercomModal />
-      </Modal>
     </>
   );
 }

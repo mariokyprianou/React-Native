@@ -24,8 +24,6 @@ import {TransitionPresets} from '@react-navigation/stack';
 import HelpMeChooseScreen from '../screens/auth/HelpMeChooseScreen';
 import HelpMeChooseResultsScreen from '../screens/auth/HelpMeChooseResultsScreen';
 
-import ProfileScreen from '../screens/Profile/ProfileScreen';
-
 export default function AuthContainer(props) {
   return (
     <AuthStack.Navigator
@@ -35,7 +33,6 @@ export default function AuthContainer(props) {
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      <AuthStack.Screen name="Profile" component={ProfileScreen} />
       <AuthStack.Screen
         name="LanguageSelection"
         component={LanguageSelectionScreen}

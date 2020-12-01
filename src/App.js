@@ -25,6 +25,7 @@ import {Navigator as AppNavigator, Screen} from './navigation/AppStack';
 import AppContainer from './AppContainer';
 import SplashScreen from 'react-native-splash-screen';
 import {useAsyncStorage} from '@react-native-community/async-storage';
+import Intercom from 'react-native-intercom';
 
 const App = () => {
   const [client, setClient] = useState(null);
@@ -63,6 +64,7 @@ const App = () => {
     }
     validateChecksum();
     languageSet();
+    Intercom.registerUnidentifiedUser();
 
     return () => {
       if (Platform.OS === 'ios') {

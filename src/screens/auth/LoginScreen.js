@@ -16,6 +16,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
+import Intercom from 'react-native-intercom';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -84,7 +85,7 @@ export default function RegisterScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleLogin() {
-    navigation.navigate('MeetYourIcons');
+    navigation.navigate('MeetYourIcons', {switchProgramme: false});
     setLoading(true);
     cleanErrors();
 
@@ -106,6 +107,9 @@ export default function RegisterScreen() {
       setLoading(false);
       return;
     }
+
+    Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
+
     navigation.reset({
       index: 0,
       routes: [{name: 'TabContainer'}],

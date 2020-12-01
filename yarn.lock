@@ -8706,6 +8706,11 @@ react-native-image-crop-picker@^0.35.1:
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.35.1.tgz#590b6ed7af7b63a505132c73819c9166347bf1e3"
   integrity sha512-5HY2NnkmgL/Nw1IpU9CkTWj4qgFYPF8KxDaHoaufEWNjvOCRGziMoui55cO7k4KdwsIKmb1UbDzkCYemJqcyow==
 
+react-native-intercom@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-intercom/-/react-native-intercom-18.0.0.tgz#31f53c69fc8c776a3d491d8b4957a059651cd397"
+  integrity sha512-w49E65gmV85CJKkdXVKMUmn9vBlJNEVXjtTPUccAmCZVfkpiKMmUqq6ich2qc1si+yzRDt07VJmRupv3EPxbeA==
+
 react-native-iphone-x-helper@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.0.tgz#84fd13e6b89cc3aa4daa80ec514bf15cb724d86d"

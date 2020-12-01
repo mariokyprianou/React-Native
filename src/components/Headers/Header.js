@@ -21,6 +21,7 @@ const arrowBackIcon = require('../../../assets/icons/headerBackArrow.png');
 const closeIcon = require('../../../assets/icons/headerClose.png');
 const shareIcon = require('../../../assets/icons/share.png');
 const closeIconWhite = require('../../../assets/icons/closeWhite.png');
+const photoSelectIcon = require('../../../assets/icons/photoSelect.png');
 
 export default function Header({
   title,
@@ -126,6 +127,12 @@ export default function Header({
       tintColor: white ? colors.white100 : colors.black100,
       resizeMode: 'contain',
     },
+    photoIconStyle: {
+      height: getHeight(28),
+      width: getWidth(28),
+      tintColor: colors.black100,
+      resizeMode: 'contain',
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -139,6 +146,14 @@ export default function Header({
     if (icon === 'crossIcon') {
       return (
         <TDIcon input={closeIcon} inputStyle={{style: styles.crossIconStyle}} />
+      );
+    }
+    if (icon === 'photoSelectIcon') {
+      return (
+        <TDIcon
+          input={photoSelectIcon}
+          inputStyle={{style: styles.photoIconStyle}}
+        />
       );
     }
     return <TDIcon input={icon} inputStyle={styles.iconStyle} />;

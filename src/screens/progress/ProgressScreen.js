@@ -58,7 +58,6 @@ export default function ProgressScreen() {
   // console.log(progress);
   const {fakeProgress, fakeChallenges} = fakeProgressData();
   const progressData = processProgressData(fakeProgress.days);
-
   const navigation = useNavigation();
 
   navigation.setOptions({

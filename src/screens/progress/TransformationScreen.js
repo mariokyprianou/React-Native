@@ -7,23 +7,20 @@
  */
 
 import React, {useState} from 'react';
-import {View, Dimensions} from 'react-native';
+import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
-import Slideshow from 'the-core-ui-module-tdslideshow';
+import {TDSlideshow} from 'the-core-ui-module-tdslideshow';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import SliderButton from '../../components/Buttons/SliderButton';
-import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
+import DefaultButton from '../../components/Buttons/DefaultButton';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
+import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
-
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
-const cameraButton = require('../../../assets/icons/cameraButton.png');
-const overlay = require('../../../assets/images/cameraPerson.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -34,7 +31,14 @@ export default function TransformationScreen() {
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
   navigation.setOptions({
-    header: () => null,
+    header: () => (
+      <Header
+        title={ProgressDict.TransformationScreenTitle}
+        goBack
+        right="shareIcon"
+        rightAction={handleShare}
+      />
+    ),
   });
   const {fakeProgressImages} = fakeProgressData();
   const screenWidth = Dimensions.get('screen').width;
@@ -56,22 +60,15 @@ export default function TransformationScreen() {
       height: getHeight(440),
     },
     spacerHeight: {
-      height: getHeight(113),
+      height: getHeight(190),
     },
-    overlay: {
-      height: '100%',
-      top: 0,
-      resizeMode: 'cover',
+    buttonContainer: {
+      width: '100%',
+      alignItems: 'center',
     },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePhoto() {
-    console.log('set photo');
-    const takenAt = new Date();
-    // send to back end with today's date, format ProgressImage
-  }
-
   function handleSelectDate(dateItem, imageToSelect) {
     console.log(dateItem);
     // retrieve ProgressImage from back end using date
@@ -79,8 +76,25 @@ export default function TransformationScreen() {
     // if imageToSelect === 'after' setAfterPic(dateItem.imageURL)
   }
 
-  function handleCountdownStart() {
-    console.log('counting down');
+  function handleNavigateAddPhoto() {
+    request(
+      Platform.select({
+        ios: PERMISSIONS.IOS.CAMERA,
+        android: PERMISSIONS.ANDROID.CAMERA,
+      }),
+    )
+      .then((result) => {
+        if (result === RESULTS.UNAVAILABLE) {
+          Alert.alert('This function is not available on this device');
+        }
+        if (result === RESULTS.BLOCKED) {
+          Alert.alert('Unable to access camera');
+        }
+        if (result === RESULTS.GRANTED) {
+          navigation.navigate('AddPhoto');
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   function handleShare() {}
@@ -88,38 +102,32 @@ export default function TransformationScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <Slideshow
-        setPhoto={handlePhoto}
+      <TDSlideshow
         beforePic={beforePic}
         afterPic={afterPic}
         imageWidth={styles.image.width}
         imageHeight={styles.image.height}
         sliderSpacerHeight={styles.spacerHeight}
         sliderStyles={styles.sliderStyles}
-        CustomButton={SliderButton}
-        CustomCountdown={() => (
-          <CustomCountdown onPress={handleCountdownStart} />
-        )}
+        minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
+        maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
+        sliderSpacerHeight={styles.spacerHeight}
+        sliderIcon={sliderThumb}
         DateSelectors={() => (
           <CustomDateSelectors
             onPress={handleSelectDate}
             images={fakeProgressImages}
           />
         )}
-        cameraButtonImage={cameraButton}
-        cameraHeaderText={ProgressDict.Upload}
-        overlayStyles={styles.overlay}
-        sliderIcon={sliderThumb}
-        overlayImage={overlay}
-        CustomHeader={() => (
-          <Header
-            title={ProgressDict.TransformationScreenTitle}
-            goBack
-            right="shareIcon"
-            rightAction={handleShare}
-          />
-        )}
       />
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="addPhoto"
+          variant="gradient"
+          icon="chevron"
+          onPress={handleNavigateAddPhoto}
+        />
+      </View>
     </View>
   );
 }

@@ -16,7 +16,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 const reminder = require('../../../assets/icons/reminder.png');
 
 const CustomCountdown = ({onPress}) => {
-  const {getHeight} = ScaleHook();
+  const {getHeight, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
   const {textStyles} = useTheme();
@@ -29,10 +29,12 @@ const CustomCountdown = ({onPress}) => {
     iconContainer: {
       alignItems: 'center',
       marginBottom: getHeight(6),
+      marginTop: getHeight(17),
       justifySelf: 'flex-end',
     },
     text: {
       ...textStyles.semiBold14_black100,
+      lineHeight: fontSize(15),
       textAlign: 'center',
     },
   };

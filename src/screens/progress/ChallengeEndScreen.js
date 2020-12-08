@@ -24,6 +24,8 @@ export default function ChallengeEndScreen() {
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const {dictionary} = useDictionary();
+  const [formHeight, setFormHeight] = useState(150);
+  let newStyle = {formHeight};
   const {
     ProgressDict: {ChallengeTime},
   } = dictionary;
@@ -120,11 +122,16 @@ export default function ChallengeEndScreen() {
       type: 'text',
       placeholder: '',
       ...cellFormStyles,
+      multiline: true,
+      onContentSizeChange: (e) =>
+        setFormHeight(e.nativeEvent.contentSize.height),
       borderBottomWidth: 1,
       borderBottomColor: colors.black30,
       marginTop: getHeight(-60),
       inputContainerStyle: {
         paddingHorizontal: 0,
+        paddingTop: 10,
+        height: [newStyle][formHeight],
       },
       style: {
         ...textStyles.regular16_black100,

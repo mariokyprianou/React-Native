@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -24,6 +24,8 @@ export default function NotesScreen() {
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const [formHeight, setFormHeight] = useState(100);
+  let newStyle = {formHeight};
   const navigation = useNavigation();
   const {
     challengeData: {description, notes},
@@ -69,8 +71,15 @@ export default function NotesScreen() {
     {
       name: 'notes',
       type: 'text',
+      multiline: true,
+      onContentSizeChange: (e) =>
+        setFormHeight(e.nativeEvent.contentSize.height),
       placeholder: '',
       ...cellFormStyles,
+      inputContainerStyle: {
+        height: [newStyle][formHeight],
+        paddingBottom: getHeight(5),
+      },
     },
   ];
 
@@ -88,7 +97,12 @@ export default function NotesScreen() {
         <Form cells={cells} config={config} />
       </View>
       <View style={styles.buttonContainer}>
-        <DefaultButton type="done" variant="white" icon="chevron" />
+        <DefaultButton
+          type="done"
+          variant="white"
+          icon="chevron"
+          onPress={() => navigation.goBack()}
+        />
       </View>
     </View>
   );

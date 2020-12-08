@@ -125,15 +125,24 @@ export default function WorkoutHomeScreen() {
       ...textStyles.bold24_aquamarine100,
       textAlign: 'left',
     },
+    touchContainer: {
+      position: 'absolute',
+      left: getWidth(110),
+      flexDirection: 'row',
+    },
     touch: {
-      width: getWidth(23),
+      width: getWidth(25),
       height: getHeight(30),
       alignItems: 'center',
       justifyContent: 'center',
     },
-    icon: {
+    leftIcon: {
       size: fontSize(16),
-      color: colors.black100,
+      color: weekNumber === 1 ? colors.black40 : colors.black100,
+    },
+    rightIcon: {
+      size: fontSize(16),
+      color: weekNumber === 2 ? colors.black40 : colors.black100,
     },
     cardContainer: {
       width: '100%',
@@ -175,24 +184,26 @@ export default function WorkoutHomeScreen() {
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
           <Text style={styles.numberText}>{`${weekNumber}`}</Text>
         </View>
-        <TouchableOpacity
-          style={styles.touch}
-          onPress={() => handlePress('left')}
-          disabled={weekNumber === 1 ? true : false}>
-          <TDIcon
-            input={isRTL() ? 'chevron-right' : 'chevron-left'}
-            inputStyle={styles.icon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.touch}
-          onPress={() => handlePress('right')}
-          disabled={weekNumber === 2 ? true : false}>
-          <TDIcon
-            input={isRTL() ? 'chevron-left' : 'chevron-right'}
-            inputStyle={styles.icon}
-          />
-        </TouchableOpacity>
+        <View style={styles.touchContainer}>
+          <TouchableOpacity
+            style={styles.touch}
+            onPress={() => handlePress('left')}
+            disabled={weekNumber === 1 ? true : false}>
+            <TDIcon
+              input={isRTL() ? 'chevron-right' : 'chevron-left'}
+              inputStyle={styles.leftIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.touch}
+            onPress={() => handlePress('right')}
+            disabled={weekNumber === 2 ? true : false}>
+            <TDIcon
+              input={isRTL() ? 'chevron-left' : 'chevron-right'}
+              inputStyle={styles.rightIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <DraggableFlatList

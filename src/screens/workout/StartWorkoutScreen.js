@@ -74,7 +74,7 @@ export default function StartWorkoutScreen() {
         <ExerciseList exercises={[{}, {}, {}, {}]} />
       </ScrollView>
       <View style={styles.fadeContainer}>
-        <FadingBottomView height={100} />
+        <FadingBottomView height={80} />
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

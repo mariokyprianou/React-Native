@@ -90,14 +90,12 @@ export default function IconTextView({
       height: getHeight(20),
       width: getWidth(20),
     },
-    text:
-      color === 'grey'
-        ? {
-            ...textStyles.medium15_brownishGreyTwo100,
-          }
-        : {
-            ...textStyles.medium15_white100,
-          },
+    greyText: {
+      ...textStyles.medium15_brownishGreyTwo100,
+    },
+    whiteText: {
+      ...textStyles.medium15_white100,
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -113,16 +111,13 @@ export default function IconTextView({
               inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
             />
           </View>
-          <Text style={styles.text}>{`${duration}`}</Text>
           <Text
             style={
-              color === 'grey'
-                ? {
-                    ...textStyles.medium14_brownishGreyTwo100,
-                  }
-                : {
-                    ...textStyles.medium14_white100,
-                  }
+              color === 'grey' ? styles.greyText : styles.whiteText
+            }>{`${duration}`}</Text>
+          <Text
+            style={
+              color === 'grey' ? styles.greyText : styles.whiteText
             }>{` ${WorkoutDict.Mins}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
@@ -134,7 +129,7 @@ export default function IconTextView({
           </View>
           <Text
             style={
-              styles.text
+              color === 'grey' ? styles.greyText : styles.whiteText
             }>{`${intensityRef[intensity]} ${WorkoutDict.Intensity}`}</Text>
         </View>
       </View>
@@ -155,16 +150,13 @@ export default function IconTextView({
               inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
             />
           </View>
-          <Text style={styles.text}>{`${duration}`}</Text>
           <Text
             style={
-              color === 'grey'
-                ? {
-                    ...textStyles.medium14_brownishGreyTwo100,
-                  }
-                : {
-                    ...textStyles.medium14_white100,
-                  }
+              color === 'grey' ? styles.greyText : styles.whiteText
+            }>{`${duration}`}</Text>
+          <Text
+            style={
+              color === 'grey' ? styles.greyText : styles.whiteText
             }>{` ${WorkoutDict.Mins}`}</Text>
         </View>
         <View
@@ -184,7 +176,10 @@ export default function IconTextView({
               }}
             />
           </View>
-          <Text style={styles.text}>{`${reps} ${WorkoutDict.Reps}`}</Text>
+          <Text
+            style={
+              color === 'grey' ? styles.greyText : styles.whiteText
+            }>{`${reps} ${WorkoutDict.Reps}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
@@ -193,7 +188,10 @@ export default function IconTextView({
               inputStyle={{style: styles.icon, ...styles.iconColor}}
             />
           </View>
-          <Text style={styles.text}>{`${sets} ${WorkoutDict.Sets}`}</Text>
+          <Text
+            style={
+              color === 'grey' ? styles.greyText : styles.whiteText
+            }>{`${sets} ${WorkoutDict.Sets}`}</Text>
         </View>
       </View>
     );

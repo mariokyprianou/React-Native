@@ -248,6 +248,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.brownishGrey100,
     },
+    medium15_brownishGreyTwo100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(20),
+      color: colors.brownishGreyTwo100,
+    },
     medium15_white100: {
       fontFamily: fonts.medium,
       fontSize: fontSize(15),

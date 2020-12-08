@@ -22,7 +22,7 @@ const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
 export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
@@ -32,11 +32,7 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
 
   navigation.setOptions({
     header: () => (
-      <Header
-        title={HelpMeChooseDict.HelpMeChoose}
-        right="crossIcon"
-        rightAction={() => navigation.navigate('MeetYourIcons')}
-      />
+      <Header title={HelpMeChooseDict.HelpMeChoose} showModalCross />
     ),
   });
 
@@ -81,6 +77,7 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
     },
     bar: {
       flex: 1,
+      borderRadius: radius(2),
     },
     buttonContainer: {
       width: '100%',
@@ -113,7 +110,7 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
             style={styles.bar}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            colors={[colors.tiffanyBlue100, colors.tealish100]}
+            colors={[colors.tealish100, colors.tiffanyBlue100]}
           />
         </View>
       </View>
@@ -135,12 +132,7 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
           trainerName={capitalizedName}
           icon="chevron"
           variant="transparentBlackBoldText"
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'TabContainer'}],
-            })
-          }
+          onPress={() => navigation.navigate('MeetYourIcons')}
         />
       </View>
     </View>

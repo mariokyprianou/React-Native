@@ -38,7 +38,7 @@ export default function GymHomeSelector({onPress}) {
       alignItems: 'center',
     },
     text: {
-      ...textStyles.bold15_brownishGrey100,
+      ...textStyles.bold14_brownishGrey100,
     },
     icon: {
       color: colors.brownishGrey100,

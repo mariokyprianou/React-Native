@@ -7,12 +7,14 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import * as Animatable from 'react-native-animatable';
 import isRTL from '../../utils/isRTL';
+
+const questionMark = require('../../../assets/images/questionMark.png');
 
 export default function CantChooseButton({onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -36,10 +38,14 @@ export default function CantChooseButton({onPress}) {
       alignItems: 'center',
       justifyContent: 'flex-end',
     },
+    image: {
+      height: getHeight(16),
+      width: getHeight(16),
+    },
     button: {
-      width: getHeight(28),
-      height: getHeight(28),
-      backgroundColor: colors.white80,
+      width: getWidth(20),
+      height: getWidth(20),
+      backgroundColor: colors.brownishGrey100,
       borderRadius: radius(14),
       alignItems: 'center',
       justifyContent: 'center',
@@ -54,19 +60,9 @@ export default function CantChooseButton({onPress}) {
       paddingLeft: getWidth(12),
       paddingRight: getWidth(8),
     },
-    darkerButton: {
-      backgroundColor: colors.brownishGrey100,
-      width: getWidth(20),
-      height: getWidth(20),
-    },
     largerText: {
       ...textStyles.bold15_brownishGrey100,
       marginRight: getWidth(10),
-    },
-    questionMark: {
-      color: colors.brownishGrey100,
-      fontWeight: 'bold',
-      fontSize: fontSize(16),
     },
     readyQuestionMark: {
       color: colors.white80,
@@ -84,7 +80,7 @@ export default function CantChooseButton({onPress}) {
         animation={isRTL() ? 'slideInLeft' : 'slideInRight'}>
         <TouchableOpacity style={styles.touch} onPress={onPress}>
           <Text style={styles.largerText}>{ButtonDict.CantChoose}</Text>
-          <View style={{...styles.button, ...styles.darkerButton}}>
+          <View style={styles.button}>
             <Text style={styles.readyQuestionMark}>
               {ButtonDict.QuestionMark}
             </Text>
@@ -95,9 +91,9 @@ export default function CantChooseButton({onPress}) {
   }
 
   return (
-    <View style={styles.button}>
+    <View>
       <TouchableOpacity style={styles.touch} onPress={onPress}>
-        <Text style={styles.questionMark}>{ButtonDict.QuestionMark}</Text>
+        <Image source={questionMark} style={styles.image} />
       </TouchableOpacity>
     </View>
   );

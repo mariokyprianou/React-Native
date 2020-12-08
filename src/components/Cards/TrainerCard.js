@@ -53,6 +53,7 @@ export default function TrainerCard({
     overlay: {
       width: '100%',
       bottom: getHeight(140),
+      paddingTop: 80,
     },
     titleContainer: {
       width: '90%',

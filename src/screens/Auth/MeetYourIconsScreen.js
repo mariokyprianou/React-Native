@@ -89,18 +89,26 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
       alignSelf: 'flex-start',
       position: 'absolute',
       right: getWidth(15),
+      height: getHeight(28),
+      alignItems: 'center',
     },
-    iconContainer: {
-      width: '90%',
-      height: getHeight(150),
+    leftIconContainer: {
+      width: getWidth(50),
+      alignItems: 'center',
+      height: getHeight(50),
       position: 'absolute',
-      left: screenWidth * 0.05,
-      top: getHeight(110),
+      left: 0,
+      top: getHeight(225),
       zIndex: 9,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      paddingBottom: getHeight(30),
+    },
+    rightIconContainer: {
+      width: getWidth(50),
+      alignItems: 'center',
+      height: getHeight(50),
+      position: 'absolute',
+      right: 0,
+      top: getHeight(225),
+      zIndex: 9,
     },
     icon: {
       size: fontSize(18),
@@ -125,12 +133,13 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     },
     heading: {
       ...textStyles.bold24_white100,
-      marginTop: getHeight(20),
+      marginTop: getHeight(15),
       textAlign: 'left',
     },
     weeksText: {
       ...textStyles.bold14_white100,
       textAlign: 'left',
+      marginBottom: getHeight(15),
     },
     workoutContainer: {
       width: '100%',
@@ -231,16 +240,19 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
         onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
         {meetYourIconsData.map(
-          ({
-            fatLoss,
-            fitness,
-            buildMuscle,
-            name,
-            image,
-            text,
-            liveWeeks,
-            firstWeek,
-          }) => {
+          (
+            {
+              fatLoss,
+              fitness,
+              buildMuscle,
+              name,
+              image,
+              text,
+              liveWeeks,
+              firstWeek,
+            },
+            index,
+          ) => {
             return (
               <ScrollView style={styles.sliderContainer}>
                 <View style={styles.headerContainer}>
@@ -257,20 +269,26 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
                     />
                   </View>
                 </View>
-                <View style={styles.iconContainer}>
-                  <TouchableOpacity onPress={() => handlePress('left')}>
-                    <TDIcon
-                      input={isRTL() ? 'chevron-right' : 'chevron-left'}
-                      inputStyle={styles.icon}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handlePress('right')}>
-                    <TDIcon
-                      input={isRTL() ? 'chevron-left' : 'chevron-right'}
-                      inputStyle={styles.icon}
-                    />
-                  </TouchableOpacity>
-                </View>
+                {index !== 0 && (
+                  <View style={styles.leftIconContainer}>
+                    <TouchableOpacity onPress={() => handlePress('left')}>
+                      <TDIcon
+                        input={isRTL() ? 'chevron-right' : 'chevron-left'}
+                        inputStyle={styles.icon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+                {index !== meetYourIconsData.length - 1 && (
+                  <View style={styles.rightIconContainer}>
+                    <TouchableOpacity onPress={() => handlePress('right')}>
+                      <TDIcon
+                        input={isRTL() ? 'chevron-left' : 'chevron-right'}
+                        inputStyle={styles.icon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
                 <View style={styles.cardContainer}>
                   <TrainerCard
                     fatLoss={fatLoss}
@@ -281,7 +299,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
                     onPressGymHome={() => setVenue(venue)}
                   />
                 </View>
-                <Spacer height={30} />
+                <Spacer height={90} />
                 <View style={styles.textContainer}>
                   <Text style={styles.text}>{text}</Text>
                   <Text

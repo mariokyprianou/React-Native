@@ -54,6 +54,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.black20,
     },
+    bold14_brownishGrey100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(14),
+      lineHeight: fontSize(20),
+      color: colors.brownishGrey100,
+    },
     bold14_white100: {
       fontFamily: fonts.bold,
       fontSize: fontSize(14),

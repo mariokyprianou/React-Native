@@ -68,15 +68,18 @@ export default function PercentageBar({icon, text, percentage}) {
     bar: {
       height: getHeight(4),
       marginBottom: getHeight(4),
-      borderRadius: radius(2),
     },
     activeBar: {
       backgroundColor: colors.white100,
       width: getWidth(activePercentage),
+      borderBottomLeftRadius: radius(2),
+      borderTopLeftRadius: radius(2),
     },
     inactiveBar: {
       backgroundColor: colors.paleBlue100,
       width: getWidth(inactivePercentage),
+      borderBottomRightRadius: radius(2),
+      borderTopRightRadius: radius(2),
     },
   };
 

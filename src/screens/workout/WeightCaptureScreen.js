@@ -81,14 +81,13 @@ export default function WeightCaptureScreen() {
     chartCard: {
       height: getHeight(200),
       width: '90%',
-      backgroundColor: colors.backgroundWhite100,
+      backgroundColor: colors.white100,
       alignSelf: 'center',
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,
       elevation: 6,
-      paddingHorizontal: getWidth(5),
     },
     scrollCard: {
       height: getHeight(220),

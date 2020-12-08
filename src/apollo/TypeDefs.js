@@ -7,16 +7,15 @@
 
 import gql from 'graphql-tag';
 
-const Address = gql`
-	type Address {
-		formatted: String
-		streetAddress: String
-		city: String
-		postalCode: String
-		country: String
-	}
+const OnboardingResponse = gql`
+  type Onboarding {
+    orderIndex: Int!
+    title: String!
+    description: String!
+    image: String!
+  }
 `;
 
-const TypeDefs = [Address];
+const TypeDefs = [OnboardingResponse];
 
 export default TypeDefs;

@@ -10,7 +10,6 @@ import React, {useRef, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import useOnboarding from '../../hooks/data/useOnboarding';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
@@ -18,6 +17,9 @@ import OnboardingSliderItem from '../../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
+import useData from '../../hooks/data/UseData';
+
+import useOnboarding from '../../hooks/data/useOnboarding';
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -25,10 +27,14 @@ export default function OnboardingScreen() {
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
-  const {onboardingData} = useOnboarding();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
+
+  // const [onboarding, getOnboarding] = useData();
+  console.log(useData(), '<---onboarding');
+
+  const {onboardingData} = useOnboarding();
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,

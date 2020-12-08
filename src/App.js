@@ -35,6 +35,7 @@ const App = () => {
 
   const setupApollo = async () => {
     const newClient = await ApolloClient();
+    console.log(newClient, '<---client');
     setClient(newClient);
     SplashScreen.hide();
     setLoading(false);

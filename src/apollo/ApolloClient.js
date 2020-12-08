@@ -18,14 +18,18 @@ export default async () => {
   const cache = new InMemoryCache();
 
   // Set up the fetch and headers
-  const apolloFetch = async (uri, options) => {
-    // User Apollo Middleware
+  const awsGraphQLFetch = async (uri, options) => {
+    const locale = await AsyncStorage.getItem('@language');
+
+    const Localization = locale ? locale : undefined;
     const Authorization = await Authoriser();
+
     const updatedOptions = {
       ...options,
       headers: {
         ...options.headers,
         Authorization,
+        'Accept-Language': Localization,
       },
     };
 
@@ -34,10 +38,10 @@ export default async () => {
 
   // Set up Link to external GraphQL endpoint
   const secrets = Secrets(Environment);
-  const graphQLUrl = secrets.graphQLUrl ?? '';
+  const graphQLUrl = secrets.graphQLUrl ?? 'http://localhost:4000/';
   const httpLink = new HttpLink({
     uri: graphQLUrl,
-    fetch: apolloFetch,
+    fetch: awsGraphQLFetch,
   });
 
   const client = new ApolloClient({

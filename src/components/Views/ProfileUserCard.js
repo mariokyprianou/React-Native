@@ -66,7 +66,7 @@ export default function ProfileUserCard({
       solid: true,
     },
     header: {
-      ...textStyles.bold14_black20,
+      ...textStyles.medium14_brownishGrey100,
       color: colors.brownishGrey100,
       textAlign: 'left',
     },

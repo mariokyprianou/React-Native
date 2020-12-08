@@ -62,13 +62,12 @@ export default function NotificationCell({
       paddingVertical: getHeight(15),
     },
     rowContainer: {
-      width: getWidth(355 - 30 - 20 - 15),
+      width: getWidth(355 - 30 - 20),
       flexDirection: 'row',
-      alignItems: 'center',
       justifyContent: 'space-between',
     },
     subjectTextStyle: {
-      ...textStyles.medium14_brownishGrey100,
+      ...textStyles.medium14_black100,
       flex: 0.7,
       textAlign: 'left',
     },
@@ -77,7 +76,7 @@ export default function NotificationCell({
       textAlign: 'left',
     },
     dateStyle: {
-      ...textStyles.regular15_brownishGrey80,
+      ...textStyles.medium12_brownishGrey100,
       flex: 0.3,
       textAlign: 'left',
       marginLeft: getWidth(10),

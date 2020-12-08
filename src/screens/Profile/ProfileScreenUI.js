@@ -27,14 +27,14 @@ import NotificationCell from '../../components/cells/NotificationCell';
 const notifications = [
   {
     id: 789789787,
-    subject: 'Subject',
+    subject: 'SUBJECT',
     message: 'Message',
     sentAt: new Date(),
     readAt: undefined,
   },
   {
     id: 78789789789,
-    subject: 'Very Very Very Loooooooooooooooooooong Subject',
+    subject: 'VERY VERY VERY LOOOOOOOOOOOOOOOOOOOOOOOOOONG SUBJECT',
     message: 'Message Full Of Infoooooooooooooooooooooooooooooooooooooooooo',
     sentAt: new Date(),
     readAt: undefined,
@@ -282,7 +282,6 @@ export default function ProfileScreenUI({
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
-        keyboardShouldPersistTaps="handled"
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
         {userCard()}

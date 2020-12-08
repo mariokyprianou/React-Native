@@ -8,6 +8,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -50,8 +51,7 @@ export default function ChallengeEndScreen() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
-      width: '100%',
-      height: '100%',
+      flex: 1,
       alignItems: 'center',
       backgroundColor: colors.backgroundWhite100,
     },
@@ -139,27 +139,32 @@ export default function ChallengeEndScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <ProgressChart data={historyData} />
-      </View>
-      <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-      <View style={styles.answerBoxContainer}>
-        <Text style={styles.answerLabel}>
-          {elapsed ? ChallengeTime : answerBoxLabel}
-        </Text>
-        <Form cells={cells} config={config} />
-      </View>
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="addResult"
-          icon="chevron"
-          variant="white"
-          onPress={handleAddResult}
-        />
-      </View>
+    <View style={{height: '100%', width: '100%'}}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        enableOnAndroid={true}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.card}>
+          <ProgressChart data={historyData} />
+        </View>
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{description}</Text>
+        </View>
+        <View style={styles.answerBoxContainer}>
+          <Text style={styles.answerLabel}>
+            {elapsed ? ChallengeTime : answerBoxLabel}
+          </Text>
+          <Form cells={cells} config={config} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="addResult"
+            icon="chevron"
+            variant="white"
+            onPress={handleAddResult}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

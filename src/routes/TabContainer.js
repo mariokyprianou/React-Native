@@ -35,17 +35,17 @@ export default function TabContainer() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
-    tabBarOptionStyles: {
+    tabBarStyle: {
+      height: getHeight(70),
+    },
+    tabBarItemStyle: {
       justifyContent: 'center',
-      // justifyContent: 'space-between',
-      // paddingTop: getHeight(20),
-      // paddingBottom: getHeight(20),
-      // height: getHeight(68),
+      marginBottom: getHeight(20),
+      marginTop: getHeight(12),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',
       fontSize: fontSize(10),
-      // marginTop: getHeight(12),
     },
   });
 
@@ -108,7 +108,8 @@ export default function TabContainer() {
   return (
     <BottomTab.Navigator
       tabBarOptions={{
-        style: styles.tabBarOptionStyles,
+        tabStyle: styles.tabBarItemStyle,
+        style: styles.tabBarStyle,
         labelStyle: styles.labelStyle,
         activeTintColor: colors.black100,
         inactiveTintColor: colors.black30,

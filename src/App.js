@@ -46,10 +46,25 @@ const App = () => {
     setValidChecksum(valid);
   };
 
+  const languageSet = async () => {
+    const language = await getItem();
+
+    if (language === 'ur-IN') {
+      if (!I18nManager.isRTL) {
+        I18nManager.forceRTL(true);
+      }
+    } else {
+      if (I18nManager.isRTL) {
+        I18nManager.forceRTL(false);
+      }
+    }
+  };
+
   useEffect(() => {
     if (!client) {
       setupApollo();
     }
+
     StatusBar.setBarStyle('dark-content');
     let screenshotListener;
 
@@ -78,47 +93,30 @@ const App = () => {
     return <View style={{flex: 1, backgroundColor: 'pink'}} />;
   }
 
-  // if (loading) {
-  //   return <View />;
-  // }
-
-  // const selectedLanguage = 'LTR';
-
-  const languageSet = async () => {
-    const language = await getItem();
-
-    if (language === 'ur-IN') {
-      if (!I18nManager.isRTL) {
-        I18nManager.forceRTL(true);
-      }
-    } else {
-      if (I18nManager.isRTL) {
-        I18nManager.forceRTL(false);
-      }
-    }
-  };
-
+  if (loading) {
+    return <View />;
+  }
   return (
     <>
       {Platform.OS === 'android' && (
         <StatusBar translucent backgroundColor="transparent" />
       )}
       <ScaleProvider config={{height: 667, width: 375}}>
-        {/* <ApolloProvider client={client}> */}
-        {/* <DataProvider> */}
-        <ThemeProvider>
-          <DictionaryProvider>
-            <NavigationContainer>
-              <TDCountdown>
-                <FormProvider>
-                  <AppContainer />
-                </FormProvider>
-              </TDCountdown>
-            </NavigationContainer>
-          </DictionaryProvider>
-        </ThemeProvider>
-        {/* </DataProvider> */}
-        {/* </ApolloProvider> */}
+        <ApolloProvider client={client}>
+          <DataProvider>
+            <ThemeProvider>
+              <DictionaryProvider>
+                <NavigationContainer>
+                  <TDCountdown>
+                    <FormProvider>
+                      <AppContainer />
+                    </FormProvider>
+                  </TDCountdown>
+                </NavigationContainer>
+              </DictionaryProvider>
+            </ThemeProvider>
+          </DataProvider>
+        </ApolloProvider>
       </ScaleProvider>
 
       <QuickPicker />

@@ -5,8 +5,8 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useState} from 'react';
-import {useQuery, useMutation} from 'react-apollo';
+import React, {useState, useMemo, useCallback} from 'react';
+import {useQuery, useMutation, useLazyQuery} from 'react-apollo';
 import Onboarding from '../../apollo/queries/Onboarding';
 // import ProgressImages from '../../apollo/queries/ProgressImages';
 // import Challenges from '../../apollo/queries/Challenges';
@@ -18,8 +18,9 @@ import Onboarding from '../../apollo/queries/Onboarding';
 // import CreateProgressImage from '../../apollo/mutations/CreateProgressImage';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
+import DataContext from './DataContext';
 
-export default function DataProvider({children}) {
+export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const [onboarding, setOnboarding] = useState();
@@ -30,10 +31,11 @@ export default function DataProvider({children}) {
   // const [progressHistory, setProgressHistory] = useState();
   // const [progress, setProgress] = useState();
 
-  const [getOnboarding] = useQuery(Onboarding, {
-    // fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: setOnboarding(data),
-    onError: console.log(error, '<---error'),
+  //const {loading, data: onBoardingData} =
+  useQuery(Onboarding, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => console.log('Res', res),
+    onError: (error) => console.log(error),
   });
 
   // const [getProgressImages] = useQuery(ProgressImages, {
@@ -82,7 +84,7 @@ export default function DataProvider({children}) {
       // challengeHistory,
       // progressHistory,
       // progress,
-      getOnboarding,
+      setOnboarding,
       // getProgressImages,
       // getChallenges,
       // getChallengeHistory,
@@ -99,7 +101,7 @@ export default function DataProvider({children}) {
       // challengeHistory,
       // progressHistory,
       // progress,
-      getOnboarding,
+      setOnboarding,
       // getProgressImages,
       // getChallenges,
       // getChallengeHistory,
@@ -112,5 +114,7 @@ export default function DataProvider({children}) {
   );
 
   // ** ** ** ** ** Return ** ** ** ** **
-  return <DataContext.Provider value={values}>{children}</DataContext.Provider>;
+  return (
+    <DataContext.Provider value={values}>{props.children}</DataContext.Provider>
+  );
 }

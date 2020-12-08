@@ -19,9 +19,16 @@ export default async () => {
 
   // Set up the fetch and headers
   const awsGraphQLFetch = async (uri, options) => {
-    const locale = await AsyncStorage.getItem('@language');
+    const storedLocale = await AsyncStorage.getItem('@language');
+    console.log('LOCALE', storedLocale);
+    const locale = storedLocale ? storedLocale : undefined;
+    const translateMap = {
+      'en-GB': 'en',
+      'hi-IN': 'hi',
+      'ur-IN': 'ur',
+    };
+    const localisation = translateMap[locale];
 
-    const Localization = locale ? locale : undefined;
     const Authorization = await Authoriser();
 
     const updatedOptions = {
@@ -29,7 +36,7 @@ export default async () => {
       headers: {
         ...options.headers,
         Authorization,
-        'Accept-Language': Localization,
+        'Accept-Language': localisation,
       },
     };
 
@@ -51,16 +58,16 @@ export default async () => {
     connectToDevTools: true,
   });
 
-  try {
-    await persistCache({
-      cache,
-      storage: AsyncStorage,
-      debug: true,
-    });
-  } catch (error) {
-    console.error('Error restoring Apollo cache', error);
-    return null;
-  }
+  // try {
+  //   await persistCache({
+  //     cache,
+  //     storage: AsyncStorage,
+  //     debug: true,
+  //   });
+  // } catch (error) {
+  //   console.error('Error restoring Apollo cache', error);
+  //   return null;
+  // }
 
   return client;
 };

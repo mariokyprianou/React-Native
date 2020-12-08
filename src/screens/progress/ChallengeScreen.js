@@ -76,6 +76,8 @@ export default function ChallengeScreen() {
     },
     timerText: {
       ...textStyles.bold34_black100,
+      position: 'absolute',
+      bottom: getHeight(209),
     },
     buttonContainer: {
       position: 'absolute',

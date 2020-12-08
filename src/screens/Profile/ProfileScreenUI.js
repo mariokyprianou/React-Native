@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Text} from 'react-native';
+import {View, ScrollView, Text, SafeAreaView} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -74,6 +74,10 @@ export default function ProfileScreenUI({
 
   // MARK: - Styles
   const styles = {
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.backgroundWhite100,
+    },
     container: {
       flex: 1,
     },
@@ -107,7 +111,7 @@ export default function ProfileScreenUI({
   const userCard = () => {
     return (
       <>
-        <Spacer height={50} />
+        <Spacer height={30} />
         <ProfileUserCard
           firstName={'Johny'}
           lastName={'Appleased'}
@@ -276,14 +280,16 @@ export default function ProfileScreenUI({
   // MARK: - Render
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}>
-      {userCard()}
-      {notificationsUI()}
-      {form()}
-      {buttons()}
-    </ScrollView>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        {userCard()}
+        {notificationsUI()}
+        {form()}
+        {buttons()}
+      </ScrollView>
+    </SafeAreaView>
   );
 }

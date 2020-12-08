@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Platform,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -67,6 +68,10 @@ export default function ProgressScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.backgroundWhite100,
+    },
     screen: {
       width: '100%',
       height: '100%',
@@ -79,7 +84,7 @@ export default function ProgressScreen() {
     },
     titleContainer: {
       flexDirection: 'row',
-      marginTop: getHeight(50),
+      marginTop: getHeight(20),
       marginBottom: getHeight(15),
       width: '100%',
       alignSelf: 'center',
@@ -123,53 +128,56 @@ export default function ProgressScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <ScrollView style={styles.screen}>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
-          <Text style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
-        </View>
-        <View style={styles.calendarContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-            <Text style={styles.calendarTitle}>
-              {ProgressDict.YourWorkouts}
-            </Text>
-            <Calendar
-              days={days}
-              daysTextStyles={daysTextStyles}
-              daysContainerStyles={daysContainerStyles}
-              firstDayOfWeek="Monday"
-              calendarType="single-month"
-              showPrevNextDays={false}
-              datesSelectable={false}
-              dateCellStyles={dateCellStyles}
-              cellData={progressData}
-              pillWidth={pillWidth}
-              lookupStyleTable={lookupStyleTable}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.boxWrapper}>
-          <TransformationChallenge
-            type="progress"
-            title="Transformation"
-            image={fakeImage}
-            onPress={() => navigation.navigate('Transformation')}
-          />
-          {fakeChallenges.map((challenge, index) => {
-            const {name} = challenge;
-            return (
-              <TransformationChallenge
-                key={index}
-                type="challenge"
-                title={name}
-                image={fakeGraph}
-                onPress={() => navigation.navigate('Challenge', {challenge})}
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.screen}>
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
+            <Text
+              style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
+          </View>
+          <View style={styles.calendarContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+              <Text style={styles.calendarTitle}>
+                {ProgressDict.YourWorkouts}
+              </Text>
+              <Calendar
+                days={days}
+                daysTextStyles={daysTextStyles}
+                daysContainerStyles={daysContainerStyles}
+                firstDayOfWeek="Monday"
+                calendarType="single-month"
+                showPrevNextDays={false}
+                datesSelectable={false}
+                dateCellStyles={dateCellStyles}
+                cellData={progressData}
+                pillWidth={pillWidth}
+                lookupStyleTable={lookupStyleTable}
               />
-            );
-          })}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.boxWrapper}>
+            <TransformationChallenge
+              type="progress"
+              title="Transformation"
+              image={fakeImage}
+              onPress={() => navigation.navigate('Transformation')}
+            />
+            {fakeChallenges.map((challenge, index) => {
+              const {name} = challenge;
+              return (
+                <TransformationChallenge
+                  key={index}
+                  type="challenge"
+                  title={name}
+                  image={fakeGraph}
+                  onPress={() => navigation.navigate('Challenge', {challenge})}
+                />
+              );
+            })}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

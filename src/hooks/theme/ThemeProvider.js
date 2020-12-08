@@ -83,6 +83,7 @@ export default function ThemeProvider({children}) {
       fontFamily: fonts.bold,
       fontSize: fontSize(15),
       lineHeight: fontSize(20),
+      letterSpacing: 0.75,
       color: colors.white100,
     },
     bold16_brownishGrey100: {

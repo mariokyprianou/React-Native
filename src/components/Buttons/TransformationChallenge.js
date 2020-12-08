@@ -29,9 +29,9 @@ export default function TransformationChallenge({type, title, image, onPress}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     box: {
-      height: getHeight(130),
+      height: getHeight(162),
       width: '48%',
-      marginBottom: '3%',
+      marginBottom: '4%',
     },
     challengeBox: {
       backgroundColor: colors.white100,
@@ -42,7 +42,9 @@ export default function TransformationChallenge({type, title, image, onPress}) {
       elevation: 6,
     },
     textContainer: {
-      padding: getHeight(10),
+      paddingHorizontal: getHeight(10),
+      position: 'absolute',
+      bottom: getHeight(10),
     },
     progressTitle: {
       ...textStyles.bold12_white100,
@@ -114,7 +116,9 @@ export default function TransformationChallenge({type, title, image, onPress}) {
             <Image source={image} style={styles.challengeImage} />
             <View style={styles.textContainer}>
               <Text style={styles.challengeTitle}>{ButtonDict.Challenge}</Text>
-              <Text style={styles.challengeText}>{title}</Text>
+              <Text style={styles.challengeText} numberOfLines={1}>
+                {title}
+              </Text>
             </View>
           </>
         )}

@@ -106,7 +106,6 @@ export default function OnboardingScreen() {
         ref={onboardSwiper}
         loop={false}
         onIndexChanged={(index) => {
-          console.log(index);
           setActiveIndex(index);
         }}
         dot={<View style={styles.dot} />}
@@ -117,6 +116,7 @@ export default function OnboardingScreen() {
             header={header}
             text={text}
             handlePress={handlePress}
+            activeIndex={activeIndex}
           />
         ))}
       </Swiper>

@@ -16,24 +16,28 @@ const fakeData = [
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     image: onboardingImage,
+    orderIndex: 0,
   },
   {
     header: 'Train like the best',
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     image: onboardingImage,
+    orderIndex: 1,
   },
   {
     header: 'Plan your workouts',
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     image: onboardingImage,
+    orderIndex: 2,
   },
   {
     header: 'Pick your programme',
     text:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     image: onboardingImage,
+    orderIndex: 3,
   },
 ];
 

@@ -72,7 +72,6 @@ export default function LanguageSelectionScreen() {
       ...textStyles.medium14_brownishGrey100,
     },
   };
-
   const cells = [
     {
       name: 'language',

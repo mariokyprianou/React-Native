@@ -82,7 +82,7 @@ export default function LanguageSelectionScreen() {
       placeholder: getLanguage() || dropdownData[0],
       data: dropdownData,
       rightAccessory: () => (
-        <View style={styles.iconContainer}>
+        <View>
           <TDIcon input="chevron-down" inputStyle={styles.iconStyle} />
         </View>
       ),

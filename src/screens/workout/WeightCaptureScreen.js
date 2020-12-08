@@ -13,7 +13,6 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
-import DropDownPicker from 'react-native-dropdown-picker';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Spacer from '../../components/Utility/Spacer';
 import DefaultButton from '../../components/Buttons/DefaultButton';
@@ -21,11 +20,19 @@ import SetsTable from '../../components/Infographics/SetsTable';
 import format from 'date-fns/format';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import processChallengeHistory from '../../utils/processChallengeHistory';
+import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import TDIcon from 'the-core-ui-component-tdicon';
 
 export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {
+    colors,
+    textStyles,
+    cellFormStyles,
+    cellFormConfig,
+    dropdownStyle,
+  } = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
@@ -41,11 +48,11 @@ export default function WeightCaptureScreen() {
   const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
 
   const dropdownData = historyData.map((event) => {
-    return {label: `${event.value}`, value: event.value};
+    return `${event.value}`;
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
-  const styles = StyleSheet.create({
+  const styles = {
     card: {
       backgroundColor: colors.veryLightPink100,
       height: '100%',
@@ -54,7 +61,7 @@ export default function WeightCaptureScreen() {
     titleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: getHeight(40),
+      height: getHeight(50),
       width: '90%',
       alignSelf: 'center',
       zIndex: 9,
@@ -62,26 +69,6 @@ export default function WeightCaptureScreen() {
     title: {
       ...textStyles.bold20_black100,
       textAlign: 'left',
-    },
-    dropdown: {
-      flexDirection: 'row',
-      zIndex: 9,
-    },
-    dropdownContainer: {
-      height: getHeight(30),
-      width: getWidth(95),
-    },
-    dropdownBox: {
-      backgroundColor: colors.veryLightPink100,
-      borderColor: colors.veryLightPink100,
-    },
-    dropdownList: {
-      backgroundColor: colors.veryLightPink100,
-    },
-    dropdownArrow: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
     },
     subtitleContainer: {
       width: '90%',
@@ -94,6 +81,7 @@ export default function WeightCaptureScreen() {
     chartCard: {
       height: getHeight(200),
       width: '90%',
+      backgroundColor: colors.backgroundWhite100,
       alignSelf: 'center',
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -110,30 +98,52 @@ export default function WeightCaptureScreen() {
       width: '100%',
       alignItems: 'center',
     },
-  });
+    iconStyle: {
+      size: fontSize(12),
+      solid: true,
+    },
+  };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
+
+  const cells = [
+    {
+      name: 'repsHistory',
+      type: 'dropdown',
+      placeholder: 'Reps',
+      data: dropdownData,
+      underline: false,
+      rightAccessory: () => (
+        <View>
+          <TDIcon input="chevron-down" inputStyle={styles.iconStyle} />
+        </View>
+      ),
+      iconTintColor: colors.black100,
+      ...cellFormStyles,
+      ...dropdownStyle,
+      inputContainerStyle: {
+        paddingLeft: getWidth(7),
+        width: getWidth(80),
+        height: getHeight(50),
+        position: 'absolute',
+        top: getHeight(-41),
+      },
+      inputStyle: {
+        ...textStyles.bold20_black100,
+      },
+    },
+  ];
+  const config = {
+    ...cellFormConfig,
+  };
 
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Squats -</Text>
-          <DropDownPicker
-            items={dropdownData}
-            defaultValue={null}
-            placeholder={WorkoutDict.Reps_}
-            placeholderStyle={{
-              ...textStyles.bold20_black100,
-              textAlign: 'left',
-            }}
-            containerStyle={styles.dropdownContainer}
-            style={styles.dropdownBox}
-            dropDownStyle={styles.dropdownList}
-            onChangeItem={(item) => onPress(item, 'after')}
-            arrowStyle={styles.dropdownArrow}
-          />
+          <Form {...{cells, config}} />
         </View>
         <View style={styles.subtitleContainer}>
           <Text style={styles.subtitle}>{WorkoutDict.PickAWeight}</Text>

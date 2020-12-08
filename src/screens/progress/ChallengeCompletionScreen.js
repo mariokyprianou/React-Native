@@ -129,7 +129,7 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart data={historyData} axis={false} />
+        <ProgressChart data={historyData} axis={false} background={false} />
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>

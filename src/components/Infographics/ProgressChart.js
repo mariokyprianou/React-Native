@@ -13,7 +13,12 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
 
-export default function ProgressChart({axis = true, selectable = false, data}) {
+export default function ProgressChart({
+  axis = true,
+  background = true,
+  selectable = false,
+  data,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -32,11 +37,9 @@ export default function ProgressChart({axis = true, selectable = false, data}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scroll: {
-      backgroundColor: colors.white100,
       height: getHeight(200),
     },
     nonScrollContainer: {
-      backgroundColor: colors.white100,
       width: getWidth(335),
       height: getHeight(200),
     },
@@ -86,6 +89,11 @@ export default function ProgressChart({axis = true, selectable = false, data}) {
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}
+            style={{
+              backgroundColor: background
+                ? colors.white100
+                : colors.backgroundWhite100,
+            }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
               interval: 5,

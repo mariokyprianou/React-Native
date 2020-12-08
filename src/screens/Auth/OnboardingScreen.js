@@ -31,8 +31,8 @@ export default function OnboardingScreen() {
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
 
-  // const [onboarding, getOnboarding] = useData();
-  console.log(useData(), '<---onboarding');
+  const {onboarding, setOnboarding} = useData();
+  console.log(onboarding, '<---onboarding');
 
   const {onboardingData} = useOnboarding();
 

@@ -19,11 +19,13 @@ import Onboarding from '../../apollo/queries/Onboarding';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
+import {useEffect} from 'react-native';
+import R from 'ramda';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const [onboarding, setOnboarding] = useState();
+  const [onboarding, setOnboarding] = useState([]);
 
   // const [progressImages, setProgressImages] = useState();
   // const [challenges, setChallenges] = useState();
@@ -31,10 +33,12 @@ export default function DataProvider(props) {
   // const [progressHistory, setProgressHistory] = useState();
   // const [progress, setProgress] = useState();
 
-  //const {loading, data: onBoardingData} =
+  //const {loading: onBoardingLoading, data: onBoardingData} =
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => console.log('Res', res),
+    onCompleted: (res) => {
+      setOnboarding(res.onboardingScreens);
+    },
     onError: (error) => console.log(error),
   });
 

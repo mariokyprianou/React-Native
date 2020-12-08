@@ -5,7 +5,7 @@
  * Copyright (c) 2019 The Distance
  */
 
-import {AsyncStorage} from '@react-native-community/async-storage';
+import {AsyncStorage} from 'react-native';
 import {persistCache} from 'apollo-cache-persist';
 import {ApolloClient, InMemoryCache, HttpLink} from 'apollo-boost';
 
@@ -58,16 +58,16 @@ export default async () => {
     connectToDevTools: true,
   });
 
-  // try {
-  //   await persistCache({
-  //     cache,
-  //     storage: AsyncStorage,
-  //     debug: true,
-  //   });
-  // } catch (error) {
-  //   console.error('Error restoring Apollo cache', error);
-  //   return null;
-  // }
+  try {
+    await persistCache({
+      cache,
+      storage: AsyncStorage,
+      debug: true,
+    });
+  } catch (error) {
+    console.error('Error restoring Apollo cache', error);
+    return null;
+  }
 
   return client;
 };

@@ -6,7 +6,7 @@
  */
 
 import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutProgressBar from '../Infographics/WorkoutProgressBar';
@@ -25,6 +25,8 @@ export default function ({currentExercise, totalExercises}) {
 
   const [isPaused, setIsPaused] = useState(false);
 
+  const screenWidth = Dimensions.get('screen').width;
+
   const styles = {
     leftContainerStyle: {
       width: getWidth(54),
@@ -32,18 +34,18 @@ export default function ({currentExercise, totalExercises}) {
       borderRadius: radius(18),
       overflow: 'hidden',
       marginStart: getWidth(20),
-      alignContent: 'center',
       alignItems: 'center',
     },
     leftTestStyle: {
       ...textStyles.bold14_white100,
       position: 'absolute',
+      top: getHeight(1),
     },
-    titleContainerStyle: {
-      justifyContent: 'center',
-      alignSelf: 'center',
-      flexDirection: 'row',
-      marginLeft: getWidth(34),
+    titleTextContainer: {
+      position: 'absolute',
+      width: getWidth(100),
+      left: screenWidth / 2 - 100,
+      top: getHeight(-18),
     },
     titleTextStyle: {
       ...textStyles.bold22_black100,
@@ -52,8 +54,9 @@ export default function ({currentExercise, totalExercises}) {
       width: getWidth(44),
       height: getWidth(14),
       padding: getWidth(14),
-      alignSelf: 'center',
-      justifyContent: 'center',
+      position: 'absolute',
+      left: getWidth(180),
+      top: getHeight(-22),
     },
     iconStyle: {
       width: getWidth(14),
@@ -75,10 +78,12 @@ export default function ({currentExercise, totalExercises}) {
   );
 
   const headerTitle = () => (
-    <View style={styles.titleContainerStyle}>
-      <Text style={styles.titleTextStyle}>
-        {elapsedMS ? msToHMSFull(elapsedMS) : '00:00:00'}
-      </Text>
+    <View>
+      <View style={styles.titleTextContainer}>
+        <Text style={styles.titleTextStyle}>
+          {elapsedMS ? msToHMSFull(elapsedMS) : '00:00:00'}
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.timerTouchStyle}
         onPress={() => {

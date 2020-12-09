@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 
 import Colors from '../../styles/Colors';
@@ -16,6 +17,8 @@ import ThemeContext from './ThemeContext';
 
 export default function ThemeProvider({children}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+
+  const screenWidth = Dimensions.get('screen').width;
 
   const colors = {
     ...Colors,
@@ -593,15 +596,24 @@ export default function ThemeProvider({children}) {
       justifyContent: 'space-evenly',
     },
     timerContainer: {
-      position: 'absolute',
       width: '100%',
       height: '100%',
       backgroundColor: colors.white90,
       justifyContent: 'center',
+      position: 'absolute',
+    },
+    timerTouchArea: {
+      flex: 1,
+    },
+    timerTextContainer: {
+      position: 'absolute',
+      width: getWidth(230),
+      height: '100%',
+      left: screenWidth / 2 - 105,
+      top: getHeight(40),
     },
     timerTextStyle: {
       ...textStyles.bold76_black100,
-      alignSelf: 'center',
       lineHeight: getHeight(80),
     },
   };

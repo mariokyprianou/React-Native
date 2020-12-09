@@ -33,10 +33,11 @@ export default function ExerciseView() {
   const {dictionary} = useDictionary();
   const insets = useSafeArea();
   const {remainingMS, toggle, reset} = useTimer({
-    timer: '00:60',
+    timer: '00:05',
   });
 
   const [countDown, setCountDown] = useState(false);
+  const [msLeft, setMsLeft] = useState();
 
   const {WorkoutDict} = dictionary;
   const exerciseTitle = 'Lateral lunges';
@@ -56,15 +57,23 @@ export default function ExerciseView() {
 
   const onSetCompleted = () => {
     setCountDown(true);
-    reset();
+    // reset();
     toggle();
   };
 
+  const onCancelTimer = () => {
+    setCountDown(false);
+  };
+
   useEffect(() => {
-    if (remainingMS === 0) {
-      toggle();
+    if (msToHMS(remainingMS) === '00:00') {
+      setTimeout(() => {
+        setCountDown(false);
+        reset();
+      }, 1000);
     }
-  }, [remainingMS, toggle]);
+  }, [remainingMS, setCountDown]);
+
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const RepsList = React.memo(({reps}) => {
@@ -80,7 +89,11 @@ export default function ExerciseView() {
   const renderCountDown = () => {
     return (
       <View style={styles.timerContainer}>
-        <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+        <TouchableOpacity style={styles.timerTouchArea} onPress={onCancelTimer}>
+          <View style={styles.timerTextContainer}>
+            <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };

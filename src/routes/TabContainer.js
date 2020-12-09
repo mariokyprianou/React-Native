@@ -41,7 +41,7 @@ export default function TabContainer() {
     tabBarItemStyle: {
       justifyContent: 'center',
       marginBottom: getHeight(20),
-      marginTop: getHeight(12),
+      marginTop: getHeight(15),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',

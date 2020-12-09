@@ -94,6 +94,7 @@ export default function Header({
       justifyContent: 'center',
       width: '15%',
       alignItems: 'center',
+      paddingBottom: right === 'shareIcon' ? 5 : 0,
     },
     searchInputContainer: {
       height: height - insets.top,
@@ -115,8 +116,8 @@ export default function Header({
       transform: [{scaleX: isRTL() ? -1 : 1}],
     },
     shareIconStyle: {
-      height: getHeight(18),
-      width: getWidth(18),
+      height: getHeight(20),
+      width: getWidth(20),
       tintColor: colors.black100,
       resizeMode: 'contain',
     },

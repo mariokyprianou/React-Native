@@ -14,6 +14,7 @@ import TransformationScreen from '../screens/progress/TransformationScreen';
 import ChallengeScreen from '../screens/progress/ChallengeScreen';
 import ChallengeEndScreen from '../screens/progress/ChallengeEndScreen';
 import ChallengeCompletionScreen from '../screens/progress/ChallengeCompletionScreen';
+import AddPhotoScreen from '../screens/progress/AddPhotoScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function ProgressContainer(props) {
@@ -35,6 +36,7 @@ export default function ProgressContainer(props) {
         name="Transformation"
         component={TransformationScreen}
       />
+      <ProgressStack.Screen name="AddPhoto" component={AddPhotoScreen} />
       <ProgressStack.Screen name="Challenge" component={ChallengeScreen} />
       <ProgressStack.Screen
         name="ChallengeEnd"

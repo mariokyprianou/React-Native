@@ -1,175 +1,661 @@
+diff --git a/node_modules/the-core-ui-module-tdslideshow/index.js b/node_modules/the-core-ui-module-tdslideshow/index.js
+index 914bab1..a1d5124 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/index.js
+@@ -6,6 +6,8 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import Slideshow from "./src/Slideshow";
++import ImageSlider from "./src/components/ImageSlider";
++import AddPhoto from "./src/components/AddPhoto";
+ 
+-export default Slideshow;
++export { ImageSlider as TDSlideshow };
++export { AddPhoto as TDAddPhoto };
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
-index 82dabb6..cf0a4a3 100644
+deleted file mode 100644
+index 82dabb6..0000000
 --- a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
-+++ b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
-@@ -31,6 +31,7 @@ const Slideshow = ({
-   CustomCountdown,
-   DateSelectors,
-   cameraButtonImage,
-+  CustomHeader,
- }) => {
-   // ******* SETUP *******
-   const [activeViewIndex, setActiveViewIndex] = useState(0);
-@@ -114,7 +115,8 @@ const Slideshow = ({
-         sliderStyles={sliderStyles || defaultSliderStyles}
-         sliderSpacerHeight={sliderSpacerHeight || defaultSliderSpacerHeight}
-         sliderIcon={sliderIcon}
++++ /dev/null
+@@ -1,138 +0,0 @@
+-/*
+- * Jira Ticket:
+- * Created Date: Mon, 12th Oct 2020, 08:51:30 am
+- * Author: Jodi Dublon
+- * Email: jodi.dublon@thedistance.co.uk
+- * Copyright (c) 2020 The Distance
+- */
+-
+-import React, { useState } from "react";
+-import { Platform, Alert } from "react-native";
+-import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
+-import AddPhoto from "./components/AddPhoto";
+-import ImageSlider from "./components/ImageSlider";
+-import { defaultProps } from "./defaultProps";
+-import { checkDimensions, checkText, checkStylesIncHeight } from "./utils";
+-
+-const Slideshow = ({
+-  setPhoto,
+-  beforePic,
+-  afterPic,
+-  imageWidth,
+-  imageHeight,
+-  CustomButton,
+-  buttonText,
+-  sliderStyles,
+-  sliderSpacerHeight,
+-  sliderIcon,
+-  cameraHeaderText,
+-  overlayImage,
+-  overlayStyles,
+-  CustomCountdown,
+-  DateSelectors,
+-  cameraButtonImage,
+-}) => {
+-  // ******* SETUP *******
+-  const [activeViewIndex, setActiveViewIndex] = useState(0);
+-  const [afterImageWidth, setAfterImageWidth] = useState(imageWidth / 2);
+-  const [afterImageLeft, setAfterImageLeft] = useState(imageWidth / 2);
+-
+-  const {
+-    defaultImageWidth,
+-    defaultImageHeight,
+-    defaultButtonText,
+-    defaultSliderStyles,
+-    defaultSliderSpacerHeight,
+-    defaultCameraHeaderText,
+-    defaultOverlayStyles,
+-  } = defaultProps();
+-
+-  imageWidth && checkDimensions(imageWidth);
+-  imageHeight && checkDimensions(imageHeight);
+-  buttonText && checkText(buttonText);
+-  sliderStyles && checkStylesIncHeight(sliderStyles);
+-  sliderSpacerHeight && checkStylesIncHeight(sliderSpacerHeight);
+-  cameraHeaderText && checkText(cameraHeaderText);
+-  overlayStyles && checkStylesIncHeight(overlayStyles);
+-
+-  // ******* STYLES *******
+-
+-  // ******* FUNCTIONS *******
+-  function handleAddPhoto() {
+-    request(
+-      Platform.select({
+-        ios: PERMISSIONS.IOS.CAMERA,
+-        android: PERMISSIONS.ANDROID.CAMERA,
+-      })
+-    )
+-      .then((result) => {
+-        if (result === RESULTS.UNAVAILABLE) {
+-          Alert.alert("This function is not available on this device");
+-        }
+-        if (result === RESULTS.BLOCKED) {
+-          Alert.alert("Unable to access camera");
+-        }
+-        if (result === RESULTS.GRANTED) {
+-          setActiveViewIndex(1);
+-        }
+-      })
+-      .catch((err) => console.log(err));
+-  }
+-
+-  async function handlePhotoClick(camera) {
+-    const options = { quality: 0.5, base64: true };
+-    const data = await camera.takePictureAsync(options);
+-    setPhoto(data.uri);
+-    setActiveViewIndex(0);
+-  }
+-
+-  function handleSlideChange(value) {
+-    if (imageWidth) {
+-      const newWidth = imageWidth - value;
+-      setAfterImageWidth(newWidth);
+-    } else {
+-      const newWidth = defaultImageWidth - value;
+-      setAfterImageWidth(newWidth);
+-    }
+-    setAfterImageLeft(value);
+-  }
+-
+-  // ******* RENDER *******
+-  if (activeViewIndex === 0) {
+-    return (
+-      <ImageSlider
+-        handleAddPhoto={handleAddPhoto}
+-        handleSlideChange={handleSlideChange}
+-        beforePic={beforePic || null}
+-        afterPic={afterPic || null}
+-        imageWidth={imageWidth || defaultImageWidth}
+-        imageHeight={imageHeight || defaultImageHeight}
+-        afterImageWidth={afterImageWidth}
+-        afterImageLeft={afterImageLeft}
+-        buttonText={buttonText || defaultButtonText}
+-        CustomButton={CustomButton}
+-        sliderStyles={sliderStyles || defaultSliderStyles}
+-        sliderSpacerHeight={sliderSpacerHeight || defaultSliderSpacerHeight}
+-        sliderIcon={sliderIcon}
 -        DateSelectors={DateSelectors}
-+        DateSelectors={ DateSelectors }
-+        CustomHeader={CustomHeader}
-       />
-     );
-   }
+-      />
+-    );
+-  }
+-
+-  if (activeViewIndex === 1) {
+-    return (
+-      <AddPhoto
+-        handlePhotoClick={handlePhotoClick}
+-        setActiveViewIndex={setActiveViewIndex}
+-        setPhoto={setPhoto}
+-        cameraHeaderText={cameraHeaderText || defaultCameraHeaderText}
+-        overlayImage={overlayImage || null}
+-        overlayStyles={overlayStyles || defaultOverlayStyles}
+-        CustomCountdown={CustomCountdown}
+-        cameraButtonImage={cameraButtonImage}
+-      />
+-    );
+-  }
+-};
+-
+-export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..9920b18 100644
+index f41ddff..e36db5d 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -28,12 +28,13 @@ const AddPhoto = ({
+@@ -7,28 +7,31 @@
+  */
+ 
+ import React, { useState } from "react";
+-import { View, Image, TouchableOpacity, Platform, Alert } from "react-native";
+-import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
+-import ImagePicker from "react-native-image-crop-picker";
++import { View, Image, TouchableOpacity, Dimensions } from "react-native";
+ import { RNCamera } from "react-native-camera";
+ import TDIcon from "the-core-ui-component-tdicon";
+-import Header from "./Header";
+ import { ScaleHook } from "react-native-design-to-component";
++import { defaultProps } from "../defaultProps";
++import { checkStylesIncHeight, checkString } from "../utils";
+ 
+ const AddPhoto = ({
+-  handlePhotoClick,
+-  setActiveViewIndex,
+   setPhoto,
+-  cameraHeaderText,
+   overlayImage,
+   overlayStyles,
+   CustomCountdown,
+   cameraButtonImage,
++  backgroundColor,
+ }) => {
    // ******* SETUP *******
++  overlayStyles && checkStylesIncHeight(overlayStyles);
++  backgroundColor && checkString(backgroundColor);
++
++  const { defaultOverlayStyles, defaultBackgroundColor } = defaultProps();
++
    const [cameraRef, setCameraRef] = useState();
    const [cameraType, setCameraType] = useState("back");
 -  const { getHeight, fontSize } = ScaleHook();
-+  const { getHeight, getWidth, fontSize } = ScaleHook();
++  const { getHeight, fontSize, getWidth } = ScaleHook();
++  const screenWidth = Dimensions.get("screen").width;
  
    // ******* STYLES *******
    const styles = {
-     pageContainer: {
-       height: "100%",
-+      backgroundColor: 'rgba(252, 252, 252, 1)',
+@@ -55,50 +58,51 @@ const AddPhoto = ({
+       backgroundColor: "transparent",
+       zIndex: 1,
      },
-     cameraContainer: {
-       height: getHeight(550),
-@@ -44,9 +45,8 @@ const AddPhoto = ({
-       flex: 1,
-     },
-     overlay: {
--      flex: 1,
-       position: "absolute",
--      top: getHeight(50),
-+      // top: getHeight(50),
-       left: 0,
-       width: "100%",
-       height: "100%",
-@@ -60,7 +60,7 @@ const AddPhoto = ({
++    overlayImage: {
++      ...defaultOverlayStyles,
++      ...overlayStyles,
++    },
+     buttonContainer: {
+       flexDirection: "row",
        alignItems: "center",
-       justifyContent: "space-around",
+-      justifyContent: "space-around",
++      height: getHeight(70),
        paddingVertical: getHeight(15),
 -      backgroundColor: "white",
-+      backgroundColor: 'rgba(252, 252, 252, 1)',
++      backgroundColor: backgroundColor
++        ? backgroundColor
++        : defaultBackgroundColor,
      },
-     rotateButton: {
-       size: fontSize(24),
-diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
-index 507924f..243d0c8 100644
---- a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
-+++ b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
-@@ -7,10 +7,12 @@
-  */
+-    rotateButton: {
+-      size: fontSize(24),
+-      color: "black",
++    countdownButtonContainer: {
++      position: "absolute",
++      left: getWidth(40),
++    },
++    cameraButtonContainer: {
++      position: "absolute",
++      left: screenWidth / 2 - (cameraButtonImage ? 25 : 30),
+     },
+     cameraButton: {
+-      size: fontSize(60),
++      size: getWidth(60),
+       color: "black",
+     },
+-    sideButtons: {
++    cameraButtonImage: {
+       width: getWidth(50),
++      height: getHeight(50),
++      resizeMode: "contain",
++    },
++    rotateButtonContainer: {
++      position: "absolute",
++      right: getWidth(40),
++    },
++    rotateButton: {
++      size: fontSize(24),
++      color: "black",
+     },
+   };
  
- import React from "react";
--import { View, TouchableOpacity, Text } from "react-native";
-+import { View, TouchableOpacity, Text, I18nManager } from "react-native";
- import TDIcon from "the-core-ui-component-tdicon";
- import { ScaleHook } from "react-native-design-to-component";
+   // ******* FUNCTIONS *******
+-  function handleSelectPhoto() {
+-    request(
+-      Platform.select({
+-        ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+-        android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+-      })
+-    )
+-      .then((result) => {
+-        if (result === RESULTS.UNAVAILABLE) {
+-          Alert.alert("This function is not available on this device");
+-        }
+-        if (result === RESULTS.BLOCKED) {
+-          Alert.alert("Unable to access camera");
+-        }
+-        if (result === RESULTS.GRANTED) {
+-          ImagePicker.openPicker({
+-            mediaType: "photo",
+-          }).then((cameraPhoto) => {
+-            setPhoto(cameraPhoto.sourceURL);
+-          });
+-        }
+-      })
+-      .catch((err) => console.log(err));
++  async function handlePhotoClick(camera) {
++    const options = { quality: 0.5, base64: true };
++    const data = await camera.takePictureAsync(options);
++    setPhoto(data.uri);
+   }
  
-+const photoSelect = require('../../../../assets/icons/photoSelect.png'); 
+   function handleSwitchView() {
+@@ -109,11 +113,6 @@ const AddPhoto = ({
+ 
+   return (
+     <View style={styles.pageContainer}>
+-      <Header
+-        setActiveViewIndex={setActiveViewIndex}
+-        handleSelectPhoto={handleSelectPhoto}
+-        cameraHeaderText={cameraHeaderText}
+-      />
+       <View style={styles.cameraContainer}>
+         <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
+           {({ camera }) => {
+@@ -121,7 +120,7 @@ const AddPhoto = ({
+             if (overlayImage) {
+               return (
+                 <View style={styles.overlay}>
+-                  <Image source={overlayImage} style={overlayStyles} />
++                  <Image source={overlayImage} style={styles.overlayImage} />
+                 </View>
+               );
+             } else {
+@@ -131,17 +130,24 @@ const AddPhoto = ({
+         </RNCamera>
+         <View style={styles.buttonContainer}>
+           {CustomCountdown && (
+-            <View style={styles.sideButtons}>
++            <View style={styles.countdownButtonContainer}>
+               <CustomCountdown />
+             </View>
+           )}
+-          <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
+-            <TDIcon
+-              input={cameraButtonImage ? cameraButtonImage : "dot-circle"}
+-              inputStyle={cameraButtonImage ? null : styles.cameraButton}
+-            />
+-          </TouchableOpacity>
+-          <View style={styles.sideButtons}>
++          <View style={styles.cameraButtonContainer}>
++            <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
++              <TDIcon
++                input={cameraButtonImage ? cameraButtonImage : "dot-circle"}
++                inputStyle={
++                  cameraButtonImage
++                    ? styles.cameraButtonImage
++                    : styles.cameraButton
++                }
++              />
++            </TouchableOpacity>
++          </View>
 +
- const Header = ({
-   setActiveViewIndex,
-   handleSelectPhoto,
-@@ -23,8 +25,10 @@ const Header = ({
-   const styles = {
-     container: {
-       flexDirection: "row",
++          <View style={styles.rotateButtonContainer}>
+             <TouchableOpacity onPress={handleSwitchView}>
+               <TDIcon input="sync" inputStyle={styles.rotateButton} />
+             </TouchableOpacity>
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
+deleted file mode 100644
+index 507924f..0000000
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
++++ /dev/null
+@@ -1,75 +0,0 @@
+-/*
+- * Jira Ticket:
+- * Created Date: Thu, 22nd Oct 2020, 14:56:45 pm
+- * Author: Jodi Dublon
+- * Email: jodi.dublon@thedistance.co.uk
+- * Copyright (c) 2020 The Distance
+- */
+-
+-import React from "react";
+-import { View, TouchableOpacity, Text } from "react-native";
+-import TDIcon from "the-core-ui-component-tdicon";
+-import { ScaleHook } from "react-native-design-to-component";
+-
+-const Header = ({
+-  setActiveViewIndex,
+-  handleSelectPhoto,
+-  cameraHeaderText,
+-}) => {
+-  // ******* SETUP *******
+-  const { getHeight, getWidth, fontSize } = ScaleHook();
+-
+-  // ******* STYLES *******
+-  const styles = {
+-    container: {
+-      flexDirection: "row",
 -      alignItems: "center",
 -      height: getHeight(50),
-+      alignItems: "flex-end",
-+      backgroundColor: 'rgba(252, 252, 252, 1)',
-+      paddingBottom: getHeight(15),
-+      height: getHeight(90),
-       justifyContent: "space-between",
-     },
-     leftContainer: {
-@@ -37,6 +41,11 @@ const Header = ({
-       size: fontSize(20),
-       color: "#3a3a3a",
-     },
-+    photoIconStyle: {
-+      height: getHeight(23),
-+      width: getWidth(17),
-+      resizeMode: 'contain',
-+    },
-     titleTextStyle: {
-       fontSize: fontSize(20),
-       fontWeight: "bold",
-@@ -59,13 +68,13 @@ const Header = ({
-     <View style={styles.container}>
-       <View style={styles.leftContainer}>
-         <TouchableOpacity onPress={handleGoBack}>
+-      justifyContent: "space-between",
+-    },
+-    leftContainer: {
+-      flexDirection: "row",
+-      width: getWidth(40),
+-      alignItems: "center",
+-      justifyContent: "center",
+-    },
+-    iconStyle: {
+-      size: fontSize(20),
+-      color: "#3a3a3a",
+-    },
+-    titleTextStyle: {
+-      fontSize: fontSize(20),
+-      fontWeight: "bold",
+-      color: "#3a3a3a",
+-    },
+-    rightContainer: {
+-      justifyContent: "center",
+-      alignItems: "center",
+-      width: getWidth(40),
+-    },
+-  };
+-
+-  // ******* FUNCTIONS *******
+-  function handleGoBack() {
+-    setActiveViewIndex(0);
+-  }
+-
+-  // ******* RENDER *******
+-  return (
+-    <View style={styles.container}>
+-      <View style={styles.leftContainer}>
+-        <TouchableOpacity onPress={handleGoBack}>
 -          <TDIcon input="chevron-left" inputStyle={styles.iconStyle} />
-+          <TDIcon input={I18nManager.isRTL? "chevron-right" : "chevron-left"} inputStyle={styles.iconStyle} />
-         </TouchableOpacity>
-       </View>
-       <Text style={styles.titleTextStyle}>{cameraHeaderText}</Text>
-       <View style={styles.rightContainer}>
-         <TouchableOpacity onPress={handleSelectPhoto} activeOpacity={1}>
+-        </TouchableOpacity>
+-      </View>
+-      <Text style={styles.titleTextStyle}>{cameraHeaderText}</Text>
+-      <View style={styles.rightContainer}>
+-        <TouchableOpacity onPress={handleSelectPhoto} activeOpacity={1}>
 -          <TDIcon input="images" inputStyle={styles.iconStyle} />
-+          <TDIcon input={photoSelect} inputStyle={styles.photoIconStyle} />    
-         </TouchableOpacity>
-       </View>
-     </View>
+-        </TouchableOpacity>
+-      </View>
+-    </View>
+-  );
+-};
+-
+-export default Header;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 1bbdec1..77c0ace 100644
+index 1bbdec1..6317ef0 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-@@ -33,11 +33,13 @@ const ImageSlider = ({
+@@ -6,38 +6,48 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import React from "react";
+-import {
+-  View,
+-  Image,
+-  StyleSheet,
+-  TouchableOpacity,
+-  Text,
+-  Dimensions,
+-} from "react-native";
+-import TDIcon from "the-core-ui-component-tdicon";
++import React, { useState } from "react";
++import { View, Image, StyleSheet, Dimensions } from "react-native";
+ import Slider from "@react-native-community/slider";
+ import { ScaleHook } from "react-native-design-to-component";
++import { defaultProps } from "../defaultProps";
++import { checkDimensions, checkStylesIncHeight, checkString } from "../utils";
+ 
+ const ImageSlider = ({
+-  handleAddPhoto,
+-  handleSlideChange,
+   beforePic,
+   afterPic,
+   imageWidth,
+   imageHeight,
+-  afterImageWidth,
+-  afterImageLeft,
+-  buttonText,
+   sliderStyles,
++  minimumTrackTintColor,
++  maximumTrackTintColor,
    sliderSpacerHeight,
    sliderIcon,
    DateSelectors,
-+  CustomButton,
-+  CustomHeader,
  }) => {
    // ******* SETUP *******
++  imageWidth && checkDimensions(imageWidth);
++  imageHeight && checkDimensions(imageHeight);
++  sliderStyles && checkStylesIncHeight(sliderStyles);
++  minimumTrackTintColor && checkString(minimumTrackTintColor);
++  maximumTrackTintColor && checkString(maximumTrackTintColor);
++  sliderSpacerHeight && checkStylesIncHeight(sliderSpacerHeight);
++
++  const {
++    defaultImageWidth,
++    defaultImageHeight,
++    defaultSliderStyles,
++    defaultSliderSpacerHeight,
++  } = defaultProps();
++
++  const _imageWidth = imageWidth ? imageWidth : defaultImageWidth;
++  const _imageHeight = imageHeight ? imageHeight : defaultImageHeight;
++
++  const [afterImageWidth, setAfterImageWidth] = useState(_imageWidth / 2);
++  const [afterImageLeft, setAfterImageLeft] = useState(_imageWidth / 2);
    const screenWidth = Dimensions.get("screen").width;
-   const leftAlign = (screenWidth - imageWidth) / 2;
+-  const leftAlign = (screenWidth - imageWidth) / 2;
 -  const { getHeight, getWidth } = ScaleHook();
++  const leftAlign = (screenWidth - _imageWidth) / 2;
 +  const { getHeight, getWidth, fontSize } = ScaleHook();
  
    // ******* STYLES *******
    const styles = StyleSheet.create({
-@@ -99,16 +101,19 @@ const ImageSlider = ({
+@@ -50,26 +60,26 @@ const ImageSlider = ({
+       position: "absolute",
+       left: 0,
+       top: 0,
+-      height: imageHeight,
+-      width: imageWidth,
++      height: _imageHeight,
++      width: _imageWidth,
+     },
+     beforeImage: {
+-      height: imageHeight,
+-      width: imageWidth,
++      height: _imageHeight,
++      width: _imageWidth,
+     },
+     afterContainer: {
+       flex: 1,
+       position: "absolute",
+       top: 0,
+       left: 0,
+-      height: imageHeight,
++      height: _imageHeight,
+       width: afterImageWidth,
+       overflow: "hidden",
+       left: afterImageLeft,
+     },
+     afterImage: {
+-      height: imageHeight,
+-      width: imageWidth,
++      height: _imageHeight,
++      width: _imageWidth,
+       marginLeft: -afterImageLeft,
+     },
+     button: {
+@@ -96,57 +106,52 @@ const ImageSlider = ({
+   });
+ 
+   // ******* FUNCTIONS *******
++  function handleSlideChange(value) {
++    const newWidth = _imageWidth - value;
++    setAfterImageWidth(newWidth);
++    setAfterImageLeft(value);
++  }
++
    // ******* RENDER *******
    return (
      <View>
-+      {CustomHeader && (
-+        <CustomHeader />
-+      )}
        <View style={styles.imagesContainer}>
          {DateSelectors && <DateSelectors />}
          <View style={styles.beforeContainer}>
-           {beforePic && (
+-          {beforePic && (
 -            <Image source={{ uri: beforePic }} style={styles.beforeImage} />
-+            <Image source={beforePic} style={styles.beforeImage} />
-           )}
+-          )}
++          {beforePic && <Image source={beforePic} style={styles.beforeImage} />}
          </View>
          <View style={styles.afterContainer}>
-           {afterPic && (
+-          {afterPic && (
 -            <Image source={{ uri: afterPic }} style={styles.afterImage} />
-+            <Image source={afterPic} style={styles.afterImage} />
-           )}
+-          )}
++          {afterPic && <Image source={afterPic} style={styles.afterImage} />}
          </View>
        </View>
-@@ -118,9 +123,10 @@ const ImageSlider = ({
-           width: sliderStyles.width,
-           height: sliderStyles.height,
+-      <View style={sliderSpacerHeight} />
++      <View
++        style={
++          sliderSpacerHeight ? sliderSpacerHeight : defaultSliderSpacerHeight
++        }
++      />
+       <Slider
+         style={{
+-          width: sliderStyles.width,
+-          height: sliderStyles.height,
            alignSelf: "center",
--        }}
++          ...defaultSliderStyles,
++          ...sliderStyles,
+         }}
 -        minimumValue={0}
 -        maximumValue={imageWidth}
-+        } }
-+        // patch
-+        minimumValue={imageWidth / 10}
-+        maximumValue={(imageWidth / 10) * 9}
-         step={imageWidth / 10}
-         value={imageWidth / 2}
-         minimumTrackTintColor={sliderStyles.minimumTrackTintColor}
+-        step={imageWidth / 10}
+-        value={imageWidth / 2}
+-        minimumTrackTintColor={sliderStyles.minimumTrackTintColor}
+-        maximumTrackTintColor={sliderStyles.maximumTrackTintColor}
++        minimumValue={_imageWidth / 10}
++        maximumValue={(_imageWidth / 10) * 9}
++        step={_imageWidth / 100}
++        value={_imageWidth / 2}
++        minimumTrackTintColor={
++          minimumTrackTintColor
++            ? minimumTrackTintColor
++            : defaultSliderStyles.minimumTrackTintColor
++        }
++        maximumTrackTintColor={
++          maximumTrackTintColor
++            ? maximumTrackTintColor
++            : defaultSliderStyles.maximumTrackTintColor
++        }
+         onValueChange={(value) => handleSlideChange(value)}
+         thumbImage={sliderIcon || null}
+       />
+-      {CustomButton ? (
+-        <CustomButton onPress={handleAddPhoto} />
+-      ) : (
+-        <View style={styles.button}>
+-          <TouchableOpacity onPress={handleAddPhoto}>
+-            <Text style={styles.buttonText}>{buttonText}</Text>
+-          </TouchableOpacity>
+-          <View style={styles.iconContainer}>
+-            <TDIcon
+-              input="chevron-right"
+-              inputStyle={{
+-                size: styles.buttonText.fontSize,
+-                color: styles.buttonText.color,
+-                solid: true,
+-              }}
+-            />
+-          </View>
+-        </View>
+-      )}
+     </View>
+   );
+ };
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
+index 70e1755..f08e166 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
+@@ -9,26 +9,25 @@
+ import { ScaleHook } from "react-native-design-to-component";
+ 
+ export function defaultProps() {
+-  const { getHeight, getWidth, fontSize } = ScaleHook();
++  const { getHeight, getWidth } = ScaleHook();
+ 
+   return {
+     defaultImageWidth: getWidth(300),
+     defaultImageHeight: getHeight(250),
+-    defaultButtonText: "ADD PHOTO",
+     defaultSliderStyles: {
+       height: getHeight(30),
+-      width: getWidth(40),
++      width: getWidth(300),
+       minimumTrackTintColor: "transparent",
+       maximumTrackTintColor: "transparent",
+     },
+     defaultSliderSpacerHeight: {
+-      height: getHeight(30),
++      height: getHeight(78),
+     },
+-    defaultCameraHeaderText: "Upload",
+     defaultOverlayStyles: {
+       height: getHeight(400),
+       top: getHeight(-50),
+       resizeMode: "contain",
+     },
++    defaultBackgroundColor: "white",
+   };
+ }
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js b/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
+index 5ecd5d0..4ee0aa4 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
+@@ -11,8 +11,8 @@ export function checkDimensions(dimension) {
+     throw new Error("Image dimensions must be numbers");
+ }
+ 
+-export function checkText(text) {
+-  if (typeof text !== "string") throw new Error("Text should be a string");
++export function checkString(text) {
++  if (typeof text !== "string") throw new Error("Property should be a string");
+ }
+ 
+ export function checkStylesIncHeight(styles) {

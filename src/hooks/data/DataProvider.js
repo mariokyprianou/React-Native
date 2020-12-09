@@ -37,7 +37,8 @@ export default function DataProvider(props) {
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      setOnboarding(res.onboardingScreens);
+      const data = res.onboardingScreens.reverse();
+      setOnboarding(data);
     },
     onError: (error) => console.log(error),
   });
@@ -88,7 +89,6 @@ export default function DataProvider(props) {
       // challengeHistory,
       // progressHistory,
       // progress,
-      setOnboarding,
       // getProgressImages,
       // getChallenges,
       // getChallengeHistory,
@@ -105,7 +105,6 @@ export default function DataProvider(props) {
       // challengeHistory,
       // progressHistory,
       // progress,
-      setOnboarding,
       // getProgressImages,
       // getChallenges,
       // getChallengeHistory,

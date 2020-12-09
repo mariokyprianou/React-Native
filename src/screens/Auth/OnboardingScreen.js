@@ -19,8 +19,6 @@ import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
 import useData from '../../hooks/data/UseData';
 
-import useOnboarding from '../../hooks/data/useOnboarding';
-
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
@@ -31,10 +29,7 @@ export default function OnboardingScreen() {
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
 
-  const {onboarding, setOnboarding} = useData();
-  console.log(onboarding, '<---onboarding');
-
-  const {onboardingData} = useOnboarding();
+  const {onboarding} = useData();
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
@@ -92,10 +87,10 @@ export default function OnboardingScreen() {
   };
 
   function handlePress(direction) {
-    if (direction === 'left' && activeIndex !== 0) {
+    if (direction === 'left') {
       onboardSwiper.current.scrollTo(activeIndex - 1, true);
     }
-    if (direction === 'right' && activeIndex !== onboardingData.length - 1) {
+    if (direction === 'right') {
       onboardSwiper.current.scrollTo(activeIndex + 1, true);
     }
   }
@@ -116,12 +111,13 @@ export default function OnboardingScreen() {
         }}
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}>
-        {onboardingData.map(({header, text, image}) => (
+        {onboarding.map(({title, description, image}) => (
           <OnboardingSliderItem
             image={image}
-            header={header}
-            text={text}
+            header={title}
+            text={description}
             handlePress={handlePress}
+            activeIndex={activeIndex}
           />
         ))}
       </Swiper>

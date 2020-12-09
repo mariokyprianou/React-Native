@@ -20,7 +20,9 @@ export default async () => {
   // Set up the fetch and headers
   const awsGraphQLFetch = async (uri, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
+
     console.log('LOCALE', storedLocale);
+
     const locale = storedLocale ? storedLocale : undefined;
     const translateMap = {
       'en-GB': 'en',
@@ -46,6 +48,7 @@ export default async () => {
   // Set up Link to external GraphQL endpoint
   const secrets = Secrets(Environment);
   const graphQLUrl = secrets.graphQLUrl ?? 'http://localhost:4000/';
+
   const httpLink = new HttpLink({
     uri: graphQLUrl,
     fetch: awsGraphQLFetch,

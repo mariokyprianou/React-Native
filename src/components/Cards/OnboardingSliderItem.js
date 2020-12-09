@@ -19,6 +19,7 @@ export default function OnboardingSliderItem({
   header,
   text,
   handlePress,
+  activeIndex,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
@@ -30,29 +31,34 @@ export default function OnboardingSliderItem({
       width: '100%',
       paddingHorizontal: getWidth(20),
     },
-    iconContainer: {
-      width: '100%',
-      height: getHeight(309),
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      paddingBottom: getHeight(93),
+    leftIconContainer: {
+      width: getWidth(50),
+      alignItems: 'center',
+      height: getHeight(50),
+      position: 'absolute',
+      left: 0,
+      top: getHeight(180),
+    },
+    rightIconContainer: {
+      width: getWidth(50),
+      alignItems: 'center',
+      height: getHeight(50),
+      position: 'absolute',
+      right: 0,
+      top: getHeight(180),
     },
     imagesContainer: {
       height: getHeight(310),
       width: getWidth(210),
-      position: 'absolute',
-      top: 0,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
       alignSelf: 'center',
+      justifyContent: 'flex-end',
     },
     image: {
-      height: getHeight(330),
-      width: getWidth(196),
-      position: 'absolute',
+      height: '100%',
+      width: '100%',
       resizeMode: 'contain',
-      top: 0,
+      position: 'absolute',
+      top: getHeight(20),
     },
     icon: {
       size: fontSize(18),
@@ -75,23 +81,29 @@ export default function OnboardingSliderItem({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => handlePress('left')}>
-          <TDIcon
-            input={isRTL() ? 'chevron-right' : 'chevron-left'}
-            inputStyle={styles.icon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('right')}>
-          <TDIcon
-            input={isRTL() ? 'chevron-left' : 'chevron-right'}
-            inputStyle={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
+      {activeIndex !== 0 && (
+        <View style={styles.leftIconContainer}>
+          <TouchableOpacity onPress={() => handlePress('left')}>
+            <TDIcon
+              input={isRTL() ? 'chevron-right' : 'chevron-left'}
+              inputStyle={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+      {activeIndex !== 3 && (
+        <View style={styles.rightIconContainer}>
+          <TouchableOpacity onPress={() => handlePress('right')}>
+            <TDIcon
+              input={isRTL() ? 'chevron-left' : 'chevron-right'}
+              inputStyle={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.imagesContainer}>
-        <Image source={image} style={styles.image} />
-        <FadingBottomView color="white" height={80} />
+        <Image source={{uri: image}} style={styles.image} />
+        <FadingBottomView color="white" height={60} />
       </View>
       <Text style={styles.header}>{header}</Text>
       <Text style={styles.text}>{text}</Text>

@@ -26,7 +26,6 @@
 		61720B52558F499CB288D41C /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5652FA8072B94CFE8E2B4DC8 /* proximanova-regular.otf */; };
 		72AF1DD1315B0D5C71548AAD /* libPods-thecoreui-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30F9D918DE7918BCF809FAB5 /* libPods-thecoreui-tvOSTests.a */; };
 		7CE2211324AB6671001D8ECD /* Secrets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 7CE2210F24AB6671001D8ECD /* Secrets.stencil */; };
-		7CE2211424AB6671001D8ECD /* Secrets.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2211124AB6671001D8ECD /* Secrets.generated.swift */; };
 		7CE2211524AB6671001D8ECD /* SecretsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2211224AB6671001D8ECD /* SecretsManager.m */; };
 		7CFA8B86223A1C78728E4F8E /* libPods-thecoreui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D283AEAA947986FFB426475 /* libPods-thecoreui.a */; };
 		87BE96A3A92D45288B8048C4 /* proximanova-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F7E5C929D9B4DDC8D265ACA /* proximanova-light.otf */; };
@@ -88,7 +87,6 @@
 		7CE2210E24AB6671001D8ECD /* SecretsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretsManager.h; sourceTree = "<group>"; };
 		7CE2210F24AB6671001D8ECD /* Secrets.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Secrets.stencil; sourceTree = "<group>"; };
 		7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TheCoreUI-Bridging-Header.h"; sourceTree = "<group>"; };
-		7CE2211124AB6671001D8ECD /* Secrets.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.generated.swift; sourceTree = "<group>"; };
 		7CE2211224AB6671001D8ECD /* SecretsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretsManager.m; sourceTree = "<group>"; };
 		92FB52913565401FAD1E29AD /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		976E9763CE5949A5A2C69440 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 				7CE2210E24AB6671001D8ECD /* SecretsManager.h */,
 				7CE2210F24AB6671001D8ECD /* Secrets.stencil */,
 				7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */,
-				7CE2211124AB6671001D8ECD /* Secrets.generated.swift */,
 				7CE2211224AB6671001D8ECD /* SecretsManager.m */,
 			);
 			path = Helpers;
@@ -551,7 +548,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\n#if [ -f ../env-vars.sh ]\n#then\n#source ../env-vars.sh\n#fi\n#no `else` case needed if the CI works as expected\n#${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args staging_graphql_url=$AWS_GRAPHQL_URL_STAGING,staging_user_pool_id=$AWS_USER_POOL_ID_STAGING,staging_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_STAGING,staging_aws_region=$AWS_REGION_STAGING,production_graphql_url=$AWS_GRAPHQL_URL_PRODUCTION,production_user_pool_id=$AWS_USER_POOL_ID_PRODUCTION,production_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_PRODUCTION,production_aws_region=$AWS_REGION_PRODUCTION,development_graphql_url=$AWS_GRAPHQL_URL_DEVELOPMENT,development_user_pool_id=$AWS_USER_POOL_ID_DEVELOPMENT,development_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT,development_aws_region=$AWS_REGION_DEVELOPMENT,checksum=\"${SHASUMARRAY[0]}\"\n";
+			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\nif [ -f ../env-vars.sh ]\nthen\nsource ../env-vars.sh\nfi\nno `else` case needed if the CI works as expected\n${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args staging_graphql_url=$AWS_GRAPHQL_URL_STAGING,staging_user_pool_id=$AWS_USER_POOL_ID_STAGING,staging_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_STAGING,staging_aws_region=$AWS_REGION_STAGING,production_graphql_url=$AWS_GRAPHQL_URL_PRODUCTION,production_user_pool_id=$AWS_USER_POOL_ID_PRODUCTION,production_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_PRODUCTION,production_aws_region=$AWS_REGION_PRODUCTION,development_graphql_url=$AWS_GRAPHQL_URL_DEVELOPMENT,development_user_pool_id=$AWS_USER_POOL_ID_DEVELOPMENT,development_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT,development_aws_region=$AWS_REGION_DEVELOPMENT,checksum=\"${SHASUMARRAY[0]}\"\n";
 		};
 		916F5771E0D5AB189A5B4F7B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -762,7 +759,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CE2211424AB6671001D8ECD /* Secrets.generated.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				7CE2211524AB6671001D8ECD /* SecretsManager.m in Sources */,
@@ -818,7 +814,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 09C81E17ED3DE32216FEFCA2 /* Pods-thecoreui-thecoreuiTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -842,7 +837,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E7C83A6B9A7E73F9817DB1E8 /* Pods-thecoreui-thecoreuiTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = thecoreuiTests/Info.plist;

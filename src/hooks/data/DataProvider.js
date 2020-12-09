@@ -5,7 +5,7 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useState, useMemo, useCallback} from 'react';
+import React, {useState, useMemo} from 'react';
 import {useQuery, useMutation, useLazyQuery} from 'react-apollo';
 import Onboarding from '../../apollo/queries/Onboarding';
 // import ProgressImages from '../../apollo/queries/ProgressImages';
@@ -19,8 +19,6 @@ import Onboarding from '../../apollo/queries/Onboarding';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
-import {useEffect} from 'react-native';
-import R from 'ramda';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();

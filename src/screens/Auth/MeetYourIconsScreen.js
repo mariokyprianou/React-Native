@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useMeetYourIcons from '../../hooks/data/useMeetYourIcons';
+import useData from '../../hooks/data/UseData';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
 import TrainerCard from '../../components/Cards/TrainerCard';
@@ -32,17 +32,20 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import {format} from 'date-fns';
 import {useRoute} from '@react-navigation/core';
 
+import useMeetYourIcons from '../../hooks/data/useMeetYourIcons';
+
 const fakeImage = require('../../../assets/images/trainerCarousel.png');
+const logo = require('../../../assets/images/logo.png');
 
 export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
+  const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
-  const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
-  const {currentTrainer, currentWeek} = userProgrammeData;
   const [trainerOnSlider, setTrainerOnSlider] = useState();
   const [venue, setVenue] = useState('gym');
   const {
@@ -50,13 +53,10 @@ export default function MeetYourIconsScreen() {
   } = useRoute();
   const navigation = useNavigation();
 
+  const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
+  const {currentTrainer, currentWeek} = userProgrammeData;
+
   const connected = true; // change to check connection
-
-  const {MeetYourIconsDict} = dictionary;
-
-  const screenWidth = Dimensions.get('screen').width;
-
-  const logo = require('../../../assets/images/logo.png');
 
   navigation.setOptions({
     header: () => null,

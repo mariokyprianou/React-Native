@@ -21,8 +21,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(fetch:(NSString *)environment) {
     NSString *userPoolId = [Secrets userPoolIdProduction];
     NSString *clientId = [Secrets userPoolClientIdProduction];
     NSString *checksum = [Secrets checksum];
-//    NSString *intercomAPIKey = [Secrets intercomAPIKey];
-//    NSString *intercomAppId = [Secrets intercomAppId];
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                 graphQLUrl, @"graphQLUrl",
                                 awsRegion, @"awsRegion",
@@ -38,8 +36,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(fetch:(NSString *)environment) {
     NSString *userPoolId = [Secrets userPoolIdDevelopment];
     NSString *clientId = [Secrets userPoolClientIdDevelopment];
     NSString *checksum = [Secrets checksum];
-//    NSString *intercomAPIKey = [Secrets intercomAPIKey];
-//    NSString *intercomAppId = [Secrets intercomAppId];
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                 graphQLUrl, @"graphQLUrl",
                                 awsRegion, @"awsRegion",
@@ -54,8 +50,6 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(fetch:(NSString *)environment) {
   NSString *userPoolId = [Secrets userPoolIdStaging];
   NSString *clientId = [Secrets userPoolClientIdStaging];
   NSString *checksum = [Secrets checksum];
-//  NSString *intercomAPIKey = [Secrets intercomAPIKey];
-//  NSString *intercomAppId = [Secrets intercomAppId];
   NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                               graphQLUrl, @"graphQLUrl",
                               awsRegion, @"awsRegion",

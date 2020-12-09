@@ -22,6 +22,7 @@ export default async () => {
     const storedLocale = await AsyncStorage.getItem('@language');
 
     console.log('LOCALE', storedLocale);
+    console.log(Secrets('development'), '<---secrets');
 
     const locale = storedLocale ? storedLocale : undefined;
     const translateMap = {
@@ -50,7 +51,7 @@ export default async () => {
   const graphQLUrl = secrets.graphQLUrl ?? 'http://localhost:4000/';
 
   const httpLink = new HttpLink({
-    uri: graphQLUrl,
+    uri: 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/graphql',
     fetch: awsGraphQLFetch,
   });
 

@@ -22,7 +22,6 @@ export default async () => {
     const storedLocale = await AsyncStorage.getItem('@language');
 
     console.log('LOCALE', storedLocale);
-    console.log(Secrets('development'), '<---secrets');
 
     const locale = storedLocale ? storedLocale : undefined;
     const translateMap = {

@@ -32,6 +32,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import {useRoute} from '@react-navigation/core';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const fakeImage = require('../../../assets/images/trainerCarousel.png'); // change to default image when available
 const logo = require('../../../assets/images/logo.png');
@@ -52,8 +53,7 @@ export default function MeetYourIconsScreen() {
     params: {switchProgramme},
   } = useRoute();
   const navigation = useNavigation();
-
-  const connected = true; // change to check connection
+  const {isConnected, isInternetReachable} = useNetInfo();
 
   // old fake data
   const currentTrainer = 'Katrina'; // to be changed to getProgramme data
@@ -196,7 +196,7 @@ export default function MeetYourIconsScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (!connected) {
+  if (!isConnected && !isInternetReachable) {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>

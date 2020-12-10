@@ -6,20 +6,21 @@
  */
 
 import * as R from 'ramda';
-import { NetInfo } from 'react-native';
+import {NetInfo} from 'react-native';
 
 export default isConnected = async () => {
-	const connected = await NetInfo.getConnectionInfo()
-		.then(connectionInfo => {
-			const type = R.path(['type'], connectionInfo);
-			if (type === 'unknown' || type === 'none') {
-				return false;
-			}
-			return true;
-		})
-		.catch(err => {
-			console.log('Network Connection Error:', err);
-			return false;
-		});
-	return connected;
+  const connected = await NetInfo.getConnectionInfo()
+    .then((connectionInfo) => {
+      console.log(connectionInfo, '<--- connection info');
+      const type = R.path(['type'], connectionInfo);
+      if (type === 'unknown' || type === 'none') {
+        return false;
+      }
+      return true;
+    })
+    .catch((err) => {
+      console.log('Network Connection Error:', err);
+      return false;
+    });
+  return connected;
 };

@@ -9,6 +9,7 @@ import React, {useState, useMemo} from 'react';
 import {useQuery, useMutation, useLazyQuery} from 'react-apollo';
 import Onboarding from '../../apollo/queries/Onboarding';
 import Trainers from '../../apollo/queries/Trainers';
+import Legals from '../../apollo/queries/Legals';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
@@ -18,6 +19,7 @@ export default function DataProvider(props) {
 
   const [onboarding, setOnboarding] = useState([]);
   const [trainers, setTrainers] = useState([]);
+  const [legals, setLegals] = useState({});
 
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -36,6 +38,14 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
+  useQuery(Legals, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      setLegals(res.legals);
+    },
+    onError: (error) => console.log(error),
+  });
+
   // const [submitChallengeResult] = useMutation(SubmitChallengeResult, {
   //   fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
   // });
@@ -45,6 +55,7 @@ export default function DataProvider(props) {
     () => ({
       onboarding,
       trainers,
+      legals,
     }),
     [onboarding, trainers],
   );

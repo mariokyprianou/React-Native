@@ -18,10 +18,13 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
 import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
-import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
+// import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
+import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import isRTL from '../../utils/isRTL';
+
+const fakeImage = require('../../../assets/fakeCard.png');
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -55,21 +58,11 @@ export default function WorkoutHomeScreen() {
   });
 
   useEffect(() => {
-    // fetch programme from back end with this week and next week
-    // data will arrive with all workout days and rest days - each has date stamp, order index and isCompleted
     if (weekNumber === 1) {
-      // setWorkoutsToDisplay with this week
-      // format the date
-      const thisWeekWorkouts = formatWorkoutWeek(currentWeek, 1);
-      const thisWeekWithRests = addRestDays(thisWeekWorkouts);
-      setWorkoutsToDisplay(thisWeekWithRests);
+      setWorkoutsToDisplay(currentWeek);
     }
     if (weekNumber === 2) {
-      // setWorkoutsToDisplay with next week
-      // format the date
-      const nextWeekWorkouts = formatWorkoutWeek(nextWeek, 2);
-      const nextWeekWithRests = addRestDays(nextWeekWorkouts);
-      setWorkoutsToDisplay(nextWeekWithRests);
+      setWorkoutsToDisplay(nextWeek);
     }
   }, [currentWeek, nextWeek, weekNumber]);
 
@@ -193,18 +186,20 @@ export default function WorkoutHomeScreen() {
           data={workoutsToDisplay}
           keyExtractor={(item, index) => `${index}`}
           onDragEnd={({data}) => setWorkoutsToDisplay(data)}
-          renderItem={({item, index, drag, isActive}) => (
-            <WorkoutCard
-              title={item.title}
-              day={item.day}
-              date={item.date}
-              duration={item.duration}
-              intensity={item.intensity}
-              image={item.image}
-              drag={drag}
-              onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
-            />
-          )}
+          renderItem={({item, index, drag, isActive}) => {
+            return (
+              <WorkoutCard
+                title={item.workout.name}
+                day={item.day}
+                date={item.date}
+                duration={item.workout.duration}
+                intensity={item.workout.intensity}
+                image={fakeImage}
+                drag={drag}
+                onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
+              />
+            );
+          }}
         />
       </View>
     </View>

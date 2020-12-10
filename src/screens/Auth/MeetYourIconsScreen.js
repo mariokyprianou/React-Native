@@ -46,17 +46,18 @@ export default function MeetYourIconsScreen() {
   const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [trainerOnSlider, setTrainerOnSlider] = useState();
-  const [venue, setVenue] = useState('GYM');
   const {trainers} = useData();
-  const {
-    params: {switchProgramme},
-  } = useRoute();
+  const [trainerOnSlider, setTrainerOnSlider] = useState(trainers[0].name);
+  const [venue, setVenue] = useState('GYM');
+  // const {
+  //   params: {switchProgramme},
+  // } = useRoute();
+  const switchProgramme = true;
   const navigation = useNavigation();
   const {isConnected, isInternetReachable} = useNetInfo();
 
   // old fake data
-  const currentTrainer = 'Katrina'; // to be changed to getProgramme data
+  const currentTrainer = 'Virat Kohli'; // to be changed to getProgramme data
   const currentWeek = 4; // to be changed to getProgramme data
 
   navigation.setOptions({
@@ -251,7 +252,9 @@ export default function MeetYourIconsScreen() {
             muscle,
             firstWeek,
           } = selectedProgramme[0];
+          console.log(firstWeek, '<---first week');
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
+
           return (
             <ScrollView style={styles.sliderContainer}>
               <View style={styles.headerContainer}>

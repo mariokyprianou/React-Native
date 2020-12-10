@@ -29,8 +29,10 @@ import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
-import {format} from 'date-fns';
+import {addDays, format} from 'date-fns';
 import {useRoute} from '@react-navigation/core';
+import addRestDays from '../../utils/addRestDays';
+import addWorkoutDates from '../../utils/addWorkoutDates';
 
 import useMeetYourIcons from '../../hooks/data/useMeetYourIcons';
 
@@ -53,8 +55,26 @@ export default function MeetYourIconsScreen() {
   } = useRoute();
   const navigation = useNavigation();
 
-  const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
-  const {currentTrainer, currentWeek} = userProgrammeData;
+  // new data
+  const {trainers} = useData();
+  const name = trainers[0].name;
+  const newImage = trainers[0].programmes[0].programmeImage;
+  const liveWeeks = trainers[0].programmes[0].numberOfWeeks;
+  const description = trainers[0].programmes[0].description;
+  const fatLoss = trainers[0].programmes[0].fatLoss;
+  const fitness = trainers[0].programmes[0].fitness;
+  const buildMuscle = trainers[0].programmes[0].muscle;
+
+  const firstWeek = trainers[0].programmes[0].firstWeek;
+
+  const extendedWeek = addRestDays(firstWeek);
+  const extendedWeekWithDates = addWorkoutDates(extendedWeek);
+
+  // old fake data
+  const {meetYourIconsData} = useMeetYourIcons();
+
+  const currentTrainer = 'Katrina'; // to be changed to getProgramme data
+  const currentWeek = 4; // to be changed to getProgramme data
 
   const connected = true; // change to check connection
 
@@ -239,13 +259,13 @@ export default function MeetYourIconsScreen() {
         showsPagination={false}>
         {meetYourIconsData.map(
           ({
-            fatLoss,
-            fitness,
-            buildMuscle,
-            name,
-            image,
-            text,
-            liveWeeks,
+            // fatLoss,
+            // fitness,
+            // buildMuscle,
+            // name,
+            // image,
+            // text,
+            // liveWeeks,
             firstWeek,
           }) => {
             return (
@@ -284,13 +304,13 @@ export default function MeetYourIconsScreen() {
                     fitness={fitness}
                     buildMuscle={buildMuscle}
                     name={name}
-                    image={image}
+                    image={newImage}
                     onPressGymHome={() => setVenue(venue)}
                   />
                 </View>
                 <Spacer height={30} />
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>{text}</Text>
+                  <Text style={styles.text}>{description}</Text>
                   <Text
                     style={
                       styles.heading
@@ -301,21 +321,19 @@ export default function MeetYourIconsScreen() {
                     }>{`${liveWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
                 </View>
                 <View style={styles.workoutContainer}>
-                  {firstWeek.map(({title, day, date, duration, intensity}) => {
-                    const formattedDate = format(
-                      new Date(date),
-                      'eeee, eo LLL',
-                    );
-                    return (
-                      <WorkoutCard
-                        title={title}
-                        day={day}
-                        date={formattedDate}
-                        duration={duration}
-                        intensity={intensity}
-                      />
-                    );
-                  })}
+                  {extendedWeekWithDates.map(
+                    ({date, duration, intensity, name, day}) => {
+                      return (
+                        <WorkoutCard
+                          title={name}
+                          day={day}
+                          date={date}
+                          duration={duration}
+                          intensity={intensity}
+                        />
+                      );
+                    },
+                  )}
                 </View>
                 <Spacer height={180} />
               </ScrollView>
@@ -363,7 +381,6 @@ export default function MeetYourIconsScreen() {
             variant="gradient"
             onPress={() => navigation.navigate('Registration')}
           />
-          {/* <Spacer height={20} /> */}
           <DefaultButton
             type="login"
             variant="transparentWhiteText"

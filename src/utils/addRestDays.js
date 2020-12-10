@@ -5,11 +5,11 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import {addDays, format} from 'date-fns';
 
 const addRestDays = (data) => {
+  data.map((day, index) => (day.day = index + 1));
   const restDay = {
-    title: 'REST DAY',
+    workout: {name: 'REST DAY', duration: 0, intensity: 0},
   };
   if (data.length === 5) {
     data.splice(3, 0, restDay);
@@ -22,19 +22,7 @@ const addRestDays = (data) => {
     data.splice(3, 0, restDay);
     data.splice(5, 0, restDay, restDay);
   }
-
-  const firstDayOfWeek = data[0].startDay;
-
-  const dataWithDates = data.map((day, index) => {
-    if (!day.date) {
-      const daysToAdd = index;
-      const date = addDays(firstDayOfWeek, daysToAdd);
-      const formattedDate = format(date, 'iiii, do LLL');
-      day.date = formattedDate;
-    }
-    return day;
-  });
-  return dataWithDates;
+  return data;
 };
 
 export default addRestDays;

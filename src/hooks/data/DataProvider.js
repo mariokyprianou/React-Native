@@ -31,10 +31,6 @@ export default function DataProvider(props) {
   useQuery(Trainers, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(
-        res.getTrainers[0].programmes[0].firstWeek.workout,
-        '<----workout',
-      );
       setTrainers(res.getTrainers);
     },
     onError: (error) => console.log(error),

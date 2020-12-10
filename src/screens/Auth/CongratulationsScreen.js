@@ -19,14 +19,14 @@ import Share from 'react-native-share';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function CongratulationsScreen({name = 'Katrina'}) {
+export default function CongratulationsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {switchProgramme},
+    params: {switchProgramme, newTrainer},
   } = useRoute();
   const navigation = useNavigation();
 
@@ -135,7 +135,7 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
   function handlePressStart() {
     navigation.reset({
       index: 0,
-      routes: [{name: 'TabContainer'}],
+      routes: [{name: 'TabContainer'}], // add params for which programme selected
     });
   }
 
@@ -151,7 +151,7 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
           {MeetYourIconsDict.CongratulationsTitle}
         </Text>
         <Text style={styles.text}>
-          {MeetYourIconsDict.StartedProgramme(name)}
+          {MeetYourIconsDict.StartedProgramme(newTrainer)}
         </Text>
       </View>
       <View style={styles.buttonContainer}>

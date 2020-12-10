@@ -57,7 +57,7 @@ export default function MeetYourIconsScreen() {
   const {isConnected, isInternetReachable} = useNetInfo();
 
   // old fake data
-  const currentTrainer = 'Virat Kohli'; // to be changed to getProgramme data
+  const currentTrainer = 'Katrina'; // to be changed to getProgramme data
   const currentWeek = 4; // to be changed to getProgramme data
 
   navigation.setOptions({
@@ -252,7 +252,6 @@ export default function MeetYourIconsScreen() {
             muscle,
             firstWeek,
           } = selectedProgramme[0];
-          console.log(firstWeek, '<---first week');
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 
           return (
@@ -353,8 +352,11 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="gradient"
             onPress={() =>
-              navigation.navigate('Congratulations', {switchProgramme: true})
-            } // add params to say which trainer selected
+              navigation.navigate('Congratulations', {
+                switchProgramme: true,
+                newTrainer: trainerOnSlider,
+              })
+            }
           />
         </View>
       ) : (

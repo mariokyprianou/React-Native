@@ -51,6 +51,30 @@ export default function DataProvider(props) {
   useQuery(ProgrammeQuestionnaire, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
+      res.programmeQuestionnaire.map((question) => {
+        question.answers = [];
+        question.answers.push(
+          question.question.answer1,
+          question.question.answer2,
+          question.question.answer3,
+          question.question.answer4,
+        );
+        const newQuestion = question.answers.map((question, index) => {
+          const keys = {
+            1: 'A',
+            2: 'B',
+            3: 'C',
+            4: 'D',
+          };
+          return {
+            key: `${index + 1}`,
+            answerLetter: keys[index + 1],
+            answerText: question,
+          };
+        });
+        question.answers = newQuestion;
+        return question;
+      });
       setProgrammeQuestionnaire(res.programmeQuestionnaire);
     },
     onError: (error) => console.log(error),

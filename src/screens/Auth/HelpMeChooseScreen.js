@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -18,18 +18,14 @@ import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
 import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
 
-import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
-
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const {helpMeChooseData} = useHelpMeChoose();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
   const {programmeQuestionnaire} = useData();
-  console.log(programmeQuestionnaire, '<--- questionnaire');
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -63,7 +59,7 @@ export default function HelpMeChooseScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress() {
-    if (currentQuestion === helpMeChooseData.length) {
+    if (currentQuestion === programmeQuestionnaire.length) {
       navigation.navigate('HelpMeChooseResults');
     } else {
       setCurrentQuestion(currentQuestion + 1);
@@ -75,12 +71,14 @@ export default function HelpMeChooseScreen() {
       <View style={styles.container}>
         <HelpMeChooseBar
           currentQuestion={currentQuestion}
-          totalQuestions={helpMeChooseData.length}
-          questionText={helpMeChooseData[currentQuestion - 1].questionText}
+          totalQuestions={programmeQuestionnaire.length}
+          questionText={
+            programmeQuestionnaire[currentQuestion - 1].question.question
+          }
         />
         <Spacer height={20} />
         <FlatList
-          data={helpMeChooseData[currentQuestion - 1].answers}
+          data={programmeQuestionnaire[currentQuestion - 1].answers}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapperStyle}
           renderItem={({item, index}) => (

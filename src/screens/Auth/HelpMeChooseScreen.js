@@ -12,11 +12,13 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
+import useData from '../../hooks/data/UseData';
 import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
 import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
 import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
+
+import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,6 +28,8 @@ export default function HelpMeChooseScreen() {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
+  const {programmeQuestionnaire} = useData();
+  console.log(programmeQuestionnaire, '<--- questionnaire');
   const navigation = useNavigation();
 
   navigation.setOptions({

@@ -16,6 +16,7 @@ import {BottomTab} from '../navigation';
 import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
+import isIphoneX from '../utils/isIphoneX';
 
 const notificationCount = 2;
 
@@ -40,8 +41,8 @@ export default function TabContainer() {
     },
     tabBarItemStyle: {
       justifyContent: 'center',
-      marginBottom: getHeight(20),
-      marginTop: getHeight(15),
+      marginBottom: isIphoneX() ? getHeight(0) : getHeight(20),
+      marginTop: isIphoneX() ? getHeight(10) : getHeight(15),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',
@@ -114,13 +115,6 @@ export default function TabContainer() {
         labelStyle: styles.labelStyle,
         activeTintColor: colors.black100,
         inactiveTintColor: colors.black30,
-        ...Platform.select({
-          android: {
-            safeAreaInsets: {
-              bottom: 10,
-            },
-          },
-        }),
       }}>
       <BottomTab.Screen
         name="Tab1"

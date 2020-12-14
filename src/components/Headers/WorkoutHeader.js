@@ -42,21 +42,18 @@ export default function ({currentExercise, totalExercises}) {
       top: getHeight(1),
     },
     titleTextContainer: {
-      position: 'absolute',
-      width: getWidth(100),
-      left: screenWidth / 2 - 100,
-      top: getHeight(-18),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: getWidth(155),
+      marginStart: getWidth(20),
     },
     titleTextStyle: {
       ...textStyles.bold22_black100,
     },
     timerTouchStyle: {
       width: getWidth(44),
-      height: getWidth(14),
-      padding: getWidth(14),
-      position: 'absolute',
-      left: getWidth(180),
-      top: getHeight(-22),
+      height: getWidth(34),
+      padding: getWidth(12),
     },
     iconStyle: {
       width: getWidth(14),
@@ -78,23 +75,23 @@ export default function ({currentExercise, totalExercises}) {
   );
 
   const headerTitle = () => (
-    <View>
+    <View style={{alignItems: 'center'}}>
       <View style={styles.titleTextContainer}>
         <Text style={styles.titleTextStyle}>
           {elapsedMS ? msToHMSFull(elapsedMS) : '00:00:00'}
         </Text>
+        <TouchableOpacity
+          style={styles.timerTouchStyle}
+          onPress={() => {
+            toggle();
+            setIsPaused(!isPaused);
+          }}>
+          <Image
+            style={styles.iconStyle}
+            source={!isPaused ? playIcon : pauseIcon}
+          />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.timerTouchStyle}
-        onPress={() => {
-          toggle();
-          setIsPaused(!isPaused);
-        }}>
-        <Image
-          style={styles.iconStyle}
-          source={!isPaused ? playIcon : pauseIcon}
-        />
-      </TouchableOpacity>
     </View>
   );
 

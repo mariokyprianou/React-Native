@@ -75,18 +75,20 @@ export default function HelpMeChooseScreen() {
           questionText={helpMeChooseData[currentQuestion - 1].questionText}
         />
         <Spacer height={20} />
-        <FlatList
-          data={helpMeChooseData[currentQuestion - 1].answers}
-          numColumns={2}
-          columnWrapperStyle={styles.columnWrapperStyle}
-          renderItem={({item, index}) => (
-            <HelpMeChooseButton
-              letter={item.answerLetter}
-              text={item.answerText}
-              onPress={handlePress}
-            />
-          )}
-        />
+        <View style={{height: '100%'}}>
+          <FlatList
+            data={helpMeChooseData[currentQuestion - 1].answers}
+            numColumns={2}
+            columnWrapperStyle={styles.columnWrapperStyle}
+            renderItem={({item, index}) => (
+              <HelpMeChooseButton
+                letter={item.answerLetter}
+                text={item.answerText}
+                onPress={handlePress}
+              />
+            )}
+          />
+        </View>
       </View>
     </View>
   );

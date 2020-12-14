@@ -80,6 +80,7 @@ export default function ProgressScreen() {
     container: {
       width: '90%',
       height: '100%',
+      marginTop: Platform.OS === 'android' ? getHeight(20) : 0,
       alignSelf: 'center',
     },
     titleContainer: {

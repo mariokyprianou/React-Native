@@ -24,7 +24,7 @@ export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [storedAnswers, setStoredAnswers] = useState();
+  const [storedAnswers, setStoredAnswers] = useState([]);
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
@@ -37,12 +37,7 @@ export default function HelpMeChooseScreen() {
     ),
   });
 
-  const [execute] = useMutation(SubmitProgrammeQuestionnaire, {
-    onError: ({networkError, graphQLErrors}) => {
-      console.log('graphQLErrors', graphQLErrors);
-      console.log('networkError', networkError);
-    },
-  });
+  const [execute] = useMutation(SubmitProgrammeQuestionnaire);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -68,27 +63,31 @@ export default function HelpMeChooseScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  async function fetchData() {
-    await execute({
-      variables: {
-        input: {
-          answers: [
-            {question: '1abf23f6-99a1-4de9-98fb-cb2738eee5bd', answer: 'ONE'},
-          ],
-        },
-      },
-    })
-      .then((res) => {
-        console.log(res, '<---result');
-        // setStoredAnswers(res);
-      })
-      .catch((err) => console.log(err));
-  }
+  const addAnswer = (answer) => {
+    setStoredAnswers([...storedAnswers, answer]);
+  };
 
-  function handlePress() {
+  async function handlePress(questionId, answerType) {
+    addAnswer({question: questionId, answer: answerType});
+
     if (currentQuestion === programmeQuestionnaire.length) {
-      fetchData();
-      navigation.navigate('HelpMeChooseResults');
+      console.log(storedAnswers, '<---stored');
+      await execute({
+        variables: {
+          input: {
+            answers: [{question: questionId, answer: answerType}],
+          },
+        },
+      })
+        .then((res) => {
+          navigation.navigate('HelpMeChooseResults', {
+            recommendedEnvironment:
+              res.data.submitProgrammeQuestionnaire.programme.environment,
+            recommendedTrainer:
+              res.data.submitProgrammeQuestionnaire.programme.trainer.name,
+          });
+        })
+        .catch((err) => console.log(err));
     } else {
       setCurrentQuestion(currentQuestion + 1);
     }
@@ -113,7 +112,17 @@ export default function HelpMeChooseScreen() {
             <HelpMeChooseButton
               letter={item.answerLetter}
               text={item.answerText}
-              onPress={handlePress}
+              onPress={() => {
+                const questionId =
+                  programmeQuestionnaire[currentQuestion - 1].id;
+                const answerTypes = {
+                  0: 'ONE',
+                  1: 'TWO',
+                  2: 'THREE',
+                  3: 'FOUR',
+                };
+                return handlePress(questionId, answerTypes[index]);
+              }}
             />
           )}
         />

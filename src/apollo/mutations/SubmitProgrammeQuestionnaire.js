@@ -10,7 +10,7 @@ import gql from 'graphql-tag';
 
 export default gql`
   mutation SubmitProgrammeQuestionnaire(
-    $input: SubmitProgrammeQuestionnaireInput
+    $input: SubmitProgrammeQuestionnaireInput!
   ) {
     submitProgrammeQuestionnaire(input: $input) {
       programme {

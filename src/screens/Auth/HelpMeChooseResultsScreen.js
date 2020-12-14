@@ -11,6 +11,7 @@ import {View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useRoute} from '@react-navigation/core';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import DefaultButton from '../../components/Buttons/DefaultButton';
@@ -26,8 +27,11 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
   const navigation = useNavigation();
+  const {
+    params: {recommendedEnvironment, recommendedTrainer},
+  } = useRoute();
 
-  const capitalizedName = name.toUpperCase();
+  const capitalizedName = recommendedTrainer.toUpperCase();
 
   navigation.setOptions({
     header: () => (
@@ -127,7 +131,7 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
         </View>
         <Text style={styles.name}>{capitalizedName}</Text>
         <Text style={styles.result}>
-          {HelpMeChooseDict.SuggestedProgramme(name)}
+          {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
         </Text>
       </View>
       <View style={styles.buttonContainer}>

@@ -13,6 +13,8 @@ import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useData from '../../hooks/data/UseData';
+import SubmitProgrammeQuestionnaire from '../../apollo/mutations/SubmitProgrammeQuestionnaire';
+import {useMutation} from 'react-apollo';
 import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
 import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
@@ -22,6 +24,7 @@ export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [storedAnswers, setStoredAnswers] = useState();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
@@ -32,6 +35,13 @@ export default function HelpMeChooseScreen() {
     header: () => (
       <Header title={HelpMeChooseDict.HelpMeChoose} showModalCross />
     ),
+  });
+
+  const [execute] = useMutation(SubmitProgrammeQuestionnaire, {
+    onError: ({networkError, graphQLErrors}) => {
+      console.log('graphQLErrors', graphQLErrors);
+      console.log('networkError', networkError);
+    },
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -58,8 +68,26 @@ export default function HelpMeChooseScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function fetchData() {
+    await execute({
+      variables: {
+        input: {
+          answers: [
+            {question: '1abf23f6-99a1-4de9-98fb-cb2738eee5bd', answer: 'ONE'},
+          ],
+        },
+      },
+    })
+      .then((res) => {
+        console.log(res, '<---result');
+        // setStoredAnswers(res);
+      })
+      .catch((err) => console.log(err));
+  }
+
   function handlePress() {
     if (currentQuestion === programmeQuestionnaire.length) {
+      fetchData();
       navigation.navigate('HelpMeChooseResults');
     } else {
       setCurrentQuestion(currentQuestion + 1);

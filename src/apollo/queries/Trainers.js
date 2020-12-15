@@ -14,6 +14,7 @@ export default gql`
       id
       name
       programmes {
+        id
         numberOfWeeks
         programmeImage
         environment

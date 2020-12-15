@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   Dimensions,
   View,
@@ -48,6 +48,7 @@ export default function MeetYourIconsScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const {trainers} = useData();
   const [trainerOnSlider, setTrainerOnSlider] = useState(trainers[0].name);
+  const [progIdOnSlider, setProgIdOnSlider] = useState();
   const [venue, setVenue] = useState('GYM');
   const {
     params: {switchProgramme},
@@ -63,6 +64,16 @@ export default function MeetYourIconsScreen() {
   navigation.setOptions({
     header: () => null,
   });
+
+  useEffect(() => {
+    const selectedTrainer = trainers.filter(
+      (trainer) => trainer.name === trainerOnSlider,
+    )[0];
+    const selectedProgramme = selectedTrainer.programmes.filter(
+      (prog) => prog.environment === venue,
+    )[0];
+    setProgIdOnSlider(selectedProgramme.id);
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -365,7 +376,9 @@ export default function MeetYourIconsScreen() {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() => navigation.navigate('Registration')}
+            onPress={() =>
+              navigation.navigate('Registration', {programmeId: progIdOnSlider})
+            }
           />
           <DefaultButton
             type="login"

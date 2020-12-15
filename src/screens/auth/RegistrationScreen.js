@@ -13,6 +13,7 @@ import {format} from 'date-fns';
 import {useQuery, useMutation} from 'react-apollo';
 import TDIcon from 'the-core-ui-component-tdicon';
 import TimeZone from 'react-native-timezone';
+import {useRoute} from '@react-navigation/core';
 import Header from '../../components/Headers/Header';
 import {useNavigation} from '@react-navigation/native';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -44,6 +45,9 @@ export default function RegisterScreen() {
     textStyles,
     colors,
   } = useTheme();
+  const {
+    params: {programmeId},
+  } = useRoute();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {loading, error, data: countryData} = useQuery(AllCountries);
@@ -203,6 +207,7 @@ export default function RegisterScreen() {
             selectedCountry === 'India' ? indianRegionsLookup[region] : null,
           deviceUDID: deviceUid,
           timeZone: deviceTimeZone,
+          // programmeId: programmeId,  <---- property name to be confirmed by back end
         },
       },
     })

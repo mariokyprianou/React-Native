@@ -10,6 +10,7 @@ import {ScrollView, View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
+import {useQuery} from 'react-apollo';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Header from '../../components/Headers/Header';
 import {useNavigation} from '@react-navigation/native';
@@ -17,22 +18,22 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
-import useRegistrationData from '../../hooks/data/useRegistrationData';
 import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
+
+import useRegistrationData from '../../hooks/data/useRegistrationData';
+import AllCountries from '../../apollo/queries/AllCountries';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
-
-  navigation.setOptions({
-    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
-  });
-
+  const [termsAndConditions, setTerms] = useState('off');
+  const [loadingRegister, setLoadingRegister] = useState(false);
+  const [activeRegister, setActiveRegister] = useState(false);
   const {
     cellFormStyles,
     dropdownStyle,
@@ -42,12 +43,17 @@ export default function RegisterScreen() {
   } = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {loading, error, data: countryData} = useQuery(AllCountries);
+  const [countriesList, setCountriesList] = useState([]);
+  const [regionsList, setRegionsList] = useState([]);
+  const {getValueByName} = FormHook();
+  const selectedCountry = getValueByName('country');
+
+  navigation.setOptions({
+    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
+  });
 
   const {registrationData} = useRegistrationData();
-
-  const [termsAndConditions, setTerms] = useState('off');
-  const [loadingRegister, setLoadingRegister] = useState(false);
-  const [activeRegister, setActiveRegister] = useState(false);
 
   useEffect(() => {
     const {
@@ -73,6 +79,18 @@ export default function RegisterScreen() {
     }
     setActiveRegister(false);
   }, [getValues]);
+
+  useEffect(() => {
+    const countries = countryData.allCountries.map(
+      (country) => country.country,
+    );
+    setCountriesList(countries);
+
+    const indianRegions = countryData.allCountries
+      .filter((country) => country.country === 'India')[0]
+      .regions.map((region) => region.region);
+    setRegionsList(indianRegions);
+  }, [countryData]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -247,19 +265,20 @@ export default function RegisterScreen() {
       name: 'country',
       type: 'dropdown',
       label: AuthDict.CountryLabel,
-      placeholder: registrationData.countries[0],
-      data: registrationData.countries,
+      data: countriesList,
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
     {
       name: 'region',
-      type: 'dropdown',
+      type: selectedCountry === 'India' ? 'dropdown' : 'text',
+      editable: false,
       label: AuthDict.RegionLabel,
-      placeholder: registrationData.regions[0],
-      data: registrationData.regions,
-      rightAccessory: () => <DropDownIcon />,
+      data: regionsList,
+      rightAccessory: () => (
+        <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
+      ),
       ...cellFormStyles,
       ...dropdownStyle,
     },

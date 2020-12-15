@@ -242,7 +242,9 @@ export default function ProfileScreenUI({
       editable: false,
       ...cellFormStyles,
       ...dropdownStyle,
-      rightAccessory: () => <DropDownIcon />,
+      rightAccessory: () => (
+        <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
+      ),
       data: regionsList,
     },
   ];

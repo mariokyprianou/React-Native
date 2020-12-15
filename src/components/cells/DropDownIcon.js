@@ -17,9 +17,14 @@ export default function ({enabled = true}) {
 
   const icon = require('../../../assets/icons/dropdown.png');
 
+  const styles = {
+    style: {
+      opacity: enabled === false ? 0.5 : 1,
+    },
+  };
   return (
     <View style={{marginRight: getWidth(-5)}}>
-      <TDIcon input={icon} />
+      <TDIcon input={icon} inputStyle={styles} />
     </View>
   );
 }

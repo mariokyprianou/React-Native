@@ -10,7 +10,7 @@ import {ScrollView, View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
-import {useQuery} from 'react-apollo';
+import {useQuery, useMutation} from 'react-apollo';
 import TDIcon from 'the-core-ui-component-tdicon';
 import TimeZone from 'react-native-timezone';
 import Header from '../../components/Headers/Header';
@@ -26,6 +26,8 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 
 import useRegistrationData from '../../hooks/data/useRegistrationData';
 import AllCountries from '../../apollo/queries/AllCountries';
+import RegisterUser from '../../apollo/mutations/RegisterUser';
+import {getUniqueId} from 'react-native-device-info';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -48,8 +50,10 @@ export default function RegisterScreen() {
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const [deviceTimeZone, setDeviceTimeZone] = useState();
-  const {getValueByName} = FormHook();
+  const [deviceUid, setDeviceUid] = useState();
+  const {getValueByName, cleanValues} = FormHook();
   const selectedCountry = getValueByName('country');
+  const [execute] = useMutation(RegisterUser);
 
   navigation.setOptions({
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
@@ -57,26 +61,33 @@ export default function RegisterScreen() {
 
   const {registrationData} = useRegistrationData();
 
+  const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
+    let {country, id} = obj;
+    return {...acc, [country]: id};
+  }, {});
+
+  const indianRegions = countryData.allCountries.filter(
+    (country) => country.country === 'India',
+  )[0].regions;
+
+  const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+    let {region, id} = obj;
+    return {...acc, [region]: id};
+  }, {});
+
   useEffect(() => {
     const {
-      firstName,
-      lastName,
-      emailAddress,
+      givenName,
+      familyName,
+      email,
       password,
       gender,
-      birthDate,
+      dateOfBirth,
       country,
       region,
     } = getValues();
 
-    if (
-      firstName &&
-      lastName &&
-      emailAddress &&
-      password &&
-      birthDate &&
-      gender
-    ) {
+    if (givenName && familyName && email && password && dateOfBirth && gender) {
       return setActiveRegister(true);
     }
     setActiveRegister(false);
@@ -100,6 +111,9 @@ export default function RegisterScreen() {
       setDeviceTimeZone(timeZone);
     };
     getTimeZone();
+
+    const deviceId = getUniqueId();
+    setDeviceUid(deviceId);
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -141,15 +155,26 @@ export default function RegisterScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleRegister() {
+  async function handleRegister() {
     setLoadingRegister(true);
     cleanErrors();
 
-    const {emailAddress, password, telephone} = getValues();
+    const {
+      givenName,
+      familyName,
+      email,
+      password,
+      gender,
+      dateOfBirth,
+      country,
+      region,
+    } = getValues();
 
-    if (!emailRegex.test(emailAddress)) {
+    const countryID = countryIdLookup[country];
+
+    if (!emailRegex.test(email)) {
       updateError({
-        name: 'emailAddress',
+        name: 'email',
         value: AuthDict.InvalidEmail,
       });
       setLoadingRegister(false);
@@ -163,6 +188,36 @@ export default function RegisterScreen() {
       setLoadingRegister(false);
       return;
     }
+
+    await execute({
+      variables: {
+        input: {
+          givenName: givenName,
+          familyName: familyName,
+          email: email,
+          password: password,
+          gender: gender.toLowerCase(),
+          dateOfBirth: dateOfBirth,
+          country: countryID,
+          region:
+            selectedCountry === 'India' ? indianRegionsLookup[region] : null,
+          deviceUDID: deviceUid,
+          timeZone: deviceTimeZone,
+        },
+      },
+    })
+      .then((res) => {
+        if (res.data.registerUser === true) {
+          if (Platform.OS === 'android') {
+            navigation.navigate('TabContainer');
+          } else {
+            navigation.navigate('Notifications');
+          }
+          setLoadingRegister(false);
+        }
+      })
+      .catch((err) => console.log(err));
+    cleanValues();
   }
 
   const handleTermsAndConditionsButton = () => {
@@ -177,13 +232,14 @@ export default function RegisterScreen() {
         type="createAccount"
         variant="white"
         icon="chevron"
-        onPress={() => {
-          if (Platform.OS === 'android') {
-            navigation.navigate('TabContainer');
-          } else {
-            navigation.navigate('Notifications');
-          }
-        }}
+        onPress={handleRegister}
+        // onPress={() => {
+        //   if (Platform.OS === 'android') {
+        //     navigation.navigate('TabContainer');
+        //   } else {
+        //     navigation.navigate('Notifications');
+        //   }
+        // }}
       />
     </View>
   );
@@ -215,7 +271,7 @@ export default function RegisterScreen() {
       ),
     },
     {
-      name: 'firstName',
+      name: 'givenName',
       type: 'text',
       label: AuthDict.FirstNameLabel,
       placeholder: '',
@@ -223,7 +279,7 @@ export default function RegisterScreen() {
       ...cellFormStyles,
     },
     {
-      name: 'lastName',
+      name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
       placeholder: '',
@@ -231,7 +287,7 @@ export default function RegisterScreen() {
       ...cellFormStyles,
     },
     {
-      name: 'emailAddress',
+      name: 'email',
       type: 'text',
       variant: 'email',
       label: AuthDict.EmailLabel,
@@ -262,7 +318,7 @@ export default function RegisterScreen() {
       ...dropdownStyle,
     },
     {
-      name: 'birthDate',
+      name: 'dateOfBirth',
       type: 'calendar',
       label: AuthDict.DobLabel,
       placeholder: '',

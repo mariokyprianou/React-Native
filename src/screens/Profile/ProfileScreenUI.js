@@ -5,8 +5,9 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, ScrollView, Text} from 'react-native';
+import {useQuery} from 'react-apollo';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -18,11 +19,13 @@ import Spacer from '../../components/Utility/Spacer';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import DropDownIcon from '../../components/cells/DropDownIcon';
-import useRegistrationData from '../../hooks/data/useRegistrationData';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import ProfileUserCard from '../../components/Views/ProfileUserCard';
 import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
+
+import useRegistrationData from '../../hooks/data/useRegistrationData';
+import AllCountries from '../../apollo/queries/AllCountries';
 
 const notifications = [
   {
@@ -58,8 +61,24 @@ export default function ProfileScreenUI({
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {ProfileDict} = dictionary;
-
+  const {getValueByName} = FormHook();
   const {registrationData} = useRegistrationData();
+  const {loading, error, data: countryData} = useQuery(AllCountries);
+  const [countriesList, setCountriesList] = useState([]);
+  const [regionsList, setRegionsList] = useState([]);
+  const selectedCountry = getValueByName('profile_country');
+
+  useEffect(() => {
+    const countries = countryData.allCountries.map(
+      (country) => country.country,
+    );
+    setCountriesList(countries);
+
+    const indianRegions = countryData.allCountries
+      .filter((country) => country.country === 'India')[0]
+      .regions.map((region) => region.region);
+    setRegionsList(indianRegions);
+  }, [countryData]);
 
   // MARK: - Local
 
@@ -214,18 +233,17 @@ export default function ProfileScreenUI({
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: registrationData.countries[0],
-      data: registrationData.countries,
+      data: countriesList,
     },
     {
       name: 'profile_region',
-      type: 'dropdown',
+      type: selectedCountry === 'India' ? 'dropdown' : 'text',
       label: ProfileDict.FormLabel7,
+      editable: false,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: registrationData.regions[0],
-      data: registrationData.regions,
+      data: regionsList,
     },
   ];
 

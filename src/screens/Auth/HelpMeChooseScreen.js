@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -24,6 +24,7 @@ export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [newAnswer, setNewAnswer] = useState({});
   const [storedAnswers, setStoredAnswers] = useState([]);
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
@@ -38,6 +39,12 @@ export default function HelpMeChooseScreen() {
   });
 
   const [execute] = useMutation(SubmitProgrammeQuestionnaire);
+
+  useEffect(() => {
+    setStoredAnswers((prev) => [...prev, newAnswer]);
+  }, [newAnswer]);
+
+  console.log(storedAnswers, '<---stored');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -63,15 +70,11 @@ export default function HelpMeChooseScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const addAnswer = (answer) => {
-    setStoredAnswers([...storedAnswers, answer]);
-  };
 
   async function handlePress(questionId, answerType) {
-    addAnswer({question: questionId, answer: answerType});
+    setNewAnswer({question: questionId, answer: answerType});
 
     if (currentQuestion === programmeQuestionnaire.length) {
-      console.log(storedAnswers, '<---stored');
       await execute({
         variables: {
           input: {
@@ -121,6 +124,7 @@ export default function HelpMeChooseScreen() {
                   2: 'THREE',
                   3: 'FOUR',
                 };
+
                 return handlePress(questionId, answerTypes[index]);
               }}
             />

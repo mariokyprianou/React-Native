@@ -23,8 +23,6 @@ import CalendarIcon from '../../components/cells/CalendarIcon';
 import ProfileUserCard from '../../components/Views/ProfileUserCard';
 import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
-
-import useRegistrationData from '../../hooks/data/useRegistrationData';
 import AllCountries from '../../apollo/queries/AllCountries';
 
 const notifications = [
@@ -60,9 +58,8 @@ export default function ProfileScreenUI({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict} = dictionary;
+  const {ProfileDict, AuthDict} = dictionary;
   const {getValueByName} = FormHook();
-  const {registrationData} = useRegistrationData();
   const {loading, error, data: countryData} = useQuery(AllCountries);
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
@@ -80,6 +77,12 @@ export default function ProfileScreenUI({
     setRegionsList(indianRegions);
   }, [countryData]);
 
+  const gendersData = [
+    AuthDict.RegistrationGendersFemale,
+    AuthDict.RegistrationGendersMale,
+    AuthDict.RegistrationGendersOther,
+    AuthDict.RegistrationGendersPreferNot,
+  ];
   // MARK: - Local
 
   // MARK: - Logic
@@ -214,8 +217,7 @@ export default function ProfileScreenUI({
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: registrationData.genders[0],
-      data: registrationData.genders,
+      data: gendersData,
     },
     {
       name: 'profile_dateOfBirth',

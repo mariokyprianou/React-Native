@@ -24,8 +24,6 @@ import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
-
-import useRegistrationData from '../../hooks/data/useRegistrationData';
 import AllCountries from '../../apollo/queries/AllCountries';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
@@ -63,8 +61,6 @@ export default function RegisterScreen() {
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
   });
 
-  const {registrationData} = useRegistrationData();
-
   const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
     let {country, id} = obj;
     return {...acc, [country]: id};
@@ -78,6 +74,13 @@ export default function RegisterScreen() {
     let {region, id} = obj;
     return {...acc, [region]: id};
   }, {});
+
+  const gendersData = [
+    AuthDict.RegistrationGendersFemale,
+    AuthDict.RegistrationGendersMale,
+    AuthDict.RegistrationGendersOther,
+    AuthDict.RegistrationGendersPreferNot,
+  ];
 
   useEffect(() => {
     const {
@@ -316,8 +319,7 @@ export default function RegisterScreen() {
       name: 'gender',
       type: 'dropdown',
       label: AuthDict.GenderLabel,
-      placeholder: registrationData.genders[0],
-      data: registrationData.genders,
+      data: gendersData,
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,

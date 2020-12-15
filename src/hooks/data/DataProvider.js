@@ -8,6 +8,7 @@
 import React, {useState, useMemo} from 'react';
 import {useQuery, useMutation, useLazyQuery} from 'react-apollo';
 import fetchPolicy from '../../utils/fetchPolicy';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Onboarding from '../../apollo/queries/Onboarding';

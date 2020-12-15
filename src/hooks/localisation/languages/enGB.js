@@ -73,6 +73,10 @@ const enGB = {
     TermsAndConditionsScreenTitle: 'Terms & conditions',
     ResetPasswordScreenTitle: 'Forgot password',
     RegistrationScreenTitle: 'Create account',
+    RegistrationGendersFemale: 'Female',
+    RegistrationGendersMale: 'Male',
+    RegistrationGendersOther: 'Other',
+    RegistrationGendersPreferNot: 'Prefer not to say',
     PrivacyPolicyScreenTitle: 'Privacy policy',
 
     NotificationsPermissionsScreenTitle: 'Notifications',

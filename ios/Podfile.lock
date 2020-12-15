@@ -278,6 +278,8 @@ PODS:
     - React
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-timezone (1.0.3):
+    - React
   - react-native-version-number (0.3.6):
     - React
   - react-native-video (5.1.0-alpha8):
@@ -460,6 +462,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-timezone (from `../node_modules/react-native-timezone`)
   - react-native-version-number (from `../node_modules/react-native-version-number`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -585,6 +588,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/slider"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-timezone:
+    :path: "../node_modules/react-native-timezone"
   react-native-version-number:
     :path: "../node_modules/react-native-version-number"
   react-native-video:
@@ -715,6 +720,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-timezone: 35ccec2dfbdc60bc1d24fa2d60d880e2e9eb2c2c
   react-native-version-number: b415bbec6a13f2df62bf978e85bc0d699462f37f
   react-native-video: dbb8df4f0bbdf80de6797c90fcad8bc12b19401d
   react-native-webview: 0633fd7861a9bd7a80bacaee7da763c3afc248fa

@@ -8876,6 +8876,11 @@ react-native-tab-view@^2.14.4:
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.15.2.tgz#4bc7832d33a119306614efee667509672a7ee64e"
   integrity sha512-2hxLkBnZtEKFDyfvNO5EUywhy3f/EiLOBO8SWqKj4BMBTO0QwnybaPE5MVF00Fhz+VA4+h/iI40Dkrrtq70dGg==
 
+react-native-timezone@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-timezone/-/react-native-timezone-1.0.3.tgz#437f8b5a7f5e0b874b7c3b6366994182155b527a"
+  integrity sha512-01Wzq4RyuBrIRBZh/hqalaYWQ7g9bvmS9UFDjgxkPCvBFoiSSyOVVw+j9KUtljbuJF4X6R3/0VwuhvaP8b8qQw==
+
 react-native-unimodules@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-unimodules/-/react-native-unimodules-0.11.0.tgz#78483ee4e7eb27b439d34c3ba7455f40087ff166"

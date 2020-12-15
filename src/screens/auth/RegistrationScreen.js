@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
 import {useQuery} from 'react-apollo';
 import TDIcon from 'the-core-ui-component-tdicon';
+import TimeZone from 'react-native-timezone';
 import Header from '../../components/Headers/Header';
 import {useNavigation} from '@react-navigation/native';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -46,6 +47,7 @@ export default function RegisterScreen() {
   const {loading, error, data: countryData} = useQuery(AllCountries);
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
+  const [deviceTimeZone, setDeviceTimeZone] = useState();
   const {getValueByName} = FormHook();
   const selectedCountry = getValueByName('country');
 
@@ -91,6 +93,14 @@ export default function RegisterScreen() {
       .regions.map((region) => region.region);
     setRegionsList(indianRegions);
   }, [countryData]);
+
+  useEffect(() => {
+    const getTimeZone = async () => {
+      const timeZone = await TimeZone.getTimeZone().then((zone) => zone);
+      setDeviceTimeZone(timeZone);
+    };
+    getTimeZone();
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

@@ -75,6 +75,7 @@
     "react-native-swipeable": "^0.6.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^2.14.4",
+    "react-native-timezone": "^1.0.3",
     "react-native-unimodules": "^0.11.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-version-number": "^0.3.6",

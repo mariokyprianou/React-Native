@@ -34,8 +34,6 @@ export default function RegisterScreen() {
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
   const [termsAndConditions, setTerms] = useState('off');
-  const [loadingRegister, setLoadingRegister] = useState(false);
-  const [activeRegister, setActiveRegister] = useState(false);
   const {
     cellFormStyles,
     dropdownStyle,
@@ -61,7 +59,7 @@ export default function RegisterScreen() {
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
   });
 
-  const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
+  const countryIdLookup = countryData.allCountries?.reduce((acc, obj) => {
     let {country, id} = obj;
     return {...acc, [country]: id};
   }, {});
@@ -81,24 +79,6 @@ export default function RegisterScreen() {
     AuthDict.RegistrationGendersOther,
     AuthDict.RegistrationGendersPreferNot,
   ];
-
-  useEffect(() => {
-    const {
-      givenName,
-      familyName,
-      email,
-      password,
-      gender,
-      dateOfBirth,
-      country,
-      region,
-    } = getValues();
-
-    if (givenName && familyName && email && password && dateOfBirth && gender) {
-      return setActiveRegister(true);
-    }
-    setActiveRegister(false);
-  }, [getValues]);
 
   useEffect(() => {
     const countries = countryData.allCountries.map(
@@ -163,7 +143,6 @@ export default function RegisterScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleRegister() {
-    setLoadingRegister(true);
     cleanErrors();
 
     const {
@@ -179,12 +158,25 @@ export default function RegisterScreen() {
 
     const countryID = countryIdLookup[country];
 
+    if (!givenName) {
+      updateError({
+        name: 'givenName',
+        value: AuthDict.InvalidGivenName,
+      });
+    }
+
+    if (!familyName) {
+      updateError({
+        name: 'familyName',
+        value: AuthDict.InvalidFamilyName,
+      });
+    }
+
     if (!emailRegex.test(email)) {
       updateError({
         name: 'email',
         value: AuthDict.InvalidEmail,
       });
-      setLoadingRegister(false);
       return;
     }
     if (!passwordRegex.test(password)) {
@@ -192,7 +184,6 @@ export default function RegisterScreen() {
         name: 'password',
         value: AuthDict.InvalidPassword,
       });
-      setLoadingRegister(false);
       return;
     }
 
@@ -203,14 +194,14 @@ export default function RegisterScreen() {
           familyName: familyName,
           email: email,
           password: password,
-          gender: gender.toLowerCase(),
+          gender: gender ? gender.toLowerCase() : null,
           dateOfBirth: dateOfBirth,
-          country: countryID,
+          country: country ? countryID : null,
           region:
             selectedCountry === 'India' ? indianRegionsLookup[region] : null,
           deviceUDID: deviceUid,
           timeZone: deviceTimeZone,
-          // programmeId: programmeId,  <---- property name to be confirmed by back end
+          programme: programmeId,
         },
       },
     })
@@ -221,7 +212,6 @@ export default function RegisterScreen() {
           } else {
             navigation.navigate('Notifications');
           }
-          setLoadingRegister(false);
         }
       })
       .catch((err) => console.log(err));
@@ -282,16 +272,12 @@ export default function RegisterScreen() {
       name: 'givenName',
       type: 'text',
       label: AuthDict.FirstNameLabel,
-      placeholder: '',
-      textContentType: 'name',
       ...cellFormStyles,
     },
     {
       name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
-      placeholder: '',
-      textContentType: 'name',
       ...cellFormStyles,
     },
     {

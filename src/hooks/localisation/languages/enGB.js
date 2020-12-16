@@ -58,6 +58,8 @@ const enGB = {
     RegionLabel: 'REGION',
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
+    InvalidGivenName: 'Please enter your first name',
+    InvalidFamilyName: 'Please enter your last name',
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',

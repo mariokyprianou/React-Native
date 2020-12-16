@@ -10,6 +10,7 @@ import {View, StatusBar, Platform, I18nManager, Alert} from 'react-native';
 import ThemeProvider from './hooks/theme/ThemeProvider';
 import DictionaryProvider from './hooks/localisation/DictionaryProvider';
 import {ApolloProvider} from 'react-apollo';
+import AuthProvider from 'the-core-ui-module-tdauth-amplify';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScaleProvider} from 'react-native-design-to-component';
 import {FormProvider} from 'the-core-ui-module-tdforms';
@@ -32,6 +33,27 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [validChecksum, setValidChecksum] = useState(true);
   const {getItem, setItem} = useAsyncStorage('@language');
+
+  const authConfig = {
+    Auth: {
+      // REQUIRED - Amazon Cognito Region
+      region: 'eu-west-1',
+
+      // OPTIONAL - Amazon Cognito User Pool ID
+      userPoolId: 'ap-south-1_IKCoLjZya',
+
+      // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
+      userPoolWebClientId: '6jh3je4i3ni14qki167tr5v3gm',
+
+      appWebDomain: 'dummy-url.com',
+
+      redirectUriSignIn: 'http://localhost:8081',
+      redirectUriSignOut: 'http://localhost:8081',
+
+      // The apps url scheme for social login
+      appUrlScheme: 'dummyScheme',
+    },
+  };
 
   const setupApollo = async () => {
     const newClient = await ApolloClient();
@@ -101,21 +123,23 @@ const App = () => {
         <StatusBar translucent backgroundColor="transparent" />
       )}
       <ScaleProvider config={{height: 667, width: 375}}>
-        <ApolloProvider client={client}>
-          <DataProvider>
-            <ThemeProvider>
-              <DictionaryProvider>
-                <NavigationContainer>
-                  <TDCountdown>
-                    <FormProvider>
-                      <AppContainer />
-                    </FormProvider>
-                  </TDCountdown>
-                </NavigationContainer>
-              </DictionaryProvider>
-            </ThemeProvider>
-          </DataProvider>
-        </ApolloProvider>
+        <AuthProvider config={authConfig}>
+          <ApolloProvider client={client}>
+            <DataProvider>
+              <ThemeProvider>
+                <DictionaryProvider>
+                  <NavigationContainer>
+                    <TDCountdown>
+                      <FormProvider>
+                        <AppContainer />
+                      </FormProvider>
+                    </TDCountdown>
+                  </NavigationContainer>
+                </DictionaryProvider>
+              </ThemeProvider>
+            </DataProvider>
+          </ApolloProvider>
+        </AuthProvider>
       </ScaleProvider>
 
       <QuickPicker />

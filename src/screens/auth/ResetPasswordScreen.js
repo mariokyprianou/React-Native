@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {ScrollView, View, Text} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 
@@ -18,12 +18,11 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
+import {Auth} from 'aws-amplify';
 
 export default function Screen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-
   const navigation = useNavigation();
-
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
 
@@ -31,27 +30,15 @@ export default function Screen() {
     header: () => <Header title={AuthDict.ResetPasswordScreenTitle} goBack />,
   });
 
-  const {
-    cellFormStyles,
-    dropdownStyle,
-    cellFormConfig,
-    textStyles,
-    colors,
-  } = useTheme();
+  const {cellFormStyles, cellFormConfig, textStyles, colors} = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-
-  const [loading, setLoading] = useState(false);
-  const [activeReset, setActiveReset] = useState(false);
+  const {getHeight, getWidth} = ScaleHook();
 
   useEffect(() => {
-    const {code, password} = getValues();
-
-    if (code && password) {
-      return setActiveReset(true);
-    }
-    setActiveReset(false);
-  }, [getValues]);
+    Auth.currentAuthenticatedUser()
+      .then((user) => console.log(user, '<---user'))
+      .catch((err) => console.log(err, '<---error here'));
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -81,9 +68,6 @@ export default function Screen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleChangePassword() {
-    navigation.navigate('Login');
-
-    setLoading(true);
     cleanErrors();
 
     const {code, password} = getValues();
@@ -93,7 +77,6 @@ export default function Screen() {
         name: 'code',
         value: AuthDict.InvalidResetCode,
       });
-      setLoading(false);
       return;
     }
 
@@ -102,9 +85,9 @@ export default function Screen() {
         name: 'password',
         value: AuthDict.InvalidPassword,
       });
-      setLoading(false);
       return;
     }
+    navigation.navigate('Login');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

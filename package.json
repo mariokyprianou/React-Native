@@ -84,6 +84,7 @@
     "react-native-wheel-picker-android": "^2.0.6",
     "rn-fetch-blob": "^0.12.0",
     "the-core-ui-component-tdicon": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-component-tdicon.git",
+    "the-core-ui-module-tdauth-amplify": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdauth-amplify.git",
     "the-core-ui-module-tdcalendar": "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdcalendar.git",
     "the-core-ui-module-tdcountdown": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdcountdown.git",
     "the-core-ui-module-tdforms": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdforms.git#v1.1.8",

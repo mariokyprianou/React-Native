@@ -5,11 +5,10 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {ScrollView, View} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -19,36 +18,16 @@ import Header from '../../components/Headers/Header';
 
 export default function Screen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-
   const navigation = useNavigation();
-
   navigation.setOptions({
     header: () => <Header title={'Forgot password'} goBack />,
   });
 
-  const {
-    cellFormStyles,
-
-    cellFormConfig,
-    textStyles,
-    colors,
-  } = useTheme();
+  const {cellFormStyles, cellFormConfig, textStyles, colors} = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
-
-  const [loading, setLoading] = useState(false);
-  const [activeReset, setActiveReset] = useState(false);
-
-  useEffect(() => {
-    const {emailAddress, password} = getValues();
-
-    if (emailAddress && password) {
-      return setActiveReset(true);
-    }
-    setActiveReset(false);
-  }, [getValues]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -80,20 +59,16 @@ export default function Screen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleSendReset() {
-    navigation.navigate('ResetPassword');
-    setLoading(true);
     cleanErrors();
-
-    const {emailAddress, password} = getValues();
-
-    if (!emailRegex.test(emailAddress)) {
+    const {emailAddress} = getValues();
+    if (!emailAddress || !emailRegex.test(emailAddress)) {
       updateError({
         name: 'emailAddress',
         value: AuthDict.InvalidEmail,
       });
-      setLoading(false);
       return;
     }
+    navigation.navigate('ResetPassword');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

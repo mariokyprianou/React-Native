@@ -17,6 +17,7 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 import Intercom from 'react-native-intercom';
+import {Auth} from 'aws-amplify';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -73,7 +74,7 @@ export default function LoginScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleLogin() {
+  async function handleLogin() {
     // navigation.navigate('MeetYourIcons', {switchProgramme: false});
     cleanErrors();
 
@@ -94,12 +95,18 @@ export default function LoginScreen() {
       return;
     }
 
-    // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
+    await Auth.signIn(emailAddress, password)
+      .then(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'TabContainer'}],
+        });
+      })
+      .catch((error) => {
+        console.log('error signing in', error);
+      });
 
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'TabContainer'}],
-    });
+    // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
   }
 
   function forgotPassword() {

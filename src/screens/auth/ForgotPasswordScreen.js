@@ -15,6 +15,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex} from '../../utils/regex';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
+import {Auth} from 'aws-amplify';
 
 export default function Screen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -61,6 +62,7 @@ export default function Screen() {
   function handleSendReset() {
     cleanErrors();
     const {emailAddress} = getValues();
+
     if (!emailAddress || !emailRegex.test(emailAddress)) {
       updateError({
         name: 'emailAddress',
@@ -68,6 +70,11 @@ export default function Screen() {
       });
       return;
     }
+
+    Auth.forgotPassword(emailAddress)
+      .then((data) => console.log(data, '<----data'))
+      .catch((err) => console.log(err, '<---error'));
+
     navigation.navigate('ResetPassword');
   }
 

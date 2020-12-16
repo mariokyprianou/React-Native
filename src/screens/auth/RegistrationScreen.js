@@ -230,14 +230,14 @@ export default function RegisterScreen() {
         type="createAccount"
         variant="white"
         icon="chevron"
-        onPress={handleRegister}
-        // onPress={() => {
-        //   if (Platform.OS === 'android') {
-        //     navigation.navigate('TabContainer');
-        //   } else {
-        //     navigation.navigate('Notifications');
-        //   }
-        // }}
+        // onPress={handleRegister}
+        onPress={() => {
+          if (Platform.OS === 'android') {
+            navigation.navigate('TabContainer');
+          } else {
+            navigation.navigate('Notifications');
+          }
+        }}
       />
     </View>
   );

@@ -207,11 +207,7 @@ export default function RegisterScreen() {
     })
       .then((res) => {
         if (res.data.registerUser === true) {
-          if (Platform.OS === 'android') {
-            navigation.navigate('TabContainer');
-          } else {
-            navigation.navigate('Notifications');
-          }
+          navigation.navigate('EmailVerification', {email, password});
         }
       })
       .catch((err) => console.log(err));

@@ -131,6 +131,7 @@ export default function DefaultButton({
     done: ButtonDict.Done,
     getStarted: ButtonDict.GetStarted,
     goBack: ButtonDict.GoBack,
+    goBackLower: ButtonDict.GoBackLower,
     jumpIn: ButtonDict.JumpIn,
     login: ButtonDict.Login,
     programme: ButtonDict.Programme,

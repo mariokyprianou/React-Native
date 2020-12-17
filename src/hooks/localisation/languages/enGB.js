@@ -19,6 +19,7 @@ const enGB = {
     Done: 'DONE',
     GetStarted: 'GET STARTED',
     GoBack: 'GO BACK',
+    GoBackLower: 'Go back',
     Gym: 'GYM',
     Home: 'HOME',
     JumpIn: 'JUMP IN',

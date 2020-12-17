@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
@@ -46,7 +46,6 @@ export default function RegisterScreen() {
   } = useRoute();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {loading, error, data: countryData} = useQuery(AllCountries);
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
@@ -68,31 +67,31 @@ export default function RegisterScreen() {
     AuthDict.RegistrationGendersPreferNot,
   ];
 
-  useEffect(() => {
-    const countries = countryData.allCountries.map(
-      (country) => country.country,
-    );
-    setCountriesList(countries);
+  useQuery(AllCountries, {
+    onCompleted: (data) => {
+      const countries = data.allCountries.map((country) => country.country);
+      setCountriesList(countries);
 
-    const indianRegions = countryData.allCountries.filter(
-      (country) => country.country === 'India',
-    )[0].regions;
+      const indianRegions = data.allCountries.filter(
+        (country) => country.country === 'India',
+      )[0].regions;
 
-    const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-      let {region, id} = obj;
-      return {...acc, [region]: id};
-    }, {});
-    setRegionLookup(indianRegionsLookup);
+      const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+        let {region, id} = obj;
+        return {...acc, [region]: id};
+      }, {});
+      setRegionLookup(indianRegionsLookup);
 
-    const indianRegionsList = indianRegions.map((region) => region.region);
-    setRegionsList(indianRegionsList);
+      const indianRegionsList = indianRegions.map((region) => region.region);
+      setRegionsList(indianRegionsList);
 
-    const countryIdLookup = countryData?.allCountries.reduce((acc, obj) => {
-      let {country, id} = obj;
-      return {...acc, [country]: id};
-    }, {});
-    setCountryLookup(countryIdLookup);
-  }, [countryData]);
+      const countryIdLookup = data.allCountries.reduce((acc, obj) => {
+        let {country, id} = obj;
+        return {...acc, [country]: id};
+      }, {});
+      setCountryLookup(countryIdLookup);
+    },
+  });
 
   useEffect(() => {
     const getTimeZone = async () => {
@@ -227,14 +226,14 @@ export default function RegisterScreen() {
         type="createAccount"
         variant="white"
         icon="chevron"
-        // onPress={handleRegister}
-        onPress={() => {
-          if (Platform.OS === 'android') {
-            navigation.navigate('TabContainer');
-          } else {
-            navigation.navigate('Notifications');
-          }
-        }}
+        onPress={handleRegister}
+        // onPress={() => {
+        //   if (Platform.OS === 'android') {
+        //     navigation.navigate('TabContainer');
+        //   } else {
+        //     navigation.navigate('Notifications');
+        //   }
+        // }}
       />
     </View>
   );
@@ -329,6 +328,7 @@ export default function RegisterScreen() {
     {
       name: 'region',
       type: selectedCountry === 'India' ? 'dropdown' : 'text',
+      placeholder: '',
       editable: false,
       label: AuthDict.RegionLabel,
       data: regionsList,

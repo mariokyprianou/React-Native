@@ -7,8 +7,9 @@
  */
 
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, AppState} from 'react-native';
+import {Platform, AppState, Alert} from 'react-native';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import {useNavigation} from '@react-navigation/native';
 import PermissionScreenUI from './PermissionScreenUI';
 import {useRoute} from '@react-navigation/core';
 import {Auth} from 'aws-amplify';
@@ -16,6 +17,7 @@ import {Auth} from 'aws-amplify';
 export default function EmailVerificationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {dictionary} = useDictionary();
+  const navigation = useNavigation();
   const {AuthDict} = dictionary;
   const {
     params: {email, password},
@@ -48,6 +50,9 @@ export default function EmailVerificationScreen() {
         })
         .catch((error) => {
           console.log('error signing in', error);
+          Alert.alert(
+            'You are not yet logged in - please verify your email address',
+          );
         });
     }
 

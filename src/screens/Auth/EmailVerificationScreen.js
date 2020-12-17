@@ -13,6 +13,8 @@ import {useNavigation} from '@react-navigation/native';
 import PermissionScreenUI from './PermissionScreenUI';
 import {useRoute} from '@react-navigation/core';
 import {Auth} from 'aws-amplify';
+import {useMutation} from 'react-apollo';
+import ResendVerificationEmail from '../../apollo/mutations/ResendVerificationEmail';
 
 export default function EmailVerificationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -24,6 +26,8 @@ export default function EmailVerificationScreen() {
   } = useRoute();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  const [resendEmail] = useMutation(ResendVerificationEmail);
 
   useEffect(() => {
     AppState.addEventListener('change', handleAppStateChange);
@@ -61,7 +65,11 @@ export default function EmailVerificationScreen() {
   }
 
   async function onPressButton() {
-    // TO DO - resend verification email mutation
+    await resendEmail({variables: {email}})
+      .then(() => {
+        Alert.alert('Verification link sent');
+      })
+      .catch((err) => console.log(err));
   }
 
   async function onPressBottomButton() {

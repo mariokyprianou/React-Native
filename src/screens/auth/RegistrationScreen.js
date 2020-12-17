@@ -49,6 +49,8 @@ export default function RegisterScreen() {
   const {loading, error, data: countryData} = useQuery(AllCountries);
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
+  const [countryLookup, setCountryLookup] = useState();
+  const [regionLookup, setRegionLookup] = useState();
   const [deviceTimeZone, setDeviceTimeZone] = useState();
   const [deviceUid, setDeviceUid] = useState();
   const {getValueByName, cleanValues} = FormHook();
@@ -58,20 +60,6 @@ export default function RegisterScreen() {
   navigation.setOptions({
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
   });
-
-  const countryIdLookup = countryData.allCountries?.reduce((acc, obj) => {
-    let {country, id} = obj;
-    return {...acc, [country]: id};
-  }, {});
-
-  const indianRegions = countryData.allCountries.filter(
-    (country) => country.country === 'India',
-  )[0].regions;
-
-  const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-    let {region, id} = obj;
-    return {...acc, [region]: id};
-  }, {});
 
   const gendersData = [
     AuthDict.RegistrationGendersFemale,
@@ -86,10 +74,24 @@ export default function RegisterScreen() {
     );
     setCountriesList(countries);
 
-    const indianRegions = countryData.allCountries
-      .filter((country) => country.country === 'India')[0]
-      .regions.map((region) => region.region);
-    setRegionsList(indianRegions);
+    const indianRegions = countryData.allCountries.filter(
+      (country) => country.country === 'India',
+    )[0].regions;
+
+    const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+      let {region, id} = obj;
+      return {...acc, [region]: id};
+    }, {});
+    setRegionLookup(indianRegionsLookup);
+
+    const indianRegionsList = indianRegions.map((region) => region.region);
+    setRegionsList(indianRegionsList);
+
+    const countryIdLookup = countryData?.allCountries.reduce((acc, obj) => {
+      let {country, id} = obj;
+      return {...acc, [country]: id};
+    }, {});
+    setCountryLookup(countryIdLookup);
   }, [countryData]);
 
   useEffect(() => {
@@ -156,7 +158,7 @@ export default function RegisterScreen() {
       region,
     } = getValues();
 
-    const countryID = countryIdLookup[country];
+    const countryID = countryLookup[country];
 
     if (!givenName) {
       updateError({
@@ -197,8 +199,7 @@ export default function RegisterScreen() {
           gender: gender ? gender.toLowerCase() : null,
           dateOfBirth: dateOfBirth,
           country: country ? countryID : null,
-          region:
-            selectedCountry === 'India' ? indianRegionsLookup[region] : null,
+          region: selectedCountry === 'India' ? regionLookup[region] : null,
           deviceUDID: deviceUid,
           timeZone: deviceTimeZone,
           programme: programmeId,

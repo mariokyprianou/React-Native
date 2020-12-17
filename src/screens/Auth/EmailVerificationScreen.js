@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {Platform} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Platform, AppState} from 'react-native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import PermissionScreenUI from './PermissionScreenUI';
 import {useRoute} from '@react-navigation/core';
@@ -20,27 +20,47 @@ export default function EmailVerificationScreen() {
   const {
     params: {email, password},
   } = useRoute();
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function handleAppStateChange(nextAppState) {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      await Auth.signIn(email, password)
+        .then(() => {
+          if (Platform.OS === 'android') {
+            navigation.navigate('TabContainer');
+          } else {
+            navigation.navigate('Notifications');
+          }
+        })
+        .catch((error) => {
+          console.log('error signing in', error);
+        });
+    }
+
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
+  }
+
   async function onPressButton() {
     // TO DO - resend verification email mutation
   }
 
   async function onPressBottomButton() {
-    // Check verified - if verified go to home screen/notifications
-    await Auth.signIn(email, password)
-      .then(() => {
-        if (Platform.OS === 'android') {
-          navigation.navigate('TabContainer');
-        } else {
-          navigation.navigate('Notifications');
-        }
-      })
-      .catch((error) => {
-        // what to do if not verified??
-        console.log('error signing in', error);
-      });
+    navigation.navigate('MeetYourIcons', {switchProgramme: false});
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

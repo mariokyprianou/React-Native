@@ -72,6 +72,11 @@ export default function ProgressScreen() {
       flex: 1,
       backgroundColor: colors.backgroundWhite100,
     },
+    androidSafeArea: {
+      backgroundColor: colors.backgroundWhite100,
+      height: 30,
+      width: '100%',
+    },
     screen: {
       width: '100%',
       height: '100%',
@@ -130,6 +135,7 @@ export default function ProgressScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <SafeAreaView style={styles.safeArea}>
+      {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
       <ScrollView style={styles.screen}>
         <View style={styles.container}>
           <View style={styles.titleContainer}>

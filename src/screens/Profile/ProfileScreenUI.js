@@ -79,6 +79,11 @@ export default function ProfileScreenUI({
       flex: 1,
       backgroundColor: colors.backgroundWhite100,
     },
+    androidSafeArea: {
+      backgroundColor: colors.backgroundWhite100,
+      height: 30,
+      width: '100%',
+    },
     container: {
       flex: 1,
     },
@@ -317,6 +322,7 @@ export default function ProfileScreenUI({
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>

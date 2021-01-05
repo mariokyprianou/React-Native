@@ -34,16 +34,12 @@ export default function GymHomeSelector({onPress}) {
     touch: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       alignItems: 'center',
-      paddingLeft: getWidth(9),
     },
     text: {
       ...textStyles.bold15_brownishGrey100,
-    },
-    iconContainer: {
-      position: 'absolute',
-      right: getWidth(7),
+      marginRight: getWidth(5),
     },
     icon: {
       color: colors.brownishGrey100,
@@ -69,9 +65,7 @@ export default function GymHomeSelector({onPress}) {
     <View style={styles.pill}>
       <TouchableOpacity onPress={handleSelect} style={styles.touch}>
         <Text style={styles.text}>{buttonText}</Text>
-        <View style={styles.iconContainer}>
-          <TDIcon input={buttonIcon} inputStyle={styles.icon} />
-        </View>
+        <TDIcon input={buttonIcon} inputStyle={styles.icon} />
       </TouchableOpacity>
     </View>
   );

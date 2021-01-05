@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Text, ScrollView} from 'react-native';
+import {Text, ScrollView, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import TDSettings from 'the-core-ui-module-tdsettings';
@@ -127,7 +127,7 @@ const SettingsScreen = ({}) => {
       textAlign: 'left',
     },
     switchTitleStyle: {
-      ...textStyles.semiBold14_brownishGrey100,
+      ...textStyles.medium14_brownishGrey100,
       alignSelf: 'center',
       textAlign: 'left',
     },

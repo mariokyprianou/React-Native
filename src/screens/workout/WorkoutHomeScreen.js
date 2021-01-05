@@ -105,6 +105,11 @@ export default function WorkoutHomeScreen() {
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
     },
+    headerBorder: {
+      width: '100%',
+      height: getHeight(2),
+      backgroundColor: colors.offWhite100,
+    },
     titleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -179,6 +184,7 @@ export default function WorkoutHomeScreen() {
   return (
     <View style={styles.container}>
       <WorkoutHomeHeader />
+      <View style={styles.headerBorder} />
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>

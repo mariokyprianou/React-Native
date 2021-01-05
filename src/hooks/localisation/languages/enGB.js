@@ -169,8 +169,8 @@ const enGB = {
     DownloadWorkouts: 'Download workouts',
     DownloadWorkoutsText:
       'Download this week’s workouts so you can train even without an internet connection.',
-    DownloadWorkoutsQuality: 'Download quality',
-    DownloadWorkoutsTimeZone: 'Time zone',
+    DownloadWorkoutsQuality: 'DOWNLOAD QUALITY',
+    DownloadWorkoutsTimeZone: 'TIME ZONE',
     DataCollection: 'Data collection',
     DataCollectionText:
       'We collect data on the usage of the POWER app to understand how we can make it better. All the data we collect is completely anonymous and cannot be traced to you.',
@@ -180,7 +180,7 @@ const enGB = {
     Analytics: 'Analytics',
     AnalyticsText:
       'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
-    Language: 'Language',
+    Language: 'LANGUAGE',
   },
 
   ProgressDict: {

@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -54,14 +54,14 @@ export default function WeightCaptureScreen() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
-      backgroundColor: colors.veryLightPink100,
+      backgroundColor: colors.backgroundWhite100,
       height: '100%',
       width: '100%',
     },
     titleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: getHeight(50),
+      height: getHeight(30),
       width: '90%',
       alignSelf: 'center',
       zIndex: 9,
@@ -87,7 +87,7 @@ export default function WeightCaptureScreen() {
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,
       shadowOpacity: 1,
-      elevation: 6,
+      elevation: 4,
     },
     scrollCard: {
       height: getHeight(220),
@@ -96,6 +96,9 @@ export default function WeightCaptureScreen() {
     buttonContainer: {
       width: '100%',
       alignItems: 'center',
+      position: 'absolute',
+      top: getHeight(490),
+      elevation: 9,
     },
     iconStyle: {
       size: fontSize(12),
@@ -124,9 +127,9 @@ export default function WeightCaptureScreen() {
       inputContainerStyle: {
         paddingLeft: getWidth(7),
         width: getWidth(80),
-        height: getHeight(50),
+        height: getHeight(30),
         position: 'absolute',
-        top: getHeight(-41),
+        top: Platform.OS === 'ios' ? getHeight(-30) : getHeight(34),
       },
       inputStyle: {
         ...textStyles.bold20_black100,

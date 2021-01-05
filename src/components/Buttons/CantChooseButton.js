@@ -58,7 +58,7 @@ export default function CantChooseButton({onPress}) {
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingLeft: getWidth(12),
-      paddingRight: getWidth(8),
+      paddingRight: getWidth(4.5),
     },
     largerText: {
       ...textStyles.bold15_brownishGrey100,

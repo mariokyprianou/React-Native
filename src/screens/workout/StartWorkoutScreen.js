@@ -30,6 +30,11 @@ export default function StartWorkoutScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    headerBorder: {
+      width: '100%',
+      height: getHeight(2),
+      backgroundColor: colors.offWhite100,
+    },
     scrollViewContainer: {
       height: '100%',
       width: '100%',
@@ -67,6 +72,7 @@ export default function StartWorkoutScreen() {
 
   return (
     <View>
+      <View style={styles.headerBorder} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>

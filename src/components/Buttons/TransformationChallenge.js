@@ -52,6 +52,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
     },
     progressText: {
       ...textStyles.bold15_white100,
+      letterSpacing: 0,
       textAlign: 'left',
     },
     challengeTitle: {
@@ -60,6 +61,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
     },
     challengeText: {
       ...textStyles.bold15_black100,
+      letterSpacing: 0,
       textAlign: 'left',
     },
     photoImage: {

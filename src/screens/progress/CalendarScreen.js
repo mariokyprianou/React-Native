@@ -18,7 +18,7 @@ import processProgressData from '../../utils/processProgressData';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {singleCalendarStyles, colors} = useTheme();
+  const {singleCalendarStyles, colors, textStyles} = useTheme();
   const {
     days,
     daysTextStyles,
@@ -26,6 +26,7 @@ export default function CalendarScreen() {
     dateCellStyles,
     pillWidth,
     lookupStyleTable,
+    monthNames,
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
@@ -55,6 +56,9 @@ export default function CalendarScreen() {
       width: '90%',
       alignSelf: 'center',
     },
+    monthTitles: {
+      ...textStyles.bold20_black100,
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -74,6 +78,8 @@ export default function CalendarScreen() {
           pillWidth={pillWidth}
           calendarType="multiple-month"
           lookupStyleTable={lookupStyleTable}
+          calendarMonthNames={monthNames}
+          monthTitleTextStyles={styles.monthTitles}
         />
       </View>
     </View>

@@ -299,7 +299,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
                     onPressGymHome={() => setVenue(venue)}
                   />
                 </View>
-                <Spacer height={90} />
+                <Spacer height={100} />
                 <View style={styles.textContainer}>
                   <Text style={styles.text}>{text}</Text>
                   <Text

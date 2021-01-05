@@ -83,7 +83,7 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
       top: getHeight(120),
     },
     resultContainer: {
-      backgroundColor: colors.paleBlue100,
+      backgroundColor: colors.veryLightPinkTwo100,
       borderRadius: radius(15),
       borderTopLeftRadius: 0,
       width: getWidth(170),

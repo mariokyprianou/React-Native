@@ -33,6 +33,7 @@ const Colors = {
   powderBlue0: 'rgba(197, 217, 228, 0)',
   powderBlue100: 'rgba(197, 217, 228, 1)',
   veryLightPink100: 'rgba(241, 241, 241, 1)',
+  veryLightPinkTwo100: 'rgba(239, 239, 239, 1)',
   white0: 'rgba(255, 255, 255, 0)',
   white75: 'rgba(255, 255, 255, 0.75)',
   white80: 'rgba(255, 255, 255, 0.8)',

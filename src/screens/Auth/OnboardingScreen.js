@@ -38,9 +38,10 @@ export default function OnboardingScreen() {
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      height: '90%',
+      height: '100%',
       alignItems: 'center',
       backgroundColor: colors.backgroundWhite100,
+      paddingBottom: '10%',
     },
     title: {
       ...textStyles.bold24_black100,

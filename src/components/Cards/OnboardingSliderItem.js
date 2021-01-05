@@ -58,7 +58,7 @@ export default function OnboardingSliderItem({
       width: '100%',
       resizeMode: 'contain',
       position: 'absolute',
-      top: getHeight(20),
+      top: getHeight(0),
     },
     icon: {
       size: fontSize(18),

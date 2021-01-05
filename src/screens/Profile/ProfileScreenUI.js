@@ -23,6 +23,7 @@ import CalendarIcon from '../../components/cells/CalendarIcon';
 import ProfileUserCard from '../../components/Views/ProfileUserCard';
 import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
+import TDIcon from 'the-core-ui-component-tdicon';
 
 const notifications = [
   {
@@ -106,6 +107,11 @@ export default function ProfileScreenUI({
     signOut: {
       ...textStyles.semiBold14_brownishGrey100,
     },
+    icon: {
+      solid: true,
+      size: fontSize(11),
+      color: colors.black100,
+    },
   };
 
   const userCard = () => {
@@ -187,7 +193,9 @@ export default function ProfileScreenUI({
       label: ProfileDict.FormLabel3,
       ...cellFormStyles,
       ...dropdownStyle,
-      rightAccessory: () => <DropDownIcon />,
+      rightAccessory: () => (
+        <TDIcon input="chevron-right" inputStyle={styles.icon} />
+      ),
       rightAccessoryOnPress: () => {
         navigation.navigate('ChangeEmail');
       },

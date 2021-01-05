@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Text, SafeAreaView} from 'react-native';
+import {View, ScrollView, Text, SafeAreaView, Platform} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -117,7 +117,7 @@ export default function ProfileScreenUI({
   const userCard = () => {
     return (
       <>
-        <Spacer height={30} />
+        <Spacer height={Platform.OS === 'ios' ? 30 : 60} />
         <ProfileUserCard
           firstName={'Johny'}
           lastName={'Appleased'}
@@ -180,12 +180,20 @@ export default function ProfileScreenUI({
       type: 'text',
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'profile_lastName',
       type: 'text',
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'profile_email',
@@ -199,6 +207,10 @@ export default function ProfileScreenUI({
       rightAccessoryOnPress: () => {
         navigation.navigate('ChangeEmail');
       },
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(3),
+      },
     },
     {
       name: 'profile_gender',
@@ -209,6 +221,10 @@ export default function ProfileScreenUI({
       rightAccessory: () => <DropDownIcon />,
       placeholder: registrationData.genders[0],
       data: registrationData.genders,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'profile_dateOfBirth',
@@ -218,6 +234,10 @@ export default function ProfileScreenUI({
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'profile_country',
@@ -228,6 +248,10 @@ export default function ProfileScreenUI({
       rightAccessory: () => <DropDownIcon />,
       placeholder: registrationData.countries[0],
       data: registrationData.countries,
+      inputContainerStyle: {
+        paddingLeft: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'profile_region',
@@ -238,6 +262,10 @@ export default function ProfileScreenUI({
       rightAccessory: () => <DropDownIcon />,
       placeholder: registrationData.regions[0],
       data: registrationData.regions,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
   ];
 

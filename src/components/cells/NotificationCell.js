@@ -43,7 +43,7 @@ export default function NotificationCell({
       width: getWidth(355),
     },
     container: {
-      backgroundColor: colors.offWhite100,
+      backgroundColor: colors.backgroundWhite100,
       width: getWidth(355),
       marginTop: 0,
       marginBottom: 0,

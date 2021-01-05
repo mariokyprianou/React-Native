@@ -15,7 +15,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 
-const fakeImage = require('../../../assets/fake2.png');
+const fakeImage = require('../../../assets/congratulationsBackground.png');
 
 export default function CongratulationsScreen({name = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **

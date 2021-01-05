@@ -18,10 +18,11 @@ import OnboardingSliderItem from '../../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
+import TDIcon from 'the-core-ui-component-tdicon';
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius} = ScaleHook();
+  const {getHeight, getWidth, radius, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,7 +36,7 @@ export default function OnboardingScreen() {
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
-  const styles = StyleSheet.create({
+  const styles = {
     container: {
       width: '100%',
       height: '100%',
@@ -73,7 +74,22 @@ export default function OnboardingScreen() {
       ...textStyles.bold15_black100,
       textAlign: 'left',
     },
-  });
+    buttonWrapper: {
+      backgroundColor: 'transparent',
+      flexDirection: 'row',
+      position: 'absolute',
+      top: getHeight(-30),
+      left: 0,
+      flex: 1,
+      paddingHorizontal: getWidth(20),
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    icon: {
+      size: fontSize(18),
+      color: colors.black100,
+    },
+  };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const Login = () => {
@@ -106,20 +122,27 @@ export default function OnboardingScreen() {
         style={{flexDirection: isRTL ? 'row-reverse' : 'row'}}
         ref={onboardSwiper}
         loop={false}
+        showsButtons={true}
+        buttonWrapperStyle={styles.buttonWrapper}
+        prevButton={<TDIcon input={'chevron-left'} inputStyle={styles.icon} />}
+        nextButton={<TDIcon input={'chevron-right'} inputStyle={styles.icon} />}
         onIndexChanged={(index) => {
           setActiveIndex(index);
         }}
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}>
-        {onboardingData.map(({header, text, image}) => (
-          <OnboardingSliderItem
-            image={image}
-            header={header}
-            text={text}
-            handlePress={handlePress}
-            activeIndex={activeIndex}
-          />
-        ))}
+        {onboardingData.map(({header, text, image, orderIndex}) => {
+          console.log(orderIndex, '<---index');
+          return (
+            <OnboardingSliderItem
+              image={image}
+              header={header}
+              text={text}
+              handlePress={handlePress}
+              activeIndex={activeIndex}
+            />
+          );
+        })}
       </Swiper>
       <DefaultButton
         type="getStarted"

@@ -551,7 +551,6 @@ export default function ThemeProvider({children}) {
       marginHorizontal: getWidth(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
-
       alignItems: 'center',
     },
     exerciseTitleStyle: {
@@ -624,7 +623,7 @@ export default function ThemeProvider({children}) {
       width: getWidth(230),
       height: '100%',
       left: screenWidth / 2 - 105,
-      top: getHeight(40),
+      top: getHeight(90),
     },
     timerTextStyle: {
       ...textStyles.bold76_black100,

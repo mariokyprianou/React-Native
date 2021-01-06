@@ -15,6 +15,7 @@ import WeightSelection from '../../components/Infographics/WeightSelection';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {useNavigation} from '@react-navigation/native';
+import {msToHMS} from '../../utils/dateTimeUtils';
 
 const restTime = 10;
 
@@ -94,7 +95,7 @@ export default function SetCompletionScreen() {
       <View style={styles.card}>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
-          <Text style={styles.timerText}>{remaining}</Text>
+          <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
           <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
           <View style={styles.weightSelectionContainer}>
             <WeightSelection />

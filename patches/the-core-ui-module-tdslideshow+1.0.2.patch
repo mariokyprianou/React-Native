@@ -158,7 +158,7 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..e1c7354 100644
+index f41ddff..a803e0a 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 @@ -7,28 +7,31 @@
@@ -201,6 +201,15 @@ index f41ddff..e1c7354 100644
  
    // ******* STYLES *******
    const styles = {
+@@ -36,7 +39,7 @@ const AddPhoto = ({
+       height: "100%",
+     },
+     cameraContainer: {
+-      height: getHeight(550),
++      height: '100%', // was 550
+       width: "100%",
+       overflow: "hidden",
+     },
 @@ -55,50 +58,52 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
@@ -213,8 +222,8 @@ index f41ddff..e1c7354 100644
        flexDirection: "row",
        alignItems: "center",
 -      justifyContent: "space-around",
-+      height: getHeight(70),
-       paddingVertical: getHeight(15),
++      height: getHeight(90), 
+       paddingVertical: getHeight(15), 
 -      backgroundColor: "white",
 +      backgroundColor: backgroundColor
 +        ? backgroundColor
@@ -225,8 +234,8 @@ index f41ddff..e1c7354 100644
 -      color: "black",
 +    countdownButtonContainer: {
 +      position: "absolute",
-+      left: getWidth(40),
-+      paddingTop: getHeight(25),
++      left: getWidth(80),
++      paddingTop: getHeight(24),
 +    },
 +    cameraButtonContainer: {
 +      position: "absolute",
@@ -245,7 +254,7 @@ index f41ddff..e1c7354 100644
 +    },
 +    rotateButtonContainer: {
 +      position: "absolute",
-+      right: getWidth(40),
++      right: getWidth(80),
 +    },
 +    rotateButton: {
 +      size: fontSize(24),

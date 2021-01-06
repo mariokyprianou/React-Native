@@ -140,7 +140,7 @@ export default function ExerciseView() {
               {WorkoutDict.SetsText}
             </Text>
           </View>
-          <RepsList reps={reps} />
+          {/* <RepsList reps={reps} /> */}
         </View>
 
         {countDown && renderCountDown()}

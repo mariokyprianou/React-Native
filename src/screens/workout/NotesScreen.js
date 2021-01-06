@@ -17,6 +17,7 @@ import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import Spacer from '../../components/Utility/Spacer';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -58,10 +59,10 @@ export default function NotesScreen() {
       textAlign: 'left',
     },
     buttonContainer: {
-      position: 'absolute',
-      bottom: getHeight(40),
+      height: getHeight(90),
       width: '100%',
       alignItems: 'center',
+      marginTop: getHeight(130),
     },
   };
 
@@ -92,9 +93,14 @@ export default function NotesScreen() {
       <View style={styles.contentContainer}>
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
-        <Text style={styles.description}>{notes}</Text>
-        <Spacer height={70} />
-        <Form cells={cells} config={config} />
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.container}
+          enableOnAndroid={true}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <Text style={styles.description}>{notes}</Text>
+          <Spacer height={70} />
+          <Form cells={cells} config={config} />
+        </KeyboardAwareScrollView>
       </View>
       <View style={styles.buttonContainer}>
         <DefaultButton

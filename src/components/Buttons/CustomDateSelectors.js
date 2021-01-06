@@ -15,6 +15,7 @@ import useTransformation from '../../hooks/data/useTransformation';
 import isRTL from '../../utils/isRTL';
 
 const arrowDown = require('../../../assets/icons/sortDown.png');
+const arrowUp = require('../../../assets/icons/sortUp.png');
 
 const CustomDateSelectors = ({onPress}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -49,12 +50,13 @@ const CustomDateSelectors = ({onPress}) => {
     },
     dropdownArrow: {
       position: 'absolute',
-      top: getHeight(-2),
+      top: getHeight(-3),
       right: isRTL() ? 90 : 0,
     },
     arrowStyle: {
-      height: getHeight(12),
-      width: getWidth(12),
+      height: getHeight(18),
+      width: getWidth(18),
+      resizeMode: 'contain',
     },
     label: {
       ...textStyles.semiBold14_brownishGrey100,
@@ -67,7 +69,7 @@ const CustomDateSelectors = ({onPress}) => {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const customUp = () => <></>;
+  const customUp = () => <Image source={arrowUp} style={styles.arrowStyle} />;
 
   const customDown = () => (
     <Image source={arrowDown} style={styles.arrowStyle} />

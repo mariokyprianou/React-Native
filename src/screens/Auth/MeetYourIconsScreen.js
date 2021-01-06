@@ -45,6 +45,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   const [trainerOnSlider, setTrainerOnSlider] = useState();
   const [venue, setVenue] = useState('gym');
   const navigation = useNavigation();
+  const [safeArea, setSafeArea] = useState(false);
 
   const connected = true; // change to check connection
 
@@ -63,6 +64,11 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     container: {
       height: '100%',
       width: '100%',
+    },
+    safeArea: {
+      height: getHeight(23),
+      width: '100%',
+      backgroundColor: colors.powderBlue100,
     },
     headerContainer: {
       width: '100%',
@@ -234,6 +240,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
 
   return (
     <View style={styles.container}>
+      {safeArea && <View style={styles.safeArea} />}
       <Swiper
         ref={iconsSwiper}
         loop={false}
@@ -254,7 +261,9 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             index,
           ) => {
             return (
-              <ScrollView style={styles.sliderContainer}>
+              <ScrollView
+                style={styles.sliderContainer}
+                onScrollBeginDrag={() => setSafeArea(true)}>
                 <View style={styles.headerContainer}>
                   <View>
                     <Image source={logo} style={styles.image} />

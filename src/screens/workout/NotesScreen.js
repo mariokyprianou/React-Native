@@ -90,26 +90,26 @@ export default function NotesScreen() {
 
   return (
     <View style={styles.card}>
-      <View style={styles.contentContainer}>
-        <Text style={styles.description}>{description}</Text>
-        <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
-        <KeyboardAwareScrollView
-          contentContainerStyle={styles.container}
-          enableOnAndroid={true}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.description}>{description}</Text>
+          <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
+
           <Text style={styles.description}>{notes}</Text>
           <Spacer height={70} />
           <Form cells={cells} config={config} />
-        </KeyboardAwareScrollView>
-      </View>
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="done"
-          variant="white"
-          icon="chevron"
-          onPress={() => navigation.goBack()}
-        />
-      </View>
+        </View>
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="done"
+            variant="white"
+            icon="chevron"
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

@@ -57,6 +57,10 @@ export default function ChallengeEndScreen() {
       alignItems: 'center',
       backgroundColor: colors.backgroundWhite100,
     },
+    scroll: {
+      alignItems: 'center',
+      backgroundColor: colors.backgroundWhite100,
+    },
     card: {
       backgroundColor: colors.white100,
       height: getHeight(200),
@@ -97,10 +101,10 @@ export default function ChallengeEndScreen() {
       backgroundColor: colors.black30,
     },
     buttonContainer: {
-      position: 'absolute',
+      height: getHeight(90),
       width: '100%',
       alignItems: 'center',
-      bottom: getHeight(40),
+      marginTop: getHeight(120),
     },
   });
 
@@ -148,7 +152,7 @@ export default function ChallengeEndScreen() {
   return (
     <View style={{height: '100%', width: '100%'}}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={styles.scroll}
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.card}>

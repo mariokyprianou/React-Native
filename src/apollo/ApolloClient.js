@@ -17,6 +17,8 @@ import Authoriser from './ApolloMiddleware/Authoriser';
 export default async () => {
   const cache = new InMemoryCache();
 
+  const Authorization = await Authoriser();
+
   // Set up the fetch and headers
   const awsGraphQLFetch = async (uri, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
@@ -30,8 +32,6 @@ export default async () => {
       'ur-IN': 'ur',
     };
     const localisation = translateMap[locale];
-
-    const Authorization = await Authoriser();
 
     const updatedOptions = {
       ...options,
@@ -50,7 +50,9 @@ export default async () => {
   const graphQLUrl = secrets.graphQLUrl ?? 'http://localhost:4000/';
 
   const httpLink = new HttpLink({
-    uri: 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/graphql',
+    uri: Authorization
+      ? 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/auth'
+      : 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/graphql',
     fetch: awsGraphQLFetch,
   });
 

@@ -20,6 +20,7 @@ import {TDCountdown} from 'the-core-ui-module-tdcountdown';
 import * as ScreenCapture from 'expo-screen-capture';
 
 import ApolloClient from './apollo/ApolloClient';
+import AuthenticatedApolloClient from './apollo/AuthenticatedApolloClient';
 import Theme from './styles/AppTheme';
 import isValidChecksum from './utils/checksumValidation';
 import {Navigator as AppNavigator, Screen} from './navigation/AppStack';
@@ -45,18 +46,20 @@ const App = () => {
   const [validChecksum, setValidChecksum] = useState(true);
   const {getItem, setItem} = useAsyncStorage('@language');
 
-  useEffect(() => {
+  const setupApollo = async () =>
     Auth.currentAuthenticatedUser()
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  }, []);
-
-  const setupApollo = async () => {
-    const newClient = await ApolloClient();
-    setClient(newClient);
-    SplashScreen.hide();
-    setLoading(false);
-  };
+      .then(async (res) => {
+        const newClient = await AuthenticatedApolloClient();
+        setClient(newClient);
+        SplashScreen.hide();
+        setLoading(false);
+      })
+      .catch(async (err) => {
+        const newClient = await ApolloClient();
+        setClient(newClient);
+        SplashScreen.hide();
+        setLoading(false);
+      });
 
   const validateChecksum = async () => {
     const valid = await isValidChecksum();

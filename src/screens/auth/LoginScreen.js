@@ -96,7 +96,7 @@ export default function LoginScreen() {
     }
 
     await Auth.signIn(emailAddress, password)
-      .then(() => {
+      .then((res) => {
         navigation.reset({
           index: 0,
           routes: [{name: 'TabContainer'}],

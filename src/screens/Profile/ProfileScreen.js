@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
@@ -14,7 +14,7 @@ import Intercom from 'react-native-intercom';
 export default function ProfileScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {getValues} = FormHook();
 
   const onSaveChanges = () => {
     const {

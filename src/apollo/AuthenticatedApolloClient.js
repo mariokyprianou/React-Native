@@ -31,10 +31,13 @@ export default async () => {
     };
     const localisation = translateMap[locale];
 
+    const Authorization = await Authoriser();
+
     const updatedOptions = {
       ...options,
       headers: {
         ...options.headers,
+        Authorization,
         'Accept-Language': localisation,
       },
     };
@@ -47,7 +50,7 @@ export default async () => {
   const graphQLUrl = secrets.graphQLUrl ?? 'http://localhost:4000/';
 
   const httpLink = new HttpLink({
-    uri: 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/graphql',
+    uri: 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/auth',
     fetch: awsGraphQLFetch,
   });
 

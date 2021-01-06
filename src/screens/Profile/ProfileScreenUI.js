@@ -7,7 +7,7 @@
 
 import React, {useEffect, useState, useCallback} from 'react';
 import {View, ScrollView, Text} from 'react-native';
-import {useQuery} from 'react-apollo';
+import {useApolloClient, useQuery} from 'react-apollo';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -24,6 +24,7 @@ import ProfileUserCard from '../../components/Views/ProfileUserCard';
 import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
 import AllCountries from '../../apollo/queries/AllCountries';
+import Profile from '../../apollo/queries/Profile';
 
 const notifications = [
   {
@@ -61,9 +62,11 @@ export default function ProfileScreenUI({
   const {ProfileDict, AuthDict} = dictionary;
   const {getValueByName} = FormHook();
   const {loading, error, data: countryData} = useQuery(AllCountries);
+  // const {error: profileError, data: profileData} = useQuery(Profile);
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const selectedCountry = getValueByName('profile_country');
+  const client = useApolloClient();
 
   useEffect(() => {
     const countries = countryData.allCountries.map(
@@ -76,6 +79,15 @@ export default function ProfileScreenUI({
       .regions.map((region) => region.region);
     setRegionsList(indianRegions);
   }, [countryData]);
+
+  // console.log(profileData, profileError, '<---profile, error');
+
+  useEffect(() => {
+    client
+      .query({query: Profile})
+      .then((res) => console.log(res, '<--query res'))
+      .catch((err) => console.log(err, '<---query err'));
+  }, []);
 
   const gendersData = [
     AuthDict.RegistrationGendersFemale,

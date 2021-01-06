@@ -7,18 +7,22 @@
  */
 
 import React from 'react';
-import {View} from 'react-native';
+import {View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import DropDownPicker from 'react-native-dropdown-picker';
 import useTheme from '../../hooks/theme/UseTheme';
 import useTransformation from '../../hooks/data/useTransformation';
 import isRTL from '../../utils/isRTL';
 
+const arrowDown = require('../../../assets/icons/sortDown.png');
+
 const CustomDateSelectors = ({onPress}) => {
-  const {getHeight, getWidth, radius} = ScaleHook();
-  const {colors} = useTheme();
+  // ** ** ** ** ** SETUP ** ** ** ** **
+  const {getHeight, getWidth, radius, fontSize} = ScaleHook();
+  const {colors, textStyles} = useTheme();
   const {transformationImages} = useTransformation();
 
+  // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     dropdown: {
       flexDirection: 'row',
@@ -45,11 +49,31 @@ const CustomDateSelectors = ({onPress}) => {
     },
     dropdownArrow: {
       position: 'absolute',
-      top: 0,
+      top: getHeight(-2),
       right: isRTL() ? 90 : 0,
+    },
+    arrowStyle: {
+      height: getHeight(12),
+      width: getWidth(12),
+    },
+    label: {
+      ...textStyles.semiBold14_brownishGrey100,
+      lineHeight: fontSize(18),
+    },
+    item: {
+      justifyContent: 'flex-start',
+      marginLeft: getWidth(6),
     },
   };
 
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const customUp = () => <></>;
+
+  const customDown = () => (
+    <Image source={arrowDown} style={styles.arrowStyle} />
+  );
+
+  // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.dropdown}>
       <DropDownPicker
@@ -60,6 +84,10 @@ const CustomDateSelectors = ({onPress}) => {
         dropDownStyle={styles.dropdownList}
         onChangeItem={(item) => onPress(item, 'before')}
         arrowStyle={styles.dropdownArrow}
+        labelStyle={styles.label}
+        itemStyle={styles.item}
+        customArrowDown={customDown}
+        customArrowUp={customUp}
       />
       <DropDownPicker
         items={transformationImages}
@@ -69,6 +97,10 @@ const CustomDateSelectors = ({onPress}) => {
         dropDownStyle={styles.dropdownList}
         onChangeItem={(item) => onPress(item, 'after')}
         arrowStyle={styles.dropdownArrow}
+        labelStyle={styles.label}
+        itemStyle={styles.item}
+        customArrowDown={customDown}
+        customArrowUp={customUp}
       />
     </View>
   );

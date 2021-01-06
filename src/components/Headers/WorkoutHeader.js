@@ -54,12 +54,13 @@ export default function ({currentExercise, totalExercises}) {
       width: getWidth(44),
       height: getWidth(34),
       padding: getWidth(12),
+      justifyContent: 'center',
     },
     iconStyle: {
-      width: getWidth(14),
-      height: getWidth(14),
-      alignSelf: 'center',
-      marginLeft: getWidth(10),
+      width: getWidth(15),
+      height: getWidth(15),
+      resizeMode: 'contain',
+      marginLeft: getWidth(8),
       tintColor: colors.black100,
     },
   };

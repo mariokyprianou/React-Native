@@ -20,6 +20,7 @@ export default function WorkoutScreen() {
   const {colors} = useTheme();
   const navigation = useNavigation();
   const {workout} = useWorkoutData();
+  const {getHeight} = ScaleHook();
 
   navigation.setOptions({
     header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,
@@ -32,6 +33,11 @@ export default function WorkoutScreen() {
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
     },
+    headerBorder: {
+      width: '100%',
+      height: getHeight(2),
+      backgroundColor: colors.offWhite100,
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -39,6 +45,7 @@ export default function WorkoutScreen() {
 
   return (
     <View>
+      <View style={styles.headerBorder} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}

@@ -10,7 +10,7 @@ import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
-import {useQuery, useMutation} from 'react-apollo';
+import {useQuery, useMutation} from '@apollo/client';
 import TDIcon from 'the-core-ui-component-tdicon';
 import TimeZone from 'react-native-timezone';
 import {useRoute} from '@react-navigation/core';

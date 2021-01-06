@@ -7,7 +7,13 @@
  */
 
 import React, {useRef, useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -18,10 +24,15 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
 import useData from '../../hooks/data/UseData';
+import fetchPolicy from '../../utils/fetchPolicy';
+import Onboarding from '../../apollo/queries/Onboarding';
+import {useQuery} from '@apollo/client';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
+  const {isConnected, isInternetReachable} = useNetInfo();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -100,6 +111,7 @@ export default function OnboardingScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+
   return (
     <View style={styles.container}>
       <Swiper

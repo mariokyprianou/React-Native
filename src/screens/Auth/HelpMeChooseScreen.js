@@ -14,7 +14,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useData from '../../hooks/data/UseData';
 import SubmitProgrammeQuestionnaire from '../../apollo/mutations/SubmitProgrammeQuestionnaire';
-import {useMutation} from 'react-apollo';
+import {useMutation} from '@apollo/client';
 import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
 import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';

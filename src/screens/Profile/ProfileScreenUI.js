@@ -7,7 +7,7 @@
 
 import React, {useEffect, useState, useCallback} from 'react';
 import {View, ScrollView, Text} from 'react-native';
-import {useApolloClient, useQuery} from 'react-apollo';
+import {useApolloClient, useQuery} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -69,16 +69,20 @@ export default function ProfileScreenUI({
   const client = useApolloClient();
 
   useEffect(() => {
-    const countries = countryData.allCountries.map(
-      (country) => country.country,
-    );
-    setCountriesList(countries);
+    if (countryData) {
+      const countries = countryData.allCountries.map(
+        (country) => country.country,
+      );
+      setCountriesList(countries);
 
-    const indianRegions = countryData.allCountries
-      .filter((country) => country.country === 'India')[0]
-      .regions.map((region) => region.region);
-    setRegionsList(indianRegions);
-  }, [countryData]);
+      const indianRegions = countryData.allCountries
+        .filter((country) => country.country === 'India')[0]
+        .regions.map((region) => region.region);
+      setRegionsList(indianRegions);
+    } else {
+      console.log(loading, error);
+    }
+  }, [countryData, loading, error]);
 
   // console.log(profileData, profileError, '<---profile, error');
 

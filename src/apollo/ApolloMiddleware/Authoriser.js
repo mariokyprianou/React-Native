@@ -27,7 +27,7 @@ export default async function Authorization() {
   }
   // Refresh Token if Expired
   const expirationDate =
-    cognitoUser.signInUserSession.idToken.payload.exp * 1000;
+    cognitoUser.signInUserSession.accessToken.payload.exp * 1000;
   if (subMinutes(new Date(expirationDate), 15) < new Date()) {
     const currentSession = await Auth.currentSession();
     return cognitoUser.refreshSession(
@@ -37,14 +37,14 @@ export default async function Authorization() {
           // Return no authorization for error
           return null;
         } else {
-          const {idToken} = session;
+          const {accessToken} = session;
           // return new token
-          return idToken.jwtToken;
+          return `Bearer ${accessToken.jwtToken}`;
         }
       },
     );
   } else {
     // return current token
-    return cognitoUser.signInUserSession.idToken.jwtToken;
+    return `Bearer ${cognitoUser.signInUserSession.accessToken.jwtToken}`;
   }
 }

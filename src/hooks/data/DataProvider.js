@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo} from 'react';
-import {useQuery, useMutation, useLazyQuery} from 'react-apollo';
+import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -27,7 +27,7 @@ export default function DataProvider(props) {
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const data = res.onboardingScreens.reverse();
+      const data = res.onboardingScreens;
       setOnboarding(data);
     },
     onError: (error) => console.log(error),
@@ -52,15 +52,15 @@ export default function DataProvider(props) {
   useQuery(ProgrammeQuestionnaire, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      res.programmeQuestionnaire.map((question) => {
-        question.answers = [];
-        question.answers.push(
+      const qMap = res.programmeQuestionnaire.map((question) => {
+        const answers = [];
+        answers.push(
           question.question.answer1,
           question.question.answer2,
           question.question.answer3,
           question.question.answer4,
         );
-        const newQuestion = question.answers.map((question, index) => {
+        const formattedQuestion = answers.map((val, index) => {
           const keys = {
             1: 'A',
             2: 'B',
@@ -70,13 +70,13 @@ export default function DataProvider(props) {
           return {
             key: `${index + 1}`,
             answerLetter: keys[index + 1],
-            answerText: question,
+            answerText: val,
           };
         });
-        question.answers = newQuestion;
-        return question;
+        // q.answers = newQuestion;
+        return {...question, answers: formattedQuestion};
       });
-      setProgrammeQuestionnaire(res.programmeQuestionnaire);
+      setProgrammeQuestionnaire(qMap);
     },
     onError: (error) => console.log(error),
   });

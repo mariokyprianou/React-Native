@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import PermissionScreenUI from './PermissionScreenUI';
 import {useRoute} from '@react-navigation/core';
 import {Auth} from 'aws-amplify';
-import {useMutation} from 'react-apollo';
+import {useMutation} from '@apollo/client';
 import ResendVerificationEmail from '../../apollo/mutations/ResendVerificationEmail';
 
 export default function EmailVerificationScreen() {

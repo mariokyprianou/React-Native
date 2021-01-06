@@ -50,10 +50,10 @@ export default function MeetYourIconsScreen() {
   const [trainerOnSlider, setTrainerOnSlider] = useState(trainers[0].name);
   const [progIdOnSlider, setProgIdOnSlider] = useState();
   const [venue, setVenue] = useState('GYM');
-  const {
-    params: {switchProgramme},
-  } = useRoute();
-  // const switchProgramme = true;
+  // const {
+  //   params: {switchProgramme},
+  // } = useRoute();
+  const switchProgramme = true;
   const navigation = useNavigation();
   const {isConnected, isInternetReachable} = useNetInfo();
 

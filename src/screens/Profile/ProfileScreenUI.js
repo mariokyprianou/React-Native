@@ -5,9 +5,9 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Text} from 'react-native';
-import {useApolloClient, useQuery} from '@apollo/client';
+import {useQuery, useMutation} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -25,6 +25,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
 import AllCountries from '../../apollo/queries/AllCountries';
 import Profile from '../../apollo/queries/Profile';
+import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 
 const notifications = [
   {
@@ -71,10 +72,15 @@ export default function ProfileScreenUI({
     error: profileError,
     data: profileData,
   } = useQuery(Profile);
+  const [updateProfile] = useMutation(UpdateProfile);
   const [userData, setUserData] = useState({});
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
+  const [countryLookup, setCountryLookup] = useState();
+  const [regionLookup, setRegionLookup] = useState();
   const selectedCountry = getValueByName('profile_country');
+  const {cleanErrors, getValues, cleanValues} = FormHook();
+  const [newDateOfBirth, setNewDateOfBirth] = useState();
 
   useEffect(() => {
     if (countryData) {
@@ -83,10 +89,24 @@ export default function ProfileScreenUI({
       );
       setCountriesList(countries);
 
-      const indianRegions = countryData.allCountries
-        .filter((country) => country.country === 'India')[0]
-        .regions.map((region) => region.region);
-      setRegionsList(indianRegions);
+      const indianRegions = countryData.allCountries.filter(
+        (country) => country.country === 'India',
+      )[0].regions;
+
+      const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+        let {region, id} = obj;
+        return {...acc, [region]: id};
+      }, {});
+      setRegionLookup(indianRegionsLookup);
+
+      const indianRegionsList = indianRegions.map((region) => region.region);
+      setRegionsList(indianRegionsList);
+
+      const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
+        let {country, id} = obj;
+        return {...acc, [country]: id};
+      }, {});
+      setCountryLookup(countryIdLookup);
     } else {
       console.log(countryLoading, countryError);
     }
@@ -103,14 +123,19 @@ export default function ProfileScreenUI({
     }
   }, [profileData, profileLoading, profileError]);
 
-  console.log(userData, '<---userData');
-
   const gendersData = [
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
     AuthDict.RegistrationGendersOther,
     AuthDict.RegistrationGendersPreferNot,
   ];
+
+  const gendersRef = {
+    female: 'Female',
+    male: 'Male',
+    other: 'Other',
+    preferNotToSay: 'Prefer not to say',
+  };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -148,6 +173,56 @@ export default function ProfileScreenUI({
   const onPressChangePassword = () => {
     navigation.navigate('ChangePassword');
   };
+
+  async function handleUpdate() {
+    cleanErrors();
+
+    const {
+      profile_firstName,
+      profile_lastName,
+      profile_gender,
+      profile_dateOfBirth,
+      profile_country,
+      profile_region,
+    } = getValues();
+
+    if (
+      !profile_firstName &&
+      !profile_lastName &&
+      !profile_gender &&
+      !profile_dateOfBirth &&
+      !profile_country &&
+      !profile_region
+    ) {
+      return;
+    }
+
+    await updateProfile({
+      variables: {
+        input: {
+          givenName: profile_firstName || userData.givenName,
+          familyName: profile_lastName || userData.familyName,
+          gender: profile_gender?.toLowerCase() || userData.gender,
+          dateOfBirth: newDateOfBirth || userData.dateOfBirth,
+          country: countryLookup[profile_country] || userData.country,
+          region: regionLookup[profile_region] || userData.region,
+        },
+      },
+    })
+      .then((res) => {
+        const newData = {...res.data.updateProfile};
+        newData.memberSince = userData.memberSince;
+        const displayDateOfBirth = format(
+          new Date(newData.dateOfBirth),
+          'dd/LL/yyyy',
+        );
+        newData.dateOfBirth = displayDateOfBirth;
+        setUserData(newData);
+      })
+      .catch((err) => console.log(err));
+
+    cleanValues();
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
@@ -217,6 +292,10 @@ export default function ProfileScreenUI({
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
       placeholder: userData.givenName,
+      style: {
+        ...textStyles.regular16_black100,
+        flex: 1,
+      },
     },
     {
       name: 'profile_lastName',
@@ -224,6 +303,10 @@ export default function ProfileScreenUI({
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
       placeholder: userData.familyName,
+      style: {
+        ...textStyles.regular16_black100,
+        flex: 1,
+      },
     },
     {
       name: 'profile_email',
@@ -231,6 +314,9 @@ export default function ProfileScreenUI({
       label: ProfileDict.FormLabel3,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputStyle: {
+        ...textStyles.regular16_black60,
+      },
       rightAccessory: () => <DropDownIcon />,
       rightAccessoryOnPress: () => {
         navigation.navigate('ChangeEmail');
@@ -245,17 +331,21 @@ export default function ProfileScreenUI({
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       data: gendersData,
-      placeholder: userData.gender || '',
+      placeholder: gendersRef[userData.gender] || '',
     },
     {
       name: 'profile_dateOfBirth',
       type: 'calendar',
       label: ProfileDict.FormLabel5,
-      dateFormat: (e) => format(e, 'dd/MM/yyyy'),
+      dateFormat: (e) => {
+        const formattedDate = format(e, 'yyyy-LL-dd');
+        setNewDateOfBirth(formattedDate);
+        return format(e, 'dd/MM/yyyy');
+      },
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
-      placeholder: userData.dateOfBirth || '',
+      placeholder: userData?.dateOfBirth || '',
     },
     {
       name: 'profile_country',
@@ -298,7 +388,7 @@ export default function ProfileScreenUI({
       <DefaultButton
         type={'saveChanges'}
         variant="white"
-        onPress={onSaveChanges}
+        onPress={handleUpdate}
         icon={'chevron'}
       />
       <Spacer height={20} />

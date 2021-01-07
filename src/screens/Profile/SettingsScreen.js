@@ -13,12 +13,13 @@ import TDSettings from 'the-core-ui-module-tdsettings';
 import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
-
+import {useQuery, useMutation} from '@apollo/client';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import Spacer from '../../components/Utility/Spacer';
+import Preferences from '../../apollo/queries/Preferences';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -34,6 +35,9 @@ const SettingsScreen = ({}) => {
     textStyles,
     dropdownStyle,
   } = useTheme();
+
+  const {loading, error, data} = useQuery(Preferences);
+  console.log(data, '<--preferences data');
 
   const dropdownData = [
     LanguageDict.English,
@@ -55,9 +59,10 @@ const SettingsScreen = ({}) => {
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
     false,
   );
-  const [downloadWorkouts, setDownloadWorkouts] = useState(false);
-  const [errorReports, setErrorReports] = useState(false);
-  const [analytics, setAnalytics] = useState(false);
+  const [downloadWorkouts, setDownloadWorkouts] = useState(true);
+  const [prefDownloadQuality, setPrefDownloadQuality] = useState(true);
+  const [prefErrorReports, setPrefErrorReports] = useState(false);
+  const [prefAnalytics, setPrefAnalytics] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -66,16 +71,37 @@ const SettingsScreen = ({}) => {
   }, []);
 
   useEffect(() => {
-    // TODO - quality changed
-  }, [settings_downloadsQuality]);
+    if (data) {
+      const {
+        emails,
+        notifications,
+        analytics,
+        downloadQuality,
+        errorReports,
+      } = data.preferences;
 
-  useEffect(() => {
-    // TODO - language changed
-  }, [settings_language]);
+      setMarketingPrefEmail(emails);
+      setMarketingPrefNotifications(notifications);
+      // setDownloadWorkouts() - not yet on query
+      setPrefErrorReports(errorReports);
+      setPrefAnalytics(analytics);
+      setPrefDownloadQuality(downloadQuality);
+    } else {
+      console.log(error);
+    }
+  }, []);
 
-  useEffect(() => {
-    // TODO - timeZone changed
-  }, [settings_timeZone]);
+  // useEffect(() => {
+  //   // TODO - quality changed
+  // }, [settings_downloadsQuality]);
+
+  // useEffect(() => {
+  //   // TODO - language changed
+  // }, [settings_language]);
+
+  // useEffect(() => {
+  //   // TODO - timeZone changed
+  // }, [settings_timeZone]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -139,11 +165,11 @@ const SettingsScreen = ({}) => {
   };
   const onToggleErrorReports = (bool) => {
     // TODO
-    setErrorReports(bool);
+    setPrefErrorReports(bool);
   };
   const onToggleAnalytics = (bool) => {
     // TODO
-    setAnalytics(bool);
+    setPrefAnalytics(bool);
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -257,7 +283,7 @@ const SettingsScreen = ({}) => {
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
-          switchValue={errorReports}
+          switchValue={prefErrorReports}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleErrorReports}
           descriptionTextStyle={styles.switchDescriptionStyle}
@@ -272,7 +298,7 @@ const SettingsScreen = ({}) => {
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
-          switchValue={analytics}
+          switchValue={prefAnalytics}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleAnalytics}
           descriptionTextStyle={styles.switchDescriptionStyle}

@@ -48,7 +48,7 @@ export default function ProfileScreenUI({
   onPressNeedHelp,
   onPressLogout,
 }) {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const {
     cellFormConfig,
     cellFormStyles,
@@ -61,12 +61,20 @@ export default function ProfileScreenUI({
   const {dictionary} = useDictionary();
   const {ProfileDict, AuthDict} = dictionary;
   const {getValueByName} = FormHook();
-  const {loading, error, data: countryData} = useQuery(AllCountries);
-  // const {error: profileError, data: profileData} = useQuery(Profile);
+  const {
+    loading: countryLoading,
+    error: countryError,
+    data: countryData,
+  } = useQuery(AllCountries);
+  const {
+    loading: profileLoading,
+    error: profileError,
+    data: profileData,
+  } = useQuery(Profile);
+  const [userData, setUserData] = useState({});
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const selectedCountry = getValueByName('profile_country');
-  const client = useApolloClient();
 
   useEffect(() => {
     if (countryData) {
@@ -80,18 +88,22 @@ export default function ProfileScreenUI({
         .regions.map((region) => region.region);
       setRegionsList(indianRegions);
     } else {
-      console.log(loading, error);
+      console.log(countryLoading, countryError);
     }
-  }, [countryData, loading, error]);
-
-  // console.log(profileData, profileError, '<---profile, error');
+  }, [countryData, countryLoading, countryError]);
 
   useEffect(() => {
-    client
-      .query({query: Profile})
-      .then((res) => console.log(res, '<--query res'))
-      .catch((err) => console.log(err, '<---query err'));
-  }, []);
+    if (profileData) {
+      const memberSince = profileData.profile.createdAt.slice(0, 4);
+      const userProfile = {...profileData.profile};
+      userProfile.memberSince = memberSince;
+      setUserData(userProfile);
+    } else {
+      console.log(profileLoading, profileError);
+    }
+  }, [profileData, profileLoading, profileError]);
+
+  console.log(userData, '<---userData');
 
   const gendersData = [
     AuthDict.RegistrationGendersFemale,
@@ -99,18 +111,8 @@ export default function ProfileScreenUI({
     AuthDict.RegistrationGendersOther,
     AuthDict.RegistrationGendersPreferNot,
   ];
-  // MARK: - Local
 
-  // MARK: - Logic
-
-  // MARK: - Use Effect
-
-  // MARK: - Actions
-  const onPressChangePassword = () => {
-    navigation.navigate('ChangePassword');
-  };
-
-  // MARK: - Styles
+  // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
       flex: 1,
@@ -142,15 +144,21 @@ export default function ProfileScreenUI({
     },
   };
 
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const onPressChangePassword = () => {
+    navigation.navigate('ChangePassword');
+  };
+
+  // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
     return (
       <>
         <Spacer height={50} />
         <ProfileUserCard
-          firstName={'Johny'}
-          lastName={'Appleased'}
-          memberSince={2080}
-          workoutsComplete={751}
+          firstName={userData.givenName}
+          lastName={userData.familyName}
+          memberSince={userData.memberSince}
+          workoutsComplete={751} // to be added - not yet available on query
           onPressRightIcon={() => {
             navigation.navigate('Settings');
           }}
@@ -159,7 +167,7 @@ export default function ProfileScreenUI({
     );
   };
 
-  // MARK - Notifications UI
+  // Notifications UI
   const notificationsUI = () => {
     const renderNotificationCell = ({item, index}) => {
       return (
@@ -186,7 +194,7 @@ export default function ProfileScreenUI({
     );
   };
 
-  // MARK: - Form
+  // Form
   const cells = [
     {
       name: 'profileTitle',
@@ -208,12 +216,14 @@ export default function ProfileScreenUI({
       type: 'text',
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
+      placeholder: userData.givenName,
     },
     {
       name: 'profile_lastName',
       type: 'text',
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
+      placeholder: userData.familyName,
     },
     {
       name: 'profile_email',
@@ -225,6 +235,7 @@ export default function ProfileScreenUI({
       rightAccessoryOnPress: () => {
         navigation.navigate('ChangeEmail');
       },
+      placeholder: userData.email,
     },
     {
       name: 'profile_gender',
@@ -234,6 +245,7 @@ export default function ProfileScreenUI({
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       data: gendersData,
+      placeholder: userData.gender || '',
     },
     {
       name: 'profile_dateOfBirth',
@@ -243,6 +255,7 @@ export default function ProfileScreenUI({
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      placeholder: userData.dateOfBirth || '',
     },
     {
       name: 'profile_country',
@@ -252,6 +265,7 @@ export default function ProfileScreenUI({
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       data: countriesList,
+      placeholder: userData.country || '',
     },
     {
       name: 'profile_region',
@@ -264,6 +278,7 @@ export default function ProfileScreenUI({
         <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
       ),
       data: regionsList,
+      placeholder: userData.region || '',
     },
   ];
 
@@ -277,7 +292,7 @@ export default function ProfileScreenUI({
     </View>
   );
 
-  // MARK: - Buttons
+  // Buttons
   const buttons = () => (
     <View style={styles.buttonsBottomContainer}>
       <DefaultButton
@@ -310,8 +325,6 @@ export default function ProfileScreenUI({
       <Spacer height={20} />
     </View>
   );
-
-  // MARK: - Render
 
   return (
     <ScrollView

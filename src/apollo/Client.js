@@ -12,8 +12,8 @@ import {onError} from '@apollo/client/link/error';
 
 const errorLink = onError(
   ({graphQLErrors, networkError, operation, response}) => {
-    console.log('GQL-OPERATION', JSON.stringify(operation));
-    console.log('GQL-RESPONSE', response);
+    // console.log('GQL-OPERATION', JSON.stringify(operation));
+    // console.log('GQL-RESPONSE', response);
     if (graphQLErrors) {
       graphQLErrors.map(({message, locations, path}) =>
         console.log(
@@ -34,7 +34,7 @@ export async function TDGraphQLProvider() {
   const authFetch = async (_, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
 
-    console.log('LOCALE', storedLocale);
+    // console.log('LOCALE', storedLocale);
 
     const locale = storedLocale ? storedLocale : undefined;
     const translateMap = {
@@ -44,12 +44,12 @@ export async function TDGraphQLProvider() {
     };
     const localisation = translateMap[locale];
     const Authorization = await Authoriser();
-    console.log('AUTH', Authorization);
+    // console.log('AUTH', Authorization);
     const url = `https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/${
       Authorization ? 'auth' : 'graphql'
     }`;
-    console.log('URL', url);
-    console.log('GQL', options);
+    // console.log('URL', url);
+    // console.log('GQL', options);
     return fetch(url, {
       ...options,
       headers: {

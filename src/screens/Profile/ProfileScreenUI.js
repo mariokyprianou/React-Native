@@ -12,7 +12,7 @@ import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
 import {format} from 'date-fns';
-
+import {Auth} from 'aws-amplify';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
@@ -224,6 +224,14 @@ export default function ProfileScreenUI({
     cleanValues();
   }
 
+  async function handleLogout() {
+    await Auth.signOut()
+      .then(() => {
+        navigation.reset({index: 0, routes: [{name: 'AuthContainer'}]});
+      })
+      .catch((err) => console.log('Error signing out', err));
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
     return (
@@ -389,7 +397,6 @@ export default function ProfileScreenUI({
         type={'saveChanges'}
         variant="white"
         onPress={handleUpdate}
-        icon={'chevron'}
       />
       <Spacer height={20} />
       <DefaultButton
@@ -410,7 +417,7 @@ export default function ProfileScreenUI({
       <DefaultButton
         type={'logout'}
         variant="transparentBlackBoldText"
-        onPress={onPressLogout}
+        onPress={handleLogout}
       />
       <Spacer height={20} />
     </View>

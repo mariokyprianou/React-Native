@@ -23,6 +23,7 @@ export default gql`
       deviceUDID
       createdAt
       updatedAt
+      completedWorkouts
     }
   }
 `;

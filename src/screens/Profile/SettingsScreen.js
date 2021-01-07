@@ -21,12 +21,19 @@ import DropDownIcon from '../../components/cells/DropDownIcon';
 import Spacer from '../../components/Utility/Spacer';
 
 const SettingsScreen = ({}) => {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-
   const {cleanErrors, getValues, updateError} = FormHook();
   const {dictionary, getLanguage} = useDictionary();
   const {SettingsDict, LanguageDict} = dictionary;
+  const {getHeight, getWidth} = ScaleHook();
+  const {
+    colors,
+    cellFormConfig,
+    cellFormStyles,
+    textStyles,
+    dropdownStyle,
+  } = useTheme();
 
   const dropdownData = [
     LanguageDict.English,
@@ -38,22 +45,12 @@ const SettingsScreen = ({}) => {
     header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
   });
 
-  const {getHeight, getWidth} = ScaleHook();
-  const {
-    colors,
-    cellFormConfig,
-    cellFormStyles,
-    textStyles,
-    dropdownStyle,
-  } = useTheme();
-
   const {
     settings_downloadsQuality,
     settings_timeZone,
     settings_language,
   } = getValues();
 
-  // MARK: - Local
   const [marketingPrefEmail, setMarketingPrefEmail] = useState(false);
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
     false,
@@ -62,7 +59,6 @@ const SettingsScreen = ({}) => {
   const [errorReports, setErrorReports] = useState(false);
   const [analytics, setAnalytics] = useState(false);
 
-  // MARK: - Use Effect
   useEffect(() => {
     navigation.setOptions({
       header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
@@ -81,29 +77,7 @@ const SettingsScreen = ({}) => {
     // TODO - timeZone changed
   }, [settings_timeZone]);
 
-  // MARK: - Actions
-  const onToggleMarketingPrefEmail = (bool) => {
-    // TODO
-    setMarketingPrefEmail(bool);
-  };
-  const onToggleMarketingPrefNotifications = (bool) => {
-    // TODO
-    setMarketingPrefNotifications(bool);
-  };
-  const onToggleDownloadWorkouts = (bool) => {
-    // TODO
-    setDownloadWorkouts(bool);
-  };
-  const onToggleErrorReports = (bool) => {
-    // TODO
-    setErrorReports(bool);
-  };
-  const onToggleAnalytics = (bool) => {
-    // TODO
-    setAnalytics(bool);
-  };
-
-  // MARK: - Styles
+  // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
       flex: 1,
@@ -150,8 +124,29 @@ const SettingsScreen = ({}) => {
     },
   };
 
-  // MARK: - Settings Cells & Forms
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const onToggleMarketingPrefEmail = (bool) => {
+    // TODO
+    setMarketingPrefEmail(bool);
+  };
+  const onToggleMarketingPrefNotifications = (bool) => {
+    // TODO
+    setMarketingPrefNotifications(bool);
+  };
+  const onToggleDownloadWorkouts = (bool) => {
+    // TODO
+    setDownloadWorkouts(bool);
+  };
+  const onToggleErrorReports = (bool) => {
+    // TODO
+    setErrorReports(bool);
+  };
+  const onToggleAnalytics = (bool) => {
+    // TODO
+    setAnalytics(bool);
+  };
 
+  // ** ** ** ** ** RENDER ** ** ** ** **
   const formConfig = {
     ...cellFormConfig,
     formContainerStyle: {
@@ -165,6 +160,7 @@ const SettingsScreen = ({}) => {
     showVersion: false,
     containerStyle: {...styles.formContainer},
   };
+
   const cells = [
     {
       customComponent: () => (
@@ -220,7 +216,6 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-
   const cells2 = [
     {
       name: 'settings_downloadsQuality',
@@ -286,7 +281,6 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-
   const cells4 = [
     {
       name: 'settings_language',
@@ -299,8 +293,6 @@ const SettingsScreen = ({}) => {
       data: dropdownData,
     },
   ];
-
-  // MARK: - Render
 
   return (
     <ScrollView

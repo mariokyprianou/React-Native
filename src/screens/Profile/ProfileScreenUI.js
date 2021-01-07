@@ -241,7 +241,7 @@ export default function ProfileScreenUI({
           firstName={userData.givenName}
           lastName={userData.familyName}
           memberSince={userData.memberSince}
-          workoutsComplete={751} // to be added - not yet available on query
+          workoutsComplete={userData.completedWorkouts}
           onPressRightIcon={() => {
             navigation.navigate('Settings');
           }}

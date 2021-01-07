@@ -183,6 +183,8 @@ const enGB = {
     DownloadWorkoutsText:
       'Download this week’s workouts so you can train even without an internet connection.',
     DownloadWorkoutsQuality: 'Download quality',
+    DownloadQualityHigh: 'High (1080p)',
+    DownloadQualityLow: 'Low (420p)',
     DownloadWorkoutsTimeZone: 'Time zone',
     DataCollection: 'Data collection',
     DataCollectionText:

@@ -14,6 +14,7 @@ import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {useQuery, useMutation} from '@apollo/client';
+import {useRoute} from '@react-navigation/core';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -35,14 +36,19 @@ const SettingsScreen = ({}) => {
     textStyles,
     dropdownStyle,
   } = useTheme();
-
+  const {params: timeZone} = useRoute();
+  console.log(timeZone.timeZone, '<---time');
   const {loading, error, data} = useQuery(Preferences);
-  console.log(data, '<--preferences data');
 
-  const dropdownData = [
+  const languageDropdownData = [
     LanguageDict.English,
     LanguageDict.Hindi,
     LanguageDict.Urdu,
+  ];
+
+  const downloadQualityDropdownData = [
+    SettingsDict.DownloadQualityHigh,
+    SettingsDict.DownloadQualityLow,
   ];
 
   navigation.setOptions({
@@ -82,7 +88,6 @@ const SettingsScreen = ({}) => {
 
       setMarketingPrefEmail(emails);
       setMarketingPrefNotifications(notifications);
-      // setDownloadWorkouts() - not yet on query
       setPrefErrorReports(errorReports);
       setPrefAnalytics(analytics);
       setPrefDownloadQuality(downloadQuality);
@@ -250,8 +255,8 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      //   placeholder: registrationData.countries[0],
-      //   data: registrationData.countries,
+      placeholder: downloadQualityDropdownData[0],
+      data: downloadQualityDropdownData,
     },
     {
       name: 'settings_timeZone',
@@ -260,7 +265,7 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      //   placeholder: registrationData.countries[0],
+      placeholder: timeZone.timeZone,
       //   data: registrationData.countries,
     },
   ];
@@ -315,8 +320,8 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: getLanguage() || dropdownData[0],
-      data: dropdownData,
+      placeholder: getLanguage() || languageDropdownData[0],
+      data: languageDropdownData,
     },
   ];
 

@@ -243,7 +243,7 @@ export default function ProfileScreenUI({
           memberSince={userData.memberSince}
           workoutsComplete={userData.completedWorkouts}
           onPressRightIcon={() => {
-            navigation.navigate('Settings');
+            navigation.navigate('Settings', {timeZone: userData.timeZone});
           }}
         />
       </>

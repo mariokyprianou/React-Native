@@ -291,7 +291,6 @@ export default function ProfileScreenUI({
         type={'saveChanges'}
         variant="white"
         onPress={onSaveChanges}
-        icon={'chevron'}
       />
       <Spacer height={20} />
       <DefaultButton

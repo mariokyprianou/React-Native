@@ -105,7 +105,6 @@ const TwoFieldChangeScreenUI = ({
         type={buttonType}
         variant="white"
         onPress={onPressChange}
-        icon="chevron"
       />
     </View>
   );

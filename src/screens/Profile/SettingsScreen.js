@@ -21,6 +21,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import Spacer from '../../components/Utility/Spacer';
 import Preferences from '../../apollo/queries/Preferences';
+import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -38,6 +39,7 @@ const SettingsScreen = ({}) => {
   } = useTheme();
   const {params: timeZone} = useRoute();
   const {loading, error, data} = useQuery(Preferences);
+  const [updatePreferences] = useMutation(UpdatePreference);
 
   const languageDropdownData = [
     LanguageDict.English,
@@ -64,10 +66,10 @@ const SettingsScreen = ({}) => {
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
     false,
   );
-  const [downloadWorkouts, setDownloadWorkouts] = useState(true);
-  const [prefDownloadQuality, setPrefDownloadQuality] = useState(true);
   const [prefErrorReports, setPrefErrorReports] = useState(false);
   const [prefAnalytics, setPrefAnalytics] = useState(false);
+  const [prefDownloadQuality, setPrefDownloadQuality] = useState('HIGH');
+  const [downloadWorkouts, setDownloadWorkouts] = useState(true);
 
   useEffect(() => {
     navigation.setOptions({
@@ -93,11 +95,11 @@ const SettingsScreen = ({}) => {
     } else {
       console.log(error);
     }
-  }, []);
+  }, [data]);
 
-  // useEffect(() => {
-  //   // TODO - quality changed
-  // }, [settings_downloadsQuality]);
+  useEffect(() => {
+    setPrefDownloadQuality(settings_downloadsQuality);
+  }, [settings_downloadsQuality]);
 
   // useEffect(() => {
   //   // TODO - language changed
@@ -155,25 +157,78 @@ const SettingsScreen = ({}) => {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const onToggleMarketingPrefEmail = (bool) => {
-    // TODO
-    setMarketingPrefEmail(bool);
-  };
-  const onToggleMarketingPrefNotifications = (bool) => {
-    // TODO
-    setMarketingPrefNotifications(bool);
-  };
+  async function onToggleMarketingPrefEmail() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: marketingPrefNotifications,
+          emails: !marketingPrefEmail,
+          errorReports: prefErrorReports,
+          analytics: prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setMarketingPrefEmail(!marketingPrefEmail);
+      })
+      .catch((err) => console.log(err));
+  }
+  async function onToggleMarketingPrefNotifications() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: !marketingPrefNotifications,
+          emails: marketingPrefEmail,
+          errorReports: prefErrorReports,
+          analytics: prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setMarketingPrefNotifications(!marketingPrefNotifications);
+      })
+      .catch((err) => console.log(err));
+  }
+  async function onToggleErrorReports() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: marketingPrefNotifications,
+          emails: marketingPrefEmail,
+          errorReports: !prefErrorReports,
+          analytics: prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setPrefErrorReports(!prefErrorReports);
+      })
+      .catch((err) => console.log(err));
+  }
+  async function onToggleAnalytics() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: marketingPrefNotifications,
+          emails: marketingPrefEmail,
+          errorReports: prefErrorReports,
+          analytics: !prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setPrefAnalytics(!prefAnalytics);
+      })
+      .catch((err) => console.log(err));
+  }
+
   const onToggleDownloadWorkouts = (bool) => {
     // TODO
     setDownloadWorkouts(bool);
-  };
-  const onToggleErrorReports = (bool) => {
-    // TODO
-    setPrefErrorReports(bool);
-  };
-  const onToggleAnalytics = (bool) => {
-    // TODO
-    setPrefAnalytics(bool);
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **

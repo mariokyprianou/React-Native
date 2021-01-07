@@ -13,7 +13,6 @@ export default gql`
     updateProfile(input: $input) {
       givenName
       familyName
-      email
       gender
       dateOfBirth
       country

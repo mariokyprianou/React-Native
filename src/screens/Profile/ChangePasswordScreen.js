@@ -5,44 +5,44 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
+import {Auth} from 'aws-amplify';
 
 export default function ChangePasswordScreen() {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const {dictionary} = useDictionary();
   const {ProfileDict} = dictionary;
-  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
+  const {getValues, cleanValues} = FormHook();
 
-  // MARK: - Local
-  const firstValueName = 'changePasswordValue1';
-  const secondValueName = 'changePasswordValue2';
-
-  // MARK: - Logic
-  const changePassword = (newPassword) => {
-    // TODO: - Logic
-  };
-
-  // MARK: - Actions
+  // ** ** ** ** ** STYLES ** ** ** ** **
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressChange = () => {
     const {
       changePasswordValue1: oldPassword,
       changePasswordValue2: newPassword,
     } = getValues();
-    // TODO: - Verify Values
-    changePassword(newPassword);
+
+    Auth.currentAuthenticatedUser()
+      .then((user) => {
+        return Auth.changePassword(user, oldPassword, newPassword);
+      })
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+
+    cleanValues();
   };
 
-  // MARK: - Render
+  // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <TwoFieldChangeScreenUI
       screenTitle={ProfileDict.ChangePasswordScreenTitle}
       firstFieldLabel={ProfileDict.ChangePasswordLabel1}
       secondFieldLabel={ProfileDict.ChangePasswordLabel2}
-      firstFieldName={firstValueName}
-      secondFieldName={secondValueName}
+      firstFieldName={'changePasswordValue1'}
+      secondFieldName={'changePasswordValue2'}
       buttonType={'changePassword'}
       onPressChange={onPressChange}
     />

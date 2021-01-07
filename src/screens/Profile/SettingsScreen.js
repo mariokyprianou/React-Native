@@ -37,7 +37,6 @@ const SettingsScreen = ({}) => {
     dropdownStyle,
   } = useTheme();
   const {params: timeZone} = useRoute();
-  console.log(timeZone.timeZone, '<---time');
   const {loading, error, data} = useQuery(Preferences);
 
   const languageDropdownData = [

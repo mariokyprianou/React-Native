@@ -133,7 +133,6 @@ export default function Screen() {
       textContentType: 'password',
       autoCompleteType: 'password',
       autoCorrect: false,
-      rightAccessory: () => <PasswordEyeIcon />,
       ...cellFormStyles,
     },
   ];

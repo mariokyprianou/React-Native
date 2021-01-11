@@ -146,7 +146,6 @@ export default function RegisterScreen() {
       textContentType: 'password',
       autoCompleteType: 'password',
       autoCorrect: false,
-      rightAccessory: () => <PasswordEyeIcon />,
       ...cellFormStyles,
     },
   ];

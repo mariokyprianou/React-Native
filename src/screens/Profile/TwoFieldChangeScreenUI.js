@@ -43,8 +43,8 @@ const TwoFieldChangeScreenUI = ({
   const cellSetupFor = (type) => {
     if (type === 'password') {
       return {
+        type: 'text',
         variant: 'password',
-        rightAccessory: () => <PasswordEyeIcon />,
         textContentType: 'password',
         autoCompleteType: 'password',
         autoCorrect: false,

@@ -219,7 +219,6 @@ export default function RegisterScreen() {
       label: AuthDict.PasswordLabel,
       textContentType: 'password',
       autoCompleteType: 'password',
-      rightAccessory: () => <PasswordEyeIcon />,
       autoCorrect: false,
       ...cellFormStyles,
     },

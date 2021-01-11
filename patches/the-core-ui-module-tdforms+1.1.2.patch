@@ -1,0 +1,41 @@
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
+index 06cd661..d4eff8f 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
+@@ -13,12 +13,13 @@ import {ScaleHook} from 'react-native-design-to-component';
+ import FormHook from '../Form/FormHook';
+ import TextInput from './TextInput';
+ import DropdownCell from './DropdownCell';
++import TDIcon from 'the-core-ui-component-tdicon';
+ 
+ const eye = require('../Assets/eye.png');
+ const eyeClose = require('../Assets/eye-close.png');
+ 
+ export default function TextCell(props) {
+-  const {getHeight, getWidth} = ScaleHook();
++  const {getHeight, getWidth, fontSize} = ScaleHook();
+   const {getValueByName} = FormHook();
+ 
+   const {cell} = props;
+@@ -36,9 +37,20 @@ export default function TextCell(props) {
+     />
+   );
+ 
++
++  const powerCustomRightAccessory = () => (
++    <View style={{marginRight: getWidth(-5)}}>
++      <TDIcon     
++        input={visibility ? 'eye' : 'eye-slash'} 
++        inputStyle={
++          { icon: { size: fontSize(12) }}
++        } />
++    </View>
++  )
++
+   const PasswordEye = cell.rightAccessory
+     ? () => cell.rightAccessory(visibility)
+-    : () => rightAccessory();
++    : () => powerCustomRightAccessory();
+ 
+   const rightAccessoryOnPress = () => setVisibility(!visibility);
+ 

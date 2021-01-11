@@ -104,10 +104,7 @@ export default function ExerciseView() {
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exerciseTitle}</Text>
-          <TouchableOpacity
-            style={{zIndex: 1}}
-            activeOpacity={countDown ? 1 : 0.2}
-            onPress={countDown ? onCancelTimer : onExerciseCompleted}>
+          <TouchableOpacity onPress={countDown ? null : onExerciseCompleted}>
             <Image source={completeIcon} />
             <Image style={styles.checkIconStyle} source={checkIcon} />
           </TouchableOpacity>

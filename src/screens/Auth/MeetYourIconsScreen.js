@@ -14,6 +14,8 @@ import {
   Text,
   ScrollView,
   Image,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -30,6 +32,7 @@ import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import {format} from 'date-fns';
+import isIphoneX from '../../utils/isIphoneX';
 
 const fakeImage = require('../../../assets/images/trainerCarousel.png');
 
@@ -66,7 +69,18 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
       width: '100%',
     },
     safeArea: {
-      height: getHeight(23),
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1,
+      height: getHeight(
+        Platform.OS === 'android'
+          ? StatusBar.currentHeight
+          : isIphoneX()
+          ? 30
+          : 20,
+      ),
       width: '100%',
       backgroundColor: colors.powderBlue100,
     },
@@ -238,6 +252,16 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
     );
   }
 
+  const onScroll = (e) => {
+    const offset = e.nativeEvent.contentOffset.y;
+    console.log(offset);
+    if (offset > 10 && !safeArea) {
+      setSafeArea(true);
+    } else if (offset <= 10 && safeArea) {
+      setSafeArea(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {safeArea && <View style={styles.safeArea} />}
@@ -263,7 +287,9 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             return (
               <ScrollView
                 style={styles.sliderContainer}
-                onScrollBeginDrag={() => setSafeArea(true)}>
+                onScroll={onScroll}
+                scrollEventThrottle={10}
+                bounces={false}>
                 <View style={styles.headerContainer}>
                   <View>
                     <Image source={logo} style={styles.image} />

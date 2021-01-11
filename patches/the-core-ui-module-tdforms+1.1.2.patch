@@ -1,3 +1,16 @@
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
+index 439a0d3..b83788e 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
+@@ -15,7 +15,7 @@ export default function (props) {
+   React.useEffect(() => {
+     if (picker) {
+       QuickPicker.open({
+-        items: ['', ...props.data],
++        items: [...props.data],
+         selectedValue: props.value,
+         onValueChange: props.onChange,
+         onPressDone: (value) => {
 diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 index 06cd661..d4eff8f 100644
 --- a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js

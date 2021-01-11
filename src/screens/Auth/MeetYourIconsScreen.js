@@ -254,7 +254,6 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
 
   const onScroll = (e) => {
     const offset = e.nativeEvent.contentOffset.y;
-    console.log(offset);
     if (offset > 10 && !safeArea) {
       setSafeArea(true);
     } else if (offset <= 10 && safeArea) {

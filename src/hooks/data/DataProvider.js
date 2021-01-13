@@ -8,7 +8,6 @@
 import React, {useState, useMemo} from 'react';
 import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
-import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Onboarding from '../../apollo/queries/Onboarding';
@@ -61,22 +60,30 @@ export default function DataProvider(props) {
           question.question.answer3,
           question.question.answer4,
         );
+
         const formattedQuestion = answers.map((val, index) => {
-          const keys = {
-            1: 'A',
-            2: 'B',
-            3: 'C',
-            4: 'D',
-          };
           return {
             key: `${index + 1}`,
-            answerLetter: keys[index + 1],
             answerText: val,
           };
         });
-        // q.answers = newQuestion;
+
         return {...question, answers: formattedQuestion};
       });
+
+      const localQuestion = {
+        orderIndex: 1,
+        answers: [
+          {answerText: 'Home', key: '1'},
+          {answerText: 'Gym', key: '2'},
+        ],
+        question: {
+          language: 'en',
+          question: 'How many times a week do you exercise?',
+        },
+      };
+
+      qMap.unshift(localQuestion);
       setProgrammeQuestionnaire(qMap);
     },
     onError: (error) => console.log(error),

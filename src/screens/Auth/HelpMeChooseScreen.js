@@ -29,7 +29,6 @@ export default function HelpMeChooseScreen() {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
-  const {programmeQuestionnaire} = useData();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -38,13 +37,30 @@ export default function HelpMeChooseScreen() {
     ),
   });
 
+  const {programmeQuestionnaire} = useData();
+
   const [execute] = useMutation(SubmitProgrammeQuestionnaire);
 
   useEffect(() => {
-    setStoredAnswers((prev) => [...prev, newAnswer]);
+    if (!newAnswer || !newAnswer.answer) {
+      return;
+    }
+    if (
+      storedAnswers.find((it) => it.question !== newAnswer.question) !== null
+    ) {
+      setStoredAnswers((prev) => [...prev, newAnswer]);
+      if (currentQuestion < programmeQuestionnaire.length) {
+        setCurrentQuestion(currentQuestion + 1);
+      }
+    }
   }, [newAnswer]);
 
-  console.log(storedAnswers, '<---stored');
+  useEffect(() => {
+    console.log('storedAnswers', storedAnswers);
+    if (storedAnswers.length === programmeQuestionnaire.length) {
+      submitQuestionnaire();
+    }
+  }, [storedAnswers]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -71,30 +87,47 @@ export default function HelpMeChooseScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
-  async function handlePress(questionId, answerType) {
-    setNewAnswer({question: questionId, answer: answerType});
-
-    if (currentQuestion === programmeQuestionnaire.length) {
-      await execute({
-        variables: {
-          input: {
-            answers: [{question: questionId, answer: answerType}],
-          },
+  async function submitQuestionnaire() {
+    const answers = storedAnswers.filter(
+      (it) => it.question !== null && it.question !== 'environment',
+    );
+    console.log('answers', {
+      answers: answers,
+      environment:
+        storedAnswers.find((it) => it.question === 'environment').answer ===
+        'ONE'
+          ? 'HOME'
+          : 'GYM',
+    });
+    await execute({
+      variables: {
+        input: {
+          answers: answers,
+          environment:
+            storedAnswers.find((it) => it.question === 'environment').answer ===
+            'ONE'
+              ? 'HOME'
+              : 'GYM',
         },
+      },
+    })
+      .then((res) => {
+        navigation.navigate('HelpMeChooseResults', {
+          recommendedEnvironment:
+            res.data.submitProgrammeQuestionnaire.programme.environment,
+          recommendedTrainer:
+            res.data.submitProgrammeQuestionnaire.programme.trainer.name,
+        });
       })
-        .then((res) => {
-          navigation.navigate('HelpMeChooseResults', {
-            recommendedEnvironment:
-              res.data.submitProgrammeQuestionnaire.programme.environment,
-            recommendedTrainer:
-              res.data.submitProgrammeQuestionnaire.programme.trainer.name,
-          });
-        })
-        .catch((err) => console.log(err));
-    } else {
-      setCurrentQuestion(currentQuestion + 1);
-    }
+      .catch((err) => console.log(err));
   }
+
+  const keys = {
+    1: 'A',
+    2: 'B',
+    3: 'C',
+    4: 'D',
+  };
 
   return (
     <View style={styles.card}>
@@ -114,7 +147,7 @@ export default function HelpMeChooseScreen() {
             columnWrapperStyle={styles.columnWrapperStyle}
             renderItem={({item, index}) => (
               <HelpMeChooseButton
-                letter={item.answerLetter}
+                letter={keys[item.key]}
                 text={item.answerText}
                 onPress={() => {
                   const questionId =
@@ -125,8 +158,11 @@ export default function HelpMeChooseScreen() {
                     2: 'THREE',
                     3: 'FOUR',
                   };
-
-                  return handlePress(questionId, answerTypes[index]);
+                  setNewAnswer({
+                    question: questionId || 'environment',
+                    answer: answerTypes[index],
+                  });
+                  //handlePress(questionId || 'environment', answerTypes[index]);
                 }}
               />
             )}

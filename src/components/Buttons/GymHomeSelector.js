@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-export default function GymHomeSelector({onPress}) {
+export default function GymHomeSelector({onPress, text}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -63,8 +63,8 @@ export default function GymHomeSelector({onPress}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.pill}>
-      <TouchableOpacity onPress={handleSelect} style={styles.touch}>
-        <Text style={styles.text}>{buttonText}</Text>
+      <TouchableOpacity onPress={onPress} style={styles.touch}>
+        <Text style={styles.text}>{text}</Text>
         <TDIcon input={buttonIcon} inputStyle={styles.icon} />
       </TouchableOpacity>
     </View>

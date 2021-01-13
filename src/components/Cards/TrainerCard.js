@@ -16,14 +16,7 @@ import GymHomeSelector from '../Buttons/GymHomeSelector';
 import PercentageBar from '../Infographics/PercentageBar';
 import Spacer from '../Utility/Spacer';
 
-export default function TrainerCard({
-  name,
-  fatLoss,
-  fitness,
-  buildMuscle,
-  image,
-  onPressGymHome,
-}) {
+export default function TrainerCard({trainer, currentProgram, onPressGymHome}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
@@ -76,31 +69,37 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image source={{uri: image}} style={styles.image} />
+        <Image
+          source={{uri: currentProgram.programmeImage}}
+          style={styles.image}
+        />
         <FadingBottomView color="blue" height={250} />
       </View>
       <View style={styles.overlay}>
         <View style={styles.titleContainer}>
-          <Text style={styles.nameText}>{name}</Text>
-          <GymHomeSelector onPress={onPressGymHome} />
+          <Text style={styles.nameText}>{trainer.name}</Text>
+          <GymHomeSelector
+            onPress={onPressGymHome}
+            text={currentProgram.environment}
+          />
         </View>
         <View style={styles.barsContainer}>
           <PercentageBar
             icon="lightning"
             text={MeetYourIconsDict.FatLoss}
-            percentage={fatLoss}
+            percentage={currentProgram.fatLoss}
           />
           <Spacer height={10} />
           <PercentageBar
             icon="heartRate"
             text={MeetYourIconsDict.Fitness}
-            percentage={fitness}
+            percentage={currentProgram.fitness}
           />
           <Spacer height={10} />
           <PercentageBar
             icon="weight"
             text={MeetYourIconsDict.BuildMuscle}
-            percentage={buildMuscle}
+            percentage={currentProgram.muscle}
           />
         </View>
       </View>

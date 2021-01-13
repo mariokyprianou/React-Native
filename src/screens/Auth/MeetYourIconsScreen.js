@@ -43,42 +43,42 @@ const logo = require('../../../assets/images/logo.png');
 
 export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {colors, textStyles} = useTheme();
-  const screenWidth = Dimensions.get('screen').width;
-  const {dictionary} = useDictionary();
-  const {MeetYourIconsDict} = dictionary;
-  const iconsSwiper = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const {trainers} = useData();
-  const [trainerOnSlider, setTrainerOnSlider] = useState(trainers[0].name);
-  const [progIdOnSlider, setProgIdOnSlider] = useState();
-  const [venue, setVenue] = useState('GYM');
-  // const {
-  //   params: {switchProgramme},
-  // } = useRoute();
-  const switchProgramme = true;
   const navigation = useNavigation();
-  const [safeArea, setSafeArea] = useState(false);
-  const {isConnected, isInternetReachable} = useNetInfo();
-
-  // old fake data
-  const currentTrainer = 'Katrina'; // to be changed to getProgramme data
-  const currentWeek = 4; // to be changed to getProgramme data
 
   navigation.setOptions({
     header: () => null,
   });
 
+  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {colors, textStyles} = useTheme();
+
+  const {dictionary} = useDictionary();
+  const {MeetYourIconsDict} = dictionary;
+
+  const iconsSwiper = useRef();
+
+  const {
+    params: {switchProgramme},
+  } = useRoute();
+  //const switchProgramme = true;
+
+  const {trainers} = useData();
+  const [selectedTrainer, setSelectedTrainer] = useState();
+  const [selectedProgramId, setSelectedProgramId] = useState();
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const [safeArea, setSafeArea] = useState(false);
+  const {isConnected, isInternetReachable} = useNetInfo();
+
+  // old fake data
+  const currentTrainerId = 'Katrina'; // to be changed to getProgramme data
+  const currentWeek = 4; // to be changed to getProgramme data
+
   useEffect(() => {
-    const selectedTrainer = trainers.filter(
-      (trainer) => trainer.name === trainerOnSlider,
-    )[0];
-    const selectedProgramme = selectedTrainer.programmes.filter(
-      (prog) => prog.environment === venue,
-    )[0];
-    setProgIdOnSlider(selectedProgramme.id);
-  }, []);
+    setSelectedTrainer(trainers[activeIndex]);
+    setSelectedProgramId(trainers[activeIndex].programmes[0].id);
+  }, [trainers, activeIndex]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -222,12 +222,21 @@ export default function MeetYourIconsScreen() {
   function handlePress(direction) {
     if (direction === 'left' && activeIndex !== 0) {
       iconsSwiper.current.scrollTo(activeIndex - 1, true);
-      setTrainerOnSlider(trainers[activeIndex - 1].name);
     }
     if (direction === 'right' && activeIndex !== trainers.length - 1) {
       iconsSwiper.current.scrollTo(activeIndex + 1, true);
-      setTrainerOnSlider(trainers[activeIndex + 1].name);
     }
+  }
+
+  function switchProgram() {
+    if (selectedTrainer.programmes.length === 1) {
+      return;
+    }
+    const newProgrammeId = selectedTrainer.programmes.find(
+      (it) => it.id !== selectedProgramId,
+    ).id;
+
+    setSelectedProgramId(newProgrammeId);
   }
 
   function navigateToWorkoutHome() {
@@ -287,19 +296,13 @@ export default function MeetYourIconsScreen() {
         loop={false}
         onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
-        {trainers.map(({name, programmes}) => {
-          const selectedProgramme = programmes.filter(
-            (prog) => prog.environment === venue,
-          );
-          const {
-            programmeImage,
-            numberOfWeeks,
-            description,
-            fatLoss,
-            fitness,
-            muscle,
-            firstWeek,
-          } = selectedProgramme[0];
+        {trainers.map((trainer) => {
+          const currentProgram =
+            trainer.programmes.find((it) => it.id === selectedProgramId) ||
+            trainer.programmes[0];
+
+          const {numberOfWeeks, description, firstWeek} = currentProgram;
+
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 
           return (
@@ -340,12 +343,9 @@ export default function MeetYourIconsScreen() {
               </View>
               <View style={styles.cardContainer}>
                 <TrainerCard
-                  fatLoss={fatLoss}
-                  fitness={fitness}
-                  buildMuscle={muscle}
-                  name={name}
-                  image={programmeImage}
-                  onPressGymHome={() => setVenue(venue)}
+                  trainer={trainer}
+                  onPressGymHome={switchProgram}
+                  currentProgram={currentProgram}
                 />
               </View>
               <Spacer height={90} />
@@ -354,7 +354,7 @@ export default function MeetYourIconsScreen() {
                 <Text
                   style={
                     styles.heading
-                  }>{`${MeetYourIconsDict.YourFirstWeek} ${name}`}</Text>
+                  }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
                 <Text
                   style={
                     styles.weeksText
@@ -381,7 +381,7 @@ export default function MeetYourIconsScreen() {
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
       </View>
-      {switchProgramme === true && trainerOnSlider === currentTrainer ? (
+      {switchProgramme === true && selectedTrainer === currentTrainer ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="restartProgramme"
@@ -399,7 +399,7 @@ export default function MeetYourIconsScreen() {
             onPress={navigateToWorkoutHome}
           />
         </View>
-      ) : switchProgramme === true && trainerOnSlider !== currentTrainer ? (
+      ) : switchProgramme === true && selectedTrainer !== currentTrainerId ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="startNow"
@@ -408,7 +408,7 @@ export default function MeetYourIconsScreen() {
             onPress={() =>
               navigation.navigate('Congratulations', {
                 switchProgramme: true,
-                newTrainer: trainerOnSlider,
+                newTrainer: selectedTrainer.name,
               })
             }
           />
@@ -420,7 +420,9 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="gradient"
             onPress={() =>
-              navigation.navigate('Registration', {programmeId: progIdOnSlider})
+              navigation.navigate('Registration', {
+                programmeId: selectedProgramId,
+              })
             }
           />
           <DefaultButton

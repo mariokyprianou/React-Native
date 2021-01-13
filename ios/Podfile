@@ -78,6 +78,7 @@ target 'thecoreui' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+#  pod 'react-native-intercom', :path => '../node_modules/react-native-intercom'
   # permissions
   permissions_path = '../node_modules/react-native-permissions/ios'
     pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"

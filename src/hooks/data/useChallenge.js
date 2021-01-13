@@ -20,7 +20,7 @@ const fakeChallengeData = {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
 };
 
-export default function useOnboarding() {
+export default function useChallenge() {
   const [challengeData, setChallengeData] = useState(fakeChallengeData);
 
   return {challengeData};

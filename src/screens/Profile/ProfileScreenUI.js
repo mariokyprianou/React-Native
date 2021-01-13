@@ -7,23 +7,26 @@
 
 import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Text, SafeAreaView, Platform} from 'react-native';
+import {useQuery, useMutation} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
 import {format} from 'date-fns';
-
+import {Auth} from 'aws-amplify';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import DropDownIcon from '../../components/cells/DropDownIcon';
-import useRegistrationData from '../../hooks/data/useRegistrationData';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import ProfileUserCard from '../../components/Views/ProfileUserCard';
 import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
 import TDIcon from 'the-core-ui-component-tdicon';
+import AllCountries from '../../apollo/queries/AllCountries';
+import Profile from '../../apollo/queries/Profile';
+import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 
 const notifications = [
   {
@@ -47,7 +50,7 @@ export default function ProfileScreenUI({
   onPressNeedHelp,
   onPressLogout,
 }) {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const {
     cellFormConfig,
     cellFormStyles,
@@ -58,22 +61,84 @@ export default function ProfileScreenUI({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict} = dictionary;
+  const {ProfileDict, AuthDict} = dictionary;
+  const {getValueByName} = FormHook();
+  const {
+    loading: countryLoading,
+    error: countryError,
+    data: countryData,
+  } = useQuery(AllCountries);
+  const {
+    loading: profileLoading,
+    error: profileError,
+    data: profileData,
+  } = useQuery(Profile);
+  const [updateProfile] = useMutation(UpdateProfile);
+  const [userData, setUserData] = useState({});
+  const [countriesList, setCountriesList] = useState([]);
+  const [regionsList, setRegionsList] = useState([]);
+  const [countryLookup, setCountryLookup] = useState();
+  const [regionLookup, setRegionLookup] = useState();
+  const selectedCountry = getValueByName('profile_country');
+  const {cleanErrors, getValues, cleanValues} = FormHook();
+  const [newDateOfBirth, setNewDateOfBirth] = useState();
 
-  const {registrationData} = useRegistrationData();
+  useEffect(() => {
+    if (countryData) {
+      const countries = countryData.allCountries.map(
+        (country) => country.country,
+      );
+      setCountriesList(countries);
 
-  // MARK: - Local
+      const indianRegions = countryData.allCountries.filter(
+        (country) => country.country === 'India',
+      )[0].regions;
 
-  // MARK: - Logic
+      const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+        let {region, id} = obj;
+        return {...acc, [region]: id};
+      }, {});
+      setRegionLookup(indianRegionsLookup);
 
-  // MARK: - Use Effect
+      const indianRegionsList = indianRegions.map((region) => region.region);
+      setRegionsList(indianRegionsList);
 
-  // MARK: - Actions
-  const onPressChangePassword = () => {
-    navigation.navigate('ChangePassword');
+      const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
+        let {country, id} = obj;
+        return {...acc, [country]: id};
+      }, {});
+      setCountryLookup(countryIdLookup);
+    } else {
+      console.log(countryLoading, countryError);
+    }
+  }, [countryData, countryLoading, countryError]);
+
+  useEffect(() => {
+    if (profileData) {
+      const memberSince = profileData.profile.createdAt.slice(0, 4);
+      const userProfile = {...profileData.profile};
+      userProfile.memberSince = memberSince;
+      setUserData(userProfile);
+    } else {
+      console.log(profileLoading, profileError);
+    }
+  }, [profileData, profileLoading, profileError]);
+
+  const gendersData = [
+    AuthDict.RegistrationGendersFemale,
+    AuthDict.RegistrationGendersMale,
+    AuthDict.RegistrationGendersOther,
+    AuthDict.RegistrationGendersPreferNot,
+  ];
+
+  const gendersRef = {
+    female: 'Female',
+    male: 'Male',
+    other: 'Other',
+    preferNotToSay: 'Prefer not to say',
   };
 
-  // MARK: - Styles
+  // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     safeArea: {
       flex: 1,
@@ -119,24 +184,88 @@ export default function ProfileScreenUI({
     },
   };
 
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const onPressChangePassword = () => {
+    navigation.navigate('ChangePassword');
+  };
+
+  async function handleUpdate() {
+    cleanErrors();
+
+    const {
+      profile_firstName,
+      profile_lastName,
+      profile_gender,
+      profile_dateOfBirth,
+      profile_country,
+      profile_region,
+    } = getValues();
+
+    if (
+      !profile_firstName &&
+      !profile_lastName &&
+      !profile_gender &&
+      !profile_dateOfBirth &&
+      !profile_country &&
+      !profile_region
+    ) {
+      return;
+    }
+
+    await updateProfile({
+      variables: {
+        input: {
+          givenName: profile_firstName || userData.givenName,
+          familyName: profile_lastName || userData.familyName,
+          gender: profile_gender?.toLowerCase() || userData.gender,
+          dateOfBirth: newDateOfBirth || userData.dateOfBirth,
+          country: countryLookup[profile_country] || userData.country,
+          region: regionLookup[profile_region] || userData.region,
+        },
+      },
+    })
+      .then((res) => {
+        const newData = {...res.data.updateProfile};
+        newData.memberSince = userData.memberSince;
+        const displayDateOfBirth = format(
+          new Date(newData.dateOfBirth),
+          'dd/LL/yyyy',
+        );
+        newData.dateOfBirth = displayDateOfBirth;
+        setUserData(newData);
+      })
+      .catch((err) => console.log(err));
+
+    cleanValues();
+  }
+
+  async function handleLogout() {
+    await Auth.signOut()
+      .then(() => {
+        navigation.reset({index: 0, routes: [{name: 'AuthContainer'}]});
+      })
+      .catch((err) => console.log('Error signing out', err));
+  }
+
+  // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
     return (
       <>
         <Spacer height={Platform.OS === 'ios' ? 30 : 60} />
         <ProfileUserCard
-          firstName={'Johny'}
-          lastName={'Appleased'}
-          memberSince={2080}
-          workoutsComplete={751}
+          firstName={userData.givenName}
+          lastName={userData.familyName}
+          memberSince={userData.memberSince}
+          workoutsComplete={userData.completedWorkouts}
           onPressRightIcon={() => {
-            navigation.navigate('Settings');
+            navigation.navigate('Settings', {timeZone: userData.timeZone});
           }}
         />
       </>
     );
   };
 
-  // MARK - Notifications UI
+  // Notifications UI
   const notificationsUI = () => {
     const renderNotificationCell = ({item, index}) => {
       return (
@@ -163,7 +292,7 @@ export default function ProfileScreenUI({
     );
   };
 
-  // MARK: - Form
+  // Form
   const cells = [
     {
       name: 'profileTitle',
@@ -189,6 +318,11 @@ export default function ProfileScreenUI({
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
+      placeholder: userData.givenName,
+      style: {
+        ...textStyles.regular16_black100,
+        flex: 1,
+      },
     },
     {
       name: 'profile_lastName',
@@ -199,6 +333,11 @@ export default function ProfileScreenUI({
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
+      placeholder: userData.familyName,
+      style: {
+        ...textStyles.regular16_black100,
+        flex: 1,
+      },
     },
     {
       name: 'profile_email',
@@ -206,16 +345,22 @@ export default function ProfileScreenUI({
       label: ProfileDict.FormLabel3,
       ...cellFormStyles,
       ...dropdownStyle,
-      rightAccessory: () => (
-        <TDIcon input="chevron-right" inputStyle={styles.icon} />
-      ),
-      rightAccessoryOnPress: () => {
-        navigation.navigate('ChangeEmail');
-      },
+      // rightAccessory: () => (
+      //   <TDIcon input="chevron-right" inputStyle={styles.icon} />
+      // ),
+
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(3),
       },
+      inputStyle: {
+        ...textStyles.regular16_black60,
+      },
+      rightAccessory: () => <DropDownIcon />,
+      rightAccessoryOnPress: () => {
+        navigation.navigate('ChangeEmail');
+      },
+      placeholder: userData.email,
     },
     {
       name: 'profile_gender',
@@ -224,18 +369,18 @@ export default function ProfileScreenUI({
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: registrationData.genders[0],
-      data: registrationData.genders,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-      },
+      data: gendersData,
+      placeholder: gendersRef[userData.gender] || '',
     },
     {
       name: 'profile_dateOfBirth',
       type: 'calendar',
       label: ProfileDict.FormLabel5,
-      dateFormat: (e) => format(e, 'dd/MM/yyyy'),
+      dateFormat: (e) => {
+        const formattedDate = format(e, 'yyyy-LL-dd');
+        setNewDateOfBirth(formattedDate);
+        return format(e, 'dd/MM/yyyy');
+      },
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
@@ -243,6 +388,7 @@ export default function ProfileScreenUI({
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
+      placeholder: userData?.dateOfBirth || '',
     },
     {
       name: 'profile_country',
@@ -251,26 +397,32 @@ export default function ProfileScreenUI({
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: registrationData.countries[0],
-      data: registrationData.countries,
+
       inputContainerStyle: {
         paddingLeft: 0,
         paddingRight: getWidth(6),
       },
+      data: countriesList,
+      placeholder: userData.country || '',
     },
     {
       name: 'profile_region',
-      type: 'dropdown',
+      type: selectedCountry === 'India' ? 'dropdown' : 'text',
       label: ProfileDict.FormLabel7,
+      editable: false,
       ...cellFormStyles,
       ...dropdownStyle,
-      rightAccessory: () => <DropDownIcon />,
-      placeholder: registrationData.regions[0],
-      data: registrationData.regions,
+      // rightAccessory: () => <DropDownIcon />,
+
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
+      rightAccessory: () => (
+        <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
+      ),
+      data: regionsList,
+      placeholder: userData.region || '',
     },
   ];
 
@@ -284,13 +436,13 @@ export default function ProfileScreenUI({
     </View>
   );
 
-  // MARK: - Buttons
+  // Buttons
   const buttons = () => (
     <View style={styles.buttonsBottomContainer}>
       <DefaultButton
         type={'saveChanges'}
         variant="white"
-        onPress={onSaveChanges}
+        onPress={handleUpdate}
       />
       <Spacer height={20} />
       <DefaultButton
@@ -311,13 +463,11 @@ export default function ProfileScreenUI({
       <DefaultButton
         type={'logout'}
         variant="transparentBlackBoldText"
-        onPress={onPressLogout}
+        onPress={handleLogout}
       />
       <Spacer height={20} />
     </View>
   );
-
-  // MARK: - Render
 
   return (
     <SafeAreaView style={styles.safeArea}>

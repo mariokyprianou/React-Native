@@ -8,6 +8,7 @@
 import React, {useEffect, useState} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import PermissionScreenUI from './PermissionScreenUI';
+import Intercom from 'react-native-intercom';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
@@ -29,7 +30,7 @@ export default function ChangeDeviceScreen() {
     console.log('HDSJHDKJA');
   };
   const onPressBottomButton = () => {
-    // TODO: - Need help?
+    Intercom.displayMessenger();
   };
 
   // MARK: - Render

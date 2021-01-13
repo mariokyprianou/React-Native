@@ -19,6 +19,7 @@ const enGB = {
     Done: 'DONE',
     GetStarted: 'GET STARTED',
     GoBack: 'GO BACK',
+    GoBackLower: 'Go back',
     Gym: 'GYM',
     Home: 'HOME',
     JumpIn: 'JUMP IN',
@@ -58,6 +59,8 @@ const enGB = {
     RegionLabel: 'REGION',
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
+    InvalidGivenName: 'Please enter your first name',
+    InvalidFamilyName: 'Please enter your last name',
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
@@ -73,6 +76,10 @@ const enGB = {
     TermsAndConditionsScreenTitle: 'Terms & conditions',
     ResetPasswordScreenTitle: 'Forgot password',
     RegistrationScreenTitle: 'Create account',
+    RegistrationGendersFemale: 'Female',
+    RegistrationGendersMale: 'Male',
+    RegistrationGendersOther: 'Other',
+    RegistrationGendersPreferNot: 'Prefer not to say',
     PrivacyPolicyScreenTitle: 'Privacy policy',
 
     NotificationsPermissionsScreenTitle: 'Notifications',
@@ -159,6 +166,12 @@ const enGB = {
     NotificationDelete: 'Delete',
   },
 
+  ShareDict: {
+    ShareProgress: 'Share your progress now!',
+    Cancel: 'Cancel',
+    Message: 'Share',
+  },
+
   SettingsDict: {
     ScreenTitle: 'Settings',
     VersionText: 'Power App - Version',
@@ -171,6 +184,8 @@ const enGB = {
       'Download this week’s workouts so you can train even without an internet connection.',
     DownloadWorkoutsQuality: 'DOWNLOAD QUALITY',
     DownloadWorkoutsTimeZone: 'TIME ZONE',
+    DownloadQualityHigh: 'High (1080p)',
+    DownloadQualityLow: 'Low (420p)',
     DataCollection: 'Data collection',
     DataCollectionText:
       'We collect data on the usage of the POWER app to understand how we can make it better. All the data we collect is completely anonymous and cannot be traced to you.',

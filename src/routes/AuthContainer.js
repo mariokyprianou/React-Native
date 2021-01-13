@@ -24,6 +24,8 @@ import {TransitionPresets} from '@react-navigation/stack';
 import HelpMeChooseScreen from '../screens/auth/HelpMeChooseScreen';
 import HelpMeChooseResultsScreen from '../screens/auth/HelpMeChooseResultsScreen';
 
+import EmailVerificationScreen from '../screens/auth/EmailVerificationScreen';
+
 export default function AuthContainer(props) {
   return (
     <AuthStack.Navigator
@@ -40,10 +42,16 @@ export default function AuthContainer(props) {
       <AuthStack.Screen name="Onboarding" component={OnboardingScreen} />
       <AuthStack.Screen name="MeetYourIcons" component={MeetYourIconsScreen} />
       <AuthStack.Screen name="Registration" component={RegistrationScreen} />
+      <AuthStack.Screen
+        name="EmailVerification"
+        component={EmailVerificationScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
       <AuthStack.Screen name="Login" component={LoginScreen} />
       <AuthStack.Screen
         name="Congratulations"
         component={CongratulationsScreen}
+        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
       <AuthStack.Screen
         name="TermsAndConditions"

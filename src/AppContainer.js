@@ -9,10 +9,20 @@ import React from 'react';
 import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
+import LandingScreen from './screens/landing/LandingScreen';
+// import SettingsScreen from './screens/Profile/SettingsScreen';
 
 export default function AppContainer() {
   return (
-    <AppStack.Navigator headerMode="screen">
+    <AppStack.Navigator headerMode="screen" initialRouteName="Landing">
+      {/* <AppStack.Screen name="Test" component={SettingsScreen} /> */}
+      <AppStack.Screen
+        name="Landing"
+        component={LandingScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <AppStack.Screen
         name="AuthContainer"
         component={AuthContainer}

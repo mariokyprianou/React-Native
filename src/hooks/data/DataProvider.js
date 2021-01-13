@@ -5,99 +5,100 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useState} from 'react';
-import {useQuery, useMutation} from 'react-apollo';
-import ProgressImages from '../../apollo/queries/ProgressImages';
-import Challenges from '../../apollo/queries/Challenges';
-import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
-import ProgressHistory from '../../apollo/queries/ProgressHistory';
-import Progress from '../../apollo/queries/Progress';
-import SubmitChallengeResult from '../../apollo/mutations/SubmitChallengeResult';
-import UploadProgressImage from '../../apollo/mutations/UploadProgressImage';
-import CreateProgressImage from '../../apollo/mutations/CreateProgressImage';
+import React, {useState, useMemo} from 'react';
+import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNetInfo} from '@react-native-community/netinfo';
+import DataContext from './DataContext';
+import Onboarding from '../../apollo/queries/Onboarding';
+import Trainers from '../../apollo/queries/Trainers';
+import Legals from '../../apollo/queries/Legals';
+import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
 
-export default function DataProvider({children}) {
+export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const [progressImages, setProgressImages] = useState();
-  const [challenges, setChallenges] = useState();
-  const [challengeHistory, setChallengeHistory] = useState();
-  const [progressHistory, setProgressHistory] = useState();
-  const [progress, setProgress] = useState();
+  const [onboarding, setOnboarding] = useState([]);
+  const [trainers, setTrainers] = useState([]);
+  const [legals, setLegals] = useState({});
+  const [programmeQuestionnaire, setProgrammeQuestionnaire] = useState({});
 
-  const [getProgressImages] = useQuery(ProgressImages, {
+  useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (newData) => setProgressImages(newData),
+    onCompleted: (res) => {
+      console.log(res);
+      const data = res.onboardingScreens;
+      setOnboarding(data);
+    },
+    onError: (error) => console.log(error),
   });
 
-  const [getChallenges] = useQuery(Challenges, {
+  useQuery(Trainers, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (newData) => setChallenges(newData),
+    onCompleted: (res) => {
+      setTrainers(res.getTrainers);
+    },
+    onError: (error) => console.log(error),
   });
 
-  const [getChallengeHistory] = useQuery(ChallengeHistory, {
+  useQuery(Legals, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (newData) => setChallengeHistory(newData),
+    onCompleted: (res) => {
+      setLegals(res.legals);
+    },
+    onError: (error) => console.log(error),
   });
 
-  const [getProgressHistory] = useQuery(ProgressHistory, {
+  useQuery(ProgrammeQuestionnaire, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (newData) => setProgressHistory(newData),
+    onCompleted: (res) => {
+      const qMap = res.programmeQuestionnaire.map((question) => {
+        const answers = [];
+        answers.push(
+          question.question.answer1,
+          question.question.answer2,
+          question.question.answer3,
+          question.question.answer4,
+        );
+        const formattedQuestion = answers.map((val, index) => {
+          const keys = {
+            1: 'A',
+            2: 'B',
+            3: 'C',
+            4: 'D',
+          };
+          return {
+            key: `${index + 1}`,
+            answerLetter: keys[index + 1],
+            answerText: val,
+          };
+        });
+        // q.answers = newQuestion;
+        return {...question, answers: formattedQuestion};
+      });
+      setProgrammeQuestionnaire(qMap);
+    },
+    onError: (error) => console.log(error),
   });
 
-  const [getProgress] = useQuery(Progress, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (newData) => setProgress(newData),
-  });
-
-  const [submitChallengeResult] = useMutation(SubmitChallengeResult, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-  });
-
-  const [uploadProgressImage] = useMutation(UploadProgressImage, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-  });
-
-  const [createProgressImage] = useMutation(CreateProgressImage, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-  });
+  // const [submitChallengeResult] = useMutation(SubmitChallengeResult, {
+  //   fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+  // });
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = useMemo(
     () => ({
-      progressImages,
-      challenges,
-      challengeHistory,
-      progressHistory,
-      progress,
-      getProgressImages,
-      getChallenges,
-      getChallengeHistory,
-      getProgressHistory,
-      getProgress,
-      submitChallengeResult,
-      uploadProgressImage,
-      createProgressImage,
+      onboarding,
+      trainers,
+      legals,
+      programmeQuestionnaire,
     }),
-    [
-      progressImages,
-      challenges,
-      challengeHistory,
-      progressHistory,
-      progress,
-      getProgressImages,
-      getChallenges,
-      getChallengeHistory,
-      getProgressHistory,
-      getProgress,
-      submitChallengeResult,
-      uploadProgressImage,
-      createProgressImage,
-    ],
+    [onboarding, trainers, legals, programmeQuestionnaire],
   );
 
   // ** ** ** ** ** Return ** ** ** ** **
-  return <DataContext.Provider value={values}>{children}</DataContext.Provider>;
+  return (
+    <DataContext.Provider value={values}>{props.children}</DataContext.Provider>
+  );
 }

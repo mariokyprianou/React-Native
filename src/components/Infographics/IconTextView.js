@@ -36,9 +36,9 @@ export default function IconTextView({
   const repsIcon = require('../../../assets/icons/weight.png');
 
   const intensityRef = {
-    low: WorkoutDict.Low,
-    medium: WorkoutDict.Medium,
-    high: WorkoutDict.High,
+    LOW: WorkoutDict.Low,
+    MOD: WorkoutDict.Medium,
+    HIGH: WorkoutDict.High,
   };
 
   // ** ** ** ** ** STYLES ** ** ** ** **

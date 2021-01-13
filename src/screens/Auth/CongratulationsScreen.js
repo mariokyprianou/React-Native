@@ -14,15 +14,20 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
+import {useRoute} from '@react-navigation/core';
+import Share from 'react-native-share';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
-export default function CongratulationsScreen({name = 'Katrina'}) {
+export default function CongratulationsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {MeetYourIconsDict} = dictionary;
+  const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
+  const {
+    params: {switchProgramme, newTrainer},
+  } = useRoute();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -66,15 +71,71 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
       position: 'absolute',
       bottom: 30,
     },
+    switchedText: {
+      ...textStyles.regular15_white100,
+      marginTop: getHeight(18),
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePressShare() {}
+  const url = 'www.google.com';
+  const shareOptions = Platform.select({
+    ios: {
+      activityItemSources: [
+        {
+          // For sharing url with custom title.
+          placeholderItem: {
+            type: 'url',
+            content: url,
+          },
+          item: {
+            default: {type: 'url', content: url},
+          },
+          subject: {
+            default: ShareDict.ShareProgress,
+          },
+          linkMetadata: {
+            originalUrl: url,
+            url,
+            title: ShareDict.ShareProgress,
+          },
+        },
+      ],
+    },
+    default: {
+      title: ShareDict.ShareProgress,
+      subject: ShareDict.ShareProgress,
+      message: `${ShareDict.Message} ${url}`,
+    },
+  });
+
+  function handlePressShare() {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showShareActionSheetWithOptions(
+        {
+          url: '',
+          message: ShareDict.ShareProgress,
+        },
+        (error) => console.log(error),
+        (success, method) => {
+          if (success) console.log('Successfully shared', success);
+        },
+      );
+    } else {
+      Share.open({shareOptions})
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          err && console.log(err);
+        });
+    }
+  }
 
   function handlePressStart() {
     navigation.reset({
       index: 0,
-      routes: [{name: 'TabContainer'}],
+      routes: [{name: 'TabContainer'}], // add params for which programme selected
     });
   }
 
@@ -90,21 +151,42 @@ export default function CongratulationsScreen({name = 'Katrina'}) {
           {MeetYourIconsDict.CongratulationsTitle}
         </Text>
         <Text style={styles.text}>
-          {MeetYourIconsDict.StartedProgramme(name)}
+          {MeetYourIconsDict.StartedProgramme(newTrainer)}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="share"
-          icon="share"
-          variant="white"
-          onPress={handlePressShare}
-        />
-        <DefaultButton
-          type="getStarted"
-          variant="transparentWhiteText"
-          onPress={handlePressStart}
-        />
+        {switchProgramme === true ? (
+          <>
+            <DefaultButton
+              type="jumpIn"
+              icon="chevron"
+              variant="white"
+              onPress={handlePressStart}
+            />
+            <Text style={styles.switchedText}>
+              {WorkoutDict.SwitchedByMistake}
+            </Text>
+            <DefaultButton
+              type="cancel"
+              variant="transparentWhiteText"
+              onPress={() => navigation.goBack()}
+            />
+          </>
+        ) : (
+          <>
+            <DefaultButton
+              type="share"
+              icon="share"
+              variant="white"
+              onPress={handlePressShare}
+            />
+            <DefaultButton
+              type="getStarted"
+              variant="transparentWhiteText"
+              onPress={handlePressStart}
+            />
+          </>
+        )}
       </View>
     </View>
   );

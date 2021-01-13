@@ -53,7 +53,7 @@ export default function TrainerCard({
     overlay: {
       width: '100%',
       bottom: getHeight(140),
-      paddingTop: 80,
+      paddingTop: getHeight(60),
     },
     titleContainer: {
       width: '90%',
@@ -76,7 +76,7 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image source={image} style={styles.image} />
+        <Image source={{uri: image}} style={styles.image} />
         <FadingBottomView color="blue" height={250} />
       </View>
       <View style={styles.overlay}>

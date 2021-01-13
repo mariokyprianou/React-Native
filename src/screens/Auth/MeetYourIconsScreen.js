@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   Dimensions,
   View,
@@ -21,7 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useMeetYourIcons from '../../hooks/data/useMeetYourIcons';
+import useData from '../../hooks/data/UseData';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
 import TrainerCard from '../../components/Cards/TrainerCard';
@@ -33,34 +33,52 @@ import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import {format} from 'date-fns';
 import isIphoneX from '../../utils/isIphoneX';
+import {useRoute} from '@react-navigation/core';
+import addRestDays from '../../utils/addRestDays';
+import addWorkoutDates from '../../utils/addWorkoutDates';
+import {useNetInfo} from '@react-native-community/netinfo';
 
-const fakeImage = require('../../../assets/images/trainerCarousel.png');
+const fakeImage = require('../../../assets/images/trainerCarousel.png'); // change to default image when available
+const logo = require('../../../assets/images/logo.png');
 
-export default function MeetYourIconsScreen({switchProgramme = true}) {
+export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
+  const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
-  const {meetYourIconsData, userProgrammeData} = useMeetYourIcons();
-  const {currentTrainer, currentWeek} = userProgrammeData;
-  const [trainerOnSlider, setTrainerOnSlider] = useState();
-  const [venue, setVenue] = useState('gym');
+  const {trainers} = useData();
+  const [trainerOnSlider, setTrainerOnSlider] = useState(trainers[0].name);
+  const [progIdOnSlider, setProgIdOnSlider] = useState();
+  const [venue, setVenue] = useState('GYM');
+  // const {
+  //   params: {switchProgramme},
+  // } = useRoute();
+  const switchProgramme = true;
   const navigation = useNavigation();
   const [safeArea, setSafeArea] = useState(false);
+  const {isConnected, isInternetReachable} = useNetInfo();
 
-  const connected = true; // change to check connection
-
-  const {MeetYourIconsDict} = dictionary;
-
-  const screenWidth = Dimensions.get('screen').width;
-
-  const logo = require('../../../assets/images/logo.png');
+  // old fake data
+  const currentTrainer = 'Katrina'; // to be changed to getProgramme data
+  const currentWeek = 4; // to be changed to getProgramme data
 
   navigation.setOptions({
     header: () => null,
   });
+
+  useEffect(() => {
+    const selectedTrainer = trainers.filter(
+      (trainer) => trainer.name === trainerOnSlider,
+    )[0];
+    const selectedProgramme = selectedTrainer.programmes.filter(
+      (prog) => prog.environment === venue,
+    )[0];
+    setProgIdOnSlider(selectedProgramme.id);
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -204,11 +222,11 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   function handlePress(direction) {
     if (direction === 'left' && activeIndex !== 0) {
       iconsSwiper.current.scrollTo(activeIndex - 1, true);
-      setTrainerOnSlider(meetYourIconsData[activeIndex - 1].name);
+      setTrainerOnSlider(trainers[activeIndex - 1].name);
     }
-    if (direction === 'right' && activeIndex !== meetYourIconsData.length - 1) {
+    if (direction === 'right' && activeIndex !== trainers.length - 1) {
       iconsSwiper.current.scrollTo(activeIndex + 1, true);
-      setTrainerOnSlider(meetYourIconsData[activeIndex + 1].name);
+      setTrainerOnSlider(trainers[activeIndex + 1].name);
     }
   }
 
@@ -217,7 +235,7 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (!connected) {
+  if (!isConnected && !isInternetReachable) {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -254,9 +272,9 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
 
   const onScroll = (e) => {
     const offset = e.nativeEvent.contentOffset.y;
-    if (offset > 10 && !safeArea) {
+    if (offset > 0 && !safeArea) {
       setSafeArea(true);
-    } else if (offset <= 10 && safeArea) {
+    } else if (offset <= 0 && safeArea) {
       setSafeArea(false);
     }
   };
@@ -269,104 +287,96 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
         loop={false}
         onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
-        {meetYourIconsData.map(
-          (
-            {
-              fatLoss,
-              fitness,
-              buildMuscle,
-              name,
-              image,
-              text,
-              liveWeeks,
-              firstWeek,
-            },
-            index,
-          ) => {
-            return (
-              <ScrollView
-                style={styles.sliderContainer}
-                onScroll={onScroll}
-                scrollEventThrottle={10}
-                bounces={false}>
-                <View style={styles.headerContainer}>
-                  <View>
-                    <Image source={logo} style={styles.image} />
-                    <Text style={styles.selectText}>
-                      {MeetYourIconsDict.SelectYourProgramme}
-                    </Text>
-                  </View>
-                  <View style={styles.cantChooseContainer}>
-                    <CantChooseButton
-                      onPress={() => navigation.navigate('HelpMeChoose')}
-                      navigation={navigation}
-                    />
-                  </View>
+        {trainers.map(({name, programmes}) => {
+          const selectedProgramme = programmes.filter(
+            (prog) => prog.environment === venue,
+          );
+          const {
+            programmeImage,
+            numberOfWeeks,
+            description,
+            fatLoss,
+            fitness,
+            muscle,
+            firstWeek,
+          } = selectedProgramme[0];
+          const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
+
+          return (
+            <ScrollView
+              style={styles.sliderContainer}
+              onScroll={onScroll}
+              scrollEventThrottle={10}
+              bounces={false}>
+              <View style={styles.headerContainer}>
+                <View>
+                  <Image source={logo} style={styles.image} />
+                  <Text style={styles.selectText}>
+                    {MeetYourIconsDict.SelectYourProgramme}
+                  </Text>
                 </View>
-                {index !== 0 && (
-                  <View style={styles.leftIconContainer}>
-                    <TouchableOpacity onPress={() => handlePress('left')}>
-                      <TDIcon
-                        input={isRTL() ? 'chevron-right' : 'chevron-left'}
-                        inputStyle={styles.icon}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )}
-                {index !== meetYourIconsData.length - 1 && (
-                  <View style={styles.rightIconContainer}>
-                    <TouchableOpacity onPress={() => handlePress('right')}>
-                      <TDIcon
-                        input={isRTL() ? 'chevron-left' : 'chevron-right'}
-                        inputStyle={styles.icon}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )}
-                <View style={styles.cardContainer}>
-                  <TrainerCard
-                    fatLoss={fatLoss}
-                    fitness={fitness}
-                    buildMuscle={buildMuscle}
-                    name={name}
-                    image={image}
-                    onPressGymHome={() => setVenue(venue)}
+                <View style={styles.cantChooseContainer}>
+                  <CantChooseButton
+                    onPress={() => navigation.navigate('HelpMeChoose')}
+                    navigation={navigation}
                   />
                 </View>
-                <Spacer height={100} />
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>{text}</Text>
-                  <Text
-                    style={
-                      styles.heading
-                    }>{`${MeetYourIconsDict.YourFirstWeek} ${name}`}</Text>
-                  <Text
-                    style={
-                      styles.weeksText
-                    }>{`${liveWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
-                </View>
-                <View style={styles.workoutContainer}>
-                  {firstWeek.map(({title, day, date, duration, intensity}) => {
-                    const formattedDate = format(
-                      new Date(date),
-                      'eeee, eo LLL',
-                    );
-                    return (
-                      <WorkoutCard
-                        title={title}
-                        day={day}
-                        date={formattedDate}
-                        duration={duration}
-                        intensity={intensity}
-                      />
-                    );
-                  })}
-                </View>
-                <Spacer height={180} />
-              </ScrollView>
-            );
-          },
-        )}
+              </View>
+              <View style={styles.leftIconContainer}>
+                <TouchableOpacity onPress={() => handlePress('left')}>
+                  <TDIcon
+                    input={isRTL() ? 'chevron-right' : 'chevron-left'}
+                    inputStyle={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.rightIconContainer}>
+                <TouchableOpacity onPress={() => handlePress('right')}>
+                  <TDIcon
+                    input={isRTL() ? 'chevron-left' : 'chevron-right'}
+                    inputStyle={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.cardContainer}>
+                <TrainerCard
+                  fatLoss={fatLoss}
+                  fitness={fitness}
+                  buildMuscle={muscle}
+                  name={name}
+                  image={programmeImage}
+                  onPressGymHome={() => setVenue(venue)}
+                />
+              </View>
+              <Spacer height={90} />
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>{description}</Text>
+                <Text
+                  style={
+                    styles.heading
+                  }>{`${MeetYourIconsDict.YourFirstWeek} ${name}`}</Text>
+                <Text
+                  style={
+                    styles.weeksText
+                  }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
+              </View>
+              <View style={styles.workoutContainer}>
+                {extendedWeek.map(({date, duration, intensity, name, day}) => {
+                  return (
+                    <WorkoutCard
+                      title={name}
+                      day={day}
+                      date={date}
+                      duration={duration}
+                      intensity={intensity}
+                    />
+                  );
+                })}
+              </View>
+              <Spacer height={180} />
+            </ScrollView>
+          );
+        })}
       </Swiper>
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
@@ -395,7 +405,12 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() => navigation.navigate('Congratulations')} // add params to say which trainer selected
+            onPress={() =>
+              navigation.navigate('Congratulations', {
+                switchProgramme: true,
+                newTrainer: trainerOnSlider,
+              })
+            }
           />
         </View>
       ) : (
@@ -404,12 +419,13 @@ export default function MeetYourIconsScreen({switchProgramme = true}) {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() => navigation.navigate('Registration')}
+            onPress={() =>
+              navigation.navigate('Registration', {programmeId: progIdOnSlider})
+            }
           />
-          {/* <Spacer height={20} /> */}
           <DefaultButton
             type="login"
-            variant="grey"
+            variant="transparentWhiteText"
             onPress={() => navigation.navigate('Login')}
           />
         </View>

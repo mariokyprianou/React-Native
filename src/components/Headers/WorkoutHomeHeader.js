@@ -17,7 +17,7 @@ const fakeHeadshot = require('../../../assets/fakeHeadshot.png');
 
 export default function WorkoutHomeHeader({name = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;

@@ -64,7 +64,6 @@ export default function EmojiSelection() {
     }
   }
 
-  console.log(selected);
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>

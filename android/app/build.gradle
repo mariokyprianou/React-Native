@@ -252,6 +252,7 @@ dependencies {
     implementation project(':react-native-bundle-checksum')
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'io.intercom.android:intercom-sdk-base:7.2.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

@@ -10,7 +10,7 @@ import React from 'react';
 
 import DataContext from './DataContext';
 
-export default function useData() {
+export default () => {
   const context = React.useContext(DataContext);
 
   if (context === undefined) {
@@ -19,4 +19,4 @@ export default function useData() {
     );
   }
   return context;
-}
+};

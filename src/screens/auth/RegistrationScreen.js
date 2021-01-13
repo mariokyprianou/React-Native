@@ -6,33 +6,34 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
+import {useQuery, useMutation} from '@apollo/client';
 import TDIcon from 'the-core-ui-component-tdicon';
+import TimeZone from 'react-native-timezone';
+import {useRoute} from '@react-navigation/core';
 import Header from '../../components/Headers/Header';
 import {useNavigation} from '@react-navigation/native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
-import useRegistrationData from '../../hooks/data/useRegistrationData';
 import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
+import AllCountries from '../../apollo/queries/AllCountries';
+import RegisterUser from '../../apollo/mutations/RegisterUser';
+import {getUniqueId} from 'react-native-device-info';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
-
-  navigation.setOptions({
-    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
-  });
-
+  const [termsAndConditions, setTerms] = useState('off');
   const {
     cellFormStyles,
     dropdownStyle,
@@ -40,39 +41,68 @@ export default function RegisterScreen() {
     textStyles,
     colors,
   } = useTheme();
+  const {
+    params: {programmeId},
+  } = useRoute();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
+  const [countriesList, setCountriesList] = useState([]);
+  const [regionsList, setRegionsList] = useState([]);
+  const [countryLookup, setCountryLookup] = useState();
+  const [regionLookup, setRegionLookup] = useState();
+  const [deviceTimeZone, setDeviceTimeZone] = useState();
+  const [deviceUid, setDeviceUid] = useState();
+  const {getValueByName, cleanValues} = FormHook();
+  const selectedCountry = getValueByName('country');
+  const [execute] = useMutation(RegisterUser);
 
-  const {registrationData} = useRegistrationData();
+  navigation.setOptions({
+    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
+  });
 
-  const [termsAndConditions, setTerms] = useState('off');
-  const [loadingRegister, setLoadingRegister] = useState(false);
-  const [activeRegister, setActiveRegister] = useState(false);
+  const gendersData = [
+    AuthDict.RegistrationGendersFemale,
+    AuthDict.RegistrationGendersMale,
+    AuthDict.RegistrationGendersOther,
+    AuthDict.RegistrationGendersPreferNot,
+  ];
+
+  useQuery(AllCountries, {
+    onCompleted: (data) => {
+      const countries = data.allCountries.map((country) => country.country);
+      setCountriesList(countries);
+
+      const indianRegions = data.allCountries.filter(
+        (country) => country.country === 'India',
+      )[0].regions;
+
+      const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+        let {region, id} = obj;
+        return {...acc, [region]: id};
+      }, {});
+      setRegionLookup(indianRegionsLookup);
+
+      const indianRegionsList = indianRegions.map((region) => region.region);
+      setRegionsList(indianRegionsList);
+
+      const countryIdLookup = data.allCountries.reduce((acc, obj) => {
+        let {country, id} = obj;
+        return {...acc, [country]: id};
+      }, {});
+      setCountryLookup(countryIdLookup);
+    },
+  });
 
   useEffect(() => {
-    const {
-      firstName,
-      lastName,
-      emailAddress,
-      password,
-      gender,
-      birthDate,
-      country,
-      region,
-    } = getValues();
+    const getTimeZone = async () => {
+      const timeZone = await TimeZone.getTimeZone().then((zone) => zone);
+      setDeviceTimeZone(timeZone);
+    };
+    getTimeZone();
 
-    if (
-      firstName &&
-      lastName &&
-      emailAddress &&
-      password &&
-      birthDate &&
-      gender
-    ) {
-      return setActiveRegister(true);
-    }
-    setActiveRegister(false);
-  }, [getValues]);
+    const deviceId = getUniqueId();
+    setDeviceUid(deviceId);
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -113,18 +143,41 @@ export default function RegisterScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleRegister() {
-    setLoadingRegister(true);
+  async function handleRegister() {
     cleanErrors();
 
-    const {emailAddress, password, telephone} = getValues();
+    const {
+      givenName,
+      familyName,
+      email,
+      password,
+      gender,
+      dateOfBirth,
+      country,
+      region,
+    } = getValues();
 
-    if (!emailRegex.test(emailAddress)) {
+    const countryID = countryLookup[country];
+
+    if (!givenName) {
       updateError({
-        name: 'emailAddress',
+        name: 'givenName',
+        value: AuthDict.InvalidGivenName,
+      });
+    }
+
+    if (!familyName) {
+      updateError({
+        name: 'familyName',
+        value: AuthDict.InvalidFamilyName,
+      });
+    }
+
+    if (!emailRegex.test(email)) {
+      updateError({
+        name: 'email',
         value: AuthDict.InvalidEmail,
       });
-      setLoadingRegister(false);
       return;
     }
     if (!passwordRegex.test(password)) {
@@ -132,9 +185,33 @@ export default function RegisterScreen() {
         name: 'password',
         value: AuthDict.InvalidPassword,
       });
-      setLoadingRegister(false);
       return;
     }
+
+    await execute({
+      variables: {
+        input: {
+          givenName: givenName,
+          familyName: familyName,
+          email: email,
+          password: password,
+          gender: gender ? gender.toLowerCase() : null,
+          dateOfBirth: dateOfBirth,
+          country: country ? countryID : null,
+          region: selectedCountry === 'India' ? regionLookup[region] : null,
+          deviceUDID: deviceUid,
+          timeZone: deviceTimeZone,
+          programme: programmeId,
+        },
+      },
+    })
+      .then((res) => {
+        if (res.data.registerUser === true) {
+          navigation.navigate('EmailVerification', {email, password});
+        }
+      })
+      .catch((err) => console.log(err));
+    cleanValues();
   }
 
   const handleTermsAndConditionsButton = () => {
@@ -149,13 +226,14 @@ export default function RegisterScreen() {
         type="createAccount"
         variant="white"
         icon="chevron"
-        onPress={() => {
-          if (Platform.OS === 'android') {
-            navigation.navigate('TabContainer');
-          } else {
-            navigation.navigate('Notifications');
-          }
-        }}
+        onPress={handleRegister}
+        // onPress={() => {
+        //   if (Platform.OS === 'android') {
+        //     navigation.navigate('TabContainer');
+        //   } else {
+        //     navigation.navigate('Notifications');
+        //   }
+        // }}
       />
     </View>
   );
@@ -187,23 +265,19 @@ export default function RegisterScreen() {
       ),
     },
     {
-      name: 'firstName',
+      name: 'givenName',
       type: 'text',
       label: AuthDict.FirstNameLabel,
-      placeholder: '',
-      textContentType: 'name',
       ...cellFormStyles,
     },
     {
-      name: 'lastName',
+      name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
-      placeholder: '',
-      textContentType: 'name',
       ...cellFormStyles,
     },
     {
-      name: 'emailAddress',
+      name: 'email',
       type: 'text',
       variant: 'email',
       label: AuthDict.EmailLabel,
@@ -226,14 +300,13 @@ export default function RegisterScreen() {
       name: 'gender',
       type: 'dropdown',
       label: AuthDict.GenderLabel,
-      placeholder: registrationData.genders[0],
-      data: registrationData.genders,
+      data: gendersData,
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
     {
-      name: 'birthDate',
+      name: 'dateOfBirth',
       type: 'calendar',
       label: AuthDict.DobLabel,
       placeholder: '',
@@ -246,19 +319,21 @@ export default function RegisterScreen() {
       name: 'country',
       type: 'dropdown',
       label: AuthDict.CountryLabel,
-      placeholder: registrationData.countries[0],
-      data: registrationData.countries,
+      data: countriesList,
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
     },
     {
       name: 'region',
-      type: 'dropdown',
+      type: selectedCountry === 'India' ? 'dropdown' : 'text',
+      placeholder: '',
+      editable: false,
       label: AuthDict.RegionLabel,
-      placeholder: registrationData.regions[0],
-      data: registrationData.regions,
-      rightAccessory: () => <DropDownIcon />,
+      data: regionsList,
+      rightAccessory: () => (
+        <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
+      ),
       ...cellFormStyles,
       ...dropdownStyle,
     },

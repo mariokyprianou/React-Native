@@ -16,6 +16,7 @@ const Colors = {
   black20: 'rgba(33, 33, 33, 0.2)',
   black30: 'rgba(33, 33, 33, 0.3)',
   black40: 'rgba(33, 33, 33, 0.4)',
+  black60: 'rgba(33, 33, 33, 0.6)',
   black80: 'rgba(33, 33, 33, 0.8)',
   black100: 'rgba(33, 33, 33, 1)',
   blueGreen100: 'rgba(14, 119, 116, 1)',

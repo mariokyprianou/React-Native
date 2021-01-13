@@ -7,10 +7,15 @@
  */
 
 import React, {useRef, useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import useOnboarding from '../../hooks/data/useOnboarding';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
@@ -18,18 +23,25 @@ import OnboardingSliderItem from '../../components/Cards/OnboardingSliderItem';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
+import useData from '../../hooks/data/UseData';
+import fetchPolicy from '../../utils/fetchPolicy';
+import Onboarding from '../../apollo/queries/Onboarding';
+import {useQuery} from '@apollo/client';
+import {useNetInfo} from '@react-native-community/netinfo';
 import TDIcon from 'the-core-ui-component-tdicon';
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
+  const {isConnected, isInternetReachable} = useNetInfo();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
-  const {onboardingData} = useOnboarding();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
+
+  const {onboarding} = useData();
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
@@ -103,19 +115,20 @@ export default function OnboardingScreen() {
   };
 
   function handlePress(direction) {
-    if (direction === 'left' && activeIndex !== 0) {
+    if (direction === 'left') {
       onboardSwiper.current.scrollTo(activeIndex - 1, true);
     }
-    if (direction === 'right' && activeIndex !== onboardingData.length - 1) {
+    if (direction === 'right') {
       onboardSwiper.current.scrollTo(activeIndex + 1, true);
     }
   }
 
   function handlePressGetStarted() {
-    navigation.navigate('MeetYourIcons');
+    navigation.navigate('MeetYourIcons', {switchProgramme: false});
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+
   return (
     <View style={styles.container}>
       <Swiper
@@ -131,18 +144,15 @@ export default function OnboardingScreen() {
         }}
         dot={<View style={styles.dot} />}
         activeDot={<View style={styles.activeDot} />}>
-        {onboardingData.map(({header, text, image, orderIndex}) => {
-          console.log(orderIndex, '<---index');
-          return (
-            <OnboardingSliderItem
-              image={image}
-              header={header}
-              text={text}
-              handlePress={handlePress}
-              activeIndex={activeIndex}
-            />
-          );
-        })}
+        {onboarding.map(({title, description, image}) => (
+          <OnboardingSliderItem
+            image={image}
+            header={title}
+            text={description}
+            handlePress={handlePress}
+            activeIndex={activeIndex}
+          />
+        ))}
       </Swiper>
       <DefaultButton
         type="getStarted"

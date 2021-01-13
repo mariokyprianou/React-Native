@@ -13,31 +13,22 @@ import TDSettings from 'the-core-ui-module-tdsettings';
 import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
-
+import {useQuery, useMutation} from '@apollo/client';
+import {useRoute} from '@react-navigation/core';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import Spacer from '../../components/Utility/Spacer';
+import Preferences from '../../apollo/queries/Preferences';
+import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 
 const SettingsScreen = ({}) => {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-
   const {cleanErrors, getValues, updateError} = FormHook();
   const {dictionary, getLanguage} = useDictionary();
   const {SettingsDict, LanguageDict} = dictionary;
-
-  const dropdownData = [
-    LanguageDict.English,
-    LanguageDict.Hindi,
-    LanguageDict.Urdu,
-  ];
-
-  navigation.setOptions({
-    header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
-  });
-
   const {getHeight, getWidth} = ScaleHook();
   const {
     colors,
@@ -46,6 +37,24 @@ const SettingsScreen = ({}) => {
     textStyles,
     dropdownStyle,
   } = useTheme();
+  const {params: timeZone} = useRoute();
+  const {loading, error, data} = useQuery(Preferences);
+  const [updatePreferences] = useMutation(UpdatePreference);
+
+  const languageDropdownData = [
+    LanguageDict.English,
+    LanguageDict.Hindi,
+    LanguageDict.Urdu,
+  ];
+
+  const downloadQualityDropdownData = [
+    SettingsDict.DownloadQualityHigh,
+    SettingsDict.DownloadQualityLow,
+  ];
+
+  navigation.setOptions({
+    header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
+  });
 
   const {
     settings_downloadsQuality,
@@ -53,16 +62,15 @@ const SettingsScreen = ({}) => {
     settings_language,
   } = getValues();
 
-  // MARK: - Local
   const [marketingPrefEmail, setMarketingPrefEmail] = useState(false);
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
     false,
   );
-  const [downloadWorkouts, setDownloadWorkouts] = useState(false);
-  const [errorReports, setErrorReports] = useState(false);
-  const [analytics, setAnalytics] = useState(false);
+  const [prefErrorReports, setPrefErrorReports] = useState(false);
+  const [prefAnalytics, setPrefAnalytics] = useState(false);
+  const [prefDownloadQuality, setPrefDownloadQuality] = useState('HIGH');
+  const [downloadWorkouts, setDownloadWorkouts] = useState(true);
 
-  // MARK: - Use Effect
   useEffect(() => {
     navigation.setOptions({
       header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
@@ -70,40 +78,38 @@ const SettingsScreen = ({}) => {
   }, []);
 
   useEffect(() => {
-    // TODO - quality changed
+    if (data) {
+      const {
+        emails,
+        notifications,
+        analytics,
+        downloadQuality,
+        errorReports,
+      } = data.preferences;
+
+      setMarketingPrefEmail(emails);
+      setMarketingPrefNotifications(notifications);
+      setPrefErrorReports(errorReports);
+      setPrefAnalytics(analytics);
+      setPrefDownloadQuality(downloadQuality);
+    } else {
+      console.log(error);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setPrefDownloadQuality(settings_downloadsQuality);
   }, [settings_downloadsQuality]);
 
-  useEffect(() => {
-    // TODO - language changed
-  }, [settings_language]);
+  // useEffect(() => {
+  //   // TODO - language changed
+  // }, [settings_language]);
 
-  useEffect(() => {
-    // TODO - timeZone changed
-  }, [settings_timeZone]);
+  // useEffect(() => {
+  //   // TODO - timeZone changed
+  // }, [settings_timeZone]);
 
-  // MARK: - Actions
-  const onToggleMarketingPrefEmail = (bool) => {
-    // TODO
-    setMarketingPrefEmail(bool);
-  };
-  const onToggleMarketingPrefNotifications = (bool) => {
-    // TODO
-    setMarketingPrefNotifications(bool);
-  };
-  const onToggleDownloadWorkouts = (bool) => {
-    // TODO
-    setDownloadWorkouts(bool);
-  };
-  const onToggleErrorReports = (bool) => {
-    // TODO
-    setErrorReports(bool);
-  };
-  const onToggleAnalytics = (bool) => {
-    // TODO
-    setAnalytics(bool);
-  };
-
-  // MARK: - Styles
+  // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
       flex: 1,
@@ -150,8 +156,82 @@ const SettingsScreen = ({}) => {
     },
   };
 
-  // MARK: - Settings Cells & Forms
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function onToggleMarketingPrefEmail() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: marketingPrefNotifications,
+          emails: !marketingPrefEmail,
+          errorReports: prefErrorReports,
+          analytics: prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setMarketingPrefEmail(!marketingPrefEmail);
+      })
+      .catch((err) => console.log(err));
+  }
+  async function onToggleMarketingPrefNotifications() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: !marketingPrefNotifications,
+          emails: marketingPrefEmail,
+          errorReports: prefErrorReports,
+          analytics: prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setMarketingPrefNotifications(!marketingPrefNotifications);
+      })
+      .catch((err) => console.log(err));
+  }
+  async function onToggleErrorReports() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: marketingPrefNotifications,
+          emails: marketingPrefEmail,
+          errorReports: !prefErrorReports,
+          analytics: prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setPrefErrorReports(!prefErrorReports);
+      })
+      .catch((err) => console.log(err));
+  }
+  async function onToggleAnalytics() {
+    await updatePreferences({
+      variables: {
+        input: {
+          notifications: marketingPrefNotifications,
+          emails: marketingPrefEmail,
+          errorReports: prefErrorReports,
+          analytics: !prefAnalytics,
+          downloadQuality: 'HIGH',
+        },
+      },
+    })
+      .then(() => {
+        setPrefAnalytics(!prefAnalytics);
+      })
+      .catch((err) => console.log(err));
+  }
 
+  const onToggleDownloadWorkouts = (bool) => {
+    // TODO
+    setDownloadWorkouts(bool);
+  };
+
+  // ** ** ** ** ** RENDER ** ** ** ** **
   const formConfig = {
     ...cellFormConfig,
     formContainerStyle: {
@@ -165,6 +245,7 @@ const SettingsScreen = ({}) => {
     showVersion: false,
     containerStyle: {...styles.formContainer},
   };
+
   const cells = [
     {
       customComponent: () => (
@@ -220,7 +301,6 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-
   const cells2 = [
     {
       name: 'settings_downloadsQuality',
@@ -229,8 +309,8 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      //   placeholder: registrationData.countries[0],
-      //   data: registrationData.countries,
+      placeholder: downloadQualityDropdownData[0],
+      data: downloadQualityDropdownData,
     },
     {
       name: 'settings_timeZone',
@@ -239,7 +319,7 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      //   placeholder: registrationData.countries[0],
+      placeholder: timeZone.timeZone,
       //   data: registrationData.countries,
     },
   ];
@@ -262,7 +342,7 @@ const SettingsScreen = ({}) => {
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
-          switchValue={errorReports}
+          switchValue={prefErrorReports}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleErrorReports}
           descriptionTextStyle={styles.switchDescriptionStyle}
@@ -277,7 +357,7 @@ const SettingsScreen = ({}) => {
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           showSwitch
-          switchValue={analytics}
+          switchValue={prefAnalytics}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleAnalytics}
           descriptionTextStyle={styles.switchDescriptionStyle}
@@ -286,7 +366,6 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-
   const cells4 = [
     {
       name: 'settings_language',
@@ -295,12 +374,10 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: getLanguage() || dropdownData[0],
-      data: dropdownData,
+      placeholder: getLanguage() || languageDropdownData[0],
+      data: languageDropdownData,
     },
   ];
-
-  // MARK: - Render
 
   return (
     <ScrollView

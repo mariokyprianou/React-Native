@@ -9,7 +9,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
-
+import Intercom from 'react-native-intercom';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
@@ -59,6 +59,11 @@ const PurchaseModalScreen = ({}) => {
   };
   const onPressThirdButton = () => {
     // TODO
+  };
+
+  const displayMessenger = () => {
+    // to open intercom
+    Intercom.displayMessenger();
   };
 
   // MARK: - Style

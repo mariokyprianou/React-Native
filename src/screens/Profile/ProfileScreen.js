@@ -5,21 +5,17 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
+// import Intercom from 'react-native-intercom';
 
 export default function ProfileScreen() {
-  // MARK: - Hooks
+  // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {getValues} = FormHook();
 
-  // MARK: - Local
-
-  // MARK: - Logic
-
-  // MARK: - Actions
   const onSaveChanges = () => {
     const {
       profile_firstName,
@@ -33,8 +29,17 @@ export default function ProfileScreen() {
     // TODO: - Verify Values
   };
 
+  // ** ** ** ** ** STYLES ** ** ** ** **
+  const styles = {
+    view: {
+      justifyContent: 'flex-end',
+      margin: 0,
+    },
+  };
+
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressNeedHelp = () => {
-    console.log('TODO: - onPressNeedHelp');
+    // Intercom.displayMessenger();
   };
 
   const onPressLogout = () => {
@@ -43,16 +48,14 @@ export default function ProfileScreen() {
     navigation.navigate('Onboarding');
   };
 
-  const onPressNeedToSignOut = () => {
-    console.log('TODO: - onPressNeedToSignOut');
-  };
-
-  // MARK: - Render
+  // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <ProfileScreenUI
-      onSaveChange={onSaveChanges}
-      onPressNeedHelp={onPressNeedHelp}
-      onPressLogout={onPressLogout}
-    />
+    <>
+      <ProfileScreenUI
+        onSaveChange={onSaveChanges}
+        onPressNeedHelp={onPressNeedHelp}
+        onPressLogout={onPressLogout}
+      />
+    </>
   );
 }

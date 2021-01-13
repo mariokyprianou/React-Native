@@ -8,6 +8,7 @@
 #import <UMCore/UMModuleRegistry.h>
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
+//#import <Intercom/intercom.h>
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
@@ -60,6 +61,7 @@ static void InitializeFlipper(UIApplication *application) {
   
   [RNSplashScreen show];
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+//  [Intercom setApiKey:@"ios_sdk-fd29c067657e0cf6598493d7cd9f0b96d3cb910a" forAppId:@"h9qs9je1"];
   return YES;
 }
 

@@ -52,11 +52,11 @@ export default function GymHomeSelector({onPress}) {
   function handleSelect() {
     if (buttonText === ButtonDict.Gym) {
       setButtonText(ButtonDict.Home);
-      onPress('home');
+      onPress('HOME');
     }
     if (buttonText === ButtonDict.Home) {
       setButtonText(ButtonDict.Gym);
-      onPress('gym');
+      onPress('GYM');
     }
   }
 

@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -16,13 +16,15 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
+import {Auth} from 'aws-amplify';
 
-export default function RegisterScreen() {
+export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
+  const [passwordEyeEnabled, setPasswordEyeEnabled] = useState(true);
 
   navigation.setOptions({
     header: () => (
@@ -38,18 +40,6 @@ export default function RegisterScreen() {
   const {cellFormStyles, cellFormConfig, textStyles} = useTheme();
   const {cleanErrors, getValues, updateError} = FormHook();
   const {getHeight, getWidth} = ScaleHook();
-
-  const [loading, setLoading] = useState(false);
-  const [activeLogin, setActiveLogin] = useState(false);
-
-  useEffect(() => {
-    const {emailAddress, password} = getValues();
-
-    if (emailAddress && password) {
-      return setActiveLogin(true);
-    }
-    setActiveLogin(false);
-  }, [getValues]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -83,33 +73,39 @@ export default function RegisterScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleLogin() {
-    navigation.navigate('MeetYourIcons');
-    setLoading(true);
+  async function handleLogin() {
+    // navigation.navigate('MeetYourIcons', {switchProgramme: false});
     cleanErrors();
 
     const {emailAddress, password} = getValues();
 
-    if (!emailRegex.test(emailAddress)) {
+    if (!emailAddress || !emailRegex.test(emailAddress)) {
       updateError({
         name: 'emailAddress',
         value: AuthDict.InvalidEmail,
       });
-      setLoading(false);
       return;
     }
-    if (!passwordRegex.test(password)) {
+    if (!password || !passwordRegex.test(password)) {
       updateError({
         name: 'password',
         value: AuthDict.InvalidPassword,
       });
-      setLoading(false);
       return;
     }
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'TabContainer'}],
-    });
+
+    await Auth.signIn(emailAddress, password)
+      .then((res) => {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'TabContainer'}],
+        });
+      })
+      .catch((error) => {
+        console.log('error signing in', error);
+      });
+
+    // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
   }
 
   function forgotPassword() {

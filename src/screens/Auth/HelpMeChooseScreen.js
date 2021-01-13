@@ -6,13 +6,15 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, FlatList} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useHelpMeChoose from '../../hooks/data/useHelpMeChoose';
+import useData from '../../hooks/data/UseData';
+import SubmitProgrammeQuestionnaire from '../../apollo/mutations/SubmitProgrammeQuestionnaire';
+import {useMutation} from '@apollo/client';
 import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
 import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
@@ -22,10 +24,12 @@ export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const {helpMeChooseData} = useHelpMeChoose();
+  const [newAnswer, setNewAnswer] = useState({});
+  const [storedAnswers, setStoredAnswers] = useState([]);
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
+  const {programmeQuestionnaire} = useData();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -33,6 +37,14 @@ export default function HelpMeChooseScreen() {
       <Header title={HelpMeChooseDict.HelpMeChoose} showModalCross />
     ),
   });
+
+  const [execute] = useMutation(SubmitProgrammeQuestionnaire);
+
+  useEffect(() => {
+    setStoredAnswers((prev) => [...prev, newAnswer]);
+  }, [newAnswer]);
+
+  console.log(storedAnswers, '<---stored');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -58,9 +70,27 @@ export default function HelpMeChooseScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePress() {
-    if (currentQuestion === helpMeChooseData.length) {
-      navigation.navigate('HelpMeChooseResults');
+
+  async function handlePress(questionId, answerType) {
+    setNewAnswer({question: questionId, answer: answerType});
+
+    if (currentQuestion === programmeQuestionnaire.length) {
+      await execute({
+        variables: {
+          input: {
+            answers: [{question: questionId, answer: answerType}],
+          },
+        },
+      })
+        .then((res) => {
+          navigation.navigate('HelpMeChooseResults', {
+            recommendedEnvironment:
+              res.data.submitProgrammeQuestionnaire.programme.environment,
+            recommendedTrainer:
+              res.data.submitProgrammeQuestionnaire.programme.trainer.name,
+          });
+        })
+        .catch((err) => console.log(err));
     } else {
       setCurrentQuestion(currentQuestion + 1);
     }
@@ -71,20 +101,33 @@ export default function HelpMeChooseScreen() {
       <View style={styles.container}>
         <HelpMeChooseBar
           currentQuestion={currentQuestion}
-          totalQuestions={helpMeChooseData.length}
-          questionText={helpMeChooseData[currentQuestion - 1].questionText}
+          totalQuestions={programmeQuestionnaire.length}
+          questionText={
+            programmeQuestionnaire[currentQuestion - 1].question.question
+          }
         />
         <Spacer height={20} />
         <View style={{height: '100%'}}>
           <FlatList
-            data={helpMeChooseData[currentQuestion - 1].answers}
+            data={programmeQuestionnaire[currentQuestion - 1].answers}
             numColumns={2}
             columnWrapperStyle={styles.columnWrapperStyle}
             renderItem={({item, index}) => (
               <HelpMeChooseButton
                 letter={item.answerLetter}
                 text={item.answerText}
-                onPress={handlePress}
+                onPress={() => {
+                  const questionId =
+                    programmeQuestionnaire[currentQuestion - 1].id;
+                  const answerTypes = {
+                    0: 'ONE',
+                    1: 'TWO',
+                    2: 'THREE',
+                    3: 'FOUR',
+                  };
+
+                  return handlePress(questionId, answerTypes[index]);
+                }}
               />
             )}
           />

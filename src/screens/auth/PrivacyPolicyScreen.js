@@ -5,34 +5,29 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useEffect} from 'react';
-import {View, Text} from 'react-native';
-import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import React from 'react';
+import {View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
-
+import useData from '../../hooks/data/UseData';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
-import useTermsPolicyData from '../../hooks/data/useTermsPolicyData';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
 import Header from '../../components/Headers/Header';
 import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
+  const {legals} = useData();
+  const {colors} = useTheme();
+  const {getHeight} = ScaleHook();
 
   navigation.setOptions({
     header: () => <Header title={AuthDict.PrivacyPolicyScreenTitle} goBack />,
   });
-
-  const {textStyles, colors} = useTheme();
-  const {getHeight} = ScaleHook();
-
-  const {privacyPolicy, isHtml} = useTermsPolicyData();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -58,7 +53,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.render.container}>
-      <TermsPolicyContentView isHtml={isHtml} content={privacyPolicy} />
+      <TermsPolicyContentView isHtml={false} content={legals.privacyPolicy} />
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="done"

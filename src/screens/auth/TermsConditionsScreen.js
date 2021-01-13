@@ -5,14 +5,13 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
-
+import useData from '../../hooks/data/UseData';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
-import useTermsPolicyData from '../../hooks/data/useTermsPolicyData';
 import TermsPolicyContentView from '../../components/Views/TermsPolicyContentView';
 import Header from '../../components/Headers/Header';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -20,26 +19,17 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 export default function TermsConditionsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
+  const {legals} = useData();
+  const {colors} = useTheme();
+  const {getHeight} = ScaleHook();
 
   navigation.setOptions({
     header: () => (
       <Header title={AuthDict.TermsAndConditionsScreenTitle} goBack />
     ),
   });
-
-  const {
-    cellFormStyles,
-    dropdownStyle,
-    cellFormConfig,
-    textStyles,
-    colors,
-  } = useTheme();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-
-  const {termsAndConditions, isHtml} = useTermsPolicyData();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -65,7 +55,10 @@ export default function TermsConditionsScreen() {
 
   return (
     <View style={styles.render.container}>
-      <TermsPolicyContentView isHtml={isHtml} content={termsAndConditions} />
+      <TermsPolicyContentView
+        isHtml={false}
+        content={legals.termsAndConditions}
+      />
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="done"

@@ -24,9 +24,9 @@
 		4AA4DFA524BF099000EA0A56 /* FontAwesome5_Pro_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AA4DFA124BF099000EA0A56 /* FontAwesome5_Pro_Solid.ttf */; };
 		4AA4DFA624BF099000EA0A56 /* FontAwesome5_Pro_Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AA4DFA224BF099000EA0A56 /* FontAwesome5_Pro_Light.ttf */; };
 		61720B52558F499CB288D41C /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5652FA8072B94CFE8E2B4DC8 /* proximanova-regular.otf */; };
+		6FC19CC5258123FD00628EDE /* Secrets.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC19CC4258123FD00628EDE /* Secrets.generated.swift */; };
 		72AF1DD1315B0D5C71548AAD /* libPods-thecoreui-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30F9D918DE7918BCF809FAB5 /* libPods-thecoreui-tvOSTests.a */; };
 		7CE2211324AB6671001D8ECD /* Secrets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 7CE2210F24AB6671001D8ECD /* Secrets.stencil */; };
-		7CE2211424AB6671001D8ECD /* Secrets.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2211124AB6671001D8ECD /* Secrets.generated.swift */; };
 		7CE2211524AB6671001D8ECD /* SecretsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2211224AB6671001D8ECD /* SecretsManager.m */; };
 		7CFA8B86223A1C78728E4F8E /* libPods-thecoreui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D283AEAA947986FFB426475 /* libPods-thecoreui.a */; };
 		87BE96A3A92D45288B8048C4 /* proximanova-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F7E5C929D9B4DDC8D265ACA /* proximanova-light.otf */; };
@@ -84,11 +84,11 @@
 		62B136E7D484421BAB4FA267 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		6BFD3314A4B5409AE581A2AA /* libPods-thecoreui-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-thecoreui-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EB853C643B4558E69A518D7 /* Pods-thecoreui-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-thecoreui-tvOS.release.xcconfig"; path = "Target Support Files/Pods-thecoreui-tvOS/Pods-thecoreui-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		6FC19CC4258123FD00628EDE /* Secrets.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.generated.swift; path = Helpers/Secrets.generated.swift; sourceTree = SOURCE_ROOT; };
 		716A57A560824F9B9A8BF88F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		7CE2210E24AB6671001D8ECD /* SecretsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretsManager.h; sourceTree = "<group>"; };
 		7CE2210F24AB6671001D8ECD /* Secrets.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Secrets.stencil; sourceTree = "<group>"; };
 		7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TheCoreUI-Bridging-Header.h"; sourceTree = "<group>"; };
-		7CE2211124AB6671001D8ECD /* Secrets.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.generated.swift; sourceTree = "<group>"; };
 		7CE2211224AB6671001D8ECD /* SecretsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretsManager.m; sourceTree = "<group>"; };
 		92FB52913565401FAD1E29AD /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		976E9763CE5949A5A2C69440 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -195,10 +195,10 @@
 		7CE2210D24AB6671001D8ECD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				6FC19CC4258123FD00628EDE /* Secrets.generated.swift */,
 				7CE2210E24AB6671001D8ECD /* SecretsManager.h */,
 				7CE2210F24AB6671001D8ECD /* Secrets.stencil */,
 				7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */,
-				7CE2211124AB6671001D8ECD /* Secrets.generated.swift */,
 				7CE2211224AB6671001D8ECD /* SecretsManager.m */,
 			);
 			path = Helpers;
@@ -551,7 +551,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\nif [ -f ../env-vars.sh ]\nthen\nsource ../env-vars.sh\nfi\n#no `else` case needed if the CI works as expected\n${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args staging_graphql_url=$AWS_GRAPHQL_URL_STAGING,staging_user_pool_id=$AWS_USER_POOL_ID_STAGING,staging_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_STAGING,staging_aws_region=$AWS_REGION_STAGING,production_graphql_url=$AWS_GRAPHQL_URL_PRODUCTION,production_user_pool_id=$AWS_USER_POOL_ID_PRODUCTION,production_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_PRODUCTION,production_aws_region=$AWS_REGION_PRODUCTION,development_graphql_url=$AWS_GRAPHQL_URL_DEVELOPMENT,development_user_pool_id=$AWS_USER_POOL_ID_DEVELOPMENT,development_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT,development_aws_region=$AWS_REGION_DEVELOPMENT,checksum=\"${SHASUMARRAY[0]}\"\n";
+			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\nif [ -f ../env-vars.sh ]\nthen\nsource ../env-vars.sh\nfi\nno `else` case needed if the CI works as expected\n${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args staging_graphql_url=$AWS_GRAPHQL_URL_STAGING,staging_user_pool_id=$AWS_USER_POOL_ID_STAGING,staging_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_STAGING,staging_aws_region=$AWS_REGION_STAGING,production_graphql_url=$AWS_GRAPHQL_URL_PRODUCTION,production_user_pool_id=$AWS_USER_POOL_ID_PRODUCTION,production_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_PRODUCTION,production_aws_region=$AWS_REGION_PRODUCTION,development_graphql_url=$AWS_GRAPHQL_URL_DEVELOPMENT,development_user_pool_id=$AWS_USER_POOL_ID_DEVELOPMENT,development_user_pool_client_id=$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT,development_aws_region=$AWS_REGION_DEVELOPMENT,checksum=\"${SHASUMARRAY[0]}\"\n";
 		};
 		916F5771E0D5AB189A5B4F7B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -754,7 +754,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CE2211424AB6671001D8ECD /* Secrets.generated.swift in Sources */,
+				6FC19CC5258123FD00628EDE /* Secrets.generated.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				7CE2211524AB6671001D8ECD /* SecretsManager.m in Sources */,
@@ -865,6 +865,7 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = thecoreui/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -889,6 +890,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6M9GL47CCT;
 				INFOPLIST_FILE = thecoreui/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1060,7 +1062,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -1113,7 +1115,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",

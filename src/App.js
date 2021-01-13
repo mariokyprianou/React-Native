@@ -9,7 +9,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StatusBar, Platform, I18nManager, Alert} from 'react-native';
 import ThemeProvider from './hooks/theme/ThemeProvider';
 import DictionaryProvider from './hooks/localisation/DictionaryProvider';
-import {ApolloProvider} from 'react-apollo';
+import {ApolloProvider} from '@apollo/client';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScaleProvider} from 'react-native-design-to-component';
 import {FormProvider} from 'the-core-ui-module-tdforms';
@@ -17,69 +17,41 @@ import DataProvider from './hooks/data/DataProvider';
 import QuickPicker from 'quick-picker';
 import {TDCountdown} from 'the-core-ui-module-tdcountdown';
 import * as ScreenCapture from 'expo-screen-capture';
-
-import ApolloClient from './apollo/ApolloClient';
-import Theme from './styles/AppTheme';
 import isValidChecksum from './utils/checksumValidation';
-import {Navigator as AppNavigator, Screen} from './navigation/AppStack';
 import AppContainer from './AppContainer';
-import SplashScreen from 'react-native-splash-screen';
 import {useAsyncStorage} from '@react-native-community/async-storage';
+// import Intercom from 'react-native-intercom';
+import Amplify from 'aws-amplify';
+import {TDGraphQLProvider} from './apollo/Client';
+
+const authConfig = {
+  Auth: {
+    region: 'ap-south-1',
+    userPoolId: 'ap-south-1_IKCoLjZya',
+    userPoolWebClientId: '6jh3je4i3ni14qki167tr5v3gm',
+  },
+};
+
+Amplify.configure(authConfig);
 
 const App = () => {
-  const [client, setClient] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [client, setClient] = useState();
   const [validChecksum, setValidChecksum] = useState(true);
   const {getItem, setItem} = useAsyncStorage('@language');
 
-  const setupApollo = async () => {
-    const newClient = await ApolloClient();
-    setClient(newClient);
-    SplashScreen.hide();
-    setLoading(false);
-  };
+  useEffect(() => {
+    async function BuildClient() {
+      const gqlClient = await TDGraphQLProvider();
+      setClient(gqlClient);
+    }
+
+    BuildClient();
+  }, []);
 
   const validateChecksum = async () => {
     const valid = await isValidChecksum();
     setValidChecksum(valid);
   };
-
-  useEffect(() => {
-    if (!client) {
-      setupApollo();
-    }
-    StatusBar.setBarStyle('dark-content');
-    let screenshotListener;
-
-    if (Platform.OS === 'ios') {
-      screenshotListener = ScreenCapture.addScreenshotListener(() => {
-        Alert.alert(
-          'Oops!',
-          'You cannot screen record or take screenshots whilst using the Power application. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
-          [{text: 'OK'}],
-          {cancelable: false},
-        );
-      });
-    }
-    validateChecksum();
-    languageSet();
-
-    return () => {
-      if (Platform.OS === 'ios') {
-        screenshotListener.remove();
-      }
-    };
-  }, [client]);
-
-  if (!validChecksum) {
-    return <View style={{flex: 1, backgroundColor: 'pink'}} />;
-  }
-
-  // if (loading) {
-  //   return <View />;
-  // }
-
-  // const selectedLanguage = 'LTR';
 
   const languageSet = async () => {
     const language = await getItem();
@@ -95,28 +67,62 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+    let screenshotListener;
+
+    if (Platform.OS === 'ios') {
+      screenshotListener = ScreenCapture.addScreenshotListener(() => {
+        Alert.alert(
+          'Oops!',
+          'You cannot screen record or take screenshots whilst using the Power application. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+          [{text: 'OK'}],
+          {cancelable: false},
+        );
+      });
+    }
+    validateChecksum();
+    languageSet();
+    // Intercom.registerUnidentifiedUser();
+
+    return () => {
+      if (Platform.OS === 'ios') {
+        screenshotListener.remove();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!validChecksum) {
+    return <View style={{flex: 1, backgroundColor: 'pink'}} />;
+  }
+
+  if (!client) {
+    return <View />;
+  }
+
   return (
     <>
       {Platform.OS === 'android' && (
         <StatusBar translucent backgroundColor="transparent" />
       )}
-      <ScaleProvider config={{height: 667, width: 375}}>
-        {/* <ApolloProvider client={client}> */}
-        {/* <DataProvider> */}
-        <ThemeProvider>
-          <DictionaryProvider>
-            <NavigationContainer>
-              <TDCountdown>
-                <FormProvider>
-                  <AppContainer />
-                </FormProvider>
-              </TDCountdown>
-            </NavigationContainer>
-          </DictionaryProvider>
-        </ThemeProvider>
-        {/* </DataProvider> */}
-        {/* </ApolloProvider> */}
-      </ScaleProvider>
+      <ApolloProvider client={client}>
+        <ScaleProvider config={{height: 667, width: 375}}>
+          <ThemeProvider>
+            <DataProvider>
+              <DictionaryProvider>
+                <NavigationContainer>
+                  <TDCountdown>
+                    <FormProvider>
+                      <AppContainer />
+                    </FormProvider>
+                  </TDCountdown>
+                </NavigationContainer>
+              </DictionaryProvider>
+            </DataProvider>
+          </ThemeProvider>
+        </ScaleProvider>
+      </ApolloProvider>
 
       <QuickPicker />
     </>

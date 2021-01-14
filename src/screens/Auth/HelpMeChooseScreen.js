@@ -19,6 +19,9 @@ import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
 import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
 import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
+import displayAlert from '../../utils/DisplayAlert';
+
+import getResponse from '../../utils/getResponse';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -37,12 +40,18 @@ export default function HelpMeChooseScreen() {
     ),
   });
 
-  const {programmeQuestionnaire} = useData();
+  const {programmeQuestionnaire, setSuggestedProgramme} = useData();
 
-  const [execute] = useMutation(SubmitProgrammeQuestionnaire);
+  const [execute] = useMutation(SubmitProgrammeQuestionnaire, {
+    fetchPolicy: 'no-cache',
+  });
 
   useEffect(() => {
-    if (!newAnswer || !newAnswer.answer) {
+    if (
+      !newAnswer ||
+      !newAnswer.answer ||
+      storedAnswers.find((it) => it.question === newAnswer.question)
+    ) {
       return;
     }
     if (
@@ -112,14 +121,32 @@ export default function HelpMeChooseScreen() {
       },
     })
       .then((res) => {
-        navigation.navigate('HelpMeChooseResults', {
-          recommendedEnvironment:
-            res.data.submitProgrammeQuestionnaire.programme.environment,
-          recommendedTrainer:
-            res.data.submitProgrammeQuestionnaire.programme.trainer.name,
-        });
+        if (res && res.data) {
+          const {programme} = getResponse(res, 'submitProgrammeQuestionnaire');
+          setSuggestedProgramme(programme);
+
+          navigation.navigate('HelpMeChooseResults', {
+            recommendedTrainer:
+              res.data.submitProgrammeQuestionnaire.programme.trainer.name,
+          });
+        } else {
+          if (res.errors.length > 0) {
+            showError(null, res.errors[0].message);
+          }
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        showError('Server error', 'Unable to return program');
+        console.log(err);
+      });
+  }
+
+  function showError(title, text) {
+    displayAlert({
+      title,
+      text,
+      onPress: () => navigation.pop(),
+    });
   }
 
   const keys = {
@@ -162,7 +189,6 @@ export default function HelpMeChooseScreen() {
                     question: questionId || 'environment',
                     answer: answerTypes[index],
                   });
-                  //handlePress(questionId || 'environment', answerTypes[index]);
                 }}
               />
             )}

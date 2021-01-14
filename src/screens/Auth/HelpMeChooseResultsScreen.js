@@ -21,7 +21,7 @@ import isIPhoneX from '../../utils/isIphoneX';
 
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
-export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
+export default function HelpMeChooseResultsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -29,14 +29,18 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
   const {HelpMeChooseDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {recommendedEnvironment, recommendedTrainer},
+    params: {recommendedTrainer},
   } = useRoute();
 
   const capitalizedName = recommendedTrainer.toUpperCase();
 
   navigation.setOptions({
     header: () => (
-      <Header title={HelpMeChooseDict.HelpMeChoose} showModalCross />
+      <Header
+        title={HelpMeChooseDict.HelpMeChoose}
+        showModalCross
+        rightAction={() => navigation.pop(2)}
+      />
     ),
   });
 
@@ -129,7 +133,7 @@ export default function HelpMeChooseResultsScreen({name = 'Katrina'}) {
         <View style={styles.titleContainer}>
           <Text style={styles.name}>{capitalizedName}</Text>
           <Text style={styles.result}>
-            {HelpMeChooseDict.SuggestedProgramme(name)}
+            {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
           </Text>
         </View>
       </ImageBackground>

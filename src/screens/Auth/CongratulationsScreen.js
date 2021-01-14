@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -26,7 +26,7 @@ export default function CongratulationsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {switchProgramme, newTrainer},
+    params: {switchProgramme, newTrainer, environment},
   } = useRoute();
   const navigation = useNavigation();
 
@@ -118,7 +118,9 @@ export default function CongratulationsScreen() {
         },
         (error) => console.log(error),
         (success, method) => {
-          if (success) console.log('Successfully shared', success);
+          if (success) {
+            console.log('Successfully shared', success);
+          }
         },
       );
     } else {
@@ -151,7 +153,10 @@ export default function CongratulationsScreen() {
           {MeetYourIconsDict.CongratulationsTitle}
         </Text>
         <Text style={styles.text}>
-          {MeetYourIconsDict.StartedProgramme(newTrainer)}
+          {MeetYourIconsDict.StartedProgramme(
+            newTrainer,
+            environment.toLowerCase(),
+          )}
         </Text>
       </View>
       <View style={styles.buttonContainer}>

@@ -62,9 +62,9 @@ export default function MeetYourIconsScreen() {
   } = useRoute();
   //const switchProgramme = true;
 
-  const {trainers} = useData();
+  const {trainers, suggestedProgramme} = useData();
   const [selectedTrainer, setSelectedTrainer] = useState();
-  const [selectedProgramId, setSelectedProgramId] = useState();
+  const [selectedProgram, setSelectedProgram] = useState();
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -77,8 +77,27 @@ export default function MeetYourIconsScreen() {
 
   useEffect(() => {
     setSelectedTrainer(trainers[activeIndex]);
-    setSelectedProgramId(trainers[activeIndex].programmes[0].id);
+    setSelectedProgram(trainers[activeIndex].programmes[0]);
   }, [trainers, activeIndex]);
+
+  useEffect(() => {
+    if (!suggestedProgramme) {
+      return;
+    }
+
+    const trainer = trainers.find(
+      (it) => it.name === suggestedProgramme.trainer.name,
+    );
+
+    if (
+      trainer &&
+      trainer.programmes.find(
+        (it) => it.environment === suggestedProgramme.environment,
+      )
+    ) {
+      setActiveIndex(trainers.indexOf(trainer));
+    }
+  }, [suggestedProgramme]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -232,11 +251,11 @@ export default function MeetYourIconsScreen() {
     if (selectedTrainer.programmes.length === 1) {
       return;
     }
-    const newProgrammeId = selectedTrainer.programmes.find(
-      (it) => it.id !== selectedProgramId,
-    ).id;
+    const newProgramme = selectedTrainer.programmes.find(
+      (it) => it.id !== selectedProgram.id,
+    );
 
-    setSelectedProgramId(newProgrammeId);
+    setSelectedProgram(newProgramme);
   }
 
   function navigateToWorkoutHome() {
@@ -298,7 +317,7 @@ export default function MeetYourIconsScreen() {
         showsPagination={false}>
         {trainers.map((trainer) => {
           const currentProgram =
-            trainer.programmes.find((it) => it.id === selectedProgramId) ||
+            trainer.programmes.find((it) => it.id === selectedProgram.id) ||
             trainer.programmes[0];
 
           const {numberOfWeeks, description, firstWeek} = currentProgram;
@@ -381,7 +400,7 @@ export default function MeetYourIconsScreen() {
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
       </View>
-      {switchProgramme === true && selectedTrainer === currentTrainer ? (
+      {switchProgramme === true && selectedTrainer.id === currentTrainerId ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="restartProgramme"
@@ -399,7 +418,8 @@ export default function MeetYourIconsScreen() {
             onPress={navigateToWorkoutHome}
           />
         </View>
-      ) : switchProgramme === true && selectedTrainer !== currentTrainerId ? (
+      ) : switchProgramme === true &&
+        selectedTrainer.id !== currentTrainerId ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="startNow"
@@ -409,6 +429,7 @@ export default function MeetYourIconsScreen() {
               navigation.navigate('Congratulations', {
                 switchProgramme: true,
                 newTrainer: selectedTrainer.name,
+                environment: selectedProgram.environment,
               })
             }
           />
@@ -421,7 +442,7 @@ export default function MeetYourIconsScreen() {
             variant="gradient"
             onPress={() =>
               navigation.navigate('Registration', {
-                programmeId: selectedProgramId,
+                programmeId: selectedProgram.id,
               })
             }
           />

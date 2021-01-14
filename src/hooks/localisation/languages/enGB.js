@@ -134,7 +134,8 @@ const enGB = {
     ZeroStateText: 'Lorem ipsum dolor sit amet, consectetur',
 
     CongratulationsTitle: 'Congratulations!',
-    StartedProgramme: (name) => `You've started ${name}'s programme.`,
+    StartedProgramme: (name, environment) =>
+      `You've started ${name}'s ${environment} programme.`,
 
     FatLoss: 'FAT LOSS',
     Fitness: 'FITNESS',

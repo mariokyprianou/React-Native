@@ -22,6 +22,7 @@ export default function DataProvider(props) {
   const [trainers, setTrainers] = useState([]);
   const [legals, setLegals] = useState({});
   const [programmeQuestionnaire, setProgrammeQuestionnaire] = useState({});
+  const [suggestedProgramme, setSuggestedProgramme] = useState();
 
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -94,14 +95,24 @@ export default function DataProvider(props) {
   // });
 
   // ** ** ** ** ** Memoize ** ** ** ** **
-  const values = useMemo(
+
+  const values = React.useMemo(
     () => ({
       onboarding,
       trainers,
       legals,
       programmeQuestionnaire,
+      suggestedProgramme,
+      setSuggestedProgramme,
     }),
-    [onboarding, trainers, legals, programmeQuestionnaire],
+    [
+      onboarding,
+      trainers,
+      legals,
+      programmeQuestionnaire,
+      suggestedProgramme,
+      setSuggestedProgramme,
+    ],
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

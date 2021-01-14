@@ -20,16 +20,32 @@ import Header from '../../components/Headers/Header';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import Spacer from '../../components/Utility/Spacer';
-import Preferences from '../../apollo/queries/Preferences';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
+import useUserData from '../../hooks/data/useUserData';
+import useData from '../../hooks/data/UseData';
+
+import AsyncStorage from '@react-native-community/async-storage';
+import displayAlert from '../../utils/DisplayAlert';
+import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-  const {cleanErrors, getValues, updateError} = FormHook();
-  const {dictionary, getLanguage} = useDictionary();
+
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={SettingsDict.ScreenTitle}
+        goBack
+        leftAction={() => updateSettingsAndNavigate()}
+      />
+    ),
+  });
+
+  const {getValues} = FormHook();
+  const {dictionary, getLanguage, setLanguage} = useDictionary();
   const {SettingsDict, LanguageDict} = dictionary;
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight} = ScaleHook();
   const {
     colors,
     cellFormConfig,
@@ -38,76 +54,58 @@ const SettingsScreen = ({}) => {
     dropdownStyle,
   } = useTheme();
   const {params: timeZone} = useRoute();
-  const {loading, error, data} = useQuery(Preferences);
-  const [updatePreferences] = useMutation(UpdatePreference);
-
-  const languageDropdownData = [
-    LanguageDict.English,
-    LanguageDict.Hindi,
-    LanguageDict.Urdu,
-  ];
-
-  const downloadQualityDropdownData = [
-    SettingsDict.DownloadQualityHigh,
-    SettingsDict.DownloadQualityLow,
-  ];
-
-  navigation.setOptions({
-    header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
-  });
 
   const {
-    settings_downloadsQuality,
-    settings_timeZone,
-    settings_language,
-  } = getValues();
+    userData,
+    setUserData,
+    preferences,
+    getPreferences,
+    setPreferences,
+  } = useUserData();
+  const {timeZones} = useData();
 
-  const [marketingPrefEmail, setMarketingPrefEmail] = useState(false);
-  const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
-    false,
+  const [updatePreferences] = useMutation(UpdatePreference);
+  const [updateProfile] = useMutation(UpdateProfile);
+
+  const [marketingPrefEmail, setMarketingPrefEmail] = useState(
+    preferences.emails || false,
   );
-  const [prefErrorReports, setPrefErrorReports] = useState(false);
-  const [prefAnalytics, setPrefAnalytics] = useState(false);
-  const [prefDownloadQuality, setPrefDownloadQuality] = useState('HIGH');
+  const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
+    preferences.notifications || false,
+  );
+  const [prefErrorReports, setPrefErrorReports] = useState(
+    preferences.errorReports || false,
+  );
+  const [prefAnalytics, setPrefAnalytics] = useState(
+    preferences.analytics || false,
+  );
+
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
 
-  useEffect(() => {
-    navigation.setOptions({
-      header: () => <Header title={SettingsDict.ScreenTitle} goBack />,
-    });
-  }, []);
+  const [downloadQuality, setDownloadQuality] = useState(
+    preferences.downloadQuality || 'HIGH',
+  );
+
+  // MARK: - Logic
+  const checkDownloadEnabled = async () => {
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+    const enabled = JSON.parse(value);
+    setDownloadWorkouts(enabled);
+  };
 
   useEffect(() => {
-    if (data) {
-      const {
-        emails,
-        notifications,
-        analytics,
-        downloadQuality,
-        errorReports,
-      } = data.preferences;
+    checkDownloadEnabled();
 
-      setMarketingPrefEmail(emails);
-      setMarketingPrefNotifications(notifications);
-      setPrefErrorReports(errorReports);
-      setPrefAnalytics(analytics);
-      setPrefDownloadQuality(downloadQuality);
-    } else {
-      console.log(error);
+    if (!preferences) {
+      getPreferences().then((res) => {
+        setMarketingPrefEmail(res.preferences.emails);
+        setMarketingPrefNotifications(res.preferences.notifications);
+        setPrefErrorReports(res.preferences.errorReports);
+        setPrefAnalytics(res.preferences.analytics);
+        setDownloadQuality(res.preferences.downloadQuality);
+      });
     }
-  }, [data]);
-
-  useEffect(() => {
-    setPrefDownloadQuality(settings_downloadsQuality);
-  }, [settings_downloadsQuality]);
-
-  // useEffect(() => {
-  //   // TODO - language changed
-  // }, [settings_language]);
-
-  // useEffect(() => {
-  //   // TODO - timeZone changed
-  // }, [settings_timeZone]);
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -157,78 +155,98 @@ const SettingsScreen = ({}) => {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  async function onToggleMarketingPrefEmail() {
-    await updatePreferences({
+  const updateSettingsAndNavigate = async () => {
+    AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
+
+    const {formDownloadsQuality, formTimeZone, formLanguage} = getValues();
+
+    const language = formLanguage || getLanguage();
+    setLanguage(language);
+
+    const newDownloadQuality =
+      Object.keys(downloadQualityMap).find(
+        (key) => downloadQualityMap[key] === formDownloadsQuality,
+      ) || downloadQuality;
+
+    const newPreferences = {
+      notifications: marketingPrefNotifications,
+      emails: marketingPrefEmail,
+      errorReports: prefErrorReports,
+      analytics: prefAnalytics,
+      downloadQuality: newDownloadQuality,
+    };
+
+    const newUserData = {
+      ...userData,
+      timeZone: formTimeZone,
+    };
+    updateProfile({
       variables: {
         input: {
-          notifications: marketingPrefNotifications,
-          emails: !marketingPrefEmail,
-          errorReports: prefErrorReports,
-          analytics: prefAnalytics,
-          downloadQuality: 'HIGH',
+          ...newUserData,
         },
       },
     })
-      .then(() => {
-        setMarketingPrefEmail(!marketingPrefEmail);
+      .then((res) => {
+        setUserData(newUserData);
       })
       .catch((err) => console.log(err));
+
+    updatePreferences({
+      variables: {
+        input: {
+          ...newPreferences,
+        },
+      },
+    })
+      .then((res) => {
+        if (!res.data) {
+          displayAlert({
+            text: 'Unable to update settings',
+          });
+        } else {
+          setPreferences(newPreferences);
+          navigation.goBack();
+        }
+      })
+
+      .catch((err) => {
+        displayAlert({
+          text: 'Unable to update settings',
+        });
+      });
+  };
+
+  function onToggleMarketingPrefEmail() {
+    setMarketingPrefEmail(!marketingPrefEmail);
   }
-  async function onToggleMarketingPrefNotifications() {
-    await updatePreferences({
-      variables: {
-        input: {
-          notifications: !marketingPrefNotifications,
-          emails: marketingPrefEmail,
-          errorReports: prefErrorReports,
-          analytics: prefAnalytics,
-          downloadQuality: 'HIGH',
-        },
-      },
-    })
-      .then(() => {
-        setMarketingPrefNotifications(!marketingPrefNotifications);
-      })
-      .catch((err) => console.log(err));
+  function onToggleMarketingPrefNotifications() {
+    setMarketingPrefNotifications(!marketingPrefNotifications);
   }
-  async function onToggleErrorReports() {
-    await updatePreferences({
-      variables: {
-        input: {
-          notifications: marketingPrefNotifications,
-          emails: marketingPrefEmail,
-          errorReports: !prefErrorReports,
-          analytics: prefAnalytics,
-          downloadQuality: 'HIGH',
-        },
-      },
-    })
-      .then(() => {
-        setPrefErrorReports(!prefErrorReports);
-      })
-      .catch((err) => console.log(err));
+  function onToggleErrorReports() {
+    setPrefErrorReports(!prefErrorReports);
   }
-  async function onToggleAnalytics() {
-    await updatePreferences({
-      variables: {
-        input: {
-          notifications: marketingPrefNotifications,
-          emails: marketingPrefEmail,
-          errorReports: prefErrorReports,
-          analytics: !prefAnalytics,
-          downloadQuality: 'HIGH',
-        },
-      },
-    })
-      .then(() => {
-        setPrefAnalytics(!prefAnalytics);
-      })
-      .catch((err) => console.log(err));
+  function onToggleAnalytics() {
+    setPrefAnalytics(!prefAnalytics);
+  }
+  function onToggleDownloads() {
+    setDownloadWorkouts(!downloadWorkouts);
   }
 
-  const onToggleDownloadWorkouts = (bool) => {
-    // TODO
-    setDownloadWorkouts(bool);
+  const languageDropdownData = [
+    LanguageDict.English,
+    LanguageDict.Hindi,
+    LanguageDict.Urdu,
+  ];
+
+  const downloadQualityDropdownData = [
+    SettingsDict.DownloadQualityHigh,
+    SettingsDict.DownloadQualityLow,
+  ];
+
+  const downloadQualityMap = {
+    HIGH: SettingsDict.DownloadQualityHigh,
+    LOW: SettingsDict.DownloadQualityLow,
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -294,7 +312,7 @@ const SettingsScreen = ({}) => {
           showSwitch
           switchValue={downloadWorkouts}
           switchStyle={styles.switchStyle}
-          onSwitchChange={onToggleDownloadWorkouts}
+          onSwitchChange={onToggleDownloads}
           descriptionTextStyle={styles.switchDescriptionStyle}
           description={SettingsDict.DownloadWorkoutsText}
         />
@@ -303,24 +321,26 @@ const SettingsScreen = ({}) => {
   ];
   const cells2 = [
     {
-      name: 'settings_downloadsQuality',
+      name: 'formDownloadsQuality',
       type: 'dropdown',
       label: SettingsDict.DownloadWorkoutsQuality,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: downloadQualityDropdownData[0],
+      placeholder: downloadQualityMap[downloadQuality],
       data: downloadQualityDropdownData,
     },
     {
-      name: 'settings_timeZone',
+      name: 'formTimeZone',
       type: 'dropdown',
       label: SettingsDict.DownloadWorkoutsTimeZone,
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: timeZone.timeZone,
-      //   data: registrationData.countries,
+      data: timeZones
+        ? timeZones.map(({timeZone}) => timeZone)
+        : [timeZone.timeZone],
     },
   ];
   const cells3 = [
@@ -368,7 +388,7 @@ const SettingsScreen = ({}) => {
   ];
   const cells4 = [
     {
-      name: 'settings_language',
+      name: 'formLanguage',
       type: 'dropdown',
       label: SettingsDict.Language,
       ...cellFormStyles,

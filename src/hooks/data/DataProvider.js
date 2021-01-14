@@ -20,16 +20,20 @@ export default function DataProvider(props) {
 
   const [onboarding, setOnboarding] = useState([]);
   const [trainers, setTrainers] = useState([]);
+
   const [legals, setLegals] = useState({});
   const [programmeQuestionnaire, setProgrammeQuestionnaire] = useState({});
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
+  const [timeZones, setTimeZones] = useState([]);
+
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res);
-      const data = res.onboardingScreens;
-      setOnboarding(data);
+      if (res) {
+        const data = res.onboardingScreens;
+        setOnboarding(data);
+      }
     },
     onError: (error) => console.log(error),
   });
@@ -37,7 +41,9 @@ export default function DataProvider(props) {
   useQuery(Trainers, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      setTrainers(res.getTrainers);
+      if (res) {
+        setTrainers(res.getTrainers);
+      }
     },
     onError: (error) => console.log(error),
   });
@@ -101,6 +107,7 @@ export default function DataProvider(props) {
       onboarding,
       trainers,
       legals,
+      timeZones,
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
@@ -109,6 +116,7 @@ export default function DataProvider(props) {
       onboarding,
       trainers,
       legals,
+      timeZones,
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,

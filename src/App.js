@@ -23,7 +23,8 @@ import {useAsyncStorage} from '@react-native-community/async-storage';
 // import Intercom from 'react-native-intercom';
 import Amplify from 'aws-amplify';
 import {TDGraphQLProvider} from './apollo/Client';
-
+import UserDataProvider from './hooks/data/UserDataProvider';
+import getTimeZoneOffset from './utils/getTimeZoneOffset';
 const authConfig = {
   Auth: {
     region: 'ap-south-1',
@@ -110,15 +111,17 @@ const App = () => {
         <ScaleProvider config={{height: 667, width: 375}}>
           <ThemeProvider>
             <DataProvider>
-              <DictionaryProvider>
-                <NavigationContainer>
-                  <TDCountdown>
-                    <FormProvider>
-                      <AppContainer />
-                    </FormProvider>
-                  </TDCountdown>
-                </NavigationContainer>
-              </DictionaryProvider>
+              <UserDataProvider>
+                <DictionaryProvider>
+                  <NavigationContainer>
+                    <TDCountdown>
+                      <FormProvider>
+                        <AppContainer />
+                      </FormProvider>
+                    </TDCountdown>
+                  </NavigationContainer>
+                </DictionaryProvider>
+              </UserDataProvider>
             </DataProvider>
           </ThemeProvider>
         </ScaleProvider>

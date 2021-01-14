@@ -30,6 +30,7 @@ import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
+import useUserData from '../../hooks/data/useUserData';
 
 const notifications = [
   {
@@ -78,7 +79,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
   });
   const [updateProfile] = useMutation(UpdateProfile);
-  const [userData, setUserData] = useState({});
+  const {userData, setUserData} = useUserData();
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();

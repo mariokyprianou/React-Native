@@ -164,6 +164,9 @@ const enGB = {
     FormLabel7: 'REGION',
 
     NotificationDelete: 'Delete',
+
+    LogoutModalText: 'Are you sure you wish to log out of your account?',
+    LogoutModalButton: 'Logout',
   },
 
   ShareDict: {

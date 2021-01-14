@@ -19,6 +19,7 @@ const urIN = {
     Done: 'DONE',
     GetStarted: 'GET STARTED',
     GoBack: 'GO BACK',
+    GoBackLower: 'Go back',
     Gym: 'GYM',
     Home: 'HOME',
     JumpIn: 'JUMP IN',
@@ -38,7 +39,7 @@ const urIN = {
     StartNow: 'START NOW',
     StartWorkout: 'START WORKOUT',
     TryAgain: 'TRY AGAIN',
-    ThreeSecs: '3 SECS',
+    ThreeSecs: '3s',
     Skip: 'Skip',
     NeedHelp: 'Need help?',
     SaveChanges: 'Save changes',
@@ -58,11 +59,13 @@ const urIN = {
     RegionLabel: 'REGION',
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
+    InvalidGivenName: 'Please enter your first name',
+    InvalidFamilyName: 'Please enter your last name',
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
 
-    ForgotPasswordButtonText: 'Forgot Password?',
+    ForgotPasswordButtonText: 'Forgot password?',
     ForgotPasswordCodeLabel: 'PASSWORD RESET CODE',
     ForgotPasswordLabel: 'NEW PASSWORD',
     InvalidResetCode: 'Invalid code',
@@ -73,6 +76,10 @@ const urIN = {
     TermsAndConditionsScreenTitle: 'Terms & conditions',
     ResetPasswordScreenTitle: 'Forgot password',
     RegistrationScreenTitle: 'Create account',
+    RegistrationGendersFemale: 'Female',
+    RegistrationGendersMale: 'Male',
+    RegistrationGendersOther: 'Other',
+    RegistrationGendersPreferNot: 'Prefer not to say',
     PrivacyPolicyScreenTitle: 'Privacy policy',
 
     NotificationsPermissionsScreenTitle: 'Notifications',
@@ -136,17 +143,18 @@ const urIN = {
 
   ProfileDict: {
     ChangeEmailScreenTitle: 'Change email',
-    ChangeEmailLabel1: 'Old password',
-    ChangeEmailLabel2: 'New Email',
+    ChangeEmailLabel1: 'OLD PASSWORD',
+    ChangeEmailLabel2: 'NEW EMAIL',
     ChangePasswordScreenTitle: 'Change password',
-    ChangePasswordLabel1: 'Old password',
-    ChangePasswordLabel2: 'New password',
+    ChangePasswordLabel1: 'OLD PASSWORD',
+    ChangePasswordLabel2: 'NEW PASSWORD',
 
     DeleteNotificationButtonTitle: 'Delete',
     MemberSince: 'Member since',
     WorkoutsComplete: 'Workouts complete',
+    NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: 'Notifications',
-    PersonalDetails: 'Personal Details',
+    PersonalDetails: 'Personal details',
     FormLabel1: 'FIRST NAME',
     FormLabel2: 'LAST NAME',
     FormLabel3: 'EMAIL',
@@ -156,20 +164,31 @@ const urIN = {
     FormLabel7: 'REGION',
 
     NotificationDelete: 'Delete',
+
+    LogoutModalText: 'Are you sure you wish to log out of your account?',
+    LogoutModalButton: 'Logout',
+  },
+
+  ShareDict: {
+    ShareProgress: 'Share your progress now!',
+    Cancel: 'Cancel',
+    Message: 'Share',
   },
 
   SettingsDict: {
     ScreenTitle: 'Settings',
     VersionText: 'Power App - Version',
     MarketingPreferences: 'Marketing preferences',
-    AppSettings: 'App Settings',
+    AppSettings: 'App settings',
     MarketingPrefEmail: 'Email',
     MarketingPrefNotifications: 'Notifications',
     DownloadWorkouts: 'Download workouts',
     DownloadWorkoutsText:
       'Download this week’s workouts so you can train even without an internet connection.',
-    DownloadWorkoutsQuality: 'Download quality',
-    DownloadWorkoutsTimeZone: 'Time zone',
+    DownloadWorkoutsQuality: 'DOWNLOAD QUALITY',
+    DownloadWorkoutsTimeZone: 'TIME ZONE',
+    DownloadQualityHigh: 'High (1080p)',
+    DownloadQualityLow: 'Low (420p)',
     DataCollection: 'Data collection',
     DataCollectionText:
       'We collect data on the usage of the POWER app to understand how we can make it better. All the data we collect is completely anonymous and cannot be traced to you.',
@@ -179,17 +198,16 @@ const urIN = {
     Analytics: 'Analytics',
     AnalyticsText:
       'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
-    Language: 'Language',
+    Language: 'LANGUAGE',
   },
 
   ProgressDict: {
     YourWorkouts: 'Your workouts',
-
     Your: 'Your',
-    Progress: 'Progress',
-
+    Progress: 'progress',
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
+    ChallengeTime: 'TIME',
   },
 
   TabsTitleDict: {
@@ -204,7 +222,7 @@ const urIN = {
     exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
-    SetsText: 'Sets',
+    SetsText: 'sets',
     EasierSwitchText: 'EASIER',
     HarderSwitchText: 'HARDER',
 
@@ -213,7 +231,7 @@ const urIN = {
     WeightsUnitText: 'kg',
 
     RestDay: 'REST DAY',
-    Day: 'DAY',
+    Day: 'Day',
 
     YourNotes: 'YOUR NOTES',
     Notes: 'Notes',
@@ -221,7 +239,7 @@ const urIN = {
     Low: 'Low',
     Medium: 'Medium',
     High: 'High',
-    Intensity: 'intensity',
+    Intensity: 'Intensity',
     Mins: 'mins',
     Reps: 'reps',
     Sets: 'sets',
@@ -238,12 +256,14 @@ const urIN = {
     CongratulationsTitle: 'Congratulations!',
     StartedProgrammeWithVenue: (name, venue) =>
       `You’ve started ${name}’s ${venue} programme!`,
+    PickAWeight: 'Pick a weight that lorem ipsum dolor',
     ProgrammeComplete: (name, venue) =>
       `Congratulations! You’ve completed ${name}’s ${venue} programme on POWER! To be the first to know if we add more workouts with ${name}, just hit the button below!`,
     SwitchedByMistake: 'Switched by mistake?',
 
     ReminderTitle: 'Set a workout reminder',
     ReminderText: 'Power will remind you to kickstart your workout next week.',
+    Reps_: 'Reps',
     StayTunedTitle: 'Stay tuned',
     StayTuned: (name, date) =>
       `You’ve completed this week’s workouts with ${name}. Get some rest and come back on ${date} for more.`,

@@ -16,19 +16,6 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   const {getValues} = FormHook();
 
-  const onSaveChanges = () => {
-    const {
-      profile_firstName,
-      profile_lastName,
-      profile_email,
-      profile_gender,
-      profile_dateOfBirth,
-      profile_country,
-      profile_region,
-    } = getValues();
-    // TODO: - Verify Values
-  };
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     view: {
@@ -42,20 +29,10 @@ export default function ProfileScreen() {
     // Intercom.displayMessenger();
   };
 
-  const onPressLogout = () => {
-    console.log('TODO: - onPressLogout');
-
-    navigation.navigate('Onboarding');
-  };
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <>
-      <ProfileScreenUI
-        onSaveChange={onSaveChanges}
-        onPressNeedHelp={onPressNeedHelp}
-        onPressLogout={onPressLogout}
-      />
+      <ProfileScreenUI onPressNeedHelp={onPressNeedHelp} />
     </>
   );
 }

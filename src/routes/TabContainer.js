@@ -99,7 +99,9 @@ export default function TabContainer() {
       routeName === 'TakeARest' ||
       routeName === 'WorkoutComplete' ||
       routeName === 'SetCompletion' ||
-      routeName === 'AddPhoto'
+      routeName === 'AddPhoto' ||
+      routeName === 'ChangePassword' ||
+      routeName === 'ChangeEmail'
     ) {
       return false;
     }

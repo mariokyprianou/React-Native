@@ -269,12 +269,20 @@ export default function RegisterScreen() {
       type: 'text',
       label: AuthDict.FirstNameLabel,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'email',
@@ -285,6 +293,10 @@ export default function RegisterScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'password',
@@ -295,6 +307,10 @@ export default function RegisterScreen() {
       autoCompleteType: 'password',
       autoCorrect: false,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'gender',
@@ -304,6 +320,10 @@ export default function RegisterScreen() {
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'dateOfBirth',
@@ -314,6 +334,10 @@ export default function RegisterScreen() {
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'country',
@@ -323,6 +347,10 @@ export default function RegisterScreen() {
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
   ];
 

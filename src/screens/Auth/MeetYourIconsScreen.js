@@ -123,9 +123,9 @@ export default function MeetYourIconsScreen() {
     },
     headerContainer: {
       width: '100%',
-      height: getHeight(75),
+      height: getHeight(80),
       position: 'absolute',
-      top: getHeight(35),
+      top: getHeight(40),
       zIndex: 9,
       flexDirection: 'row',
       justifyContent: 'space-between',

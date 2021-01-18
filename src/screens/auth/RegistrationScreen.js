@@ -324,19 +324,27 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
     },
-    {
+  ];
+
+  if (selectedCountry === 'India') {
+    cells.push({
       name: 'region',
-      type: selectedCountry === 'India' ? 'dropdown' : 'text',
+      type: 'dropdown',
       placeholder: '',
       editable: false,
       label: AuthDict.RegionLabel,
-      data: regionsList,
-      rightAccessory: () => (
-        <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
-      ),
       ...cellFormStyles,
       ...dropdownStyle,
-    },
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
+      rightAccessory: () => <DropDownIcon />,
+      data: regionsList,
+    });
+  }
+
+  const cells2 = [
     {
       name: 'termsAndConditions',
       labelComponent: () => null,
@@ -376,7 +384,8 @@ export default function RegisterScreen() {
         keyboardShouldPersistTaps="handled"
         style={styles.render.scrollViewContainer}>
         <View style={{marginHorizontal: getWidth(25)}}>
-          <Form cells={cells} config={config} />
+          <Form cells={cells} config={{...cellFormConfig}} />
+          <Form cells={cells2} config={config} />
         </View>
       </ScrollView>
     </View>

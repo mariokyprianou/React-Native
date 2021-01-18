@@ -14,15 +14,15 @@ import LandingScreen from './screens/landing/LandingScreen';
 
 export default function AppContainer() {
   return (
-    <AppStack.Navigator headerMode="screen" initialRouteName="Landing">
+    <AppStack.Navigator headerMode="screen">
       {/* <AppStack.Screen name="Test" component={SettingsScreen} /> */}
-      <AppStack.Screen
+      {/* <AppStack.Screen
         name="Landing"
         component={LandingScreen}
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
       <AppStack.Screen
         name="AuthContainer"
         component={AuthContainer}

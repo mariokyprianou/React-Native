@@ -441,7 +441,10 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="gradient"
             onPress={() =>
-              navigation.navigate('Registration', {
+              navigation.navigate('Congratulations', {
+                switchProgramme: false,
+                newTrainer: selectedTrainer.name,
+                environment: selectedProgram.environment,
                 programmeId: selectedProgram.id,
               })
             }

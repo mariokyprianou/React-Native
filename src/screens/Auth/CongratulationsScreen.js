@@ -26,7 +26,7 @@ export default function CongratulationsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {switchProgramme, newTrainer, environment},
+    params: {switchProgramme, newTrainer, environment, programmeId},
   } = useRoute();
   const navigation = useNavigation();
 
@@ -135,10 +135,16 @@ export default function CongratulationsScreen() {
   }
 
   function handlePressStart() {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'TabContainer'}], // add params for which programme selected
-    });
+    if (switchProgramme === true) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabContainer'}], // add params for which programme selected
+      });
+    } else {
+      navigation.navigate('Registration', {
+        programmeId: programmeId,
+      });
+    }
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

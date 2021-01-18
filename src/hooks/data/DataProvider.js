@@ -89,7 +89,7 @@ export default function DataProvider(props) {
         ],
         question: {
           language: 'en',
-          question: 'How many times a week do you exercise?',
+          question: 'Would you rather train at home or in the gym?',
         },
       };
 

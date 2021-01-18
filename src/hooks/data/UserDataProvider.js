@@ -5,14 +5,17 @@
  * Copyright (c) 2021 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useMemo, useEffect, useLayoutEffect} from 'react';
-import {Auth} from 'aws-amplify';
+import React, {useState, useCallback} from 'react';
+import {Platform} from 'react-native';
 
-import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import {useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
+import * as R from 'ramda';
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -30,6 +33,24 @@ export default function UserDataProvider(props) {
     onError: (error) => console.log(error),
   });
 
+  const permissionsNeeded = useCallback(async () => {
+    if (Platform.OS !== 'ios') {
+      return null;
+    }
+
+    const analyticsEnabled = await AsyncStorage.getItem('@ANALYTICS_ASKED');
+    const notificationsEnabled = await AsyncStorage.getItem(
+      '@NOTIFICATIONS_ASKED',
+    );
+
+    if (R.isNil(notificationsEnabled)) {
+      return 'Notifications';
+    }
+    if (R.isNil(analyticsEnabled)) {
+      return 'Analytics';
+    }
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({
@@ -38,8 +59,16 @@ export default function UserDataProvider(props) {
       preferences,
       getPreferences,
       setPreferences,
+      permissionsNeeded,
     }),
-    [userData, setUserData, preferences, getPreferences, setPreferences],
+    [
+      userData,
+      setUserData,
+      preferences,
+      getPreferences,
+      setPreferences,
+      permissionsNeeded,
+    ],
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

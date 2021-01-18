@@ -51,7 +51,9 @@ export default function DataProvider(props) {
   useQuery(Legals, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      setLegals(res.legals);
+      if (res) {
+        setLegals(res.legals);
+      }
     },
     onError: (error) => console.log(error),
   });

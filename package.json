@@ -92,7 +92,9 @@
     "the-core-ui-module-tdmediamanager": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git#v1.0.0",
     "the-core-ui-module-tdsettings": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdsettings.git",
     "the-core-ui-module-tdslideshow": "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow.git",
-    "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git"
+    "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git",
+        "the-core-ui-module-tdnotifications": "https://bitbucket.org/thedistance/the-core-ui-module-tdnotifications.git#notifications.v.3.4.0"
+
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",

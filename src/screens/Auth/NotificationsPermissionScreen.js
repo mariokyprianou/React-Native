@@ -9,6 +9,13 @@ import React, {useEffect} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import PermissionScreenUI from './PermissionScreenUI';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
+import {useMutation} from '@apollo/client';
+import UpdatePreference from '../../apollo/mutations/UpdatePreference';
+import useUserData from '../../hooks/data/useUserData';
+
+// import {Notifications} from 'react-native-notifications';
+// import {NotificationsHook} from 'the-core-ui-module-tdnotifications';
 
 export default function NotificationPermissionScreen() {
   // MARK: - Hooks
@@ -17,15 +24,65 @@ export default function NotificationPermissionScreen() {
 
   const navigation = useNavigation();
 
+  // const {updateNotificationsPreferencesTo} = NotificationsHook();
+
+  const {preferences, getPreferences, setPreferences} = useUserData();
+
+  const [updatePreferences] = useMutation(UpdatePreference);
+
   // MARK: - Logic
+  useEffect(() => {
+    getPreferences();
+  }, []);
+
+  const disallowNotifications = () => {
+    return AsyncStorage.setItem('@NOTIFICATIONS_ASKED', 'true').then((res) => {
+      navigateForward();
+    });
+  };
+
+  const saveSetting = async (enabled) => {
+    // Notifications.registerRemoteNotifications();
+    // updateNotificationsPreferencesTo(true);
+
+    const newPreferences = {
+      emails: preferences.emails,
+      errorReports: preferences.errorReports,
+      analytics: preferences.analytics,
+      downloadQuality: preferences.downloadQuality,
+      notifications: enabled,
+    };
+
+    setPreferences(newPreferences);
+
+    await AsyncStorage.setItem('@NOTIFICATIONS_ASKED', 'true')
+      .then(() => {
+        return updatePreferences({
+          variables: {
+            input: {
+              ...newPreferences,
+            },
+          },
+        });
+      })
+      .then((res) => {
+        console.log('NotificationsScreenUpdate', res);
+        navigateForward();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // MARK: - Actions
   const onPressButton = () => {
-    // TODO: - Allow Notifications
-    navigation.navigate('Analytics');
+    saveSetting(true);
   };
   const onPressBottomButton = () => {
-    // TODO: - Skip permission
+    disallowNotifications();
+  };
+
+  const navigateForward = () => {
     navigation.navigate('Analytics');
   };
 

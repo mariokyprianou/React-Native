@@ -15,6 +15,7 @@ import {useRoute} from '@react-navigation/core';
 import {Auth} from 'aws-amplify';
 import {useMutation} from '@apollo/client';
 import ResendVerificationEmail from '../../apollo/mutations/ResendVerificationEmail';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function EmailVerificationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,6 +27,8 @@ export default function EmailVerificationScreen() {
   } = useRoute();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  const {permissionsNeeded} = useUserData();
 
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
@@ -45,11 +48,13 @@ export default function EmailVerificationScreen() {
       nextAppState === 'active'
     ) {
       await Auth.signIn(email, password)
-        .then(() => {
-          if (Platform.OS === 'android') {
-            navigation.navigate('TabContainer');
+        .then(async () => {
+          const permissionNeeded = await permissionsNeeded();
+
+          if (permissionNeeded) {
+            navigation.navigate(permissionNeeded);
           } else {
-            navigation.navigate('Notifications');
+            navigation.navigate('TabContainer');
           }
         })
         .catch((error) => {
@@ -73,7 +78,13 @@ export default function EmailVerificationScreen() {
   }
 
   async function onPressBottomButton() {
-    navigation.navigate('MeetYourIcons', {switchProgramme: false});
+    const permissionNeeded = await permissionsNeeded();
+
+    if (permissionNeeded) {
+      navigation.navigate(permissionNeeded);
+    } else {
+      navigation.navigate('MeetYourIcons', {switchProgramme: false});
+    }
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

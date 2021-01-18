@@ -17,6 +17,7 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -25,6 +26,8 @@ export default function LoginScreen() {
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
   const [passwordEyeEnabled, setPasswordEyeEnabled] = useState(true);
+
+  const {permissionsNeeded} = useUserData();
 
   navigation.setOptions({
     header: () => (
@@ -95,11 +98,17 @@ export default function LoginScreen() {
     }
 
     await Auth.signIn(emailAddress, password)
-      .then((res) => {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'TabContainer'}],
-        });
+      .then(async (res) => {
+        const permissionNeeded = await permissionsNeeded();
+
+        if (permissionNeeded) {
+          navigation.navigate(permissionNeeded);
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'TabContainer'}],
+          });
+        }
       })
       .catch((error) => {
         console.log('error signing in', error);

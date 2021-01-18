@@ -38,7 +38,7 @@ import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 
-const fakeImage = require('../../../assets/images/trainerCarousel.png'); // change to default image when available
+const zeroState = require('../../../assets/images/zeroState.png');
 const logo = require('../../../assets/images/logo.png');
 
 export default function MeetYourIconsScreen() {
@@ -280,7 +280,7 @@ export default function MeetYourIconsScreen() {
             />
           </View>
         </View>
-        <Image source={fakeImage} style={styles.zeroImage} />
+        <Image source={zeroState} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>
           <Text style={styles.zeroInfoText}>
             {MeetYourIconsDict.ZeroStateText}

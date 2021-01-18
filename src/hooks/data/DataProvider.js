@@ -31,7 +31,10 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       if (res) {
-        const data = res.onboardingScreens;
+        const data = [];
+        res.onboardingScreens.forEach((screen) => {
+          data.unshift(screen);
+        });
         setOnboarding(data);
       }
     },

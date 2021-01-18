@@ -22,7 +22,7 @@ export default function EmailVerificationScreen() {
   const navigation = useNavigation();
   const {AuthDict} = dictionary;
   const {
-    params: {email, password},
+    params: {email, password, fromLogin},
   } = useRoute();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
@@ -73,7 +73,22 @@ export default function EmailVerificationScreen() {
   }
 
   async function onPressBottomButton() {
-    navigation.navigate('MeetYourIcons', {switchProgramme: false});
+    Alert.alert('You will be logged out - do you wish to continue?', '', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Ok',
+        onPress: () => {
+          if (fromLogin === true) {
+            navigation.goBack();
+          } else {
+            navigation.navigate('MeetYourIcons', {switchProgramme: false});
+          }
+        },
+      },
+    ]);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

@@ -103,6 +103,13 @@ export default function LoginScreen() {
       })
       .catch((error) => {
         console.log('error signing in', error);
+        if (error.code === 'UserNotConfirmedException') {
+          navigation.navigate('EmailVerification', {
+            email: emailAddress,
+            password: password,
+            fromLogin: true,
+          });
+        }
       });
 
     // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available

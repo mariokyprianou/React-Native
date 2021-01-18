@@ -227,6 +227,7 @@ export default function RegisterScreen() {
         variant="white"
         icon="chevron"
         onPress={handleRegister}
+        disabled={termsAndConditions === 'on' ? false : true}
         // onPress={() => {
         //   if (Platform.OS === 'android') {
         //     navigation.navigate('TabContainer');

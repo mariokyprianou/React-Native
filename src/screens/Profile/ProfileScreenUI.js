@@ -70,9 +70,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {dictionary} = useDictionary();
   const {ProfileDict, AuthDict} = dictionary;
   const {getValueByName} = FormHook();
-
   const {isConnected, isInternetReachable} = useNetInfo();
-
   const {
     loading: countryLoading,
     error: countryError,
@@ -93,6 +91,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const [regionLookup, setRegionLookup] = useState();
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
+  const [storedNotifications, setStoredNotifications] = useState(notifications);
 
   const formCountry = getValueByName('profile_country');
   useEffect(() => {
@@ -301,6 +300,14 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     });
   }
 
+  function deleteNotification(id) {
+    // change to work with backend and real data when ready
+    const updatedNotifications = storedNotifications.filter(
+      (not) => not.id !== id,
+    );
+    setStoredNotifications(updatedNotifications);
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
     return (
@@ -327,7 +334,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           {...item}
           index={index}
           // onPress={() => readNotificationAction(item.id)}
-          // onDelete={() => deleteNotificationAction(item.id)}
+          onDelete={() => deleteNotification(item.id)}
         />
       );
     };
@@ -341,7 +348,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           }}>
           {ProfileDict.NotificationsTitle}
         </Text>
-        <FlatList data={notifications} renderItem={renderNotificationCell} />
+        <FlatList
+          data={storedNotifications}
+          renderItem={renderNotificationCell}
+        />
       </View>
     );
   };

@@ -197,7 +197,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     },
     icon: {
       solid: true,
-      size: fontSize(11),
+      size: fontSize(12.5),
       color: colors.black100,
     },
   };
@@ -405,12 +405,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(3),
       },
       inputStyle: {
         ...textStyles.regular16_black60,
       },
-      rightAccessory: () => <DropDownIcon />,
+      rightAccessory: () => (
+        <TDIcon input="chevron-right" inputStyle={styles.icon} />
+      ),
       rightAccessoryOnPress: () => {
         navigation.navigate('ChangeEmail');
       },

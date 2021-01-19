@@ -67,6 +67,10 @@ const TwoFieldChangeScreenUI = ({
       label: firstFieldLabel,
       ...cellSetupFor(firstFieldType),
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: secondFieldName,
@@ -74,6 +78,10 @@ const TwoFieldChangeScreenUI = ({
       label: secondFieldLabel,
       ...cellSetupFor(secondFieldType),
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
   ];
 

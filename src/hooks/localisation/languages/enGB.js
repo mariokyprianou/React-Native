@@ -66,6 +66,8 @@ const enGB = {
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
     InvalidNotNewPassword:
       'Oops! Your password must consist of at least 8 alphanumeric, mixed-case characters. Please try again with a new password.',
+    ChangePasswordFail:
+      'Oops! Ensure you have entered your current password, along with your new password, in order to make the change.',
     IncorrectEmailOrPassword:
       'Oops! Your email or password is incorrect. Please try again.',
     ForgotPasswordButtonText: 'Forgot password?',

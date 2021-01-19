@@ -64,6 +64,8 @@ const enGB = {
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
+    InvalidNotNewPassword:
+      'Oops! Your password must consist of at least 8 alphanumeric, mixed-case characters. Please try again with a new password.',
     IncorrectEmailOrPassword:
       'Oops! Your email or password is incorrect. Please try again.',
     ForgotPasswordButtonText: 'Forgot password?',
@@ -99,6 +101,8 @@ const enGB = {
     VerifyEmail:
       'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
     YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
+    VerificationNotRecognized:
+      'Oops! Verification code not recognised. Please try again.',
   },
 
   LanguageDict: {

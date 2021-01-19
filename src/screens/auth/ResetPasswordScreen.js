@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {ScrollView, View, Text} from 'react-native';
+import {ScrollView, View, Text, Alert} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 
@@ -31,7 +31,7 @@ export default function Screen() {
   });
 
   const {cellFormStyles, cellFormConfig, textStyles, colors} = useTheme();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
   const {getHeight, getWidth} = ScaleHook();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -74,19 +74,26 @@ export default function Screen() {
       return;
     }
 
-    if (!passwordRegex.test(newPassword)) {
+    if (!newPassword || !passwordRegex.test(newPassword)) {
       updateError({
-        name: 'password',
-        value: AuthDict.InvalidPassword,
+        name: 'newPassword',
+        value: AuthDict.InvalidNotNewPassword,
       });
       return;
     }
 
     Auth.forgotPasswordSubmit(emailAddress, code, newPassword)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-
-    navigation.navigate('Login');
+      .then((data) => {
+        console.log(data, '<---reset password data');
+        cleanValues();
+        navigation.navigate('Login');
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.code === 'CodeMismatchException') {
+          Alert.alert(AuthDict.VerificationNotRecognized);
+        }
+      });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -106,6 +113,9 @@ export default function Screen() {
       placeholder: '123456',
       textContentType: 'oneTimeCode',
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+      },
     },
     {
       name: 'newPassword',
@@ -116,6 +126,10 @@ export default function Screen() {
       autoCompleteType: 'password',
       autoCorrect: false,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
   ];
 

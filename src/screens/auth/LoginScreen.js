@@ -110,7 +110,6 @@ export default function LoginScreen() {
             fromLogin: true,
           });
         } else if (error.code === 'NotAuthorizedException') {
-          cleanValues();
           Alert.alert(AuthDict.IncorrectEmailOrPassword);
         }
       });
@@ -143,6 +142,9 @@ export default function LoginScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+      },
     },
     {
       name: 'password',
@@ -153,6 +155,10 @@ export default function LoginScreen() {
       autoCompleteType: 'password',
       autoCorrect: false,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
   ];
 

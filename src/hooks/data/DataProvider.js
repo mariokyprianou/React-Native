@@ -14,6 +14,9 @@ import Onboarding from '../../apollo/queries/Onboarding';
 import Trainers from '../../apollo/queries/Trainers';
 import Legals from '../../apollo/queries/Legals';
 import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
+import Programme from '../../apollo/queries/Programme';
+import addWorkoutDates from '../../utils/addWorkoutDates';
+import addRestDays from '../../utils/addRestDays';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -25,7 +28,7 @@ export default function DataProvider(props) {
   const [programmeQuestionnaire, setProgrammeQuestionnaire] = useState({});
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
-  const [timeZones, setTimeZones] = useState([]);
+  const [programme, setProgramme] = useState();
 
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -101,6 +104,17 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
+  const [getProgramme] = useLazyQuery(Programme, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      console.log(res);
+      const data = res.getProgramme;
+
+      setProgramme(data);
+    },
+    onError: (error) => console.log(error),
+  });
+
   // const [submitChallengeResult] = useMutation(SubmitChallengeResult, {
   //   fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
   // });
@@ -112,19 +126,21 @@ export default function DataProvider(props) {
       onboarding,
       trainers,
       legals,
-      timeZones,
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
+      programme,
+      getProgramme,
     }),
     [
       onboarding,
       trainers,
       legals,
-      timeZones,
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
+      programme,
+      getProgramme,
     ],
   );
 

@@ -6,22 +6,34 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
+import UseData from '../../hooks/data/UseData';
 
-const fakeHeadshot = require('../../../assets/fakeHeadshot.png');
-
-export default function WorkoutHomeHeader({name = 'Katrina'}) {
+export default function WorkoutHomeHeader() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
+
+  const [trainerData, setTrainerData] = useState({});
+
+  const {programme} = UseData();
+
+  useEffect(() => {
+    if (programme) {
+      setTrainerData({
+        name: programme.trainer.name,
+        image: programme.programmeImage,
+      });
+    }
+  }, [programme]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -48,6 +60,7 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
     headshot: {
       height: getHeight(32.5),
       width: getHeight(32.5),
+      borderRadius: radius(20),
     },
     name: {
       ...textStyles.bold22_black100,
@@ -71,8 +84,8 @@ export default function WorkoutHomeHeader({name = 'Katrina'}) {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.leftContainer}>
-          <Image source={fakeHeadshot} style={styles.headshot} />
-          <Text style={styles.name}>{name}</Text>
+          <Image source={{uri: trainerData.image}} style={styles.headshot} />
+          <Text style={styles.name}>{trainerData.name}</Text>
         </View>
         <TouchableOpacity onPress={handlePress}>
           <Text style={styles.link}>{WorkoutDict.AllProgrammes}</Text>

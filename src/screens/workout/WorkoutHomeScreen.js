@@ -15,16 +15,16 @@ import {useNavigation} from '@react-navigation/native';
 import useWorkoutHome from '../../hooks/data/useWorkoutHome';
 import useTakeRest from '../../hooks/data/useTakeRest';
 import TDIcon from 'the-core-ui-component-tdicon';
-import {format} from 'date-fns';
 import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
-// import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
-import addWorkoutDates from '../../utils/addWorkoutDates';
-import addRestDays from '../../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import isRTL from '../../utils/isRTL';
-
-const fakeImage = require('../../../assets/fakeCard.png');
+import useData from '../../hooks/data/UseData';
+import {useMutation} from '@apollo/client';
+import UpdateOrder from '../../apollo/mutations/UpdateOrder';
+import * as R from 'ramda';
+import addRestDays from '../../utils/addRestDays';
+import addWorkoutDates from '../../utils/addWorkoutDates';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,42 +33,48 @@ export default function WorkoutHomeScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const [weekNumber, setWeekNumber] = useState(1);
-  const {
-    workoutHomeData: {
-      currentWeek,
-      currentWeekNumber,
-      nextWeek,
-      trainerName,
-      venue,
-      totalDuration,
-      totalReps,
-      totalSets,
-      completedWorkoutWeek,
-      threeWorkoutsInRow,
-      firstWorkoutOfNextWeek,
-      lastWeekOfProgramme,
-    },
-  } = useWorkoutHome();
-  const {takeRestData} = useTakeRest();
+
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
+  const [threeWorkoutsInRow, setThreeWorkoutsInRow] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => null,
   });
 
-  useEffect(() => {
-    if (weekNumber === 1) {
-      setWorkoutsToDisplay(currentWeek);
-    }
-    if (weekNumber === 2) {
-      setWorkoutsToDisplay(nextWeek);
-    }
-  }, [currentWeek, nextWeek, weekNumber]);
+  const {programme, getProgramme} = useData();
+
+  const [updateOrderMutation] = useMutation(UpdateOrder);
 
   useEffect(() => {
-    // change dates on back end too
-  }, [workoutsToDisplay]);
+    getProgramme();
+  }, []);
+
+  const getWeekToDisplay = (data, isCurrentWeek) => {
+    const workouts = isCurrentWeek
+      ? data.currentWeek.workouts
+      : data.nextWeek.workouts;
+    let weekWorkout = workouts
+      .slice()
+      .sort((a, b) => a.orderIndex - b.orderIndex);
+    const week = addWorkoutDates(addRestDays(weekWorkout), isCurrentWeek);
+
+    return week;
+  };
+
+  useEffect(() => {
+    if (programme) {
+      // Sort by index, add rest day and dates
+      if (weekNumber === 1) {
+        const currentWeek = getWeekToDisplay(programme, true);
+        setWorkoutsToDisplay(currentWeek);
+      }
+      if (weekNumber === 2) {
+        const nextWeek = getWeekToDisplay(programme, false);
+        setWorkoutsToDisplay(nextWeek);
+      }
+    }
+  }, [programme, weekNumber]);
 
   useEffect(() => {
     if (threeWorkoutsInRow === true) {
@@ -77,18 +83,64 @@ export default function WorkoutHomeScreen() {
     // deps array left blank so this only appears the first time the page is loaded
   }, []);
 
-  useEffect(() => {
-    if (completedWorkoutWeek === true) {
-      navigation.navigate('WeekComplete', {
-        name: trainerName,
-        weekNumber: currentWeekNumber,
-        totalDuration: totalDuration,
-        totalReps: totalReps,
-        totalSets: totalSets,
-      });
+  // useEffect(() => {
+  //   if (completedWorkoutWeek === true) {
+  //     navigation.navigate('WeekComplete', {
+  //       name: trainerName,
+  //       weekNumber: currentWeekNumber,
+  //       totalDuration: totalDuration,
+  //       totalReps: totalReps,
+  //       totalSets: totalSets,
+  //     });
+  //   }
+  //   // deps array left blank so this only appears the first time the page is loaded
+  // }, []);
+
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function handlePress(direction) {
+    if (direction === 'left') {
+      setWeekNumber(1);
     }
-    // deps array left blank so this only appears the first time the page is loaded
-  }, []);
+    if (direction === 'right') {
+      setWeekNumber(2);
+    }
+    // if (direction === 'right' && completedWorkoutWeek) {
+    //   navigation.navigate('StayTuned', {
+    //     name: trainerName,
+    //     venue: venue,
+    //     date: firstWorkoutOfNextWeek,
+    //     type:
+    //       lastWeekOfProgramme === true
+    //         ? 'programmeComplete'
+    //         : 'workoutComplete',
+    //   });
+    // }
+  }
+
+  async function updateOrder(newList) {
+    setWorkoutsToDisplay(newList);
+
+    let index = 0;
+    const data = newList.filter((it) => it.id !== undefined);
+    const newOrder = data.map((it) => {
+      index = index + 1;
+      return {
+        index: index,
+        id: it.id,
+      };
+    });
+
+    await updateOrderMutation({
+      variables: {
+        input: newOrder,
+      },
+    })
+      .then((res) => {
+        const success = R.path(['data', 'updateOrder'], res);
+        console.log('UpdateOrderRes', success);
+      })
+      .catch((err) => console.log(err));
+  }
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -152,27 +204,6 @@ export default function WorkoutHomeScreen() {
     },
   };
 
-  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePress(direction) {
-    if (direction === 'left') {
-      setWeekNumber(1);
-    }
-    if (direction === 'right' && !completedWorkoutWeek) {
-      setWeekNumber(2);
-    }
-    if (direction === 'right' && completedWorkoutWeek) {
-      navigation.navigate('StayTuned', {
-        name: trainerName,
-        venue: venue,
-        date: firstWorkoutOfNextWeek,
-        type:
-          lastWeekOfProgramme === true
-            ? 'programmeComplete'
-            : 'workoutComplete',
-      });
-    }
-  }
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -208,7 +239,7 @@ export default function WorkoutHomeScreen() {
       <DraggableFlatList
         data={workoutsToDisplay}
         keyExtractor={(item, index) => `${index}`}
-        onDragEnd={({data}) => setWorkoutsToDisplay(data)}
+        onDragEnd={({data}) => updateOrder(data)}
         renderItem={({item, index, drag, isActive}) => (
           <View
             style={{
@@ -217,12 +248,12 @@ export default function WorkoutHomeScreen() {
               paddingTop: index === 0 ? getHeight(20) : 0,
             }}>
             <WorkoutCard
-              title={item.title}
+              title={item.name}
               day={item.day}
               date={item.date}
               duration={item.duration}
               intensity={item.intensity}
-              image={item.image}
+              image={item.overviewImage}
               drag={drag}
               onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
             />

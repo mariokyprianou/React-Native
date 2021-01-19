@@ -50,7 +50,8 @@ export async function TDGraphQLProvider() {
       Authorization,
       'Accept-Language': translateMap[locale],
     };
-
+    // console.log('headers', url);
+    //console.log('headers', headers);
     return fetch(url, {
       ...options,
       headers: headers,

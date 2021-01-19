@@ -14,15 +14,22 @@ const addWorkoutDates = (data, thisWeek) => {
     const date = thisWeek ? addDays(today, index) : addDays(today, index + 7);
     const formattedDate = format(date, 'iiii, do LLL');
 
-    const newWorkout = {
-      name: workout.workout.name,
-      intensity: workout.workout.intensity,
-      duration: workout.workout.duration,
-      date: formattedDate,
-      day: workout.day,
-    };
-
-    return newWorkout;
+    if (workout.workout) {
+      return {
+        name: workout.workout.name.toUpperCase(),
+        intensity: workout.workout.intensity,
+        duration: workout.workout.duration,
+        date: formattedDate,
+        day: workout.day,
+      };
+    } else {
+      return {
+        ...workout,
+        name: workout.name.toUpperCase(),
+        date: formattedDate,
+        day: workout.day,
+      };
+    }
   });
 
   return newData;

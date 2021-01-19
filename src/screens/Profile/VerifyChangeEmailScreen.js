@@ -11,12 +11,15 @@ import {View, StyleSheet} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
+import {useMutation} from '@apollo/client';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import {Form} from 'the-core-ui-module-tdforms';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Auth} from 'aws-amplify';
+import {useRoute} from '@react-navigation/core';
+import UpdateEmail from '../../apollo/mutations/UpdateEmail';
 
 export default function VerifyChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -24,7 +27,11 @@ export default function VerifyChangeEmailScreen() {
   const {colors, cellFormConfig, cellFormStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {ProfileDict} = dictionary;
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
+  const {
+    params: {email},
+  } = useRoute();
+  const [changeEmail] = useMutation(UpdateEmail);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -64,12 +71,20 @@ export default function VerifyChangeEmailScreen() {
     }
 
     await Auth.verifyCurrentUserAttributeSubmit('email', code)
-      .then((res) => {
+      .then(async (res) => {
         cleanValues();
-        navigation.navigate('Profile');
+
+        await changeEmail({variables: {email: email}})
+          .then((res) => {
+            console.log(res, '<---change email result');
+            navigation.navigate('Profile');
+          })
+          .catch((err) =>
+            console.log(err, '<---error changing email on back end'),
+          );
       })
       .catch((err) => {
-        console.log(err, '<---error');
+        console.log(err, '<---error verifying code with cognito');
         if (err.code === 'CodeMismatchException') {
           updateError({
             name: 'code',

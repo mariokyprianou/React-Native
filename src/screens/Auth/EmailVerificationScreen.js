@@ -54,9 +54,7 @@ export default function EmailVerificationScreen() {
         })
         .catch((error) => {
           console.log('error signing in', error);
-          Alert.alert(
-            'You are not yet logged in - please verify your email address',
-          );
+          Alert.alert(AuthDict.NotYetLoggedIn);
         });
     }
 
@@ -67,13 +65,13 @@ export default function EmailVerificationScreen() {
   async function onPressButton() {
     await resendEmail({variables: {email}})
       .then(() => {
-        Alert.alert('Verification link sent');
+        Alert.alert(AuthDict.VerificationLinkSent);
       })
       .catch((err) => console.log(err));
   }
 
   async function onPressBottomButton() {
-    Alert.alert('You will be logged out - do you wish to continue?', '', [
+    Alert.alert(AuthDict.YouWillBeLoggedOut, '', [
       {
         text: 'Cancel',
         style: 'cancel',

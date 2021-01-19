@@ -6,7 +6,7 @@
  */
 
 import React, {useState} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {ScrollView, View, Text, TouchableOpacity, Alert} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -38,7 +38,7 @@ export default function LoginScreen() {
   });
 
   const {cellFormStyles, cellFormConfig, textStyles} = useTheme();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
   const {getHeight, getWidth} = ScaleHook();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -74,7 +74,6 @@ export default function LoginScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleLogin() {
-    // navigation.navigate('MeetYourIcons', {switchProgramme: false});
     cleanErrors();
 
     const {emailAddress, password} = getValues();
@@ -104,11 +103,15 @@ export default function LoginScreen() {
       .catch((error) => {
         console.log('error signing in', error);
         if (error.code === 'UserNotConfirmedException') {
+          cleanValues();
           navigation.navigate('EmailVerification', {
             email: emailAddress,
             password: password,
             fromLogin: true,
           });
+        } else if (error.code === 'NotAuthorizedException') {
+          cleanValues();
+          Alert.alert(AuthDict.IncorrectEmailOrPassword);
         }
       });
 

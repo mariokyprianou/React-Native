@@ -64,7 +64,8 @@ const enGB = {
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
-
+    IncorrectEmailOrPassword:
+      'Oops! Your email or password is incorrect. Please try again.',
     ForgotPasswordButtonText: 'Forgot password?',
     ForgotPasswordCodeLabel: 'PASSWORD RESET CODE',
     ForgotPasswordLabel: 'NEW PASSWORD',
@@ -81,7 +82,8 @@ const enGB = {
     RegistrationGendersOther: 'Other',
     RegistrationGendersPreferNot: 'Prefer not to say',
     PrivacyPolicyScreenTitle: 'Privacy policy',
-
+    NotYetLoggedIn:
+      'You are not yet logged in - please verify your email address',
     NotificationsPermissionsScreenTitle: 'Notifications',
     NotificationsPermissionsText:
       'To send you workout updates, we need permission to send push notifications to your device.',
@@ -93,8 +95,10 @@ const enGB = {
     LoginScreenTitle: 'Login',
 
     VerifyEmailTitle: 'Verify email',
+    VerificationLinkSent: 'Verification link sent',
     VerifyEmail:
       'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
+    YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
   },
 
   LanguageDict: {

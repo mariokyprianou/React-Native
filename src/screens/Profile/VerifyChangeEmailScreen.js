@@ -1,8 +1,9 @@
 /*
- * Created Date: Mon, 9th Nov 2020, 13:30:27 pm
- * Author: Kristyna Fojtikova
- * Email: kristyna.fojtikova@thedistance.co.uk
- * Copyright (c) 2020 The Distance
+ * Jira Ticket:
+ * Created Date: Tue, 19th Jan 2021, 10:50:04 am
+ * Author: Jodi Dublon
+ * Email: jodi.dublon@thedistance.co.uk
+ * Copyright (c) 2021 The Distance
  */
 
 import React, {useEffect} from 'react';
@@ -15,10 +16,9 @@ import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import {Form} from 'the-core-ui-module-tdforms';
 import DefaultButton from '../../components/Buttons/DefaultButton';
-import {emailRegex} from '../../utils/regex';
 import {Auth} from 'aws-amplify';
 
-export default function ChangeEmailScreen() {
+export default function VerifyChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, cellFormConfig, cellFormStyles} = useTheme();
@@ -30,7 +30,7 @@ export default function ChangeEmailScreen() {
   useEffect(() => {
     navigation.setOptions({
       header: () => (
-        <Header title={ProfileDict.ChangeEmailScreenTitle} goBack />
+        <Header title={ProfileDict.VerifyEmailScreenTitle} goBack />
       ),
     });
   }, []);
@@ -53,35 +53,41 @@ export default function ChangeEmailScreen() {
   async function onPressChange() {
     cleanErrors();
 
-    const {newEmail} = getValues();
+    const {code} = getValues();
 
-    if (!newEmail || !emailRegex.test(newEmail)) {
+    if (!code || code.length < 6) {
       updateError({
-        name: 'newEmail',
-        value: ProfileDict.IncorrectEmail,
+        name: 'code',
+        value: ProfileDict.InvalidChangeEmailCode,
       });
       return;
     }
 
-    let user = await Auth.currentAuthenticatedUser();
-
-    await Auth.updateUserAttributes(user, {email: newEmail})
+    await Auth.verifyCurrentUserAttributeSubmit('email', code)
       .then((res) => {
-        console.log(res);
-        navigation.navigate('VerifyChangeEmail', {email: newEmail});
+        cleanValues();
+        navigation.navigate('Profile');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err, '<---error');
+        if (err.code === 'CodeMismatchException') {
+          updateError({
+            name: 'code',
+            value: ProfileDict.InvalidChangeEmailCode,
+          });
+        }
+      });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const cells = [
     {
-      name: 'newEmail',
       type: 'text',
-      variant: 'email',
-      textContentType: 'emailAddress',
-      autoCompleteType: 'email',
-      label: ProfileDict.ChangeEmailLabel2,
+      variant: 'number',
+      name: 'code',
+      label: ProfileDict.CodeLabel,
+      placeholder: '123456',
+      textContentType: 'oneTimeCode',
       ...cellFormStyles,
       inputContainerStyle: {
         paddingHorizontal: 0,
@@ -98,7 +104,7 @@ export default function ChangeEmailScreen() {
         <Form cells={cells} config={config} />
       </View>
       <DefaultButton
-        type="changeEmail"
+        type="done"
         variant="white"
         onPress={onPressChange}
         icon="chevron"

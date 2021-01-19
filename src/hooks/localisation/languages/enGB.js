@@ -159,6 +159,11 @@ const enGB = {
     ChangePasswordScreenTitle: 'Change password',
     ChangePasswordLabel1: 'OLD PASSWORD',
     ChangePasswordLabel2: 'NEW PASSWORD',
+    IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
+    VerifyEmailScreenTitle: 'Verify email',
+    InvalidChangeEmailCode:
+      'Oops! This code is not recognised; please enter the correct code to change your email address.',
+    CodeLabel: 'CODE',
 
     DeleteNotificationButtonTitle: 'Delete',
     MemberSince: 'Member since',

@@ -72,17 +72,14 @@ export default function DataProvider(props) {
           question.question.answer3,
           question.question.answer4,
         );
-
         const formattedQuestion = answers.map((val, index) => {
           return {
             key: `${index + 1}`,
             answerText: val,
           };
         });
-
         return {...question, answers: formattedQuestion};
       });
-
       const localQuestion = {
         orderIndex: 1,
         answers: [
@@ -94,7 +91,6 @@ export default function DataProvider(props) {
           question: 'Would you rather train at home or in the gym?',
         },
       };
-
       qMap.unshift(localQuestion);
       setProgrammeQuestionnaire(qMap);
     },

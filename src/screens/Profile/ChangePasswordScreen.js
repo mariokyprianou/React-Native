@@ -10,12 +10,16 @@ import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 import {Auth} from 'aws-amplify';
+import {passwordRegex} from '../../utils/regex';
+import {useNavigation} from '@react-navigation/native';
 
 export default function ChangePasswordScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {dictionary} = useDictionary();
+  const {AuthDict} = dictionary;
   const {ProfileDict} = dictionary;
-  const {getValues, cleanValues} = FormHook();
+  const {getValues, cleanValues, updateError} = FormHook();
+  const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -25,12 +29,34 @@ export default function ChangePasswordScreen() {
       changePasswordValue2: newPassword,
     } = getValues();
 
+    if (!newPassword || !passwordRegex.test(newPassword)) {
+      updateError({
+        name: 'changePasswordValue2',
+        value: AuthDict.ChangePasswordFail,
+      });
+      return;
+    }
+
     Auth.currentAuthenticatedUser()
       .then((user) => {
         return Auth.changePassword(user, oldPassword, newPassword);
       })
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        console.log(data);
+        navigation.goBack();
+      })
+      .catch((err) => {
+        console.log(err);
+        if (
+          err.code === 'InvalidParameterException' ||
+          err.code === 'NotAuthorizedException'
+        ) {
+          updateError({
+            name: 'changePasswordValue2',
+            value: AuthDict.ChangePasswordFail,
+          });
+        }
+      });
 
     cleanValues();
   };

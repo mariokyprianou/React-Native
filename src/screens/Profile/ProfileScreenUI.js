@@ -47,6 +47,13 @@ const notifications = [
     sentAt: new Date(),
     readAt: undefined,
   },
+  {
+    id: 789789788,
+    subject: 'SUBJECT',
+    message: 'Message',
+    sentAt: new Date(),
+    readAt: undefined,
+  },
 ];
 
 export default function ProfileScreenUI({onPressNeedHelp}) {
@@ -190,7 +197,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     },
     icon: {
       solid: true,
-      size: fontSize(11),
+      size: fontSize(12.5),
       color: colors.black100,
     },
   };
@@ -369,6 +376,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
       },
     },
     {
@@ -384,6 +393,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
       },
     },
     {
@@ -394,12 +405,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(3),
       },
       inputStyle: {
         ...textStyles.regular16_black60,
       },
-      rightAccessory: () => <DropDownIcon />,
+      rightAccessory: () => (
+        <TDIcon input="chevron-right" inputStyle={styles.icon} />
+      ),
       rightAccessoryOnPress: () => {
         navigation.navigate('ChangeEmail');
       },
@@ -414,6 +426,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       rightAccessory: () => <DropDownIcon />,
       data: gendersData,
       placeholder: gendersRef[userData.gender] || '',
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(3),
+      },
     },
     {
       name: 'profile_dateOfBirth',

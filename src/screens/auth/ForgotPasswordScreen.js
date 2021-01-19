@@ -25,7 +25,7 @@ export default function Screen() {
   });
 
   const {cellFormStyles, cellFormConfig, textStyles, colors} = useTheme();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
   const {getHeight, getWidth} = ScaleHook();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
@@ -89,6 +89,9 @@ export default function Screen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+      },
     },
   ];
 

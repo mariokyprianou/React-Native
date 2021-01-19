@@ -227,6 +227,7 @@ export default function RegisterScreen() {
         variant="white"
         icon="chevron"
         onPress={handleRegister}
+        disabled={termsAndConditions === 'on' ? false : true}
         // onPress={() => {
         //   if (Platform.OS === 'android') {
         //     navigation.navigate('TabContainer');
@@ -269,12 +270,20 @@ export default function RegisterScreen() {
       type: 'text',
       label: AuthDict.FirstNameLabel,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'email',
@@ -285,6 +294,10 @@ export default function RegisterScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'password',
@@ -295,6 +308,10 @@ export default function RegisterScreen() {
       autoCompleteType: 'password',
       autoCorrect: false,
       ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'gender',
@@ -304,6 +321,10 @@ export default function RegisterScreen() {
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'dateOfBirth',
@@ -314,6 +335,10 @@ export default function RegisterScreen() {
       rightAccessory: () => <CalendarIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'country',
@@ -323,20 +348,32 @@ export default function RegisterScreen() {
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
     },
-    {
+  ];
+
+  if (selectedCountry === 'India') {
+    cells.push({
       name: 'region',
-      type: selectedCountry === 'India' ? 'dropdown' : 'text',
+      type: 'dropdown',
       placeholder: '',
       editable: false,
       label: AuthDict.RegionLabel,
-      data: regionsList,
-      rightAccessory: () => (
-        <DropDownIcon enabled={selectedCountry === 'India' ? true : false} />
-      ),
       ...cellFormStyles,
       ...dropdownStyle,
-    },
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+      },
+      rightAccessory: () => <DropDownIcon />,
+      data: regionsList,
+    });
+  }
+
+  const cells2 = [
     {
       name: 'termsAndConditions',
       labelComponent: () => null,
@@ -376,7 +413,8 @@ export default function RegisterScreen() {
         keyboardShouldPersistTaps="handled"
         style={styles.render.scrollViewContainer}>
         <View style={{marginHorizontal: getWidth(25)}}>
-          <Form cells={cells} config={config} />
+          <Form cells={cells} config={{...cellFormConfig}} />
+          <Form cells={cells2} config={config} />
         </View>
       </ScrollView>
     </View>

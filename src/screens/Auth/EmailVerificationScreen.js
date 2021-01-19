@@ -23,7 +23,7 @@ export default function EmailVerificationScreen() {
   const navigation = useNavigation();
   const {AuthDict} = dictionary;
   const {
-    params: {email, password},
+    params: {email, password, fromLogin},
   } = useRoute();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
@@ -59,9 +59,7 @@ export default function EmailVerificationScreen() {
         })
         .catch((error) => {
           console.log('error signing in', error);
-          Alert.alert(
-            'You are not yet logged in - please verify your email address',
-          );
+          Alert.alert(AuthDict.NotYetLoggedIn);
         });
     }
 
@@ -72,19 +70,34 @@ export default function EmailVerificationScreen() {
   async function onPressButton() {
     await resendEmail({variables: {email}})
       .then(() => {
-        Alert.alert('Verification link sent');
+        Alert.alert(AuthDict.VerificationLinkSent);
       })
       .catch((err) => console.log(err));
   }
 
   async function onPressBottomButton() {
-    const permissionNeeded = await permissionsNeeded();
+    Alert.alert(AuthDict.YouWillBeLoggedOut, '', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Ok',
+        onPress: async () => {
+          if (fromLogin === true) {
+            navigation.goBack();
+          } else {
+            const permissionNeeded = await permissionsNeeded();
 
-    if (permissionNeeded) {
-      navigation.navigate(permissionNeeded);
-    } else {
-      navigation.navigate('MeetYourIcons', {switchProgramme: false});
-    }
+            if (permissionNeeded) {
+              navigation.navigate(permissionNeeded);
+            } else {
+              navigation.navigate('MeetYourIcons', {switchProgramme: false});
+            }
+          }
+        },
+      },
+    ]);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

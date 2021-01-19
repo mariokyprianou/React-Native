@@ -54,7 +54,7 @@ export default function OnboardingSliderItem({image, header, text}) {
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image source={image} style={styles.image} />
+        <Image source={{uri: image}} style={styles.image} />
         <FadingBottomView color="white" height={60} />
       </View>
       <Text style={styles.header}>{header}</Text>

@@ -38,7 +38,7 @@ import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 
-const fakeImage = require('../../../assets/images/trainerCarousel.png'); // change to default image when available
+const zeroState = require('../../../assets/images/zeroState.png');
 const logo = require('../../../assets/images/logo.png');
 
 export default function MeetYourIconsScreen() {
@@ -123,9 +123,9 @@ export default function MeetYourIconsScreen() {
     },
     headerContainer: {
       width: '100%',
-      height: getHeight(75),
+      height: getHeight(80),
       position: 'absolute',
-      top: getHeight(35),
+      top: getHeight(40),
       zIndex: 9,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -280,7 +280,7 @@ export default function MeetYourIconsScreen() {
             />
           </View>
         </View>
-        <Image source={fakeImage} style={styles.zeroImage} />
+        <Image source={zeroState} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>
           <Text style={styles.zeroInfoText}>
             {MeetYourIconsDict.ZeroStateText}
@@ -441,7 +441,10 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="gradient"
             onPress={() =>
-              navigation.navigate('Registration', {
+              navigation.navigate('Congratulations', {
+                switchProgramme: false,
+                newTrainer: selectedTrainer.name,
+                environment: selectedProgram.environment,
                 programmeId: selectedProgram.id,
               })
             }

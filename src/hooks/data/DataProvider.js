@@ -31,7 +31,10 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       if (res) {
-        const data = res.onboardingScreens;
+        const data = [];
+        res.onboardingScreens.forEach((screen) => {
+          data.unshift(screen);
+        });
         setOnboarding(data);
       }
     },
@@ -88,7 +91,7 @@ export default function DataProvider(props) {
         ],
         question: {
           language: 'en',
-          question: 'How many times a week do you exercise?',
+          question: 'Would you rather train at home or in the gym?',
         },
       };
 

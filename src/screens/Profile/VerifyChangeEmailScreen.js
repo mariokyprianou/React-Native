@@ -29,7 +29,7 @@ export default function VerifyChangeEmailScreen() {
   const {ProfileDict} = dictionary;
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
   const {
-    params: {email},
+    params: {email, userData, setUserData},
   } = useRoute();
   const [changeEmail] = useMutation(UpdateEmail);
   const navigation = useNavigation();
@@ -76,7 +76,7 @@ export default function VerifyChangeEmailScreen() {
 
         await changeEmail({variables: {email: email}})
           .then((res) => {
-            console.log(res, '<---change email result');
+            setUserData({...userData, email: email});
             navigation.navigate('Profile');
           })
           .catch((err) =>

@@ -133,7 +133,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (profileData) {
-      console.log(profileData, '<---profile data');
       const memberSince = profileData.profile.createdAt.slice(0, 4);
       const userProfile = {...profileData.profile};
       userProfile.memberSince = memberSince;
@@ -414,7 +413,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <TDIcon input="chevron-right" inputStyle={styles.icon} />
       ),
       rightAccessoryOnPress: () => {
-        navigation.navigate('ChangeEmail');
+        navigation.navigate('ChangeEmail', {
+          userData: userData,
+          setUserData: setUserData,
+        });
       },
       placeholder: userData.email,
     },

@@ -24,12 +24,15 @@ import {useAsyncStorage} from '@react-native-community/async-storage';
 import Amplify from 'aws-amplify';
 import {TDGraphQLProvider} from './apollo/Client';
 import UserDataProvider from './hooks/data/UserDataProvider';
-import getTimeZoneOffset from './utils/getTimeZoneOffset';
+import Secrets from './environment/Secrets';
+
+const {awsRegion, userPoolId, clientId} = Secrets();
+
 const authConfig = {
   Auth: {
-    region: 'ap-south-1',
-    userPoolId: 'ap-south-1_IKCoLjZya',
-    userPoolWebClientId: '6jh3je4i3ni14qki167tr5v3gm',
+    region: awsRegion,
+    userPoolId: userPoolId,
+    userPoolWebClientId: clientId,
   },
 };
 

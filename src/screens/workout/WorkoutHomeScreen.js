@@ -23,7 +23,7 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
-import {differenceInDays, subDays} from 'date-fns';
+import {differenceInDays, addDays} from 'date-fns';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -120,37 +120,39 @@ export default function WorkoutHomeScreen() {
     }
   }, [programme, threeWorkoutsInRow]);
 
-  // useEffect(() => {
-  //   if (completedWorkoutWeek === true) {
-  //     navigation.navigate('WeekComplete', {
-  //       name: trainerName,
-  //       weekNumber: currentWeekNumber,
-  //       totalDuration: totalDuration,
-  //       totalReps: totalReps,
-  //       totalSets: totalSets,
-  //     });
-  //   }
-  // }, []);
-
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
+    const firstDayNextWeek = addDays(
+      new Date(programme?.currentWeek.workouts[0].completedAt),
+      7,
+    );
+    const programmeLength = programme?.trainer.programmes.filter(
+      (prog) => prog.environment === programme.environment,
+    )[0].numberOfWeeks;
+
     if (direction === 'left') {
       setWeekNumber(1);
     }
     if (direction === 'right') {
-      setWeekNumber(2);
+      if (
+        programme.currentWeek.workouts.every(
+          (workout) => workout.completedAt !== null,
+        )
+      ) {
+        navigation.navigate('StayTuned', {
+          name: programme?.trainer.name,
+          venue: programme?.environment,
+          image: programme?.programmeImage,
+          date: firstDayNextWeek,
+          type:
+            programme?.currentWeek.weekNumber === programmeLength
+              ? 'programmeComplete'
+              : 'workoutsComplete',
+        });
+      } else {
+        setWeekNumber(2);
+      }
     }
-    // if (direction === 'right' && completedWorkoutWeek) {
-    //   navigation.navigate('StayTuned', {
-    //     name: trainerName,
-    //     venue: venue,
-    //     date: firstWorkoutOfNextWeek,
-    //     type:
-    //       lastWeekOfProgramme === true
-    //         ? 'programmeComplete'
-    //         : 'workoutComplete',
-    //   });
-    // }
   }
 
   async function updateOrder(newList) {

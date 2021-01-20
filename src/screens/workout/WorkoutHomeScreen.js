@@ -92,8 +92,21 @@ export default function WorkoutHomeScreen() {
         // set threeWorkoutsInRow => true/false
       }
       if (previousWorkoutDates.length >= 3) {
-        //check if consecutive before today
-        setThreeWorkoutsInRow(true);
+        const lastIndex = previousWorkoutDates.length - 1;
+        if (
+          differenceInDays(today, new Date(previousWorkoutDates[lastIndex])) ===
+            1 &&
+          differenceInDays(
+            today,
+            new Date(previousWorkoutDates[lastIndex - 1]),
+          ) === 2 &&
+          differenceInDays(
+            today,
+            new Date(previousWorkoutDates[lastIndex - 2]),
+          ) === 3
+        ) {
+          setThreeWorkoutsInRow(true);
+        }
       }
     }
   }, [programme]);

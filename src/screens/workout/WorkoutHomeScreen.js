@@ -12,8 +12,6 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
-import useWorkoutHome from '../../hooks/data/useWorkoutHome';
-import useTakeRest from '../../hooks/data/useTakeRest';
 import TDIcon from 'the-core-ui-component-tdicon';
 import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
@@ -25,6 +23,7 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
+import {differenceInDays, subDays} from 'date-fns';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -36,6 +35,7 @@ export default function WorkoutHomeScreen() {
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const [threeWorkoutsInRow, setThreeWorkoutsInRow] = useState(false);
+  const [warningReceived, setWarningReceived] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -43,7 +43,6 @@ export default function WorkoutHomeScreen() {
   });
 
   const {programme, getProgramme} = useData();
-
   const [updateOrderMutation] = useMutation(UpdateOrder);
 
   useEffect(() => {
@@ -64,7 +63,6 @@ export default function WorkoutHomeScreen() {
 
   useEffect(() => {
     if (programme) {
-      // Sort by index, add rest day and dates
       if (weekNumber === 1) {
         const currentWeek = getWeekToDisplay(programme, true);
         setWorkoutsToDisplay(currentWeek);
@@ -77,11 +75,37 @@ export default function WorkoutHomeScreen() {
   }, [programme, weekNumber]);
 
   useEffect(() => {
-    if (threeWorkoutsInRow === true) {
-      navigation.navigate('TakeARest', {name: 'Katrina'});
+    const today = new Date();
+    // console.log(subDays(today, 2), '<--- 2 days ago');
+    if (programme) {
+      const previousWorkoutDates = [];
+      const completedWorkouts = programme.currentWeek.workouts.filter(
+        (workout) => workout.completedAt !== null,
+      );
+      completedWorkouts.forEach((workout) =>
+        previousWorkoutDates.push(workout.completedAt),
+      );
+      if (previousWorkoutDates.length < 3) {
+        // check async storage
+        // Christos to store completed workouts in async storage
+        // Three booleans for hasCompleted1, hasCompleted2, hasCompleted3 (consecutively)
+        // set threeWorkoutsInRow => true/false
+      }
+      if (previousWorkoutDates.length >= 3) {
+        //check if consecutive before today
+        setThreeWorkoutsInRow(true);
+      }
     }
-    // deps array left blank so this only appears the first time the page is loaded
-  }, []);
+  }, [programme]);
+
+  useEffect(() => {
+    if (programme && threeWorkoutsInRow === true && warningReceived === false) {
+      navigation.navigate('TakeARest', {
+        name: programme.trainer.name,
+        setWarningReceived,
+      });
+    }
+  }, [programme, threeWorkoutsInRow]);
 
   // useEffect(() => {
   //   if (completedWorkoutWeek === true) {
@@ -93,7 +117,6 @@ export default function WorkoutHomeScreen() {
   //       totalSets: totalSets,
   //     });
   //   }
-  //   // deps array left blank so this only appears the first time the page is loaded
   // }, []);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **

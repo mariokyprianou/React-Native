@@ -44,19 +44,15 @@ const logo = require('../../../assets/images/logo.png');
 export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
-
   navigation.setOptions({
     header: () => null,
   });
 
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
-
   const iconsSwiper = useRef();
-
   const {
     params: {switchProgramme},
   } = useRoute();
@@ -65,9 +61,7 @@ export default function MeetYourIconsScreen() {
   const {trainers, suggestedProgramme} = useData();
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
-
   const [activeIndex, setActiveIndex] = useState(0);
-
   const [safeArea, setSafeArea] = useState(false);
   const {isConnected, isInternetReachable} = useNetInfo();
 
@@ -76,6 +70,7 @@ export default function MeetYourIconsScreen() {
   const currentWeek = 4; // to be changed to getProgramme data
 
   useEffect(() => {
+    console.log(trainers, activeIndex, '<---?');
     setSelectedTrainer(trainers[activeIndex]);
     setSelectedProgram(trainers[activeIndex].programmes[0]);
   }, [trainers, activeIndex]);

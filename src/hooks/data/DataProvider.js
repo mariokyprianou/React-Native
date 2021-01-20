@@ -107,7 +107,6 @@ export default function DataProvider(props) {
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res);
       const data = res.getProgramme;
 
       setProgramme(data);

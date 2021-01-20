@@ -9,11 +9,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import TypeDefs from './TypeDefs';
 import Authoriser from './ApolloMiddleware/Authoriser';
 import {onError} from '@apollo/client/link/error';
+import Secrets from '../environment/Secrets';
 
 const errorLink = onError(
   ({graphQLErrors, networkError, operation, response}) => {
-    // console.log('GQL-OPERATION', JSON.stringify(operation));
-    // console.log('GQL-RESPONSE', response);
     if (graphQLErrors) {
       graphQLErrors.map(({message, locations, path}) =>
         console.log(
@@ -29,12 +28,9 @@ const errorLink = onError(
 
 export async function TDGraphQLProvider() {
   const cache = new InMemoryCache();
-  const uri = 'https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/';
 
   const authFetch = async (_, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
-
-    // console.log('LOCALE', storedLocale);
 
     const locale = storedLocale ? storedLocale : undefined;
     const translateMap = {
@@ -42,22 +38,24 @@ export async function TDGraphQLProvider() {
       'hi-IN': 'hi',
       'ur-IN': 'ur',
     };
-    const localisation = translateMap[locale];
+
+    const {graphQLUrl} = Secrets();
     const Authorization = await Authoriser();
-    // console.log('AUTH', Authorization);
-    const url = `https://7dljjjdaud.execute-api.ap-south-1.amazonaws.com/${
-      Authorization ? 'auth' : 'graphql'
-    }`;
-    // console.log('URL', url);
-    // console.log('GQL', options);
+
+    const url = `${graphQLUrl}${Authorization ? 'auth' : 'graphql'}`;
+    console.log(url, '<----url?');
+
+    const headers = {
+      ...options.headers,
+      referer: 'rn',
+      Authorization,
+      'Accept-Language': translateMap[locale],
+    };
+    // console.log('headers', url);
+    //console.log('headers', headers);
     return fetch(url, {
       ...options,
-      headers: {
-        ...options.headers,
-        referer: 'rn',
-        Authorization,
-        'Accept-Language': localisation,
-      },
+      headers: headers,
     });
   };
 

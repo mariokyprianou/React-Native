@@ -28,8 +28,8 @@ import getTimeZoneOffset from './utils/getTimeZoneOffset';
 const authConfig = {
   Auth: {
     region: 'ap-south-1',
-    userPoolId: 'ap-south-1_IKCoLjZya',
-    userPoolWebClientId: '6jh3je4i3ni14qki167tr5v3gm',
+    userPoolId: 'ap-south-1_yaNI1zrXU',
+    userPoolWebClientId: '1eln0nrnineheq1c9e443shd8l',
   },
 };
 

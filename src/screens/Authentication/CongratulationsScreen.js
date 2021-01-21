@@ -7,7 +7,14 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, Image, Platform} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Platform,
+  ActionSheetIOS,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';

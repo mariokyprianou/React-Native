@@ -38,21 +38,21 @@ const notifications = [
     subject: 'SUBJECT',
     message: 'Message',
     sentAt: new Date(),
-    readAt: undefined,
+    readAt: null,
   },
   {
     id: 78789789789,
     subject: 'VERY VERY VERY LOOOOOOOOOOOOOOOOOOOOOOOOOONG SUBJECT',
     message: 'Message Full Of Infoooooooooooooooooooooooooooooooooooooooooo',
     sentAt: new Date(),
-    readAt: undefined,
+    readAt: null,
   },
   {
     id: 789789788,
     subject: 'SUBJECT',
     message: 'Message',
     sentAt: new Date(),
-    readAt: undefined,
+    readAt: new Date(),
   },
 ];
 
@@ -308,6 +308,16 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     setStoredNotifications(updatedNotifications);
   }
 
+  // function readNotification(id) {
+  //   const today = new Date();
+  //   const updatedNotifications = storedNotifications.map((not) => {
+  //     if (not.id === id) {
+  //       not.readAt = today;
+  //     }
+  //   });
+  //   setStoredNotifications(updatedNotifications);
+  // }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
     return (
@@ -333,7 +343,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <NotificationCell
           {...item}
           index={index}
-          // onPress={() => readNotificationAction(item.id)}
+          // onPress={() => readNotification(item.id)}
           onDelete={() => deleteNotification(item.id)}
         />
       );
@@ -351,6 +361,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <FlatList
           data={storedNotifications}
           renderItem={renderNotificationCell}
+          keyExtractor={(item) => item.id}
         />
       </View>
     );

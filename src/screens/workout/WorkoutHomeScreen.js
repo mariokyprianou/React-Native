@@ -42,7 +42,7 @@ export default function WorkoutHomeScreen() {
     header: () => null,
   });
 
-  const {programme, getProgramme} = useData();
+  const {programme, getProgramme, setSelectedWorkout} = useData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
 
   useEffect(() => {
@@ -286,6 +286,7 @@ export default function WorkoutHomeScreen() {
               paddingTop: index === 0 ? getHeight(20) : 0,
             }}>
             <WorkoutCard
+              workout={item}
               title={item.name}
               day={item.day}
               date={item.date}
@@ -293,7 +294,17 @@ export default function WorkoutHomeScreen() {
               intensity={item.intensity}
               image={item.overviewImage}
               drag={drag}
-              onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
+              onPressCard={(workout) => {
+                // Sort exercises
+                const newWorkout = {
+                  ...workout,
+                  exercises: workout.exercises
+                    .slice()
+                    .sort((a, b) => a.orderIndex - b.orderIndex),
+                };
+                setSelectedWorkout(newWorkout);
+                navigation.navigate('StartWorkout');
+              }}
             />
           </View>
         )}

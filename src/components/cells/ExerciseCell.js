@@ -12,14 +12,11 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
 
-export default function ({
-  onPress = () => alert('Exercise on press'),
-  number = 1,
-  total = 12,
-  name = 'WALKING LUNGES',
-  reps = '12',
-  sets = '5',
-}) {
+export default function (props) {
+  console.log('LOG', props);
+
+  const {name} = props.exercise;
+
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
@@ -46,26 +43,25 @@ export default function ({
     },
     exerciseInfoStyle: {
       ...textStyles.medium14_brownishGrey100,
-      marginStart: getWidth(40),
+      marginStart: getWidth(30),
       marginTop: getHeight(3),
       textAlign: 'left',
     },
   };
 
   const exerciseNameTitle = isRTL()
-    ? `${name} :${number}/${total}`
-    : `${number}/${total}: ${name}`;
+    ? `${name} :${props.orderIndex}/${props.total}`
+    : `${props.orderIndex}/${props.total}: ${name}`;
 
+  const sets = props.sets;
+  const reps = sets.reduce((n, {quantity}) => n + quantity, 0);
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={onPress}
-      style={styles.touchableStyle}>
+    <TouchableOpacity activeOpacity={1} style={styles.touchableStyle}>
       <View style={styles.containerStyle}>
         <View>
           <Text style={styles.exerciseNameStyle}>{exerciseNameTitle}</Text>
           <Text style={styles.exerciseInfoStyle}>
-            {exerciseInfoFormatText(sets, reps)}
+            {exerciseInfoFormatText(sets.length, reps)}
           </Text>
         </View>
       </View>

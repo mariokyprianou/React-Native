@@ -29,6 +29,7 @@ export default function DataProvider(props) {
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
   const [programme, setProgramme] = useState();
+  const [selectedWorkout, setSelectedWorkout] = useState();
 
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -130,6 +131,8 @@ export default function DataProvider(props) {
       setSuggestedProgramme,
       programme,
       getProgramme,
+      selectedWorkout,
+      setSelectedWorkout,
     }),
     [
       onboarding,
@@ -140,6 +143,8 @@ export default function DataProvider(props) {
       setSuggestedProgramme,
       programme,
       getProgramme,
+      selectedWorkout,
+      setSelectedWorkout,
     ],
   );
 

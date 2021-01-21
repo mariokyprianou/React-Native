@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -21,6 +21,8 @@ export default function WorkoutScreen() {
   const navigation = useNavigation();
   const {workout} = useWorkoutData();
   const {getHeight} = ScaleHook();
+
+  useEffect(() => {}, []);
 
   navigation.setOptions({
     header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,

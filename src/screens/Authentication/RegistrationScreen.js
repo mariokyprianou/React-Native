@@ -187,6 +187,13 @@ export default function RegisterScreen() {
       });
       return;
     }
+    if (termsAndConditions !== 'on') {
+      updateError({
+        name: 'termsAndConditions',
+        value: AuthDict.InvalidTsAndCs,
+      });
+      return;
+    }
 
     await execute({
       variables: {
@@ -227,14 +234,6 @@ export default function RegisterScreen() {
         variant="white"
         icon="chevron"
         onPress={handleRegister}
-        disabled={termsAndConditions === 'on' ? false : true}
-        // onPress={() => {
-        //   if (Platform.OS === 'android') {
-        //     navigation.navigate('TabContainer');
-        //   } else {
-        //     navigation.navigate('Notifications');
-        //   }
-        // }}
       />
     </View>
   );

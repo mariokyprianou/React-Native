@@ -65,7 +65,6 @@ export default function MeetYourIconsScreen() {
   const {trainers, suggestedProgramme} = useData();
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
-
   const [activeIndex, setActiveIndex] = useState(0);
 
   const [safeArea, setSafeArea] = useState(false);

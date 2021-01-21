@@ -397,8 +397,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
       },
     },
     {
@@ -414,8 +412,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
       },
     },
     {
@@ -487,7 +483,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         paddingLeft: 0,
         paddingRight: getWidth(6),
       },
-      placeholder: userData.country || countriesList[0],
+      placeholder: userData.country || countriesList[1],
       data: countriesList,
     },
   ];

@@ -38,7 +38,7 @@ import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 
-const zeroState = require('../../../assets/images/zeroState.png');
+const zeroState = require('../../../assets/images/zeroState.jpg');
 const logo = require('../../../assets/images/logo.png');
 
 export default function MeetYourIconsScreen() {
@@ -123,7 +123,7 @@ export default function MeetYourIconsScreen() {
     },
     headerContainer: {
       width: '100%',
-      height: getHeight(80),
+      height: getHeight(85),
       position: 'absolute',
       top: getHeight(40),
       zIndex: 9,
@@ -225,9 +225,14 @@ export default function MeetYourIconsScreen() {
       bottom: 0,
       width: '100%',
     },
+    zeroTextContainer: {
+      width: '90%',
+      alignSelf: 'center',
+    },
     zeroInfoText: {
       ...textStyles.regular15_white100,
       marginBottom: getHeight(80),
+      textAlign: 'center',
     },
     fadeContainer: {
       position: 'absolute',
@@ -282,10 +287,11 @@ export default function MeetYourIconsScreen() {
         </View>
         <Image source={zeroState} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>
-          <Text style={styles.zeroInfoText}>
-            {MeetYourIconsDict.ZeroStateText}
-          </Text>
-          {/* change ^^ to zero state info text */}
+          <View style={styles.zeroTextContainer}>
+            <Text style={styles.zeroInfoText}>
+              {MeetYourIconsDict.ZeroStateText}
+            </Text>
+          </View>
           <DefaultButton
             type="tryAgain"
             icon="chevron"

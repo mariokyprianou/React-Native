@@ -141,7 +141,8 @@ const enGB = {
     WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
     SelectYourProgramme: 'Select your programme',
 
-    ZeroStateText: 'Lorem ipsum dolor sit amet, consectetur',
+    ZeroStateText:
+      'Reconnect to the internet to pick your programme and train with POWER',
 
     CongratulationsTitle: 'Congratulations!',
     StartedProgramme: (name, environment) =>

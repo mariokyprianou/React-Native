@@ -15,12 +15,8 @@ import {useNavigation} from '@react-navigation/native';
 import useWorkoutHome from '../../hooks/data/useWorkoutHome';
 import useTakeRest from '../../hooks/data/useTakeRest';
 import TDIcon from 'the-core-ui-component-tdicon';
-import {format} from 'date-fns';
 import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
-// import formatWorkoutWeek from '../../utils/formatWorkoutWeek';
-import addWorkoutDates from '../../utils/addWorkoutDates';
-import addRestDays from '../../utils/addRestDays';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import isRTL from '../../utils/isRTL';
 
@@ -217,12 +213,12 @@ export default function WorkoutHomeScreen() {
               paddingTop: index === 0 ? getHeight(20) : 0,
             }}>
             <WorkoutCard
-              title={item.title}
+              title={item.workout.name}
               day={item.day}
               date={item.date}
-              duration={item.duration}
-              intensity={item.intensity}
-              image={item.image}
+              duration={item.workout.duration}
+              intensity={item.workout.intensity}
+              image={fakeImage}
               drag={drag}
               onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
             />

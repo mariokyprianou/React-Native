@@ -43,7 +43,6 @@ export async function TDGraphQLProvider() {
     const Authorization = await Authoriser();
 
     const url = `${graphQLUrl}${Authorization ? 'auth' : 'graphql'}`;
-    console.log(url, '<----url?');
 
     const headers = {
       ...options.headers,

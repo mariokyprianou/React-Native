@@ -268,41 +268,41 @@ export default function MeetYourIconsScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  // if (!isConnected && !isInternetReachable) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View>
-          <Image source={logo} style={styles.image} />
-          <Text style={styles.selectText}>
-            {MeetYourIconsDict.SelectYourProgramme}
-          </Text>
+  if (!isConnected && !isInternetReachable) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View>
+            <Image source={logo} style={styles.image} />
+            <Text style={styles.selectText}>
+              {MeetYourIconsDict.SelectYourProgramme}
+            </Text>
+          </View>
+          <View style={styles.cantChooseContainer}>
+            <CantChooseButton
+              onPress={() => navigation.navigate('HelpMeChoose')}
+              navigation={navigation}
+            />
+          </View>
         </View>
-        <View style={styles.cantChooseContainer}>
-          <CantChooseButton
-            onPress={() => navigation.navigate('HelpMeChoose')}
-            navigation={navigation}
+        <Image source={zeroState} style={styles.zeroImage} />
+        <View style={styles.zeroButtonContainer}>
+          <View style={styles.zeroTextContainer}>
+            <Text style={styles.zeroInfoText}>
+              {MeetYourIconsDict.ZeroStateText}
+            </Text>
+          </View>
+          <DefaultButton
+            type="tryAgain"
+            icon="chevron"
+            variant="white"
+            onPress={() => console.log('try again')}
           />
+          <Spacer height={30} />
         </View>
       </View>
-      <Image source={zeroState} style={styles.zeroImage} />
-      <View style={styles.zeroButtonContainer}>
-        <View style={styles.zeroTextContainer}>
-          <Text style={styles.zeroInfoText}>
-            {MeetYourIconsDict.ZeroStateText}
-          </Text>
-        </View>
-        <DefaultButton
-          type="tryAgain"
-          icon="chevron"
-          variant="white"
-          onPress={() => console.log('try again')}
-        />
-        <Spacer height={30} />
-      </View>
-    </View>
-  );
-  // }
+    );
+  }
 
   const onScroll = (e) => {
     const offset = e.nativeEvent.contentOffset.y;
@@ -313,155 +313,155 @@ export default function MeetYourIconsScreen() {
     }
   };
 
-  //   return (
-  //     <View style={styles.container}>
-  //       {safeArea && <View style={styles.safeArea} />}
-  //       <Swiper
-  //         ref={iconsSwiper}
-  //         loop={false}
-  //         onIndexChanged={(index) => setActiveIndex(index)}
-  //         showsPagination={false}>
-  //         {trainers.map((trainer) => {
-  //           const currentProgram =
-  //             trainer.programmes.find((it) => it.id === selectedProgram.id) ||
-  //             trainer.programmes[0];
+  return (
+    <View style={styles.container}>
+      {safeArea && <View style={styles.safeArea} />}
+      <Swiper
+        ref={iconsSwiper}
+        loop={false}
+        onIndexChanged={(index) => setActiveIndex(index)}
+        showsPagination={false}>
+        {trainers.map((trainer) => {
+          const currentProgram =
+            trainer.programmes.find((it) => it.id === selectedProgram.id) ||
+            trainer.programmes[0];
 
-  //           const {numberOfWeeks, description, firstWeek} = currentProgram;
+          const {numberOfWeeks, description, firstWeek} = currentProgram;
 
-  //           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
+          const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 
-  //           return (
-  //             <ScrollView
-  //               style={styles.sliderContainer}
-  //               onScroll={onScroll}
-  //               scrollEventThrottle={10}
-  //               bounces={false}>
-  //               <View style={styles.headerContainer}>
-  //                 <View>
-  //                   <Image source={logo} style={styles.image} />
-  //                   <Text style={styles.selectText}>
-  //                     {MeetYourIconsDict.SelectYourProgramme}
-  //                   </Text>
-  //                 </View>
-  //                 <View style={styles.cantChooseContainer}>
-  //                   <CantChooseButton
-  //                     onPress={() => navigation.navigate('HelpMeChoose')}
-  //                     navigation={navigation}
-  //                   />
-  //                 </View>
-  //               </View>
-  //               <View style={styles.leftIconContainer}>
-  //                 <TouchableOpacity onPress={() => handlePress('left')}>
-  //                   <TDIcon
-  //                     input={isRTL() ? 'chevron-right' : 'chevron-left'}
-  //                     inputStyle={styles.icon}
-  //                   />
-  //                 </TouchableOpacity>
-  //               </View>
-  //               <View style={styles.rightIconContainer}>
-  //                 <TouchableOpacity onPress={() => handlePress('right')}>
-  //                   <TDIcon
-  //                     input={isRTL() ? 'chevron-left' : 'chevron-right'}
-  //                     inputStyle={styles.icon}
-  //                   />
-  //                 </TouchableOpacity>
-  //               </View>
-  //               <View style={styles.cardContainer}>
-  //                 <TrainerCard
-  //                   trainer={trainer}
-  //                   onPressGymHome={switchProgram}
-  //                   currentProgram={currentProgram}
-  //                 />
-  //               </View>
-  //               <Spacer height={90} />
-  //               <View style={styles.textContainer}>
-  //                 <Text style={styles.text}>{description}</Text>
-  //                 <Text
-  //                   style={
-  //                     styles.heading
-  //                   }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
-  //                 <Text
-  //                   style={
-  //                     styles.weeksText
-  //                   }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
-  //               </View>
-  //               <View style={styles.workoutContainer}>
-  //                 {extendedWeek.map(({date, duration, intensity, name, day}) => {
-  //                   return (
-  //                     <WorkoutCard
-  //                       title={name}
-  //                       day={day}
-  //                       date={date}
-  //                       duration={duration}
-  //                       intensity={intensity}
-  //                     />
-  //                   );
-  //                 })}
-  //               </View>
-  //               <Spacer height={180} />
-  //             </ScrollView>
-  //           );
-  //         })}
-  //       </Swiper>
-  //       <View style={styles.fadeContainer}>
-  //         <FadingBottomView color="blue" height={70} />
-  //       </View>
-  //       {switchProgramme === true && selectedTrainer.id === currentTrainerId ? (
-  //         <View style={styles.buttonContainer}>
-  //           <DefaultButton
-  //             type="restartProgramme"
-  //             icon="chevron"
-  //             variant="gradient"
-  //             trainerName="KATRINA"
-  //             onPress={navigateToWorkoutHome}
-  //           />
-  //           <Spacer height={20} />
-  //           <DefaultButton
-  //             type="continueFromWeek"
-  //             icon="chevron"
-  //             variant="white"
-  //             weekNo={currentWeek}
-  //             onPress={navigateToWorkoutHome}
-  //           />
-  //         </View>
-  //       ) : switchProgramme === true &&
-  //         selectedTrainer.id !== currentTrainerId ? (
-  //         <View style={styles.buttonContainer}>
-  //           <DefaultButton
-  //             type="startNow"
-  //             icon="chevron"
-  //             variant="gradient"
-  //             onPress={() =>
-  //               navigation.navigate('Congratulations', {
-  //                 switchProgramme: true,
-  //                 newTrainer: selectedTrainer.name,
-  //                 environment: selectedProgram.environment,
-  //               })
-  //             }
-  //           />
-  //         </View>
-  //       ) : (
-  //         <View style={styles.buttonContainer}>
-  //           <DefaultButton
-  //             type="startNow"
-  //             icon="chevron"
-  //             variant="gradient"
-  //             onPress={() =>
-  //               navigation.navigate('Congratulations', {
-  //                 switchProgramme: false,
-  //                 newTrainer: selectedTrainer.name,
-  //                 environment: selectedProgram.environment,
-  //                 programmeId: selectedProgram.id,
-  //               })
-  //             }
-  //           />
-  //           <DefaultButton
-  //             type="login"
-  //             variant="transparentWhiteText"
-  //             onPress={() => navigation.navigate('Login')}
-  //           />
-  //         </View>
-  //       )}
-  //     </View>
-  //   );
+          return (
+            <ScrollView
+              style={styles.sliderContainer}
+              onScroll={onScroll}
+              scrollEventThrottle={10}
+              bounces={false}>
+              <View style={styles.headerContainer}>
+                <View>
+                  <Image source={logo} style={styles.image} />
+                  <Text style={styles.selectText}>
+                    {MeetYourIconsDict.SelectYourProgramme}
+                  </Text>
+                </View>
+                <View style={styles.cantChooseContainer}>
+                  <CantChooseButton
+                    onPress={() => navigation.navigate('HelpMeChoose')}
+                    navigation={navigation}
+                  />
+                </View>
+              </View>
+              <View style={styles.leftIconContainer}>
+                <TouchableOpacity onPress={() => handlePress('left')}>
+                  <TDIcon
+                    input={isRTL() ? 'chevron-right' : 'chevron-left'}
+                    inputStyle={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.rightIconContainer}>
+                <TouchableOpacity onPress={() => handlePress('right')}>
+                  <TDIcon
+                    input={isRTL() ? 'chevron-left' : 'chevron-right'}
+                    inputStyle={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.cardContainer}>
+                <TrainerCard
+                  trainer={trainer}
+                  onPressGymHome={switchProgram}
+                  currentProgram={currentProgram}
+                />
+              </View>
+              <Spacer height={90} />
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>{description}</Text>
+                <Text
+                  style={
+                    styles.heading
+                  }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
+                <Text
+                  style={
+                    styles.weeksText
+                  }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
+              </View>
+              <View style={styles.workoutContainer}>
+                {extendedWeek.map(({date, duration, intensity, name, day}) => {
+                  return (
+                    <WorkoutCard
+                      title={name}
+                      day={day}
+                      date={date}
+                      duration={duration}
+                      intensity={intensity}
+                    />
+                  );
+                })}
+              </View>
+              <Spacer height={180} />
+            </ScrollView>
+          );
+        })}
+      </Swiper>
+      <View style={styles.fadeContainer}>
+        <FadingBottomView color="blue" height={70} />
+      </View>
+      {switchProgramme === true && selectedTrainer.id === currentTrainerId ? (
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="restartProgramme"
+            icon="chevron"
+            variant="gradient"
+            trainerName="KATRINA"
+            onPress={navigateToWorkoutHome}
+          />
+          <Spacer height={20} />
+          <DefaultButton
+            type="continueFromWeek"
+            icon="chevron"
+            variant="white"
+            weekNo={currentWeek}
+            onPress={navigateToWorkoutHome}
+          />
+        </View>
+      ) : switchProgramme === true &&
+        selectedTrainer.id !== currentTrainerId ? (
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="startNow"
+            icon="chevron"
+            variant="gradient"
+            onPress={() =>
+              navigation.navigate('Congratulations', {
+                switchProgramme: true,
+                newTrainer: selectedTrainer.name,
+                environment: selectedProgram.environment,
+              })
+            }
+          />
+        </View>
+      ) : (
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="startNow"
+            icon="chevron"
+            variant="gradient"
+            onPress={() =>
+              navigation.navigate('Congratulations', {
+                switchProgramme: false,
+                newTrainer: selectedTrainer.name,
+                environment: selectedProgram.environment,
+                programmeId: selectedProgram.id,
+              })
+            }
+          />
+          <DefaultButton
+            type="login"
+            variant="transparentWhiteText"
+            onPress={() => navigation.navigate('Login')}
+          />
+        </View>
+      )}
+    </View>
+  );
 }

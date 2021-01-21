@@ -63,8 +63,8 @@ export default function RegisterScreen() {
   const gendersData = [
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
-    AuthDict.RegistrationGendersOther,
-    AuthDict.RegistrationGendersPreferNot,
+    // AuthDict.RegistrationGendersOther,
+    // AuthDict.RegistrationGendersPreferNot,
   ];
 
   useQuery(AllCountries, {

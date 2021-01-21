@@ -14,8 +14,9 @@ import FadingBottomView from '../Views/FadingBottomView';
 
 export default function OnboardingSliderItem({image, header, text}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight, getWidth} = ScaleHook();
+  const {textStyles} = useTheme();
+  const url = {uri: image};
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -54,7 +55,7 @@ export default function OnboardingSliderItem({image, header, text}) {
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image source={{uri: image}} style={styles.image} />
+        <Image source={url} style={styles.image} />
         <FadingBottomView color="white" height={60} />
       </View>
       <Text style={styles.header}>{header}</Text>

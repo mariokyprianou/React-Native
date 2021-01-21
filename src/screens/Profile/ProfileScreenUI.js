@@ -144,15 +144,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const gendersData = [
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
-    AuthDict.RegistrationGendersOther,
-    AuthDict.RegistrationGendersPreferNot,
+    // AuthDict.RegistrationGendersOther,
+    // AuthDict.RegistrationGendersPreferNot,
   ];
 
   const gendersRef = {
     female: 'Female',
     male: 'Male',
-    other: 'Other',
-    preferNotToSay: 'Prefer not to say',
+    // other: 'Other',
+    // preferNotToSay: 'Prefer not to say',
   };
 
   // ** ** ** ** ** STYLES ** ** ** ** **

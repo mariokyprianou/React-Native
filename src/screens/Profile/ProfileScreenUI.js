@@ -245,7 +245,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     if (profile_country === 'India' && !newRegion) {
       newRegion = regionLookup[regionsList[0]];
     }
-    console.log(regionLookup[profile_region]);
+
     console.log('Input', {
       input: {
         givenName: profile_firstName || userData.givenName,
@@ -263,7 +263,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           familyName: profile_lastName || userData.familyName,
           gender: profile_gender?.toLowerCase() || userData.gender,
           dateOfBirth: dob,
-          country: newCountry,
+          country: newCountry || userData.country,
           region: newRegion,
         },
       },
@@ -397,6 +397,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
+        height: '100%',
+        marginBottom: getHeight(6),
       },
     },
     {
@@ -412,6 +414,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
+        height: '100%',
+        marginBottom: getHeight(6),
       },
     },
     {
@@ -478,7 +482,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-
       inputContainerStyle: {
         paddingLeft: 0,
         paddingRight: getWidth(6),

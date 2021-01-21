@@ -17,13 +17,17 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import SliderProgressView from './SliderProgressView';
+import {it} from 'date-fns/locale';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
 const weightIcon = require('../../../assets/icons/weight.png');
 const notesIcon = require('../../../assets/icons/notes.png');
 
-export default function ExerciseView() {
+export default function ExerciseView(props) {
+  const {exercise, exerciseDoneFunction} = props;
+  console.log(props);
+
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles, exerciseViewStyle} = useTheme();
@@ -32,66 +36,107 @@ export default function ExerciseView() {
 
   const {dictionary} = useDictionary();
   const insets = useSafeArea();
-  const {remainingMS, toggle, reset} = useTimer({
-    timer: '00:05',
-  });
+  // const {remainingMS, toggle, reset} = useTimer({
+  //   timer: '00:05',
+  // });
 
   const [countDown, setCountDown] = useState(false);
   const [msLeft, setMsLeft] = useState();
 
+  const [currentSet, setCurrentSet] = useState(0);
+  const [sets, setSets] = useState([]);
   const {WorkoutDict} = dictionary;
-  const exerciseTitle = 'Lateral lunges';
-  const exerciseDescription =
-    'Keep your front knee in line with your toes, with your back neutral and upright lorem ipsum dolor sit amet';
+  const exerciseTitle = exercise.name;
+  const exerciseDescription = exercise.coachingTips;
 
-  const reps = [{}, {}, {}, {}, {}];
+  useEffect(() => {
+    let sets = props.sets;
+
+    sets = sets.map((it) => {
+      return {
+        ...it,
+        state: 'inactive',
+      };
+    });
+
+    setSets(sets);
+  }, []);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onExerciseCompleted = () => {
     if (countDown) {
-      reset();
+      //reset();
       setCountDown(false);
     } else {
     }
   };
 
-  const onSetCompleted = () => {
+  const onSetCompleted = (completedIndex) => {
+    const newSets = sets.map((it, index) => {
+      if (index === completedIndex) {
+        return {
+          ...it,
+          state: 'completed',
+        };
+      } else if (index === completedIndex + 1) {
+        return {
+          ...it,
+          state: 'active',
+        };
+      }
+
+      return it;
+    });
+
+    // Update Sets
+    setSets(newSets);
+
+    // Move to next set
+    if (currentSet < sets.length) {
+      setCurrentSet(completedIndex + 1);
+    }
+
     setCountDown(true);
-    // reset();
-    toggle();
+    //toggle();
   };
 
   const onCancelTimer = () => {
     setCountDown(false);
   };
 
-  useEffect(() => {
-    if (msToHMS(remainingMS) === '00:00') {
-      setTimeout(() => {
-        setCountDown(false);
-        reset();
-      }, 1000);
-    }
-  }, [remainingMS, setCountDown]);
+  // useEffect(() => {
+  //   if (msToHMS(remainingMS) === '00:00') {
+  //     setTimeout(() => {
+  //       setCountDown(false);
+  //       reset();
+  //     }, 1000);
+  //   }
+  // }, [remainingMS, setCountDown]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
 
-  const RepsList = React.memo(({reps}) => {
+  const RepsList = ({sets}) => {
     return (
       <View style={styles.repsContainerStyle}>
-        {reps.map((index) => (
-          <RepCell key={index} onPress={() => onSetCompleted(index)} />
-        ))}
+        {sets.map((item, index) => {
+          return (
+            <RepCell
+              key={index}
+              {...item}
+              onPress={() => onSetCompleted(index)}
+            />
+          );
+        })}
       </View>
     );
-  });
+  };
 
   const renderCountDown = () => {
     return (
       <View style={styles.timerContainer}>
         <TouchableOpacity style={styles.timerTouchArea} onPress={onCancelTimer}>
           <View style={styles.timerTextContainer}>
-            <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+            {/* <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text> */}
           </View>
         </TouchableOpacity>
       </View>
@@ -134,12 +179,14 @@ export default function ExerciseView() {
 
         <View style={styles.setsContainerStyle}>
           <View style={styles.setsCompletedContainerStyle}>
-            <Text style={styles.competedSetsTitleStyle}>2/5</Text>
+            <Text style={styles.competedSetsTitleStyle}>
+              {currentSet}/{sets.length}
+            </Text>
             <Text style={styles.competedSetsTextStyle}>
               {WorkoutDict.SetsText}
             </Text>
           </View>
-          <RepsList reps={reps} />
+          <RepsList sets={sets} />
         </View>
         {countDown && renderCountDown()}
       </View>

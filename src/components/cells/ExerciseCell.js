@@ -50,8 +50,8 @@ export default function (props) {
   };
 
   const exerciseNameTitle = isRTL()
-    ? `${name} :${props.orderIndex}/${props.total}`
-    : `${props.orderIndex}/${props.total}: ${name}`;
+    ? `${name} :${props.index}/${props.total}`
+    : `${props.index}/${props.total}: ${name}`;
 
   const sets = props.sets;
   const reps = sets.reduce((n, {quantity}) => n + quantity, 0);

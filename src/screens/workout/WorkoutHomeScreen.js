@@ -296,9 +296,13 @@ export default function WorkoutHomeScreen() {
               drag={drag}
               onPressCard={(workout) => {
                 // Sort exercises
+
+                const exercises = workout.exercises
+                  .concat(workout.exercises)
+                  .concat(workout.exercises);
                 const newWorkout = {
                   ...workout,
-                  exercises: workout.exercises
+                  exercises: exercises
                     .slice()
                     .sort((a, b) => a.orderIndex - b.orderIndex),
                 };

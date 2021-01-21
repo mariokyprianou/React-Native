@@ -15,13 +15,11 @@ import WorkoutImageView from '../../components/Views/WorkoutImageView';
 import ExerciseCell from '../../components/cells/ExerciseCell';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
-import useWorkoutData from '../../hooks/data/useWorkoutData';
 import useData from '../../hooks/data/UseData';
 
 export default function StartWorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
-  //const {workout} = useWorkoutData();
   const navigation = useNavigation();
   const {colors} = useTheme();
   const {selectedWorkout} = useData();
@@ -29,7 +27,6 @@ export default function StartWorkoutScreen() {
   const [topViewProps, setTopViewProps] = useState({});
 
   useEffect(() => {
-    console.log('WORKOUT', selectedWorkout.exercises[0]);
     const {overviewImage, duration, intensity} = selectedWorkout;
 
     let workoutTopViewProps = {
@@ -89,7 +86,7 @@ export default function StartWorkoutScreen() {
     return (
       <View style={{paddingBottom: getHeight(150)}}>
         {exercises.map((item, index) => (
-          <ExerciseCell {...item} total={exercises.length} />
+          <ExerciseCell {...item} index={index + 1} total={exercises.length} />
         ))}
       </View>
     );

@@ -373,15 +373,17 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       name: 'profileTitle',
       labelComponent: () => null,
       inputComponent: () => (
-        <Text
-          style={{
-            ...textStyles.bold20_black100,
-            marginTop: getHeight(20),
-            marginBottom: getHeight(10),
-            textAlign: 'left',
-          }}>
-          {ProfileDict.PersonalDetails}
-        </Text>
+        <View>
+          <Text
+            style={{
+              ...textStyles.bold20_black100,
+              marginTop: getHeight(20),
+              marginBottom: getHeight(10),
+              textAlign: 'left',
+            }}>
+            {ProfileDict.PersonalDetails}
+          </Text>
+        </View>
       ),
     },
     {

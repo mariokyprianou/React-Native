@@ -44,7 +44,6 @@ export default function Screen() {
       height: '100%',
       width: '100%',
     },
-
     buttonContainer: {
       width: '100%',
       position: 'absolute',

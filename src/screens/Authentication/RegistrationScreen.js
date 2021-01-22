@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
@@ -23,10 +23,10 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
-import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import AllCountries from '../../apollo/queries/AllCountries';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -408,14 +408,15 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.render.container}>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        style={styles.render.scrollViewContainer}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scroll}
+        enableOnAndroid={true}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={{marginHorizontal: getWidth(25)}}>
           <Form cells={cells} config={{...cellFormConfig}} />
           <Form cells={cells2} config={config} />
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

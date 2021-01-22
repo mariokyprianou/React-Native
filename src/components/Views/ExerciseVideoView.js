@@ -97,7 +97,8 @@ export default function ({}) {
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
         backgroundColor: colors.black10,
-      }}>
+      }}
+      useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
           videoRef.current.pause();

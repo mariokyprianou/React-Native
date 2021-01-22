@@ -118,7 +118,7 @@ export default function NotificationCell({
 
   const rightButtons = [
     <TouchableOpacity style={styles.rightAction} onPress={onDelete}>
-      <Animated.Text style={styles.actionText}>
+      <Animated.Text style={styles.actionText} useNativeDriver={true}>
         {ProfileDict.NotificationDelete}
       </Animated.Text>
     </TouchableOpacity>,

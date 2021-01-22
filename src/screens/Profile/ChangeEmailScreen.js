@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
@@ -48,8 +48,14 @@ export default function ChangeEmailScreen() {
       paddingBottom: getHeight(40),
       alignItems: 'center',
     },
+    scrollViewContainer: {
+      height: '100%',
+      width: '100%',
+      alignSelf: 'center',
+    },
     formContainer: {
       width: '90%',
+      alignSelf: 'center',
     },
   });
 
@@ -102,9 +108,13 @@ export default function ChangeEmailScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Form cells={cells} config={config} />
-      </View>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.scrollViewContainer}>
+        <View style={styles.formContainer}>
+          <Form cells={cells} config={config} />
+        </View>
+      </ScrollView>
       <DefaultButton
         type="changeEmail"
         variant="white"

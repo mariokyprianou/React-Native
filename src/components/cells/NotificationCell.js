@@ -103,11 +103,11 @@ export default function NotificationCell({
     <View style={styles.content}>
       <View style={styles.rowContainer}>
         <Text style={styles.subjectTextStyle}>
-          {readAt === null && (
+          {/* {readAt === null && (
             <View style={styles.dotContainer}>
               <Image source={notificationDot} />
             </View>
-          )}
+          )} */}
           {subject}
         </Text>
         <Text style={styles.dateStyle}>{sentAtFormatted}</Text>

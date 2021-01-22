@@ -76,13 +76,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     error: countryError,
     data: countryData,
   } = useQuery(AllCountries);
-  const {
-    loading: profileLoading,
-    error: profileError,
-    data: profileData,
-  } = useQuery(Profile, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-  });
   const [updateProfile] = useMutation(UpdateProfile);
   const {userData, setUserData} = useUserData();
   const [countriesList, setCountriesList] = useState([]);
@@ -130,16 +123,27 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     }
   }, [countryData, countryLoading, countryError]);
 
-  useEffect(() => {
-    if (profileData) {
-      const memberSince = profileData.profile.createdAt.slice(0, 4);
-      const userProfile = {...profileData.profile};
-      userProfile.memberSince = memberSince;
+  // useEffect(() => {
+  //   if (profileData) {
+  //     const memberSince = profileData.profile.createdAt.slice(0, 4);
+  //     const userProfile = {...profileData.profile};
+  //     userProfile.memberSince = memberSince;
+  //     setUserData(userProfile);
+  //   } else {
+  //     console.log(profileLoading, profileError);
+  //   }
+  // }, [profileData, profileLoading, profileError]);
+
+  useQuery(Profile, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      console.log(res, '<---result');
+      const memberSince = res.profile.createdAt.slice(0, 4);
+      const userProfile = {...res.profile, memberSince};
       setUserData(userProfile);
-    } else {
-      console.log(profileLoading, profileError);
-    }
-  }, [profileData, profileLoading, profileError]);
+    },
+    onError: (error) => console.log(error),
+  });
 
   const gendersData = [
     AuthDict.RegistrationGendersFemale,

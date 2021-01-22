@@ -11,3 +11,60 @@ index 5161f5a..9fac292 100644
  
    return (
      <GlobalTimeContext.Provider value={date}>
+diff --git a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
+index 1b1c1fe..2b20273 100644
+--- a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
++++ b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
+@@ -10,9 +10,8 @@ import msToHMS from "../utils/msToHMS";
+ import HMStoMS from "../utils/HMStoMS";
+ 
+ export default function useTimer({ timer }) {
+-  // This is global clock
+-  const date = useContext(GlobalTimeContext);
+ 
++  const interval = null;
+   // This is the time remaining in milliseconds (timer is a HH:MM:SS string)
+   const [remaining, setRemaining] = useState(HMStoMS(timer));
+ 
+@@ -31,6 +30,25 @@ export default function useTimer({ timer }) {
+     }
+   };
+ 
++  useEffect(() => {
++
++    if (start && targetTime > new Date()) {
++    this.interval = setInterval(() => {
++      const value = (Math.ceil((targetTime - new Date()) / 1000) * 1000)
++      if (value >= 0) {
++        setRemaining(Math.abs(value));
++      }
++      else {
++        setStart(false)
++      }
++    }, 1000);
++  }
++    else{
++      clearInterval(this.interval);
++      this.interval = null;
++    }
++  }, [start])
++
+   // Reset the timer
+   const reset = () => {
+     setStart(false);
+@@ -38,15 +56,6 @@ export default function useTimer({ timer }) {
+     setRemaining(HMStoMS(timer));
+   };
+ 
+-  // react to the global clock up dates
+-  useEffect(() => {
+-    if (start && targetTime > date) {
+-      setRemaining(targetTime - date);
+-    }
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [date]);
+-
+-  //   return date;
+   return {
+     remaining: msToHMS(remaining),
+     remainingMS: remaining,

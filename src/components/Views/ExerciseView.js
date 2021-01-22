@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import {View, TouchableOpacity, Text, Image, StatusBar} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
@@ -26,28 +26,20 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   const {exercise, exerciseDoneFunction} = props;
-  console.log(props);
 
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles, exerciseViewStyle} = useTheme();
-  const styles = exerciseViewStyle;
   const navigation = useNavigation();
-
-  const {dictionary} = useDictionary();
+  const {getHeight, getWidth} = ScaleHook();
   const insets = useSafeArea();
-  // const {remainingMS, toggle, reset} = useTimer({
-  //   timer: '00:05',
-  // });
+  const {exerciseViewStyle} = useTheme();
+  const styles = exerciseViewStyle;
+  const {dictionary} = useDictionary();
+  const {WorkoutDict} = dictionary;
 
   const [countDown, setCountDown] = useState(false);
-  const [msLeft, setMsLeft] = useState();
-
-  const [currentSet, setCurrentSet] = useState(0);
   const [sets, setSets] = useState([]);
-  const {WorkoutDict} = dictionary;
-  const exerciseTitle = exercise.name;
-  const exerciseDescription = exercise.coachingTips;
+  const [currentSet, setCurrentSet] = useState(0);
+  const [restTime, setRestTime] = useState();
 
   useEffect(() => {
     let sets = props.sets;
@@ -65,7 +57,6 @@ export default function ExerciseView(props) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onExerciseCompleted = () => {
     if (countDown) {
-      //reset();
       setCountDown(false);
     } else {
     }
@@ -74,6 +65,7 @@ export default function ExerciseView(props) {
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {
       if (index === completedIndex) {
+        setRestTime(it.restTime * 1000);
         return {
           ...it,
           state: 'completed',
@@ -87,31 +79,24 @@ export default function ExerciseView(props) {
 
       return it;
     });
-
-    // Update Sets
-    setSets(newSets);
-
     // Move to next set
     if (currentSet < sets.length) {
       setCurrentSet(completedIndex + 1);
     }
 
+    // Update Sets
+    setSets(newSets);
+
     setCountDown(true);
-    //toggle();
   };
 
   const onCancelTimer = () => {
     setCountDown(false);
   };
 
-  // useEffect(() => {
-  //   if (msToHMS(remainingMS) === '00:00') {
-  //     setTimeout(() => {
-  //       setCountDown(false);
-  //       reset();
-  //     }, 1000);
-  //   }
-  // }, [remainingMS, setCountDown]);
+  const onFinishTimer = () => {
+    setCountDown(false);
+  };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
 
@@ -131,24 +116,12 @@ export default function ExerciseView(props) {
     );
   };
 
-  const renderCountDown = () => {
-    return (
-      <View style={styles.timerContainer}>
-        <TouchableOpacity style={styles.timerTouchArea} onPress={onCancelTimer}>
-          <View style={styles.timerTextContainer}>
-            {/* <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text> */}
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   return (
     <View style={{height: getHeight(667 - 56 - insets.top)}}>
       <ExerciseVideoView />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
-          <Text style={styles.exerciseTitleStyle}>{exerciseTitle}</Text>
+          <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
           <TouchableOpacity onPress={countDown ? null : onExerciseCompleted}>
             <Image source={completeIcon} />
             <Image style={styles.checkIconStyle} source={checkIcon} />
@@ -156,7 +129,7 @@ export default function ExerciseView(props) {
         </View>
 
         <Text style={styles.exerciseDescriptionStyle}>
-          {exerciseDescription}
+          {exercise.coachingTips}
         </Text>
 
         <View style={styles.extraContainerStyle}>
@@ -188,8 +161,46 @@ export default function ExerciseView(props) {
           </View>
           <RepsList sets={sets} />
         </View>
-        {countDown && renderCountDown()}
+        {countDown && (
+          <TimerView
+            duration={msToHMS(restTime)}
+            onCancelTimer={onCancelTimer}
+            onFinish={onFinishTimer}
+          />
+        )}
       </View>
+    </View>
+  );
+}
+
+function TimerView(props) {
+  const {remainingMS, toggle, reset} = useTimer({
+    timer: props.duration,
+  });
+
+  useEffect(() => {
+    reset();
+    toggle();
+  }, []);
+
+  useEffect(() => {
+    if (remainingMS === 0) {
+      props.onFinish && props.onFinish();
+    }
+  }, [remainingMS]);
+
+  const {exerciseViewStyle} = useTheme();
+  const styles = exerciseViewStyle;
+
+  return (
+    <View style={styles.timerContainer}>
+      <TouchableOpacity
+        style={styles.timerTouchArea}
+        onPress={props.onCancelTimer}>
+        <View style={styles.timerTextContainer}>
+          <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }

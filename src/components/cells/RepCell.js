@@ -14,7 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const completedIcon = require('../../../assets/icons/completedSet.png');
 export default function (props) {
   const {onPress = () => {}, quantity = '8', state = 'inactive'} = props;
-  console.log(props);
+
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
 

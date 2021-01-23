@@ -13,8 +13,6 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
 
 export default function (props) {
-  console.log('LOG', props);
-
   const {name} = props.exercise;
 
   const {getWidth, fontSize, getHeight} = ScaleHook();

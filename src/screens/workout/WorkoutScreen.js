@@ -22,15 +22,19 @@ export default function WorkoutScreen() {
   const navigation = useNavigation();
   const {getHeight} = ScaleHook();
 
-  const {selectedWorkout} = useData();
+  const {
+    selectedWorkout,
+    currentExerciseIndex,
+    setCurrentExerciseIndex,
+  } = useData();
 
-  const [currentIndex, setCurrentIndex] = useState(1);
   const [offset, setOffset] = useState(0);
 
+  console.log(currentExerciseIndex);
   navigation.setOptions({
     header: () => (
       <WorkoutHeader
-        currentExercise={currentIndex}
+        currentExercise={currentExerciseIndex + 1}
         totalExercises={selectedWorkout.exercises.length}
       />
     ),
@@ -53,9 +57,11 @@ export default function WorkoutScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleIndex(newOffset) {
     if (newOffset > offset) {
-      setCurrentIndex(currentIndex + 1);
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
     } else {
-      setCurrentIndex(currentIndex - 1);
+      if (currentExerciseIndex > 0) {
+        setCurrentExerciseIndex(currentExerciseIndex - 1);
+      }
     }
 
     setOffset(newOffset);
@@ -77,7 +83,7 @@ export default function WorkoutScreen() {
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
         {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView {...screen} />
+          <ExerciseView {...screen} index={index} />
         ))}
       </ScrollView>
     </View>

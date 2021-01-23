@@ -12,8 +12,9 @@ import useTheme from '../../hooks/theme/UseTheme';
 import SliderProgressView from './SliderProgressView';
 import {VideoView} from 'the-core-ui-module-tdmediamanager';
 import ControlsView from './ControlsView';
+import UseData from '../../hooks/data/UseData';
 
-export default function ({video, videoEasy, videoEasiest}) {
+export default function ({video, videoEasy, videoEasiest, index}) {
   const videos = {
     video,
     videoEasy,
@@ -22,11 +23,12 @@ export default function ({video, videoEasy, videoEasiest}) {
 
   const {getHeight} = ScaleHook();
   const {colors} = useTheme();
+  const {isDownloadEnabled, currentExerciseIndex} = UseData();
 
   const [videoDuration, setVideoDuration] = useState(100);
   const [currentProgress, setCurrentProgress] = useState(0);
 
-  const [isPaused, setIsPaused] = useState(true);
+  const [isPaused, setIsPaused] = useState(index !== currentExerciseIndex);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
   const [showControls, setShowControls] = useState(false);
@@ -35,7 +37,6 @@ export default function ({video, videoEasy, videoEasiest}) {
 
   const videoRef = useRef();
 
-  useEffect(() => {}, []);
   const styles = {
     container: {
       width: '100%',
@@ -45,8 +46,8 @@ export default function ({video, videoEasy, videoEasiest}) {
   const videoProps = {
     height: getHeight(300),
     url: videos[currentVideo],
-    skipCache: true,
-    autoplay: false,
+    skipCache: !isDownloadEnabled,
+    autoplay: index === currentExerciseIndex,
     muted: true,
 
     onLoadEnd: (duration) => {

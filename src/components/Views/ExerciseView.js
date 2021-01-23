@@ -25,8 +25,7 @@ const weightIcon = require('../../../assets/icons/weight.png');
 const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
-  const {exercise} = props;
-  console.log(exercise);
+  const {exercise, index} = props;
 
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
@@ -124,7 +123,7 @@ export default function ExerciseView(props) {
 
   return (
     <View style={{height: getHeight(667 - 56 - insets.top)}}>
-      <ExerciseVideoView {...exercise} />
+      <ExerciseVideoView {...exercise} index={index} />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>

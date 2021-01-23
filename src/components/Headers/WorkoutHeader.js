@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -96,7 +96,11 @@ export default function ({currentExercise, totalExercises}) {
 function TimerView(props) {
   const {elapsedMS, toggle} = useStopwatch();
 
-  const [isPaused, setIsPaused] = useState(false);
+  useEffect(() => {
+    toggle();
+  }, []);
+
+  const [isPaused, setIsPaused] = useState(true);
 
   return (
     <>

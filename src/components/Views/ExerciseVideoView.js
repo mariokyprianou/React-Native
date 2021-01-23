@@ -6,25 +6,22 @@
  */
 
 import React, {useState, useRef, useEffect} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  Dimensions,
-  Animated,
-} from 'react-native';
+import {View, TouchableOpacity, Animated} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import SliderProgressView from './SliderProgressView';
-import {VideoView, TestData} from 'the-core-ui-module-tdmediamanager';
+import {VideoView} from 'the-core-ui-module-tdmediamanager';
 import ControlsView from './ControlsView';
 
-let ScreenHeight = Dimensions.get('window').height;
+export default function ({video, videoEasy, videoEasiest}) {
+  const videos = {
+    video,
+    videoEasy,
+    videoEasiest,
+  };
 
-export default function ({}) {
-  const {getWidth, fontSize, getHeight} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+  const {colors} = useTheme();
 
   const [videoDuration, setVideoDuration] = useState(100);
   const [currentProgress, setCurrentProgress] = useState(0);
@@ -34,8 +31,11 @@ export default function ({}) {
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
   const [showControls, setShowControls] = useState(false);
 
+  const [currentVideo, setCurrentVideo] = useState('video');
+
   const videoRef = useRef();
 
+  useEffect(() => {}, []);
   const styles = {
     container: {
       width: '100%',
@@ -44,7 +44,7 @@ export default function ({}) {
 
   const videoProps = {
     height: getHeight(300),
-    url: TestData[0],
+    url: videos[currentVideo],
     skipCache: true,
     autoplay: false,
     muted: true,
@@ -103,6 +103,9 @@ export default function ({}) {
           videoRef.current.pause();
         }}
         isPaused={isPaused}
+        videos={videos}
+        currentVideo={currentVideo}
+        setCurrentVideo={setCurrentVideo}
       />
     </Animated.View>
   );

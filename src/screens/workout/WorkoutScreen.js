@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, ScrollView, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -21,7 +21,6 @@ export default function WorkoutScreen() {
   const {colors} = useTheme();
   const navigation = useNavigation();
   const {getHeight} = ScaleHook();
-  const insets = useSafeArea();
 
   const {selectedWorkout} = useData();
 

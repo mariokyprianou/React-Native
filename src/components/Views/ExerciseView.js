@@ -25,7 +25,8 @@ const weightIcon = require('../../../assets/icons/weight.png');
 const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
-  const {exercise, exerciseDoneFunction} = props;
+  const {exercise} = props;
+  console.log(exercise);
 
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
@@ -44,7 +45,13 @@ export default function ExerciseView(props) {
   useEffect(() => {
     let sets = props.sets;
 
-    sets = sets.map((it) => {
+    sets = sets.map((it, index) => {
+      if (index === 0) {
+        return {
+          ...it,
+          state: 'active',
+        };
+      }
       return {
         ...it,
         state: 'inactive',
@@ -55,17 +62,11 @@ export default function ExerciseView(props) {
   }, []);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const onExerciseCompleted = () => {
-    if (countDown) {
-      setCountDown(false);
-    } else {
-    }
-  };
 
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {
-      if (index === completedIndex) {
-        setRestTime(it.restTime * 1000);
+      if (index <= completedIndex) {
+        setRestTime((it.restTime || 0) * 1000);
         return {
           ...it,
           state: 'completed',
@@ -79,15 +80,16 @@ export default function ExerciseView(props) {
 
       return it;
     });
-    // Move to next set
+
+    // Cool down and move to next set
+
     if (currentSet < sets.length) {
-      setCurrentSet(completedIndex + 1);
+      setCurrentSet(currentSet + 1);
+      setCountDown(true);
     }
 
     // Update Sets
     setSets(newSets);
-
-    setCountDown(true);
   };
 
   const onCancelTimer = () => {
@@ -96,6 +98,10 @@ export default function ExerciseView(props) {
 
   const onFinishTimer = () => {
     setCountDown(false);
+  };
+
+  const onExerciseCompleted = () => {
+    onSetCompleted(sets.length);
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -118,7 +124,7 @@ export default function ExerciseView(props) {
 
   return (
     <View style={{height: getHeight(667 - 56 - insets.top)}}>
-      <ExerciseVideoView />
+      <ExerciseVideoView {...exercise} />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
@@ -133,16 +139,23 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          <TouchableOpacity
-            style={styles.weightTouchStyle}
-            onPress={() => navigation.navigate('WeightCapture')}>
-            <Image source={weightIcon} />
-            <Text style={styles.extraTextStyle}>{WorkoutDict.WeightText}</Text>
-          </TouchableOpacity>
+          {exercise.weight && (
+            <TouchableOpacity
+              style={{
+                ...styles.weightTouchStyle,
+                marginEnd: getWidth(40),
+              }}
+              onPress={() => navigation.navigate('WeightCapture')}>
+              <Image source={weightIcon} />
+              <Text style={styles.extraTextStyle}>
+                {WorkoutDict.WeightText}
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity
             style={{
               ...styles.weightTouchStyle,
-              marginStart: getWidth(40),
             }}
             onPress={() => navigation.navigate('Notes')}>
             <Image source={notesIcon} />
@@ -161,7 +174,7 @@ export default function ExerciseView(props) {
           </View>
           <RepsList sets={sets} />
         </View>
-        {countDown && (
+        {countDown && restTime > 0 && (
           <TimerView
             duration={msToHMS(restTime)}
             onCancelTimer={onCancelTimer}

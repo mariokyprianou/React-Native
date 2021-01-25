@@ -11,6 +11,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
+import Intercom from 'react-native-intercom';
 
 export default function ChangeEmailScreen() {
   // MARK: - Hooks
@@ -28,7 +29,7 @@ export default function ChangeEmailScreen() {
   // MARK: - Logic
   const changeEmail = (newEmail) => {
     // TODO: - Logic
-
+    Intercom.updateUser({email: newEmail}); // insert this into the .then of the Auth.updateUserAttributes functions, before navigation
     navigation.navigate('Profile');
   };
 

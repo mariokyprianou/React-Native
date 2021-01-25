@@ -119,6 +119,8 @@ export default function DataProvider(props) {
   const [isDownloadEnabled, setDownloadEnabled] = useState();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
 
+  const [workoutTime, setWorkoutTime] = useState(0);
+
   const getDownloadEnabled = useCallback(async () => {
     const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
     const enabled = JSON.parse(value);
@@ -143,6 +145,8 @@ export default function DataProvider(props) {
       isDownloadEnabled,
       currentExerciseIndex,
       setCurrentExerciseIndex,
+      workoutTime,
+      setWorkoutTime,
     }),
     [
       onboarding,
@@ -159,6 +163,8 @@ export default function DataProvider(props) {
       isDownloadEnabled,
       currentExerciseIndex,
       setCurrentExerciseIndex,
+      workoutTime,
+      setWorkoutTime,
     ],
   );
 

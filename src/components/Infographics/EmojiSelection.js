@@ -13,13 +13,14 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import Emoji from 'react-native-emoji';
 
-export default function EmojiSelection() {
+export default function EmojiSelection(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, fontSize} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const [selected, setSelected] = useState([]);
+
+  const {selectedEmoji, setSelectedEmoji} = props;
 
   const emojis = [
     'sweat_smile',
@@ -56,12 +57,7 @@ export default function EmojiSelection() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleSelect(name) {
-    if (selected.includes(name)) {
-      const removed = selected.filter((emoji) => emoji !== name);
-      setSelected(removed);
-    } else {
-      setSelected([...selected, name]);
-    }
+    setSelectedEmoji(name);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -74,7 +70,7 @@ export default function EmojiSelection() {
             <Emoji
               name={emoji}
               style={
-                selected.includes(emoji)
+                selectedEmoji === emoji
                   ? {...styles.emoji, ...styles.selected}
                   : styles.emoji
               }

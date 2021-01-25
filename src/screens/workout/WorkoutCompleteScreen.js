@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -19,6 +19,11 @@ import SliderProgressView from '../../components/Views/SliderProgressView';
 import IconTextView from '../../components/Infographics/IconTextView';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import Spacer from '../../components/Utility/Spacer';
+import {useStopwatch} from 'the-core-ui-module-tdcountdown';
+import UseData from '../../hooks/data/UseData';
+import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
+import {useMutation} from '@apollo/client';
+import * as R from 'ramda';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -28,9 +33,39 @@ export default function WorkoutCompleteScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
 
+  const {selectedWorkout, workoutTime} = UseData();
+
+  const [completeWorkout] = useMutation(CompleteWorkout);
+
+  const [selectedIntensity, setSelectedIntensity] = useState(50);
+  const [selectedEmoji, setSelectedEmoji] = useState();
+
+  const [stats, setStats] = useState({});
+
   navigation.setOptions({
     header: () => <Header title={WorkoutDict.WorkoutComplete} showModalCross />,
   });
+
+  useEffect(() => {
+    const duration = workoutTime ? Math.ceil(workoutTime / 1000 / 60) : 0;
+
+    let reps = 0;
+    let sets = 0;
+
+    selectedWorkout.exercises.map((exercise) => {
+      sets += exercise.sets.length;
+      exercise.sets.map((set) => (reps += set.quantity));
+    });
+
+    const {overviewImage} = selectedWorkout;
+
+    setStats({
+      duration,
+      reps,
+      sets,
+      overviewImage,
+    });
+  }, [selectedWorkout]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -85,6 +120,40 @@ export default function WorkoutCompleteScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function submitWorkout() {
+    if (!selectedEmoji) {
+      return;
+    }
+    const workoutComplete = {
+      workoutId: selectedWorkout.id,
+      date: new Date(),
+      intensity: Math.ceil(selectedIntensity),
+      emoji: selectedEmoji,
+      timeTaken: stats.duration,
+    };
+
+    console.log(workoutComplete);
+
+    completeWorkout({
+      variables: {
+        input: {
+          ...workoutComplete,
+        },
+      },
+    })
+      .then((res) => {
+        console.log('RES', res).data.completeWorkout;
+        const success = R.path(['data', 'completeWorkout'], res);
+
+        if (success) {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'TabContainer'}],
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
@@ -92,7 +161,11 @@ export default function WorkoutCompleteScreen() {
       <ScrollView style={styles.scroll}>
         <View style={styles.imageContainer}>
           <Image
-            source={require('../../../assets/fakeWorkout.png')}
+            source={
+              stats.overviewImage
+                ? {uri: stats.overviewImage}
+                : require('../../../assets/fakeWorkout.png')
+            }
             style={styles.image}
           />
           <View style={styles.fadeContainer}>
@@ -101,9 +174,9 @@ export default function WorkoutCompleteScreen() {
           <View style={styles.iconContainer}>
             <IconTextView
               type="workoutComplete"
-              duration={30}
-              reps={20}
-              sets={17}
+              duration={stats.duration}
+              reps={stats.reps}
+              sets={stats.sets}
               color="white"
             />
           </View>
@@ -114,15 +187,24 @@ export default function WorkoutCompleteScreen() {
             <SliderProgressView
               slider={true}
               max={100}
-              progress={30}
+              progress={selectedIntensity}
+              setProgress={setSelectedIntensity}
               height={getHeight(4)}
               rounded={true}
             />
           </View>
-          <EmojiSelection />
+          <EmojiSelection
+            selectedEmoji={selectedEmoji}
+            setSelectedEmoji={setSelectedEmoji}
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <DefaultButton type="done" variant="white" icon="chevron" />
+          <DefaultButton
+            type="done"
+            variant="white"
+            icon="chevron"
+            onPress={submitWorkout}
+          />
         </View>
         <Spacer height={50} />
       </ScrollView>

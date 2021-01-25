@@ -19,6 +19,7 @@ export default function HelpMeChooseBar({
   slider = false,
   height,
   rounded = false,
+  setProgress,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
@@ -95,7 +96,12 @@ export default function HelpMeChooseBar({
           minimumValue={0}
           maximumValue={max}
           value={currentProgress}
-          onValueChange={(value) => setCurrentProgress(value)}
+          onValueChange={(value) => {
+            setCurrentProgress(value);
+            if (setProgress) {
+              setProgress(value);
+            }
+          }}
           thumbStyle={styles.thumbStyle}
           thumbTouchSize={{width: getWidth(42), height: getHeight(22)}}
           trackStyle={{backgroundColor: 'transparent'}}

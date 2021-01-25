@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -30,7 +30,6 @@ export default function WorkoutScreen() {
 
   const [offset, setOffset] = useState(0);
 
-  console.log(currentExerciseIndex);
   navigation.setOptions({
     header: () => (
       <WorkoutHeader
@@ -39,7 +38,6 @@ export default function WorkoutScreen() {
       />
     ),
   });
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scrollViewContainer: {
@@ -67,6 +65,10 @@ export default function WorkoutScreen() {
     setOffset(newOffset);
   }
 
+  function workoutFinished() {
+    navigation.navigate('WorkoutComplete');
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
@@ -83,7 +85,11 @@ export default function WorkoutScreen() {
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
         {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView {...screen} index={index} />
+          <ExerciseView
+            {...screen}
+            index={index}
+            workoutFinished={workoutFinished}
+          />
         ))}
       </ScrollView>
     </View>

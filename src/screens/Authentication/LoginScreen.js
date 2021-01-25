@@ -17,6 +17,7 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
 import useUserData from '../../hooks/data/useUserData';
+import Intercom from 'react-native-intercom';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -96,7 +97,7 @@ export default function LoginScreen() {
 
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
-        // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
+        Intercom.registerIdentifiedUser({email: emailAddress});
 
         const permissionNeeded = await permissionsNeeded();
         if (permissionNeeded) {

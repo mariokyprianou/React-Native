@@ -297,6 +297,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               .catch((err) => console.log('Error signing out', err));
           },
         },
+        {
+          text: ProfileDict.CancelButton,
+          style: 'cancel',
+        },
       ],
     });
   }

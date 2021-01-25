@@ -178,6 +178,7 @@ const enGB = {
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',
     LogoutModalButton: 'Logout',
+    CancelButton: 'Cancel',
   },
 
   ShareDict: {

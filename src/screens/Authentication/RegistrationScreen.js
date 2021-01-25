@@ -23,10 +23,10 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
-import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import AllCountries from '../../apollo/queries/AllCountries';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
+import Intercom from 'react-native-intercom';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -207,6 +207,7 @@ export default function RegisterScreen() {
     })
       .then((res) => {
         if (res.data.registerUser === true) {
+          Intercom.registerIdentifiedUser({email: email});
           navigation.navigate('EmailVerification', {email, password});
         }
       })

@@ -31,6 +31,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
+import Intercom from 'react-native-intercom';
 
 const notifications = [
   {
@@ -289,6 +290,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           onPress: async () => {
             await Auth.signOut()
               .then(() => {
+                Intercom.logout();
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

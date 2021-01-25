@@ -14,6 +14,10 @@ export default gql`
       trainer {
         id
         name
+        programmes {
+          environment
+          numberOfWeeks
+        }
       }
       environment
       programmeImage

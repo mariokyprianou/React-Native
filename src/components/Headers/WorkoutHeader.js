@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -21,9 +21,6 @@ export default function ({currentExercise, totalExercises}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {elapsedMS, toggle} = useStopwatch();
-
-  const [isPaused, setIsPaused] = useState(false);
 
   const screenWidth = Dimensions.get('screen').width;
 
@@ -78,20 +75,7 @@ export default function ({currentExercise, totalExercises}) {
   const headerTitle = () => (
     <View style={{alignItems: 'center'}}>
       <View style={styles.titleTextContainer}>
-        <Text style={styles.titleTextStyle}>
-          {elapsedMS ? msToHMSFull(elapsedMS) : '00:00:00'}
-        </Text>
-        <TouchableOpacity
-          style={styles.timerTouchStyle}
-          onPress={() => {
-            toggle();
-            setIsPaused(!isPaused);
-          }}>
-          <Image
-            style={styles.iconStyle}
-            source={!isPaused ? playIcon : pauseIcon}
-          />
-        </TouchableOpacity>
+        <TimerView styles={styles} />
       </View>
     </View>
   );
@@ -107,4 +91,33 @@ export default function ({currentExercise, totalExercises}) {
   };
 
   return <WorkoutHeader />;
+}
+
+function TimerView(props) {
+  const {elapsedMS, toggle} = useStopwatch();
+
+  useEffect(() => {
+    toggle();
+  }, []);
+
+  const [isPaused, setIsPaused] = useState(true);
+
+  return (
+    <>
+      <Text style={props.styles.titleTextStyle}>
+        {elapsedMS ? msToHMSFull(elapsedMS) : '00:00:00'}
+      </Text>
+      <TouchableOpacity
+        style={props.styles.timerTouchStyle}
+        onPress={() => {
+          toggle();
+          setIsPaused(!isPaused);
+        }}>
+        <Image
+          style={props.styles.iconStyle}
+          source={!isPaused ? playIcon : pauseIcon}
+        />
+      </TouchableOpacity>
+    </>
+  );
 }

@@ -6,24 +6,38 @@
  */
 
 import React, {useState} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
-import useWorkoutData from '../../hooks/data/useWorkoutData';
+import useData from '../../hooks/data/UseData';
+import {useSafeArea} from 'react-native-safe-area-context';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {colors} = useTheme();
   const navigation = useNavigation();
-  const {workout} = useWorkoutData();
   const {getHeight} = ScaleHook();
 
+  const {
+    selectedWorkout,
+    currentExerciseIndex,
+    setCurrentExerciseIndex,
+  } = useData();
+
+  const [offset, setOffset] = useState(0);
+
+  console.log(currentExerciseIndex);
   navigation.setOptions({
-    header: () => <WorkoutHeader currentExercise={4} totalExercises={12} />,
+    header: () => (
+      <WorkoutHeader
+        currentExercise={currentExerciseIndex + 1}
+        totalExercises={selectedWorkout.exercises.length}
+      />
+    ),
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -41,8 +55,19 @@ export default function WorkoutScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  // ** ** ** ** ** RENDER ** ** ** ** **
+  function handleIndex(newOffset) {
+    if (newOffset > offset) {
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+    } else {
+      if (currentExerciseIndex > 0) {
+        setCurrentExerciseIndex(currentExerciseIndex - 1);
+      }
+    }
 
+    setOffset(newOffset);
+  }
+
+  // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
       <View style={styles.headerBorder} />
@@ -53,9 +78,12 @@ export default function WorkoutScreen() {
         pagingEnabled
         bounces={false}
         overScrollMode={'never'}
-        style={styles.scrollViewContainer}>
-        {workout.exercises.map((screen, index) => (
-          <ExerciseView />
+        style={styles.scrollViewContainer}
+        onMomentumScrollEnd={(event) =>
+          handleIndex(event.nativeEvent.contentOffset.y)
+        }>
+        {selectedWorkout.exercises.map((screen, index) => (
+          <ExerciseView {...screen} index={index} />
         ))}
       </ScrollView>
     </View>

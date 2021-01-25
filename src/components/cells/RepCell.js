@@ -5,18 +5,16 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import LinearGradient from 'react-native-linear-gradient';
 
 const completedIcon = require('../../../assets/icons/completedSet.png');
-export default function ({
-  onPress = () => {},
-  value = '8',
-  state = 'inactive',
-}) {
+export default function (props) {
+  const {onPress = () => {}, quantity = '8', state = 'inactive'} = props;
+
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
@@ -44,7 +42,7 @@ export default function ({
     },
   };
 
-  const content = () => <Text style={styles.textStyle}>{value}</Text>;
+  const content = () => <Text style={styles.textStyle}>{quantity}</Text>;
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.containerStyle}>

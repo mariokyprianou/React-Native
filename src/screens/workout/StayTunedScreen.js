@@ -7,31 +7,30 @@
  */
 
 import React, {useState} from 'react';
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  ImageBackground,
-  Alert,
-} from 'react-native';
+import {View, Text, ImageBackground, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
-import TDIcon from 'the-core-ui-component-tdicon';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
+import {useRoute} from '@react-navigation/core';
+import {format} from 'date-fns';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function StayTuned({name, venue, date, type}) {
+export default function StayTuned() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const [reminders, showReminders] = useState(true);
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const {
+    params: {name, venue, image, date, type},
+  } = useRoute();
+  const formattedDate = format(date, 'do LLLL');
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -102,11 +101,11 @@ export default function StayTuned({name, venue, date, type}) {
   if (type === 'workoutsComplete') {
     return (
       <View>
-        <ImageBackground source={fakeImage} style={styles.image}>
+        <ImageBackground source={{uri: image}} style={styles.image}>
           <FadingBottomView color="black" />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
-              {WorkoutDict.StayTuned(name, date)}
+              {WorkoutDict.StayTuned(name, formattedDate)}
             </Text>
           </View>
           <View style={styles.buttonContainer}>

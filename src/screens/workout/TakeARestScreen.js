@@ -15,22 +15,27 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
+import {useRoute} from '@react-navigation/core';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function TakeARestScreen({name}) {
+export default function TakeARestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
+  const {
+    params: {name, setWarningReceived},
+  } = useRoute();
 
   navigation.setOptions({
     header: () => (
       <Header
         title={WorkoutDict.TakeARestTitle}
-        showModalCross
+        right="crossIcon"
+        rightAction={handleGoBack}
         white
         transparent
       />
@@ -72,6 +77,11 @@ export default function TakeARestScreen({name}) {
     navigation.navigate('StartWorkout');
   }
 
+  function handleGoBack() {
+    setWarningReceived(true);
+    navigation.goBack();
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
@@ -90,7 +100,7 @@ export default function TakeARestScreen({name}) {
           <DefaultButton
             type="goBack"
             variant="transparentWhiteText"
-            onPress={() => navigation.goBack()}
+            onPress={handleGoBack}
           />
         </View>
       </ImageBackground>

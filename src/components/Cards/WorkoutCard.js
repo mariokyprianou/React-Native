@@ -19,6 +19,7 @@ import isRTL from '../../utils/isRTL';
 // possible status' - currentDay, complete, todo
 
 export default function WorkoutCard({
+  workout,
   title,
   day,
   date,
@@ -128,7 +129,9 @@ export default function WorkoutCard({
       <TouchableOpacity
         style={styles.touch}
         onLongPress={drag}
-        onPress={title === WorkoutDict.RestDay ? null : onPressCard}>
+        onPress={
+          title === WorkoutDict.RestDay ? null : () => onPressCard(workout)
+        }>
         {date === formattedToday && (
           <Image source={image} style={styles.image} />
         )}

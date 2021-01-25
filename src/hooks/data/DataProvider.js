@@ -5,7 +5,7 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -17,6 +17,7 @@ import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire'
 import Programme from '../../apollo/queries/Programme';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -116,13 +117,19 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
-  // const [submitChallengeResult] = useMutation(SubmitChallengeResult, {
-  //   fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-  // });
+  const [selectedWorkout, setSelectedWorkout] = useState();
+  const [isDownloadEnabled, setDownloadEnabled] = useState();
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+
+  const getDownloadEnabled = useCallback(async () => {
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+    const enabled = JSON.parse(value);
+    setDownloadEnabled(enabled);
+  }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
-  const values = React.useMemo(
+  const values = useMemo(
     () => ({
       onboarding,
       trainers,
@@ -132,6 +139,12 @@ export default function DataProvider(props) {
       setSuggestedProgramme,
       programme,
       getProgramme,
+      selectedWorkout,
+      setSelectedWorkout,
+      getDownloadEnabled,
+      isDownloadEnabled,
+      currentExerciseIndex,
+      setCurrentExerciseIndex,
     }),
     [
       onboarding,
@@ -142,6 +155,12 @@ export default function DataProvider(props) {
       setSuggestedProgramme,
       programme,
       getProgramme,
+      selectedWorkout,
+      setSelectedWorkout,
+      getDownloadEnabled,
+      isDownloadEnabled,
+      currentExerciseIndex,
+      setCurrentExerciseIndex,
     ],
   );
 

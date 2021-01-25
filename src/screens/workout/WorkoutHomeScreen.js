@@ -12,8 +12,6 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
-import useWorkoutHome from '../../hooks/data/useWorkoutHome';
-import useTakeRest from '../../hooks/data/useTakeRest';
 import TDIcon from 'the-core-ui-component-tdicon';
 import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
@@ -25,6 +23,7 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
+import {differenceInDays, addDays} from 'date-fns';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -36,14 +35,14 @@ export default function WorkoutHomeScreen() {
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const [threeWorkoutsInRow, setThreeWorkoutsInRow] = useState(false);
+  const [warningReceived, setWarningReceived] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => null,
   });
 
-  const {programme, getProgramme} = useData();
-
+  const {programme, getProgramme, setSelectedWorkout} = useData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
 
   useEffect(() => {
@@ -64,7 +63,6 @@ export default function WorkoutHomeScreen() {
 
   useEffect(() => {
     if (programme) {
-      // Sort by index, add rest day and dates
       if (weekNumber === 1) {
         const currentWeek = getWeekToDisplay(programme, true);
         setWorkoutsToDisplay(currentWeek);
@@ -77,44 +75,84 @@ export default function WorkoutHomeScreen() {
   }, [programme, weekNumber]);
 
   useEffect(() => {
-    if (threeWorkoutsInRow === true) {
-      navigation.navigate('TakeARest', {name: 'Katrina'});
+    const today = new Date();
+    // console.log(subDays(today, 2), '<--- 2 days ago');
+    if (programme) {
+      const previousWorkoutDates = [];
+      const completedWorkouts = programme.currentWeek.workouts.filter(
+        (workout) => workout.completedAt !== null,
+      );
+      completedWorkouts.forEach((workout) =>
+        previousWorkoutDates.push(workout.completedAt),
+      );
+      if (previousWorkoutDates.length < 3) {
+        // check async storage
+        // Christos to store completed workouts in async storage
+        // Three booleans for hasCompleted1, hasCompleted2, hasCompleted3 (consecutively)
+        // set threeWorkoutsInRow => true/false
+      }
+      if (previousWorkoutDates.length >= 3) {
+        const lastIndex = previousWorkoutDates.length - 1;
+        if (
+          differenceInDays(today, new Date(previousWorkoutDates[lastIndex])) ===
+            1 &&
+          differenceInDays(
+            today,
+            new Date(previousWorkoutDates[lastIndex - 1]),
+          ) === 2 &&
+          differenceInDays(
+            today,
+            new Date(previousWorkoutDates[lastIndex - 2]),
+          ) === 3
+        ) {
+          setThreeWorkoutsInRow(true);
+        }
+      }
     }
-    // deps array left blank so this only appears the first time the page is loaded
-  }, []);
+  }, [programme]);
 
-  // useEffect(() => {
-  //   if (completedWorkoutWeek === true) {
-  //     navigation.navigate('WeekComplete', {
-  //       name: trainerName,
-  //       weekNumber: currentWeekNumber,
-  //       totalDuration: totalDuration,
-  //       totalReps: totalReps,
-  //       totalSets: totalSets,
-  //     });
-  //   }
-  //   // deps array left blank so this only appears the first time the page is loaded
-  // }, []);
+  useEffect(() => {
+    if (programme && threeWorkoutsInRow === true && warningReceived === false) {
+      navigation.navigate('TakeARest', {
+        name: programme.trainer.name,
+        setWarningReceived,
+      });
+    }
+  }, [programme, threeWorkoutsInRow]);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
+    const firstDayNextWeek = addDays(
+      new Date(programme?.currentWeek.workouts[0].completedAt),
+      7,
+    );
+    const programmeLength = programme?.trainer.programmes.filter(
+      (prog) => prog.environment === programme.environment,
+    )[0].numberOfWeeks;
+
     if (direction === 'left') {
       setWeekNumber(1);
     }
     if (direction === 'right') {
-      setWeekNumber(2);
+      if (
+        programme.currentWeek.workouts.every(
+          (workout) => workout.completedAt !== null,
+        )
+      ) {
+        navigation.navigate('StayTuned', {
+          name: programme?.trainer.name,
+          venue: programme?.environment,
+          image: programme?.programmeImage,
+          date: firstDayNextWeek,
+          type:
+            programme?.currentWeek.weekNumber === programmeLength
+              ? 'programmeComplete'
+              : 'workoutsComplete',
+        });
+      } else {
+        setWeekNumber(2);
+      }
     }
-    // if (direction === 'right' && completedWorkoutWeek) {
-    //   navigation.navigate('StayTuned', {
-    //     name: trainerName,
-    //     venue: venue,
-    //     date: firstWorkoutOfNextWeek,
-    //     type:
-    //       lastWeekOfProgramme === true
-    //         ? 'programmeComplete'
-    //         : 'workoutComplete',
-    //   });
-    // }
   }
 
   async function updateOrder(newList) {
@@ -248,6 +286,7 @@ export default function WorkoutHomeScreen() {
               paddingTop: index === 0 ? getHeight(20) : 0,
             }}>
             <WorkoutCard
+              workout={item}
               title={item.name}
               day={item.day}
               date={item.date}
@@ -255,7 +294,21 @@ export default function WorkoutHomeScreen() {
               intensity={item.intensity}
               image={item.overviewImage}
               drag={drag}
-              onPressCard={() => navigation.navigate('StartWorkout')} // add params to specify workout ID
+              onPressCard={(workout) => {
+                // Sort exercises
+
+                // const exercises = workout.exercises
+                //   .concat(workout.exercises)
+                //   .concat(workout.exercises);
+                const newWorkout = {
+                  ...workout,
+                  exercises: workout.exercises
+                    .slice()
+                    .sort((a, b) => a.orderIndex - b.orderIndex),
+                };
+                setSelectedWorkout(newWorkout);
+                navigation.navigate('StartWorkout');
+              }}
             />
           </View>
         )}

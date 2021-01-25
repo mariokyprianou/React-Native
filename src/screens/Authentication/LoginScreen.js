@@ -5,7 +5,7 @@
  * Copyright (c) 2020 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 import {ScrollView, View, Text, TouchableOpacity, Alert} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -14,7 +14,6 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
-import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
 import useUserData from '../../hooks/data/useUserData';
@@ -25,7 +24,6 @@ export default function LoginScreen() {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
-  const [passwordEyeEnabled, setPasswordEyeEnabled] = useState(true);
 
   const {permissionsNeeded} = useUserData();
 
@@ -98,8 +96,9 @@ export default function LoginScreen() {
 
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
-        const permissionNeeded = await permissionsNeeded();
+        // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
 
+        const permissionNeeded = await permissionsNeeded();
         if (permissionNeeded) {
           navigation.navigate(permissionNeeded);
         } else {
@@ -122,8 +121,6 @@ export default function LoginScreen() {
           Alert.alert(AuthDict.IncorrectEmailOrPassword);
         }
       });
-
-    // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
   }
 
   function forgotPassword() {

@@ -20,7 +20,7 @@ import * as ScreenCapture from 'expo-screen-capture';
 import isValidChecksum from './utils/checksumValidation';
 import AppContainer from './AppContainer';
 import {useAsyncStorage} from '@react-native-community/async-storage';
-// import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 import Amplify from 'aws-amplify';
 import {TDGraphQLProvider} from './apollo/Client';
 import UserDataProvider from './hooks/data/UserDataProvider';
@@ -87,7 +87,7 @@ const App = () => {
     }
     validateChecksum();
     languageSet();
-    // Intercom.registerUnidentifiedUser();
+    Intercom.registerUnidentifiedUser();
 
     return () => {
       if (Platform.OS === 'ios') {

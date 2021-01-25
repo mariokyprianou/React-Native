@@ -9,7 +9,7 @@ import React from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
-// import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 
 export default function ProfileScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +26,7 @@ export default function ProfileScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressNeedHelp = () => {
-    // Intercom.displayMessenger();
+    Intercom.displayMessenger();
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **

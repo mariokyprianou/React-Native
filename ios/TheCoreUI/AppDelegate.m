@@ -8,7 +8,7 @@
 #import <UMCore/UMModuleRegistry.h>
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
-//#import <Intercom/intercom.h>
+#import <Intercom/intercom.h>
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
@@ -61,7 +61,7 @@ static void InitializeFlipper(UIApplication *application) {
   
   [RNSplashScreen show];
   [super application:application didFinishLaunchingWithOptions:launchOptions];
-//  [Intercom setApiKey:@"ios_sdk-fd29c067657e0cf6598493d7cd9f0b96d3cb910a" forAppId:@"h9qs9je1"];
+  [Intercom setApiKey:@"ios_sdk-fd29c067657e0cf6598493d7cd9f0b96d3cb910a" forAppId:@"h9qs9je1"];
   return YES;
 }
 
@@ -87,6 +87,11 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
   return [RCTLinkingManager application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // Intercom
+    [Intercom setDeviceToken:deviceToken];
 }
 
 @end

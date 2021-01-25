@@ -67,39 +67,41 @@ export default function DataProvider(props) {
   useQuery(ProgrammeQuestionnaire, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const qMap = res.programmeQuestionnaire.map((question) => {
-        const answers = [];
-        answers.push(
-          question.question.answer1,
-          question.question.answer2,
-          question.question.answer3,
-          question.question.answer4,
-        );
+      if (res) {
+        const qMap = res.programmeQuestionnaire.map((question) => {
+          const answers = [];
+          answers.push(
+            question.question.answer1,
+            question.question.answer2,
+            question.question.answer3,
+            question.question.answer4,
+          );
 
-        const formattedQuestion = answers.map((val, index) => {
-          return {
-            key: `${index + 1}`,
-            answerText: val,
-          };
+          const formattedQuestion = answers.map((val, index) => {
+            return {
+              key: `${index + 1}`,
+              answerText: val,
+            };
+          });
+
+          return {...question, answers: formattedQuestion};
         });
 
-        return {...question, answers: formattedQuestion};
-      });
+        const localQuestion = {
+          orderIndex: 1,
+          answers: [
+            {answerText: 'Home', key: '1'},
+            {answerText: 'Gym', key: '2'},
+          ],
+          question: {
+            language: 'en',
+            question: 'Would you rather train at home or in the gym?',
+          },
+        };
 
-      const localQuestion = {
-        orderIndex: 1,
-        answers: [
-          {answerText: 'Home', key: '1'},
-          {answerText: 'Gym', key: '2'},
-        ],
-        question: {
-          language: 'en',
-          question: 'Would you rather train at home or in the gym?',
-        },
-      };
-
-      qMap.unshift(localQuestion);
-      setProgrammeQuestionnaire(qMap);
+        qMap.unshift(localQuestion);
+        setProgrammeQuestionnaire(qMap);
+      }
     },
     onError: (error) => console.log(error),
   });

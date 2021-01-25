@@ -8,23 +8,23 @@
 
 import React from 'react';
 import {AuthStack} from '../navigation';
-import LanguageSelectionScreen from '../screens/auth/LanguageSelectionScreen';
-import OnboardingScreen from '../screens/auth/OnboardingScreen';
-import MeetYourIconsScreen from '../screens/auth/MeetYourIconsScreen';
-import RegistrationScreen from '../screens/auth/RegistrationScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
-import CongratulationsScreen from '../screens/auth/CongratulationsScreen';
-import TermsAndConditionsScreen from '../screens/auth/TermsConditionsScreen';
-import PrivacyPolicyScreen from '../screens/auth/PrivacyPolicyScreen';
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
-import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
-import AnalyticsPermissionScreen from '../screens/auth/AnalyticsPermissionScreen';
-import NotificationsPermissionScreen from '../screens/auth/NotificationsPermissionScreen';
+import LanguageSelectionScreen from '../screens/Authentication/LanguageSelectionScreen';
+import OnboardingScreen from '../screens/Authentication/OnboardingScreen';
+import MeetYourIconsScreen from '../screens/Authentication/MeetYourIconsScreen';
+import RegistrationScreen from '../screens/Authentication/RegistrationScreen';
+import LoginScreen from '../screens/Authentication/LoginScreen';
+import CongratulationsScreen from '../screens/Authentication/CongratulationsScreen';
+import TermsAndConditionsScreen from '../screens/Authentication/TermsConditionsScreen';
+import PrivacyPolicyScreen from '../screens/Authentication/PrivacyPolicyScreen';
+import ForgotPasswordScreen from '../screens/Authentication/ForgotPasswordScreen';
+import ResetPasswordScreen from '../screens/Authentication/ResetPasswordScreen';
+import AnalyticsPermissionScreen from '../screens/Authentication/AnalyticsPermissionScreen';
+import NotificationsPermissionScreen from '../screens/Authentication/NotificationsPermissionScreen';
 import {TransitionPresets} from '@react-navigation/stack';
-import HelpMeChooseScreen from '../screens/auth/HelpMeChooseScreen';
-import HelpMeChooseResultsScreen from '../screens/auth/HelpMeChooseResultsScreen';
+import HelpMeChooseScreen from '../screens/Authentication/HelpMeChooseScreen';
+import HelpMeChooseResultsScreen from '../screens/Authentication/HelpMeChooseResultsScreen';
 
-import EmailVerificationScreen from '../screens/auth/EmailVerificationScreen';
+import EmailVerificationScreen from '../screens/Authentication/EmailVerificationScreen';
 
 export default function AuthContainer(props) {
   return (

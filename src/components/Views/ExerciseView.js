@@ -18,6 +18,11 @@ import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import SliderProgressView from './SliderProgressView';
 import {it} from 'date-fns/locale';
+import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
+import {useQuery} from '@apollo/client';
+import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -28,6 +33,7 @@ export default function ExerciseView(props) {
   const {exercise, index} = props;
 
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
   const insets = useSafeArea();
@@ -40,6 +46,8 @@ export default function ExerciseView(props) {
   const [sets, setSets] = useState([]);
   const [currentSet, setCurrentSet] = useState(0);
   const [restTime, setRestTime] = useState();
+  const [setComplete, setSetComplete] = useState(false);
+  const [lastWeight, setLastWeight] = useState('0kg');
 
   useEffect(() => {
     let sets = props.sets;
@@ -59,6 +67,16 @@ export default function ExerciseView(props) {
 
     setSets(sets);
   }, []);
+
+  useQuery(GetExerciseWeight, {
+    variables: {exercise: exercise.id},
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      const lastIndex = res.getExerciseWeight.length - 1;
+      setLastWeight(`${res.getExerciseWeight[lastIndex].weight}kg`);
+    },
+    onError: (error) => console.log(error, '<---- error fetching weights'),
+  });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -81,10 +99,16 @@ export default function ExerciseView(props) {
     });
 
     // Cool down and move to next set
-
     if (currentSet < sets.length) {
       setCurrentSet(currentSet + 1);
-      setCountDown(true);
+    }
+
+    setCountDown(true);
+
+    const involvesWeights = true;
+    if (involvesWeights) {
+      // swap ^^ for exercise.weight
+      setSetComplete(true);
     }
 
     // Update Sets
@@ -181,6 +205,16 @@ export default function ExerciseView(props) {
           />
         )}
       </View>
+      {setComplete && (
+        <SetCompletionScreen
+          restTime={restTime}
+          setSetComplete={setSetComplete}
+          setReps={sets[currentSet - 1].quantity}
+          setNumber={sets[currentSet - 1].setNumber}
+          exercise={exercise.id}
+          lastWeight={lastWeight}
+        />
+      )}
     </View>
   );
 }

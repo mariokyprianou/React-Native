@@ -25,12 +25,13 @@ const fakeWeights = [
   '10kg',
 ];
 
-export default function WeightSelection() {
+export default function WeightSelection({setSelectedWeight, lastWeight}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const swiperRef = useRef();
   const {textStyles} = useTheme();
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const lastWeightIndex = fakeWeights.indexOf(lastWeight);
+  const [selectedIndex, setSelectedIndex] = useState(lastWeightIndex);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -90,8 +91,12 @@ export default function WeightSelection() {
         sliderWidth={getWidth(350)}
         itemWidth={getWidth(75)}
         hasParallaxImages={true}
-        onSnapToItem={(index) => setSelectedIndex(index)}
+        onSnapToItem={(index) => {
+          setSelectedIndex(index);
+          setSelectedWeight(fakeWeights[index]);
+        }}
         windowSize={1}
+        firstItem={lastWeightIndex}
       />
     </View>
   );

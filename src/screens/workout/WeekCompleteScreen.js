@@ -16,16 +16,21 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import IconTextView from '../../components/Infographics/IconTextView';
 import Header from '../../components/Headers/Header';
+import {useRoute} from '@react-navigation/core';
 
 const fakeImage = require('../../../assets/fake2.png');
 
-export default function WeekCompleteScreen({
-  name = 'Katrina',
-  weekNumber = 4,
-  totalDuration = 100,
-  totalReps = 150,
-  totalSets = 40,
-}) {
+export default function WeekCompleteScreen() {
+  const {
+    params: {
+      name = 'Katrina',
+      weekNumber = 1,
+      totalDuration = 1,
+      totalReps = 1,
+      totalSets = 1,
+    },
+  } = useRoute();
+
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();

@@ -24,6 +24,7 @@ import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {differenceInDays, addDays} from 'date-fns';
+import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -44,10 +45,56 @@ export default function WorkoutHomeScreen() {
 
   const {programme, getProgramme, setSelectedWorkout} = useData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
+  const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
   useEffect(() => {
     getProgramme();
   }, []);
+
+  // Check if week is completed
+  useEffect(() => {
+    if (programme) {
+      const hasRemaining = programme.currentWeek.workouts.find(
+        (workout) => !workout.completedAt,
+      );
+
+      if (!hasRemaining) {
+        const {weekNumber} = programme.currentWeek;
+        let duration = 0;
+        let reps = 0;
+        let sets = 0;
+        programme.currentWeek.workouts.map((workout) => {
+          duration += workout.duration || 0;
+          workout.exercises.map((exercise) => {
+            sets += exercise.sets.length;
+            exercise.sets.map((set) => (reps += set.quantity));
+          });
+        });
+
+        const weekCompleteProps = {
+          name: programme.trainer.name,
+          weekNumber: weekNumber,
+          totalDuration: duration,
+          totalReps: reps,
+          totalSets: sets,
+        };
+
+        completeWeek(weekCompleteProps);
+      }
+    }
+  }, [programme]);
+
+  async function completeWeek(props) {
+    await completeWeekMutation()
+      .then((res) => {
+        const success = R.path(['data', 'completeWorkoutWeek'], res);
+
+        if (success) {
+          navigation.navigate('WeekComplete', {...props});
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   const getWeekToDisplay = (data, isCurrentWeek) => {
     const workouts = isCurrentWeek

@@ -297,12 +297,12 @@ export default function WorkoutHomeScreen() {
               onPressCard={(workout) => {
                 // Sort exercises
 
-                const exercises = workout.exercises
-                  .concat(workout.exercises)
-                  .concat(workout.exercises);
+                // const exercises = workout.exercises
+                //   .concat(workout.exercises)
+                //   .concat(workout.exercises);
                 const newWorkout = {
                   ...workout,
-                  exercises: exercises
+                  exercises: workout.exercises
                     .slice()
                     .sort((a, b) => a.orderIndex - b.orderIndex),
                 };

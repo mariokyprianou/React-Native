@@ -277,12 +277,6 @@ export default function MeetYourIconsScreen() {
               {MeetYourIconsDict.SelectYourProgramme}
             </Text>
           </View>
-          <View style={styles.cantChooseContainer}>
-            <CantChooseButton
-              onPress={() => navigation.navigate('HelpMeChoose')}
-              navigation={navigation}
-            />
-          </View>
         </View>
         <Image source={zeroState} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>

@@ -23,6 +23,7 @@ import {useQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
+import UseData from '../../hooks/data/UseData';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -41,6 +42,7 @@ export default function ExerciseView(props) {
   const styles = exerciseViewStyle;
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const {selectedWorkout} = UseData();
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
@@ -85,8 +87,6 @@ export default function ExerciseView(props) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const involvesWeights = true;
-
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
@@ -112,13 +112,20 @@ export default function ExerciseView(props) {
 
     setCountDown(true);
 
-    if (involvesWeights) {
-      // swap ^^ for exercise.weight
+    if (exercise.weight) {
       setSetComplete(true);
     }
 
     // Update Sets
     setSets(newSets);
+
+    console.log(selectedWorkout.exercises.length);
+    if (
+      currentSet === sets.length &&
+      index === selectedWorkout.exercises.length - 1
+    ) {
+      props.workoutFinished();
+    }
   };
 
   const onCancelTimer = () => {
@@ -168,7 +175,7 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          {involvesWeights && (
+          {exercise.weights && (
             <TouchableOpacity
               style={{
                 ...styles.weightTouchStyle,

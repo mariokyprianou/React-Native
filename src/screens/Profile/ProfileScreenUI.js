@@ -6,7 +6,14 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Text, SafeAreaView, Platform} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  SafeAreaView,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
 import {useQuery, useMutation} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation} from '@react-navigation/native';
@@ -85,6 +92,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState(notifications);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const formCountry = getValueByName('profile_country');
   useEffect(() => {
@@ -239,6 +247,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       return;
     }
 
+    setUpdateLoading(true);
+
     const dob = format(
       parseISO(newDateOfBirth || userData.dateOfBirth),
       'yyyy-LL-dd',
@@ -256,23 +266,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       newRegion = regionLookup[regionsList[0]];
     }
 
-    console.log('Input', {
-      input: {
-        givenName: profile_firstName || userData.givenName,
-        familyName: profile_lastName || userData.familyName,
-        gender: profile_gender?.toLowerCase() || userData.gender,
-        dateOfBirth: dob,
-        country: newCountry,
-        region: newRegion,
-      },
-    });
     await updateProfile({
       variables: {
         input: {
           givenName: profile_firstName || userData.givenName,
           familyName: profile_lastName || userData.familyName,
           gender: profile_gender?.toLowerCase() || userData.gender,
-          dateOfBirth: dob,
+          dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
           country: newCountry || userData.country,
           region: newRegion,
         },
@@ -282,8 +282,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         const newData = {...userData, ...res.data.updateProfile};
         console.log('newData', newData);
         setUserData(newData);
+        setUpdateLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err, '<---error on updating');
+        setUpdateLoading(false);
+      });
 
     cleanValues();
   }
@@ -567,6 +571,20 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     </View>
   );
 
+  const loader = () => (
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: getHeight(287),
+        zIndex: 9,
+        elevation: 6,
+      }}>
+      <ActivityIndicator color={colors.black60} size="large" />
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
@@ -576,6 +594,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         {userCard()}
         {notificationsUI()}
         {form()}
+        {updateLoading && loader()}
         {buttons()}
       </ScrollView>
     </SafeAreaView>

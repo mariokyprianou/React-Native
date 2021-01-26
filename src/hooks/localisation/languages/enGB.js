@@ -256,6 +256,7 @@ const enGB = {
     Sets: 'sets',
 
     GreatJob: 'Great job! Have a rest',
+    GreatJobNoRest: 'Great job!',
     WhichWeight: 'Which weight did you use for this exercise?',
     HowDoYouFeel: 'How do you feel?',
 

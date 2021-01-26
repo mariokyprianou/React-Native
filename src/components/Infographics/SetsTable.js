@@ -12,15 +12,17 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import SetTableRow from './SetTableRow';
 import {FlatList} from 'the-core-ui-module-tdlist';
-import useWeightHistory from '../../hooks/data/useWeightHistory';
 import FadingBottomView from '../Views/FadingBottomView';
+import {useRoute} from '@react-navigation/core';
 
 export default function SetsTable({date}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const listRef = useRef();
-  const {weightHistoryData} = useWeightHistory();
+  const {
+    params: {weightHistory},
+  } = useRoute();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -51,6 +53,7 @@ export default function SetsTable({date}) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   return (
@@ -60,7 +63,7 @@ export default function SetsTable({date}) {
           <Text style={styles.title}>{date}</Text>
           <FlatList
             ref={listRef}
-            data={weightHistoryData}
+            data={weightHistory}
             scrollEnabled={false}
             renderItem={({item}) => (
               <SetTableRow

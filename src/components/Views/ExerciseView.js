@@ -81,7 +81,7 @@ export default function ExerciseView(props) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const involvesWeights = true;
+  const involvesWeights = true; // TO DELETE
 
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {

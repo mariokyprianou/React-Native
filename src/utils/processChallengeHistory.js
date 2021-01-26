@@ -7,9 +7,8 @@
  */
 import {format} from 'date-fns';
 
-export default historyData = (data) =>
+export default processChallengeHistory = (data) =>
   data.map((event) => {
-    const formattedDate = format(new Date(event.date), 'dd/LL');
-    event.date = formattedDate;
-    return event;
+    const date = format(new Date(event.createdAt), 'dd/LL');
+    return {...event, date};
   });

@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, Platform} from 'react-native';
+import {View, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -18,10 +18,10 @@ import Spacer from '../../components/Utility/Spacer';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import SetsTable from '../../components/Infographics/SetsTable';
 import format from 'date-fns/format';
-import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import processChallengeHistory from '../../utils/processChallengeHistory';
-import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import {Form} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
+import {useRoute} from '@react-navigation/core';
 
 export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -36,6 +36,9 @@ export default function WeightCaptureScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
+  const {
+    params: {weightHistory},
+  } = useRoute();
 
   const today = new Date();
   const date = format(today, 'do LLL yyyy');
@@ -44,12 +47,11 @@ export default function WeightCaptureScreen() {
     header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
   });
 
-  const {fakeChallengeHistory} = fakeProgressData();
-  const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
+  const historyData = processChallengeHistory(weightHistory);
 
-  const dropdownData = historyData.map((event) => {
-    return `${event.value}`;
-  });
+  const dropdownData = historyData
+    .map((event) => `${event.reps}`)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -126,10 +128,9 @@ export default function WeightCaptureScreen() {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingLeft: getWidth(7),
-        width: getWidth(80),
+        width: getWidth(75),
         height: getHeight(30),
-        position: 'absolute',
-        top: Platform.OS === 'ios' ? getHeight(-30) : getHeight(34),
+        marginBottom: Platform.OS === 'ios' ? getHeight(30) : getHeight(34),
       },
       inputStyle: {
         ...textStyles.bold20_black100,
@@ -155,7 +156,7 @@ export default function WeightCaptureScreen() {
         </View>
         <Spacer height={30} />
         <View style={{...styles.chartCard, ...styles.scrollCard}}>
-          <SetsTable date={date} />
+          <SetsTable date={date} weightHistory={weightHistory} />
         </View>
         <View style={styles.buttonContainer}>
           <DefaultButton type="done" variant="white" icon="chevron" />

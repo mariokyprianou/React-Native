@@ -24,7 +24,7 @@ export default function ProgressChart({
   const {colors, textStyles} = useTheme();
 
   const dataPoints = data.map((event, index) => {
-    return {x: index + 1, y: event.value};
+    return {x: index + 1, y: event.reps};
   });
 
   const highestValue = Math.max(...dataPoints.map((point) => point.y));
@@ -37,10 +37,6 @@ export default function ProgressChart({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scroll: {
-      height: getHeight(200),
-    },
-    nonScrollContainer: {
-      width: getWidth(335),
       height: getHeight(200),
     },
   });
@@ -67,7 +63,6 @@ export default function ProgressChart({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      {/* with scroll */}
       <ScrollView
         horizontal={true}
         style={styles.scroll}
@@ -101,10 +96,10 @@ export default function ProgressChart({
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              // axisLabel: 'kg',
-              // axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
-              // axisLabelAlignment: 'bottom',
-              // labelTopPadding: getHeight(0),
+              axisLabel: 'kg',
+              axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
+              axisLabelAlignment: 'middle',
+              labelLeftOffset: getWidth(-4),
             }}
             xAxisProps={{
               axisMarkerLabels: xLabels,
@@ -116,37 +111,6 @@ export default function ProgressChart({
           />
         </View>
       </ScrollView>
-      {/* without scroll */}
-      {/* <View style={styles.nonScrollContainer}>
-        <SlideBarChart
-          data={dataPoints}
-          barSpacing={40}
-          selectionChangedCallback={(barIndex) => console.log(barIndex)}
-          renderFillGradient={(props) => defaultBarChartFillGradient(props)}
-          renderSelectedFillGradient={(props) =>
-            defaultSelectedBarFillGradient(props)
-          }
-          width={getWidth(320)}
-          axisWidth={getWidth(35)}
-          axisHeight={getHeight(35)}
-          height={getHeight(200)}
-          yAxisProps={{
-            numberOfTicks: ticks,
-            interval: 5,
-            horizontalLineColor: colors.white100,
-            verticalLineColor: colors.white100,
-            axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
-            markerChartOffset: getWidth(20),
-          }}
-          xAxisProps={{
-            axisMarkerLabels: xLabels,
-            markerTopPadding: getHeight(10),
-            axisLabelStyle: {
-              ...textStyles.semiBold10_brownGrey100,
-            },
-          }}
-        />
-      </View> */}
     </View>
   );
 }

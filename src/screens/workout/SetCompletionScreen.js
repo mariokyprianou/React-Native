@@ -117,8 +117,14 @@ export default function SetCompletionScreen({
         style={styles.touch}
         onPress={() => setSetComplete(false)}>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
-          <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
+          {restTime > 0 ? (
+            <>
+              <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
+              <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
+            </>
+          ) : (
+            <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
+          )}
           <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
           <View style={styles.weightSelectionContainer}>
             <WeightSelection

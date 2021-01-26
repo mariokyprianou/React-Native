@@ -134,10 +134,16 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   //   }
   // }, [profileData, profileLoading, profileError]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      cleanValues();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   useQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res, '<---result');
       const memberSince = res.profile.createdAt.slice(0, 4);
       const userProfile = {...res.profile, memberSince};
       setUserData(userProfile);

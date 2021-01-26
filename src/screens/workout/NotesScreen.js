@@ -18,18 +18,22 @@ import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import Spacer from '../../components/Utility/Spacer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useRoute} from '@react-navigation/core';
+import {useMutation} from '@apollo/client';
+import UpdateExerciseNote from '../../apollo/mutations/UpdateExerciseNote';
 
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+  const {cleanValues, getValues} = FormHook();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+  const [addNote] = useMutation(UpdateExerciseNote);
   const [formHeight, setFormHeight] = useState(100);
   let newStyle = {formHeight};
   const navigation = useNavigation();
   const {
-    params: {notes},
+    params: {notes, id},
   } = useRoute();
 
   const description =
@@ -77,9 +81,23 @@ export default function NotesScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleAddNote() {
-    // add in mutation logic once ready
-    navigation.goBack();
+  async function handleAddNote() {
+    const newNote = getValues('notes').notes;
+
+    await addNote({
+      variables: {
+        input: {
+          note: newNote,
+          exercise: id,
+        },
+      },
+    })
+      .then((res) => {
+        console.log(res, '<---notes res');
+        cleanValues();
+        navigation.goBack();
+      })
+      .catch((err) => console.log(err, '<---error on adding note'));
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

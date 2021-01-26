@@ -44,7 +44,7 @@ export default function SetCompletionScreen({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     card: {
-      height: getHeight(349),
+      height: restTime === 0 ? getHeight(302) : getHeight(349),
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(15),
@@ -63,7 +63,7 @@ export default function SetCompletionScreen({
     title: {
       ...textStyles.bold22_black100,
       textAlign: 'center',
-      marginBottom: getHeight(20),
+      marginBottom: restTime === 0 ? 0 : getHeight(20),
     },
     timerText: {
       textAlign: 'center',

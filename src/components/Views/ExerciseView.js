@@ -199,7 +199,9 @@ export default function ExerciseView(props) {
             style={{
               ...styles.weightTouchStyle,
             }}
-            onPress={() => navigation.navigate('Notes', {notes: notes})}>
+            onPress={() =>
+              navigation.navigate('Notes', {notes: notes, id: exercise.id})
+            }>
             <Image source={notesIcon} />
             <Text style={styles.extraTextStyle}>{WorkoutDict.NotesText}</Text>
           </TouchableOpacity>

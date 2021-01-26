@@ -48,6 +48,7 @@ export default function ExerciseView(props) {
   const [restTime, setRestTime] = useState();
   const [setComplete, setSetComplete] = useState(false);
   const [lastWeight, setLastWeight] = useState('0kg');
+  const [weightHistory, setWeightHistory] = useState([]);
 
   useEffect(() => {
     let sets = props.sets;
@@ -74,11 +75,13 @@ export default function ExerciseView(props) {
     onCompleted: (res) => {
       const lastIndex = res.getExerciseWeight.length - 1;
       setLastWeight(`${res.getExerciseWeight[lastIndex].weight}kg`);
+      setWeightHistory(res.getExerciseWeight);
     },
     onError: (error) => console.log(error, '<---- error fetching weights'),
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const involvesWeights = true;
 
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {
@@ -105,7 +108,6 @@ export default function ExerciseView(props) {
 
     setCountDown(true);
 
-    const involvesWeights = true;
     if (involvesWeights) {
       // swap ^^ for exercise.weight
       setSetComplete(true);
@@ -162,13 +164,17 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          {exercise.weight && (
+          {involvesWeights && (
             <TouchableOpacity
               style={{
                 ...styles.weightTouchStyle,
                 marginEnd: getWidth(40),
               }}
-              onPress={() => navigation.navigate('WeightCapture')}>
+              onPress={() =>
+                navigation.navigate('WeightCapture', {
+                  weightHistory: weightHistory,
+                })
+              }>
               <Image source={weightIcon} />
               <Text style={styles.extraTextStyle}>
                 {WorkoutDict.WeightText}

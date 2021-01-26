@@ -12,6 +12,9 @@ export default gql`
   query GetExerciseWeight($exercise: ID!) {
     getExerciseWeight(exercise: $exercise) {
       weight
+      createdAt
+      reps
+      setNumber
     }
   }
 `;

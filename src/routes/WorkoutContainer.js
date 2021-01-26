@@ -17,7 +17,6 @@ import WeekCompleteScreen from '../screens/workout/WeekCompleteScreen';
 import TakeARestScreen from '../screens/workout/TakeARestScreen';
 import StayTunedScreen from '../screens/workout/StayTunedScreen';
 import WorkoutCompleteScreen from '../screens/workout/WorkoutCompleteScreen';
-import SetCompletionScreen from '../screens/workout/SetCompletionScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function WorkoutContainer(props) {
@@ -68,11 +67,6 @@ export default function WorkoutContainer(props) {
       <WorkoutStack.Screen
         name="WorkoutComplete"
         component={WorkoutCompleteScreen}
-        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
-      />
-      <WorkoutStack.Screen
-        name="SetCompletion"
-        component={SetCompletionScreen}
         options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
     </WorkoutStack.Navigator>

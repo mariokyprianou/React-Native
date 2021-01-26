@@ -6,30 +6,33 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import WeightSelection from '../../components/Infographics/WeightSelection';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
-import {useNavigation} from '@react-navigation/native';
 import {msToHMS} from '../../utils/dateTimeUtils';
+import {useMutation} from '@apollo/client';
+import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 
-const restTime = 10;
-
-export default function SetCompletionScreen() {
+export default function SetCompletionScreen({
+  restTime,
+  setSetComplete,
+  setReps,
+  setNumber,
+  exercise,
+  lastWeight,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const navigation = useNavigation();
-
-  navigation.setOptions({
-    header: () => null,
-  });
+  const [addWeight] = useMutation(AddExerciseWeight);
+  const [selectedWeight, setSelectedWeight] = useState('0kg');
 
   const formattedSeconds = new Date(restTime * 1000)
     .toISOString()
@@ -40,11 +43,6 @@ export default function SetCompletionScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
-    container: {
-      height: '100%',
-      width: '100%',
-      justifyContent: 'flex-end',
-    },
     card: {
       height: getHeight(349),
       width: '100%',
@@ -52,6 +50,11 @@ export default function SetCompletionScreen() {
       borderTopLeftRadius: radius(15),
       borderTopRightRadius: radius(15),
       paddingTop: getHeight(23),
+      position: 'absolute',
+      bottom: 0,
+    },
+    touch: {
+      flex: 1,
     },
     contentContainer: {
       width: '90%',
@@ -83,28 +86,56 @@ export default function SetCompletionScreen() {
     buttonContainer: {
       width: '100%',
       alignItems: 'center',
-      position: 'absolute',
-      bottom: getHeight(40),
+      marginTop: getHeight(30),
     },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function handleAddWeight() {
+    const formattedWeight = Number(selectedWeight.slice(0, -2));
+
+    await addWeight({
+      variables: {
+        input: {
+          weight: formattedWeight,
+          reps: setReps,
+          setNumber: setNumber,
+          exerciseId: exercise,
+        },
+      },
+    })
+      .then((res) => {
+        setSetComplete(false);
+      })
+      .catch((err) => console.log(err, '<---error on adding weight'));
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
+    <View style={styles.card}>
+      <TouchableOpacity
+        style={styles.touch}
+        onPress={() => setSetComplete(false)}>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
           <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
           <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
           <View style={styles.weightSelectionContainer}>
-            <WeightSelection />
+            <WeightSelection
+              setSelectedWeight={setSelectedWeight}
+              lastWeight={lastWeight}
+            />
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          <DefaultButton type="addWeight" variant="gradient" icon="chevron" />
+          <DefaultButton
+            type="addWeight"
+            variant="gradient"
+            icon="chevron"
+            onPress={handleAddWeight}
+          />
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

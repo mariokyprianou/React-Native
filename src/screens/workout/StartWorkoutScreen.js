@@ -22,12 +22,17 @@ export default function StartWorkoutScreen() {
   const {getHeight} = ScaleHook();
   const navigation = useNavigation();
   const {colors} = useTheme();
-  const {selectedWorkout, getDownloadEnabled} = useData();
+  const {
+    selectedWorkout,
+    getDownloadEnabled,
+    setCurrentExerciseIndex,
+  } = useData();
 
   const [topViewProps, setTopViewProps] = useState({});
 
   useEffect(() => {
     getDownloadEnabled();
+    setCurrentExerciseIndex(0);
 
     const {overviewImage, duration, intensity} = selectedWorkout;
 

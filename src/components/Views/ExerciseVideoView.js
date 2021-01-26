@@ -28,7 +28,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const [videoDuration, setVideoDuration] = useState(100);
   const [currentProgress, setCurrentProgress] = useState(0);
 
-  const [isPaused, setIsPaused] = useState(index !== currentExerciseIndex);
+  const [isPaused, setIsPaused] = useState(true);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
   const [showControls, setShowControls] = useState(false);
@@ -43,11 +43,28 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     },
   };
 
+  useEffect(() => {
+    console.log(currentExerciseIndex);
+
+    // Autoplay if its current exercise and there is remaining video
+    if (
+      index === currentExerciseIndex &&
+      currentProgress < videoDuration &&
+      isPaused
+    ) {
+      videoRef.current.pause();
+
+      // Only call if any other than current is playing
+    } else if (!isPaused) {
+      videoRef.current.pause();
+    }
+  }, [currentExerciseIndex, index]);
+
   const videoProps = {
     height: getHeight(300),
     url: videos[currentVideo],
     skipCache: !isDownloadEnabled,
-    autoplay: index === currentExerciseIndex,
+    autoplay: false, //index === currentExerciseIndex,
     muted: true,
 
     onLoadEnd: (duration) => {

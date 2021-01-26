@@ -13,6 +13,7 @@ import WorkoutProgressBar from '../Infographics/WorkoutProgressBar';
 import Header from './Header';
 import {useStopwatch} from 'the-core-ui-module-tdcountdown';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
+import UseData from '../../hooks/data/UseData';
 
 const playIcon = require('../../../assets/icons/play.png');
 const pauseIcon = require('../../../assets/icons/pauseIcon.png');
@@ -75,7 +76,7 @@ export default function ({currentExercise, totalExercises}) {
   const headerTitle = () => (
     <View style={{alignItems: 'center'}}>
       <View style={styles.titleTextContainer}>
-        <TimerView styles={styles} />
+        <Timer styles={styles} />
       </View>
     </View>
   );
@@ -93,29 +94,35 @@ export default function ({currentExercise, totalExercises}) {
   return <WorkoutHeader />;
 }
 
+const Timer = React.memo(
+  ({styles}) => <TimerView styles={styles} />,
+  () => true,
+);
+
 function TimerView(props) {
-  const {elapsedMS, toggle} = useStopwatch();
+  const {
+    workoutTime,
+    isWorkoutTimerRunning,
+    setIsWorkoutTimerRunning,
+  } = UseData();
 
-  useEffect(() => {
-    toggle();
-  }, []);
-
-  const [isPaused, setIsPaused] = useState(true);
+  function toggle() {
+    setIsWorkoutTimerRunning(!isWorkoutTimerRunning);
+  }
 
   return (
     <>
       <Text style={props.styles.titleTextStyle}>
-        {elapsedMS ? msToHMSFull(elapsedMS) : '00:00:00'}
+        {workoutTime ? msToHMSFull(workoutTime) : '00:00:00'}
       </Text>
       <TouchableOpacity
         style={props.styles.timerTouchStyle}
         onPress={() => {
           toggle();
-          setIsPaused(!isPaused);
         }}>
         <Image
           style={props.styles.iconStyle}
-          source={!isPaused ? playIcon : pauseIcon}
+          source={!isWorkoutTimerRunning ? playIcon : pauseIcon}
         />
       </TouchableOpacity>
     </>

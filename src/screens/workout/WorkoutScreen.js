@@ -24,6 +24,7 @@ export default function WorkoutScreen() {
     selectedWorkout,
     currentExerciseIndex,
     setCurrentExerciseIndex,
+    setIsWorkoutTimerRunning,
   } = useData();
 
   const [offset, setOffset] = useState(0);
@@ -64,6 +65,7 @@ export default function WorkoutScreen() {
   }
 
   function workoutFinished() {
+    setIsWorkoutTimerRunning(false);
     navigation.navigate('WorkoutComplete');
   }
 

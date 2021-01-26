@@ -5,7 +5,7 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useState, useMemo, useCallback} from 'react';
+import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
 import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -121,13 +121,34 @@ export default function DataProvider(props) {
   const [isDownloadEnabled, setDownloadEnabled] = useState();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
 
-  const [workoutTime, setWorkoutTime] = useState(0);
-
   const getDownloadEnabled = useCallback(async () => {
     const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
     const enabled = JSON.parse(value);
     setDownloadEnabled(enabled);
   }, []);
+
+  const [workoutTime, setWorkoutTime] = useState(0);
+  const [isWorkoutTimerRunning, setIsWorkoutTimerRunning] = useState(false);
+  const intervalRef = useRef();
+
+  const cancelInterval = useCallback(async () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = undefined;
+  }, []);
+
+  useEffect(() => {
+    if (isWorkoutTimerRunning) {
+      intervalRef.current = setInterval(
+        () => setWorkoutTime((prevMS) => prevMS + 1000),
+        1000,
+      );
+    } else {
+      cancelInterval();
+    }
+    return () => {
+      cancelInterval();
+    };
+  }, [isWorkoutTimerRunning]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -149,6 +170,8 @@ export default function DataProvider(props) {
       setCurrentExerciseIndex,
       workoutTime,
       setWorkoutTime,
+      isWorkoutTimerRunning,
+      setIsWorkoutTimerRunning,
     }),
     [
       onboarding,
@@ -167,6 +190,8 @@ export default function DataProvider(props) {
       setCurrentExerciseIndex,
       workoutTime,
       setWorkoutTime,
+      isWorkoutTimerRunning,
+      setIsWorkoutTimerRunning,
     ],
   );
 

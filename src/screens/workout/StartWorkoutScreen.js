@@ -26,13 +26,14 @@ export default function StartWorkoutScreen() {
     selectedWorkout,
     getDownloadEnabled,
     setCurrentExerciseIndex,
+    setWorkoutTime,
+    setIsWorkoutTimerRunning,
   } = useData();
 
   const [topViewProps, setTopViewProps] = useState({});
 
   useEffect(() => {
     getDownloadEnabled();
-    setCurrentExerciseIndex(0);
 
     const {overviewImage, duration, intensity} = selectedWorkout;
 
@@ -99,6 +100,13 @@ export default function StartWorkoutScreen() {
     );
   });
 
+  function startWorkout() {
+    setCurrentExerciseIndex(0);
+    setWorkoutTime(0);
+    setIsWorkoutTimerRunning(true);
+    navigation.navigate('Workout');
+  }
+
   return (
     <View>
       <View style={styles.headerBorder} />
@@ -116,7 +124,7 @@ export default function StartWorkoutScreen() {
           type="startWorkout"
           variant="gradient"
           icon="chevron"
-          onPress={() => navigation.navigate('Workout')}
+          onPress={() => startWorkout()}
         />
       </View>
     </View>

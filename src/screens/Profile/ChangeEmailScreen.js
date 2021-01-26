@@ -77,7 +77,7 @@ export default function ChangeEmailScreen() {
 
     await Auth.updateUserAttributes(user, {email: newEmail})
       .then((res) => {
-        console.log(res);
+        console.log(res, '<----update email res');
         navigation.navigate('VerifyChangeEmail', {
           email: newEmail,
           userData: userData,

@@ -12,12 +12,12 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
-import useChallenge from '../../hooks/data/useChallenge';
 import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import Spacer from '../../components/Utility/Spacer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {useRoute} from '@react-navigation/core';
 
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -29,8 +29,11 @@ export default function NotesScreen() {
   let newStyle = {formHeight};
   const navigation = useNavigation();
   const {
-    challengeData: {description, notes},
-  } = useChallenge(); // replace with workout data
+    params: {notes},
+  } = useRoute();
+
+  const description =
+    'Start the timer and see how many 4kg squats you can do in 60 seconds!'; // replace once backend fixed
 
   navigation.setOptions({
     header: () => <Header title={WorkoutDict.Notes} showModalCross />,
@@ -42,15 +45,22 @@ export default function NotesScreen() {
       width: '100%',
       height: '100%',
       backgroundColor: colors.backgroundWhite100,
+      flexDirection: 'column',
     },
     contentContainer: {
       width: '90%',
+      height: '100%',
       alignSelf: 'center',
       paddingTop: getHeight(20),
     },
     description: {
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
+    },
+    notes: {
+      ...textStyles.regular15_brownishGrey100,
+      textAlign: 'left',
+      marginBottom: getHeight(10),
     },
     subtitle: {
       ...textStyles.medium14_black100,
@@ -62,11 +72,16 @@ export default function NotesScreen() {
       height: getHeight(90),
       width: '100%',
       alignItems: 'center',
-      marginTop: getHeight(130),
+      justifySelf: 'flex-end',
     },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function handleAddNote() {
+    // add in mutation logic once ready
+    navigation.goBack();
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const cells = [
     {
@@ -96,20 +111,20 @@ export default function NotesScreen() {
         <View style={styles.contentContainer}>
           <Text style={styles.description}>{description}</Text>
           <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
-
-          <Text style={styles.description}>{notes}</Text>
-          <Spacer height={70} />
+          {notes &&
+            notes.map((note) => <Text style={styles.notes}>{note}</Text>)}
+          <Spacer height={30} />
           <Form cells={cells} config={config} />
         </View>
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="done"
-            variant="white"
-            icon="chevron"
-            onPress={() => navigation.goBack()}
-          />
-        </View>
       </KeyboardAwareScrollView>
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="done"
+          variant="white"
+          icon="chevron"
+          onPress={handleAddNote}
+        />
+      </View>
     </View>
   );
 }

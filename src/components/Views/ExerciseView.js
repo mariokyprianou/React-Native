@@ -30,9 +30,8 @@ const weightIcon = require('../../../assets/icons/weight.png');
 const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
-  const {exercise, index} = props;
-
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {exercise, index, notes} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -81,7 +80,8 @@ export default function ExerciseView(props) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const involvesWeights = true; // TO DELETE
+
+  // const involvesWeights = true; <----- add back in to check weight capture screen
 
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {
@@ -108,8 +108,7 @@ export default function ExerciseView(props) {
 
     setCountDown(true);
 
-    if (involvesWeights) {
-      // swap ^^ for exercise.weight
+    if (exercise.weight) {
       setSetComplete(true);
     }
 
@@ -164,7 +163,7 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          {involvesWeights && (
+          {exercise.weight && (
             <TouchableOpacity
               style={{
                 ...styles.weightTouchStyle,
@@ -186,7 +185,7 @@ export default function ExerciseView(props) {
             style={{
               ...styles.weightTouchStyle,
             }}
-            onPress={() => navigation.navigate('Notes')}>
+            onPress={() => navigation.navigate('Notes', {notes: notes})}>
             <Image source={notesIcon} />
             <Text style={styles.extraTextStyle}>{WorkoutDict.NotesText}</Text>
           </TouchableOpacity>

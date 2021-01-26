@@ -79,9 +79,10 @@ export default function WorkoutScreen() {
         onMomentumScrollEnd={(event) =>
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
-        {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView {...screen} index={index} />
-        ))}
+        {selectedWorkout.exercises.map((screen, index) => {
+          // console.log(screen, '<---screen');
+          return <ExerciseView {...screen} index={index} />;
+        })}
       </ScrollView>
     </View>
   );

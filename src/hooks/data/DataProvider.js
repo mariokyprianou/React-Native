@@ -142,6 +142,58 @@ export default function DataProvider(props) {
     await AsyncStorage.setItem('@CURRENT_WEEK', JSON.stringify(data));
   }, []);
 
+  const updateConsecutiveWorkouts = useCallback(async () => {
+    const completed = currentWeek
+      .filter((it) => it.completedAt)
+      .map((it) => parseISO(it.completedAt));
+
+    // Latest date first
+    completed.sort((a, b) => b - a);
+
+    const now = new Date();
+    let consecutiveDays = 0;
+
+    completed.map((date) => {
+      if (differenceInDays(date, now) === 0) {
+        consecutiveDays = 1;
+      }
+
+      if (differenceInDays(date, now) === 1 && consecutiveDays === 1) {
+        consecutiveDays = 2;
+      }
+
+      if (differenceInDays(date, now) === 2 && consecutiveDays === 2) {
+        consecutiveDays = 3;
+      }
+    });
+
+    if (consecutiveDays > 0) {
+      await AsyncStorage.setItem(
+        '@CONSECUTIVE_DAYS',
+        JSON.stringify(consecutiveDays),
+      );
+      await AsyncStorage.setItem(
+        '@LAST_CONSECUTIVE_DAY',
+        JSON.stringify(completed[0]),
+      );
+    }
+  }, [currentWeek]);
+
+  const getConsecutiveWorkouts = useCallback(async () => {
+    const value = await AsyncStorage.getItem('@CONSECUTIVE_DAYS');
+    const date = await AsyncStorage.getItem('@LAST_CONSECUTIVE_DAY');
+
+    return {
+      lastDate: parseISO(date),
+      consecutiveWorkouts: value ? parseInt(value) : 0,
+    };
+  }, []);
+
+  const clearConsecutiveDays = useCallback(async () => {
+    await AsyncStorage.clear('@CONSECUTIVE_DAYS');
+    await AsyncStorage.clear('@LAST_CONSECUTIVE_DAY');
+  }, []);
+
   // Get matching rest date from stored data
   const getRestDay = useCallback((futureRestDays, date) => {
     return futureRestDays.find((it) => {
@@ -286,6 +338,9 @@ export default function DataProvider(props) {
       currentWeek,
       updateStoredDays,
       structureWeek,
+      updateConsecutiveWorkouts,
+      getConsecutiveWorkouts,
+      clearConsecutiveDays,
     }),
     [
       onboarding,
@@ -309,6 +364,9 @@ export default function DataProvider(props) {
       currentWeek,
       updateStoredDays,
       structureWeek,
+      updateConsecutiveWorkouts,
+      getConsecutiveWorkouts,
+      clearConsecutiveDays,
     ],
   );
 

@@ -50,6 +50,9 @@ export default function WorkoutHomeScreen() {
     currentWeek,
     updateStoredDays,
     structureWeek,
+    updateConsecutiveWorkouts,
+    getConsecutiveWorkouts,
+    clearConsecutiveDays,
   } = useData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
@@ -108,6 +111,7 @@ export default function WorkoutHomeScreen() {
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
+          updateConsecutiveWorkouts();
           updateStoredDays([]);
           navigation.navigate('WeekComplete', {...props});
         }
@@ -118,7 +122,6 @@ export default function WorkoutHomeScreen() {
   useEffect(() => {
     if (programme) {
       if (weekNumber === 1) {
-        //const currentWeek = getWeekToDisplay(programme, true);
         setWorkoutsToDisplay(currentWeek);
       }
       if (weekNumber === 2) {
@@ -128,9 +131,28 @@ export default function WorkoutHomeScreen() {
     }
   }, [programme, weekNumber]);
 
+  async function checkLastWeek(previousWorkoutDates) {
+    const {consecutiveWorkouts, lastDate} = await getConsecutiveWorkouts();
+
+    const today = new Date();
+    if (
+      (previousWorkoutDates.length === 0 &&
+        consecutiveWorkouts === 3 &&
+        differenceInDays(today, lastDate) === 1) ||
+      (previousWorkoutDates.length === 1 &&
+        consecutiveWorkouts === 2 &&
+        differenceInDays(today, lastDate) === 2) ||
+      (previousWorkoutDates.length === 2 &&
+        consecutiveWorkouts === 1 &&
+        differenceInDays(today, lastDate) === 3)
+    ) {
+      setThreeWorkoutsInRow(true);
+      clearConsecutiveDays();
+    }
+  }
   useEffect(() => {
     const today = new Date();
-    // console.log(subDays(today, 2), '<--- 2 days ago');
+
     if (programme) {
       const previousWorkoutDates = [];
       const completedWorkouts = programme.currentWeek.workouts.filter(
@@ -139,12 +161,11 @@ export default function WorkoutHomeScreen() {
       completedWorkouts.forEach((workout) =>
         previousWorkoutDates.push(workout.completedAt),
       );
+
       if (previousWorkoutDates.length < 3) {
-        // check async storage
-        // Christos to store completed workouts in async storage
-        // Three booleans for hasCompleted1, hasCompleted2, hasCompleted3 (consecutively)
-        // set threeWorkoutsInRow => true/false
+        checkLastWeek(previousWorkoutDates);
       }
+
       if (previousWorkoutDates.length >= 3) {
         const lastIndex = previousWorkoutDates.length - 1;
         if (

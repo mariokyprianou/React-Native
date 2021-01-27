@@ -258,6 +258,7 @@ export default function WorkoutHomeScreen() {
       programme.currentWeek.workouts,
       storedData,
     );
+
     setWorkoutsToDisplay(updatedWeek);
 
     // Construct new order of workouts
@@ -396,7 +397,13 @@ export default function WorkoutHomeScreen() {
               duration={item.duration}
               intensity={item.intensity}
               image={item.overviewImage}
-              drag={drag}
+              drag={weekNumber === 1 && drag}
+              status={
+                item.completedAt ||
+                differenceInDays(item.exactDate, new Date()) < 0
+                  ? 'complete'
+                  : null
+              }
               onPressCard={(workout) => {
                 // Sort exercises
 

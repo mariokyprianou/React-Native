@@ -84,7 +84,7 @@ export default function WorkoutCard({
     },
     icon: {
       solid: true,
-      color: colors.black100,
+      color: status === 'complete' ? colors.white100 : colors.black100,
       size: fontSize(12),
     },
     completeIconContainer: {

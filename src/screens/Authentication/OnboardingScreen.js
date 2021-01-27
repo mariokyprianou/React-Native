@@ -18,13 +18,10 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
 import useData from '../../hooks/data/UseData';
-import {useNetInfo} from '@react-native-community/netinfo';
-import TDIcon from 'the-core-ui-component-tdicon';
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
-  const {isConnected, isInternetReachable} = useNetInfo();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -126,10 +123,6 @@ export default function OnboardingScreen() {
         style={{flexDirection: isRTL ? 'row-reverse' : 'row'}}
         ref={onboardSwiper}
         loop={false}
-        showsButtons={true}
-        buttonWrapperStyle={styles.buttonWrapper}
-        prevButton={<TDIcon input={'chevron-left'} inputStyle={styles.icon} />}
-        nextButton={<TDIcon input={'chevron-right'} inputStyle={styles.icon} />}
         onIndexChanged={(index) => {
           setActiveIndex(index);
         }}
@@ -142,6 +135,7 @@ export default function OnboardingScreen() {
             text={description}
             handlePress={handlePress}
             activeIndex={activeIndex}
+            lastScreenIndex={onboarding.length - 1}
           />
         ))}
       </Swiper>

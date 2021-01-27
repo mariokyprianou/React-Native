@@ -159,8 +159,18 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     onError: (error) => console.log(error),
   });
 
+  useEffect(() => {
+    if (userData) {
+      if (!userData.gender) {
+        updateValue({
+          name: 'profile_gender',
+          value: AuthDict.RegistrationGendersFemale,
+        });
+      }
+    }
+  }, [updateValue]);
+
   const gendersData = [
-    '',
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
     // AuthDict.RegistrationGendersOther,

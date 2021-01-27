@@ -44,7 +44,7 @@ export default function RegisterScreen() {
   const {
     params: {programmeId},
   } = useRoute();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {cleanErrors, getValues, updateError, updateValue} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
@@ -61,7 +61,6 @@ export default function RegisterScreen() {
   });
 
   const gendersData = [
-    '',
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
     // AuthDict.RegistrationGendersOther,
@@ -104,6 +103,10 @@ export default function RegisterScreen() {
     const deviceId = getUniqueId();
     setDeviceUid(deviceId);
   }, []);
+
+  useEffect(() => {
+    updateValue({name: 'gender', value: AuthDict.RegistrationGendersFemale});
+  }, [updateValue]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

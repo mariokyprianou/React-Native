@@ -98,7 +98,7 @@ export default function MeetYourIconsScreen() {
     }
   }, [trainers, suggestedProgramme]);
 
-  console.log(activeIndex, '<---- current active index');
+  console.log(suggestedProgramme, '<---suggested programme');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -369,6 +369,7 @@ export default function MeetYourIconsScreen() {
                   trainer={trainer}
                   onPressGymHome={switchProgram}
                   currentProgram={currentProgram}
+                  suggestedEnv={suggestedProgramme?.environment || null}
                 />
               </View>
               <Spacer height={90} />

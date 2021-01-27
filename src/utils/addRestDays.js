@@ -15,7 +15,7 @@ const addRestDays = (ddata) => {
   });
 
   const restDay = {
-    workout: {name: 'REST DAY', duration: 0, intensity: 0},
+    workout: {name: 'REST DAY', duration: 0, intensity: 0, isRestDay: true},
   };
 
   const res = [];

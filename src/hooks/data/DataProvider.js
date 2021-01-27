@@ -18,6 +18,15 @@ import Programme from '../../apollo/queries/Programme';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 import AsyncStorage from '@react-native-community/async-storage';
+import {differenceInDays, addDays, format, parse, parseISO} from 'date-fns';
+
+import {
+  initializeRestDays,
+  getPastWorkouts,
+  getStoredPastRestDays,
+  getStoredFutureRestDays,
+  getWeekArrayWithPastDays,
+} from './WeekStructureUtils';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -30,6 +39,7 @@ export default function DataProvider(props) {
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
   const [programme, setProgramme] = useState();
+  const [currentWeek, setCurrentWeek] = useState();
 
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -107,11 +117,112 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
+  // Get stored rest days from Async or create defaults
+  const getStoredDays = useCallback(async (numberOfWorkouts) => {
+    let days = await AsyncStorage.getItem('@CURRENT_WEEK');
+    days = JSON.parse(days);
+    days = days.map((it) => {
+      return {
+        ...it,
+        date: parseISO(it.date),
+        exactDate: parseISO(it.exactDate),
+      };
+    });
+
+    // Set default rest days if nothing stored
+    if (!days || days.length === 0) {
+      days = initializeRestDays(numberOfWorkouts);
+      updateStoredDays(days);
+    }
+
+    return days;
+  }, []);
+
+  const updateStoredDays = useCallback(async (data) => {
+    await AsyncStorage.setItem('@CURRENT_WEEK', JSON.stringify(data));
+  }, []);
+
+  // Get matching rest date from stored data
+  const getRestDay = useCallback((futureRestDays, date) => {
+    return futureRestDays.find((it) => {
+      let diff;
+      if (it.exactDate < date) {
+        diff =
+          differenceInDays(it.exactDate, date) === 0 &&
+          it.exactDate.getDay() === date.getDay();
+      } else {
+        diff =
+          differenceInDays(date, it.exactDate) === 0 &&
+          it.exactDate.getDay() === date.getDay();
+      }
+
+      return diff;
+    });
+  }, []);
+
+  // Structure current week UI
+  const structureWeek = useCallback((workouts, storedDays) => {
+    const now = new Date();
+
+    // PAST
+    let pastWorkouts = getPastWorkouts(workouts);
+    let pastRestDays = getStoredPastRestDays(storedDays);
+
+    let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
+
+    // FUTURE
+    let futureWorkouts = workouts.filter((it) => !it.completedAt);
+    const futureRestDays = getStoredFutureRestDays(storedDays);
+
+    // Add future dates
+    const remaining = 7 - week.length;
+    for (let i = 0; i < remaining; i++) {
+      const date = addDays(now, i);
+
+      const restDay = getRestDay(futureRestDays, date);
+
+      if (restDay) {
+        week.push(restDay);
+      } else {
+        let workout = futureWorkouts.shift();
+        const formattedDate = format(date, 'iiii, do LLL');
+
+        if (workout) {
+          workout = {
+            ...workout,
+            name: workout.name.toUpperCase(),
+            date: formattedDate,
+            exactDate: date,
+            day: workout.orderIndex,
+          };
+          week.push(workout);
+        } else {
+          const extraRestDay = {
+            name: 'REST DAY',
+            isRestDay: true,
+            id: 'restDay',
+            date: formattedDate,
+            exactDate: date,
+          };
+
+          week.push(extraRestDay);
+        }
+      }
+    }
+
+    setCurrentWeek(week);
+    return week;
+  }, []);
+
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
+    onCompleted: async (res) => {
       const data = res.getProgramme;
 
+      const numberOfWorkouts = data.currentWeek.workouts.length;
+      let storedDays = await getStoredDays(numberOfWorkouts);
+
+      structureWeek(data.currentWeek.workouts, storedDays);
       setProgramme(data);
     },
     onError: (error) => console.log(error),
@@ -172,6 +283,9 @@ export default function DataProvider(props) {
       setWorkoutTime,
       isWorkoutTimerRunning,
       setIsWorkoutTimerRunning,
+      currentWeek,
+      updateStoredDays,
+      structureWeek,
     }),
     [
       onboarding,
@@ -192,6 +306,9 @@ export default function DataProvider(props) {
       setWorkoutTime,
       isWorkoutTimerRunning,
       setIsWorkoutTimerRunning,
+      currentWeek,
+      updateStoredDays,
+      structureWeek,
     ],
   );
 

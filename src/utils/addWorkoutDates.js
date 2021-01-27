@@ -27,6 +27,7 @@ const addWorkoutDates = (data, thisWeek) => {
         ...workout,
         name: workout.name.toUpperCase(),
         date: formattedDate,
+        exactDate: date,
         day: workout.day,
       };
     }

@@ -23,7 +23,7 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
-import {differenceInDays, addDays} from 'date-fns';
+import {differenceInDays, addDays, format} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 
 export default function WorkoutHomeScreen() {
@@ -43,7 +43,14 @@ export default function WorkoutHomeScreen() {
     header: () => null,
   });
 
-  const {programme, getProgramme, setSelectedWorkout} = useData();
+  const {
+    programme,
+    getProgramme,
+    setSelectedWorkout,
+    currentWeek,
+    updateStoredDays,
+    structureWeek,
+  } = useData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -84,38 +91,38 @@ export default function WorkoutHomeScreen() {
     }
   }, [programme]);
 
+  const getNextWeek = (workouts) => {
+    // Sort by index and isCompleted
+    let weekWorkout = workouts
+      .slice()
+      .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
+
+    const week = addWorkoutDates(addRestDays(weekWorkout), false);
+
+    return week;
+  };
+
   async function completeWeek(props) {
     await completeWeekMutation()
       .then((res) => {
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
+          updateStoredDays([]);
           navigation.navigate('WeekComplete', {...props});
         }
       })
       .catch((err) => console.log(err));
   }
 
-  const getWeekToDisplay = (data, isCurrentWeek) => {
-    const workouts = isCurrentWeek
-      ? data.currentWeek.workouts
-      : data.nextWeek.workouts;
-    let weekWorkout = workouts
-      .slice()
-      .sort((a, b) => a.orderIndex - b.orderIndex);
-    const week = addWorkoutDates(addRestDays(weekWorkout), isCurrentWeek);
-
-    return week;
-  };
-
   useEffect(() => {
     if (programme) {
       if (weekNumber === 1) {
-        const currentWeek = getWeekToDisplay(programme, true);
+        //const currentWeek = getWeekToDisplay(programme, true);
         setWorkoutsToDisplay(currentWeek);
       }
       if (weekNumber === 2) {
-        const nextWeek = getWeekToDisplay(programme, false);
+        const nextWeek = getNextWeek(programme.nextWeek.workouts);
         setWorkoutsToDisplay(nextWeek);
       }
     }
@@ -202,11 +209,39 @@ export default function WorkoutHomeScreen() {
     }
   }
 
-  async function updateOrder(newList) {
-    setWorkoutsToDisplay(newList);
+  // Capture current rest days
+  // Set date to the date assigned on that index
+  // Update asyncStorage
+  function updateStoredData(list) {
+    let toStore = list.map((day, index) => {
+      if (day.isRestDay) {
+        return {
+          id: 'restDay',
+          date: currentWeek[index].exactDate,
+          exactDate: currentWeek[index].exactDate,
+        };
+      }
+    });
+    toStore = toStore.filter(function (el) {
+      return el;
+    });
 
+    updateStoredDays(toStore);
+
+    return toStore;
+  }
+
+  async function updateOrder(newList) {
+    const storedData = updateStoredData(newList);
+    const updatedWeek = structureWeek(
+      programme.currentWeek.workouts,
+      storedData,
+    );
+    setWorkoutsToDisplay(updatedWeek);
+
+    // Construct new order of workouts
     let index = 0;
-    const data = newList.filter((it) => it.id !== undefined);
+    const data = newList.filter((it) => !it.isRestDay);
     const newOrder = data.map((it) => {
       index = index + 1;
       return {

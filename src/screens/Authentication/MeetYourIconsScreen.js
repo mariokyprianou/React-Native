@@ -318,9 +318,7 @@ export default function MeetYourIconsScreen() {
           const currentProgram =
             trainer.programmes.find((it) => it.id === selectedProgram.id) ||
             trainer.programmes[0];
-
           const {numberOfWeeks, description, firstWeek} = currentProgram;
-
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 
           return (
@@ -344,7 +342,9 @@ export default function MeetYourIconsScreen() {
                 </View>
               </View>
               <View style={styles.leftIconContainer}>
-                <TouchableOpacity onPress={() => handlePress('left')}>
+                <TouchableOpacity
+                  onPress={() => handlePress('left')}
+                  disabled={activeIndex === 0 ? true : false}>
                   <TDIcon
                     input={isRTL() ? 'chevron-right' : 'chevron-left'}
                     inputStyle={styles.icon}
@@ -352,7 +352,9 @@ export default function MeetYourIconsScreen() {
                 </TouchableOpacity>
               </View>
               <View style={styles.rightIconContainer}>
-                <TouchableOpacity onPress={() => handlePress('right')}>
+                <TouchableOpacity
+                  onPress={() => handlePress('right')}
+                  disabled={activeIndex === trainers.length - 1 ? true : false}>
                   <TDIcon
                     input={isRTL() ? 'chevron-left' : 'chevron-right'}
                     inputStyle={styles.icon}

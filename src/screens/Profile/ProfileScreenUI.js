@@ -322,15 +322,17 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     setStoredNotifications(updatedNotifications);
   }
 
-  // function readNotification(id) {
-  //   const today = new Date();
-  //   const updatedNotifications = storedNotifications.map((not) => {
-  //     if (not.id === id) {
-  //       not.readAt = today;
-  //     }
-  //   });
-  //   setStoredNotifications(updatedNotifications);
-  // }
+  function readNotification(id) {
+    const today = new Date();
+    const updatedNotifications = storedNotifications.map((not) => {
+      if (not.id === id) {
+        not.readAt = today;
+      }
+      not.key = not.id;
+      return not;
+    });
+    setStoredNotifications(updatedNotifications);
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
@@ -357,7 +359,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <NotificationCell
           {...item}
           index={index}
-          // onPress={() => readNotification(item.id)}
+          onPress={() => readNotification(item.id)}
           onDelete={() => deleteNotification(item.id)}
         />
       );
@@ -375,7 +377,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <FlatList
           data={storedNotifications}
           renderItem={renderNotificationCell}
-          keyExtractor={(item) => item.id}
         />
       </View>
     );

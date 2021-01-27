@@ -96,7 +96,9 @@ export default function MeetYourIconsScreen() {
     ) {
       setActiveIndex(trainers.indexOf(trainer));
     }
-  }, [suggestedProgramme]);
+  }, [trainers, suggestedProgramme]);
+
+  console.log(activeIndex, '<---- current active index');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -312,6 +314,7 @@ export default function MeetYourIconsScreen() {
       <Swiper
         ref={iconsSwiper}
         loop={false}
+        index={activeIndex}
         onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
         {trainers.map((trainer) => {

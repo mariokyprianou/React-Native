@@ -65,7 +65,6 @@ export default function HelpMeChooseScreen() {
   }, [newAnswer]);
 
   useEffect(() => {
-    // console.log('storedAnswers', storedAnswers);
     if (storedAnswers.length === programmeQuestionnaire.length) {
       submitQuestionnaire();
     }
@@ -100,14 +99,6 @@ export default function HelpMeChooseScreen() {
     const answers = storedAnswers.filter(
       (it) => it.question !== null && it.question !== 'environment',
     );
-    // console.log('answers', {
-    //   answers: answers,
-    //   environment:
-    //     storedAnswers.find((it) => it.question === 'environment').answer ===
-    //     'ONE'
-    //       ? 'HOME'
-    //       : 'GYM',
-    // });
     await execute({
       variables: {
         input: {

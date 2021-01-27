@@ -61,6 +61,7 @@ export default function RegisterScreen() {
   });
 
   const gendersData = [
+    '',
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
     // AuthDict.RegistrationGendersOther,

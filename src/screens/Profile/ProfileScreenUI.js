@@ -76,7 +76,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {ProfileDict, AuthDict} = dictionary;
-  const {getValueByName} = FormHook();
+  const {getValueByName, updateValue} = FormHook();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {
     loading: countryLoading,
@@ -160,6 +160,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   });
 
   const gendersData = [
+    '',
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
     // AuthDict.RegistrationGendersOther,

@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, AppState, Alert} from 'react-native';
+import {AppState, Alert} from 'react-native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import PermissionScreenUI from './PermissionScreenUI';
@@ -38,6 +38,24 @@ export default function EmailVerificationScreen() {
     return () => {
       AppState.removeEventListener('change', handleAppStateChange);
     };
+  }, []);
+
+  useEffect(() => {
+    setInterval(async () => {
+      await Auth.signIn(email, password)
+        .then(async () => {
+          const permissionNeeded = await permissionsNeeded();
+
+          if (permissionNeeded) {
+            navigation.navigate(permissionNeeded);
+          } else {
+            navigation.navigate('TabContainer');
+          }
+        })
+        .catch((error) => {
+          console.log('not yet verified', error);
+        });
+    }, 1000);
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **

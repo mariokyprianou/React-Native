@@ -48,7 +48,7 @@ export default function ExerciseView(props) {
   const [currentSet, setCurrentSet] = useState(0);
   const [restTime, setRestTime] = useState();
   const [setComplete, setSetComplete] = useState(false);
-  const [lastWeight, setLastWeight] = useState('0kg');
+  const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function ExerciseView(props) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
-  // const involvesWeights = true; <----- add back in to check weight capture screen
+  const involvesWeights = true; //<----- add back in to check weight capture screen
 
   const onSetCompleted = (completedIndex) => {
     const newSets = sets.map((it, index) => {
@@ -114,14 +114,13 @@ export default function ExerciseView(props) {
 
     setCountDown(true);
 
-    if (exercise.weight) {
+    if (involvesWeights) {
       setSetComplete(true);
     }
 
     // Update Sets
     setSets(newSets);
 
-    console.log(selectedWorkout.exercises.length);
     if (
       currentSet === sets.length &&
       index === selectedWorkout.exercises.length - 1
@@ -177,7 +176,7 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          {exercise.weight && (
+          {involvesWeights && (
             <TouchableOpacity
               style={{
                 ...styles.weightTouchStyle,
@@ -228,7 +227,7 @@ export default function ExerciseView(props) {
       </View>
       {setComplete && (
         <SetCompletionScreen
-          restTime={restTime}
+          restTime={msToHMS(restTime)}
           setSetComplete={setSetComplete}
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}

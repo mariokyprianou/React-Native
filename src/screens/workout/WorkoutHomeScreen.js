@@ -382,46 +382,44 @@ export default function WorkoutHomeScreen() {
         data={workoutsToDisplay}
         keyExtractor={(item, index) => `${index}`}
         onDragEnd={({data}) => updateOrder(data)}
-        renderItem={({item, index, drag, isActive}) => (
-          <View
-            style={{
-              width: '100%',
-              paddingHorizontal: getWidth(20),
-              paddingTop: index === 0 ? getHeight(20) : 0,
-            }}>
-            <WorkoutCard
-              workout={item}
-              title={item.name}
-              day={item.day}
-              date={item.date}
-              duration={item.duration}
-              intensity={item.intensity}
-              image={item.overviewImage}
-              drag={weekNumber === 1 && drag}
-              status={
-                item.completedAt ||
-                differenceInDays(item.exactDate, new Date()) < 0
-                  ? 'complete'
-                  : null
-              }
-              onPressCard={(workout) => {
-                // Sort exercises
-
-                // const exercises = workout.exercises
-                //   .concat(workout.exercises)
-                //   .concat(workout.exercises);
-                const newWorkout = {
-                  ...workout,
-                  exercises: workout.exercises
-                    .slice()
-                    .sort((a, b) => a.orderIndex - b.orderIndex),
-                };
-                setSelectedWorkout(newWorkout);
-                navigation.navigate('StartWorkout');
-              }}
-            />
-          </View>
-        )}
+        renderItem={({item, index, drag, isActive}) => {
+          return (
+            <View
+              style={{
+                width: '100%',
+                paddingHorizontal: getWidth(20),
+                paddingTop: index === 0 ? getHeight(20) : 0,
+              }}>
+              <WorkoutCard
+                workout={item}
+                title={item.name}
+                day={item.day}
+                date={item.date}
+                duration={item.duration}
+                intensity={item.intensity}
+                image={item.overviewImage}
+                drag={weekNumber === 1 && drag}
+                status={
+                  item.completedAt ||
+                  differenceInDays(item.exactDate, new Date()) < 0
+                    ? 'complete'
+                    : null
+                }
+                onPressCard={(workout) => {
+                  // Sort exercises
+                  const newWorkout = {
+                    ...workout,
+                    exercises: workout.exercises
+                      .slice()
+                      .sort((a, b) => a.orderIndex - b.orderIndex),
+                  };
+                  setSelectedWorkout(newWorkout);
+                  navigation.navigate('StartWorkout');
+                }}
+              />
+            </View>
+          );
+        }}
       />
     </View>
   );

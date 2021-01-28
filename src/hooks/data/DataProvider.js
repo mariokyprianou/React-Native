@@ -274,7 +274,12 @@ export default function DataProvider(props) {
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 
-      structureWeek(data.currentWeek.workouts, storedDays);
+      structureWeek(
+        data.currentWeek.workouts
+          .slice()
+          .sort((a, b) => a.orderIndex > b.orderIndex),
+        storedDays,
+      );
       setProgramme(data);
     },
     onError: (error) => console.log(error),

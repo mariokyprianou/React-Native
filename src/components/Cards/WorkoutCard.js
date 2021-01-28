@@ -34,7 +34,6 @@ export default function WorkoutCard({
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const [workoutDay, setWorkoutDay] = useState(day);
 
   const {WorkoutDict} = dictionary;
 
@@ -157,8 +156,8 @@ export default function WorkoutCard({
               {title !== WorkoutDict.RestDay && (
                 <Text style={styles.workoutDay}>
                   {isRTL()
-                    ? `:${WorkoutDict.Day} ${workoutDay} `
-                    : `${WorkoutDict.Day} ${workoutDay}: `}
+                    ? `:${WorkoutDict.Day} ${day} `
+                    : `${WorkoutDict.Day} ${day}: `}
                 </Text>
               )}
               <View style={styles.dateContainer}>

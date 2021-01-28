@@ -55,16 +55,16 @@ const getStoredPastRestDays = (storedDays) => {
   const now = new Date();
 
   let pastRestDays = storedDays.filter(
-    (it) => differenceInDays(it.date, now) < 0,
+    (it) => differenceInDays(it.exactDate, now) < 0,
   );
-  pastRestDays = pastRestDays.map((workout) => {
-    const formattedDate = format(workout.exactDate, 'iiii, do LLL');
+  pastRestDays = pastRestDays.map((it) => {
+    const formattedDate = format(it.exactDate, 'iiii, do LLL');
     return {
-      ...workout,
+      ...it,
       name: 'REST DAY',
       isRestDay: true,
       date: formattedDate,
-      exactDate: workout.completedAt,
+      exactDate: it.exactDate,
     };
   });
   return pastRestDays;

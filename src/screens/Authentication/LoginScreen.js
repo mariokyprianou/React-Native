@@ -18,6 +18,7 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -28,6 +29,7 @@ export default function LoginScreen() {
   const [passwordEyeEnabled, setPasswordEyeEnabled] = useState(true);
 
   const {permissionsNeeded} = useUserData();
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => (
@@ -95,6 +97,7 @@ export default function LoginScreen() {
       });
       return;
     }
+    setLoading(true);
 
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
@@ -130,7 +133,8 @@ export default function LoginScreen() {
         } else if (error.code === 'NotAuthorizedException') {
           Alert.alert(AuthDict.IncorrectEmailOrPassword);
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   function forgotPassword() {

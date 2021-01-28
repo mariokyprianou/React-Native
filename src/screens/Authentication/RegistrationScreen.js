@@ -28,6 +28,7 @@ import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import displayAlert from '../../utils/DisplayAlert';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -56,6 +57,7 @@ export default function RegisterScreen() {
   const {getValueByName, cleanValues} = FormHook();
   const selectedCountry = getValueByName('country');
   const [execute] = useMutation(RegisterUser);
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
@@ -199,6 +201,7 @@ export default function RegisterScreen() {
       });
       return;
     }
+    setLoading(true);
 
     execute({
       variables: {
@@ -229,7 +232,8 @@ export default function RegisterScreen() {
           text: 'Network request failed',
         });
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   const handleTermsAndConditionsButton = () => {

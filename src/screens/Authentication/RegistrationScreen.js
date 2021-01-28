@@ -27,6 +27,7 @@ import AllCountries from '../../apollo/queries/AllCountries';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -199,7 +200,7 @@ export default function RegisterScreen() {
       return;
     }
 
-    await execute({
+    execute({
       variables: {
         input: {
           givenName: givenName,
@@ -217,12 +218,18 @@ export default function RegisterScreen() {
       },
     })
       .then((res) => {
+        console.log('res', res);
         if (res.data.registerUser === true) {
+          cleanValues();
           navigation.navigate('EmailVerification', {email, password});
         }
       })
-      .catch((err) => console.log(err));
-    cleanValues();
+      .catch((err) => {
+        displayAlert({
+          text: 'Network request failed',
+        });
+        console.log(err);
+      });
   }
 
   const handleTermsAndConditionsButton = () => {

@@ -102,7 +102,8 @@ export default function TabContainer() {
       routeName === 'AddPhoto' ||
       routeName === 'ChangePassword' ||
       routeName === 'ChangeEmail' ||
-      routeName === 'VerifyChangeEmail'
+      routeName === 'VerifyChangeEmail' ||
+      routeName === 'Settings'
     ) {
       return false;
     }

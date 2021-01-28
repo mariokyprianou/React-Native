@@ -98,6 +98,16 @@ export default function LoginScreen() {
 
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
+        const {attributes} = await Auth.currentAuthenticatedUser();
+        if (!attributes.emailVerified) {
+          cleanValues();
+          navigation.navigate('EmailVerification', {
+            email: emailAddress,
+            password: password,
+            fromLogin: true,
+          });
+        }
+
         const permissionNeeded = await permissionsNeeded();
 
         if (permissionNeeded) {

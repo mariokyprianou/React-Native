@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView, Alert} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
@@ -20,6 +20,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Auth} from 'aws-amplify';
 import {useRoute} from '@react-navigation/core';
 import UpdateEmail from '../../apollo/mutations/UpdateEmail';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function VerifyChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -29,15 +30,20 @@ export default function VerifyChangeEmailScreen() {
   const {ProfileDict} = dictionary;
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
   const {
-    params: {email, userData, setUserData},
+    params: {email, fromLogin},
   } = useRoute();
   const [changeEmail] = useMutation(UpdateEmail);
   const navigation = useNavigation();
+  const {userData, setUserData} = useUserData();
 
   useEffect(() => {
     navigation.setOptions({
       header: () => (
-        <Header title={ProfileDict.VerifyEmailScreenTitle} goBack />
+        <Header
+          title={ProfileDict.VerifyEmailScreenTitle}
+          goBack
+          leftAction={onPressBack}
+        />
       ),
     });
   }, []);
@@ -83,7 +89,11 @@ export default function VerifyChangeEmailScreen() {
         await changeEmail({variables: {email: email}})
           .then((res) => {
             setUserData({...userData, email: email});
-            navigation.navigate('Profile');
+            if (fromLogin === true) {
+              navigation.navigate('TabContainer');
+            } else {
+              navigation.navigate('Profile');
+            }
           })
           .catch((err) =>
             console.log(err, '<---error changing email on back end'),
@@ -98,6 +108,28 @@ export default function VerifyChangeEmailScreen() {
           });
         }
       });
+  }
+
+  function onPressBack() {
+    Alert.alert('', ProfileDict.YouWillBeLoggedOut, [
+      {
+        text: ProfileDict.LogoutModalButton,
+        onPress: async () => {
+          await Auth.signOut()
+            .then(() => {
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'AuthContainer'}],
+              });
+            })
+            .catch((err) => console.log('Error signing out', err));
+        },
+      },
+      {
+        text: ProfileDict.Cancel,
+        style: 'cancel',
+      },
+    ]);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

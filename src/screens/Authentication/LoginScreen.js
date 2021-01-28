@@ -99,24 +99,23 @@ export default function LoginScreen() {
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
         const {attributes} = await Auth.currentAuthenticatedUser();
-        if (!attributes.emailVerified) {
-          cleanValues();
-          navigation.navigate('EmailVerification', {
+        if (attributes.email_verified === false) {
+          navigation.navigate('VerifyChangeEmail', {
             email: emailAddress,
-            password: password,
             fromLogin: true,
           });
-        }
-
-        const permissionNeeded = await permissionsNeeded();
-
-        if (permissionNeeded) {
-          navigation.navigate(permissionNeeded);
+          cleanValues();
         } else {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'TabContainer'}],
-          });
+          const permissionNeeded = await permissionsNeeded();
+
+          if (permissionNeeded) {
+            navigation.navigate(permissionNeeded);
+          } else {
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'TabContainer'}],
+            });
+          }
         }
       })
       .catch((error) => {
@@ -132,8 +131,6 @@ export default function LoginScreen() {
           Alert.alert(AuthDict.IncorrectEmailOrPassword);
         }
       });
-
-    // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
   }
 
   function forgotPassword() {

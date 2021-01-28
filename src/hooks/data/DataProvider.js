@@ -24,6 +24,7 @@ export default function DataProvider(props) {
   const [legals, setLegals] = useState({});
   const [programmeQuestionnaire, setProgrammeQuestionnaire] = useState({});
   const [suggestedProgramme, setSuggestedProgramme] = useState();
+  const [userData, setUserData] = useState();
 
   const [timeZones, setTimeZones] = useState([
     'Asia/Kolkata',
@@ -163,6 +164,8 @@ export default function DataProvider(props) {
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
+      userData,
+      setUserData,
     }),
     [
       onboarding,
@@ -172,6 +175,8 @@ export default function DataProvider(props) {
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
+      userData,
+      setUserData,
     ],
   );
 

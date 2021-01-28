@@ -69,15 +69,18 @@ export default function NotificationCell({
       justifyContent: 'space-between',
     },
     dotContainer: {
-      paddingRight: getWidth(3),
-      paddingBottom: getHeight(2.5),
+      width: getWidth(8),
+      marginRight: getWidth(5),
+      marginVertical: getHeight(6),
     },
     subjectTextStyle: {
       ...textStyles.medium14_black100,
-      flex: 0.7,
+      //flex: 0.7,
+      width: '70%',
       textAlign: 'left',
     },
     textStyle: {
+      marginLeft: getWidth(13),
       ...textStyles.regular15_brownishGrey80,
       textAlign: 'left',
     },
@@ -102,14 +105,13 @@ export default function NotificationCell({
   const renderContent = () => (
     <View style={styles.content}>
       <View style={styles.rowContainer}>
-        <Text style={styles.subjectTextStyle}>
-          {readAt === null && (
-            <View style={styles.dotContainer}>
-              <Image source={notificationDot} />
-            </View>
-          )}
-          {subject}
-        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.dotContainer}>
+            {readAt === null && <Image source={notificationDot} />}
+          </View>
+
+          <Text style={styles.subjectTextStyle}>{subject}</Text>
+        </View>
         <Text style={styles.dateStyle}>{sentAtFormatted}</Text>
       </View>
       <Text style={styles.textStyle}>{message}</Text>

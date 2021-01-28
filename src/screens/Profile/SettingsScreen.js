@@ -30,6 +30,26 @@ import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {getValues} = FormHook();
+  const {dictionary, getLanguage, setLanguage} = useDictionary();
+  const {SettingsDict, LanguageDict} = dictionary;
+  const {getHeight, getWidth} = ScaleHook();
+  const {
+    colors,
+    cellFormConfig,
+    cellFormStyles,
+    textStyles,
+    dropdownStyle,
+  } = useTheme();
+  const {params: timeZone} = useRoute();
+  const {
+    userData,
+    setUserData,
+    preferences,
+    getPreferences,
+    setPreferences,
+  } = useUserData();
+  const {timeZones} = useData();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -41,28 +61,6 @@ const SettingsScreen = ({}) => {
       />
     ),
   });
-
-  const {getValues} = FormHook();
-  const {dictionary, getLanguage, setLanguage} = useDictionary();
-  const {SettingsDict, LanguageDict} = dictionary;
-  const {getHeight} = ScaleHook();
-  const {
-    colors,
-    cellFormConfig,
-    cellFormStyles,
-    textStyles,
-    dropdownStyle,
-  } = useTheme();
-  const {params: timeZone} = useRoute();
-
-  const {
-    userData,
-    setUserData,
-    preferences,
-    getPreferences,
-    setPreferences,
-  } = useUserData();
-  const {timeZones} = useData();
 
   const [updatePreferences] = useMutation(UpdatePreference);
   const [updateProfile] = useMutation(UpdateProfile);
@@ -79,9 +77,7 @@ const SettingsScreen = ({}) => {
   const [prefAnalytics, setPrefAnalytics] = useState(
     preferences.analytics || false,
   );
-
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
-
   const [downloadQuality, setDownloadQuality] = useState(
     preferences.downloadQuality || 'HIGH',
   );
@@ -244,6 +240,8 @@ const SettingsScreen = ({}) => {
     SettingsDict.DownloadQualityLow,
   ];
 
+  const weightDropdownData = [SettingsDict.WeightKgs, SettingsDict.WeightLbs];
+
   const downloadQualityMap = {
     HIGH: SettingsDict.DownloadQualityHigh,
     LOW: SettingsDict.DownloadQualityLow,
@@ -303,6 +301,26 @@ const SettingsScreen = ({}) => {
         <Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text>
       ),
     },
+  ];
+
+  const cells2 = [
+    {
+      name: 'formWeightMeasurement',
+      type: 'dropdown',
+      label: SettingsDict.Weight,
+      ...cellFormStyles,
+      ...dropdownStyle,
+      rightAccessory: () => <DropDownIcon />,
+      placeholder: weightDropdownData[0],
+      data: weightDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
+    },
+  ];
+
+  const cells3 = [
     {
       customComponent: () => (
         <SettingsCell
@@ -319,7 +337,8 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-  const cells2 = [
+
+  const cells4 = [
     {
       name: 'formDownloadsQuality',
       type: 'dropdown',
@@ -329,6 +348,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: downloadQualityMap[downloadQuality],
       data: downloadQualityDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
     {
       name: 'formTimeZone',
@@ -341,9 +364,13 @@ const SettingsScreen = ({}) => {
       data: timeZones
         ? timeZones.map(({timeZone}) => timeZone)
         : [timeZone.timeZone],
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
   ];
-  const cells3 = [
+  const cells5 = [
     {
       customComponent: () => (
         <SettingsCell
@@ -386,7 +413,7 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-  const cells4 = [
+  const cells6 = [
     {
       name: 'formLanguage',
       type: 'dropdown',
@@ -396,6 +423,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: getLanguage() || languageDropdownData[0],
       data: languageDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
   ];
 
@@ -412,6 +443,12 @@ const SettingsScreen = ({}) => {
         scrollEnabled={false}
       />
       <Form cells={cells4} config={formConfig} />
+      <TDSettings
+        cells={cells5}
+        config={settingsConfig}
+        scrollEnabled={false}
+      />
+      <Form cells={cells6} config={formConfig} />
       <Spacer height={25} />
       <VersionCell
         versionText={SettingsDict.VersionText}

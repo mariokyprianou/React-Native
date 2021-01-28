@@ -6,32 +6,37 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import Carousel from 'react-native-snap-carousel';
+import UseData from '../../hooks/data/UseData';
 
-const fakeWeights = [
-  '1kg',
-  '2kg',
-  '3kg',
-  '4kg',
-  '5kg',
-  '6kg',
-  '7kg',
-  '8kg',
-  '9kg',
-  '10kg',
-];
-
-export default function WeightSelection({setSelectedWeight, lastWeight}) {
+export default function WeightSelection({lastWeight}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const swiperRef = useRef();
   const {textStyles} = useTheme();
-  const lastWeightIndex = fakeWeights.indexOf(lastWeight);
-  const [selectedIndex, setSelectedIndex] = useState(lastWeightIndex);
+  const [unformattedWeightData, setUnformattedWeightData] = useState();
+  const [lastWeightIndex, setLastWeightIndex] = useState();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const {weightChoice, setSelectedWeight} = UseData();
+
+  useEffect(() => {
+    const weightsArray = [];
+    for (let i = 1; i < 201; i++) {
+      weightsArray.push(i);
+    }
+    setUnformattedWeightData(weightsArray);
+
+    const findLastWeight = weightsArray.indexOf(Number(lastWeight));
+    // console.log(typeof findLastWeight, '<---find last weight');
+    // swiperRef.current.snapToItem(findLastWeight, true, true);
+
+    // setLastWeightIndex(findLastWeight);
+  }, [lastWeight]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -73,7 +78,7 @@ export default function WeightSelection({setSelectedWeight, lastWeight}) {
               ? styles.veryInactiveText
               : index === selectedIndex + 2 && styles.veryInactiveText
           }>
-          {item}
+          {`${item}${weightChoice}`}
         </Text>
       </View>
     );
@@ -84,7 +89,7 @@ export default function WeightSelection({setSelectedWeight, lastWeight}) {
     <View style={styles.container}>
       <Carousel
         ref={swiperRef}
-        data={fakeWeights}
+        data={unformattedWeightData}
         renderItem={renderItem}
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
@@ -93,10 +98,10 @@ export default function WeightSelection({setSelectedWeight, lastWeight}) {
         hasParallaxImages={true}
         onSnapToItem={(index) => {
           setSelectedIndex(index);
-          setSelectedWeight(fakeWeights[index]);
+          setSelectedWeight(unformattedWeightData[index]);
         }}
         windowSize={1}
-        firstItem={lastWeightIndex}
+        firstItem={19}
       />
     </View>
   );

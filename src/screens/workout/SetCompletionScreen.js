@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -17,6 +17,7 @@ import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import {useMutation} from '@apollo/client';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
+import UseData from '../../hooks/data/UseData';
 
 export default function SetCompletionScreen({
   restTime,
@@ -32,19 +33,29 @@ export default function SetCompletionScreen({
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const [addWeight] = useMutation(AddExerciseWeight);
-  const [selectedWeight, setSelectedWeight] = useState('0kg');
+  const {selectedWeight} = UseData();
 
-  const formattedSeconds = new Date(restTime * 1000)
-    .toISOString()
-    .substr(11, 8);
   const {remaining, remainingMS, toggle, active, reset} = useTimer({
-    timer: formattedSeconds,
+    timer: restTime,
   });
+
+  useEffect(() => {
+    reset();
+    toggle();
+  }, []);
+
+  useEffect(() => {
+    if (remainingMS === 0) {
+      setTimeout(() => {
+        setSetComplete(false);
+      }, 1000);
+    }
+  }, [remainingMS]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     card: {
-      height: getHeight(349),
+      height: restTime === 0 ? getHeight(302) : getHeight(349),
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(15),
@@ -53,9 +64,6 @@ export default function SetCompletionScreen({
       position: 'absolute',
       bottom: 0,
     },
-    touch: {
-      flex: 1,
-    },
     contentContainer: {
       width: '90%',
       alignSelf: 'center',
@@ -63,7 +71,7 @@ export default function SetCompletionScreen({
     title: {
       ...textStyles.bold22_black100,
       textAlign: 'center',
-      marginBottom: getHeight(20),
+      marginBottom: restTime === 0 ? 0 : getHeight(20),
     },
     timerText: {
       textAlign: 'center',
@@ -92,12 +100,10 @@ export default function SetCompletionScreen({
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
-    const formattedWeight = Number(selectedWeight.slice(0, -2));
-
     await addWeight({
       variables: {
         input: {
-          weight: formattedWeight,
+          weight: selectedWeight,
           reps: setReps,
           setNumber: setNumber,
           exerciseId: exercise,
@@ -113,11 +119,9 @@ export default function SetCompletionScreen({
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      <TouchableOpacity
-        style={styles.touch}
-        onPress={() => setSetComplete(false)}>
-        <View style={styles.contentContainer}>
-          {restTime > 0 ? (
+      <View style={styles.contentContainer}>
+        <TouchableOpacity onPress={() => setSetComplete(false)}>
+          {restTime ? (
             <>
               <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
               <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
@@ -125,23 +129,20 @@ export default function SetCompletionScreen({
           ) : (
             <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
           )}
-          <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
-          <View style={styles.weightSelectionContainer}>
-            <WeightSelection
-              setSelectedWeight={setSelectedWeight}
-              lastWeight={lastWeight}
-            />
-          </View>
+        </TouchableOpacity>
+        <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
+        <View style={styles.weightSelectionContainer}>
+          <WeightSelection lastWeight={lastWeight} />
         </View>
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="addWeight"
-            variant="gradient"
-            icon="chevron"
-            onPress={handleAddWeight}
-          />
-        </View>
-      </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="addWeight"
+          variant="gradient"
+          icon="chevron"
+          onPress={handleAddWeight}
+        />
+      </View>
     </View>
   );
 }

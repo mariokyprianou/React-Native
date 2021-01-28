@@ -285,15 +285,17 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
-  const [selectedWorkout, setSelectedWorkout] = useState();
   const [isDownloadEnabled, setDownloadEnabled] = useState();
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
 
   const getDownloadEnabled = useCallback(async () => {
     const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
     const enabled = JSON.parse(value);
     setDownloadEnabled(enabled);
   }, []);
+
+  // Current Workout data
+  const [selectedWorkout, setSelectedWorkout] = useState();
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
 
   const [workoutTime, setWorkoutTime] = useState(0);
   const [isWorkoutTimerRunning, setIsWorkoutTimerRunning] = useState(false);
@@ -317,6 +319,9 @@ export default function DataProvider(props) {
       cancelInterval();
     };
   }, [isWorkoutTimerRunning]);
+
+  const [weightChoice, setWeightChoice] = useState('kg'); // fake data, to be replaced with data from back end
+  const [selectedWeight, setSelectedWeight] = useState(20);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -346,6 +351,10 @@ export default function DataProvider(props) {
       updateConsecutiveWorkouts,
       getConsecutiveWorkouts,
       clearConsecutiveDays,
+      weightChoice,
+      setWeightChoice,
+      selectedWeight,
+      setSelectedWeight,
     }),
     [
       onboarding,
@@ -372,6 +381,10 @@ export default function DataProvider(props) {
       updateConsecutiveWorkouts,
       getConsecutiveWorkouts,
       clearConsecutiveDays,
+      weightChoice,
+      setWeightChoice,
+      selectedWeight,
+      setSelectedWeight,
     ],
   );
 

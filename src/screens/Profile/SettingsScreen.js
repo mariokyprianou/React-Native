@@ -33,7 +33,7 @@ const SettingsScreen = ({}) => {
   const {getValues} = FormHook();
   const {dictionary, getLanguage, setLanguage} = useDictionary();
   const {SettingsDict, LanguageDict} = dictionary;
-  const {getHeight} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {
     colors,
     cellFormConfig,
@@ -313,6 +313,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: weightDropdownData[0],
       data: weightDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
   ];
 
@@ -344,6 +348,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: downloadQualityMap[downloadQuality],
       data: downloadQualityDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
     {
       name: 'formTimeZone',
@@ -356,6 +364,10 @@ const SettingsScreen = ({}) => {
       data: timeZones
         ? timeZones.map(({timeZone}) => timeZone)
         : [timeZone.timeZone],
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
   ];
   const cells5 = [
@@ -411,6 +423,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: getLanguage() || languageDropdownData[0],
       data: languageDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
   ];
 

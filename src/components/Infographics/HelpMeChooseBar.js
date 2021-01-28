@@ -28,6 +28,8 @@ export default function HelpMeChooseBar({
   const activeWidth = (currentQuestion / totalQuestions) * 100;
   const inactiveWidth = 100 - activeWidth;
 
+  // console.log(activeWidth, inac)
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     title: {
@@ -40,15 +42,22 @@ export default function HelpMeChooseBar({
       width: '100%',
       height: getHeight(4),
     },
+    gradient: {
+      flex: 1,
+      borderBottomLeftRadius: radius(2),
+      borderTopLeftRadius: radius(2),
+    },
     activeBar: {
       width: `${activeWidth}%`,
+      height: '100%',
       borderBottomLeftRadius: radius(2),
       borderTopLeftRadius: radius(2),
       borderBottomRightRadius: activeWidth === 100 ? radius(2) : 0,
       borderTopRightRadius: activeWidth === 100 ? radius(2) : 0,
+      position: 'absolute',
     },
     inactiveBar: {
-      width: `${inactiveWidth}%`,
+      width: `100%`,
       backgroundColor: colors.paleTurquoise100,
       borderBottomRightRadius: radius(2),
       borderTopRightRadius: radius(2),
@@ -73,13 +82,15 @@ export default function HelpMeChooseBar({
           }>{`${HelpMeChooseDict.Question} ${currentQuestion} ${HelpMeChooseDict.Of} ${totalQuestions}`}</Text>
       )}
       <View style={styles.barContainer}>
-        <LinearGradient
-          style={styles.activeBar}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={[colors.tealish100, colors.tiffanyBlue100]}
-        />
         <View style={styles.inactiveBar} />
+        <View style={styles.activeBar}>
+          <LinearGradient
+            style={styles.gradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            colors={[colors.tealish100, colors.tiffanyBlue100]}
+          />
+        </View>
       </View>
       <Text style={styles.text}>{questionText}</Text>
     </View>

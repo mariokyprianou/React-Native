@@ -277,15 +277,19 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       newRegion = regionLookup[regionsList[0]];
     }
 
+    const newVals = {
+      givenName: profile_firstName || userData.givenName,
+      familyName: profile_lastName || userData.familyName,
+      gender: profile_gender?.toLowerCase() || userData.gender,
+      dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
+      country: newCountry || userData.country,
+      region: newRegion,
+    };
+
     await updateProfile({
       variables: {
         input: {
-          givenName: profile_firstName || userData.givenName,
-          familyName: profile_lastName || userData.familyName,
-          gender: profile_gender?.toLowerCase() || userData.gender,
-          dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
-          country: newCountry || userData.country,
-          region: newRegion,
+          ...newVals,
         },
       },
     })
@@ -418,15 +422,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        flex: 1,
+        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.givenName,
+      value: userData.givenName,
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
-        height: '100%',
-        marginBottom: getHeight(6),
       },
     },
     {
@@ -435,15 +439,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        flex: 1,
+        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.familyName,
+      value: userData.familyName,
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
-        height: '100%',
-        marginBottom: getHeight(6),
       },
     },
     {
@@ -499,9 +503,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
-      placeholder: userData?.dateOfBirth
-        ? format(new Date(userData?.dateOfBirth), 'dd/LL/yyyy')
-        : '',
+      placeholder:
+        userData.dateOfBirth !== undefined
+          ? format(parseISO(userData.dateOfBirth), 'dd/MM/yyyy')
+          : '',
     },
     {
       name: 'profile_country',

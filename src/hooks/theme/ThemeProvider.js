@@ -471,6 +471,14 @@ export default function ThemeProvider({children}) {
   };
 
   const cellFormStyles = {
+    customPasswordStyle: {
+      flex: 1,
+      width: getWidth(50),
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginRight: getWidth(-5),
+    },
     labelContainerStyle: {
       width: '100%',
       marginTop: getHeight(18),

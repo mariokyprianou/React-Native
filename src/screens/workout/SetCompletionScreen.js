@@ -17,6 +17,7 @@ import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import {useMutation} from '@apollo/client';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
+import UseData from '../../hooks/data/UseData';
 
 export default function SetCompletionScreen({
   restTime,
@@ -32,8 +33,7 @@ export default function SetCompletionScreen({
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const [addWeight] = useMutation(AddExerciseWeight);
-  const weightChoice = 'kg'; // fake data, to be replaced with data from back end
-  const [selectedWeight, setSelectedWeight] = useState(20);
+  const {selectedWeight} = UseData();
 
   const {remaining, remainingMS, toggle, active, reset} = useTimer({
     timer: restTime,
@@ -132,11 +132,7 @@ export default function SetCompletionScreen({
         </TouchableOpacity>
         <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
         <View style={styles.weightSelectionContainer}>
-          <WeightSelection
-            setSelectedWeight={setSelectedWeight}
-            lastWeight={lastWeight}
-            weightChoice={weightChoice}
-          />
+          <WeightSelection lastWeight={lastWeight} />
         </View>
       </View>
       <View style={styles.buttonContainer}>

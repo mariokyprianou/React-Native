@@ -11,20 +11,18 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import Carousel from 'react-native-snap-carousel';
+import UseData from '../../hooks/data/UseData';
 
-export default function WeightSelection({
-  setSelectedWeight,
-  lastWeight,
-  weightChoice,
-}) {
+export default function WeightSelection({lastWeight}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const swiperRef = useRef();
   const {textStyles} = useTheme();
   const [unformattedWeightData, setUnformattedWeightData] = useState();
-  const [weightData, setWeightData] = useState([]);
   const [lastWeightIndex, setLastWeightIndex] = useState();
-  const [selectedIndex, setSelectedIndex] = useState();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const {weightChoice, setSelectedWeight} = UseData();
 
   useEffect(() => {
     const weightsArray = [];
@@ -33,14 +31,12 @@ export default function WeightSelection({
     }
     setUnformattedWeightData(weightsArray);
 
-    const formattedWeights = weightsArray.map((weight) => {
-      return `${weight}${weightChoice}`;
-    });
-    setWeightData(formattedWeights);
-
     const findLastWeight = weightsArray.indexOf(Number(lastWeight));
-    setLastWeightIndex(findLastWeight);
-  }, [lastWeight, weightChoice]);
+    // console.log(typeof findLastWeight, '<---find last weight');
+    // swiperRef.current.snapToItem(findLastWeight, true, true);
+
+    // setLastWeightIndex(findLastWeight);
+  }, [lastWeight]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -82,7 +78,7 @@ export default function WeightSelection({
               ? styles.veryInactiveText
               : index === selectedIndex + 2 && styles.veryInactiveText
           }>
-          {item}
+          {`${item}${weightChoice}`}
         </Text>
       </View>
     );
@@ -93,7 +89,7 @@ export default function WeightSelection({
     <View style={styles.container}>
       <Carousel
         ref={swiperRef}
-        data={weightData}
+        data={unformattedWeightData}
         renderItem={renderItem}
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
@@ -105,7 +101,7 @@ export default function WeightSelection({
           setSelectedWeight(unformattedWeightData[index]);
         }}
         windowSize={1}
-        firstItem={lastWeightIndex}
+        firstItem={19}
       />
     </View>
   );

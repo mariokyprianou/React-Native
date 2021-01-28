@@ -121,6 +121,9 @@ export default function DataProvider(props) {
   const [isDownloadEnabled, setDownloadEnabled] = useState();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
 
+  const [weightChoice, setWeightChoice] = useState('kg'); // fake data, to be replaced with data from back end
+  const [selectedWeight, setSelectedWeight] = useState(20);
+
   const [workoutTime, setWorkoutTime] = useState(0);
 
   const getDownloadEnabled = useCallback(async () => {
@@ -149,6 +152,10 @@ export default function DataProvider(props) {
       setCurrentExerciseIndex,
       workoutTime,
       setWorkoutTime,
+      weightChoice,
+      setWeightChoice,
+      selectedWeight,
+      setSelectedWeight,
     }),
     [
       onboarding,
@@ -167,6 +174,10 @@ export default function DataProvider(props) {
       setCurrentExerciseIndex,
       workoutTime,
       setWorkoutTime,
+      weightChoice,
+      setWeightChoice,
+      selectedWeight,
+      setSelectedWeight,
     ],
   );
 

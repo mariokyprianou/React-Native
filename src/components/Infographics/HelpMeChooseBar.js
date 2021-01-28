@@ -72,7 +72,6 @@ export default function HelpMeChooseBar({
             styles.title
           }>{`${HelpMeChooseDict.Question} ${currentQuestion} ${HelpMeChooseDict.Of} ${totalQuestions}`}</Text>
       )}
-
       <View style={styles.barContainer}>
         <LinearGradient
           style={styles.activeBar}

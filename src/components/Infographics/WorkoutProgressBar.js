@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function HelpMeChooseBar({index, max, questionText}) {
+export default function WorkoutProgressBar({index, max, questionText}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();

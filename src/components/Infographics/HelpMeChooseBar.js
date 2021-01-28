@@ -44,12 +44,16 @@ export default function HelpMeChooseBar({
       width: `${activeWidth}%`,
       borderBottomLeftRadius: radius(2),
       borderTopLeftRadius: radius(2),
+      borderBottomRightRadius: activeWidth === 100 ? radius(2) : 0,
+      borderTopRightRadius: activeWidth === 100 ? radius(2) : 0,
     },
     inactiveBar: {
       width: `${inactiveWidth}%`,
       backgroundColor: colors.paleTurquoise100,
       borderBottomRightRadius: radius(2),
       borderTopRightRadius: radius(2),
+      borderBottomLeftRadius: radius(2),
+      borderTopLeftRadius: radius(2),
     },
     text: {
       ...textStyles.light15_black100,

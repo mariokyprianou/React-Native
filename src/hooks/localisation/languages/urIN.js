@@ -185,6 +185,10 @@ const urIN = {
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',
     LogoutModalButton: 'Logout',
+    YouWillBeLoggedOut:
+      'If you continue you will be logged out - please verify your email address',
+    Ok: 'Ok',
+    Cancel: 'Cancel',
   },
 
   ShareDict: {

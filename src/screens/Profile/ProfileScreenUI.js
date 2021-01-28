@@ -84,7 +84,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     data: countryData,
   } = useQuery(AllCountries);
   const [updateProfile] = useMutation(UpdateProfile);
-  const {userData, setUserData} = useUserData();
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
@@ -93,6 +92,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState(notifications);
   const [updateLoading, setUpdateLoading] = useState(false);
+
+  const {userData, setUserData} = useUserData();
 
   const formCountry = getValueByName('profile_country');
   useEffect(() => {
@@ -466,10 +467,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <TDIcon input="chevron-right" inputStyle={styles.icon} />
       ),
       rightAccessoryOnPress: () => {
-        navigation.navigate('ChangeEmail', {
-          userData: userData,
-          setUserData: setUserData,
-        });
+        navigation.navigate('ChangeEmail');
       },
       placeholder: userData.email,
     },

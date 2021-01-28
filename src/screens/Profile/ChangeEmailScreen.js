@@ -17,7 +17,6 @@ import {Form} from 'the-core-ui-module-tdforms';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {emailRegex} from '../../utils/regex';
 import {Auth} from 'aws-amplify';
-import {useRoute} from '@react-navigation/core';
 
 export default function ChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,9 +26,6 @@ export default function ChangeEmailScreen() {
   const {ProfileDict} = dictionary;
   const {cleanErrors, getValues, updateError} = FormHook();
   const navigation = useNavigation();
-  const {
-    params: {userData, setUserData},
-  } = useRoute();
 
   useEffect(() => {
     navigation.setOptions({
@@ -77,12 +73,7 @@ export default function ChangeEmailScreen() {
 
     await Auth.updateUserAttributes(user, {email: newEmail})
       .then((res) => {
-        console.log(res, '<----update email res');
-        navigation.navigate('VerifyChangeEmail', {
-          email: newEmail,
-          userData: userData,
-          setUserData: setUserData,
-        });
+        navigation.navigate('VerifyChangeEmail', {email: newEmail});
       })
       .catch((err) => console.log(err));
   }

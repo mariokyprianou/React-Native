@@ -16,6 +16,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
+import useData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -27,8 +28,10 @@ export default function TakeARestScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {name, setWarningReceived},
+    params: {name, setWarningReceived, nextWorkout},
   } = useRoute();
+
+  const {setSelectedWorkout} = useData();
 
   navigation.setOptions({
     header: () => (
@@ -74,6 +77,7 @@ export default function TakeARestScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleContinue() {
+    setSelectedWorkout(nextWorkout);
     navigation.navigate('StartWorkout');
   }
 

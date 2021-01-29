@@ -190,9 +190,14 @@ export default function WorkoutHomeScreen() {
 
   useEffect(() => {
     if (programme && threeWorkoutsInRow === true && warningReceived === false) {
+      const nextWorkout = workoutsToDisplay.filter(
+        (workout) => workout.completedAt === null,
+      )[0];
+
       navigation.navigate('TakeARest', {
         name: programme.trainer.name,
         setWarningReceived,
+        nextWorkout,
       });
     }
   }, [programme, threeWorkoutsInRow]);

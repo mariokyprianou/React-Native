@@ -2,7 +2,7 @@
  * Created Date: Fri, 20th Nov 2020, 11:00:38 am
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 import RNRestart from 'react-native-restart';
 

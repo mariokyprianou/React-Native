@@ -8,7 +8,6 @@
 
 import React, {useRef, useState, useEffect} from 'react';
 import {
-  Dimensions,
   View,
   TouchableOpacity,
   Text,
@@ -21,7 +20,6 @@ import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useData from '../../hooks/data/UseData';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
 import TrainerCard from '../../components/Cards/TrainerCard';
@@ -31,14 +29,14 @@ import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
 import isRTL from '../../utils/isRTL';
 import FadingBottomView from '../../components/Views/FadingBottomView';
-import {format} from 'date-fns';
 import isIphoneX from '../../utils/isIphoneX';
 import {useRoute} from '@react-navigation/core';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
+import useCommonData from '../../hooks/data/useCommonData';
 
-const zeroState = require('../../../assets/images/zeroState.png');
+const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
 
 export default function MeetYourIconsScreen() {
@@ -58,7 +56,7 @@ export default function MeetYourIconsScreen() {
   } = useRoute();
   //const switchProgramme = true;
 
-  const {trainers, suggestedProgramme} = useData();
+  const {trainers, suggestedProgramme} = useCommonData();
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -92,7 +90,9 @@ export default function MeetYourIconsScreen() {
     ) {
       setActiveIndex(trainers.indexOf(trainer));
     }
-  }, [suggestedProgramme]);
+  }, [trainers, suggestedProgramme]);
+
+  console.log(suggestedProgramme, '<---suggested programme');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -118,7 +118,7 @@ export default function MeetYourIconsScreen() {
     },
     headerContainer: {
       width: '100%',
-      height: getHeight(80),
+      height: getHeight(85),
       position: 'absolute',
       top: getHeight(40),
       zIndex: 9,
@@ -220,9 +220,14 @@ export default function MeetYourIconsScreen() {
       bottom: 0,
       width: '100%',
     },
+    zeroTextContainer: {
+      width: '90%',
+      alignSelf: 'center',
+    },
     zeroInfoText: {
       ...textStyles.regular15_white100,
       marginBottom: getHeight(80),
+      textAlign: 'center',
     },
     fadeContainer: {
       position: 'absolute',
@@ -268,19 +273,14 @@ export default function MeetYourIconsScreen() {
               {MeetYourIconsDict.SelectYourProgramme}
             </Text>
           </View>
-          <View style={styles.cantChooseContainer}>
-            <CantChooseButton
-              onPress={() => navigation.navigate('HelpMeChoose')}
-              navigation={navigation}
-            />
-          </View>
         </View>
         <Image source={zeroState} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>
-          <Text style={styles.zeroInfoText}>
-            {MeetYourIconsDict.ZeroStateText}
-          </Text>
-          {/* change ^^ to zero state info text */}
+          <View style={styles.zeroTextContainer}>
+            <Text style={styles.zeroInfoText}>
+              {MeetYourIconsDict.ZeroStateText}
+            </Text>
+          </View>
           <DefaultButton
             type="tryAgain"
             icon="chevron"
@@ -308,15 +308,14 @@ export default function MeetYourIconsScreen() {
       <Swiper
         ref={iconsSwiper}
         loop={false}
+        index={activeIndex}
         onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
         {trainers.map((trainer) => {
           const currentProgram =
             trainer.programmes.find((it) => it.id === selectedProgram.id) ||
             trainer.programmes[0];
-
           const {numberOfWeeks, description, firstWeek} = currentProgram;
-
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 
           return (
@@ -340,7 +339,9 @@ export default function MeetYourIconsScreen() {
                 </View>
               </View>
               <View style={styles.leftIconContainer}>
-                <TouchableOpacity onPress={() => handlePress('left')}>
+                <TouchableOpacity
+                  onPress={() => handlePress('left')}
+                  disabled={activeIndex === 0 ? true : false}>
                   <TDIcon
                     input={isRTL() ? 'chevron-right' : 'chevron-left'}
                     inputStyle={styles.icon}
@@ -348,7 +349,9 @@ export default function MeetYourIconsScreen() {
                 </TouchableOpacity>
               </View>
               <View style={styles.rightIconContainer}>
-                <TouchableOpacity onPress={() => handlePress('right')}>
+                <TouchableOpacity
+                  onPress={() => handlePress('right')}
+                  disabled={activeIndex === trainers.length - 1 ? true : false}>
                   <TDIcon
                     input={isRTL() ? 'chevron-left' : 'chevron-right'}
                     inputStyle={styles.icon}
@@ -360,6 +363,7 @@ export default function MeetYourIconsScreen() {
                   trainer={trainer}
                   onPressGymHome={switchProgram}
                   currentProgram={currentProgram}
+                  suggestedEnv={suggestedProgramme?.environment || null}
                 />
               </View>
               <Spacer height={90} />

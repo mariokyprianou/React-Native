@@ -2,7 +2,7 @@
  * Created Date: Mon, 9th Nov 2020, 17:24:04 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState, useEffect} from 'react';
@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Slider from 'react-native-slider';
 
 const thumbIcon = require('../../../assets/icons/slider.png');
-export default function HelpMeChooseBar({
+export default function SliderProgressView({
   progress = 50,
   max = 100,
   slider = false,

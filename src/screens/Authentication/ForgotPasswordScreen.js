@@ -2,7 +2,7 @@
  * Created Date: Fri, 6th Nov 2020, 12:50:51 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React from 'react';
@@ -16,6 +16,7 @@ import {emailRegex} from '../../utils/regex';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 
 export default function Screen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,21 +34,20 @@ export default function Screen() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
-      flex: 1,
+      height: '100%',
+      width: '100%',
       backgroundColor: colors.backgroundWhite100,
     },
     scrollViewContainer: {
       height: '100%',
       width: '100%',
     },
-
     buttonContainer: {
       width: '100%',
-      position: 'absolute',
-      bottom: 0,
-      marginTop: getHeight(30),
-      marginBottom: getHeight(40),
+      flex: 1,
       alignItems: 'center',
+      justifyContent: 'flex-end',
+      paddingBottom: getHeight(40),
     },
     forgotPasswordContainerStyle: {
       flexDirection: 'row',
@@ -101,6 +101,10 @@ export default function Screen() {
 
   return (
     <View style={styles.container}>
+      {/* <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollViewContainer}
+        enableOnAndroid={true}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
       <ScrollView
         keyboardShouldPersistTaps="handled"
         style={styles.scrollViewContainer}>
@@ -108,6 +112,7 @@ export default function Screen() {
           <Form cells={cells} config={config} />
         </View>
       </ScrollView>
+      {/* </KeyboardAwareScrollView> */}
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="resetRequest"

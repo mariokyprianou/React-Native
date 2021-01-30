@@ -2,7 +2,7 @@
  * Created Date: Mon, 9th Nov 2020, 15:35:47 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState, useRef, useEffect} from 'react';
@@ -115,7 +115,8 @@ export default function ({video, videoEasy, videoEasiest, index}) {
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
         backgroundColor: colors.black10,
-      }}>
+      }}
+      useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
           videoRef.current.pause();

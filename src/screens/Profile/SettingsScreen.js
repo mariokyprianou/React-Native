@@ -48,8 +48,9 @@ const SettingsScreen = ({}) => {
     preferences,
     getPreferences,
     setPreferences,
+    timeZones,
   } = useUserData();
-  const {timeZones} = useData();
+
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -360,14 +361,13 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: timeZone.timeZone,
-      data: timeZones
-        ? timeZones.map(({timeZone}) => timeZone)
-        : [timeZone.timeZone],
+      placeholder: userData.timeZone,
+
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(4),
       },
+      data: timeZones,
     },
   ];
   const cells5 = [

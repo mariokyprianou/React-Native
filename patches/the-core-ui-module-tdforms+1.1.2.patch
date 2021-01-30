@@ -12,7 +12,7 @@ index 439a0d3..b83788e 100644
          onValueChange: props.onChange,
          onPressDone: (value) => {
 diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
-index 06cd661..d4eff8f 100644
+index 06cd661..b270cca 100644
 --- a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 +++ b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 @@ -13,12 +13,13 @@ import {ScaleHook} from 'react-native-design-to-component';
@@ -36,7 +36,7 @@ index 06cd661..d4eff8f 100644
  
 +
 +  const powerCustomRightAccessory = () => (
-+    <View style={{marginRight: getWidth(-5)}}>
++    <View style={cell.customPasswordStyle}>
 +      <TDIcon     
 +        input={visibility ? 'eye' : 'eye-slash'} 
 +        inputStyle={

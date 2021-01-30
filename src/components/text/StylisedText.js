@@ -2,9 +2,8 @@
  * Created Date: Fri, 6th Nov 2020, 11:24:58 am
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
-
 
 import React from 'react';
 import ParsedText from 'react-native-parsed-text';
@@ -37,7 +36,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 
 */
 
-export default function({
+export default function ({
   text,
   input,
   textStyle,
@@ -50,12 +49,12 @@ export default function({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const style = {
     ...textStyles.regular15_brownishGrey100,
-    fontWeight: active ? "bold" : 'normal',
+    fontWeight: active ? 'bold' : 'normal',
     ...highlightedStyle,
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const patterns = input.map(item => ({
+  const patterns = input.map((item) => ({
     ...item,
     style,
   }));

@@ -2,7 +2,7 @@
  * Created Date: Thu, 5th Nov 2020, 18:22:16 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState} from 'react';

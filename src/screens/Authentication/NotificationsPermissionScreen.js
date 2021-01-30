@@ -36,7 +36,7 @@ export default function NotificationPermissionScreen() {
   }, []);
 
   const disallowNotifications = () => {
-    return AsyncStorage.setItem('@NOTIFICATIONS_ASKED', 'true').then((res) => {
+    return AsyncStorage.setItem('@NOTIFICATIONS_ASKED', 'false').then((res) => {
       navigateForward();
     });
   };

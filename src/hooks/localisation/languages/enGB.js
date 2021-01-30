@@ -66,6 +66,7 @@ const enGB = {
       'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
     InvalidNotNewPassword:
       'Oops! Your password must consist of at least 8 alphanumeric, mixed-case characters. Please try again with a new password.',
+    InvalidTsAndCs: 'Please accept the terms and conditions.',
     ChangePasswordFail:
       'Oops! Ensure you have entered your current password, along with your new password, in order to make the change.',
     IncorrectEmailOrPassword:
@@ -141,7 +142,8 @@ const enGB = {
     WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
     SelectYourProgramme: 'Select your programme',
 
-    ZeroStateText: 'Lorem ipsum dolor sit amet, consectetur',
+    ZeroStateText:
+      'Reconnect to the internet to pick your programme and train with POWER',
 
     CongratulationsTitle: 'Congratulations!',
     StartedProgramme: (name, environment) =>
@@ -159,6 +161,11 @@ const enGB = {
     ChangePasswordScreenTitle: 'Change password',
     ChangePasswordLabel1: 'OLD PASSWORD',
     ChangePasswordLabel2: 'NEW PASSWORD',
+    IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
+    VerifyEmailScreenTitle: 'Verify email',
+    InvalidChangeEmailCode:
+      'Oops! This code is not recognised; please enter the correct code to change your email address.',
+    CodeLabel: 'CODE',
 
     DeleteNotificationButtonTitle: 'Delete',
     MemberSince: 'Member since',
@@ -178,6 +185,10 @@ const enGB = {
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',
     LogoutModalButton: 'Logout',
+    YouWillBeLoggedOut:
+      'If you continue you will be logged out - please verify your email address',
+    Ok: 'Ok',
+    Cancel: 'Cancel',
   },
 
   ShareDict: {

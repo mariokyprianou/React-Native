@@ -6,19 +6,14 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
-import {useQuery, useMutation, useLazyQuery} from '@apollo/client';
+import {useLazyQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
-import Onboarding from '../../apollo/queries/Onboarding';
-import Trainers from '../../apollo/queries/Trainers';
-import Legals from '../../apollo/queries/Legals';
-import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
 import Programme from '../../apollo/queries/Programme';
-import addWorkoutDates from '../../utils/addWorkoutDates';
-import addRestDays from '../../utils/addRestDays';
 import AsyncStorage from '@react-native-community/async-storage';
-import {differenceInDays, addDays, format, parse, parseISO} from 'date-fns';
+import {differenceInDays, addDays, format, parseISO} from 'date-fns';
+import {Auth} from 'aws-amplify';
 
 import {
   initializeRestDays,
@@ -31,104 +26,25 @@ import {
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const [onboarding, setOnboarding] = useState([]);
-  const [trainers, setTrainers] = useState([]);
-
-  const [legals, setLegals] = useState({});
-  const [programmeQuestionnaire, setProgrammeQuestionnaire] = useState({});
-  const [suggestedProgramme, setSuggestedProgramme] = useState();
-
   const [programme, setProgramme] = useState();
+
   const [currentWeek, setCurrentWeek] = useState();
-
-  useQuery(Onboarding, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const data = [];
-        res.onboardingScreens.forEach((screen) => {
-          data.unshift(screen);
-        });
-        setOnboarding(data);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
-
-  useQuery(Trainers, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        setTrainers(res.getTrainers);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
-
-  useQuery(Legals, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        setLegals(res.legals);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
-
-  useQuery(ProgrammeQuestionnaire, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const qMap = res.programmeQuestionnaire.map((question) => {
-          const answers = [];
-          answers.push(
-            question.question.answer1,
-            question.question.answer2,
-            question.question.answer3,
-            question.question.answer4,
-          );
-
-          const formattedQuestion = answers.map((val, index) => {
-            return {
-              key: `${index + 1}`,
-              answerText: val,
-            };
-          });
-
-          return {...question, answers: formattedQuestion};
-        });
-
-        const localQuestion = {
-          orderIndex: 1,
-          answers: [
-            {answerText: 'Home', key: '1'},
-            {answerText: 'Gym', key: '2'},
-          ],
-          question: {
-            language: 'en',
-            question: 'Would you rather train at home or in the gym?',
-          },
-        };
-
-        qMap.unshift(localQuestion);
-        setProgrammeQuestionnaire(qMap);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
 
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
     let days = await AsyncStorage.getItem('@CURRENT_WEEK');
     days = JSON.parse(days);
-    days = days.map((it) => {
-      return {
-        ...it,
-        date: parseISO(it.date),
-        exactDate: parseISO(it.exactDate),
-      };
-    });
+    console.log(days);
 
+    if (days) {
+      days = days.map((it) => {
+        return {
+          ...it,
+          date: parseISO(it.date),
+          exactDate: parseISO(it.exactDate),
+        };
+      });
+    }
     // Set default rest days if nothing stored
     if (!days || days.length === 0) {
       days = initializeRestDays(numberOfWorkouts);
@@ -228,6 +144,7 @@ export default function DataProvider(props) {
 
     // Add future dates
     const remaining = 7 - week.length;
+
     for (let i = 0; i < remaining; i++) {
       const date = addDays(now, i);
 
@@ -285,6 +202,20 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
+  useEffect(() => {
+    async function checkUser() {
+      const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
+        return null;
+      });
+
+      if (cognitoUser) {
+        getProgramme();
+      }
+    }
+
+    checkUser();
+  }, []);
+
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 
   const getDownloadEnabled = useCallback(async () => {
@@ -327,12 +258,6 @@ export default function DataProvider(props) {
 
   const values = useMemo(
     () => ({
-      onboarding,
-      trainers,
-      legals,
-      programmeQuestionnaire,
-      suggestedProgramme,
-      setSuggestedProgramme,
       programme,
       getProgramme,
       selectedWorkout,
@@ -357,12 +282,6 @@ export default function DataProvider(props) {
       setSelectedWeight,
     }),
     [
-      onboarding,
-      trainers,
-      legals,
-      programmeQuestionnaire,
-      suggestedProgramme,
-      setSuggestedProgramme,
       programme,
       getProgramme,
       selectedWorkout,

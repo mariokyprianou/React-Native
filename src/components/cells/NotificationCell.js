@@ -6,12 +6,14 @@
  */
 
 import React from 'react';
-import {View, Text, TouchableOpacity, Animated} from 'react-native';
+import {View, Text, TouchableOpacity, Animated, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
 import Swipeable from 'react-native-swipeable';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
+
+const notificationDot = require('../../../assets/icons/notificationDot.png');
 
 export default function NotificationCell({
   subject,
@@ -44,7 +46,7 @@ export default function NotificationCell({
     },
     container: {
       backgroundColor: colors.backgroundWhite100,
-      width: getWidth(355),
+      width: '95%',
       marginTop: 0,
       marginBottom: 0,
       borderTopWidth: index !== 0 ? 1 : 0,
@@ -66,20 +68,25 @@ export default function NotificationCell({
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    dotContainer: {
+      width: getWidth(8),
+      marginRight: getWidth(5),
+      marginVertical: getHeight(6),
+    },
     subjectTextStyle: {
       ...textStyles.medium14_black100,
-      flex: 0.7,
+      //flex: 0.7,
+      width: '70%',
       textAlign: 'left',
     },
     textStyle: {
+      marginLeft: getWidth(13),
       ...textStyles.regular15_brownishGrey80,
       textAlign: 'left',
     },
     dateStyle: {
       ...textStyles.medium12_brownishGrey100,
-      flex: 0.3,
       textAlign: 'left',
-      marginLeft: getWidth(10),
     },
     rightAction: {
       flex: 1,
@@ -98,7 +105,13 @@ export default function NotificationCell({
   const renderContent = () => (
     <View style={styles.content}>
       <View style={styles.rowContainer}>
-        <Text style={styles.subjectTextStyle}>{subject}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.dotContainer}>
+            {readAt === null && <Image source={notificationDot} />}
+          </View>
+
+          <Text style={styles.subjectTextStyle}>{subject}</Text>
+        </View>
         <Text style={styles.dateStyle}>{sentAtFormatted}</Text>
       </View>
       <Text style={styles.textStyle}>{message}</Text>
@@ -107,7 +120,7 @@ export default function NotificationCell({
 
   const rightButtons = [
     <TouchableOpacity style={styles.rightAction} onPress={onDelete}>
-      <Animated.Text style={styles.actionText}>
+      <Animated.Text style={styles.actionText} useNativeDriver={true}>
         {ProfileDict.NotificationDelete}
       </Animated.Text>
     </TouchableOpacity>,

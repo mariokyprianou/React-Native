@@ -22,6 +22,7 @@ import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
 import displayAlert from '../../utils/DisplayAlert';
 
 import getResponse from '../../utils/getResponse';
+import useCommonData from '../../hooks/data/useCommonData';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -40,7 +41,7 @@ export default function HelpMeChooseScreen() {
     ),
   });
 
-  const {programmeQuestionnaire, setSuggestedProgramme} = useData();
+  const {programmeQuestionnaire, setSuggestedProgramme} = useCommonData();
 
   const [execute] = useMutation(SubmitProgrammeQuestionnaire, {
     fetchPolicy: 'no-cache',
@@ -65,7 +66,6 @@ export default function HelpMeChooseScreen() {
   }, [newAnswer]);
 
   useEffect(() => {
-    console.log('storedAnswers', storedAnswers);
     if (storedAnswers.length === programmeQuestionnaire.length) {
       submitQuestionnaire();
     }
@@ -100,14 +100,6 @@ export default function HelpMeChooseScreen() {
     const answers = storedAnswers.filter(
       (it) => it.question !== null && it.question !== 'environment',
     );
-    console.log('answers', {
-      answers: answers,
-      environment:
-        storedAnswers.find((it) => it.question === 'environment').answer ===
-        'ONE'
-          ? 'HOME'
-          : 'GYM',
-    });
     await execute({
       variables: {
         input: {

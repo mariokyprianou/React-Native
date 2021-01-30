@@ -2,7 +2,7 @@
  * Created Date: Fri, 13th Nov 2020, 13:35:44 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 export function msToHMS(duration) {

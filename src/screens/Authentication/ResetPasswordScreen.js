@@ -2,7 +2,7 @@
  * Created Date: Fri, 6th Nov 2020, 12:51:36 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React from 'react';
@@ -44,7 +44,6 @@ export default function Screen() {
       height: '100%',
       width: '100%',
     },
-
     buttonContainer: {
       width: '100%',
       position: 'absolute',

@@ -2,7 +2,7 @@
  * Created Date: Fri, 6th Nov 2020, 12:50:46 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState} from 'react';
@@ -18,6 +18,7 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -28,6 +29,7 @@ export default function LoginScreen() {
   const [passwordEyeEnabled, setPasswordEyeEnabled] = useState(true);
 
   const {permissionsNeeded} = useUserData();
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => (
@@ -95,18 +97,28 @@ export default function LoginScreen() {
       });
       return;
     }
+    setLoading(true);
 
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
-        const permissionNeeded = await permissionsNeeded();
-
-        if (permissionNeeded) {
-          navigation.navigate(permissionNeeded);
-        } else {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'TabContainer'}],
+        const {attributes} = await Auth.currentAuthenticatedUser();
+        if (attributes.email_verified === false) {
+          navigation.navigate('VerifyChangeEmail', {
+            email: emailAddress,
+            fromLogin: true,
           });
+          cleanValues();
+        } else {
+          const permissionNeeded = await permissionsNeeded();
+
+          if (permissionNeeded) {
+            navigation.navigate(permissionNeeded);
+          } else {
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'TabContainer'}],
+            });
+          }
         }
       })
       .catch((error) => {
@@ -121,9 +133,8 @@ export default function LoginScreen() {
         } else if (error.code === 'NotAuthorizedException') {
           Alert.alert(AuthDict.IncorrectEmailOrPassword);
         }
-      });
-
-    // Intercom.registerIdentifiedUser({userId: '123456'}); // change to current user ID when query available
+      })
+      .finally(() => setLoading(false));
   }
 
   function forgotPassword() {

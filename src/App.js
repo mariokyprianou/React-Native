@@ -25,6 +25,9 @@ import Amplify from 'aws-amplify';
 import {TDGraphQLProvider} from './apollo/Client';
 import UserDataProvider from './hooks/data/UserDataProvider';
 import Secrets from './environment/Secrets';
+import LoadingProvider from './hooks/loading/LoadingProvider';
+import CommonDataProvider from './hooks/data/CommonDataProvider';
+import getTimeZoneOffset from './utils/getTimeZoneOffset';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -115,15 +118,19 @@ const App = () => {
           <ThemeProvider>
             <DataProvider>
               <UserDataProvider>
-                <DictionaryProvider>
-                  <NavigationContainer>
-                    <TDCountdown>
-                      <FormProvider>
-                        <AppContainer />
-                      </FormProvider>
-                    </TDCountdown>
-                  </NavigationContainer>
-                </DictionaryProvider>
+                <CommonDataProvider>
+                  <LoadingProvider>
+                    <DictionaryProvider>
+                      <NavigationContainer>
+                        <TDCountdown>
+                          <FormProvider>
+                            <AppContainer />
+                          </FormProvider>
+                        </TDCountdown>
+                      </NavigationContainer>
+                    </DictionaryProvider>
+                  </LoadingProvider>
+                </CommonDataProvider>
               </UserDataProvider>
             </DataProvider>
           </ThemeProvider>

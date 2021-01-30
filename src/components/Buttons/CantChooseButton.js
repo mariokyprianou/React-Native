@@ -47,8 +47,6 @@ export default function CantChooseButton({onPress}) {
       height: getWidth(20),
       backgroundColor: colors.brownishGrey100,
       borderRadius: radius(14),
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     largerButton: {
       height: getHeight(28),
@@ -68,6 +66,7 @@ export default function CantChooseButton({onPress}) {
       color: colors.white80,
       fontWeight: 'bold',
       fontSize: fontSize(16),
+      textAlign: 'center',
     },
   });
 

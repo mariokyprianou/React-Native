@@ -2,11 +2,11 @@
  * Created Date: Thu, 5th Nov 2020, 16:02:12 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2020 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format} from 'date-fns';
@@ -23,10 +23,12 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
-import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import AllCountries from '../../apollo/queries/AllCountries';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import displayAlert from '../../utils/DisplayAlert';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -44,7 +46,7 @@ export default function RegisterScreen() {
   const {
     params: {programmeId},
   } = useRoute();
-  const {cleanErrors, getValues, updateError} = FormHook();
+  const {cleanErrors, getValues, updateError, updateValue} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const [countriesList, setCountriesList] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
@@ -55,6 +57,7 @@ export default function RegisterScreen() {
   const {getValueByName, cleanValues} = FormHook();
   const selectedCountry = getValueByName('country');
   const [execute] = useMutation(RegisterUser);
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
@@ -63,8 +66,8 @@ export default function RegisterScreen() {
   const gendersData = [
     AuthDict.RegistrationGendersFemale,
     AuthDict.RegistrationGendersMale,
-    AuthDict.RegistrationGendersOther,
-    AuthDict.RegistrationGendersPreferNot,
+    // AuthDict.RegistrationGendersOther,
+    // AuthDict.RegistrationGendersPreferNot,
   ];
 
   useQuery(AllCountries, {
@@ -103,6 +106,10 @@ export default function RegisterScreen() {
     const deviceId = getUniqueId();
     setDeviceUid(deviceId);
   }, []);
+
+  useEffect(() => {
+    updateValue({name: 'gender', value: AuthDict.RegistrationGendersFemale});
+  }, [updateValue]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -187,8 +194,16 @@ export default function RegisterScreen() {
       });
       return;
     }
+    if (termsAndConditions !== 'on') {
+      updateError({
+        name: 'termsAndConditions',
+        value: AuthDict.InvalidTsAndCs,
+      });
+      return;
+    }
+    setLoading(true);
 
-    await execute({
+    execute({
       variables: {
         input: {
           givenName: givenName,
@@ -206,12 +221,19 @@ export default function RegisterScreen() {
       },
     })
       .then((res) => {
+        console.log('res', res);
         if (res.data.registerUser === true) {
+          cleanValues();
           navigation.navigate('EmailVerification', {email, password});
         }
       })
-      .catch((err) => console.log(err));
-    cleanValues();
+      .catch((err) => {
+        displayAlert({
+          text: 'Network request failed',
+        });
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
   }
 
   const handleTermsAndConditionsButton = () => {
@@ -227,14 +249,6 @@ export default function RegisterScreen() {
         variant="white"
         icon="chevron"
         onPress={handleRegister}
-        disabled={termsAndConditions === 'on' ? false : true}
-        // onPress={() => {
-        //   if (Platform.OS === 'android') {
-        //     navigation.navigate('TabContainer');
-        //   } else {
-        //     navigation.navigate('Notifications');
-        //   }
-        // }}
       />
     </View>
   );
@@ -409,14 +423,15 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.render.container}>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        style={styles.render.scrollViewContainer}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scroll}
+        enableOnAndroid={true}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={{marginHorizontal: getWidth(25)}}>
           <Form cells={cells} config={{...cellFormConfig}} />
           <Form cells={cells2} config={config} />
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

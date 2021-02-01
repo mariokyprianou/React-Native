@@ -156,6 +156,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const memberSince = res.profile.createdAt.slice(0, 4);
       const userProfile = {...res.profile, memberSince};
       setUserData(userProfile);
+      console.log(userData.dateOfBirth, '<--date of birth');
     },
     onError: (error) => console.log(error),
   });
@@ -432,6 +433,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
+        paddingLeft: 0,
       },
     },
     {
@@ -449,6 +451,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
+        paddingLeft: 0,
       },
     },
     {
@@ -502,7 +505,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         paddingRight: getWidth(6),
       },
       placeholder:
-        userData.dateOfBirth !== undefined
+        userData.dateOfBirth !== undefined && userData.dateOfBirth !== null
           ? format(parseISO(userData.dateOfBirth), 'dd/MM/yyyy')
           : '',
     },

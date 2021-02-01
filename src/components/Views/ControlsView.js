@@ -57,7 +57,7 @@ export default function ({
   const styles = {
     controlsContainerStyle: {
       alignItems: 'center',
-      top: getHeight(ScreenHeight / 6),
+      top: getHeight(130),
       flexDirection: 'row',
       alignSelf: 'center',
       position: 'absolute',

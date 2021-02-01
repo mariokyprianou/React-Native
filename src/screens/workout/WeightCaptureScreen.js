@@ -53,6 +53,10 @@ export default function WeightCaptureScreen() {
     .map((event) => `${event.reps}`)
     .filter((value, index, self) => self.indexOf(value) === index);
 
+  // const dropdownData = ['30', '45', '60'];
+
+  console.log(dropdownData, '<--- dropdown data');
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
@@ -130,7 +134,7 @@ export default function WeightCaptureScreen() {
         paddingLeft: getWidth(7),
         width: getWidth(75),
         height: getHeight(30),
-        marginBottom: Platform.OS === 'ios' ? getHeight(30) : getHeight(34),
+        marginBottom: Platform.OS === 'ios' ? getHeight(30) : getHeight(36),
       },
       inputStyle: {
         ...textStyles.bold20_black100,

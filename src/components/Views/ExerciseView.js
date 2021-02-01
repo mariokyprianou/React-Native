@@ -115,6 +115,7 @@ export default function ExerciseView(props) {
     setCountDown(true);
 
     if (involvesWeights) {
+      // change ^^ back to exercise.weight (and line 180)
       setSetComplete(true);
     }
 

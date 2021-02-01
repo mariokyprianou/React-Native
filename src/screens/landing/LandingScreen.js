@@ -3,6 +3,7 @@ import {Auth} from 'aws-amplify';
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+import NumbersWheel from '../../components/Infographics/NumbersWheel';
 
 export default function LandingScreen(props) {
   const {reset} = useNavigation();

@@ -254,6 +254,16 @@ export default function DataProvider(props) {
   const [weightChoice, setWeightChoice] = useState('kg'); // fake data, to be replaced with data from back end
   const [selectedWeight, setSelectedWeight] = useState(20);
 
+  const [weightData, setWeightData] = useState([]);
+
+  useEffect(() => {
+    const weightsArray = [];
+    for (let i = 1; i < 201; i++) {
+      weightsArray.push(i);
+    }
+    setWeightData(weightsArray);
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -280,6 +290,7 @@ export default function DataProvider(props) {
       setWeightChoice,
       selectedWeight,
       setSelectedWeight,
+      weightData,
     }),
     [
       programme,
@@ -304,6 +315,7 @@ export default function DataProvider(props) {
       setWeightChoice,
       selectedWeight,
       setSelectedWeight,
+      weightData,
     ],
   );
 

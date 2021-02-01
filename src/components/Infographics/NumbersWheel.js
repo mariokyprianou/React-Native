@@ -1,0 +1,132 @@
+/*
+ * Created Date: Mon, 1st Feb 2021, 22:04:03 pm
+ * Author: Christos Demetriou
+ * Email: christos.demetiou@thedistance.co.uk
+ * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ */
+
+import React, {useRef, useState, useEffect, useLayoutEffect} from 'react';
+import {View, Text} from 'react-native';
+import {ScaleHook} from 'react-native-design-to-component';
+import UseData from '../../hooks/data/UseData';
+import useTheme from '../../hooks/theme/UseTheme';
+import SmoothPicker from 'react-native-smooth-picker';
+
+const NumbersWheel = ({lastWeight = 6}) => {
+  function handleChange(index) {
+    setSelectedWeight(index);
+  }
+
+  const refPicker = useRef(null);
+  const {
+    weightData,
+    weightChoice,
+    selectedWeight,
+    setSelectedWeight,
+  } = UseData();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {textStyles} = useTheme();
+
+  useEffect(() => {
+    setTimeout(function () {
+      setSelectedWeight(lastWeight);
+      refPicker.current.scrollToIndex({
+        animated: true,
+        index: lastWeight,
+        viewOffset: -getWidth(50),
+      });
+    }, 200);
+  }, [lastWeight]);
+
+  const ItemToRender = (
+    {item, index},
+    indexSelected,
+    vertical,
+    weightChoice,
+  ) => {
+    const selected = index === indexSelected;
+    const gap = Math.abs(index - indexSelected);
+
+    let opacity = opacities[gap];
+    if (gap > 3) {
+      opacity = opacities[4];
+    }
+    let size = sizeText[gap];
+    if (gap > 1) {
+      size = sizeText[2];
+    }
+
+    console.log(opacity);
+    const textStyle = {
+      ...textStyles.bold34_black100,
+      opacity,
+      fontSize: fontSize(size),
+    };
+
+    return (
+      <Item
+        selected={selected}
+        textStyle={textStyle}
+        width={getWidth(100)}
+        name={`${item}${weightChoice}`}
+      />
+    );
+  };
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 300,
+      }}>
+      <SmoothPicker
+        refFlatList={refPicker}
+        // initialScrollToIndex={lastWeight}
+        onScrollToIndexFailed={() => {}}
+        keyExtractor={(_, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+        data={weightData}
+        scrollAnimation
+        onSelected={({item, index}) => handleChange(index)}
+        renderItem={(option) =>
+          ItemToRender(option, selectedWeight, false, weightChoice)
+        }
+        selectOnPress={true}
+        magnet={false}
+      />
+    </View>
+  );
+};
+
+const opacities = {
+  0: 1,
+  1: 0.4,
+  2: 0.2,
+  3: 0.2,
+  4: 0.2,
+};
+const sizeText = {
+  0: 34,
+  1: 24,
+  2: 14,
+};
+
+const Item = React.memo(({selected, width, textStyle, name}) => {
+  return (
+    <View
+      style={{
+        width: width,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <Text style={{...textStyle}}>{name}</Text>
+    </View>
+  );
+});
+
+export default NumbersWheel;

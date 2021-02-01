@@ -24,6 +24,9 @@ export default function SetsTable({date}) {
     params: {weightHistory},
   } = useRoute();
 
+  let history = [...weightHistory];
+  const formattedHistory = history.reverse();
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
@@ -63,7 +66,7 @@ export default function SetsTable({date}) {
           <Text style={styles.title}>{date}</Text>
           <FlatList
             ref={listRef}
-            data={weightHistory}
+            data={formattedHistory}
             scrollEnabled={false}
             renderItem={({item}) => (
               <SetTableRow

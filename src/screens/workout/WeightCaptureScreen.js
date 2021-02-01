@@ -53,10 +53,6 @@ export default function WeightCaptureScreen() {
     .map((event) => `${event.reps}`)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-  // const dropdownData = ['30', '45', '60'];
-
-  console.log(dropdownData, '<--- dropdown data');
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
@@ -163,7 +159,12 @@ export default function WeightCaptureScreen() {
           <SetsTable date={date} weightHistory={weightHistory} />
         </View>
         <View style={styles.buttonContainer}>
-          <DefaultButton type="done" variant="white" icon="chevron" />
+          <DefaultButton
+            type="done"
+            variant="white"
+            icon="chevron"
+            onPress={() => navigation.goBack()}
+          />
         </View>
       </View>
     </View>

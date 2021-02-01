@@ -406,15 +406,19 @@ export default function WorkoutHomeScreen() {
                     : null
                 }
                 onPressCard={(workout) => {
-                  // Sort exercises
-                  const newWorkout = {
-                    ...workout,
-                    exercises: workout.exercises
-                      .slice()
-                      .sort((a, b) => a.orderIndex - b.orderIndex),
-                  };
-                  setSelectedWorkout(newWorkout);
-                  navigation.navigate('StartWorkout');
+                  if (weekNumber !== 1) {
+                    return;
+                  } else {
+                    // Sort exercises
+                    const newWorkout = {
+                      ...workout,
+                      exercises: workout.exercises
+                        .slice()
+                        .sort((a, b) => a.orderIndex - b.orderIndex),
+                    };
+                    setSelectedWorkout(newWorkout);
+                    navigation.navigate('StartWorkout');
+                  }
                 }}
               />
             </View>

@@ -54,7 +54,6 @@ export default function IconTextView({
       width: '100%',
       alignSelf: 'center',
       justifyContent: 'space-evenly',
-      marginStart: 0,
     },
     iconTextContainer: {
       flexDirection: 'row',
@@ -65,9 +64,6 @@ export default function IconTextView({
     },
     leftIconContainer: {
       marginRight: getWidth(33),
-    },
-    leftCompleteContainer: {
-      // marginRight: getWidth(42),
     },
     icon: {
       tintColor:
@@ -139,11 +135,7 @@ export default function IconTextView({
   if (type === 'workoutComplete') {
     return (
       <View style={{...styles.container, ...styles.completeContainer}}>
-        <View
-          style={{
-            ...styles.iconTextContainer,
-            ...styles.leftCompleteContainer,
-          }}>
+        <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
             <TDIcon
               input={timeIcon}
@@ -159,11 +151,7 @@ export default function IconTextView({
               color === 'grey' ? styles.greyText : styles.whiteText
             }>{` ${WorkoutDict.Mins}`}</Text>
         </View>
-        <View
-          style={{
-            ...styles.iconTextContainer,
-            ...styles.leftCompleteContainer,
-          }}>
+        <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
             <TDIcon
               input={repsIcon}

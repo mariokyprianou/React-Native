@@ -101,7 +101,7 @@ export default function WeekCompleteScreen() {
         <View style={styles.buttonContainer}>
           <View style={styles.infoIconsContainer}>
             <IconTextView
-              type="workoutComplete"
+              type="workoutsComplete"
               duration={totalDuration}
               reps={totalReps}
               sets={totalSets}

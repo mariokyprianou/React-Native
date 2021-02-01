@@ -18,7 +18,7 @@ import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {format} from 'date-fns';
 
-const fakeImage = require('../../../assets/fake2.png');
+const fakeImage = require('../../../assets/congratulationsBackground.png');
 
 export default function StayTuned() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -44,14 +44,10 @@ export default function StayTuned() {
     ),
   });
 
+  const backgroundImage = {uri: image};
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    imageContainer: {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      top: 0,
-    },
     image: {
       width: '100%',
       height: '100%',
@@ -101,7 +97,7 @@ export default function StayTuned() {
   if (type === 'workoutsComplete') {
     return (
       <View>
-        <ImageBackground source={{uri: image}} style={styles.image}>
+        <ImageBackground source={backgroundImage} style={styles.image}>
           <FadingBottomView color="black" />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>

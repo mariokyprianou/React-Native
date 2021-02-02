@@ -65,7 +65,6 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
-    console.log(programme, '<---prog');
     if (programme) {
       const hasRemaining = programme.currentWeek.workouts.find(
         (workout) => !workout.completedAt,

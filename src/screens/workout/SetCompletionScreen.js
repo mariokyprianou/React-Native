@@ -36,23 +36,6 @@ export default function SetCompletionScreen({
   const [addWeight] = useMutation(AddExerciseWeight);
   const {selectedWeight} = UseData();
 
-  const {remaining, remainingMS, toggle, active, reset} = useTimer({
-    timer: restTime,
-  });
-
-  useEffect(() => {
-    reset();
-    toggle();
-  }, []);
-
-  useEffect(() => {
-    if (remainingMS === 0) {
-      setTimeout(() => {
-        setSetComplete(false);
-      }, 1000);
-    }
-  }, [remainingMS]);
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     card: {
@@ -73,10 +56,6 @@ export default function SetCompletionScreen({
       ...textStyles.bold22_black100,
       textAlign: 'center',
       marginBottom: restTime === 0 ? 0 : getHeight(20),
-    },
-    timerText: {
-      textAlign: 'center',
-      ...textStyles.bold34_black100,
     },
     text: {
       ...textStyles.regular15_brownishGrey100,
@@ -124,10 +103,7 @@ export default function SetCompletionScreen({
       <View style={styles.contentContainer}>
         <TouchableOpacity onPress={() => setSetComplete(false)}>
           {restTime ? (
-            <>
-              <Text style={styles.title}>{WorkoutDict.GreatJob}</Text>
-              <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
-            </>
+            <TimerView title={WorkoutDict.GreatJob} restTime={restTime} />
           ) : (
             <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
           )}
@@ -146,5 +122,46 @@ export default function SetCompletionScreen({
         />
       </View>
     </View>
+  );
+}
+
+function TimerView(props) {
+  const {textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+
+  const {remaining, remainingMS, toggle, active, reset} = useTimer({
+    timer: props.restTime,
+  });
+
+  const styles = {
+    title: {
+      ...textStyles.bold22_black100,
+      textAlign: 'center',
+      marginBottom: props.restTime === 0 ? 0 : getHeight(20),
+    },
+    timerText: {
+      textAlign: 'center',
+      ...textStyles.bold34_black100,
+    },
+  };
+
+  useEffect(() => {
+    reset();
+    toggle();
+  }, []);
+
+  useEffect(() => {
+    if (remainingMS === 0) {
+      setTimeout(() => {
+        setSetComplete(false);
+      }, 1000);
+    }
+  }, [remainingMS]);
+
+  return (
+    <>
+      <Text style={styles.title}>{props.title}</Text>
+      <Text style={styles.timerText}>{msToHMS(remainingMS)}</Text>
+    </>
   );
 }

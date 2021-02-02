@@ -153,10 +153,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   useQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const memberSince = res.profile.createdAt.slice(0, 4);
-      const userProfile = {...res.profile, memberSince};
-      setUserData(userProfile);
-      console.log(userData.dateOfBirth, '<--date of birth');
+      if (res) {
+        const memberSince = res.profile.createdAt.slice(0, 4);
+        const userProfile = {...res.profile, memberSince};
+        setUserData(userProfile);
+        console.log(userData, '<--USER DATA');
+      }
     },
     onError: (error) => console.log(error),
   });

@@ -149,7 +149,7 @@ export default function DataProvider(props) {
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already
-    if (wasLastWorkoutToday()) {
+    if (wasLastWorkoutToday() === true) {
       startDate = addDays(startDate, 1);
     }
 

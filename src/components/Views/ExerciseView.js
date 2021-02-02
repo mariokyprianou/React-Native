@@ -32,7 +32,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, notes} = props;
+  const {exercise, index, notes, setEnableScroll} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -87,9 +87,17 @@ export default function ExerciseView(props) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
-  const involvesWeights = true; //<----- add back in to check weight capture screen
+  const involvesWeights = true; //<----- use to check weight capture screen
 
   const onSetCompleted = (completedIndex) => {
+    if (completedIndex + 1 === sets.length) {
+      setEnableScroll(true);
+      setCurrentSet(sets.length);
+    } else {
+      setCurrentSet(currentSet + 1);
+    }
+
+    // Update Sets
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
         setRestTime((it.restTime || 0) * 1000);
@@ -103,25 +111,22 @@ export default function ExerciseView(props) {
           state: 'active',
         };
       }
-
       return it;
     });
-
-    // Cool down and move to next set
-    if (currentSet < sets.length) {
-      setCurrentSet(currentSet + 1);
-    }
-
-    setCountDown(true);
-
-    if (involvesWeights) {
-      // change ^^ back to exercise.weight (and line 180)
-      setSetComplete(true);
-    }
-
-    // Update Sets
     setSets(newSets);
 
+    // start rest timer
+    setCountDown(true);
+
+    // show set completion modal with weights if applicable
+    if (involvesWeights) {
+      // TO DO change ^^ back to exercise.weight (and line 180)
+      setSetComplete(true);
+    }
+  };
+
+  const finishWorkout = () => {
+    // redirect to workout complete screen if clicking off the final rest timer:
     if (
       currentSet === sets.length &&
       index === selectedWorkout.exercises.length - 1
@@ -132,6 +137,7 @@ export default function ExerciseView(props) {
 
   const onCancelTimer = () => {
     setCountDown(false);
+    finishWorkout();
   };
 
   const onFinishTimer = () => {
@@ -139,7 +145,8 @@ export default function ExerciseView(props) {
   };
 
   const onExerciseCompleted = () => {
-    onSetCompleted(sets.length);
+    onSetCompleted(sets.length - 1);
+    setEnableScroll(true);
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -230,6 +237,7 @@ export default function ExerciseView(props) {
         <SetCompletionScreen
           restTime={msToHMS(restTime)}
           setSetComplete={setSetComplete}
+          finishWorkout={finishWorkout}
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}
           exercise={exercise.id}

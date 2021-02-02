@@ -412,7 +412,7 @@ export default function WorkoutHomeScreen() {
                     return;
                   }
 
-                  if (wasLastWorkoutToday()) {
+                  if (wasLastWorkoutToday() === true) {
                     DisplayAlert({
                       text: WorkoutDict.WorkoutCompetedWarningText,
                     });

@@ -183,6 +183,7 @@ export default function WorkoutCompleteScreen() {
               reps={stats.reps}
               sets={stats.sets}
               color="white"
+              alignLeft={true}
             />
           </View>
         </View>

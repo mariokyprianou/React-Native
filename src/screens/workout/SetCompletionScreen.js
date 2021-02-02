@@ -22,6 +22,7 @@ import UseData from '../../hooks/data/UseData';
 export default function SetCompletionScreen({
   restTime,
   setSetComplete,
+  finishWorkout,
   setReps,
   setNumber,
   exercise,
@@ -112,6 +113,7 @@ export default function SetCompletionScreen({
     })
       .then((res) => {
         setSetComplete(false);
+        finishWorkout();
       })
       .catch((err) => console.log(err, '<---error on adding weight'));
   }

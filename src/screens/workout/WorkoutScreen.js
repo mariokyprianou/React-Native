@@ -28,6 +28,7 @@ export default function WorkoutScreen() {
   } = useData();
 
   const [offset, setOffset] = useState(0);
+  const [enableScroll, setEnableScroll] = useState(false);
 
   navigation.setOptions({
     header: () => (
@@ -55,6 +56,7 @@ export default function WorkoutScreen() {
   function handleIndex(newOffset) {
     if (newOffset > offset) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
+      setEnableScroll(false);
     } else {
       if (currentExerciseIndex > 0) {
         setCurrentExerciseIndex(currentExerciseIndex - 1);
@@ -74,6 +76,7 @@ export default function WorkoutScreen() {
     <View>
       <View style={styles.headerBorder} />
       <ScrollView
+        scrollEnabled={enableScroll}
         keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={20} //how often we update the position of the indicator bar
@@ -89,6 +92,7 @@ export default function WorkoutScreen() {
             {...screen}
             index={index}
             workoutFinished={workoutFinished}
+            setEnableScroll={setEnableScroll}
           />
         ))}
       </ScrollView>

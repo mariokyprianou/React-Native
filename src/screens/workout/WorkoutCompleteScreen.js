@@ -175,7 +175,7 @@ export default function WorkoutCompleteScreen() {
       {
         text: ProfileDict.Ok,
         onPress: async () => {
-          navigation.goBack();
+          navigation.navigate('WorkoutHome');
         },
       },
     ]);

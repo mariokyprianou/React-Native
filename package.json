@@ -67,6 +67,7 @@
     "react-native-share": "^4.1.0",
     "react-native-slide-charts": "^1.0.4",
     "react-native-slider": "^0.11.0",
+    "react-native-smooth-picker": "^1.1.3",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.2.0",
     "react-native-spring-scrollview": "^2.0.23",
@@ -90,11 +91,10 @@
     "the-core-ui-module-tdforms": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdforms.git#v1.1.8",
     "the-core-ui-module-tdlist": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdlist.git",
     "the-core-ui-module-tdmediamanager": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdmediamanager.git#v1.0.0",
+    "the-core-ui-module-tdnotifications": "https://bitbucket.org/thedistance/the-core-ui-module-tdnotifications.git#notifications.v.3.4.0",
     "the-core-ui-module-tdsettings": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-module-tdsettings.git",
     "the-core-ui-module-tdslideshow": "git+ssh://git@bitbucket.org/thedistance/the-core-ui-module-tdslideshow.git",
-    "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git",
-        "the-core-ui-module-tdnotifications": "https://bitbucket.org/thedistance/the-core-ui-module-tdnotifications.git#notifications.v.3.4.0"
-
+    "the-core-ui-theme-base": "git+ssh://git@bitbucket.org:thedistance/the-core-ui-theme-base.git"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",

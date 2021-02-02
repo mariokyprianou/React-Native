@@ -12,7 +12,13 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
 import AsyncStorage from '@react-native-community/async-storage';
-import {differenceInDays, addDays, format, parseISO} from 'date-fns';
+import {
+  differenceInDays,
+  differenceInCalendarDays,
+  addDays,
+  format,
+  parseISO,
+} from 'date-fns';
 import {Auth} from 'aws-amplify';
 
 import {
@@ -129,9 +135,7 @@ export default function DataProvider(props) {
   }, []);
 
   // Structure current week UI
-  const structureWeek = useCallback((workouts, storedDays) => {
-    const now = new Date();
-
+  const structureWeek = useCallback(async (workouts, storedDays) => {
     // PAST
     let pastWorkouts = getPastWorkouts(workouts);
     let pastRestDays = getStoredPastRestDays(storedDays);
@@ -142,11 +146,18 @@ export default function DataProvider(props) {
     let futureWorkouts = workouts.filter((it) => !it.completedAt);
     const futureRestDays = getStoredFutureRestDays(storedDays);
 
+    let startDate = new Date();
+
+    // Move to next day if today has a completed workout already
+    if (wasLastWorkoutToday()) {
+      startDate = addDays(startDate, 1);
+    }
+
     // Add future dates
     const remaining = 7 - week.length;
 
     for (let i = 0; i < remaining; i++) {
-      const date = addDays(now, i);
+      const date = addDays(startDate, i);
 
       const restDay = getRestDay(futureRestDays, date);
 
@@ -254,6 +265,27 @@ export default function DataProvider(props) {
   const [weightChoice, setWeightChoice] = useState('kg'); // fake data, to be replaced with data from back end
   const [selectedWeight, setSelectedWeight] = useState(20);
 
+  const [weightData, setWeightData] = useState([]);
+
+  useEffect(() => {
+    const weightsArray = [];
+    for (let i = 1; i < 201; i++) {
+      weightsArray.push(i);
+    }
+    setWeightData(weightsArray);
+  }, []);
+
+  const wasLastWorkoutToday = useCallback(async () => {
+    let lastDate = await AsyncStorage.getItem('@LAST_WORKOUT_DATE');
+    if (lastDate) {
+      const firstDate = new Date();
+      lastDate = parseISO(JSON.parse(lastDate));
+      return lastDate.setHours(0, 0, 0, 0) === firstDate.setHours(0, 0, 0, 0);
+    } else {
+      return false;
+    }
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -280,6 +312,8 @@ export default function DataProvider(props) {
       setWeightChoice,
       selectedWeight,
       setSelectedWeight,
+      weightData,
+      wasLastWorkoutToday,
     }),
     [
       programme,
@@ -304,6 +338,8 @@ export default function DataProvider(props) {
       setWeightChoice,
       selectedWeight,
       setSelectedWeight,
+      weightData,
+      wasLastWorkoutToday,
     ],
   );
 

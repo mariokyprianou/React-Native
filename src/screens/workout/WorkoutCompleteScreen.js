@@ -24,6 +24,7 @@ import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -145,6 +146,11 @@ export default function WorkoutCompleteScreen() {
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
+          AsyncStorage.setItem(
+            '@LAST_WORKOUT_DATE',
+            JSON.stringify(new Date()),
+          );
+
           navigation.reset({
             index: 0,
             routes: [{name: 'TabContainer'}],

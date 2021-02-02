@@ -308,6 +308,9 @@ const enGB = {
 
     Today: 'TODAY',
     WeightsTitle: 'Weights',
+
+    WorkoutCompetedWarningText:
+      'Oops! You have already completed a workout for today.',
   },
 
   HelpMeChooseDict: {

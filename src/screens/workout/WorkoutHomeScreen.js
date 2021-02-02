@@ -25,6 +25,7 @@ import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {differenceInDays, addDays, format} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
+import DisplayAlert from '../../utils/DisplayAlert';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -53,6 +54,7 @@ export default function WorkoutHomeScreen() {
     updateConsecutiveWorkouts,
     getConsecutiveWorkouts,
     clearConsecutiveDays,
+    wasLastWorkoutToday,
   } = useData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
@@ -406,6 +408,12 @@ export default function WorkoutHomeScreen() {
                     : null
                 }
                 onPressCard={(workout) => {
+                  if (wasLastWorkoutToday()) {
+                    DisplayAlert({
+                      text: WorkoutDict.WorkoutCompetedWarningText,
+                    });
+                    return;
+                  }
                   // Sort exercises
                   const newWorkout = {
                     ...workout,

@@ -407,14 +407,14 @@ export default function WorkoutHomeScreen() {
                     ? 'complete'
                     : null
                 }
-                onPressCard={(workout) => {
+                onPressCard={async (workout) => {
                   if (weekNumber !== 1) {
                     return;
                   }
-
-                  if (wasLastWorkoutToday() === true) {
+                  const wasWorkoutToday = await wasLastWorkoutToday();
+                  if (wasWorkoutToday === true) {
                     DisplayAlert({
-                      text: WorkoutDict.WorkoutCompetedWarningText,
+                      title: WorkoutDict.WorkoutCompetedWarningText,
                     });
                     return;
                   }

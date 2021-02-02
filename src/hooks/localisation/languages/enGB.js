@@ -311,6 +311,7 @@ const enGB = {
 
     WorkoutCompetedWarningText:
       'Oops! You have already completed a workout for today.',
+    WorkoutGoBackWarning: 'If you go back you will lose your workout progress',
   },
 
   HelpMeChooseDict: {

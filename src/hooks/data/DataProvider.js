@@ -149,12 +149,14 @@ export default function DataProvider(props) {
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already
-    if (wasLastWorkoutToday() === true) {
+    const lastWorkoutToday = await wasLastWorkoutToday();
+    if (lastWorkoutToday === true) {
       startDate = addDays(startDate, 1);
     }
 
     // Add future dates
     const remaining = 7 - week.length;
+    wasLastWorkoutToday();
 
     for (let i = 0; i < remaining; i++) {
       const date = addDays(startDate, i);
@@ -280,9 +282,7 @@ export default function DataProvider(props) {
     if (lastDate) {
       const firstDate = new Date();
       lastDate = parseISO(JSON.parse(lastDate));
-      return lastDate.setHours(0, 0, 0, 0) === firstDate.setHours(0, 0, 0, 0);
-    } else {
-      return false;
+      return differenceInCalendarDays(lastDate, firstDate) === 0;
     }
   }, []);
 

@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, Image, ScrollView, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -31,7 +31,7 @@ export default function WorkoutCompleteScreen() {
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
+  const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
 
   const {selectedWorkout, workoutTime} = UseData();
@@ -44,7 +44,13 @@ export default function WorkoutCompleteScreen() {
   const [stats, setStats] = useState({});
 
   navigation.setOptions({
-    header: () => <Header title={WorkoutDict.WorkoutComplete} showModalCross />,
+    header: () => (
+      <Header
+        title={WorkoutDict.WorkoutComplete}
+        showModalCross
+        rightAction={checkGoBack}
+      />
+    ),
   });
 
   useEffect(() => {
@@ -158,6 +164,21 @@ export default function WorkoutCompleteScreen() {
         }
       })
       .catch((err) => console.log(err));
+  }
+
+  function checkGoBack() {
+    Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
+      {
+        text: ProfileDict.Cancel,
+        style: 'cancel',
+      },
+      {
+        text: ProfileDict.Ok,
+        onPress: async () => {
+          navigation.goBack();
+        },
+      },
+    ]);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

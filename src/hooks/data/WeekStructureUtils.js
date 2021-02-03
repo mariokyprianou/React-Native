@@ -94,7 +94,7 @@ const getWeekArrayWithPastDays = (pastWorkouts, pastRestDays) => {
 
   // Sort and add past dates
   let past = pastWorkouts.concat(pastRestDays);
-  past = past.sort((a, b) => a.exactDate < b.exactDate);
+  past = past.sort((a, b) => a.exactDate > b.exactDate);
   past.map((it) => {
     week.push(it);
   });

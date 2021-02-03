@@ -135,10 +135,9 @@ export default function DataProvider(props) {
   }, []);
 
   // Structure current week UI
-  const structureWeek = useCallback(async (workouts, storedDays) => {
+  const structureWeek = useCallback((workouts, storedDays) => {
     // PAST
     let pastWorkouts = getPastWorkouts(workouts);
-    console.log(pastWorkouts, '<----PAST?');
     let pastRestDays = getStoredPastRestDays(storedDays);
 
     let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
@@ -150,7 +149,7 @@ export default function DataProvider(props) {
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already
-    const lastWorkoutToday = await wasLastWorkoutToday(workouts);
+    const lastWorkoutToday = wasLastWorkoutToday(workouts);
     if (lastWorkoutToday === true) {
       startDate = addDays(startDate, 1);
     }
@@ -276,25 +275,17 @@ export default function DataProvider(props) {
     setWeightData(weightsArray);
   }, []);
 
-  const wasLastWorkoutToday = useCallback(async (workouts) => {
-    // const today = new Date();
-    // const wasToday = workouts.map(
-    //   (workout) => console.log(workout.completedAt),
-    //   // differenceInCalendarDays(workout.completedAt, today),
-    // );
-    // console.log(wasToday, '<----BOOL');
+  const wasLastWorkoutToday = useCallback((workouts) => {
+    const today = new Date();
+    const wasToday = workouts.find((workout) => {
+      console.log(workout.completedAt);
+      return (
+        workout.completedAt &&
+        differenceInCalendarDays(parseISO(workout.completedAt), today) === 0
+      );
+    });
 
-    // return false;
-
-    let lastDate = await AsyncStorage.getItem('@LAST_WORKOUT_DATE');
-
-    if (lastDate) {
-      const firstDate = new Date();
-      lastDate = parseISO(JSON.parse(lastDate));
-      return differenceInCalendarDays(lastDate, firstDate) === 0;
-    } else {
-      return false;
-    }
+    return wasToday !== undefined ? true : false;
   }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **

@@ -153,11 +153,6 @@ export default function WorkoutCompleteScreen() {
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
-          AsyncStorage.setItem(
-            '@LAST_WORKOUT_DATE',
-            JSON.stringify(new Date()),
-          );
-
           navigation.reset({
             index: 0,
             routes: [{name: 'TabContainer'}],

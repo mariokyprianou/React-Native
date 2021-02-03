@@ -131,7 +131,7 @@ export default function WorkoutHomeScreen() {
         setWorkoutsToDisplay(nextWeek);
       }
     }
-  }, [weekNumber, currentWeek]);
+  }, [weekNumber, programme]);
 
   async function checkLastWeek(previousWorkoutDates) {
     const {consecutiveWorkouts, lastDate} = await getConsecutiveWorkouts();
@@ -199,7 +199,9 @@ export default function WorkoutHomeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
-    if (!programme) return;
+    if (!programme) {
+      return;
+    }
 
     const firstDayNextWeek = addDays(
       new Date(programme.currentWeek.workouts[0].completedAt),
@@ -413,7 +415,10 @@ export default function WorkoutHomeScreen() {
                   if (weekNumber !== 1) {
                     return;
                   }
-                  const wasWorkoutToday = await wasLastWorkoutToday();
+
+                  const wasWorkoutToday = wasLastWorkoutToday(
+                    programme.currentWeek.workouts,
+                  );
                   if (wasWorkoutToday === true) {
                     DisplayAlert({
                       title: WorkoutDict.WorkoutCompetedWarningText,

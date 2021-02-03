@@ -51,6 +51,7 @@ export default function NotificationPermissionScreen() {
       analytics: preferences.analytics,
       downloadQuality: preferences.downloadQuality,
       notifications: enabled,
+      weightPreference: preferences.weightPreference,
     };
 
     setPreferences(newPreferences);

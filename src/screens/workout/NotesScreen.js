@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -20,6 +20,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useRoute} from '@react-navigation/core';
 import {useMutation} from '@apollo/client';
 import UpdateExerciseNote from '../../apollo/mutations/UpdateExerciseNote';
+import useData from '../../hooks/data/UseData';
 
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -33,8 +34,14 @@ export default function NotesScreen() {
   let newStyle = {formHeight};
   const navigation = useNavigation();
   const {
-    params: {notes, id, description},
+    params: {id, description},
   } = useRoute();
+  const {selectedWorkout, currentExerciseIndex} = useData();
+  const [savedNotes, setSavedNotes] = useState('');
+
+  useEffect(() => {
+    setSavedNotes(selectedWorkout.exercises[currentExerciseIndex].notes);
+  }, [selectedWorkout, currentExerciseIndex]);
 
   navigation.setOptions({
     header: () => <Header title={WorkoutDict.Notes} showModalCross />,
@@ -90,8 +97,6 @@ export default function NotesScreen() {
       },
     })
       .then((res) => {
-        console.log(res, '<---notes res');
-        cleanValues();
         navigation.goBack();
       })
       .catch((err) => console.log(err, '<---error on adding note'));
@@ -105,7 +110,7 @@ export default function NotesScreen() {
       multiline: true,
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
-      placeholder: '',
+      defaultValue: savedNotes,
       ...cellFormStyles,
       inputContainerStyle: {
         height: [newStyle][formHeight],
@@ -126,9 +131,7 @@ export default function NotesScreen() {
         <View style={styles.contentContainer}>
           <Text style={styles.description}>{description}</Text>
           <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
-          {notes &&
-            notes.map((note) => <Text style={styles.notes}>{note}</Text>)}
-          <Spacer height={30} />
+          <Spacer height={15} />
           <Form cells={cells} config={config} />
         </View>
       </KeyboardAwareScrollView>

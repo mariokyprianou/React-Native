@@ -50,7 +50,6 @@ export default function ExerciseView(props) {
   const [setComplete, setSetComplete] = useState(false);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
-  console.log(props, '<----- EX VIEW PROPS');
   useEffect(() => {
     let sets = props.sets;
 

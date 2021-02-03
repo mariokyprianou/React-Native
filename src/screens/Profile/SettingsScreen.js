@@ -82,6 +82,9 @@ const SettingsScreen = ({}) => {
   const [downloadQuality, setDownloadQuality] = useState(
     preferences.downloadQuality || 'HIGH',
   );
+  const [weightPref, setWeightPref] = useState(
+    preferences.weightPreference || 'KG',
+  );
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
@@ -100,6 +103,7 @@ const SettingsScreen = ({}) => {
         setPrefErrorReports(res.preferences.errorReports);
         setPrefAnalytics(res.preferences.analytics);
         setDownloadQuality(res.preferences.downloadQuality);
+        setWeightPref(res.preferences.weightPreference);
       });
     }
   }, []);
@@ -171,6 +175,7 @@ const SettingsScreen = ({}) => {
       errorReports: prefErrorReports,
       analytics: prefAnalytics,
       downloadQuality: newDownloadQuality,
+      weightPreference: weightPref,
     };
 
     const newUserData = {
@@ -241,11 +246,16 @@ const SettingsScreen = ({}) => {
     SettingsDict.DownloadQualityLow,
   ];
 
-  const weightDropdownData = [SettingsDict.WeightKgs, SettingsDict.WeightLbs];
-
   const downloadQualityMap = {
     HIGH: SettingsDict.DownloadQualityHigh,
     LOW: SettingsDict.DownloadQualityLow,
+  };
+
+  const weightDropdownData = [SettingsDict.WeightKgs, SettingsDict.WeightLbs];
+
+  const weightDropdownMap = {
+    KG: SettingsDict.WeightKgs,
+    LB: SettingsDict.WeightLbs,
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -312,7 +322,7 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: weightDropdownData[0],
+      placeholder: weightDropdownMap[weightPref],
       data: weightDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,

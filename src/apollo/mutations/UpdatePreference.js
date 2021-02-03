@@ -16,6 +16,7 @@ export default gql`
       errorReports
       analytics
       downloadQuality
+      weightPreference
     }
   }
 `;

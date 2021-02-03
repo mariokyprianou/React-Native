@@ -32,7 +32,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, notes, setEnableScroll} = props;
+  const {exercise, index, setEnableScroll} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -208,7 +208,6 @@ export default function ExerciseView(props) {
             }}
             onPress={() =>
               navigation.navigate('Notes', {
-                notes: notes,
                 id: exercise.id,
                 description: exercise.coachingTips,
               })

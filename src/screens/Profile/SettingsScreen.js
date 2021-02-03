@@ -159,7 +159,12 @@ const SettingsScreen = ({}) => {
   const updateSettingsAndNavigate = async () => {
     AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
 
-    const {formDownloadsQuality, formTimeZone, formLanguage} = getValues();
+    const {
+      formDownloadsQuality,
+      formTimeZone,
+      formLanguage,
+      formWeightMeasurement,
+    } = getValues();
 
     const language = formLanguage || getLanguage();
     setLanguage(language);
@@ -169,19 +174,30 @@ const SettingsScreen = ({}) => {
         (key) => downloadQualityMap[key] === formDownloadsQuality,
       ) || downloadQuality;
 
+    const newWeightPref =
+      Object.keys(weightDropdownMap).find(
+        (key) => weightDropdownMap[key] === formWeightMeasurement,
+      ) || weightPref;
+
     const newPreferences = {
       notifications: marketingPrefNotifications,
       emails: marketingPrefEmail,
       errorReports: prefErrorReports,
       analytics: prefAnalytics,
       downloadQuality: newDownloadQuality,
-      weightPreference: weightPref,
+      weightPreference: newWeightPref,
     };
 
     const newUserData = {
-      ...userData,
-      timeZone: formTimeZone,
+      familyName: userData.familyName,
+      givenName: userData.givenName,
+      gender: userData.gender,
+      dateOfBirth: userData.dateOfBirth,
+      country: userData.country,
+      region: userData.region,
+      // timeZone: formTimeZone,
     };
+
     updateProfile({
       variables: {
         input: {
@@ -211,7 +227,6 @@ const SettingsScreen = ({}) => {
           navigation.goBack();
         }
       })
-
       .catch((err) => {
         displayAlert({
           text: 'Unable to update settings',

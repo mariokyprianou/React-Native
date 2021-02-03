@@ -36,6 +36,7 @@ export default function AnalyticsPermissionScreen() {
       notifications: preferences.notifications,
       errorReports: enabled,
       analytics: enabled,
+      weightPreference: preferences.weightPreference,
     };
     setPreferences(newPreferences);
     await AsyncStorage.setItem('@ANALYTICS_ASKED', 'true')

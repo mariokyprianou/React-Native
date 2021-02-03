@@ -199,20 +199,18 @@ export default function DataProvider(props) {
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
-      if (res) {
-        const data = res.getProgramme;
+      const data = res.getProgramme;
 
-        const numberOfWorkouts = data.currentWeek.workouts.length;
-        let storedDays = await getStoredDays(numberOfWorkouts);
+      const numberOfWorkouts = data.currentWeek.workouts.length;
+      let storedDays = await getStoredDays(numberOfWorkouts);
 
-        structureWeek(
-          data.currentWeek.workouts
-            .slice()
-            .sort((a, b) => a.orderIndex > b.orderIndex),
-          storedDays,
-        );
-        setProgramme(data);
-      }
+      structureWeek(
+        data.currentWeek.workouts
+          .slice()
+          .sort((a, b) => a.orderIndex > b.orderIndex),
+        storedDays,
+      );
+      setProgramme(data);
     },
     onError: (error) => console.log(error),
   });

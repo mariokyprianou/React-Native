@@ -318,6 +318,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           onPress: async () => {
             await Auth.signOut()
               .then(() => {
+                setUserData({});
+
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

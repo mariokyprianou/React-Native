@@ -23,7 +23,6 @@ import {Auth} from 'aws-amplify';
 
 import {
   initializeRestDays,
-  getPastWorkouts,
   getStoredPastRestDays,
   getStoredFutureRestDays,
   getWeekArrayWithPastDays,
@@ -136,8 +135,27 @@ export default function DataProvider(props) {
 
   // Structure current week UI
   const structureWeek = useCallback((workouts, storedDays) => {
+    let workoutIndex = 0;
+
     // PAST
-    let pastWorkouts = getPastWorkouts(workouts);
+    let pastWorkouts = workouts.filter((it) => it.completedAt);
+    pastWorkouts = pastWorkouts.map((workout) => {
+      const formattedDate = format(
+        parseISO(workout.completedAt),
+        'iiii, do LLL',
+      );
+
+      workoutIndex = workoutIndex + 1;
+
+      return {
+        ...workout,
+        name: workout.name.toUpperCase(),
+        date: formattedDate,
+        exactDate: workout.completedAt,
+        day: workoutIndex,
+      };
+    });
+
     let pastRestDays = getStoredPastRestDays(storedDays);
 
     let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
@@ -169,12 +187,14 @@ export default function DataProvider(props) {
         const formattedDate = format(date, 'iiii, do LLL');
 
         if (workout) {
+          workoutIndex = workoutIndex + 1;
+
           workout = {
             ...workout,
             name: workout.name.toUpperCase(),
             date: formattedDate,
             exactDate: date,
-            day: workout.orderIndex,
+            day: workoutIndex,
           };
           week.push(workout);
         } else {

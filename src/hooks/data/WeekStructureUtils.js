@@ -36,21 +36,6 @@ const initializeRestDays = (numberOfWorkouts) => {
   return storedDays;
 };
 
-const getPastWorkouts = (workouts) => {
-  let pastWorkouts = workouts.filter((it) => it.completedAt);
-  pastWorkouts = pastWorkouts.map((workout) => {
-    const formattedDate = format(parseISO(workout.completedAt), 'iiii, do LLL');
-    return {
-      ...workout,
-      name: workout.name.toUpperCase(),
-      date: formattedDate,
-      exactDate: workout.completedAt,
-      day: workout.orderIndex,
-    };
-  });
-  return pastWorkouts;
-};
-
 const getStoredPastRestDays = (storedDays) => {
   const now = new Date();
 
@@ -102,7 +87,6 @@ const getWeekArrayWithPastDays = (pastWorkouts, pastRestDays) => {
 };
 
 export {initializeRestDays};
-export {getPastWorkouts};
 export {getStoredPastRestDays};
 export {getStoredFutureRestDays};
 export {getWeekArrayWithPastDays};

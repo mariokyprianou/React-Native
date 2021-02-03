@@ -276,7 +276,7 @@ export default function WorkoutHomeScreen() {
     let index = 0;
     const data = newList.filter((it) => !it.isRestDay);
     const newOrder = data.map((it) => {
-      index = index + 1;
+      index = index;
       return {
         index: index,
         id: it.id,

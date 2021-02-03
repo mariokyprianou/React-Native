@@ -50,7 +50,7 @@ export default function ExerciseView(props) {
   const [setComplete, setSetComplete] = useState(false);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
-
+  console.log(props, '<----- EX VIEW PROPS');
   useEffect(() => {
     let sets = props.sets;
 
@@ -208,7 +208,11 @@ export default function ExerciseView(props) {
               ...styles.weightTouchStyle,
             }}
             onPress={() =>
-              navigation.navigate('Notes', {notes: notes, id: exercise.id})
+              navigation.navigate('Notes', {
+                notes: notes,
+                id: exercise.id,
+                description: exercise.coachingTips,
+              })
             }>
             <Image source={notesIcon} />
             <Text style={styles.extraTextStyle}>{WorkoutDict.NotesText}</Text>

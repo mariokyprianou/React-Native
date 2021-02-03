@@ -33,11 +33,8 @@ export default function NotesScreen() {
   let newStyle = {formHeight};
   const navigation = useNavigation();
   const {
-    params: {notes, id},
+    params: {notes, id, description},
   } = useRoute();
-
-  const description =
-    'Start the timer and see how many 4kg squats you can do in 60 seconds!'; // replace once backend fixed
 
   navigation.setOptions({
     header: () => <Header title={WorkoutDict.Notes} showModalCross />,

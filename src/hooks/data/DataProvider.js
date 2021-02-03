@@ -199,7 +199,6 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
-      console.log(data.currentWeek, '<---- PROG DATA');
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 

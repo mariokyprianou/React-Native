@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-import {format} from 'date-fns';
+import {format, parse, parseISO} from 'date-fns';
 import {useQuery, useMutation} from '@apollo/client';
 import TDIcon from 'the-core-ui-component-tdicon';
 import TimeZone from 'react-native-timezone';
@@ -203,20 +203,24 @@ export default function RegisterScreen() {
     }
     setLoading(true);
 
+    const data = {
+      givenName: givenName,
+      familyName: familyName,
+      email: email,
+      password: password,
+      gender: gender ? gender.toLowerCase() : null,
+      dateOfBirth: new Date(dateOfBirth),
+      country: country ? countryID : null,
+      region: selectedCountry === 'India' ? regionLookup[region] : null,
+      deviceUDID: deviceUid,
+      timeZone: deviceTimeZone,
+      programme: programmeId,
+    };
+
     execute({
       variables: {
         input: {
-          givenName: givenName,
-          familyName: familyName,
-          email: email,
-          password: password,
-          gender: gender ? gender.toLowerCase() : null,
-          dateOfBirth: dateOfBirth,
-          country: country ? countryID : null,
-          region: selectedCountry === 'India' ? regionLookup[region] : null,
-          deviceUDID: deviceUid,
-          timeZone: deviceTimeZone,
-          programme: programmeId,
+          ...data,
         },
       },
     })

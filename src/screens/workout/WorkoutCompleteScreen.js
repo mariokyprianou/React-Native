@@ -149,6 +149,7 @@ export default function WorkoutCompleteScreen() {
       },
     })
       .then((res) => {
+        console.log(res, '<---- COMPLETE WORKOUT RES');
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {

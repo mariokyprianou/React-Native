@@ -138,6 +138,7 @@ export default function DataProvider(props) {
   const structureWeek = useCallback(async (workouts, storedDays) => {
     // PAST
     let pastWorkouts = getPastWorkouts(workouts);
+    console.log(pastWorkouts, '<----PAST?');
     let pastRestDays = getStoredPastRestDays(storedDays);
 
     let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
@@ -149,14 +150,13 @@ export default function DataProvider(props) {
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already
-    const lastWorkoutToday = await wasLastWorkoutToday();
+    const lastWorkoutToday = await wasLastWorkoutToday(workouts);
     if (lastWorkoutToday === true) {
       startDate = addDays(startDate, 1);
     }
 
     // Add future dates
     const remaining = 7 - week.length;
-    wasLastWorkoutToday();
 
     for (let i = 0; i < remaining; i++) {
       const date = addDays(startDate, i);
@@ -200,7 +200,7 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
-
+      console.log(data.currentWeek, '<---- PROG DATA');
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 
@@ -276,8 +276,18 @@ export default function DataProvider(props) {
     setWeightData(weightsArray);
   }, []);
 
-  const wasLastWorkoutToday = useCallback(async () => {
+  const wasLastWorkoutToday = useCallback(async (workouts) => {
+    // const today = new Date();
+    // const wasToday = workouts.map(
+    //   (workout) => console.log(workout.completedAt),
+    //   // differenceInCalendarDays(workout.completedAt, today),
+    // );
+    // console.log(wasToday, '<----BOOL');
+
+    // return false;
+
     let lastDate = await AsyncStorage.getItem('@LAST_WORKOUT_DATE');
+
     if (lastDate) {
       const firstDate = new Date();
       lastDate = parseISO(JSON.parse(lastDate));

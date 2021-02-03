@@ -123,7 +123,7 @@ export default function WorkoutHomeScreen() {
 
   useEffect(() => {
     if (programme) {
-      if (weekNumber === 1) {
+      if (weekNumber === 1 && currentWeek) {
         setWorkoutsToDisplay(currentWeek);
       }
       if (weekNumber === 2) {
@@ -131,7 +131,7 @@ export default function WorkoutHomeScreen() {
         setWorkoutsToDisplay(nextWeek);
       }
     }
-  }, [programme, weekNumber]);
+  }, [weekNumber, currentWeek]);
 
   async function checkLastWeek(previousWorkoutDates) {
     const {consecutiveWorkouts, lastDate} = await getConsecutiveWorkouts();
@@ -199,11 +199,13 @@ export default function WorkoutHomeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
+    if (!programme) return;
+
     const firstDayNextWeek = addDays(
-      new Date(programme?.currentWeek.workouts[0].completedAt),
+      new Date(programme.currentWeek.workouts[0].completedAt),
       7,
     );
-    const programmeLength = programme?.trainer.programmes.filter(
+    const programmeLength = programme.trainer.programmes.filter(
       (prog) => prog.environment === programme.environment,
     )[0].numberOfWeeks;
 

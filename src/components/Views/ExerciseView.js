@@ -41,7 +41,7 @@ export default function ExerciseView(props) {
   const styles = exerciseViewStyle;
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const {selectedWorkout} = UseData();
+  const {selectedWorkout, setSelectedWeight} = UseData();
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
@@ -77,7 +77,7 @@ export default function ExerciseView(props) {
       if (res.getExerciseWeight.length > 0) {
         const lastIndex = res.getExerciseWeight.length - 1;
         if (res.getExerciseWeight[lastIndex].weight) {
-          setLastWeight(`${res.getExerciseWeight[lastIndex].weight}kg`);
+          setLastWeight(res.getExerciseWeight[lastIndex].weight);
         }
         setWeightHistory(res.getExerciseWeight);
       }
@@ -121,6 +121,7 @@ export default function ExerciseView(props) {
     // show set completion modal with weights if applicable
     if (involvesWeights) {
       // TO DO change ^^ back to exercise.weight (and line 180)
+      setSelectedWeight(lastWeight);
       setSetComplete(true);
     }
   };
@@ -241,7 +242,6 @@ export default function ExerciseView(props) {
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}
           exercise={exercise.id}
-          lastWeight={lastWeight}
         />
       )}
     </View>

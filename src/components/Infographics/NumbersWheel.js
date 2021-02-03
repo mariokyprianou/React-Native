@@ -12,7 +12,7 @@ import UseData from '../../hooks/data/UseData';
 import useTheme from '../../hooks/theme/UseTheme';
 import SmoothPicker from 'react-native-smooth-picker';
 
-const NumbersWheel = ({lastWeight = 6}) => {
+const NumbersWheel = () => {
   function handleChange(index) {
     setSelectedWeight(index);
   }
@@ -29,14 +29,22 @@ const NumbersWheel = ({lastWeight = 6}) => {
 
   useEffect(() => {
     setTimeout(function () {
-      setSelectedWeight(lastWeight);
+      setSelectedWeight(selectedWeight);
       refPicker.current.scrollToIndex({
         animated: true,
-        index: lastWeight,
+        index: selectedWeight,
         viewOffset: -getWidth(50),
       });
-    }, 200);
-  }, [lastWeight]);
+    }, 600);
+    setTimeout(function () {
+      setSelectedWeight(selectedWeight);
+      refPicker.current.scrollToIndex({
+        animated: true,
+        index: selectedWeight,
+        viewOffset: -getWidth(50),
+      });
+    }, 1000);
+  }, [selectedWeight]);
 
   const ItemToRender = (
     {item, index},
@@ -55,12 +63,10 @@ const NumbersWheel = ({lastWeight = 6}) => {
     if (gap > 1) {
       size = sizeText[2];
     }
-
-    console.log(opacity);
     const textStyle = {
       ...textStyles.bold34_black100,
-      opacity,
-      fontSize: fontSize(size),
+      opacity: opacity || 0.2,
+      fontSize: size ? fontSize(size) : fontSize(14),
     };
 
     return (
@@ -80,7 +86,6 @@ const NumbersWheel = ({lastWeight = 6}) => {
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        marginTop: 300,
       }}>
       <SmoothPicker
         refFlatList={refPicker}
@@ -121,6 +126,7 @@ const Item = React.memo(({selected, width, textStyle, name}) => {
     <View
       style={{
         width: width,
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
       }}>

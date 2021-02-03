@@ -18,6 +18,7 @@ import {msToHMS} from '../../utils/dateTimeUtils';
 import {useMutation} from '@apollo/client';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import UseData from '../../hooks/data/UseData';
+import NumbersWheel from '../../components/Infographics/NumbersWheel';
 
 export default function SetCompletionScreen({
   restTime,
@@ -26,7 +27,6 @@ export default function SetCompletionScreen({
   setReps,
   setNumber,
   exercise,
-  lastWeight,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
@@ -103,14 +103,18 @@ export default function SetCompletionScreen({
       <View style={styles.contentContainer}>
         <TouchableOpacity onPress={() => setSetComplete(false)}>
           {restTime ? (
-            <TimerView title={WorkoutDict.GreatJob} restTime={restTime} />
+            <TimerView
+              title={WorkoutDict.GreatJob}
+              restTime={restTime}
+              setSetComplete={setSetComplete}
+            />
           ) : (
             <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
           )}
         </TouchableOpacity>
         <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
         <View style={styles.weightSelectionContainer}>
-          <WeightSelection lastWeight={lastWeight} />
+          <NumbersWheel />
         </View>
       </View>
       <View style={styles.buttonContainer}>
@@ -153,7 +157,7 @@ function TimerView(props) {
   useEffect(() => {
     if (remainingMS === 0) {
       setTimeout(() => {
-        setSetComplete(false);
+        props.setSetComplete(false);
       }, 1000);
     }
   }, [remainingMS]);

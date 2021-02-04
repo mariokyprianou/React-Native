@@ -48,8 +48,6 @@ export default function WeightCaptureScreen() {
 
   const historyData = processChallengeHistory(weightHistory, weightPreference);
 
-  console.log(historyData, '<---history data weight capture');
-
   const dropdownData = historyData
     .map((event) => `${event.reps}`)
     .filter((value, index, self) => self.indexOf(value) === index);

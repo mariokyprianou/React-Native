@@ -11,7 +11,6 @@ import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import WeightSelection from '../../components/Infographics/WeightSelection';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
@@ -27,6 +26,7 @@ export default function SetCompletionScreen({
   setReps,
   setNumber,
   exercise,
+  weightPreference,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
@@ -80,10 +80,16 @@ export default function SetCompletionScreen({
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
+    let weightToUpload = Number(selectedWeight);
+
+    if (weightPreference === 'lb') {
+      weightToUpload = Math.round(weightToUpload / 2.20462262185);
+    }
+
     await addWeight({
       variables: {
         input: {
-          weight: Number(selectedWeight),
+          weight: weightToUpload,
           reps: setReps,
           setNumber: setNumber,
           exerciseId: exercise,
@@ -114,7 +120,7 @@ export default function SetCompletionScreen({
         </TouchableOpacity>
         <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
         <View style={styles.weightSelectionContainer}>
-          <NumbersWheel />
+          <NumbersWheel weightPreference={weightPreference} />
         </View>
       </View>
       <View style={styles.buttonContainer}>

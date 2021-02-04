@@ -255,8 +255,6 @@ const enGB = {
 
     WeightsSetText: 'Set',
     WeightsRepsText: 'reps',
-    WeightsUnitKgText: 'kg',
-    WeightsUnitLbText: 'lb',
 
     RestDay: 'REST DAY',
     Day: 'Day',

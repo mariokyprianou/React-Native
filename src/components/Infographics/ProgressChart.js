@@ -19,7 +19,7 @@ export default function ProgressChart({
   background = true,
   selectable = false,
   data,
-  weightPreference = 'KG',
+  weightPreference = 'kg',
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -37,13 +37,6 @@ export default function ProgressChart({
   const xLabels = data.map((event) => {
     return event.date;
   });
-
-  const labelLookup = {
-    KG: WorkoutDict.WeightsUnitKgText,
-    LB: WorkoutDict.WeightsUnitLbText,
-  };
-
-  const weightLabel = labelLookup[weightPreference];
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -107,7 +100,7 @@ export default function ProgressChart({
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: weightLabel,
+              axisLabel: weightPreference,
               axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
               axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),

@@ -22,13 +22,6 @@ export default function SetTableRow({
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
 
-  const labelLookup = {
-    KG: WorkoutDict.WeightsUnitKgText,
-    LB: WorkoutDict.WeightsUnitLbText,
-  };
-
-  const weightLabel = labelLookup[weightPreference];
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     row: {
@@ -52,7 +45,7 @@ export default function SetTableRow({
         }>{`${WorkoutDict.WeightsSetText} ${setNumber}`}</Text>
       <Text
         style={styles.text}>{`${reps} ${WorkoutDict.WeightsRepsText}`}</Text>
-      <Text style={styles.text}>{`${weight} ${weightLabel}`}</Text>
+      <Text style={styles.text}>{`${weight} ${weightPreference}`}</Text>
     </View>
   );
 }

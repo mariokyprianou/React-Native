@@ -283,7 +283,6 @@ export default function DataProvider(props) {
     };
   }, [isWorkoutTimerRunning]);
 
-  const [weightChoice, setWeightChoice] = useState('kg'); // fake data, to be replaced with data from back end
   const [selectedWeight, setSelectedWeight] = useState(20);
 
   const [weightData, setWeightData] = useState([]);
@@ -332,8 +331,6 @@ export default function DataProvider(props) {
       updateConsecutiveWorkouts,
       getConsecutiveWorkouts,
       clearConsecutiveDays,
-      weightChoice,
-      setWeightChoice,
       selectedWeight,
       setSelectedWeight,
       weightData,
@@ -360,8 +357,6 @@ export default function DataProvider(props) {
       updateConsecutiveWorkouts,
       getConsecutiveWorkouts,
       clearConsecutiveDays,
-      weightChoice,
-      setWeightChoice,
       selectedWeight,
       setSelectedWeight,
       weightData,

@@ -50,9 +50,12 @@ export default function ExerciseView(props) {
   const [setComplete, setSetComplete] = useState(false);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
+  const [weightLabel, setWeightLabel] = useState();
 
   useEffect(() => {
     getPreferences();
+    const weightPreference = preferences.weightPreference.toLowerCase();
+    setWeightLabel(weightPreference);
   }, []);
 
   useEffect(() => {
@@ -198,7 +201,7 @@ export default function ExerciseView(props) {
               onPress={() =>
                 navigation.navigate('WeightCapture', {
                   weightHistory: weightHistory,
-                  weightPreference: preferences.weightPreference,
+                  weightPreference: weightLabel,
                 })
               }>
               <Image source={weightIcon} />
@@ -250,6 +253,7 @@ export default function ExerciseView(props) {
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}
           exercise={exercise.id}
+          weightPreference={weightLabel}
         />
       )}
     </View>

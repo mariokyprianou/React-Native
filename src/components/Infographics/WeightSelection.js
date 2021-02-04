@@ -22,7 +22,7 @@ export default function WeightSelection({lastWeight}) {
   const [lastWeightIndex, setLastWeightIndex] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const {weightChoice, setSelectedWeight} = UseData();
+  const {setSelectedWeight} = UseData();
 
   useEffect(() => {
     const weightsArray = [];
@@ -78,7 +78,7 @@ export default function WeightSelection({lastWeight}) {
               ? styles.veryInactiveText
               : index === selectedIndex + 2 && styles.veryInactiveText
           }>
-          {`${item}${weightChoice}`}
+          {`${item}kg`}
         </Text>
       </View>
     );

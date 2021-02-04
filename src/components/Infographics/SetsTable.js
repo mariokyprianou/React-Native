@@ -13,7 +13,6 @@ import useTheme from '../../hooks/theme/UseTheme';
 import SetTableRow from './SetTableRow';
 import {FlatList} from 'the-core-ui-module-tdlist';
 import FadingBottomView from '../Views/FadingBottomView';
-import {useRoute} from '@react-navigation/core';
 
 export default function SetsTable({date, weightData, weightPreference}) {
   // ** ** ** ** ** SETUP ** ** ** ** **

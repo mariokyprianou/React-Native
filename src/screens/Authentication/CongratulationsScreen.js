@@ -23,6 +23,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
+import UseData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -37,6 +38,7 @@ export default function CongratulationsScreen() {
   } = useRoute();
   const navigation = useNavigation();
 
+  const {programmeModalImage} = UseData();
   navigation.setOptions({
     header: () => null,
   });
@@ -158,7 +160,10 @@ export default function CongratulationsScreen() {
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Image source={fakeImage} style={styles.image} />
+        <Image
+          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          style={styles.image}
+        />
         <FadingBottomView color="black" />
       </View>
       <View style={styles.textContainer}>

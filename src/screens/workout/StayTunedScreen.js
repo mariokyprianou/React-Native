@@ -17,6 +17,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {format} from 'date-fns';
+import UseData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -33,6 +34,8 @@ export default function StayTuned() {
   const formattedDate = format(date, 'do LLLL');
   const navigation = useNavigation();
 
+  const {programmeModalImage} = UseData();
+
   navigation.setOptions({
     header: () => (
       <Header
@@ -43,8 +46,6 @@ export default function StayTuned() {
       />
     ),
   });
-
-  const backgroundImage = {uri: image};
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -97,7 +98,9 @@ export default function StayTuned() {
   if (type === 'workoutsComplete') {
     return (
       <View>
-        <ImageBackground source={backgroundImage} style={styles.image}>
+        <ImageBackground
+          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          style={styles.image}>
           <FadingBottomView color="black" />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>

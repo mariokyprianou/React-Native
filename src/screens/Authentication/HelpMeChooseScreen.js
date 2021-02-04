@@ -23,6 +23,7 @@ import displayAlert from '../../utils/DisplayAlert';
 
 import getResponse from '../../utils/getResponse';
 import useCommonData from '../../hooks/data/useCommonData';
+import UseData from '../../hooks/data/UseData';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -120,6 +121,7 @@ export default function HelpMeChooseScreen() {
           navigation.navigate('HelpMeChooseResults', {
             recommendedTrainer:
               res.data.submitProgrammeQuestionnaire.programme.trainer.name,
+            programmeImage: programme.programmeImage,
           });
         } else {
           if (res.errors.length > 0) {

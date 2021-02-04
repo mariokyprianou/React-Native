@@ -15,7 +15,6 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
-import {useRoute} from '@react-navigation/core';
 import useData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/fake2.png');
@@ -27,9 +26,8 @@ export default function TakeARestScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
-  const {
-    params: {name},
-  } = useRoute();
+
+  const {programme, programmeModalImage} = useData();
 
   navigation.setOptions({
     header: () => (
@@ -85,10 +83,14 @@ export default function TakeARestScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <ImageBackground source={fakeImage} style={styles.image}>
+      <ImageBackground
+        source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+        style={styles.image}>
         <FadingBottomView color="black" />
         <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>{WorkoutDict.TakeARest(name)}</Text>
+          <Text style={styles.infoText}>
+            {WorkoutDict.TakeARest(programme.trainer.name)}
+          </Text>
         </View>
         <View style={styles.buttonContainer}>
           <DefaultButton

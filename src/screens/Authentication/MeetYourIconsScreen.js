@@ -35,6 +35,7 @@ import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
+import UseData from '../../hooks/data/UseData';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -57,6 +58,7 @@ export default function MeetYourIconsScreen() {
   //const switchProgramme = true;
 
   const {trainers, suggestedProgramme} = useCommonData();
+  const {setProgrammeModalImage} = UseData();
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -424,13 +426,14 @@ export default function MeetYourIconsScreen() {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() =>
+            onPress={() => {
+              setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: true,
                 newTrainer: selectedTrainer.name,
                 environment: selectedProgram.environment,
-              })
-            }
+              });
+            }}
           />
         </View>
       ) : (
@@ -439,14 +442,15 @@ export default function MeetYourIconsScreen() {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() =>
+            onPress={() => {
+              setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: false,
                 newTrainer: selectedTrainer.name,
                 environment: selectedProgram.environment,
                 programmeId: selectedProgram.id,
-              })
-            }
+              });
+            }}
           />
           <DefaultButton
             type="login"

@@ -32,6 +32,7 @@ export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const [programme, setProgramme] = useState();
+  const [programmeModalImage, setProgrammeModalImage] = useState();
 
   const [currentWeek, setCurrentWeek] = useState();
 
@@ -219,6 +220,8 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
+
+      setProgrammeModalImage(data.programmeImage);
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 
@@ -313,6 +316,8 @@ export default function DataProvider(props) {
     () => ({
       programme,
       getProgramme,
+      programmeModalImage,
+      setProgrammeModalImage,
       selectedWorkout,
       setSelectedWorkout,
       getDownloadEnabled,
@@ -339,6 +344,8 @@ export default function DataProvider(props) {
     [
       programme,
       getProgramme,
+      programmeModalImage,
+      setProgrammeModalImage,
       selectedWorkout,
       setSelectedWorkout,
       getDownloadEnabled,

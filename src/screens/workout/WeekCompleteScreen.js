@@ -17,6 +17,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import IconTextView from '../../components/Infographics/IconTextView';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
+import UseData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -37,6 +38,7 @@ export default function WeekCompleteScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
+  const {programme, programmeModalImage} = UseData();
 
   navigation.setOptions({
     header: () => (
@@ -91,7 +93,9 @@ export default function WeekCompleteScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
-      <ImageBackground source={fakeImage} style={styles.image}>
+      <ImageBackground
+        source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+        style={styles.image}>
         <FadingBottomView color="black" />
         <View style={styles.infoTextContainer}>
           <Text style={styles.infoText}>

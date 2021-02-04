@@ -18,6 +18,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import Header from '../../components/Headers/Header';
 import isIPhoneX from '../../utils/isIphoneX';
+import UseData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
@@ -29,7 +30,7 @@ export default function HelpMeChooseResultsScreen() {
   const {HelpMeChooseDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {recommendedTrainer},
+    params: {recommendedTrainer, programmeImage},
   } = useRoute();
 
   const capitalizedName = recommendedTrainer.toUpperCase();
@@ -127,7 +128,9 @@ export default function HelpMeChooseResultsScreen() {
         </Text>
       </View>
 
-      <ImageBackground source={fakeImage} style={styles.image}>
+      <ImageBackground
+        source={programmeImage ? {uri: programmeImage} : fakeImage}
+        style={styles.image}>
         <FadingBottomView color="black" height={420} />
 
         <View style={styles.titleContainer}>

@@ -37,8 +37,6 @@ export default function WorkoutHomeScreen() {
   const [weekNumber, setWeekNumber] = useState(1);
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
-  const [threeWorkoutsInRow, setThreeWorkoutsInRow] = useState(false);
-  const [warningReceived, setWarningReceived] = useState(false);
   const navigation = useNavigation();
 
   navigation.setOptions({

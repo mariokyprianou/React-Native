@@ -25,25 +25,25 @@ export default function EmailVerificationScreen() {
   const {
     params: {email, password, fromLogin},
   } = useRoute();
-  const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+  // const appState = useRef(AppState.currentState);
+  // const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const {permissionsNeeded} = useUserData();
 
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
-  useEffect(() => {
-    AppState.addEventListener('change', handleAppStateChange);
+  // useEffect(() => {
+  //   AppState.addEventListener('change', handleAppStateChange);
 
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
-  }, []);
+  //   return () => {
+  //     AppState.removeEventListener('change', handleAppStateChange);
+  //   };
+  // }, []);
 
   useEffect(() => {
     setInterval(async () => {
       await Auth.signIn(email, password)
-        .then(async () => {
+        .then(async (res) => {
           const permissionNeeded = await permissionsNeeded();
 
           if (permissionNeeded) {
@@ -60,30 +60,30 @@ export default function EmailVerificationScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  async function handleAppStateChange(nextAppState) {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      await Auth.signIn(email, password)
-        .then(async () => {
-          const permissionNeeded = await permissionsNeeded();
+  // async function handleAppStateChange(nextAppState) {
+  //   if (
+  //     appState.current.match(/inactive|background/) &&
+  //     nextAppState === 'active'
+  //   ) {
+  //     await Auth.signIn(email, password)
+  //       .then(async () => {
+  //         const permissionNeeded = await permissionsNeeded();
 
-          if (permissionNeeded) {
-            navigation.navigate(permissionNeeded);
-          } else {
-            navigation.navigate('TabContainer');
-          }
-        })
-        .catch((error) => {
-          console.log('error signing in', error);
-          Alert.alert(AuthDict.NotYetLoggedIn);
-        });
-    }
+  //         if (permissionNeeded) {
+  //           navigation.navigate(permissionNeeded);
+  //         } else {
+  //           navigation.navigate('TabContainer');
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log('error signing in', error);
+  //         Alert.alert(AuthDict.NotYetLoggedIn);
+  //       });
+  //   }
 
-    appState.current = nextAppState;
-    setAppStateVisible(appState.current);
-  }
+  //   appState.current = nextAppState;
+  //   setAppStateVisible(appState.current);
+  // }
 
   async function onPressButton() {
     await resendEmail({variables: {email}})

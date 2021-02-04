@@ -1,4 +1,4 @@
-import {useNavigation, Navifatio} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Auth} from 'aws-amplify';
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
@@ -9,12 +9,12 @@ export default function LandingScreen(props) {
   useEffect(() => {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
-        .then((_res) =>
+        .then((_res) => {
           reset({
             index: 0,
             routes: [{name: 'TabContainer'}],
-          }),
-        )
+          });
+        })
         .catch((_err) =>
           reset({
             index: 0,

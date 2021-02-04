@@ -142,7 +142,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   useQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res, '<---profile query res');
       const memberSince = res.profile.createdAt.slice(0, 4);
       const userProfile = {...res.profile, memberSince};
       setUserData(userProfile);
@@ -251,10 +250,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
     setUpdateLoading(true);
 
-    const dob = format(
-      parseISO(newDateOfBirth || userData.dateOfBirth),
-      'yyyy-LL-dd',
-    );
+    const dob = parseISO(newDateOfBirth || userData.dateOfBirth);
 
     const newCountry =
       countryLookup[profile_country] || countryLookup[userData.country];
@@ -305,7 +301,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
-            await Auth.signOut()
+            await Auth.signOut({global: true})
               .then(() => {
                 setUserData({});
 
@@ -314,7 +310,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                   routes: [{name: 'AuthContainer'}],
                 });
               })
-              .catch((err) => console.log('Error signing out', err));
+              .catch(async (err) => {
+                console.log('Error signing out', err);
+              });
           },
         },
       ],
@@ -419,7 +417,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.givenName,
-      value: userData.givenName,
+      defaultValue: userData.givenName,
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
@@ -436,7 +434,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.familyName,
-      value: userData.familyName,
+      defaultValue: userData.familyName,
       style: {
         ...textStyles.regular16_black100,
         flex: 1,

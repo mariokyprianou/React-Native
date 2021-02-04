@@ -71,7 +71,7 @@ export default function NotificationPermissionScreen() {
         navigateForward();
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, '<---notifications screen error');
       });
   };
 

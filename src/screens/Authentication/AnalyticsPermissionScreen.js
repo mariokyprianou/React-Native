@@ -55,7 +55,7 @@ export default function AnalyticsPermissionScreen() {
         navigateForward();
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, '<---analytics permissions error');
       });
   };
 

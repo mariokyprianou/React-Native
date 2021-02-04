@@ -142,6 +142,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   useQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
+      console.log(res, '<---profile query res');
       const memberSince = res.profile.createdAt.slice(0, 4);
       const userProfile = {...res.profile, memberSince};
       setUserData(userProfile);
@@ -285,7 +286,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
-        console.log('newData', newData);
         setUserData(newData);
         setUpdateLoading(false);
       })

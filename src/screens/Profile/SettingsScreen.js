@@ -208,7 +208,7 @@ const SettingsScreen = ({}) => {
       },
     })
       .then((res) => {
-        setUserData(newUserData);
+        setUserData({...userData, ...newUserData});
       })
       .catch((err) => console.log(err));
 

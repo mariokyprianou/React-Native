@@ -4,38 +4,26 @@
  * Email: kristyna.fojtikova@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useEffect} from 'react';
-import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import {FormHook} from 'the-core-ui-module-tdforms';
-
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
 import TDIcon from 'the-core-ui-component-tdicon';
-import {color} from 'react-native-reanimated';
 import Spacer from '../Utility/Spacer';
 
 const corkIcon = require('../../../assets/icons/settings.png');
 
 export default function ProfileUserCard({
-  firstName = 'Supply firstName',
-  lastName = 'Supply lastName',
-  memberSince = 'Supply Year',
-  workoutsComplete = 'Supply Number',
+  firstName = 'firstName',
+  lastName = 'lastName',
+  memberSince = 'Year',
+  workoutsComplete = 'Number',
   onPressRightIcon,
 }) {
   // MARK: - Hooks
-  const {
-    colors,
-    cellFormConfig,
-    cellFormStyles,
-    textStyles,
-    dropdownStyle,
-  } = useTheme();
-  const {cleanErrors, getValues, updateError} = FormHook();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-  const navigation = useNavigation();
+  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
   const {dictionary} = useDictionary();
 
   const {ProfileDict} = dictionary;

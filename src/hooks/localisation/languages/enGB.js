@@ -221,6 +221,9 @@ const enGB = {
     AnalyticsText:
       'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
     Language: 'LANGUAGE',
+    Weight: 'WEIGHT MEASUREMENT',
+    WeightKgs: 'Metric (kg)',
+    WeightLbs: 'Imperial (lb)',
   },
 
   ProgressDict: {

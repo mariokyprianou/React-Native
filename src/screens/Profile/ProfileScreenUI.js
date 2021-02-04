@@ -132,17 +132,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     }
   }, [countryData, countryLoading, countryError]);
 
-  // useEffect(() => {
-  //   if (profileData) {
-  //     const memberSince = profileData.profile.createdAt.slice(0, 4);
-  //     const userProfile = {...profileData.profile};
-  //     userProfile.memberSince = memberSince;
-  //     setUserData(userProfile);
-  //   } else {
-  //     console.log(profileLoading, profileError);
-  //   }
-  // }, [profileData, profileLoading, profileError]);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       cleanValues();

@@ -23,7 +23,6 @@ import Spacer from '../../components/Utility/Spacer';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import useUserData from '../../hooks/data/useUserData';
 import useData from '../../hooks/data/UseData';
-
 import AsyncStorage from '@react-native-community/async-storage';
 import displayAlert from '../../utils/DisplayAlert';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
@@ -45,7 +44,7 @@ const SettingsScreen = ({}) => {
   const {getValues} = FormHook();
   const {dictionary, getLanguage, setLanguage} = useDictionary();
   const {SettingsDict, LanguageDict} = dictionary;
-  const {getHeight} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {
     colors,
     cellFormConfig,
@@ -85,6 +84,9 @@ const SettingsScreen = ({}) => {
   const [downloadQuality, setDownloadQuality] = useState(
     preferences.downloadQuality || 'HIGH',
   );
+  const [weightPref, setWeightPref] = useState(
+    preferences.weightPreference || 'KG',
+  );
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
@@ -103,6 +105,7 @@ const SettingsScreen = ({}) => {
         setPrefErrorReports(res.preferences.errorReports);
         setPrefAnalytics(res.preferences.analytics);
         setDownloadQuality(res.preferences.downloadQuality);
+        setWeightPref(res.preferences.weightPreference);
       });
     }
   }, []);
@@ -158,7 +161,12 @@ const SettingsScreen = ({}) => {
   const updateSettingsAndNavigate = async () => {
     AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
 
-    const {formDownloadsQuality, formTimeZone, formLanguage} = getValues();
+    const {
+      formDownloadsQuality,
+      formTimeZone,
+      formLanguage,
+      formWeightMeasurement,
+    } = getValues();
 
     const language = formLanguage || getLanguage();
     setLanguage(language);
@@ -168,18 +176,30 @@ const SettingsScreen = ({}) => {
         (key) => downloadQualityMap[key] === formDownloadsQuality,
       ) || downloadQuality;
 
+    const newWeightPref =
+      Object.keys(weightDropdownMap).find(
+        (key) => weightDropdownMap[key] === formWeightMeasurement,
+      ) || weightPref;
+
     const newPreferences = {
       notifications: marketingPrefNotifications,
       emails: marketingPrefEmail,
       errorReports: prefErrorReports,
       analytics: prefAnalytics,
       downloadQuality: newDownloadQuality,
+      weightPreference: newWeightPref,
     };
 
     const newUserData = {
-      ...userData,
-      timeZone: formTimeZone,
+      familyName: userData.familyName,
+      givenName: userData.givenName,
+      gender: userData.gender,
+      dateOfBirth: userData.dateOfBirth,
+      country: userData.country,
+      region: userData.region,
+      // timeZone: formTimeZone,
     };
+
     updateProfile({
       variables: {
         input: {
@@ -249,6 +269,13 @@ const SettingsScreen = ({}) => {
     LOW: SettingsDict.DownloadQualityLow,
   };
 
+  const weightDropdownData = [SettingsDict.WeightKgs, SettingsDict.WeightLbs];
+
+  const weightDropdownMap = {
+    KG: SettingsDict.WeightKgs,
+    LB: SettingsDict.WeightLbs,
+  };
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const formConfig = {
     ...cellFormConfig,
@@ -303,6 +330,26 @@ const SettingsScreen = ({}) => {
         <Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text>
       ),
     },
+  ];
+
+  const cells2 = [
+    {
+      name: 'formWeightMeasurement',
+      type: 'dropdown',
+      label: SettingsDict.Weight,
+      ...cellFormStyles,
+      ...dropdownStyle,
+      rightAccessory: () => <DropDownIcon />,
+      placeholder: weightDropdownMap[weightPref],
+      data: weightDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
+    },
+  ];
+
+  const cells3 = [
     {
       customComponent: () => (
         <SettingsCell
@@ -319,7 +366,8 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-  const cells2 = [
+
+  const cells4 = [
     {
       name: 'formDownloadsQuality',
       type: 'dropdown',
@@ -329,6 +377,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: downloadQualityMap[downloadQuality],
       data: downloadQualityDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
     {
       name: 'formTimeZone',
@@ -337,11 +389,16 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: timeZone.timeZone,
+      placeholder: userData.timeZone,
+
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
       data: timeZones,
     },
   ];
-  const cells3 = [
+  const cells5 = [
     {
       customComponent: () => (
         <SettingsCell
@@ -384,7 +441,7 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
-  const cells4 = [
+  const cells6 = [
     {
       name: 'formLanguage',
       type: 'dropdown',
@@ -394,6 +451,10 @@ const SettingsScreen = ({}) => {
       rightAccessory: () => <DropDownIcon />,
       placeholder: getLanguage() || languageDropdownData[0],
       data: languageDropdownData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(4),
+      },
     },
   ];
 
@@ -410,6 +471,12 @@ const SettingsScreen = ({}) => {
         scrollEnabled={false}
       />
       <Form cells={cells4} config={formConfig} />
+      <TDSettings
+        cells={cells5}
+        config={settingsConfig}
+        scrollEnabled={false}
+      />
+      <Form cells={cells6} config={formConfig} />
       <Spacer height={25} />
       <VersionCell
         versionText={SettingsDict.VersionText}

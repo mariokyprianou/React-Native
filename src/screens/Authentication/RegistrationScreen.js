@@ -29,6 +29,7 @@ import {getUniqueId} from 'react-native-device-info';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import displayAlert from '../../utils/DisplayAlert';
 import useLoading from '../../hooks/loading/useLoading';
+import Intercom from 'react-native-intercom';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -228,6 +229,7 @@ export default function RegisterScreen() {
         console.log('REGISTRATION RES', res);
         if (res.data.registerUser === true) {
           cleanValues();
+          Intercom.registerIdentifiedUser({email: email});
           navigation.navigate('EmailVerification', {email, password});
         }
       })

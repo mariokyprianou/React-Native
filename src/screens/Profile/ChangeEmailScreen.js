@@ -17,6 +17,7 @@ import {Form} from 'the-core-ui-module-tdforms';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {emailRegex} from '../../utils/regex';
 import {Auth} from 'aws-amplify';
+import Intercom from 'react-native-intercom';
 
 export default function ChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -73,6 +74,7 @@ export default function ChangeEmailScreen() {
 
     await Auth.updateUserAttributes(user, {email: newEmail})
       .then((res) => {
+        Intercom.updateUser({email: newEmail});
         navigation.navigate('VerifyChangeEmail', {email: newEmail});
       })
       .catch((err) => console.log(err));

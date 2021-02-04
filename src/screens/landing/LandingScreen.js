@@ -4,6 +4,7 @@ import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import NumbersWheel from '../../components/Infographics/NumbersWheel';
+import Intercom from 'react-native-intercom';
 
 export default function LandingScreen(props) {
   const {reset} = useNavigation();
@@ -11,17 +12,19 @@ export default function LandingScreen(props) {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then((_res) => {
+          Intercom.registerIdentifiedUser({email: _res.attributes.email});
           reset({
             index: 0,
             routes: [{name: 'TabContainer'}],
           });
         })
-        .catch((_err) =>
+        .catch((_err) => {
+          Intercom.registerUnidentifiedUser();
           reset({
             index: 0,
             routes: [{name: 'AuthContainer'}],
-          }),
-        )
+          });
+        })
         .finally(() => SplashScreen.hide());
     }
     if (reset) {

@@ -24,6 +24,7 @@ import {TransitionPresets} from '@react-navigation/stack';
 import HelpMeChooseScreen from '../screens/Authentication/HelpMeChooseScreen';
 import HelpMeChooseResultsScreen from '../screens/Authentication/HelpMeChooseResultsScreen';
 import VerifyChangeEmailScreen from '../screens/Profile/VerifyChangeEmailScreen';
+
 import EmailVerificationScreen from '../screens/Authentication/EmailVerificationScreen';
 
 export default function AuthContainer(props) {

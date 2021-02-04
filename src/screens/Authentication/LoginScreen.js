@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 import {ScrollView, View, Text, TouchableOpacity, Alert} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -14,11 +14,11 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
 import {emailRegex, passwordRegex} from '../../utils/regex';
-import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import Intercom from 'react-native-intercom';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +26,6 @@ export default function LoginScreen() {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
-  const [passwordEyeEnabled, setPasswordEyeEnabled] = useState(true);
 
   const {permissionsNeeded} = useUserData();
   const {setLoading} = useLoading();
@@ -109,6 +108,7 @@ export default function LoginScreen() {
           });
           cleanValues();
         } else {
+          Intercom.registerIdentifiedUser({email: emailAddress});
           const permissionNeeded = await permissionsNeeded();
 
           if (permissionNeeded) {

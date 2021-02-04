@@ -191,6 +191,7 @@ const enGB = {
       'If you continue you will be logged out - please verify your email address',
     Ok: 'Ok',
     Cancel: 'Cancel',
+    CancelButton: 'Cancel',
   },
 
   ShareDict: {

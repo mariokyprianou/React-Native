@@ -14,7 +14,7 @@ import com.thecoreui.SecretsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.bundlechecksum.RNBundleChecksumPackage;
 import io.intercom.android.sdk.Intercom;
-//import com.robinpowered.react.Intercom.IntercomPackage;
+import com.robinpowered.react.Intercom.IntercomPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -32,7 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
       // Packages that cannot be autolinked yet can be added manually here, for
       // example:
       // packages.add(new MyReactNativePackage());
-//      packages.add(new IntercomPackage());
+     packages.add(new IntercomPackage());
       packages.add(new SecretsPackage());
       return packages;
     }

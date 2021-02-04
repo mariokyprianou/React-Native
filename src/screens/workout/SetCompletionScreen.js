@@ -83,7 +83,7 @@ export default function SetCompletionScreen({
     await addWeight({
       variables: {
         input: {
-          weight: selectedWeight,
+          weight: Number(selectedWeight),
           reps: setReps,
           setNumber: setNumber,
           exerciseId: exercise,

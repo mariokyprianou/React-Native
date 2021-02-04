@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -37,9 +37,8 @@ export default function WeightCaptureScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {weightHistory},
+    params: {weightHistory, weightPreference},
   } = useRoute();
-
   const today = new Date();
   const date = format(today, 'do LLL yyyy');
 
@@ -47,7 +46,9 @@ export default function WeightCaptureScreen() {
     header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
   });
 
-  const historyData = processChallengeHistory(weightHistory);
+  const historyData = processChallengeHistory(weightHistory, weightPreference);
+
+  console.log(historyData, '<---history data weight capture');
 
   const dropdownData = historyData
     .map((event) => `${event.reps}`)
@@ -152,11 +153,18 @@ export default function WeightCaptureScreen() {
           <Text style={styles.subtitle}>{WorkoutDict.PickAWeight}</Text>
         </View>
         <View style={styles.chartCard}>
-          <ProgressChart data={historyData} />
+          <ProgressChart
+            data={historyData}
+            weightPreference={weightPreference}
+          />
         </View>
         <Spacer height={30} />
         <View style={{...styles.chartCard, ...styles.scrollCard}}>
-          <SetsTable date={date} weightHistory={weightHistory} />
+          <SetsTable
+            date={date}
+            weightData={historyData}
+            weightPreference={weightPreference}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <DefaultButton

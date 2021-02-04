@@ -12,19 +12,23 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function ProgressChart({
   axis = true,
   background = true,
   selectable = false,
   data,
+  weightPreference = 'KG',
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const {dictionary} = useDictionary();
+  const {WorkoutDict} = dictionary;
 
   const dataPoints = data.map((event, index) => {
-    return {x: index + 1, y: event.reps};
+    return {x: index + 1, y: event.weight};
   });
 
   const highestValue = Math.max(...dataPoints.map((point) => point.y));
@@ -33,6 +37,13 @@ export default function ProgressChart({
   const xLabels = data.map((event) => {
     return event.date;
   });
+
+  const labelLookup = {
+    KG: WorkoutDict.WeightsUnitKgText,
+    LB: WorkoutDict.WeightsUnitLbText,
+  };
+
+  const weightLabel = labelLookup[weightPreference];
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -96,7 +107,7 @@ export default function ProgressChart({
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: 'kg',
+              axisLabel: weightLabel,
               axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
               axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),

@@ -16,14 +16,13 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
-import SliderProgressView from './SliderProgressView';
-import {it} from 'date-fns/locale';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
 import {useQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
+import useUserData from '../../hooks/data/useUserData';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -42,6 +41,7 @@ export default function ExerciseView(props) {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const {selectedWorkout, setSelectedWeight} = UseData();
+  const {getPreferences, preferences} = useUserData();
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
@@ -50,6 +50,11 @@ export default function ExerciseView(props) {
   const [setComplete, setSetComplete] = useState(false);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
+
+  useEffect(() => {
+    getPreferences();
+  }, []);
+
   useEffect(() => {
     let sets = props.sets;
 
@@ -193,6 +198,7 @@ export default function ExerciseView(props) {
               onPress={() =>
                 navigation.navigate('WeightCapture', {
                   weightHistory: weightHistory,
+                  weightPreference: preferences.weightPreference,
                 })
               }>
               <Image source={weightIcon} />

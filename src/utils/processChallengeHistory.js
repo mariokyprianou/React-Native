@@ -7,8 +7,13 @@
  */
 import {format} from 'date-fns';
 
-export default processChallengeHistory = (data) =>
+export default processChallengeHistory = (data, preference) =>
   data.map((event) => {
-    const date = format(new Date(event.createdAt), 'dd/LL');
-    return {...event, date};
+    const newEvent = {...event};
+    if (preference === 'LB') {
+      const convertedWeight = Math.round(newEvent.weight * 2.20462262185);
+      newEvent.weight = convertedWeight;
+    }
+    newEvent.date = format(new Date(event.createdAt), 'dd/LL');
+    return newEvent;
   });

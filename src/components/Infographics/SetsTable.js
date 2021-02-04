@@ -15,16 +15,13 @@ import {FlatList} from 'the-core-ui-module-tdlist';
 import FadingBottomView from '../Views/FadingBottomView';
 import {useRoute} from '@react-navigation/core';
 
-export default function SetsTable({date}) {
+export default function SetsTable({date, weightData, weightPreference}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const listRef = useRef();
-  const {
-    params: {weightHistory},
-  } = useRoute();
 
-  let history = [...weightHistory];
+  let history = [...weightData];
   const formattedHistory = history.reverse();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -73,6 +70,7 @@ export default function SetsTable({date}) {
                 setNumber={item.setNumber}
                 reps={item.reps}
                 weight={item.weight}
+                weightPreference={weightPreference}
               />
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}

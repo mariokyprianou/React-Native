@@ -40,7 +40,6 @@ export default function DataProvider(props) {
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
     let days = await AsyncStorage.getItem('@CURRENT_WEEK');
     days = JSON.parse(days);
-    console.log(days);
 
     if (days) {
       days = days.map((it) => {
@@ -300,7 +299,6 @@ export default function DataProvider(props) {
   const wasLastWorkoutToday = useCallback((workouts) => {
     const today = new Date();
     const wasToday = workouts.find((workout) => {
-      console.log(workout.completedAt);
       return (
         workout.completedAt &&
         differenceInCalendarDays(parseISO(workout.completedAt), today) === 0

@@ -12,6 +12,9 @@ import TabContainer from './routes/TabContainer';
 import LandingScreen from './screens/landing/LandingScreen';
 import useLoading from './hooks/loading/useLoading';
 import LoadingView from './components/Views/LoadingView';
+import ChangeDeviceScreen from './screens/Authentication/ChangeDeviceScreen';
+import {TransitionPresets} from '@react-navigation/stack';
+
 export default function AppContainer() {
   const {loading} = useLoading();
 
@@ -38,6 +41,11 @@ export default function AppContainer() {
           options={{
             headerShown: false,
           }}
+        />
+        <AppStack.Screen
+          name="ChangeDevice"
+          component={ChangeDeviceScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
       </AppStack.Navigator>
       {loading && LoadingView()}

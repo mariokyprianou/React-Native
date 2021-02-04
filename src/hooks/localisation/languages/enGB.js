@@ -123,6 +123,7 @@ const enGB = {
       'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
     DisabledText:
       'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
+    ChangeDeviceFailedText: 'Oops! Failed to change device, try again later.',
   },
 
   PurchaseDict: {

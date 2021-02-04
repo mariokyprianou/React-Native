@@ -19,6 +19,7 @@ import {TransitionPresets} from '@react-navigation/stack';
 const defaultImage = require('../../../assets/images/analyticsImage.png');
 
 const PermissionScreenUI = ({
+  backNavigation = true,
   title = 'Supply title',
   text = 'Supply text',
   image = defaultImage,
@@ -35,7 +36,7 @@ const PermissionScreenUI = ({
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () => <Header title={title} showModalCross={true} />,
+    header: () => <Header title={title} showModalCross={backNavigation} />,
     ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 
@@ -79,7 +80,7 @@ const PermissionScreenUI = ({
         <View style={styles.textContainer}>
           <Text style={styles.text}>{text}</Text>
         </View>
-        <Spacer height={50} />
+        <Spacer height={40} />
         <DefaultButton
           type={buttonType}
           variant="white"

@@ -9,25 +9,51 @@ import React, {useEffect, useState} from 'react';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import PermissionScreenUI from './PermissionScreenUI';
 import Intercom from 'react-native-intercom';
+import {useRoute} from '@react-navigation/core';
+import {useMutation} from '@apollo/client';
+import ChangeDevice from '../../apollo/mutations/ChangeDevice';
+import {useNavigation} from '@react-navigation/native';
+import getResponse from '../../utils/getResponse';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {ChangeDeviceDict} = dictionary;
+  const navigation = useNavigation();
 
-  // MARK: - Local
-  const [canChangeDevice, setCanChangeDevice] = useState(false);
-  // MARK: - Logic
-  // MARK: - UseEffect
+  const [changeDevice] = useMutation(ChangeDevice);
 
-  useEffect(() => {
-    // TODO: - check it's possible to change device
-  });
+  const {
+    params: {canChangeDevice, newDeviceId},
+  } = useRoute();
 
   // MARK: - Actions
   const onPressButton = () => {
-    // TODO: - Change Device
-    console.log('HDSJHDKJA');
+    changeDevice({
+      variables: {
+        input: {
+          deviceId: newDeviceId,
+        },
+      },
+    })
+      .then((res) => {
+        const response = getResponse(res, 'changeDevice');
+
+        if (response) {
+          navigation.goBack();
+        } else {
+          displayAlert({
+            text: ChangeDeviceDict.ChangeDeviceFailedText,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err, '<---change device permissions error');
+        displayAlert({
+          text: ChangeDeviceDict.ChangeDeviceFailedText,
+        });
+      });
   };
   const onPressBottomButton = () => {
     Intercom.displayMessenger();
@@ -47,6 +73,7 @@ export default function ChangeDeviceScreen() {
       onPressBottomButton={onPressBottomButton}
       disabled={!canChangeDevice}
       icon="chevron"
+      backNavigation={false}
     />
   );
 }

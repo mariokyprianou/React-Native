@@ -28,10 +28,8 @@ export default function TakeARestScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {name, setWarningReceived, nextWorkout},
+    params: {name},
   } = useRoute();
-
-  const {setSelectedWorkout} = useData();
 
   navigation.setOptions({
     header: () => (
@@ -77,12 +75,10 @@ export default function TakeARestScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleContinue() {
-    setSelectedWorkout(nextWorkout);
     navigation.navigate('StartWorkout');
   }
 
   function handleGoBack() {
-    setWarningReceived(true);
     navigation.goBack();
   }
 

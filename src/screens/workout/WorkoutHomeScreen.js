@@ -23,9 +23,10 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
-import {differenceInDays, addDays, format} from 'date-fns';
+import {differenceInDays, addDays, format, parseISO, parse} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -66,6 +67,7 @@ export default function WorkoutHomeScreen() {
   // Check if week is completed
   useEffect(() => {
     if (programme) {
+      console.log(programme?.programmeImage);
       const hasRemaining = programme.currentWeek.workouts.find(
         (workout) => !workout.completedAt,
       );
@@ -133,29 +135,17 @@ export default function WorkoutHomeScreen() {
     }
   }, [weekNumber, programme]);
 
-  async function checkLastWeek(previousWorkoutDates) {
-    const {consecutiveWorkouts, lastDate} = await getConsecutiveWorkouts();
-
-    const today = new Date();
-    if (
-      (previousWorkoutDates.length === 0 &&
-        consecutiveWorkouts === 3 &&
-        differenceInDays(today, lastDate) === 1) ||
-      (previousWorkoutDates.length === 1 &&
-        consecutiveWorkouts === 2 &&
-        differenceInDays(today, lastDate) === 2) ||
-      (previousWorkoutDates.length === 2 &&
-        consecutiveWorkouts === 1 &&
-        differenceInDays(today, lastDate) === 3)
-    ) {
-      setThreeWorkoutsInRow(true);
-      clearConsecutiveDays();
-    }
-  }
-  useEffect(() => {
+  async function shouldShowWarning() {
     const today = new Date();
 
     if (programme) {
+      // Check last time warning was shown
+      const date = await AsyncStorage.getItem('@LAST_WARNING_DATE');
+      if (differenceInDays(new Date(), new Date(date)) === 0) {
+        console.log('Consecutive workouts warning already show: Abort');
+        return false;
+      }
+
       const previousWorkoutDates = [];
       const completedWorkouts = programme.currentWeek.workouts.filter(
         (workout) => workout.completedAt !== null,
@@ -164,11 +154,25 @@ export default function WorkoutHomeScreen() {
         previousWorkoutDates.push(workout.completedAt),
       );
 
+      // Check previous week dates
       if (previousWorkoutDates.length < 3) {
-        checkLastWeek(previousWorkoutDates);
-      }
-
-      if (previousWorkoutDates.length === 3) {
+        const {consecutiveWorkouts, lastDate} = await getConsecutiveWorkouts();
+        if (
+          (previousWorkoutDates.length === 0 &&
+            consecutiveWorkouts === 3 &&
+            differenceInDays(today, lastDate) === 1) ||
+          (previousWorkoutDates.length === 1 &&
+            consecutiveWorkouts === 2 &&
+            differenceInDays(today, lastDate) === 2) ||
+          (previousWorkoutDates.length === 2 &&
+            consecutiveWorkouts === 1 &&
+            differenceInDays(today, lastDate) === 3)
+        ) {
+          clearConsecutiveDays();
+          return true;
+        }
+        // Check current week dates
+      } else if (previousWorkoutDates.length >= 3) {
         const lastIndex = previousWorkoutDates.length - 1;
         if (
           differenceInDays(today, new Date(previousWorkoutDates[lastIndex])) ===
@@ -182,25 +186,12 @@ export default function WorkoutHomeScreen() {
             new Date(previousWorkoutDates[lastIndex - 2]),
           ) === 3
         ) {
-          setThreeWorkoutsInRow(true);
+          return true;
         }
       }
     }
-  }, [programme]);
-
-  useEffect(() => {
-    if (programme && threeWorkoutsInRow === true && warningReceived === false) {
-      const nextWorkout = workoutsToDisplay.filter(
-        (workout) => workout.completedAt === null,
-      )[0];
-
-      navigation.navigate('TakeARest', {
-        name: programme.trainer.name,
-        setWarningReceived,
-        nextWorkout,
-      });
-    }
-  }, [programme, threeWorkoutsInRow]);
+    return false;
+  }
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
@@ -438,6 +429,19 @@ export default function WorkoutHomeScreen() {
                       .slice()
                       .sort((a, b) => a.orderIndex - b.orderIndex),
                   };
+
+                  if (await shouldShowWarning()) {
+                    await AsyncStorage.setItem(
+                      '@LAST_WARNING_DATE',
+                      `${new Date()}`,
+                    );
+                    setSelectedWorkout(newWorkout);
+                    navigation.navigate('TakeARest', {
+                      name: programme.trainer.name,
+                    });
+                    return;
+                  }
+
                   setSelectedWorkout(newWorkout);
                   navigation.navigate('StartWorkout');
                 }}

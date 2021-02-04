@@ -168,7 +168,7 @@ export default function WorkoutHomeScreen() {
         checkLastWeek(previousWorkoutDates);
       }
 
-      if (previousWorkoutDates.length >= 3) {
+      if (previousWorkoutDates.length === 3) {
         const lastIndex = previousWorkoutDates.length - 1;
         if (
           differenceInDays(today, new Date(previousWorkoutDates[lastIndex])) ===

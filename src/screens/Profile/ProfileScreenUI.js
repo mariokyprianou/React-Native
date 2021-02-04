@@ -132,17 +132,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     }
   }, [countryData, countryLoading, countryError]);
 
-  // useEffect(() => {
-  //   if (profileData) {
-  //     const memberSince = profileData.profile.createdAt.slice(0, 4);
-  //     const userProfile = {...profileData.profile};
-  //     userProfile.memberSince = memberSince;
-  //     setUserData(userProfile);
-  //   } else {
-  //     console.log(profileLoading, profileError);
-  //   }
-  // }, [profileData, profileLoading, profileError]);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       cleanValues();
@@ -264,10 +253,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
     setUpdateLoading(true);
 
-    const dob = format(
-      parseISO(newDateOfBirth || userData.dateOfBirth),
-      'yyyy-LL-dd',
-    );
+    const dob = parseISO(newDateOfBirth || userData.dateOfBirth);
 
     const newCountry =
       countryLookup[profile_country] || countryLookup[userData.country];
@@ -299,7 +285,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
-        console.log('newData', newData);
         setUserData(newData);
         setUpdateLoading(false);
       })
@@ -320,7 +305,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
             await Auth.signOut()
-              .then(() => {
+              .then((res) => {
+                console.log(res, '<----sign out res');
                 setUserData({});
 
                 navigation.reset({
@@ -328,7 +314,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                   routes: [{name: 'AuthContainer'}],
                 });
               })
-              .catch((err) => console.log('Error signing out', err));
+              .catch(async (err) => {
+                console.log('Error signing out', err);
+              });
           },
         },
       ],
@@ -433,7 +421,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.givenName,
-      value: userData.givenName,
+      defaultValue: userData.givenName,
       style: {
         ...textStyles.regular16_black100,
         flex: 1,
@@ -451,7 +439,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.familyName,
-      value: userData.familyName,
+      defaultValue: userData.familyName,
       style: {
         ...textStyles.regular16_black100,
         flex: 1,

@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useRef, useState} from 'react';
-import {AppState, Alert} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert} from 'react-native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import PermissionScreenUI from './PermissionScreenUI';
@@ -25,31 +25,23 @@ export default function EmailVerificationScreen() {
   const {
     params: {email, password, fromLogin},
   } = useRoute();
-  const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
   const {permissionsNeeded} = useUserData();
-
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
   useEffect(() => {
-    AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    setInterval(async () => {
+    const interval = setInterval(async () => {
       await Auth.signIn(email, password)
         .then(async () => {
+          clearInterval(interval);
           const permissionNeeded = await permissionsNeeded();
 
           if (permissionNeeded) {
             navigation.navigate(permissionNeeded);
           } else {
-            navigation.navigate('TabContainer');
+            navigation.reset({
+              index: 1,
+              routes: [{name: 'TabContainer'}],
+            });
           }
         })
         .catch((error) => {
@@ -60,31 +52,6 @@ export default function EmailVerificationScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  async function handleAppStateChange(nextAppState) {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      await Auth.signIn(email, password)
-        .then(async () => {
-          const permissionNeeded = await permissionsNeeded();
-
-          if (permissionNeeded) {
-            navigation.navigate(permissionNeeded);
-          } else {
-            navigation.navigate('TabContainer');
-          }
-        })
-        .catch((error) => {
-          console.log('error signing in', error);
-          Alert.alert(AuthDict.NotYetLoggedIn);
-        });
-    }
-
-    appState.current = nextAppState;
-    setAppStateVisible(appState.current);
-  }
-
   async function onPressButton() {
     await resendEmail({variables: {email}})
       .then(() => {

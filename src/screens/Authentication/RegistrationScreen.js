@@ -225,17 +225,21 @@ export default function RegisterScreen() {
       },
     })
       .then((res) => {
-        console.log('res', res);
+        console.log('REGISTRATION RES', res);
         if (res.data.registerUser === true) {
           cleanValues();
           navigation.navigate('EmailVerification', {email, password});
         }
       })
       .catch((err) => {
+        if (err.message === 'An account with the given email already exists.') {
+          displayAlert({
+            text: AuthDict.EmailAlreadyRegistered,
+          });
+        }
         displayAlert({
-          text: 'Network request failed',
+          text: AuthDict.NetworkRequestFailed,
         });
-        console.log(err);
       })
       .finally(() => setLoading(false));
   }

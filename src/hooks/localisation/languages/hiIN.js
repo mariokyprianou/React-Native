@@ -106,6 +106,8 @@ const hiIN = {
     YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
     VerificationNotRecognized:
       'Oops! Verification code not recognised. Please try again.',
+    NetworkRequestFailed: 'Network request failed.',
+    EmailAlreadyRegistered: 'This email address has already been registered',
   },
 
   LanguageDict: {
@@ -221,6 +223,9 @@ const hiIN = {
     AnalyticsText:
       'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
     Language: 'LANGUAGE',
+    Weight: 'WEIGHT MEASUREMENT',
+    WeightKgs: 'Metric (kg)',
+    WeightLbs: 'Imperial (lb)',
   },
 
   ProgressDict: {
@@ -267,6 +272,7 @@ const hiIN = {
     Sets: 'sets',
 
     GreatJob: 'Great job! Have a rest',
+    GreatJobNoRest: 'Great job!',
     WhichWeight: 'Which weight did you use for this exercise?',
     HowDoYouFeel: 'How do you feel?',
 
@@ -304,6 +310,10 @@ const hiIN = {
 
     Today: 'TODAY',
     WeightsTitle: 'Weights',
+
+    WorkoutCompetedWarningText:
+      'Oops! You have already completed a workout for today.',
+    WorkoutGoBackWarning: 'If you go back you will lose your workout progress',
   },
 
   HelpMeChooseDict: {

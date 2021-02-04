@@ -23,7 +23,6 @@ import Spacer from '../../components/Utility/Spacer';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import useUserData from '../../hooks/data/useUserData';
 import useData from '../../hooks/data/UseData';
-
 import AsyncStorage from '@react-native-community/async-storage';
 import displayAlert from '../../utils/DisplayAlert';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
@@ -206,7 +205,7 @@ const SettingsScreen = ({}) => {
       },
     })
       .then((res) => {
-        setUserData(newUserData);
+        setUserData({...userData, ...newUserData});
       })
       .catch((err) => console.log(err));
 

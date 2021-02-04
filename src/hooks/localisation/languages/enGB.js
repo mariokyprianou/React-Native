@@ -106,6 +106,8 @@ const enGB = {
     YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
     VerificationNotRecognized:
       'Oops! Verification code not recognised. Please try again.',
+    NetworkRequestFailed: 'Network request failed.',
+    EmailAlreadyRegistered: 'This email address has already been registered',
   },
 
   LanguageDict: {

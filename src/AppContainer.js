@@ -10,8 +10,6 @@ import {AppStack} from './navigation';
 import AuthContainer from './routes/AuthContainer';
 import TabContainer from './routes/TabContainer';
 import LandingScreen from './screens/landing/LandingScreen';
-import {View, ActivityIndicator} from 'react-native';
-import useTheme from './hooks/theme/UseTheme';
 import useLoading from './hooks/loading/useLoading';
 import LoadingView from './components/Views/LoadingView';
 export default function AppContainer() {

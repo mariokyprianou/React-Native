@@ -51,16 +51,15 @@ const PermissionScreenUI = ({
     },
     textContainer: {
       width: '90%',
-      flex: 1,
     },
     text: {
       ...textStyles.medium15_brownishGrey100,
       textAlign: 'center',
     },
     imageView: {
-      width: getWidth(254),
-      height: getHeight(240),
-      marginTop: getHeight(46),
+      height: getHeight(270),
+      width: '100%',
+      marginTop: getHeight(20),
     },
     bottomContainer: {
       marginBottom: getHeight(35),

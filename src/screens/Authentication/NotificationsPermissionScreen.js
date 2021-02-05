@@ -92,6 +92,7 @@ export default function NotificationPermissionScreen() {
     <PermissionScreenUI
       title={AuthDict.NotificationsPermissionsScreenTitle}
       text={AuthDict.NotificationsPermissionsText}
+      image={require('../../../assets/images/notificationsImage.png')}
       buttonType="allowNotifications"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}

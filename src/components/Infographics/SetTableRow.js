@@ -8,13 +8,16 @@
 
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 
-export default function SetTableRow({setNumber, reps, weight}) {
+export default function SetTableRow({
+  setNumber,
+  reps,
+  weight,
+  weightPreference,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getWidth} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
@@ -42,8 +45,7 @@ export default function SetTableRow({setNumber, reps, weight}) {
         }>{`${WorkoutDict.WeightsSetText} ${setNumber}`}</Text>
       <Text
         style={styles.text}>{`${reps} ${WorkoutDict.WeightsRepsText}`}</Text>
-      <Text
-        style={styles.text}>{`${weight} ${WorkoutDict.WeightsUnitText}`}</Text>
+      <Text style={styles.text}>{`${weight} ${weightPreference}`}</Text>
     </View>
   );
 }

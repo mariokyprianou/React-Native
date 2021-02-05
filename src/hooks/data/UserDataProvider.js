@@ -77,7 +77,6 @@ export default function UserDataProvider(props) {
   const [getPreferences] = useLazyQuery(Preferences, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res, '<-- notifications prefs');
       const data = res.preferences;
       setPreferences(data);
     },

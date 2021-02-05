@@ -51,7 +51,7 @@ const PermissionScreenUI = ({
       backgroundColor: colors.backgroundWhite100,
     },
     textContainer: {
-      width: '90%',
+      width: '85%',
       flex: 1,
     },
     text: {

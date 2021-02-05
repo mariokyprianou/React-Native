@@ -63,10 +63,15 @@ export default function ChangeDeviceScreen() {
   const text = canChangeDevice
     ? ChangeDeviceDict.ActiveText
     : ChangeDeviceDict.DisabledText;
+
+  const image = canChangeDevice
+    ? require('../../../assets/images/changeDeviceActive.png')
+    : require('../../../assets/images/changeDeviceInactive.png');
   return (
     <PermissionScreenUI
       title={ChangeDeviceDict.Title}
       text={text}
+      image={image}
       buttonType="changeDevice"
       bottomButtonType="needHelp"
       onPressButton={onPressButton}

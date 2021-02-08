@@ -27,7 +27,7 @@ export default function LoginScreen() {
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
 
-  const {permissionsNeeded} = useUserData();
+  const {permissionsNeeded, firebaseLogEvent, analyticsEvents} = useUserData();
   const {setLoading} = useLoading();
 
   navigation.setOptions({
@@ -53,7 +53,6 @@ export default function LoginScreen() {
     },
     scrollViewContainer: {
       alignSelf: 'center',
-
       alignContent: 'center',
       height: '100%',
       width: '100%',
@@ -109,6 +108,9 @@ export default function LoginScreen() {
           cleanValues();
         } else {
           Intercom.registerIdentifiedUser({email: emailAddress});
+
+          firebaseLogEvent(analyticsEvents.signIn, {email: emailAddress});
+
           const permissionNeeded = await permissionsNeeded();
 
           if (permissionNeeded) {

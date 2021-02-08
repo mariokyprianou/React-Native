@@ -26,6 +26,7 @@ import useData from '../../hooks/data/UseData';
 import AsyncStorage from '@react-native-community/async-storage';
 import displayAlert from '../../utils/DisplayAlert';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
+import {firebase} from '@react-native-firebase/analytics';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -186,6 +187,8 @@ const SettingsScreen = ({}) => {
       downloadQuality: newDownloadQuality,
       weightPreference: newWeightPref,
     };
+
+    firebase.analytics().setAnalyticsCollectionEnabled(prefAnalytics);
 
     const newUserData = {
       familyName: userData.familyName,

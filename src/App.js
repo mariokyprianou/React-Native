@@ -28,6 +28,7 @@ import Secrets from './environment/Secrets';
 import LoadingProvider from './hooks/loading/LoadingProvider';
 import CommonDataProvider from './hooks/data/CommonDataProvider';
 import getTimeZoneOffset from './utils/getTimeZoneOffset';
+import {firebase} from '@react-native-firebase/analytics';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -50,6 +51,8 @@ const App = () => {
     async function BuildClient() {
       const gqlClient = await TDGraphQLProvider();
       setClient(gqlClient);
+
+      await firebase.initializeApp();
     }
 
     BuildClient();

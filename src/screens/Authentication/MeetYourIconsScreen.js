@@ -36,6 +36,7 @@ import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
+import useUserData from '../../hooks/data/useUserData';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -58,7 +59,8 @@ export default function MeetYourIconsScreen() {
   //const switchProgramme = true;
 
   const {trainers, suggestedProgramme} = useCommonData();
-  const {setProgrammeModalImage} = UseData();
+  const {setProgrammeModalImage, programme} = UseData();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -304,6 +306,24 @@ export default function MeetYourIconsScreen() {
     }
   };
 
+  function submitAnalyticsEvent(newTrainer = false) {
+    if (programme && programme.trainer) {
+      firebaseLogEvent(analyticsEvents.leftTrainer, {
+        trainerId: programme.trainer.id,
+        programmeId: programme.id,
+      });
+    }
+    firebaseLogEvent(
+      newTrainer
+        ? analyticsEvents.selectedTrainer
+        : analyticsEvents.restartContinueTrainer,
+      {
+        trainerId: selectedTrainer.id,
+        programmeId: selectedProgram.id,
+      },
+    );
+  }
+
   return (
     <View style={styles.container}>
       {safeArea && <View style={styles.safeArea} />}
@@ -408,7 +428,12 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="gradient"
             trainerName="KATRINA"
-            onPress={navigateToWorkoutHome}
+            onPress={() => {
+              // todo -- Move in switchMutation completed
+              submitAnalyticsEvent(false);
+
+              navigateToWorkoutHome();
+            }}
           />
           <Spacer height={20} />
           <DefaultButton
@@ -416,7 +441,12 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="white"
             weekNo={currentWeek}
-            onPress={navigateToWorkoutHome}
+            onPress={() => {
+              // todo -- Move in switchMutation completed
+              submitAnalyticsEvent(false);
+
+              navigateToWorkoutHome();
+            }}
           />
         </View>
       ) : switchProgramme === true &&
@@ -427,6 +457,9 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="gradient"
             onPress={() => {
+              // todo -- Move in switchMutation completed
+              submitAnalyticsEvent(true);
+
               setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: true,

@@ -30,6 +30,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import displayAlert from '../../utils/DisplayAlert';
 import useLoading from '../../hooks/loading/useLoading';
 import Intercom from 'react-native-intercom';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -59,6 +60,8 @@ export default function RegisterScreen() {
   const selectedCountry = getValueByName('country');
   const [execute] = useMutation(RegisterUser);
   const {setLoading} = useLoading();
+
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   navigation.setOptions({
     header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
@@ -230,6 +233,9 @@ export default function RegisterScreen() {
         if (res.data.registerUser === true) {
           cleanValues();
           Intercom.registerIdentifiedUser({email: email});
+
+          firebaseLogEvent(analyticsEvents.registration, {email: email});
+
           navigation.navigate('EmailVerification', {email, password});
         }
       })

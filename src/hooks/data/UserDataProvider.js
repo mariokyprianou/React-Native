@@ -16,6 +16,8 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
 import * as R from 'ramda';
+import {format} from 'date-fns';
+import analytics from '@react-native-firebase/analytics';
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -74,6 +76,26 @@ export default function UserDataProvider(props) {
     'Pacific/Tongatapu',
   ]);
 
+  const [analyticsEvents] = useState({
+    registration: 'REGISTRATION', // done
+    signIn: 'SIGN_IN', // done
+    selectedTrainer: 'SELECTED_TRAINER', // dne
+    leftTrainer: 'LEFT_TRAINER', // done
+    restartContinueTrainer: 'RESTART_CONTINUE_TRAINER', // done
+    completedWorkout: 'COMPLETED_WORKOUT',
+    startedWorkout: 'STARTED_WORKOUT',
+    completedExercise: 'COMPLETED_EXERCISE',
+    startedExercise: 'STARTED_EXERCISE',
+    newSubscription: 'SUBSCRIPTION',
+    cancelSubscription: 'CANCEL_SUBSCRIPTION',
+    completedChallenge: 'COMPLETED_CHALLENGE',
+    accessedIntercom: 'ACCESSED_INTERCOM',
+    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER',
+    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT',
+    shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE',
+    shareTransformation: 'SHARE_TRANSFORMATION',
+  });
+
   const [getPreferences] = useLazyQuery(Preferences, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
@@ -101,6 +123,27 @@ export default function UserDataProvider(props) {
     }
   }, []);
 
+  const firebaseLogEvent = useCallback((event, params = {}) => {
+    const time = format(new Date(), 'hh:mm');
+    const date = format(new Date(), 'dd/MM/yyyy');
+
+    let data = {
+      time,
+      date,
+    };
+    if (userData && userData.email) {
+      data = {...data, email: userData.email};
+    }
+
+    console.log(event + ': ' + {...data, ...params});
+
+    analytics()
+      .logEvent(event, {...data, ...params})
+      .catch((error) => {
+        console.log('AnalyticsEventError', error);
+      });
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({
@@ -112,6 +155,8 @@ export default function UserDataProvider(props) {
       permissionsNeeded,
       timeZones,
       setTimeZones,
+      firebaseLogEvent,
+      analyticsEvents,
     }),
     [
       userData,
@@ -122,6 +167,8 @@ export default function UserDataProvider(props) {
       permissionsNeeded,
       timeZones,
       setTimeZones,
+      firebaseLogEvent,
+      analyticsEvents,
     ],
   );
 

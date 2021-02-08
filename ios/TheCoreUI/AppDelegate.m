@@ -9,6 +9,8 @@
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 #import <Intercom/intercom.h>
+#import <Firebase.h>
+
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
@@ -58,6 +60,8 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+    
+  [FIRApp configure];
   
   [RNSplashScreen show];
   [super application:application didFinishLaunchingWithOptions:launchOptions];

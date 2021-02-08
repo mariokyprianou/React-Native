@@ -58,7 +58,7 @@ export default function WorkoutHomeScreen() {
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
-  useEffect(() => {
+  useEffect(async () => {
     getProgramme();
   }, []);
 

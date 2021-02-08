@@ -80,7 +80,7 @@ export default function UserDataProvider(props) {
       const data = res.preferences;
       setPreferences(data);
     },
-    onError: (error) => console.log(error),
+    onError: (error) => console.log(error, '<---get preferences query error'),
   });
 
   const permissionsNeeded = useCallback(async () => {

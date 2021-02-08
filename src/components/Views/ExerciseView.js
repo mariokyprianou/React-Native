@@ -54,9 +54,14 @@ export default function ExerciseView(props) {
 
   useEffect(() => {
     getPreferences();
-    const weightPreference = preferences.weightPreference.toLowerCase();
-    setWeightLabel(weightPreference);
   }, []);
+
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
 
   useEffect(() => {
     let sets = props.sets;

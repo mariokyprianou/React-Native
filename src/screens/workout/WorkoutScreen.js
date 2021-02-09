@@ -13,6 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useData from '../../hooks/data/UseData';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,7 +27,7 @@ export default function WorkoutScreen() {
     setCurrentExerciseIndex,
     setIsWorkoutTimerRunning,
   } = useData();
-
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
   const [offset, setOffset] = useState(0);
   const [enableScroll, setEnableScroll] = useState(false);
 
@@ -55,6 +56,23 @@ export default function WorkoutScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleIndex(newOffset) {
     if (newOffset > offset) {
+      const exerciseCompleted = selectedWorkout.exercises[currentExerciseIndex];
+      const exerciseStarted =
+        selectedWorkout.exercises[currentExerciseIndex + 1];
+
+      firebaseLogEvent(analyticsEvents.completedExercise, {
+        workoutId: selectedWorkout.id,
+        workoutName: selectedWorkout.name,
+        exerciseId: exerciseCompleted.id,
+        exerciseName: exerciseCompleted.name,
+      });
+      firebaseLogEvent(analyticsEvents.startedExercise, {
+        workoutId: selectedWorkout.id,
+        workoutName: selectedWorkout.name,
+        exerciseId: exerciseStarted.id,
+        exerciseName: exerciseStarted.name,
+      });
+
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setEnableScroll(false);
     } else {

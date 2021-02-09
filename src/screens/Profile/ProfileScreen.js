@@ -10,11 +10,13 @@ import {FormHook} from 'the-core-ui-module-tdforms';
 import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
 import Intercom from 'react-native-intercom';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function ProfileScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {getValues} = FormHook();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -26,6 +28,7 @@ export default function ProfileScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressNeedHelp = () => {
+    firebaseLogEvent(analyticsEvents.accessedIntercom, {});
     Intercom.displayMessenger();
   };
 

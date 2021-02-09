@@ -463,6 +463,7 @@ export default function MeetYourIconsScreen() {
               setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: true,
+                trainerId: selectedTrainer.id,
                 newTrainer: selectedTrainer.name,
                 environment: selectedProgram.environment,
               });
@@ -479,6 +480,7 @@ export default function MeetYourIconsScreen() {
               setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: false,
+                trainerId: selectedTrainer.id,
                 newTrainer: selectedTrainer.name,
                 environment: selectedProgram.environment,
                 programmeId: selectedProgram.id,

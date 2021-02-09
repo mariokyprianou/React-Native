@@ -24,6 +24,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
 import UseData from '../../hooks/data/UseData';
+import useUserData from '../../hooks/data/useUserData';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -34,11 +35,13 @@ export default function CongratulationsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {switchProgramme, newTrainer, environment, programmeId},
+    params: {switchProgramme, trainerId, newTrainer, environment, programmeId},
   } = useRoute();
   const navigation = useNavigation();
 
   const {programmeModalImage} = UseData();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
+
   navigation.setOptions({
     header: () => null,
   });
@@ -128,6 +131,7 @@ export default function CongratulationsScreen() {
         (error) => console.log(error),
         (success, method) => {
           if (success) {
+            shareEvent();
             console.log('Successfully shared', success);
           }
         },
@@ -135,6 +139,7 @@ export default function CongratulationsScreen() {
     } else {
       Share.open({shareOptions})
         .then((res) => {
+          shareEvent();
           console.log(res);
         })
         .catch((err) => {
@@ -143,6 +148,12 @@ export default function CongratulationsScreen() {
     }
   }
 
+  function shareEvent() {
+    firebaseLogEvent(analyticsEvents.shareSelectedTrainer, {
+      trainerId: trainerId,
+      programmeId: programmeId,
+    });
+  }
   function handlePressStart() {
     if (switchProgramme === true) {
       navigation.reset({

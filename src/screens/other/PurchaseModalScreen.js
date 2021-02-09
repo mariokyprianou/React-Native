@@ -15,6 +15,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
 import Spacer from '../../components/Utility/Spacer';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import useUserData from '../../hooks/data/useUserData';
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
 
@@ -25,6 +26,7 @@ const PurchaseModalScreen = ({}) => {
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   // MARK: - Local
   const [yearlyMonthPrice, setYearlyMonthPrice] = useState(2);
@@ -63,6 +65,8 @@ const PurchaseModalScreen = ({}) => {
 
   const displayMessenger = () => {
     // to open intercom
+    firebaseLogEvent(analyticsEvents.accessedIntercom, {});
+
     Intercom.displayMessenger();
   };
 

@@ -82,18 +82,18 @@ export default function UserDataProvider(props) {
     selectedTrainer: 'SELECTED_TRAINER', // dne
     leftTrainer: 'LEFT_TRAINER', // done
     restartContinueTrainer: 'RESTART_CONTINUE_TRAINER', // done
-    completedWorkout: 'COMPLETED_WORKOUT',
-    startedWorkout: 'STARTED_WORKOUT',
-    completedExercise: 'COMPLETED_EXERCISE',
-    startedExercise: 'STARTED_EXERCISE',
+    completedWorkout: 'COMPLETED_WORKOUT', // done
+    startedWorkout: 'STARTED_WORKOUT', // done
+    completedExercise: 'COMPLETED_EXERCISE', // done
+    startedExercise: 'STARTED_EXERCISE', // done
     newSubscription: 'SUBSCRIPTION',
     cancelSubscription: 'CANCEL_SUBSCRIPTION',
     completedChallenge: 'COMPLETED_CHALLENGE',
-    accessedIntercom: 'ACCESSED_INTERCOM',
-    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER',
-    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT',
+    accessedIntercom: 'ACCESSED_INTERCOM', // done
+    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER', // done
+    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT', // done
     shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE',
-    shareTransformation: 'SHARE_TRANSFORMATION',
+    shareTransformation: 'SHARE_TRANSFORMATION', // done
   });
 
   const [getPreferences] = useLazyQuery(Preferences, {
@@ -135,7 +135,7 @@ export default function UserDataProvider(props) {
       data = {...data, email: userData.email};
     }
 
-    console.log(event + ': ' + {...data, ...params});
+    console.log('AnalyticsEvent: ' + event + ' : ' + {...data, ...params});
 
     analytics()
       .logEvent(event, {...data, ...params})

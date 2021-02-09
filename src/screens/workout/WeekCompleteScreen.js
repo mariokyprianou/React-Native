@@ -18,6 +18,7 @@ import IconTextView from '../../components/Infographics/IconTextView';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import UseData from '../../hooks/data/UseData';
+import useUserData from '../../hooks/data/useUserData';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -39,6 +40,7 @@ export default function WeekCompleteScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
   const {programme, programmeModalImage} = UseData();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   navigation.setOptions({
     header: () => (
@@ -87,6 +89,10 @@ export default function WeekCompleteScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleShare() {
+    firebaseLogEvent(analyticsEvents.shareCompletedWorkout, {
+      trainerId: programme.trainer.id,
+      programmeId: programme.id,
+    });
     // handle share
   }
 

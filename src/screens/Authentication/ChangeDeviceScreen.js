@@ -15,12 +15,14 @@ import ChangeDevice from '../../apollo/mutations/ChangeDevice';
 import {useNavigation} from '@react-navigation/native';
 import getResponse from '../../utils/getResponse';
 import displayAlert from '../../utils/DisplayAlert';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
   const {ChangeDeviceDict} = dictionary;
   const navigation = useNavigation();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   const [changeDevice] = useMutation(ChangeDevice);
 
@@ -56,6 +58,8 @@ export default function ChangeDeviceScreen() {
       });
   };
   const onPressBottomButton = () => {
+    firebaseLogEvent(analyticsEvents.accessedIntercom, {});
+
     Intercom.displayMessenger();
   };
 

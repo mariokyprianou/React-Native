@@ -17,6 +17,7 @@ import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import useUserData from '../../hooks/data/useUserData';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
@@ -41,6 +42,8 @@ export default function TransformationScreen() {
     ),
   });
   const {fakeProgressImages} = fakeProgressData();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
+
   const screenWidth = Dimensions.get('screen').width;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -97,7 +100,9 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err));
   }
 
-  function handleShare() {}
+  function handleShare() {
+    firebaseLogEvent(analyticsEvents.shareTransformation, {});
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

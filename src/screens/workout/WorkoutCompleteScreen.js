@@ -25,6 +25,7 @@ import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
 import AsyncStorage from '@react-native-community/async-storage';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -35,6 +36,7 @@ export default function WorkoutCompleteScreen() {
   const navigation = useNavigation();
 
   const {selectedWorkout, workoutTime} = UseData();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   const [completeWorkout] = useMutation(CompleteWorkout);
 
@@ -153,6 +155,11 @@ export default function WorkoutCompleteScreen() {
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
+          firebaseLogEvent(analyticsEvents.completeWorkout, {
+            workoutId: selectedWorkout.id,
+            workoutName: selectedWorkout.name,
+          });
+
           navigation.reset({
             index: 0,
             routes: [{name: 'TabContainer'}],

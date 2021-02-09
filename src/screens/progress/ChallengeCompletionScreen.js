@@ -19,6 +19,7 @@ import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import Share from 'react-native-share';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -32,6 +33,7 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
     params: {historyData, name, elapsed},
   } = useRoute();
   const navigation = useNavigation();
+  const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   navigation.setOptions({
     header: () => (
@@ -155,12 +157,16 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
         },
         (error) => console.log(error),
         (success, method) => {
-          if (success) console.log('Successfully shared', success);
+          if (success) {
+            shareEvent();
+            console.log('Successfully shared', success);
+          }
         },
       );
     } else {
       Share.open({shareOptions})
         .then((res) => {
+          shareEvent();
           console.log(res);
         })
         .catch((err) => {
@@ -169,7 +175,12 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
     }
   }
 
+  function shareEvent() {
+    firebaseLogEvent(analyticsEvents.shareCompletedChallenge, {});
+  }
+
   function handleDone() {
+    firebaseLogEvent(analyticsEvents.completedChallenge, {});
     navigation.navigate('Progress');
   }
 

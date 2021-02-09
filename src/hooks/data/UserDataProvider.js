@@ -88,11 +88,11 @@ export default function UserDataProvider(props) {
     startedExercise: 'STARTED_EXERCISE', // done
     newSubscription: 'SUBSCRIPTION',
     cancelSubscription: 'CANCEL_SUBSCRIPTION',
-    completedChallenge: 'COMPLETED_CHALLENGE',
+    completedChallenge: 'COMPLETED_CHALLENGE', // done
     accessedIntercom: 'ACCESSED_INTERCOM', // done
     shareSelectedTrainer: 'SHARE_SELECTED_TRAINER', // done
     shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT', // done
-    shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE',
+    shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE', // done
     shareTransformation: 'SHARE_TRANSFORMATION', // done
   });
 

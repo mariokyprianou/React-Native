@@ -41,14 +41,7 @@ export default function WeekCompleteScreen() {
   const {programme, programmeModalImage} = UseData();
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.WeekCompleteTitle}
-        showModalCross
-        white
-        transparent
-      />
-    ),
+    header: () => <></>,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -92,6 +85,7 @@ export default function WeekCompleteScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
+    <>
     <View>
       <ImageBackground
         source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
@@ -121,5 +115,12 @@ export default function WeekCompleteScreen() {
         </View>
       </ImageBackground>
     </View>
+      <Header
+        title={WorkoutDict.WeekCompleteTitle}
+        showModalCross
+        white
+        transparent
+      />
+    </>
   );
 }

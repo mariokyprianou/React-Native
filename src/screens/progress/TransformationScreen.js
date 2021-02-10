@@ -7,14 +7,7 @@
  */
 
 import React, {useState} from 'react';
-import {
-  View,
-  Dimensions,
-  Platform,
-  Alert,
-  NativeModules,
-  Image,
-} from 'react-native';
+import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import Share from 'react-native-share';
 import {useNavigation} from '@react-navigation/native';
@@ -25,12 +18,11 @@ import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
-
-const GIFManager = NativeModules.GIFManager;
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -108,17 +100,16 @@ export default function TransformationScreen() {
   }
 
   async function handleShare() {
-    const beforePicResolved = Image.resolveAssetSource(beforePic);
-    const afterPicResolved = Image.resolveAssetSource(afterPic);
+    // const beforePicResolved = Image.resolveAssetSource(beforePic);
+    // const afterPicResolved = Image.resolveAssetSource(afterPic);
 
     try {
-      // TODO - GIFManager uses a native module to generate the GIF. It returns the filepath URL.
-      // TODO - Need to use React Native Share to share this file.
-      const filepath = await GIFManager.fetch(
-        beforePicResolved,
-        afterPicResolved,
-      );
-      console.log(filepath);
+      // TODO - Supply relevant urls
+      let res = await PowerShareAssetsManager.shareProgress({
+        beforeImageUrl: undefined,
+        afterImageUrl: undefined,
+      });
+      console.log('Share res', res);
     } catch (error) {
       console.error(error);
     }

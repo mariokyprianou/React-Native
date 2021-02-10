@@ -16,11 +16,14 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import IconTextView from '../../components/Infographics/IconTextView';
 import Header from '../../components/Headers/Header';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import {SampleImageUrl} from '../../utils/SampleData';
 
 const fakeImage = require('../../../assets/fake2.png');
 
 export default function WeekCompleteScreen({
   name = 'Katrina',
+  programmeName = 'home',
   weekNumber = 4,
   totalDuration = 100,
   totalReps = 150,
@@ -78,9 +81,25 @@ export default function WeekCompleteScreen({
     },
   };
 
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleShare() {
-    // handle share
+  async function handleShare() {
+    try {
+      const trainerName = 'Katrina';
+      const programmeName = 'home';
+      // TODO: - Hook up relevant values
+      let res = await PowerShareAssetsManager.shareWeekComplete({
+        imageUrl: SampleImageUrl,
+        title: `Week 3 complete with \n${name}'s ${programmeName.toLowerCase()}\n programme!`,
+        workoutsCompleted: 6,
+        totalTimeTrained: '10:90:21',
+      });
+    } catch (err) {
+      console.log('SHARE ERR: ', err);
+    }
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

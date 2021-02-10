@@ -112,7 +112,13 @@ const shareLocalImage = (path, title = 'Share from Power App') => {
     })
     .catch((err) => {
       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
-      throw err;
+      const {message} = err;
+      if (message === 'User did not share') {
+        console.log('Share cancelled');
+        return;
+      } else {
+        throw err;
+      }
     });
 };
 

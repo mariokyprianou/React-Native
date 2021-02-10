@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import SwiftyImage
 
 struct GraphicContextTextContent {
   var string: NSAttributedString
@@ -20,7 +19,7 @@ struct GraphicContextTextContent {
   
   var assetWidth: CGFloat = 1080
   var assetHeight: CGFloat = 1920
-  let fontColor: UIColor = .black
+  let fontColor: UIColor = .white
   var padding: CGFloat {
     return assetWidth / 23
   }
@@ -86,8 +85,8 @@ struct GraphicContextTextContent {
   }
   
   private func createAsset(from imageUrl: String, and contents: [GraphicContextTextContent]) -> String? {
-    guard let backgroundImage = UIImage(named: "shareSample") else {
-//          guard let backgroundImage = loadImage(from: imageUrl) else {
+//    guard let backgroundImage = UIImage(named: "shareSample") else {
+    guard let backgroundImage = loadImage(from: imageUrl) else {
       return nil
     }
     let assetFrame = CGRect(x: 0, y: 0, width: assetWidth, height: assetHeight)

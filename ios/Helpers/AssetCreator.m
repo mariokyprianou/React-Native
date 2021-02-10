@@ -22,10 +22,10 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(createBase64ImageForWorkoutComplete:(NSSt
   return image;
 };
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(createBase64ImageForStringAchievement:(NSString *)imageUrl timeString:(NSString *)achivementString description:(NSString *)description)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(createBase64ImageForStringAchievement:(NSString *)imageUrl timeString:(NSString *)achievementValueString description:(NSString *)description)
 {
   SwiftAssetCreator *creator = [SwiftAssetCreator new];
-  NSString *image = [creator encodedAchievementImageStringBasedFor:achivementString with:description from:imageUrl];
+  NSString *image = [creator encodedAchievementImageStringBasedFor:achievementValueString with:description from:imageUrl];
   return image;
 };
 

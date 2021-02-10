@@ -13,6 +13,8 @@ import uuid from 'react-native-uuid';
 
 const localFolderName = 'imageCache';
 
+// MARK: - Private file name & path functions
+
 const checkLocalResForCachedImagesExists = async (clearFolder = false) => {
   const {dirs} = RNFetchBlob.fs;
   const towerTypesImagesDir = `${dirs.DocumentDir}/${localFolderName}`;
@@ -25,10 +27,6 @@ const checkLocalResForCachedImagesExists = async (clearFolder = false) => {
   }
 };
 
-const fileNameFrom = (identifier) => {
-  return identifier;
-};
-
 const fileTypeFrom = (url) => {
   const urlPath = url.split('?')[0];
   const urlSeparated = urlPath.split('.');
@@ -37,24 +35,35 @@ const fileTypeFrom = (url) => {
 };
 
 const pathFromDocumentsDirForImageFrom = (url, identifier) => {
-  return `/${localFolderName}/${fileNameFrom(identifier)}.${fileTypeFrom(url)}`;
+  return `/${localFolderName}/${identifier}.${fileTypeFrom(url)}`;
 };
 
 const localPathForImageFrom = (url, identifier) => {
   const {dirs} = RNFetchBlob.fs;
-  const path = `${dirs.DocumentDir}/${pathFromDocumentsDirForImageFrom(url)}`;
+  const path = `${dirs.DocumentDir}${pathFromDocumentsDirForImageFrom(
+    url,
+    identifier,
+  )}`;
   return path;
 };
 
-const cacheImageFrom = async (url) => {
+const localPathForNewPNGAsset = () => {
+  const {dirs} = RNFetchBlob.fs;
+  let identifier = uuid.v1();
+  const path = `${dirs.DocumentDir}/${localFolderName}/${identifier}.png`;
+  return path;
+};
+
+// MARK: - Exposed Functions for Writing & Deleting
+
+const cacheImageFromUrl = async (url) => {
   if (!url) {
     throw new Error('Saving image Error: missing URL');
   }
-
   let identifier = uuid.v1();
   await checkLocalResForCachedImagesExists();
   let path = localPathForImageFrom(url, identifier);
-  let pathFromDocumentsDir = pathFromDocumentsDirForImageFrom(url);
+  let pathFromDocumentsDir = pathFromDocumentsDirForImageFrom(url, identifier);
 
   return RNFetchBlob.config({
     fileCache: true,
@@ -69,6 +78,26 @@ const cacheImageFrom = async (url) => {
     });
 };
 
+const cacheBase64ImagePng = async (base64data) => {
+  let path = localPathForNewPNGAsset();
+  return RNFetchBlob.fs
+    .writeFile(path, base64data, 'base64')
+    .then((res) => {
+      return path;
+    })
+    .catch((errorMessage, statusCode) => {
+      throw new Error('Unable to save base64 image');
+    });
+};
+
+const unlinkFileFromAbsolutePath = async (path) => {
+  if (!path) {
+    throw new Error('Deleting image Error: missing path');
+  }
+  const {dirs} = RNFetchBlob.fs;
+  await RNFetchBlob.fs.unlink(path);
+};
+
 const unlinkFileFromRelevantPath = async (path) => {
   if (!path) {
     throw new Error('Deleting image Error: missing path');
@@ -78,9 +107,13 @@ const unlinkFileFromRelevantPath = async (path) => {
   await RNFetchBlob.fs.unlink(completePath);
 };
 
+// const saveBase
+
 const ImagesCacheManager = {
-  cacheImageFrom,
+  cacheImageFromUrl,
+  cacheBase64ImagePng,
   unlinkFileFromRelevantPath,
+  unlinkFileFromAbsolutePath,
 };
 
 export default ImagesCacheManager;

@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-const addRestDays = (ddata) => {
+const addRestDays = (ddata = []) => {
   const data = ddata.map((currentDay, index) => {
     return {
       ...currentDay,

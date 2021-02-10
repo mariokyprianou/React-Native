@@ -7,67 +7,118 @@
 
 import React from 'react';
 import {Platform} from 'react-native';
-import * as R from 'ramda';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFS from 'react-native-fs';
+
 import CustomAssetsGenerator from './CustomAssetsGenerator';
 import Share from 'react-native-share';
+import ImagesCacheManager from './ImagesCacheManager';
+import {SampleBase64, SampleImageUrl} from './SampleData';
 
-// `Week 3 complete with \n${name}'s ${programmeName.toLowerCase()}\n programme!`
-let sampleUrl =
-  'https://i.pinimg.com/originals/bc/72/50/bc72507bed9387ba8c763ce084e78c05.jpg';
-
-// WIP: Share Logic
+// MARK: - Exposed Share Functions
 
 const shareWeekComplete = async ({
-  imageUrl = sampleUrl,
+  imageUrl = SampleImageUrl,
   title = "Week 3 complete with \nKatarina's home \nprogramme!",
+  // `Week 3 complete with \n${name}'s ${programmeName.toLowerCase()}\n programme!`
   workoutsCompleted = 6,
   totalTimeTrained = '10:90:21',
 }) => {
   try {
-    let base64EncodedImage = await CustomAssetsGenerator.generateWeekCompleteAsset(
-      {
-        imageUrl,
-        title,
-        workoutsCompleted,
-        totalTimeTrained,
-      },
-    );
+    let localSharePath = await CustomAssetsGenerator.generateWeekCompleteAsset({
+      imageUrl,
+      title,
+      workoutsCompleted,
+      totalTimeTrained,
+    });
 
-    let base64ImageResToShare =
-      Platform.OS === 'ios'
-        ? base64EncodedImage
-        : `data:image/png;base64,${base64EncodedImage}`;
-    const type = Platform.OS === 'android' ? 'image/png' : 'plain';
-    const options = {
-      type,
-      url: base64ImageResToShare,
-      title: 'Share Title',
-      subject: 'Share Subject',
-      failOnCancel: false,
-      filename: 'filename',
-      message:
-        Platform.OS === 'android'
-          ? 'Android Email Message'
-          : 'iOS Email Message',
-    };
-    return Share.open(options);
-  } catch (err) {}
+    return shareLocalImage(localSharePath);
+  } catch (err) {
+    throw err;
+  }
 };
 
-const shareIntAchievemnt = ({
-  imageUrl = sampleUrl,
+const shareIntAchievemnt = async ({
+  imageUrl = SampleImageUrl,
   achievedValue = 12,
-  subtitle = 'press-ups in \n60 seconds',
-}) => {};
+  subtitle = 'press-ups in \n 60 seconds',
+}) => {
+  try {
+    let localSharePath = await CustomAssetsGenerator.generateIntAchievementAsset(
+      {
+        imageUrl,
+        achievedValue,
+        subtitle,
+      },
+    );
+    return shareLocalImage(localSharePath);
+  } catch (err) {
+    throw err;
+  }
+};
 
-const shareStringAchievement = ({
-  imageUrl = sampleUrl,
-  achievemntValueString = '00:06:31',
+const shareStringAchievement = async ({
+  imageUrl = SampleImageUrl,
+  achievementValueString = '00:06:31',
   subtitle = '1 mile run',
-}) => {};
+}) => {
+  try {
+    let localSharePath = await CustomAssetsGenerator.generateStringAchievementAsset(
+      {
+        imageUrl,
+        achievementValueString,
+        subtitle,
+      },
+    );
+    return shareLocalImage(localSharePath);
+  } catch (err) {
+    throw err;
+  }
+};
 
-const shareProgrammeStart = ({imageUrl = sampleUrl}) => {};
+const shareProgrammeStart = ({imageUrl = SampleImageUrl}) => {
+  shareLocalImage(imageUrl);
+};
+
+// MARK: - Private share sub-functions
+
+const shareLocalImage = (path, title = 'Share from Power App') => {
+  const shareOptions = {
+    title: title,
+    url: path,
+    subject: title,
+  };
+
+  return Share.open(shareOptions)
+    .then((res) => {
+      ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+      console.log('Share res', res);
+      return res;
+    })
+    .catch((err) => {
+      ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+      throw err;
+    });
+};
+
+// SHARE SINGLE - UNUSED
+
+// const shareToInstagramOnly = (path) => {
+//   const shareSingleOptions = {
+//     method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
+//     backgroundImage: path,
+//     social: Share.Social.INSTAGRAM_STORIES,
+//   };
+//   return Share.shareSingle(shareSingleOptions)
+//     .then((res) => {
+//       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+//       console.log('Share res', res);
+//       return res;
+//     })
+//     .catch((err) => {
+//       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+//       throw err;
+//     });
+// };
 
 const PowerShareAssetsManager = {
   shareWeekComplete,

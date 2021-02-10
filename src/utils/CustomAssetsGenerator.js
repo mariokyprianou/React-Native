@@ -10,8 +10,18 @@ import {NativeModules} from 'react-native';
 import * as R from 'ramda';
 import {Platform} from 'react-native';
 import ImagesCacheManager from './ImagesCacheManager';
+import {SampleBase64} from './SampleData';
 
 const {iOSAssetCreator} = NativeModules;
+
+const mockAndroidCreator = {
+  createBase64ImageForWorkoutComplete: () => SampleBase64,
+  createBase64ImageForIntAchievement: () => SampleBase64,
+  createBase64ImageForStringAchievement: () => SampleBase64,
+};
+
+const nativeAssetCreator =
+  Platform.OS === 'ios' ? iOSAssetCreator : mockAndroidCreator;
 
 const generateWeekCompleteAsset = async ({
   imageUrl,
@@ -20,10 +30,10 @@ const generateWeekCompleteAsset = async ({
   totalTimeTrained,
 }) => {
   try {
-    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFrom(
+    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
       imageUrl,
     );
-    let base64EncodedImage = iOSAssetCreator.createBase64ImageForWorkoutComplete(
+    let base64EncodedImage = nativeAssetCreator.createBase64ImageForWorkoutComplete(
       pathToBgImageFromDocumentsDir,
       title,
       workoutsCompleted,
@@ -32,8 +42,11 @@ const generateWeekCompleteAsset = async ({
     await ImagesCacheManager.unlinkFileFromRelevantPath(
       pathToBgImageFromDocumentsDir,
     );
-    console.log('Asset generated!');
-    return base64EncodedImage;
+    const localImageToSharePath = await ImagesCacheManager.cacheBase64ImagePng(
+      base64EncodedImage,
+    );
+    const localSharePath = 'file://' + localImageToSharePath;
+    return localSharePath;
   } catch (err) {
     throw err;
   }
@@ -45,11 +58,10 @@ const generateIntAchievementAsset = async ({
   subtitle,
 }) => {
   try {
-    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFrom(
+    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
       imageUrl,
-      true,
     );
-    let base64EncodedImage = iOSAssetCreator.createBase64ImageForIntAchievement(
+    let base64EncodedImage = nativeAssetCreator.createBase64ImageForIntAchievement(
       pathToBgImageFromDocumentsDir,
       achievedValue,
       subtitle,
@@ -58,7 +70,11 @@ const generateIntAchievementAsset = async ({
       pathToBgImageFromDocumentsDir,
     );
     console.log('Asset generated!');
-    return base64EncodedImage;
+    const localImageToSharePath = await ImagesCacheManager.cacheBase64ImagePng(
+      base64EncodedImage,
+    );
+    const localSharePath = 'file://' + localImageToSharePath;
+    return localSharePath;
   } catch (err) {
     throw err;
   }
@@ -66,30 +82,31 @@ const generateIntAchievementAsset = async ({
 
 const generateStringAchievementAsset = async ({
   imageUrl,
-  achievemntValueString,
+  achievementValueString,
   subtitle,
 }) => {
   try {
-    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFrom(
+    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
       imageUrl,
-      true,
     );
-    let base64EncodedImage = iOSAssetCreator.createBase64ImageForStringAchievement(
+    let base64EncodedImage = nativeAssetCreator.createBase64ImageForStringAchievement(
       pathToBgImageFromDocumentsDir,
-      achievemntValueString,
+      achievementValueString,
       subtitle,
     );
     await ImagesCacheManager.unlinkFileFromRelevantPath(
       pathToBgImageFromDocumentsDir,
     );
     console.log('Asset generated!');
-    return base64EncodedImage;
+    const localImageToSharePath = await ImagesCacheManager.cacheBase64ImagePng(
+      base64EncodedImage,
+    );
+    const localSharePath = 'file://' + localImageToSharePath;
+    return localSharePath;
   } catch (err) {
     throw err;
   }
 };
-
-const generateAssetFromImage = () => {};
 
 const CustomAssetsGenerator = {
   generateWeekCompleteAsset,

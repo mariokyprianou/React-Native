@@ -10,3 +10,5 @@ export const SampleBase64 =
 
 export const SampleImageUrl =
   'http://www.brandtalent.net/images/models/6304/CatherineBFit.jpg';
+export const SampleImageUrl2 =
+  'https://lh3.googleusercontent.com/proxy/qcRwmfH4ESBR4pGoyeQRZT4tStpSX2U0WvpDOi4oeiI_1E5Q8uuOy9IKK6jKcwhAAZRsEkyhxKSOMMULrnpU1BO7HzImvtjoPmkOZZCUOX_sow';

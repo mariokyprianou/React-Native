@@ -16,9 +16,10 @@
 
 RCT_EXPORT_MODULE(GIFManager);
 
-RCT_EXPORT_METHOD(fetch:(id)beforeImageObject :(id)afterImageObject resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  UIImage *beforeImage = [RCTConvert UIImage:beforeImageObject];
-  UIImage *afterImage = [RCTConvert UIImage:afterImageObject];
+RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  SwiftAssetCreator *creator = [SwiftAssetCreator new];
+  UIImage *beforeImage = [creator loadImageFrom:beforeImagePath];
+  UIImage *afterImage = [creator loadImageFrom:afterImagePath];
   NSArray *array = [self getImages:beforeImage :afterImage];
   NSString *filePath = [self createGIF:array];
   resolve(filePath);

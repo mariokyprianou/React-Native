@@ -12,7 +12,7 @@ import {Platform} from 'react-native';
 import CustomAssetsGenerator from './CustomAssetsGenerator';
 import Share from 'react-native-share';
 import ImagesCacheManager from './ImagesCacheManager';
-import {SampleBase64, SampleImageUrl} from './SampleData';
+import {SampleBase64, SampleImageUrl, SampleImageUrl2} from './SampleData';
 
 // MARK: - Exposed Share Functions
 
@@ -79,6 +79,22 @@ const shareProgrammeStart = ({imageUrl = SampleImageUrl}) => {
   shareLocalImage(imageUrl);
 };
 
+const shareProgress = async ({
+  beforeImageUrl = SampleImageUrl,
+  afterImageUrl = SampleImageUrl2,
+}) => {
+  try {
+    let localSharePath = await CustomAssetsGenerator.generateGifAsset({
+      beforeImageUrl,
+      afterImageUrl,
+    });
+    return shareLocalImage(localSharePath);
+    // return shareLocalImage(localSharePath);
+  } catch (err) {
+    throw err;
+  }
+};
+
 // MARK: - Private share sub-functions
 
 const shareLocalImage = (path, title = 'Share from Power App') => {
@@ -125,6 +141,7 @@ const PowerShareAssetsManager = {
   shareIntAchievemnt,
   shareStringAchievement,
   shareProgrammeStart,
+  shareProgress,
 };
 
 export default PowerShareAssetsManager;

@@ -10,9 +10,9 @@ import {NativeModules} from 'react-native';
 import * as R from 'ramda';
 import {Platform} from 'react-native';
 import ImagesCacheManager from './ImagesCacheManager';
-import {SampleBase64} from './SampleData';
+import {SampleBase64, SampleImageUrl, SampleImageUrl2} from './SampleData';
 
-const {iOSAssetCreator} = NativeModules;
+const {iOSAssetCreator, GIFManager} = NativeModules;
 
 const mockAndroidCreator = {
   createBase64ImageForWorkoutComplete: () => SampleBase64,
@@ -108,10 +108,32 @@ const generateStringAchievementAsset = async ({
   }
 };
 
+const generateGifAsset = async ({beforeImageUrl, afterImageUrl}) => {
+  try {
+    let localPathToBeforeImage = await ImagesCacheManager.cacheImageFromUrl(
+      beforeImageUrl,
+    );
+    let localPathToAfterImage = await ImagesCacheManager.cacheImageFromUrl(
+      afterImageUrl,
+    );
+    const localGifPath = await GIFManager.fetch(
+      localPathToBeforeImage,
+      localPathToAfterImage,
+    );
+    console.log('Gif created!');
+    await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToBeforeImage);
+    await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToAfterImage);
+    return localGifPath;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const CustomAssetsGenerator = {
   generateWeekCompleteAsset,
   generateIntAchievementAsset,
   generateStringAchievementAsset,
+  generateGifAsset,
 };
 
 export default CustomAssetsGenerator;

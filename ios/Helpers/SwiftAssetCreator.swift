@@ -142,7 +142,7 @@ struct GraphicContextTextContent {
     return encoded
   }
   
-  private func loadImage(from path: String) -> UIImage? {
+  @objc public func loadImage(from path: String) -> UIImage? {
       guard let fileURL = URL(string: "\(documentsUrl)\(path)") else {
         return nil
       }

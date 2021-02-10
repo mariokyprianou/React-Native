@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
@@ -86,33 +86,33 @@ export default function WeekCompleteScreen() {
   return (
     <>
       <View>
-        <ImageBackground
+        <Image
           source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
-          style={styles.image}>
-          <FadingBottomView color="black" />
-          <View style={styles.infoTextContainer}>
-            <Text style={styles.infoText}>
-              {WorkoutDict.WeekComplete(name, weekNumber)}
-            </Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <View style={styles.infoIconsContainer}>
-              <IconTextView
-                type="workoutComplete"
-                duration={totalDuration}
-                reps={totalReps}
-                sets={totalSets}
-                color="white"
-              />
-            </View>
-            <DefaultButton
-              type="share"
-              icon="share"
-              variant="white"
-              onPress={handleShare}
+          style={styles.image}
+        />
+        <FadingBottomView color="black" />
+        <View style={styles.infoTextContainer}>
+          <Text style={styles.infoText}>
+            {WorkoutDict.WeekComplete(name, weekNumber)}
+          </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <View style={styles.infoIconsContainer}>
+            <IconTextView
+              type="workoutComplete"
+              duration={totalDuration}
+              reps={totalReps}
+              sets={totalSets}
+              color="white"
             />
           </View>
-        </ImageBackground>
+          <DefaultButton
+            type="share"
+            icon="share"
+            variant="white"
+            onPress={handleShare}
+          />
+        </View>
       </View>
       <Header
         title={WorkoutDict.WeekCompleteTitle}

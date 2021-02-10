@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
@@ -34,8 +34,8 @@ export default function WeekCompleteScreen() {
   } = useRoute();
 
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+  const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
@@ -43,31 +43,23 @@ export default function WeekCompleteScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.WeekCompleteTitle}
-        showModalCross
-        white
-        transparent
-      />
-    ),
+    header: () => <></>,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    imageContainer: {
+    image: {
       width: '100%',
       height: '100%',
       position: 'absolute',
       top: 0,
-    },
-    image: {
-      width: '100%',
-      height: '100%',
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
     infoTextContainer: {
       position: 'absolute',
-      top: getHeight(90),
+      top: getHeight(100),
       width: '90%',
       alignSelf: 'center',
     },
@@ -98,10 +90,12 @@ export default function WeekCompleteScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
-      <ImageBackground
-        source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
-        style={styles.image}>
+    <>
+      <View>
+        <Image
+          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          style={styles.image}
+        />
         <FadingBottomView color="black" />
         <View style={styles.infoTextContainer}>
           <Text style={styles.infoText}>
@@ -111,7 +105,7 @@ export default function WeekCompleteScreen() {
         <View style={styles.buttonContainer}>
           <View style={styles.infoIconsContainer}>
             <IconTextView
-              type="workoutsComplete"
+              type="workoutComplete"
               duration={totalDuration}
               reps={totalReps}
               sets={totalSets}
@@ -125,7 +119,13 @@ export default function WeekCompleteScreen() {
             onPress={handleShare}
           />
         </View>
-      </ImageBackground>
-    </View>
+      </View>
+      <Header
+        title={WorkoutDict.WeekCompleteTitle}
+        showModalCross
+        white
+        transparent
+      />
+    </>
   );
 }

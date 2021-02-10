@@ -295,6 +295,8 @@ export default function DataProvider(props) {
     setWeightData(weightsArray);
   }, []);
 
+  const [weightsToUpload, setWeightsToUpload] = useState([]);
+
   const wasLastWorkoutToday = useCallback((workouts) => {
     const today = new Date();
     const wasToday = workouts.find((workout) => {
@@ -335,6 +337,8 @@ export default function DataProvider(props) {
       setSelectedWeight,
       weightData,
       wasLastWorkoutToday,
+      weightsToUpload,
+      setWeightsToUpload,
     }),
     [
       programme,
@@ -361,6 +365,8 @@ export default function DataProvider(props) {
       setSelectedWeight,
       weightData,
       wasLastWorkoutToday,
+      weightsToUpload,
+      setWeightsToUpload,
     ],
   );
 

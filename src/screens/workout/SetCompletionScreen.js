@@ -15,7 +15,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import {useMutation} from '@apollo/client';
-import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
+// import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import UseData from '../../hooks/data/UseData';
 import NumbersWheel from '../../components/Infographics/NumbersWheel';
 
@@ -33,8 +33,8 @@ export default function SetCompletionScreen({
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const [addWeight] = useMutation(AddExerciseWeight);
-  const {selectedWeight} = UseData();
+  // const [addWeight] = useMutation(AddExerciseWeight);
+  const {selectedWeight, weightsToUpload, setWeightsToUpload} = UseData();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -80,27 +80,38 @@ export default function SetCompletionScreen({
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
-    let weightToUpload = Number(selectedWeight);
+    let weightToAdd = Number(selectedWeight);
 
     if (weightPreference === 'lb') {
-      weightToUpload = Math.round(weightToUpload / 2.20462262185);
+      weightToAdd = Math.round(weightToAdd / 2.20462262185);
     }
 
-    await addWeight({
-      variables: {
-        input: {
-          weight: weightToUpload,
-          reps: setReps,
-          setNumber: setNumber,
-          exerciseId: exercise,
-        },
-      },
-    })
-      .then((res) => {
-        setSetComplete(false);
-        finishWorkout();
-      })
-      .catch((err) => console.log(err, '<---error on adding weight'));
+    const weightDetails = {
+      weight: weightToAdd,
+      reps: setReps,
+      setNumber: setNumber,
+      exerciseId: exercise,
+    };
+
+    setWeightsToUpload([...weightsToUpload, weightDetails]);
+
+    setSetComplete(false);
+
+    // await addWeight({
+    //   variables: {
+    //     input: {
+    //       weight: weightToAdd,
+    //       reps: setReps,
+    //       setNumber: setNumber,
+    //       exerciseId: exercise,
+    //     },
+    //   },
+    // })
+    //   .then((res) => {
+    //     setSetComplete(false);
+    //     finishWorkout();
+    //   })
+    //   .catch((err) => console.log(err, '<---error on adding weight'));
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

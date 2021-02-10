@@ -23,7 +23,7 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
-import {differenceInDays, addDays, format, parseISO, parse} from 'date-fns';
+import {differenceInDays, addDays} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -209,24 +209,24 @@ export default function WorkoutHomeScreen() {
       setWeekNumber(1);
     }
     if (direction === 'right') {
-      if (
-        programme.currentWeek.workouts.every(
-          (workout) => workout.completedAt !== null,
-        )
-      ) {
-        navigation.navigate('StayTuned', {
-          name: programme?.trainer.name,
-          venue: programme?.environment,
-          image: programme?.programmeImage,
-          date: firstDayNextWeek,
-          type:
-            programme?.currentWeek.weekNumber === programmeLength
-              ? 'programmeComplete'
-              : 'workoutsComplete',
-        });
-      } else {
-        setWeekNumber(2);
-      }
+      // if (
+      //   programme.currentWeek.workouts.every(
+      //     (workout) => workout.completedAt !== null,
+      //   )
+      // ) {
+      //   navigation.navigate('StayTuned', {
+      //     name: programme?.trainer.name,
+      //     venue: programme?.environment,
+      //     image: programme?.programmeImage,
+      //     date: firstDayNextWeek,
+      //     type:
+      //       programme?.currentWeek.weekNumber === programmeLength
+      //         ? 'programmeComplete'
+      //         : 'workoutsComplete',
+      //   });
+      // } else {
+      setWeekNumber(2);
+      // }
     }
   }
 
@@ -428,7 +428,9 @@ export default function WorkoutHomeScreen() {
                       .sort((a, b) => a.orderIndex - b.orderIndex),
                   };
 
-                  if (await shouldShowWarning()) {
+                  const warning = await shouldShowWarning();
+
+                  if (warning === true) {
                     await AsyncStorage.setItem(
                       '@LAST_WARNING_DATE',
                       `${new Date()}`,

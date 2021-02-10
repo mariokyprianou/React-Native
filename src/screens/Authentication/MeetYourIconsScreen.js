@@ -69,12 +69,6 @@ export default function MeetYourIconsScreen() {
   const [currentWeekNumber, setCurrentWeekNumber] = useState();
   const [currentProgrammeId, setCurrentProgrammeId] = useState();
 
-  console.log(
-    selectedProgram.id,
-    currentProgrammeId,
-    '<---selected and current ids?',
-  );
-
   useEffect(() => {
     if (programme) {
       setCurrentTrainerId(programme.trainer.id);
@@ -441,7 +435,7 @@ export default function MeetYourIconsScreen() {
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
       </View>
-      {switchProgramme === true && selectedTrainer.id === currentTrainerId ? (
+      {switchProgramme === true && selectedProgram.id === currentProgrammeId ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="restartProgramme"
@@ -470,7 +464,7 @@ export default function MeetYourIconsScreen() {
           />
         </View>
       ) : switchProgramme === true &&
-        selectedTrainer.id !== currentTrainerId ? (
+        selectedProgram.id !== currentProgrammeId ? (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="startNow"

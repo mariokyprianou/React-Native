@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Slider from 'react-native-slider';
 
 const thumbIcon = require('../../../assets/icons/slider.png');
-export default function HelpMeChooseBar({
+export default function SliderProgressView({
   progress = 50,
   max = 100,
   slider = false,

@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
@@ -98,17 +98,27 @@ const TwoFieldChangeScreenUI = ({
       paddingVertical: getHeight(40),
       alignItems: 'center',
     },
+    scrollViewContainer: {
+      height: '100%',
+      width: '100%',
+      alignSelf: 'center',
+    },
     formContainer: {
       width: '90%',
+      alignSelf: 'center',
     },
   });
 
   // MARK: - Render
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Form cells={cells} config={config} />
-      </View>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.scrollViewContainer}>
+        <View style={styles.formContainer}>
+          <Form cells={cells} config={config} />
+        </View>
+      </ScrollView>
       <DefaultButton
         type={buttonType}
         variant="white"

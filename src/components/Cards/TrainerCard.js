@@ -16,7 +16,12 @@ import GymHomeSelector from '../Buttons/GymHomeSelector';
 import PercentageBar from '../Infographics/PercentageBar';
 import Spacer from '../Utility/Spacer';
 
-export default function TrainerCard({trainer, currentProgram, onPressGymHome}) {
+export default function TrainerCard({
+  trainer,
+  currentProgram,
+  onPressGymHome,
+  suggestedEnv,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
@@ -80,7 +85,7 @@ export default function TrainerCard({trainer, currentProgram, onPressGymHome}) {
           <Text style={styles.nameText}>{trainer.name}</Text>
           <GymHomeSelector
             onPress={onPressGymHome}
-            text={currentProgram.environment}
+            text={suggestedEnv ? suggestedEnv : currentProgram.environment}
           />
         </View>
         <View style={styles.barsContainer}>

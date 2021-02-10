@@ -24,15 +24,14 @@ import {useAsyncStorage} from '@react-native-community/async-storage';
 import Amplify from 'aws-amplify';
 import {TDGraphQLProvider} from './apollo/Client';
 import UserDataProvider from './hooks/data/UserDataProvider';
-import Secrets from './environment/Secrets';
-
-const {awsRegion, userPoolId, clientId} = Secrets();
+import LoadingProvider from './hooks/loading/LoadingProvider';
+import getTimeZoneOffset from './utils/getTimeZoneOffset';
 
 const authConfig = {
   Auth: {
-    region: awsRegion,
-    userPoolId: userPoolId,
-    userPoolWebClientId: clientId,
+    region: 'ap-south-1',
+    userPoolId: 'ap-south-1_yaNI1zrXU',
+    userPoolWebClientId: '1eln0nrnineheq1c9e443shd8l',
   },
 };
 
@@ -115,15 +114,17 @@ const App = () => {
           <ThemeProvider>
             <DataProvider>
               <UserDataProvider>
-                <DictionaryProvider>
-                  <NavigationContainer>
-                    <TDCountdown>
-                      <FormProvider>
-                        <AppContainer />
-                      </FormProvider>
-                    </TDCountdown>
-                  </NavigationContainer>
-                </DictionaryProvider>
+                <LoadingProvider>
+                  <DictionaryProvider>
+                    <NavigationContainer>
+                      <TDCountdown>
+                        <FormProvider>
+                          <AppContainer />
+                        </FormProvider>
+                      </TDCountdown>
+                    </NavigationContainer>
+                  </DictionaryProvider>
+                </LoadingProvider>
               </UserDataProvider>
             </DataProvider>
           </ThemeProvider>

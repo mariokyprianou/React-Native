@@ -98,7 +98,8 @@ export default function ({video, videoEasy, videoEasiest, index}) {
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
         backgroundColor: colors.black10,
-      }}>
+      }}
+      useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
           videoRef.current.pause();

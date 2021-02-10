@@ -7,8 +7,16 @@
  */
 
 import React, {useState} from 'react';
-import {View, Dimensions, Platform, Alert} from 'react-native';
+import {
+  View,
+  Dimensions,
+  Platform,
+  Alert,
+  NativeModules,
+  Image,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import Share from 'react-native-share';
 import {useNavigation} from '@react-navigation/native';
 import {TDSlideshow} from 'the-core-ui-module-tdslideshow';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -21,6 +29,8 @@ import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
+
+const GIFManager = NativeModules.GIFManager;
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -97,7 +107,22 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err));
   }
 
-  function handleShare() {}
+  async function handleShare() {
+    const beforePicResolved = Image.resolveAssetSource(beforePic);
+    const afterPicResolved = Image.resolveAssetSource(afterPic);
+
+    try {
+      // TODO - GIFManager uses a native module to generate the GIF. It returns the filepath URL.
+      // TODO - Need to use React Native Share to share this file.
+      const filepath = await GIFManager.fetch(
+        beforePicResolved,
+        afterPicResolved,
+      );
+      console.log(filepath);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

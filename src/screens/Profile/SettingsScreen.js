@@ -338,9 +338,7 @@ const SettingsScreen = ({}) => {
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: timeZone.timeZone,
-      data: timeZones
-        ? timeZones.map(({timeZone}) => timeZone)
-        : [timeZone.timeZone],
+      data: timeZones,
     },
   ];
   const cells3 = [

@@ -6,53 +6,112 @@
  */
 
 import React, {useEffect} from 'react';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 import {useNavigation} from '@react-navigation/native';
+import {ScaleHook} from 'react-native-design-to-component';
+import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
+import {Form} from 'the-core-ui-module-tdforms';
+import DefaultButton from '../../components/Buttons/DefaultButton';
+import {emailRegex} from '../../utils/regex';
+import {Auth} from 'aws-amplify';
 
 export default function ChangeEmailScreen() {
-  // MARK: - Hooks
-  const navigation = useNavigation();
-
+  // ** ** ** ** ** SETUP ** ** ** ** **
+  const {getHeight} = ScaleHook();
+  const {colors, cellFormConfig, cellFormStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {ProfileDict} = dictionary;
-
   const {cleanErrors, getValues, updateError} = FormHook();
+  const navigation = useNavigation();
 
-  // MARK: - Local
-  const firstValueName = 'changeEmailValue1';
-  const secondValueName = 'changeEmailValue2';
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => (
+        <Header title={ProfileDict.ChangeEmailScreenTitle} goBack />
+      ),
+    });
+  }, []);
 
-  // MARK: - Logic
-  const changeEmail = (newEmail) => {
-    // TODO: - Logic
+  // ** ** ** ** ** STYLES ** ** ** ** **
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.backgroundWhite100,
+      justifyContent: 'space-between',
+      paddingBottom: getHeight(40),
+      alignItems: 'center',
+    },
+    scrollViewContainer: {
+      height: '100%',
+      width: '100%',
+      alignSelf: 'center',
+    },
+    formContainer: {
+      width: '90%',
+      alignSelf: 'center',
+    },
+  });
 
-    navigation.navigate('Profile');
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function onPressChange() {
+    cleanErrors();
+
+    const {newEmail} = getValues();
+
+    if (!newEmail || !emailRegex.test(newEmail)) {
+      updateError({
+        name: 'newEmail',
+        value: ProfileDict.IncorrectEmail,
+      });
+      return;
+    }
+
+    let user = await Auth.currentAuthenticatedUser();
+
+    await Auth.updateUserAttributes(user, {email: newEmail})
+      .then((res) => {
+        navigation.navigate('VerifyChangeEmail', {email: newEmail});
+      })
+      .catch((err) => console.log(err));
+  }
+
+  // ** ** ** ** ** RENDER ** ** ** ** **
+  const cells = [
+    {
+      name: 'newEmail',
+      type: 'text',
+      variant: 'email',
+      textContentType: 'emailAddress',
+      autoCompleteType: 'email',
+      label: ProfileDict.ChangeEmailLabel2,
+      ...cellFormStyles,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+      },
+    },
+  ];
+  const config = {
+    ...cellFormConfig,
   };
 
-  // MARK: - Actions
-  const onPressChange = () => {
-    const {
-      changeEmailValue1: password,
-      changeEmailValue2: newEmail,
-    } = getValues();
-    // TODO: - Verify Values
-    changeEmail(newEmail);
-  };
-
-  // MARK: - Render
   return (
-    <TwoFieldChangeScreenUI
-      screenTitle={ProfileDict.ChangeEmailScreenTitle}
-      firstFieldLabel={ProfileDict.ChangeEmailLabel1}
-      secondFieldLabel={ProfileDict.ChangeEmailLabel2}
-      secondFieldType="emailAddress"
-      firstFieldName={firstValueName}
-      secondFieldName={secondValueName}
-      buttonType={'changeEmail'}
-      onPressChange={onPressChange}
-    />
+    <View style={styles.container}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.scrollViewContainer}>
+        <View style={styles.formContainer}>
+          <Form cells={cells} config={config} />
+        </View>
+      </ScrollView>
+      <DefaultButton
+        type="changeEmail"
+        variant="white"
+        onPress={onPressChange}
+        icon="chevron"
+      />
+    </View>
   );
 }

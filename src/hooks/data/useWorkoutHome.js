@@ -12,7 +12,7 @@ const fakeData = {
   currentWeek: [
     {
       __typename: 'WorkoutWeek',
-      date: 'Thursday, 17th Dec',
+      date: 'Monday, 25th Jan',
       day: 1,
       orderIndex: 1,
       workout: {
@@ -23,13 +23,13 @@ const fakeData = {
       },
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Tuesday, 26th Jan',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
     {
       __typename: 'WorkoutWeek',
-      date: 'Saturday, 19th Dec',
+      date: 'Wednesday, 27th Jan',
       day: 3,
       orderIndex: 2,
       workout: {
@@ -40,13 +40,13 @@ const fakeData = {
       },
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Thursday, 28th Jan',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
     {
       __typename: 'WorkoutWeek',
-      date: 'Monday, 21st Dec',
+      date: 'Friday, 29th Jan',
       day: 5,
       orderIndex: 3,
       workout: {
@@ -57,12 +57,12 @@ const fakeData = {
       },
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Saturday, 30th Jan',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Sunday, 31st Jan',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
@@ -70,7 +70,7 @@ const fakeData = {
   nextWeek: [
     {
       __typename: 'WorkoutWeek',
-      date: 'Thursday, 17th Dec',
+      date: 'Monday, 1st Feb',
       day: 1,
       orderIndex: 1,
       workout: {
@@ -81,13 +81,13 @@ const fakeData = {
       },
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Tuesday, 2nd Feb',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
     {
       __typename: 'WorkoutWeek',
-      date: 'Saturday, 19th Dec',
+      date: 'Wednesday, 3rd Feb',
       day: 3,
       orderIndex: 2,
       workout: {
@@ -98,13 +98,13 @@ const fakeData = {
       },
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Thursday, 4th Feb',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
     {
       __typename: 'WorkoutWeek',
-      date: 'Monday, 21st Dec',
+      date: 'Friday, 5th Feb',
       day: 5,
       orderIndex: 3,
       workout: {
@@ -115,12 +115,12 @@ const fakeData = {
       },
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Saturday, 6th Feb',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },
     {
-      date: 'Wednesday, 23rd Dec',
+      date: 'Sunday, 7th Feb',
       day: 7,
       workout: {duration: 0, intensity: 0, name: 'REST DAY'},
     },

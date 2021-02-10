@@ -12,6 +12,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A61F68A25C82747006007E7 /* GIFManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A61F68925C82747006007E7 /* GIFManager.m */; };
 		20FD9FB02FA349BB97450145 /* proximanova-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E47962DD0F964BB0BF2875E2 /* proximanova-medium.otf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -74,6 +75,8 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = thecoreui/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = thecoreui/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = thecoreui/main.m; sourceTree = "<group>"; };
+		1A61F68825C82724006007E7 /* GIFManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFManager.h; sourceTree = "<group>"; };
+		1A61F68925C82747006007E7 /* GIFManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFManager.m; sourceTree = "<group>"; };
 		1B3E9A78BA4C483ABC0E0CBB /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2AFAF27344334CD1BFBE069B /* proximanova-semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "proximanova-semibold.otf"; path = "../assets/fonts/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* thecoreui-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "thecoreui-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,15 +216,17 @@
 		7CE2210D24AB6671001D8ECD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				1A61F68825C82724006007E7 /* GIFManager.h */,
+				1A61F68925C82747006007E7 /* GIFManager.m */,
 				6FC19CC4258123FD00628EDE /* Secrets.generated.swift */,
 				95E891E225C06A2000FCE73A /* AssetCreator.h */,
 				95E891E325C06A9F00FCE73A /* AssetCreator.m */,
 				95E891ED25C06BF600FCE73A /* SwiftAssetCreator.swift */,
 				954F45DC25CC48AD0048F5C0 /* AssetFont.swift */,
 				7CE2210E24AB6671001D8ECD /* SecretsManager.h */,
+				7CE2211224AB6671001D8ECD /* SecretsManager.m */,
 				7CE2210F24AB6671001D8ECD /* Secrets.stencil */,
 				7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */,
-				7CE2211224AB6671001D8ECD /* SecretsManager.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -590,7 +595,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\nif [ -f ../env-vars.sh ]\nthen\nsource ../env-vars.sh\nfi\n#no `else` case needed if the CI works as expected\n${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args  staging_graphql_url=\\\"$AWS_GRAPHQL_URL_STAGING\\\",staging_user_pool_id=\\\"$AWS_USER_POOL_ID_STAGING\\\",staging_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_STAGING\\\",staging_aws_region=\\\"$AWS_REGION_STAGING\\\",production_graphql_url=\\\"$AWS_GRAPHQL_URL_PRODUCTION\\\",production_user_pool_id=\\\"$AWS_USER_POOL_ID_PRODUCTION\\\",production_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_PRODUCTION\\\",production_aws_region=\\\"$AWS_REGION_PRODUCTION\\\",development_graphql_url=\\\"$AWS_GRAPHQL_URL_DEVELOPMENT\\\",development_user_pool_id=\\\"$AWS_USER_POOL_ID_DEVELOPMENT\\\",development_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT\\\",development_aws_region=\\\"$AWS_REGION_DEVELOPMENT\\\",checksum=\\\"${SHASUMARRAY[0]}\\\"\n";
+			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\nif [ -f ../env-vars.sh ]\nthen\nsource ../env-vars.sh\nfi\nno `else` case needed if the CI works as expected\n${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args staging_graphql_url=\\\"$AWS_GRAPHQL_URL_STAGING\\\",staging_user_pool_id=\\\"$AWS_USER_POOL_ID_STAGING\\\",staging_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_STAGING\\\",staging_aws_region=\\\"$AWS_REGION_STAGING\\\",production_graphql_url=\\\"$AWS_GRAPHQL_URL_PRODUCTION\\\",production_user_pool_id=\\\"$AWS_USER_POOL_ID_PRODUCTION\\\",production_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_PRODUCTION\\\",production_aws_region=\\\"$AWS_REGION_PRODUCTION\\\",development_graphql_url=\\\"$AWS_GRAPHQL_URL_DEVELOPMENT\\\",development_user_pool_id=\\\"$AWS_USER_POOL_ID_DEVELOPMENT\\\",development_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT\\\",development_aws_region=\\\"$AWS_REGION_DEVELOPMENT\\\",checksum=\\\"${SHASUMARRAY[0]}\\\"\n";
 		};
 		916F5771E0D5AB189A5B4F7B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -794,6 +799,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FC19CC5258123FD00628EDE /* Secrets.generated.swift in Sources */,
+				1A61F68A25C82747006007E7 /* GIFManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				95E891EE25C06BF600FCE73A /* SwiftAssetCreator.swift in Sources */,

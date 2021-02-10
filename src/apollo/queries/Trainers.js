@@ -30,6 +30,10 @@ export default gql`
             name
           }
         }
+        userProgress {
+          isActive
+          latestWeek
+        }
       }
     }
   }

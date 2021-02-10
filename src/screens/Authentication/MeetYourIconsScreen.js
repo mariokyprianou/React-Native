@@ -56,23 +56,45 @@ export default function MeetYourIconsScreen() {
   const {
     params: {switchProgramme},
   } = useRoute();
-  //const switchProgramme = true;
-
   const {trainers, suggestedProgramme} = useCommonData();
   const {setProgrammeModalImage, programme} = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
   const [safeArea, setSafeArea] = useState(false);
-  const {isConnected, isInternetReachable} = useNetInfo();
+  const [currentTrainerId, setCurrentTrainerId] = useState();
+  const [currentWeekNumber, setCurrentWeekNumber] = useState();
+  const [currentProgrammeId, setCurrentProgrammeId] = useState();
 
-  // old fake data
-  const currentTrainerId = 'Katrina'; // to be changed to getProgramme data
-  const currentWeek = 4; // to be changed to getProgramme data
+  console.log(
+    selectedProgram.id,
+    currentProgrammeId,
+    '<---selected and current ids?',
+  );
 
   useEffect(() => {
-    console.log(trainers, activeIndex, '<---?');
+    if (programme) {
+      setCurrentTrainerId(programme.trainer.id);
+      setCurrentWeekNumber(programme.currentWeek.weekNumber);
+    }
+  }, [programme]);
+
+  useEffect(() => {
+    if (trainers && currentTrainerId) {
+      const findCurrentTrainer = trainers.filter(
+        (trainer) => trainer.id === currentTrainerId,
+      );
+      const findCurrentProgrammeId = findCurrentTrainer[0].programmes.filter(
+        (programme) => programme.userProgress,
+      );
+      setCurrentProgrammeId(findCurrentProgrammeId[0].id);
+    }
+  }, [currentTrainerId, trainers]);
+
+  useEffect(() => {
     setSelectedTrainer(trainers[activeIndex]);
     setSelectedProgram(trainers[activeIndex].programmes[0]);
   }, [trainers, activeIndex]);
@@ -95,8 +117,6 @@ export default function MeetYourIconsScreen() {
       setActiveIndex(trainers.indexOf(trainer));
     }
   }, [trainers, suggestedProgramme]);
-
-  console.log(suggestedProgramme, '<---suggested programme');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -440,7 +460,7 @@ export default function MeetYourIconsScreen() {
             type="continueFromWeek"
             icon="chevron"
             variant="white"
-            weekNo={currentWeek}
+            weekNo={currentWeekNumber}
             onPress={() => {
               // todo -- Move in switchMutation completed
               submitAnalyticsEvent(false);

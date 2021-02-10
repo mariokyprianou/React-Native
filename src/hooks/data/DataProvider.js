@@ -28,6 +28,8 @@ import {
   getWeekArrayWithPastDays,
 } from './WeekStructureUtils';
 
+import {cacheWeekVideos} from './VideoCacheUtils';
+
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
@@ -221,6 +223,10 @@ export default function DataProvider(props) {
       const data = res.getProgramme;
 
       setProgrammeModalImage(data.programmeImage);
+      if (isConnected) {
+        cacheWeekVideos(data.currentWeek.workouts);
+      }
+
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 

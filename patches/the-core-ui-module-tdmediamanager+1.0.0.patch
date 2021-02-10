@@ -1,5 +1,140 @@
+diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
+index e9042f5..2bf116a 100644
+--- a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
++++ b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
+@@ -35,6 +35,8 @@ async function downloadFiles(files) {
+ 	}
+ }
+ 
++
++
+ async function filterNewFiles(newFiles) {
+ 	const allFiles = await getAllSavedFiles();
+ 
+@@ -56,13 +58,93 @@ async function filterNewFiles(newFiles) {
+ 	return toSaveFiles;
+ }
+ 
++
++ 
++async function downloadFilesWithNames(files) {
++	if (files && files.length > 0) {
++		const results = [];
++		const filesToSave = await filterNewFilesWithNames(files);
++
++		const res = await Promise.all(
++			filesToSave.map(async (it) => {
++				const result = await downloadWithName(it);
++				return { success: result.success, file: it.filename };
++			})
++		);
++		results.push(res);
++
++		if (filesToSave.length === 0) {
++			const allFiles = await getAllSavedFiles();
++			return { success: true, files: allFiles, message: 'already cached, returned existing files' };
++		}
++
++		if (results.length === filesToSave.length) {
++			return { success: true, files: results, message: 'cached all files' };
++		}
++		else if (results.length < filesToSave.length) {
++			return { success: true, files: results, message: 'unable to cache all files' };
++		}
++	}
++}
++
++async function filterNewFilesWithNames(newFiles) {
++	const allFiles = await getAllSavedFiles();
++
++	var toSaveFiles = [];
++
++	if (allFiles && allFiles.length > 0) {
++		allFiles.map((savedFile) => {
++			const result = newFiles.filter((it) => {
++				var name = it.filename;
++				if (!savedFile.includes(name)) return it;
++			});
++
++			toSaveFiles = toSaveFiles.concat(result);
++		});
++	} else {
++		toSaveFiles = newFiles;
++	}
++
++	return toSaveFiles;
++}
++
++async function downloadWithName({filename, url}) {
++
++	const options = {
++		fileCache: true, // this option that makes response data to be stored as a file
++		path: directoryPath + formatDate(new Date()) + '_' + filename,
++		addAndroidDownloads: {
++			useDownloadManager: true,
++			notification: true,
++			mediaScannable: true,
++			path: directoryPath + formatDate(new Date()) + '_' + filename,
++		},
++	};
++
++	return config(options)
++		.fetch('GET', url)
++		.then((res) => {
++			if (res.data) {
++				return { success: true, path: res.data };
++			} else {
++				return { success: false };
++			}
++		})
++		.catch((error) => {
++			console.log(error);
++			return { success: false };
++		});
++}
++
++
++
+ async function getAllSavedFiles() {
+ 	return fs
+ 		.ls(directoryPath)
+ 		.then((files) => {
+ 			return files;
+ 		})
+-		.catch((error) => console.log(error));
++		.catch((error) => console.log("getAllSavedFiles",error));
+ }
+ 
+ async function download(url) {
+@@ -182,10 +264,26 @@ async function getLocalFile(url) {
+ 	}
+ }
+ 
++async function getLocalFileByName(filename) {
++	const allFiles = await getAllSavedFiles();
++
++	if (!allFiles || allFiles.length == 0) return { success: false };
++
++	const existingFile = allFiles.find((savedFile) => savedFile.includes(filename));
++
++	if (existingFile) {
++		return { success: true, path: directoryPath + existingFile };
++	} else {
++		return { success: false };
++	}
++}
++
+ export default {
+ 	downloadFiles,
+ 	clearAllFiles,
+ 	clearBeforeDate,
+ 	getAllSavedFiles,
+ 	getLocalFile,
++	downloadFilesWithNames,
++	getLocalFileByName,
+ };
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..ee37fa8 100644
+index c1656ea..1dbd207 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 @@ -5,29 +5,36 @@
@@ -15,8 +150,9 @@ index c1656ea..ee37fa8 100644
  import FileManager from '../utilities/FileManager';
  
 -export default function VideoView(props) {
+-	const { getLocalFile } = FileManager;
 +export function CustomVideoView(props, ref) {
- 	const { getLocalFile } = FileManager;
++	const { getLocalFile, getLocalFileByName } = FileManager;
  
  	const videoPlayer = useRef(null);
  
@@ -43,7 +179,24 @@ index c1656ea..ee37fa8 100644
  		if (props.startInFullScreen) {
  			onFullScreen();
  		}
-@@ -57,7 +64,7 @@ export default function VideoView(props) {
+@@ -40,8 +47,15 @@ export default function VideoView(props) {
+ 	}, []);
+ 
+ 	async function checkForLocalFile() {
+-		const res = await getLocalFile(props.url);
++		let res;
++		if (props.filename) {
++		 res = await getLocalFileByName(props.filename);	
++		}
++		else {
++		 res = await getLocalFile(props.url);
++		}
+ 
++		console.log("Play Existing File",res)
+ 		if (res.success) {
+ 			setUrl(res.path);
+ 		} else {
+@@ -57,7 +71,7 @@ export default function VideoView(props) {
  		setPaused(!paused);
  		setPlayerState(newPlayerState);
  
@@ -52,7 +205,7 @@ index c1656ea..ee37fa8 100644
  	};
  
  	const onReplay = () => {
-@@ -79,7 +86,7 @@ export default function VideoView(props) {
+@@ -79,7 +93,7 @@ export default function VideoView(props) {
  		setDuration(data.duration);
  		setIsLoading(false);
  
@@ -61,7 +214,7 @@ index c1656ea..ee37fa8 100644
  	};
  
  	const onLoadStart = (data) => {
-@@ -103,11 +110,9 @@ export default function VideoView(props) {
+@@ -103,11 +117,9 @@ export default function VideoView(props) {
  	const onSeeking = (newCurrentTime) => setCurrentTime(newCurrentTime);
  
  	const onFullScreen = () => {
@@ -74,7 +227,7 @@ index c1656ea..ee37fa8 100644
  			setContainerHeight('31%');
  		}
  		setIsFullScreen(!isFullScreen);
-@@ -120,7 +125,7 @@ export default function VideoView(props) {
+@@ -120,7 +132,7 @@ export default function VideoView(props) {
  	const renderToolbar = () => <></>;
  
  	return (
@@ -83,7 +236,7 @@ index c1656ea..ee37fa8 100644
  			<Video
  				onEnd={onEnd}
  				onLoad={onLoad}
-@@ -135,9 +140,12 @@ export default function VideoView(props) {
+@@ -135,9 +147,12 @@ export default function VideoView(props) {
  				}}
  				style={styles.mediaPlayer}
  				volume={props.volume || 13}
@@ -97,7 +250,7 @@ index c1656ea..ee37fa8 100644
  				isFullScreen={isFullScreen}
  				duration={duration}
  				isLoading={isLoading}
-@@ -153,6 +161,8 @@ export default function VideoView(props) {
+@@ -153,6 +168,8 @@ export default function VideoView(props) {
  				fadeOutDelay={3000}
  				showOnStart={false}
  			/>
@@ -106,7 +259,7 @@ index c1656ea..ee37fa8 100644
  		</View>
  	);
  }
-@@ -175,5 +185,10 @@ const styles = StyleSheet.create({
+@@ -175,5 +192,10 @@ const styles = StyleSheet.create({
  		bottom: 0,
  		right: 0,
  		backgroundColor: 'black',

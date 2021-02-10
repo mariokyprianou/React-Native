@@ -109,13 +109,19 @@ export default function WorkoutHomeScreen() {
 
   async function completeWeek(props) {
     await completeWeekMutation()
-      .then((res) => {
+      .then(async (res) => {
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
           updateConsecutiveWorkouts();
           updateStoredDays([]);
           navigation.navigate('WeekComplete', {...props});
+
+          await AsyncStorage.setItem(
+            '@SHOULD_CACHE_NEW_WEEK',
+            JSON.stringify(true),
+          );
+          getProgramme();
         }
       })
       .catch((err) => console.log(err));

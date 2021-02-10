@@ -37,14 +37,7 @@ export default function StayTuned() {
   const {programmeModalImage} = UseData();
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.StayTunedTitle}
-        showModalCross
-        white
-        transparent
-      />
-    ),
+    header: () => <></>,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -97,49 +90,67 @@ export default function StayTuned() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (type === 'workoutsComplete') {
     return (
-      <View>
-        <ImageBackground
-          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
-          style={styles.image}>
-          <FadingBottomView color="black" />
-          <View style={styles.infoTextContainer}>
-            <Text style={styles.infoText}>
-              {WorkoutDict.StayTuned(name, formattedDate)}
-            </Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <DefaultButton
-              type="remindMe"
-              icon="reminder"
-              variant="white"
-              onPress={handlePressRemindMe}
-            />
-          </View>
-        </ImageBackground>
-      </View>
+      <>
+        <View>
+          <ImageBackground
+            source={
+              programmeModalImage ? {uri: programmeModalImage} : fakeImage
+            }
+            style={styles.image}>
+            <FadingBottomView color="black" />
+            <View style={styles.infoTextContainer}>
+              <Text style={styles.infoText}>
+                {WorkoutDict.StayTuned(name, formattedDate)}
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <DefaultButton
+                type="remindMe"
+                icon="reminder"
+                variant="white"
+                onPress={handlePressRemindMe}
+              />
+            </View>
+          </ImageBackground>
+        </View>
+        <Header
+          title={WorkoutDict.StayTunedTitle}
+          showModalCross
+          white
+          transparent
+        />
+      </>
     );
   }
 
   if (type === 'programmeComplete') {
     return (
-      <View>
-        <ImageBackground source={fakeImage} style={styles.image}>
-          <FadingBottomView color="black" />
-          <View style={styles.infoTextContainer}>
-            <Text style={styles.infoText}>
-              {WorkoutDict.ProgrammeComplete(name, venue)}
-            </Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <DefaultButton
-              type="remindMe"
-              icon="reminder"
-              variant="white"
-              onPress={handlePressRemindMe}
-            />
-          </View>
-        </ImageBackground>
-      </View>
+      <>
+        <View>
+          <ImageBackground source={fakeImage} style={styles.image}>
+            <FadingBottomView color="black" />
+            <View style={styles.infoTextContainer}>
+              <Text style={styles.infoText}>
+                {WorkoutDict.ProgrammeComplete(name, venue)}
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <DefaultButton
+                type="remindMe"
+                icon="reminder"
+                variant="white"
+                onPress={handlePressRemindMe}
+              />
+            </View>
+          </ImageBackground>
+        </View>
+        <Header
+          title={WorkoutDict.StayTunedTitle}
+          showModalCross
+          white
+          transparent
+        />
+      </>
     );
   }
 }

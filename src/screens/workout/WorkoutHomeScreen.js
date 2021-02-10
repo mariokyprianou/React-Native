@@ -428,7 +428,9 @@ export default function WorkoutHomeScreen() {
                       .sort((a, b) => a.orderIndex - b.orderIndex),
                   };
 
-                  if (await shouldShowWarning()) {
+                  const warning = await shouldShowWarning();
+
+                  if (warning === true) {
                     await AsyncStorage.setItem(
                       '@LAST_WARNING_DATE',
                       `${new Date()}`,

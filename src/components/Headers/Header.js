@@ -7,12 +7,10 @@
 
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Platform} from 'react-native';
-import {Input} from 'react-native-elements';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeArea} from 'react-native-safe-area-context';
-
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
 import isRTL from '../../utils/isRTL';

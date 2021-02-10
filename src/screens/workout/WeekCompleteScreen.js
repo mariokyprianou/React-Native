@@ -33,12 +33,12 @@ export default function WeekCompleteScreen() {
   } = useRoute();
 
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+  const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
-  const {programme, programmeModalImage} = UseData();
+  const {programmeModalImage} = UseData();
 
   navigation.setOptions({
     header: () => <></>,
@@ -46,19 +46,18 @@ export default function WeekCompleteScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    imageContainer: {
+    image: {
       width: '100%',
       height: '100%',
       position: 'absolute',
       top: 0,
-    },
-    image: {
-      width: '100%',
-      height: '100%',
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
     infoTextContainer: {
       position: 'absolute',
-      top: getHeight(90),
+      top: getHeight(100),
       width: '90%',
       alignSelf: 'center',
     },
@@ -86,35 +85,35 @@ export default function WeekCompleteScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <>
-    <View>
-      <ImageBackground
-        source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
-        style={styles.image}>
-        <FadingBottomView color="black" />
-        <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>
-            {WorkoutDict.WeekComplete(name, weekNumber)}
-          </Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.infoIconsContainer}>
-            <IconTextView
-              type="workoutsComplete"
-              duration={totalDuration}
-              reps={totalReps}
-              sets={totalSets}
-              color="white"
+      <View>
+        <ImageBackground
+          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          style={styles.image}>
+          <FadingBottomView color="black" />
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoText}>
+              {WorkoutDict.WeekComplete(name, weekNumber)}
+            </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <View style={styles.infoIconsContainer}>
+              <IconTextView
+                type="workoutComplete"
+                duration={totalDuration}
+                reps={totalReps}
+                sets={totalSets}
+                color="white"
+              />
+            </View>
+            <DefaultButton
+              type="share"
+              icon="share"
+              variant="white"
+              onPress={handleShare}
             />
           </View>
-          <DefaultButton
-            type="share"
-            icon="share"
-            variant="white"
-            onPress={handleShare}
-          />
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </View>
       <Header
         title={WorkoutDict.WeekCompleteTitle}
         showModalCross

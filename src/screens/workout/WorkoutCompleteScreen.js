@@ -149,6 +149,8 @@ export default function WorkoutCompleteScreen() {
         .catch((err) => console.log(err, '<---add weights error'));
     });
 
+    setWeightsToUpload([]);
+
     const workoutComplete = {
       workoutId: selectedWorkout.id,
       date: new Date(),
@@ -174,7 +176,7 @@ export default function WorkoutCompleteScreen() {
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err, '<---workout complete error'));
   }
 
   function checkGoBack() {

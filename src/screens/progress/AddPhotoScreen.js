@@ -60,13 +60,8 @@ export default function TransformationScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  async function handlePhoto(url) {
-    console.log(url, '<---photo taken uri');
-    // send to back end with today's date, format ProgressImage
-
-    await requestUrl()
-      .then((res) => console.log(res, '<---requestUrl res'))
-      .catch((err) => console.log(err, '<---requestUrl err'));
+  async function handlePhoto(path, contentType) {
+    await requestUrl().catch((err) => console.log(err, '<---requestUrl err'));
   }
 
   function handleSelectPhoto() {
@@ -87,8 +82,9 @@ export default function TransformationScreen() {
           ImagePicker.openPicker({
             mediaType: 'photo',
           }).then((cameraPhoto) => {
-            console.log(cameraPhoto, '<---camera photo');
-            // send to backend
+            const path = cameraPhoto.path;
+            const contentType = cameraPhoto.mime;
+            handlePhoto(path, contentType);
           });
         }
       })

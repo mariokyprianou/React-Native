@@ -158,10 +158,10 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..a803e0a 100644
+index f41ddff..dc2927d 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -7,28 +7,31 @@
+@@ -7,28 +7,32 @@
   */
  
  import React, { useState } from "react";
@@ -175,6 +175,7 @@ index f41ddff..a803e0a 100644
  import { ScaleHook } from "react-native-design-to-component";
 +import { defaultProps } from "../defaultProps";
 +import { checkStylesIncHeight, checkString } from "../utils";
++import * as mime from 'react-native-mime-types';
  
  const AddPhoto = ({
 -  handlePhotoClick,
@@ -201,7 +202,7 @@ index f41ddff..a803e0a 100644
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +39,7 @@ const AddPhoto = ({
+@@ -36,7 +40,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
@@ -210,7 +211,7 @@ index f41ddff..a803e0a 100644
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,50 +58,52 @@ const AddPhoto = ({
+@@ -55,50 +59,53 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -223,7 +224,7 @@ index f41ddff..a803e0a 100644
        alignItems: "center",
 -      justifyContent: "space-around",
 +      height: getHeight(90), 
-       paddingVertical: getHeight(15), 
+       paddingVertical: getHeight(15),
 -      backgroundColor: "white",
 +      backgroundColor: backgroundColor
 +        ? backgroundColor
@@ -289,11 +290,12 @@ index f41ddff..a803e0a 100644
 +  async function handlePhotoClick(camera) {
 +    const options = { quality: 0.5, base64: true };
 +    const data = await camera.takePictureAsync(options);
-+    setPhoto(data.uri);
++    const contentType = mime.lookup(data.uri)
++    setPhoto(data.uri, contentType);
    }
  
    function handleSwitchView() {
-@@ -109,11 +114,6 @@ const AddPhoto = ({
+@@ -109,11 +116,6 @@ const AddPhoto = ({
  
    return (
      <View style={styles.pageContainer}>
@@ -305,7 +307,7 @@ index f41ddff..a803e0a 100644
        <View style={styles.cameraContainer}>
          <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
            {({ camera }) => {
-@@ -121,7 +121,7 @@ const AddPhoto = ({
+@@ -121,7 +123,7 @@ const AddPhoto = ({
              if (overlayImage) {
                return (
                  <View style={styles.overlay}>
@@ -314,7 +316,7 @@ index f41ddff..a803e0a 100644
                  </View>
                );
              } else {
-@@ -131,17 +131,24 @@ const AddPhoto = ({
+@@ -131,17 +133,24 @@ const AddPhoto = ({
          </RNCamera>
          <View style={styles.buttonContainer}>
            {CustomCountdown && (

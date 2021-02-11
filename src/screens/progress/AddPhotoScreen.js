@@ -17,6 +17,8 @@ import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import Header from '../../components/Headers/Header';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useQuery, useMutation} from '@apollo/client';
+import UploadUrl from '../../apollo/mutations/UploadUrl';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
@@ -40,6 +42,8 @@ export default function TransformationScreen() {
     ),
   });
 
+  const [requestUrl] = useMutation(UploadUrl);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
@@ -56,10 +60,13 @@ export default function TransformationScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePhoto() {
-    console.log('set photo');
-    const takenAt = new Date();
+  async function handlePhoto(url) {
+    console.log(url, '<---photo taken uri');
     // send to back end with today's date, format ProgressImage
+
+    await requestUrl()
+      .then((res) => console.log(res, '<---requestUrl res'))
+      .catch((err) => console.log(err, '<---requestUrl err'));
   }
 
   function handleSelectPhoto() {
@@ -80,7 +87,8 @@ export default function TransformationScreen() {
           ImagePicker.openPicker({
             mediaType: 'photo',
           }).then((cameraPhoto) => {
-            setPhoto(cameraPhoto.sourceURL);
+            console.log(cameraPhoto, '<---camera photo');
+            // send to backend
           });
         }
       })

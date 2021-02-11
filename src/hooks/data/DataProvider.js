@@ -40,7 +40,6 @@ export default function DataProvider(props) {
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
     let days = await AsyncStorage.getItem('@CURRENT_WEEK');
     days = JSON.parse(days);
-    console.log(days);
 
     if (days) {
       days = days.map((it) => {
@@ -284,7 +283,6 @@ export default function DataProvider(props) {
     };
   }, [isWorkoutTimerRunning]);
 
-  const [weightChoice, setWeightChoice] = useState('kg'); // fake data, to be replaced with data from back end
   const [selectedWeight, setSelectedWeight] = useState(20);
 
   const [weightData, setWeightData] = useState([]);
@@ -297,10 +295,11 @@ export default function DataProvider(props) {
     setWeightData(weightsArray);
   }, []);
 
+  const [weightsToUpload, setWeightsToUpload] = useState([]);
+
   const wasLastWorkoutToday = useCallback((workouts) => {
     const today = new Date();
     const wasToday = workouts.find((workout) => {
-      console.log(workout.completedAt);
       return (
         workout.completedAt &&
         differenceInCalendarDays(parseISO(workout.completedAt), today) === 0
@@ -334,12 +333,12 @@ export default function DataProvider(props) {
       updateConsecutiveWorkouts,
       getConsecutiveWorkouts,
       clearConsecutiveDays,
-      weightChoice,
-      setWeightChoice,
       selectedWeight,
       setSelectedWeight,
       weightData,
       wasLastWorkoutToday,
+      weightsToUpload,
+      setWeightsToUpload,
     }),
     [
       programme,
@@ -362,12 +361,12 @@ export default function DataProvider(props) {
       updateConsecutiveWorkouts,
       getConsecutiveWorkouts,
       clearConsecutiveDays,
-      weightChoice,
-      setWeightChoice,
       selectedWeight,
       setSelectedWeight,
       weightData,
       wasLastWorkoutToday,
+      weightsToUpload,
+      setWeightsToUpload,
     ],
   );
 

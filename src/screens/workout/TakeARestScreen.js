@@ -21,8 +21,8 @@ const fakeImage = require('../../../assets/fake2.png');
 
 export default function TakeARestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {getHeight} = ScaleHook();
+  const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
@@ -30,15 +30,7 @@ export default function TakeARestScreen() {
   const {programme, programmeModalImage} = useData();
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.TakeARestTitle}
-        right="crossIcon"
-        rightAction={handleGoBack}
-        white
-        transparent
-      />
-    ),
+    header: () => <></>,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -82,30 +74,39 @@ export default function TakeARestScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
-      <ImageBackground
-        source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
-        style={styles.image}>
-        <FadingBottomView color="black" />
-        <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>
-            {WorkoutDict.TakeARest(programme.trainer.name)}
-          </Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="continue"
-            icon="chevron"
-            variant="white"
-            onPress={handleContinue}
-          />
-          <DefaultButton
-            type="goBack"
-            variant="transparentWhiteText"
-            onPress={handleGoBack}
-          />
-        </View>
-      </ImageBackground>
-    </View>
+    <>
+      <View>
+        <ImageBackground
+          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          style={styles.image}>
+          <FadingBottomView color="black" />
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoText}>
+              {WorkoutDict.TakeARest(programme.trainer.name)}
+            </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <DefaultButton
+              type="continue"
+              icon="chevron"
+              variant="white"
+              onPress={handleContinue}
+            />
+            <DefaultButton
+              type="goBack"
+              variant="transparentWhiteText"
+              onPress={handleGoBack}
+            />
+          </View>
+        </ImageBackground>
+      </View>
+      <Header
+        title={WorkoutDict.TakeARestTitle}
+        right="crossIcon"
+        rightAction={handleGoBack}
+        white
+        transparent
+      />
+    </>
   );
 }

@@ -22,6 +22,7 @@ import Spacer from '../../components/Utility/Spacer';
 import {useStopwatch} from 'the-core-ui-module-tdcountdown';
 import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
+import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -34,9 +35,15 @@ export default function WorkoutCompleteScreen() {
   const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
 
-  const {selectedWorkout, workoutTime} = UseData();
+  const {
+    selectedWorkout,
+    workoutTime,
+    weightsToUpload,
+    setWeightsToUpload,
+  } = UseData();
 
   const [completeWorkout] = useMutation(CompleteWorkout);
+  const [addWeight] = useMutation(AddExerciseWeight);
 
   const [selectedIntensity, setSelectedIntensity] = useState(50);
   const [selectedEmoji, setSelectedEmoji] = useState();
@@ -131,6 +138,19 @@ export default function WorkoutCompleteScreen() {
     if (!selectedEmoji) {
       return;
     }
+
+    weightsToUpload.forEach((weightObject) => {
+      addWeight({
+        variables: {
+          input: weightObject,
+        },
+      })
+        .then((res) => console.log(res, '<----add weights res'))
+        .catch((err) => console.log(err, '<---add weights error'));
+    });
+
+    setWeightsToUpload([]);
+
     const workoutComplete = {
       workoutId: selectedWorkout.id,
       date: new Date(),
@@ -138,8 +158,6 @@ export default function WorkoutCompleteScreen() {
       emoji: selectedEmoji,
       timeTaken: stats.duration,
     };
-
-    console.log(workoutComplete);
 
     completeWorkout({
       variables: {
@@ -149,7 +167,6 @@ export default function WorkoutCompleteScreen() {
       },
     })
       .then((res) => {
-        console.log(res, '<---- COMPLETE WORKOUT RES');
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
@@ -159,7 +176,7 @@ export default function WorkoutCompleteScreen() {
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err, '<---workout complete error'));
   }
 
   function checkGoBack() {

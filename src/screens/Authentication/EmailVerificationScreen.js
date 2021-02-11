@@ -90,6 +90,7 @@ export default function EmailVerificationScreen() {
     <PermissionScreenUI
       title={AuthDict.VerifyEmailTitle}
       text={AuthDict.VerifyEmail}
+      image={require('../../../assets/images/verifyEmailImage.png')}
       buttonType="resend"
       bottomButtonType="goBackLower"
       onPressButton={onPressButton}

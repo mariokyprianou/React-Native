@@ -5,26 +5,21 @@
  * Copyright (c) 2021 JM APP DEVELOPMENT LTD
  */
 
-import React, {useRef, useState, useEffect, useLayoutEffect} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import UseData from '../../hooks/data/UseData';
 import useTheme from '../../hooks/theme/UseTheme';
 import SmoothPicker from 'react-native-smooth-picker';
 
-const NumbersWheel = () => {
+const NumbersWheel = ({weightPreference}) => {
   function handleChange(index) {
     setSelectedWeight(index);
   }
 
   const refPicker = useRef(null);
-  const {
-    weightData,
-    weightChoice,
-    selectedWeight,
-    setSelectedWeight,
-  } = UseData();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {weightData, selectedWeight, setSelectedWeight} = UseData();
+  const {getWidth, fontSize} = ScaleHook();
   const {textStyles} = useTheme();
 
   useEffect(() => {
@@ -50,7 +45,7 @@ const NumbersWheel = () => {
     {item, index},
     indexSelected,
     vertical,
-    weightChoice,
+    weightPreference,
   ) => {
     const selected = index === indexSelected;
     const gap = Math.abs(index - indexSelected);
@@ -74,7 +69,7 @@ const NumbersWheel = () => {
         selected={selected}
         textStyle={textStyle}
         width={getWidth(100)}
-        name={`${item}${weightChoice}`}
+        name={`${item}${weightPreference}`}
       />
     );
   };
@@ -99,7 +94,7 @@ const NumbersWheel = () => {
         scrollAnimation
         onSelected={({item, index}) => handleChange(index)}
         renderItem={(option) =>
-          ItemToRender(option, selectedWeight, false, weightChoice)
+          ItemToRender(option, selectedWeight, false, weightPreference)
         }
         selectOnPress={true}
         magnet={false}

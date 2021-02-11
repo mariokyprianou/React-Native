@@ -11,12 +11,11 @@ import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import WeightSelection from '../../components/Infographics/WeightSelection';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import {useMutation} from '@apollo/client';
-import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
+// import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import UseData from '../../hooks/data/UseData';
 import NumbersWheel from '../../components/Infographics/NumbersWheel';
 
@@ -27,14 +26,15 @@ export default function SetCompletionScreen({
   setReps,
   setNumber,
   exercise,
+  weightPreference,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const [addWeight] = useMutation(AddExerciseWeight);
-  const {selectedWeight} = UseData();
+  // const [addWeight] = useMutation(AddExerciseWeight);
+  const {selectedWeight, weightsToUpload, setWeightsToUpload} = UseData();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -80,21 +80,38 @@ export default function SetCompletionScreen({
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
-    await addWeight({
-      variables: {
-        input: {
-          weight: selectedWeight,
-          reps: setReps,
-          setNumber: setNumber,
-          exerciseId: exercise,
-        },
-      },
-    })
-      .then((res) => {
-        setSetComplete(false);
-        finishWorkout();
-      })
-      .catch((err) => console.log(err, '<---error on adding weight'));
+    let weightToAdd = Number(selectedWeight);
+
+    if (weightPreference === 'lb') {
+      weightToAdd = Math.round(weightToAdd / 2.20462262185);
+    }
+
+    const weightDetails = {
+      weight: weightToAdd,
+      reps: setReps,
+      setNumber: setNumber,
+      exerciseId: exercise,
+    };
+
+    setWeightsToUpload([...weightsToUpload, weightDetails]);
+
+    setSetComplete(false);
+
+    // await addWeight({
+    //   variables: {
+    //     input: {
+    //       weight: weightToAdd,
+    //       reps: setReps,
+    //       setNumber: setNumber,
+    //       exerciseId: exercise,
+    //     },
+    //   },
+    // })
+    //   .then((res) => {
+    //     setSetComplete(false);
+    //     finishWorkout();
+    //   })
+    //   .catch((err) => console.log(err, '<---error on adding weight'));
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -114,7 +131,7 @@ export default function SetCompletionScreen({
         </TouchableOpacity>
         <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
         <View style={styles.weightSelectionContainer}>
-          <NumbersWheel />
+          <NumbersWheel weightPreference={weightPreference} />
         </View>
       </View>
       <View style={styles.buttonContainer}>

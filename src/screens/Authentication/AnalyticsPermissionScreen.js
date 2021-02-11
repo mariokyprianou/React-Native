@@ -76,6 +76,7 @@ export default function AnalyticsPermissionScreen() {
     <PermissionScreenUI
       title={AuthDict.AnalyticsPermissionsScreenTitle}
       text={AuthDict.AnalyticsPermissionsText}
+      image={require('../../../assets/images/analyticsImage.png')}
       buttonType="allowAnalytics"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}

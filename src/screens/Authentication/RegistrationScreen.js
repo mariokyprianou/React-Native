@@ -352,6 +352,7 @@ export default function RegisterScreen() {
       name: 'dateOfBirth',
       type: 'calendar',
       label: AuthDict.DobLabel,
+      maximumDate: new Date(),
       placeholder: '',
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,

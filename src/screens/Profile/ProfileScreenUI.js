@@ -38,6 +38,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
+import TimeZone from 'react-native-timezone';
 
 const notifications = [
   {
@@ -264,6 +265,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       newRegion = regionLookup[regionsList[0]];
     }
 
+    const deviceTimeZone = await TimeZone.getTimeZone().then((zone) => zone);
+
     const newVals = {
       givenName: profile_firstName || userData.givenName,
       familyName: profile_lastName || userData.familyName,
@@ -271,6 +274,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
       region: newRegion,
+      timeZone: deviceTimeZone,
     };
 
     await updateProfile({

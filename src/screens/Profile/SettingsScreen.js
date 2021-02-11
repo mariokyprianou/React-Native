@@ -27,6 +27,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import displayAlert from '../../utils/DisplayAlert';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 import {firebase} from '@react-native-firebase/analytics';
+import UseData from '../../hooks/data/UseData';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -50,6 +51,8 @@ const SettingsScreen = ({}) => {
     setPreferences,
     timeZones,
   } = useUserData();
+
+  const {programme, initCacheWeekVideos} = UseData();
 
   const navigation = useNavigation();
 
@@ -157,7 +160,19 @@ const SettingsScreen = ({}) => {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const updateSettingsAndNavigate = async () => {
-    AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
+    await AsyncStorage.setItem(
+      '@DOWNLOAD_ENABLED',
+      JSON.stringify(downloadWorkouts),
+    );
+
+    if (downloadWorkouts) {
+      await AsyncStorage.setItem(
+        '@SHOULD_CACHE_NEW_WEEK',
+        JSON.stringify(true),
+      );
+
+      initCacheWeekVideos(programme.currentWeek.workouts);
+    }
 
     const {
       formDownloadsQuality,

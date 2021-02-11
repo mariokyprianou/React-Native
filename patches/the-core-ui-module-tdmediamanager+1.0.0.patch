@@ -1,8 +1,22 @@
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-index e9042f5..2bf116a 100644
+index e9042f5..32305f4 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-@@ -35,6 +35,8 @@ async function downloadFiles(files) {
+@@ -12,10 +12,12 @@ const appNamePath = DeviceInfo.getApplicationName();
+ 
+ const { config, fs } = RNFetchBlob;
+ 
+-const fileDirectory = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
++const fileDirectory = fs.dirs.DocumentDir;
+ 
+ const directoryPath = fileDirectory + '/' + appNamePath + '/';
+ 
++
++
+ async function downloadFiles(files) {
+ 	if (files && files.length > 0) {
+ 		const results = [];
+@@ -35,6 +37,8 @@ async function downloadFiles(files) {
  	}
  }
  
@@ -11,7 +25,7 @@ index e9042f5..2bf116a 100644
  async function filterNewFiles(newFiles) {
  	const allFiles = await getAllSavedFiles();
  
-@@ -56,13 +58,93 @@ async function filterNewFiles(newFiles) {
+@@ -56,13 +60,93 @@ async function filterNewFiles(newFiles) {
  	return toSaveFiles;
  }
  
@@ -39,7 +53,7 @@ index e9042f5..2bf116a 100644
 +			return { success: true, files: results, message: 'cached all files' };
 +		}
 +		else if (results.length < filesToSave.length) {
-+			return { success: true, files: results, message: 'unable to cache all files' };
++			return { success: false, files: results, message: 'unable to cache all files' };
 +		}
 +	}
 +}
@@ -106,7 +120,7 @@ index e9042f5..2bf116a 100644
  }
  
  async function download(url) {
-@@ -182,10 +264,26 @@ async function getLocalFile(url) {
+@@ -182,10 +266,26 @@ async function getLocalFile(url) {
  	}
  }
  

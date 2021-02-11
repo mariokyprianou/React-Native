@@ -8,7 +8,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 
-const {downloadFilesWithNames, clearAllFiles} = FileManager;
+const {downloadFilesWithNames} = FileManager;
 
 async function cacheWeekVideos(workouts) {
   const shouldCache = await shouldCacheWeek();
@@ -57,7 +57,6 @@ async function cacheWeekVideos(workouts) {
   }
 
   // Download and return files and success
-  await clearAllFiles();
   const res = await downloadFilesWithNames(result);
   console.log('res', res.success);
 

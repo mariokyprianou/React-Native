@@ -217,15 +217,19 @@ export default function DataProvider(props) {
     return week;
   }, []);
 
+  const initCacheWeekVideos = useCallback(async (workouts) => {
+    if (isConnected) {
+      cacheWeekVideos(workouts);
+    }
+  }, []);
+
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
 
       setProgrammeModalImage(data.programmeImage);
-      if (isConnected) {
-        cacheWeekVideos(data.currentWeek.workouts);
-      }
+      initCacheWeekVideos(data.currentWeek.workouts);
 
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
@@ -345,6 +349,7 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      initCacheWeekVideos,
     }),
     [
       programme,
@@ -373,6 +378,7 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      initCacheWeekVideos,
     ],
   );
 

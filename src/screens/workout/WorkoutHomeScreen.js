@@ -27,6 +27,9 @@ import {differenceInDays, addDays} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
+import {FileManager} from 'the-core-ui-module-tdmediamanager';
+
+const {clearAllFiles} = FileManager;
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -121,6 +124,7 @@ export default function WorkoutHomeScreen() {
             '@SHOULD_CACHE_NEW_WEEK',
             JSON.stringify(true),
           );
+          await clearAllFiles();
           getProgramme();
         }
       })

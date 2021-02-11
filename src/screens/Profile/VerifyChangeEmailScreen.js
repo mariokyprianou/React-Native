@@ -48,6 +48,21 @@ export default function VerifyChangeEmailScreen() {
     });
   }, []);
 
+  useEffect(() => {
+    if (fromLogin === true) {
+      async function resendCode() {
+        let user = await Auth.currentAuthenticatedUser();
+
+        await Auth.updateUserAttributes(user, {email: email})
+          .then((res) => {
+            console.log(res, '<---resend code res');
+          })
+          .catch((err) => console.log(err, '<--resend code err'));
+      }
+      resendCode();
+    }
+  }, [fromLogin]);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {

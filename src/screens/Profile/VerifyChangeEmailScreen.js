@@ -21,6 +21,7 @@ import {Auth} from 'aws-amplify';
 import {useRoute} from '@react-navigation/core';
 import UpdateEmail from '../../apollo/mutations/UpdateEmail';
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function VerifyChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -35,6 +36,7 @@ export default function VerifyChangeEmailScreen() {
   const [changeEmail] = useMutation(UpdateEmail);
   const navigation = useNavigation();
   const {userData, setUserData} = useUserData();
+  const {setLoading} = useLoading();
 
   useEffect(() => {
     navigation.setOptions({
@@ -97,6 +99,8 @@ export default function VerifyChangeEmailScreen() {
       return;
     }
 
+    setLoading(true);
+
     await Auth.verifyCurrentUserAttributeSubmit('email', code)
       .then(async (res) => {
         cleanValues();
@@ -122,7 +126,8 @@ export default function VerifyChangeEmailScreen() {
             value: ProfileDict.InvalidChangeEmailCode,
           });
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   function onPressBack() {

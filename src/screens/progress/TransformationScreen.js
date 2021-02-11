@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,10 @@ import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {useQuery, useMutation} from '@apollo/client';
+import ProgressImages from '../../apollo/queries/ProgressImages';
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
@@ -25,8 +29,8 @@ const sliderThumb = require('../../../assets/icons/photoSlider.png');
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
-  const [beforePic, setBeforePic] = useState(fakeBeforePic);
-  const [afterPic, setAfterPic] = useState(fakeAfterPic);
+  const {isConnected, isInternetReachable} = useNetInfo();
+  const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
@@ -40,8 +44,20 @@ export default function TransformationScreen() {
       />
     ),
   });
+
+  const [beforePic, setBeforePic] = useState(fakeBeforePic);
+  const [afterPic, setAfterPic] = useState(fakeAfterPic);
+  const [userImages, setUserImages] = useState([]);
   const {fakeProgressImages} = fakeProgressData();
-  const screenWidth = Dimensions.get('screen').width;
+
+  useQuery(ProgressImages, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      console.log(res, '<---progress images res');
+      setUserImages(res.progressImages);
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

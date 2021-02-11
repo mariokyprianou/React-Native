@@ -23,6 +23,8 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import {SampleImageUrl} from '../../utils/SampleData';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -117,28 +119,13 @@ export default function CongratulationsScreen() {
   });
 
   function handlePressShare() {
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showShareActionSheetWithOptions(
-        {
-          url: '',
-          message: ShareDict.ShareProgress,
-        },
-        (error) => console.log(error),
-        (success, method) => {
-          if (success) {
-            console.log('Successfully shared', success);
-          }
-        },
-      );
-    } else {
-      Share.open({shareOptions})
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          err && console.log(err);
-        });
-    }
+    // TODO: - Add relevant url
+    // TODO: -  Display loading
+    PowerShareAssetsManager.shareProgrammeStart({
+      imageUrl: SampleImageUrl,
+    })
+      .then((res) => {})
+      .catch((err) => {});
   }
 
   function handlePressStart() {

@@ -91,6 +91,7 @@ export default function WeekCompleteScreen({
       const trainerName = 'Katrina';
       const programmeName = 'home';
       // TODO: - Hook up relevant values
+      // TODO: -  Display loading
       let res = await PowerShareAssetsManager.shareWeekComplete({
         imageUrl: SampleImageUrl,
         title: `Week 3 complete with \n${name}'s ${programmeName.toLowerCase()}\n programme!`,

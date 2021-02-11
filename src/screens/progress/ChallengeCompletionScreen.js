@@ -19,6 +19,8 @@ import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import Share from 'react-native-share';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import {SampleImageUrl} from '../../utils/SampleData';
 
 export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -115,57 +117,32 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const url = 'www.google.com';
-  const shareOptions = Platform.select({
-    ios: {
-      activityItemSources: [
-        {
-          // For sharing url with custom title.
-          placeholderItem: {
-            type: 'url',
-            content: url,
-          },
-          item: {
-            default: {type: 'url', content: url},
-          },
-          subject: {
-            default: ShareDict.ShareProgress,
-          },
-          linkMetadata: {
-            originalUrl: url,
-            url,
-            title: ShareDict.ShareProgress,
-          },
-        },
-      ],
-    },
-    default: {
-      title: ShareDict.ShareProgress,
-      subject: ShareDict.ShareProgress,
-      message: `${ShareDict.Message} ${url}`,
-    },
-  });
 
   function handleShare() {
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showShareActionSheetWithOptions(
-        {
-          url: '',
-          message: ShareDict.ShareProgress,
-        },
-        (error) => console.log(error),
-        (success, method) => {
-          if (success) console.log('Successfully shared', success);
-        },
-      );
+    // TODO: select relevant share method & add relevant values
+
+    // Achievement either int or string value on the banner
+
+    let isIntAchievement = true;
+
+    if (isIntAchievement) {
+      // TODO: -  Display loading
+      PowerShareAssetsManager.shareIntAchievemnt({
+        imageUrl: SampleImageUrl,
+        achievedValue: 22,
+        subtitle: 'press-ups in \n 60 seconds',
+      })
+        .then((res) => {})
+        .catch((err) => {});
     } else {
-      Share.open({shareOptions})
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          err && console.log(err);
-        });
+      // TODO: -  Display loading
+      PowerShareAssetsManager.shareStringAchievement({
+        imageUrl: SampleImageUrl,
+        achievementValueString: '00:06:31',
+        subtitle: '1 mile run',
+      })
+        .then((res) => {})
+        .catch((err) => {});
     }
   }
 

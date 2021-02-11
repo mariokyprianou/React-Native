@@ -105,6 +105,7 @@ export default function TransformationScreen() {
 
     try {
       // TODO - Supply relevant urls
+      // TODO: -  Display loading
       let res = await PowerShareAssetsManager.shareProgress({
         beforeImageUrl: undefined,
         afterImageUrl: undefined,

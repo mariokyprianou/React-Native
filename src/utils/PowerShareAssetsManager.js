@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {Platform} from 'react-native';
+import {Platform, ActionSheetIOS} from 'react-native';
 // import RNFS from 'react-native-fs';
 
 import CustomAssetsGenerator from './CustomAssetsGenerator';
@@ -31,7 +31,7 @@ const shareWeekComplete = async ({
       totalTimeTrained,
     });
 
-    return shareLocalImage(localSharePath);
+    return shareDirectlyToInstagramStory(localSharePath);
   } catch (err) {
     throw err;
   }
@@ -50,7 +50,7 @@ const shareIntAchievemnt = async ({
         subtitle,
       },
     );
-    return shareLocalImage(localSharePath);
+    return shareDirectlyToInstagramStory(localSharePath);
   } catch (err) {
     throw err;
   }
@@ -69,14 +69,21 @@ const shareStringAchievement = async ({
         subtitle,
       },
     );
-    return shareLocalImage(localSharePath);
+    return shareDirectlyToInstagramStory(localSharePath);
   } catch (err) {
     throw err;
   }
 };
 
-const shareProgrammeStart = ({imageUrl = SampleImageUrl}) => {
-  shareLocalImage(imageUrl);
+const shareProgrammeStart = async ({imageUrl = SampleImageUrl, shareTitle}) => {
+  try {
+    let localSharePath = await CustomAssetsGenerator.generateSimpleShareableAsset(
+      imageUrl,
+    );
+    return shareDirectlyToInstagramStory(localSharePath);
+  } catch (err) {
+    throw err;
+  }
 };
 
 const shareProgress = async ({
@@ -88,8 +95,7 @@ const shareProgress = async ({
       beforeImageUrl,
       afterImageUrl,
     });
-    return shareLocalImage(localSharePath);
-    // return shareLocalImage(localSharePath);
+    return shareDirectlyToInstagramStory(localSharePath);
   } catch (err) {
     throw err;
   }
@@ -97,11 +103,32 @@ const shareProgress = async ({
 
 // MARK: - Private share sub-functions
 
-const shareLocalImage = (path, title = 'Share from Power App') => {
+const shareDirectlyToInstagramStory = async (path) => {
+  const shareSingleOptions = {
+    backgroundImage: path,
+    method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
+    social: Share.Social.INSTAGRAM_STORIES,
+  };
+
+  return Share.shareSingle(shareSingleOptions)
+    .then((res) => {
+      ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+      return res;
+    })
+    .catch((err) => {
+      ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+      throw err;
+    });
+};
+
+// WIP for share multiple - depreciated
+
+const shareOpen = (path, title) => {
   const shareOptions = {
     title: title,
     url: path,
     subject: title,
+    message: title,
   };
 
   return Share.open(shareOptions)
@@ -121,26 +148,6 @@ const shareLocalImage = (path, title = 'Share from Power App') => {
       }
     });
 };
-
-// SHARE SINGLE - UNUSED
-
-// const shareToInstagramOnly = (path) => {
-//   const shareSingleOptions = {
-//     method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
-//     backgroundImage: path,
-//     social: Share.Social.INSTAGRAM_STORIES,
-//   };
-//   return Share.shareSingle(shareSingleOptions)
-//     .then((res) => {
-//       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
-//       console.log('Share res', res);
-//       return res;
-//     })
-//     .catch((err) => {
-//       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
-//       throw err;
-//     });
-// };
 
 const PowerShareAssetsManager = {
   shareWeekComplete,

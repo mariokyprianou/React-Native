@@ -9,6 +9,7 @@ import React from 'react';
 import {NativeModules} from 'react-native';
 import * as R from 'ramda';
 import {Platform} from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 import ImagesCacheManager from './ImagesCacheManager';
 import {SampleBase64, SampleImageUrl, SampleImageUrl2} from './SampleData';
 
@@ -129,11 +130,23 @@ const generateGifAsset = async ({beforeImageUrl, afterImageUrl}) => {
   }
 };
 
+const generateSimpleShareableAsset = async (url) => {
+  try {
+    let pathFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(url);
+    const {dirs} = RNFetchBlob.fs;
+    let completePath = `${dirs.DocumentDir}/${pathFromDocumentsDir}`;
+    return completePath;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const CustomAssetsGenerator = {
   generateWeekCompleteAsset,
   generateIntAchievementAsset,
   generateStringAchievementAsset,
   generateGifAsset,
+  generateSimpleShareableAsset,
 };
 
 export default CustomAssetsGenerator;

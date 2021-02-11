@@ -190,6 +190,12 @@ const SettingsScreen = ({}) => {
       weightPreference: newWeightPref,
     };
 
+    console.log(
+      formTimeZone,
+      typeof formTimeZone,
+      '<----form time zone, typeof time zone',
+    );
+
     const newUserData = {
       familyName: userData.familyName,
       givenName: userData.givenName,
@@ -197,7 +203,7 @@ const SettingsScreen = ({}) => {
       dateOfBirth: userData.dateOfBirth,
       country: userData.country,
       region: userData.region,
-      // timeZone: formTimeZone,
+      timeZone: formTimeZone || userData.timeZone,
     };
 
     updateProfile({

@@ -265,8 +265,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       newRegion = regionLookup[regionsList[0]];
     }
 
-    const deviceTimeZone = await TimeZone.getTimeZone().then((zone) => zone);
-
     const newVals = {
       givenName: profile_firstName || userData.givenName,
       familyName: profile_lastName || userData.familyName,
@@ -274,7 +272,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
       region: newRegion,
-      timeZone: deviceTimeZone,
+      timeZone: userData.timeZone,
     };
 
     await updateProfile({
@@ -483,6 +481,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       name: 'profile_dateOfBirth',
       type: 'calendar',
       label: ProfileDict.FormLabel5,
+      maximumDate: new Date(),
       dateFormat: (e) => {
         const formattedDate = format(e, 'yyyy-LL-dd');
         setNewDateOfBirth(formattedDate);

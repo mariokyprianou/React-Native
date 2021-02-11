@@ -18,6 +18,8 @@ import {
   StatusBar,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -79,8 +81,18 @@ export default function MeetYourIconsScreen() {
       setActiveIndex(0);
       return;
     }
-    setSelectedTrainer(trainers[activeIndex]);
-    setSelectedProgram(trainers[activeIndex].programmes[0]);
+
+    const trainer = trainers[activeIndex];
+    let programme = trainer.programmes[0];
+
+    if (suggestedProgramme) {
+      console.log(suggestedProgramme);
+      programme = trainer.programmes.find(
+        (it) => it.environment === suggestedProgramme.environment,
+      );
+    }
+    setSelectedTrainer(trainer);
+    setSelectedProgram(programme);
   }, [trainers, activeIndex]);
 
   useEffect(() => {
@@ -98,11 +110,17 @@ export default function MeetYourIconsScreen() {
         (it) => it.environment === suggestedProgramme.environment,
       )
     ) {
-      setActiveIndex(trainers.indexOf(trainer));
+      let index = trainers.indexOf(trainer);
+      if (index < 0) {
+        index = 0;
+      } else if (index >= trainers.length) {
+        index = trainers.length - 1;
+      }
+
+      setActiveIndex(index);
+      iconsSwiper.current.scrollTo(index, true);
     }
   }, [trainers, suggestedProgramme]);
-
-  console.log(suggestedProgramme, '<---suggested programme');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -156,8 +174,6 @@ export default function MeetYourIconsScreen() {
     },
     leftIconContainer: {
       width: getWidth(50),
-      alignItems: 'center',
-      height: getHeight(50),
       position: 'absolute',
       left: 0,
       top: getHeight(225),
@@ -165,12 +181,16 @@ export default function MeetYourIconsScreen() {
     },
     rightIconContainer: {
       width: getWidth(50),
-      alignItems: 'center',
-      height: getHeight(50),
       position: 'absolute',
       right: 0,
       top: getHeight(225),
       zIndex: 9,
+    },
+    arrowsTouchableStyle: {
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      padding: getWidth(18),
     },
     icon: {
       size: fontSize(18),
@@ -318,15 +338,12 @@ export default function MeetYourIconsScreen() {
       <Swiper
         ref={iconsSwiper}
         loop={false}
-        index={activeIndex}
-        onIndexChanged={(index) => {
-          console.log('onIndexChanged', index);
-          setActiveIndex(index);
-        }}
+        onIndexChanged={(index) => setActiveIndex(index)}
         showsPagination={false}>
         {trainers.map((trainer) => {
           const currentProgram =
-            trainer.programmes.find((it) => it.id === selectedProgram.id) ||
+            (selectedProgram &&
+              trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
           const {numberOfWeeks, description, firstWeek} = currentProgram;
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
@@ -344,6 +361,7 @@ export default function MeetYourIconsScreen() {
                     {MeetYourIconsDict.SelectYourProgramme}
                   </Text>
                 </View>
+
                 <View style={styles.cantChooseContainer}>
                   <CantChooseButton
                     onPress={() => navigation.navigate('HelpMeChoose')}
@@ -351,8 +369,10 @@ export default function MeetYourIconsScreen() {
                   />
                 </View>
               </View>
+
               <View style={styles.leftIconContainer}>
                 <TouchableOpacity
+                  style={styles.arrowsTouchableStyle}
                   onPress={() => handlePress('left')}
                   disabled={activeIndex === 0 ? true : false}>
                   <TDIcon
@@ -361,8 +381,10 @@ export default function MeetYourIconsScreen() {
                   />
                 </TouchableOpacity>
               </View>
+
               <View style={styles.rightIconContainer}>
                 <TouchableOpacity
+                  style={styles.arrowsTouchableStyle}
                   onPress={() => handlePress('right')}
                   disabled={activeIndex === trainers.length - 1 ? true : false}>
                   <TDIcon
@@ -371,15 +393,18 @@ export default function MeetYourIconsScreen() {
                   />
                 </TouchableOpacity>
               </View>
+
               <View style={styles.cardContainer}>
                 <TrainerCard
                   trainer={trainer}
                   onPressGymHome={switchProgram}
                   currentProgram={currentProgram}
-                  suggestedEnv={suggestedProgramme?.environment || null}
+                  suggestedEnv={currentProgram?.environment || null}
                 />
               </View>
+
               <Spacer height={90} />
+
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{description}</Text>
                 <Text

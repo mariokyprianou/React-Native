@@ -20,6 +20,7 @@ import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
 import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
 import displayAlert from '../../utils/DisplayAlert';
+import useLoading from '../../hooks/loading/useLoading';
 
 import getResponse from '../../utils/getResponse';
 
@@ -33,6 +34,7 @@ export default function HelpMeChooseScreen() {
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
   const navigation = useNavigation();
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => (
@@ -96,6 +98,7 @@ export default function HelpMeChooseScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   async function submitQuestionnaire() {
+    setLoading(true);
     const answers = storedAnswers.filter(
       (it) => it.question !== null && it.question !== 'environment',
     );
@@ -129,7 +132,8 @@ export default function HelpMeChooseScreen() {
       .catch((err) => {
         showError('Server error', 'Unable to return program');
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   function showError(title, text) {

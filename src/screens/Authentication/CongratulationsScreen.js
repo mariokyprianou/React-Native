@@ -154,6 +154,7 @@ export default function CongratulationsScreen() {
       programmeId: programmeId,
     });
   }
+
   function handlePressStart() {
     if (switchProgramme === true) {
       navigation.reset({

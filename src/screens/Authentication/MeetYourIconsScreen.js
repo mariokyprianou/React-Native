@@ -37,6 +37,10 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
+import {useMutation} from '@apollo/client';
+import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
+import StartProgramme from '../../apollo/mutations/StartProgramme';
+import RestartProgramme from '../../apollo/mutations/RestartProgramme';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -57,9 +61,17 @@ export default function MeetYourIconsScreen() {
     params: {switchProgramme},
   } = useRoute();
   const {trainers, suggestedProgramme} = useCommonData();
-  const {setProgrammeModalImage, programme} = UseData();
+  const {
+    setProgrammeModalImage,
+    programme,
+    getProgramme,
+    updateStoredDays,
+  } = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {isConnected, isInternetReachable} = useNetInfo();
+  const [restartProgramme] = useMutation(RestartProgramme);
+  const [continueProgramme] = useMutation(ContinueProgramme);
+  const [startProgramme] = useMutation(StartProgramme);
 
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
@@ -68,6 +80,8 @@ export default function MeetYourIconsScreen() {
   const [currentTrainerId, setCurrentTrainerId] = useState();
   const [currentWeekNumber, setCurrentWeekNumber] = useState();
   const [currentProgrammeId, setCurrentProgrammeId] = useState();
+
+  console.log(currentProgrammeId, '<--current programme id.');
 
   useEffect(() => {
     if (programme) {
@@ -91,7 +105,13 @@ export default function MeetYourIconsScreen() {
   useEffect(() => {
     setSelectedTrainer(trainers[activeIndex]);
     setSelectedProgram(trainers[activeIndex].programmes[0]);
-  }, [trainers, activeIndex]);
+    // const programmeToDisplay = trainers[activeIndex].programmes.find(
+    //   (it) => it.id === currentProgrammeId,
+    // );
+    // const index = trainers[activeIndex].programmes.indexOf(programmeToDisplay);
+
+    // setSelectedProgram(trainers[activeIndex].programmes[index]);
+  }, [trainers, activeIndex, currentProgrammeId]);
 
   useEffect(() => {
     if (!suggestedProgramme) {
@@ -276,9 +296,88 @@ export default function MeetYourIconsScreen() {
     setSelectedProgram(newProgramme);
   }
 
-  function navigateToWorkoutHome() {
-    navigation.navigate('TabContainer');
+  async function handleRestartProgramme(id) {
+    restartProgramme({
+      variables: {
+        input: {
+          programme: id,
+        },
+      },
+    })
+      .then(() => {
+        getProgramme();
+        updateStoredDays([]);
+
+        submitAnalyticsEvent(false);
+        navigation.navigate('TabContainer');
+        setCurrentWeekNumber(1);
+      })
+      .catch((err) => console.log(err, '<---restart programme error'));
   }
+
+  async function handleContinueProgramme(id) {
+    continueProgramme({
+      variables: {
+        input: {
+          programme: id,
+        },
+      },
+    })
+      .then(() => {
+        submitAnalyticsEvent(false);
+        navigation.navigate('TabContainer');
+      })
+      .catch((err) => console.log(err, '<---continue programme error'));
+  }
+
+  async function handleStartNewProgramme(id) {
+    startProgramme({
+      variables: {
+        input: {
+          programme: id,
+        },
+      },
+    })
+      .then(() => {
+        getProgramme();
+        updateStoredDays([]);
+
+        submitAnalyticsEvent(true);
+        setProgrammeModalImage(selectedProgram.programmeImage);
+        navigation.navigate('TabContainer');
+        // setCurrentTrainerId();
+        // setCurrentWeekNumber();
+        // setCurrentProgrammeId();
+      })
+      .catch((err) => console.log(err, '<---start new programme error'));
+  }
+
+  function submitAnalyticsEvent(newTrainer = false) {
+    if (programme && programme.trainer) {
+      firebaseLogEvent(analyticsEvents.leftTrainer, {
+        trainerId: programme.trainer.id,
+        programmeId: programme.id,
+      });
+    }
+    firebaseLogEvent(
+      newTrainer
+        ? analyticsEvents.selectedTrainer
+        : analyticsEvents.restartContinueTrainer,
+      {
+        trainerId: selectedTrainer.id,
+        programmeId: selectedProgram.id,
+      },
+    );
+  }
+
+  const onScroll = (e) => {
+    const offset = e.nativeEvent.contentOffset.y;
+    if (offset > 0 && !safeArea) {
+      setSafeArea(true);
+    } else if (offset <= 0 && safeArea) {
+      setSafeArea(false);
+    }
+  };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (!isConnected && !isInternetReachable) {
@@ -308,33 +407,6 @@ export default function MeetYourIconsScreen() {
           <Spacer height={30} />
         </View>
       </View>
-    );
-  }
-
-  const onScroll = (e) => {
-    const offset = e.nativeEvent.contentOffset.y;
-    if (offset > 0 && !safeArea) {
-      setSafeArea(true);
-    } else if (offset <= 0 && safeArea) {
-      setSafeArea(false);
-    }
-  };
-
-  function submitAnalyticsEvent(newTrainer = false) {
-    if (programme && programme.trainer) {
-      firebaseLogEvent(analyticsEvents.leftTrainer, {
-        trainerId: programme.trainer.id,
-        programmeId: programme.id,
-      });
-    }
-    firebaseLogEvent(
-      newTrainer
-        ? analyticsEvents.selectedTrainer
-        : analyticsEvents.restartContinueTrainer,
-      {
-        trainerId: selectedTrainer.id,
-        programmeId: selectedProgram.id,
-      },
     );
   }
 
@@ -441,13 +513,7 @@ export default function MeetYourIconsScreen() {
             type="restartProgramme"
             icon="chevron"
             variant="gradient"
-            trainerName="KATRINA"
-            onPress={() => {
-              // todo -- Move in switchMutation completed
-              submitAnalyticsEvent(false);
-
-              navigateToWorkoutHome();
-            }}
+            onPress={() => handleRestartProgramme(selectedProgram.id)}
           />
           <Spacer height={20} />
           <DefaultButton
@@ -455,12 +521,7 @@ export default function MeetYourIconsScreen() {
             icon="chevron"
             variant="white"
             weekNo={currentWeekNumber}
-            onPress={() => {
-              // todo -- Move in switchMutation completed
-              submitAnalyticsEvent(false);
-
-              navigateToWorkoutHome();
-            }}
+            onPress={() => handleContinueProgramme(selectedProgram.id)}
           />
         </View>
       ) : switchProgramme === true &&
@@ -470,18 +531,7 @@ export default function MeetYourIconsScreen() {
             type="startNow"
             icon="chevron"
             variant="gradient"
-            onPress={() => {
-              // todo -- Move in switchMutation completed
-              submitAnalyticsEvent(true);
-
-              setProgrammeModalImage(selectedProgram.programmeImage);
-              navigation.navigate('Congratulations', {
-                switchProgramme: true,
-                trainerId: selectedTrainer.id,
-                newTrainer: selectedTrainer.name,
-                environment: selectedProgram.environment,
-              });
-            }}
+            onPress={() => handleStartNewProgramme(selectedProgram.id)}
           />
         </View>
       ) : (

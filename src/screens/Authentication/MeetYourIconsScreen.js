@@ -75,6 +75,10 @@ export default function MeetYourIconsScreen() {
   const currentWeek = 4; // to be changed to getProgramme data
 
   useEffect(() => {
+    if (activeIndex < 0) {
+      setActiveIndex(0);
+      return;
+    }
     setSelectedTrainer(trainers[activeIndex]);
     setSelectedProgram(trainers[activeIndex].programmes[0]);
   }, [trainers, activeIndex]);
@@ -315,7 +319,10 @@ export default function MeetYourIconsScreen() {
         ref={iconsSwiper}
         loop={false}
         index={activeIndex}
-        onIndexChanged={(index) => setActiveIndex(index)}
+        onIndexChanged={(index) => {
+          console.log('onIndexChanged', index);
+          setActiveIndex(index);
+        }}
         showsPagination={false}>
         {trainers.map((trainer) => {
           const currentProgram =

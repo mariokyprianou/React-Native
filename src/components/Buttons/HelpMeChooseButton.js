@@ -47,6 +47,8 @@ export default function HelpMeChooseButton({
       shadowRadius: 6,
       shadowOpacity: 1,
       elevation: 3,
+      paddingHorizontal: 0,
+      paddingBottom: 0,
     },
     linearGradientStyle: {
       flex: 1,
@@ -90,7 +92,13 @@ export default function HelpMeChooseButton({
   }
   return (
     <View style={{...styles.container, ...styles.box, ...styles.unselectedBox}}>
-      <TouchableOpacity onPress={onPress} style={styles.touch}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={{
+          ...styles.touch,
+          paddingHorizontal: getWidth(10),
+          paddingBottom: getHeight(30),
+        }}>
         <Text style={styles.unselectedLetterText}>{letter}</Text>
         <Text style={styles.unselectedBodyText}>{text}</Text>
       </TouchableOpacity>

@@ -73,7 +73,7 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(countries);
+      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
 
       const indianRegions = data.allCountries.filter(
         (country) => country.country === 'India',
@@ -86,7 +86,8 @@ export default function RegisterScreen() {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(indianRegionsList);
+      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
+
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -209,13 +210,15 @@ export default function RegisterScreen() {
       email: email,
       password: password,
       gender: gender ? gender.toLowerCase() : null,
-      dateOfBirth: new Date(dateOfBirth),
-      country: country ? countryID : null,
+      dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
+      country: countryID || null,
       region: selectedCountry === 'India' ? regionLookup[region] : null,
       deviceUDID: deviceUid,
       timeZone: deviceTimeZone,
       programme: programmeId,
     };
+
+    console.log(data);
 
     execute({
       variables: {
@@ -352,6 +355,7 @@ export default function RegisterScreen() {
       name: 'dateOfBirth',
       type: 'calendar',
       label: AuthDict.DobLabel,
+      maximumDate: new Date(),
       placeholder: '',
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,

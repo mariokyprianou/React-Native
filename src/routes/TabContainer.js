@@ -17,6 +17,8 @@ import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
 import isIphoneX from '../utils/isIphoneX';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
 
 const notificationCount = 2;
 
@@ -80,9 +82,11 @@ export default function TabContainer() {
   };
 
   function getTabBarVisibility(route) {
-    const routeName = route.state
-      ? route.state.routes[route.state.index].name
-      : route.name;
+    const routeName = getFocusedRouteNameFromRoute(route) || route.name;
+
+    // const routeName = route.state
+    //   ? route.state.routes[route.state.index].name
+    //   : route.name;
 
     if (
       routeName === 'Calendar' ||

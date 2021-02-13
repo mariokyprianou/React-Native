@@ -201,10 +201,12 @@ const SettingsScreen = ({}) => {
       givenName: userData.givenName,
       gender: userData.gender,
       dateOfBirth: userData.dateOfBirth,
-      country: userData.country,
-      region: userData.region,
+      // country: userData.country,
+      // region: userData.region,
       timeZone: formTimeZone || userData.timeZone,
     };
+
+    console.log(newUserData)
 
     updateProfile({
       variables: {

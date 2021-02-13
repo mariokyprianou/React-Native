@@ -73,7 +73,7 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(countries);
+      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
 
       const indianRegions = data.allCountries.filter(
         (country) => country.country === 'India',
@@ -209,13 +209,15 @@ export default function RegisterScreen() {
       email: email,
       password: password,
       gender: gender ? gender.toLowerCase() : null,
-      dateOfBirth: new Date(dateOfBirth),
-      country: country ? countryID : null,
+      dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
+      country: countryID || null,
       region: selectedCountry === 'India' ? regionLookup[region] : null,
       deviceUDID: deviceUid,
       timeZone: deviceTimeZone,
       programme: programmeId,
     };
+
+    console.log(data);
 
     execute({
       variables: {

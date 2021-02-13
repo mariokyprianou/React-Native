@@ -108,7 +108,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList(countries);
+      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
 
       const indianRegions = countryData.allCountries.filter(
         (country) => country.country === 'India',

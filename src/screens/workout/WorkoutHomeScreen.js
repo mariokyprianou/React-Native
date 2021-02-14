@@ -319,7 +319,7 @@ export default function WorkoutHomeScreen() {
 
   async function showStayTunedModal() {
     const firstDayNextWeek = addDays(
-      new Date(programme.currentWeek.workouts[0].completedAt),
+      parseISO(programme.currentWeek.startedAt),
       7,
     );
     const programmeLength = programme.trainer.programmes.filter(

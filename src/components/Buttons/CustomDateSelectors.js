@@ -11,17 +11,15 @@ import {View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import DropDownPicker from 'react-native-dropdown-picker';
 import useTheme from '../../hooks/theme/UseTheme';
-import useTransformation from '../../hooks/data/useTransformation';
 import isRTL from '../../utils/isRTL';
 
 const arrowDown = require('../../../assets/icons/sortDown.png');
 const arrowUp = require('../../../assets/icons/sortUp.png');
 
-const CustomDateSelectors = ({onPress}) => {
+const CustomDateSelectors = ({onPress, storedImages}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {transformationImages} = useTransformation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -79,8 +77,8 @@ const CustomDateSelectors = ({onPress}) => {
   return (
     <View style={styles.dropdown}>
       <DropDownPicker
-        items={transformationImages}
-        defaultValue={transformationImages[0].value}
+        items={storedImages}
+        defaultValue={storedImages[0].value}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}
@@ -92,8 +90,8 @@ const CustomDateSelectors = ({onPress}) => {
         customArrowUp={customUp}
       />
       <DropDownPicker
-        items={transformationImages}
-        defaultValue={transformationImages[0].value}
+        items={storedImages}
+        defaultValue={storedImages[storedImages.length - 1].value}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}

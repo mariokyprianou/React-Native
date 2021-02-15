@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -15,12 +15,13 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
-import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {useQuery, useMutation} from '@apollo/client';
+import {useQuery, useLazyQuery} from '@apollo/client';
 import ProgressImages from '../../apollo/queries/ProgressImages';
+import ProgressImage from '../../apollo/queries/ProgressImage';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
+import formatProgressImages from '../../utils/formatProgressImages';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const fakeAfterPic = require('../../../assets/fakeAfter.png');
@@ -45,18 +46,26 @@ export default function TransformationScreen() {
     ),
   });
 
-  const [beforePic, setBeforePic] = useState(fakeBeforePic);
-  const [afterPic, setAfterPic] = useState(fakeAfterPic);
-  const [userImages, setUserImages] = useState([]);
-  const {fakeProgressImages} = fakeProgressData();
+  const [beforePic, setBeforePic] = useState();
+  const [afterPic, setAfterPic] = useState();
+  const [userImages, setUserImages] = useState();
+  const [selectedUrl, setSelectedUrl] = useState();
 
   useQuery(ProgressImages, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res, '<---progress images res');
-      setUserImages(res.progressImages);
+      const formattedImages = formatProgressImages(res.progressImages);
+      setUserImages(formattedImages);
     },
     onError: (err) => console.log(err, '<---progress images err'),
+  });
+
+  const [getImage] = useLazyQuery(ProgressImage, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      setSelectedUrl(res.progressImage.url);
+    },
+    onError: (err) => console.log(err, '<---get image err'),
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -85,11 +94,22 @@ export default function TransformationScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleSelectDate(dateItem, imageToSelect) {
-    console.log(dateItem);
-    // retrieve ProgressImage from back end using date
-    // if imageToSelect === 'before' setBeforePic(dateItem.imageURL)
-    // if imageToSelect === 'after' setAfterPic(dateItem.imageURL)
+  async function handleSelectDate(dateItem, imageToSelect) {
+    getImage({
+      variables: {
+        input: {
+          id: dateItem.id,
+          createdAt: dateItem.createdAt,
+        },
+      },
+    });
+
+    if (selectedUrl && imageToSelect === 'before') {
+      console.log('BEFORE SET');
+      setBeforePic(selectedUrl);
+    } else if (selectedUrl && imageToSelect === 'after') {
+      setAfterPic(selectedUrl);
+    }
   }
 
   function handleNavigateAddPhoto() {
@@ -116,34 +136,37 @@ export default function TransformationScreen() {
   function handleShare() {}
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  return (
-    <View style={styles.container}>
-      <TDSlideshow
-        beforePic={beforePic}
-        afterPic={afterPic}
-        imageWidth={styles.image.width}
-        imageHeight={styles.image.height}
-        sliderSpacerHeight={styles.spacerHeight}
-        sliderStyles={styles.sliderStyles}
-        minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
-        maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
-        sliderSpacerHeight={styles.spacerHeight}
-        sliderIcon={sliderThumb}
-        DateSelectors={() => (
-          <CustomDateSelectors
-            onPress={handleSelectDate}
-            images={fakeProgressImages}
-          />
-        )}
-      />
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="addPhoto"
-          variant="gradient"
-          icon="chevron"
-          onPress={handleNavigateAddPhoto}
+  if (userImages) {
+    return (
+      <View style={styles.container}>
+        <TDSlideshow
+          beforePic={beforePic ? {uri: beforePic} : fakeBeforePic}
+          afterPic={afterPic ? {uri: afterPic} : fakeAfterPic}
+          imageWidth={styles.image.width}
+          imageHeight={styles.image.height}
+          sliderSpacerHeight={styles.spacerHeight}
+          sliderStyles={styles.sliderStyles}
+          minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
+          maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
+          sliderSpacerHeight={styles.spacerHeight}
+          sliderIcon={sliderThumb}
+          DateSelectors={() => (
+            <CustomDateSelectors
+              onPress={handleSelectDate}
+              storedImages={userImages}
+            />
+          )}
         />
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="addPhoto"
+            variant="gradient"
+            icon="chevron"
+            onPress={handleNavigateAddPhoto}
+          />
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+  return null;
 }

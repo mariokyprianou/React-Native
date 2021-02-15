@@ -26,9 +26,8 @@ export default function HelpMeChooseBar({
   const {HelpMeChooseDict} = dictionary;
 
   const activeWidth = (currentQuestion / totalQuestions) * 100;
-  const inactiveWidth = 100 - activeWidth;
 
-  // console.log(activeWidth, inac)
+  console.log(activeWidth, '<---activeWidth');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -46,6 +45,8 @@ export default function HelpMeChooseBar({
       flex: 1,
       borderBottomLeftRadius: radius(2),
       borderTopLeftRadius: radius(2),
+      borderBottomRightRadius: activeWidth === 100 ? radius(2) : 0,
+      borderTopRightRadius: activeWidth === 100 ? radius(2) : 0,
     },
     activeBar: {
       width: `${activeWidth}%`,

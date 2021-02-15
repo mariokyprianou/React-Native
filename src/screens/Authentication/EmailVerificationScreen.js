@@ -64,7 +64,6 @@ export default function EmailVerificationScreen() {
     Alert.alert(AuthDict.YouWillBeLoggedOut, '', [
       {
         text: 'Cancel',
-        style: 'cancel',
       },
       {
         text: 'Ok',

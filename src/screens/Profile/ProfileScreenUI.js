@@ -302,6 +302,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       text: ProfileDict.LogoutModalText,
       buttons: [
         {
+          text: ProfileDict.Cancel,
+        },
+        {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
             await Auth.signOut()
@@ -319,6 +322,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               });
           },
         },
+        
       ],
     });
   }

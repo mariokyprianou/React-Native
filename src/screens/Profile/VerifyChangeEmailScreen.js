@@ -147,7 +147,6 @@ export default function VerifyChangeEmailScreen() {
       },
       {
         text: ProfileDict.Cancel,
-        style: 'cancel',
       },
     ]);
   }

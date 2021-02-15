@@ -162,9 +162,8 @@ export default function LoginScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-      },
+     
+     
     },
     {
       name: 'password',
@@ -176,7 +175,7 @@ export default function LoginScreen() {
       autoCorrect: false,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
     },

@@ -89,6 +89,7 @@ export default function ChangeEmailScreen() {
       label: ProfileDict.ChangeEmailLabel2,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
       },
     },

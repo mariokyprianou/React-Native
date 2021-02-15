@@ -491,11 +491,14 @@ export default function ThemeProvider({children}) {
     style: {
       ...textStyles.medium14_brownishGrey100,
       flex: 1,
+      height: '100%',
     },
     inputContainerStyle: {
       padding: 0,
       margin: 0,
-      paddingHorizontal: getWidth(6),
+      //paddingHorizontal: getWidth(6),
+      paddingHorizontal: 0,    
+      marginStart: Platform.OS === 'android' ? getHeight(-4) : getHeight(0),
     },
     inputStyle: {
       ...textStyles.regular16_black100,

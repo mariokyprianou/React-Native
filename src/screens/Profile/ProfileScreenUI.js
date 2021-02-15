@@ -416,15 +416,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        flex: 1,
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
+        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(10),
       },
       placeholder: userData.givenName,
       defaultValue: userData.givenName,
       style: {
+        ...cellFormStyles.style,
         ...textStyles.regular16_black100,
-        flex: 1,
       },
     },
     {
@@ -433,15 +433,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        flex: 1,
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
+        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(10),    
       },
       placeholder: userData.familyName,
       defaultValue: userData.familyName,
-      style: {
+      style: { 
+         ...cellFormStyles.style,
         ...textStyles.regular16_black100,
-        flex: 1,
       },
     },
     {
@@ -452,6 +452,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
+
       },
       inputStyle: {
         ...textStyles.regular16_black60,

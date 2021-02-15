@@ -72,7 +72,7 @@ export default function TransformationScreen() {
     setUrlId(URL.data.uploadUrl.id);
 
     RNFetchBlob.fetch(
-      'POST',
+      'PUT',
       URL.data.uploadUrl.url,
       {
         'Content-Type': contentType,
@@ -80,9 +80,7 @@ export default function TransformationScreen() {
       RNFetchBlob.wrap(path),
     )
       .then((res) => {
-        console.log(res, '<---fetch blob res');
         let status = res.info().status;
-        console.log(status, '<----fetch blob status');
 
         if (status === 200 || status === 204) {
           console.log('SUCCESS');
@@ -97,7 +95,7 @@ export default function TransformationScreen() {
   }
 
   async function handleAddPhotoError() {
-    await sendFailed(urlId)
+    await sendFailed({variables: {id: urlId}})
       .then((res) => console.log(res, '<---upload failed res'))
       .catch((err) => console.log(err, '<---upload failed err'));
   }

@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,8 +17,10 @@ import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import Header from '../../components/Headers/Header';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useQuery, useMutation} from '@apollo/client';
+import {useMutation} from '@apollo/client';
 import UploadUrl from '../../apollo/mutations/UploadUrl';
+import UploadFailed from '../../apollo/mutations/UploadFailed';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
@@ -43,6 +45,8 @@ export default function TransformationScreen() {
   });
 
   const [requestUrl] = useMutation(UploadUrl);
+  const [sendFailed] = useMutation(UploadFailed);
+  const [urlId, setUrlId] = useState();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -61,7 +65,41 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
-    await requestUrl().catch((err) => console.log(err, '<---requestUrl err'));
+    const URL = await requestUrl().catch((err) =>
+      console.log(err, '<---requestUrl err'),
+    );
+
+    setUrlId(URL.data.uploadUrl.id);
+
+    RNFetchBlob.fetch(
+      'POST',
+      URL.data.uploadUrl.url,
+      {
+        'Content-Type': contentType,
+      },
+      RNFetchBlob.wrap(path),
+    )
+      .then((res) => {
+        console.log(res, '<---fetch blob res');
+        let status = res.info().status;
+        console.log(status, '<----fetch blob status');
+
+        if (status === 200 || status === 204) {
+          console.log('SUCCESS');
+        } else {
+          handleAddPhotoError();
+        }
+      })
+      .catch((err) => {
+        console.log(err, '<---fetch blob err');
+        handleAddPhotoError();
+      });
+  }
+
+  async function handleAddPhotoError() {
+    await sendFailed(urlId)
+      .then((res) => console.log(res, '<---upload failed res'))
+      .catch((err) => console.log(err, '<---upload failed err'));
   }
 
   function handleSelectPhoto() {

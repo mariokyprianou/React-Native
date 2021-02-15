@@ -26,9 +26,7 @@ export default function HelpMeChooseBar({
   const {HelpMeChooseDict} = dictionary;
 
   const activeWidth = (currentQuestion / totalQuestions) * 100;
-
-  console.log(activeWidth, '<---activeWidth');
-
+  
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     title: {

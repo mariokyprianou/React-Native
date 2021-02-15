@@ -158,10 +158,10 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..dc2927d 100644
+index f41ddff..f9b657e 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -7,28 +7,32 @@
+@@ -7,28 +7,33 @@
   */
  
  import React, { useState } from "react";
@@ -185,6 +185,7 @@ index f41ddff..dc2927d 100644
    overlayImage,
    overlayStyles,
    CustomCountdown,
++  CountdownTime,
    cameraButtonImage,
 +  backgroundColor,
  }) => {
@@ -202,7 +203,7 @@ index f41ddff..dc2927d 100644
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +40,7 @@ const AddPhoto = ({
+@@ -36,7 +41,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
@@ -211,7 +212,7 @@ index f41ddff..dc2927d 100644
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,50 +59,53 @@ const AddPhoto = ({
+@@ -55,50 +60,59 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -287,15 +288,21 @@ index f41ddff..dc2927d 100644
 -        }
 -      })
 -      .catch((err) => console.log(err));
-+  async function handlePhotoClick(camera) {
++  async function handlePhotoClick() {
 +    const options = { quality: 0.5, base64: true };
-+    const data = await camera.takePictureAsync(options);
-+    const contentType = mime.lookup(data.uri)
-+    setPhoto(data.uri, contentType);
++
++    const timeout = CountdownTime ? CountdownTime : 0;
++
++    setTimeout(async () => {
++      const data = await cameraRef.takePictureAsync(options);
++      const contentType = mime.lookup(data.uri)
++      setPhoto(data.uri, contentType);
++    }, timeout)
++
    }
  
    function handleSwitchView() {
-@@ -109,11 +116,6 @@ const AddPhoto = ({
+@@ -109,11 +123,6 @@ const AddPhoto = ({
  
    return (
      <View style={styles.pageContainer}>
@@ -307,7 +314,7 @@ index f41ddff..dc2927d 100644
        <View style={styles.cameraContainer}>
          <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
            {({ camera }) => {
-@@ -121,7 +123,7 @@ const AddPhoto = ({
+@@ -121,7 +130,7 @@ const AddPhoto = ({
              if (overlayImage) {
                return (
                  <View style={styles.overlay}>
@@ -316,13 +323,16 @@ index f41ddff..dc2927d 100644
                  </View>
                );
              } else {
-@@ -131,17 +133,24 @@ const AddPhoto = ({
+@@ -131,17 +140,26 @@ const AddPhoto = ({
          </RNCamera>
          <View style={styles.buttonContainer}>
            {CustomCountdown && (
 -            <View style={styles.sideButtons}>
-+            <View style={styles.countdownButtonContainer}>
-               <CustomCountdown />
+-              <CustomCountdown />
++            <View style={ styles.countdownButtonContainer }>
++              <TouchableOpacity onPress={handlePhotoClick}>
++                <CustomCountdown />
++              </TouchableOpacity>  
              </View>
            )}
 -          <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
@@ -333,7 +343,7 @@ index f41ddff..dc2927d 100644
 -          </TouchableOpacity>
 -          <View style={styles.sideButtons}>
 +          <View style={styles.cameraButtonContainer}>
-+            <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
++            <TouchableOpacity onPress={handlePhotoClick}>
 +              <TDIcon
 +                input={cameraButtonImage ? cameraButtonImage : "dot-circle"}
 +                inputStyle={

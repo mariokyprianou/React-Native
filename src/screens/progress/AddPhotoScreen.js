@@ -127,10 +127,6 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err));
   }
 
-  function handleCountdownStart() {
-    console.log('counting down');
-  }
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -138,9 +134,8 @@ export default function TransformationScreen() {
         setPhoto={handlePhoto}
         overlayImage={overlay}
         overlayStyles={styles.overlay}
-        CustomCountdown={() => (
-          <CustomCountdown onPress={handleCountdownStart} />
-        )}
+        CustomCountdown={() => <CustomCountdown time={3000} />}
+        CountdownTime={3000}
         cameraButtonImage={cameraButton}
         backgroundColor={colors.backgroundWhite100}
       />

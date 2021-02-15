@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {TouchableOpacity, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {ScaleHook} from 'react-native-design-to-component';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -15,7 +15,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 
 const reminder = require('../../../assets/icons/reminder.png');
 
-const CustomCountdown = ({onPress}) => {
+const CustomCountdown = () => {
   const {getHeight, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
@@ -40,12 +40,12 @@ const CustomCountdown = ({onPress}) => {
   };
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <>
       <View style={styles.iconContainer}>
         <TDIcon input={reminder} inputStyle={{style: styles.countdownStyle}} />
       </View>
       <Text style={styles.text}>{ButtonDict.ThreeSecs}</Text>
-    </TouchableOpacity>
+    </>
   );
 };
 

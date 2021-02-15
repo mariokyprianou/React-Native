@@ -477,12 +477,14 @@ export default function ThemeProvider({children}) {
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      marginRight: getWidth(-5),
+      marginRight: getWidth(-8),
+      paddingRight: getWidth(4),
     },
     labelContainerStyle: {
       width: '100%',
       marginTop: getHeight(18),
     },
+    
     labelTextStyle: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
@@ -492,6 +494,7 @@ export default function ThemeProvider({children}) {
       ...textStyles.medium14_brownishGrey100,
       flex: 1,
       height: '100%',
+      
     },
     inputContainerStyle: {
       padding: 0,
@@ -507,6 +510,7 @@ export default function ThemeProvider({children}) {
       margin: 0,
       textAlign: 'left',
     },
+    marginEnd: Platform.OS === 'android' ? getHeight(-4) : getHeight(0),
     writingDirection: isRTL() ? 'rtl' : 'ltr',
   };
 

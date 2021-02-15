@@ -20,11 +20,14 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useData from '../../hooks/data/UseData';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import processProgressData from '../../utils/processProgressData';
+import {useQuery} from '@apollo/client';
+import Progress from '../../apollo/queries/Progress';
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -33,6 +36,7 @@ export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
+  const {isConnected, isInternetReachable} = useNetInfo();
   const {
     days,
     daysTextStyles,
@@ -43,26 +47,27 @@ export default function ProgressScreen() {
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-
-  // const [
-  //   progress,
-  //   // getProgress,
-  //   // challenges,
-  //   // getChallenges,
-  //   // challengeHistory,
-  //   // getChallengeHistory,
-  //   // progressHistory,
-  //   // getProgressHistory,
-  //   // progressImages,
-  //   // getProgressImages,
-  // ] = useData();
-  // console.log(progress);
-  const {fakeProgress, fakeChallenges} = fakeProgressData();
-  const progressData = processProgressData(fakeProgress.days);
   const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => null,
+  });
+
+  const {fakeProgress, fakeChallenges} = fakeProgressData();
+  const progressData = processProgressData(fakeProgress.days);
+
+  useQuery(Progress, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      const progressHistoryData = res.progress
+        .map((month) => {
+          return processProgressData(month.days);
+        })
+        .flat();
+
+      console.log(progressHistoryData, '<---formatted progress data');
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

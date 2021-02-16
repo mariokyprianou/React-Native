@@ -59,7 +59,7 @@ export default function MeetYourIconsScreen() {
   } = useRoute();
   //const switchProgramme = true;
 
-  const {trainers, suggestedProgramme} = useCommonData();
+  const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
   const {setProgrammeModalImage} = UseData();
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
@@ -81,14 +81,13 @@ export default function MeetYourIconsScreen() {
     let programme = trainer.programmes[0];
 
     if (suggestedProgramme) {
-      console.log(suggestedProgramme);
       programme = trainer.programmes.find(
         (it) => it.environment === suggestedProgramme.environment,
       );
     }
     setSelectedTrainer(trainer);
     setSelectedProgram(programme);
-  }, [trainers, activeIndex]);
+  }, [trainers, activeIndex, suggestedProgramme]);
 
   useEffect(() => {
     if (!suggestedProgramme) {
@@ -264,6 +263,7 @@ export default function MeetYourIconsScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
+    
     if (direction === 'left' && activeIndex !== 0) {
       iconsSwiper.current.scrollTo(activeIndex - 1, true);
     }
@@ -333,13 +333,19 @@ export default function MeetYourIconsScreen() {
       <Swiper
         ref={iconsSwiper}
         loop={false}
-        onIndexChanged={(index) => setActiveIndex(index)}
+        onIndexChanged={(index) =>{
+
+          // reset suggested programme to prevent conflict between suggested && selected programme
+          setSuggestedProgramme(null);
+          setActiveIndex(index);
+        }}
         showsPagination={false}>
         {trainers.map((trainer) => {
-          const currentProgram =
+          let currentProgram =
             (selectedProgram &&
               trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
+
           const {numberOfWeeks, description, firstWeek} = currentProgram;
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 

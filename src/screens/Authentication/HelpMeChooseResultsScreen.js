@@ -66,7 +66,6 @@ export default function HelpMeChooseResultsScreen() {
       width: '100%',
       height: getHeight(420),
       resizeMode: 'cover',
-      backgroundColor: 'red',
     },
     titleContainer: {
       position: 'absolute',

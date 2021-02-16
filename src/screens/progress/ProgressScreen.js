@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -53,8 +53,9 @@ export default function ProgressScreen() {
     header: () => null,
   });
 
-  const {fakeProgress, fakeChallenges} = fakeProgressData();
-  const progressData = processProgressData(fakeProgress.days);
+  const [progressData, setProgressData] = useState();
+
+  const {fakeChallenges} = fakeProgressData();
 
   useQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -64,8 +65,7 @@ export default function ProgressScreen() {
           return processProgressData(month.days);
         })
         .flat();
-
-      console.log(progressHistoryData, '<---formatted progress data');
+      setProgressData(progressHistoryData);
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });

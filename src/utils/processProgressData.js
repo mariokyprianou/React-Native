@@ -6,7 +6,12 @@
  * Copyright (c) 2020 The Distance
  */
 
-import {eachDayOfInterval, startOfMonth, lastDayOfMonth} from 'date-fns';
+import {
+  eachDayOfInterval,
+  startOfMonth,
+  lastDayOfMonth,
+  format,
+} from 'date-fns';
 
 export default processProgressData = (data) => {
   const sortedData = [...data].sort(
@@ -14,8 +19,8 @@ export default processProgressData = (data) => {
   );
 
   const formattedData = sortedData.map((sortedDay) => {
-    const dayString = sortedDay.date.slice(0, 10);
-    return {[sortedDay.date]: sortedDay.type, day: dayString};
+    const key = format(new Date(sortedDay.date), 'EEE MMM dd yyyy');
+    return {[key]: sortedDay.type, day: key};
   });
 
   const firstOfMonth = startOfMonth(new Date(sortedData[0].date)).toISOString();
@@ -28,12 +33,11 @@ export default processProgressData = (data) => {
   });
 
   const emptyDaysArray = allDays.map((day) => {
-    const dateString = day.toISOString();
-    const dayString = dateString.slice(0, 10);
-    const today = new Date().toISOString().slice(0, 10);
+    const key = format(day, 'EEE MMM dd yyyy');
+    const today = format(new Date(), 'EEE MMM dd yyyy');
     let type = 'noData';
-    if (dayString === today) type = 'currentDay';
-    return {[dateString]: type, day: dayString};
+    if (key === today) type = 'currentDay';
+    return {[key]: type, day: key};
   });
 
   const completeArray = [...formattedData, ...emptyDaysArray];
@@ -44,5 +48,11 @@ export default processProgressData = (data) => {
     })
     .sort((a, b) => new Date(Object.keys(a)[0]) - new Date(Object.keys(b)[0]));
 
-  return uniqueArray;
+  const result = uniqueArray.map((dayObj) => {
+    const newDayObj = {...dayObj};
+    delete newDayObj.day;
+    return newDayObj;
+  });
+
+  return result;
 };

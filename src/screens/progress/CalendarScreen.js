@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -41,27 +41,20 @@ export default function CalendarScreen() {
     header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
   });
 
+  const [progressHistoryData, setProgressHistoryData] = useState();
+
   useQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const progressHistoryData = res.progress
+      const progressData = res.progress
         .map((month) => {
           return processProgressData(month.days);
         })
         .flat();
-
-      // console.log(progressHistoryData, '<---formatted progress data');
+      setProgressHistoryData(progressData);
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
-
-  // const {fakeProgressHistory} = fakeProgressData();
-
-  // const progressHistoryData = fakeProgressHistory
-  //   .map((month) => {
-  //     return processProgressData(month.days);
-  //   })
-  //   .flat();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -85,7 +78,7 @@ export default function CalendarScreen() {
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
-        {/* <Calendar
+        <Calendar
           days={days}
           daysTextStyles={daysTextStyles}
           daysContainerStyles={daysContainerStyles}
@@ -99,7 +92,7 @@ export default function CalendarScreen() {
           lookupStyleTable={lookupStyleTable}
           calendarMonthNames={monthNames}
           monthTitleTextStyles={styles.monthTitles}
-        /> */}
+        />
       </View>
     </View>
   );

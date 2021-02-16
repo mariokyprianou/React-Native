@@ -28,6 +28,7 @@ import {useQuery} from '@apollo/client';
 import Progress from '../../apollo/queries/Progress';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {startOfMonth} from 'date-fns';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -60,11 +61,13 @@ export default function ProgressScreen() {
   useQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const progressHistoryData = res.progress
-        .map((month) => {
-          return processProgressData(month.days);
-        })
-        .flat();
+      const startOfThisMonth = startOfMonth(new Date()).toISOString();
+      const thisMonth = res.progress.filter(
+        (month) => month.startOfMonth === startOfThisMonth,
+      );
+
+      const progressHistoryData = processProgressData(thisMonth[0].days);
+
       setProgressData(progressHistoryData);
     },
     onError: (err) => console.log(err, '<---progress images err'),
@@ -137,58 +140,64 @@ export default function ProgressScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
-      <ScrollView style={styles.screen}>
-        <View style={styles.container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
-            <Text
-              style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
-          </View>
-          <View style={styles.calendarContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-              <Text style={styles.calendarTitle}>
-                {ProgressDict.YourWorkouts}
-              </Text>
-              <Calendar
-                days={days}
-                daysTextStyles={daysTextStyles}
-                daysContainerStyles={daysContainerStyles}
-                firstDayOfWeek="Monday"
-                calendarType="single-month"
-                showPrevNextDays={false}
-                datesSelectable={false}
-                dateCellStyles={dateCellStyles}
-                cellData={progressData}
-                pillWidth={pillWidth}
-                lookupStyleTable={lookupStyleTable}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.boxWrapper}>
-            <TransformationChallenge
-              type="progress"
-              title="Transformation"
-              image={fakeImage}
-              onPress={() => navigation.navigate('Transformation')}
-            />
-            {fakeChallenges.map((challenge, index) => {
-              const {name} = challenge;
-              return (
-                <TransformationChallenge
-                  key={index}
-                  type="challenge"
-                  title={name}
-                  image={fakeGraph}
-                  onPress={() => navigation.navigate('Challenge', {challenge})}
+  if (progressData) {
+    // console.log(progressData, '<---DATA');
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
+        <ScrollView style={styles.screen}>
+          <View style={styles.container}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
+              <Text
+                style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
+            </View>
+            <View style={styles.calendarContainer}>
+              <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+                <Text style={styles.calendarTitle}>
+                  {ProgressDict.YourWorkouts}
+                </Text>
+                <Calendar
+                  days={days}
+                  daysTextStyles={daysTextStyles}
+                  daysContainerStyles={daysContainerStyles}
+                  firstDayOfWeek="Monday"
+                  calendarType="single-month"
+                  showPrevNextDays={false}
+                  datesSelectable={false}
+                  dateCellStyles={dateCellStyles}
+                  cellData={progressData}
+                  pillWidth={pillWidth}
+                  lookupStyleTable={lookupStyleTable}
                 />
-              );
-            })}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.boxWrapper}>
+              <TransformationChallenge
+                type="progress"
+                title="Transformation"
+                image={fakeImage}
+                onPress={() => navigation.navigate('Transformation')}
+              />
+              {fakeChallenges.map((challenge, index) => {
+                const {name} = challenge;
+                return (
+                  <TransformationChallenge
+                    key={index}
+                    type="challenge"
+                    title={name}
+                    image={fakeGraph}
+                    onPress={() =>
+                      navigation.navigate('Challenge', {challenge})
+                    }
+                  />
+                );
+              })}
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+  return null;
 }

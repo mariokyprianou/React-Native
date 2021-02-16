@@ -26,11 +26,11 @@ export default function ProgressContainer(props) {
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      {/* <ProgressStack.Screen
+      <ProgressStack.Screen
         name="Progress"
         component={ProgressScreen}
         options={{headerShown: false}}
-      /> */}
+      />
       <ProgressStack.Screen name="Calendar" component={CalendarScreen} />
       <ProgressStack.Screen
         name="Transformation"

@@ -433,15 +433,15 @@ export default function ThemeProvider({children}) {
       width: getWidth(45),
     },
     lookupStyleTable: {
-      newWeek: {
+      NEW_WEEK: {
         pill: calendarPillStyles.pillNewWeek,
         text: calendarTextStyles.textNewWeek,
       },
-      newWeekNewProgramme: {
+      NEW_PROGRAMME: {
         pill: calendarPillStyles.pillNewWeek,
         text: calendarTextStyles.textNewWeek,
       },
-      workoutComplete: {
+      WORKOUT_COMPLETE: {
         pill: calendarPillStyles.pillWorkoutComplete,
         text: calendarTextStyles.textWorkoutComplete,
       },

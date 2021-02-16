@@ -50,18 +50,18 @@ export default function CalendarScreen() {
         })
         .flat();
 
-      console.log(progressHistoryData, '<---formatted progress data');
+      // console.log(progressHistoryData, '<---formatted progress data');
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
 
-  const {fakeProgressHistory} = fakeProgressData();
+  // const {fakeProgressHistory} = fakeProgressData();
 
-  const progressHistoryData = fakeProgressHistory
-    .map((month) => {
-      return processProgressData(month.days);
-    })
-    .flat();
+  // const progressHistoryData = fakeProgressHistory
+  //   .map((month) => {
+  //     return processProgressData(month.days);
+  //   })
+  //   .flat();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -85,7 +85,7 @@ export default function CalendarScreen() {
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
-        <Calendar
+        {/* <Calendar
           days={days}
           daysTextStyles={daysTextStyles}
           daysContainerStyles={daysContainerStyles}
@@ -99,7 +99,7 @@ export default function CalendarScreen() {
           lookupStyleTable={lookupStyleTable}
           calendarMonthNames={monthNames}
           monthTitleTextStyles={styles.monthTitles}
-        />
+        /> */}
       </View>
     </View>
   );

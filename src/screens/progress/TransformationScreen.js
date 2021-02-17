@@ -25,8 +25,8 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import formatProgressImages from '../../utils/formatProgressImages';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
-const fakeAfterPic = require('../../../assets/fakeAfter.png');
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
+const overlay = require('../../../assets/images/progressZero.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -53,7 +53,7 @@ export default function TransformationScreen() {
   const [userImages, setUserImages] = useState();
   const [selectedUrl, setSelectedUrl] = useState();
 
-  console.log(userImages, '<---userImages');
+  console.log(beforePic, typeof beforePic, '<---before pic');
 
   useQuery(ProgressImages, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -65,20 +65,38 @@ export default function TransformationScreen() {
   });
 
   useEffect(() => {
-    if (userImages && userImages.length === 1) {
-      getImage({
-        variables: {
-          input: {
-            id: userImages[0].id,
-            createdAt: userImages[0].createdAt,
+    if (userImages && (userImages.length === 1 || userImages.length === 2)) {
+      async function getBeforePicOnly() {
+        await getImage({
+          variables: {
+            input: {
+              id: userImages[0].id,
+              createdAt: userImages[0].createdAt,
+            },
           },
-        },
-      });
+        });
+      }
+      getBeforePicOnly();
+      setBeforePic(selectedUrl);
     }
-  }, [userImages]);
+    if (userImages && userImages.length === 2) {
+      async function getAfterPicOnly() {
+        await getImage({
+          variables: {
+            input: {
+              id: userImages[1].id,
+              createdAt: userImages[1].createdAt,
+            },
+          },
+        });
+      }
+      getAfterPicOnly();
+      setAfterPic(selectedUrl);
+    }
+  }, [userImages, selectedUrl]);
 
   const [getImage] = useLazyQuery(ProgressImage, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    fetchPolicy: 'no-cache',
     onCompleted: (res) => {
       setSelectedUrl(res.progressImage.url);
     },
@@ -90,8 +108,7 @@ export default function TransformationScreen() {
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor:
-        userImages?.length >= 2 ? undefined : colors.backgroundWhite100,
+      // backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
       height: getHeight(10),
@@ -159,31 +176,24 @@ export default function TransformationScreen() {
   if (userImages) {
     return (
       <View style={styles.container}>
-        {userImages.length === 1 && (
-          <View style={{backgroundColor: 'pink'}}>
-            <Image source={{uri: selectedUrl}} style={styles.image} />
-          </View>
-        )}
-        {userImages.length >= 2 && (
-          <TDSlideshow
-            beforePic={beforePic ? {uri: beforePic} : fakeBeforePic}
-            afterPic={afterPic ? {uri: afterPic} : fakeAfterPic}
-            imageWidth={styles.image.width}
-            imageHeight={styles.image.height}
-            sliderSpacerHeight={styles.spacerHeight}
-            sliderStyles={styles.sliderStyles}
-            minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
-            maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
-            sliderSpacerHeight={styles.spacerHeight}
-            sliderIcon={sliderThumb}
-            DateSelectors={() => (
-              <CustomDateSelectors
-                onPress={handleSelectDate}
-                storedImages={userImages}
-              />
-            )}
-          />
-        )}
+        <TDSlideshow
+          beforePic={beforePic ? {uri: beforePic} : overlay}
+          afterPic={afterPic ? {uri: afterPic} : overlay}
+          imageWidth={styles.image.width}
+          imageHeight={styles.image.height}
+          sliderSpacerHeight={styles.spacerHeight}
+          sliderStyles={styles.sliderStyles}
+          minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
+          maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
+          sliderSpacerHeight={styles.spacerHeight}
+          sliderIcon={sliderThumb}
+          // DateSelectors={() => (
+          //   <CustomDateSelectors
+          //     onPress={handleSelectDate}
+          //     storedImages={userImages}
+          //   />
+          // )}
+        />
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="addPhoto"

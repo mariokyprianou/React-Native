@@ -186,7 +186,15 @@ export default function ProgressScreen() {
                 onPress={() => navigation.navigate('Transformation')}
               />
               {challenges.map((challenge, index) => {
-                const {name} = challenge;
+                const {
+                  name,
+                  id,
+                  fieldDescription,
+                  type,
+                  duration,
+                  fieldTitle,
+                  unitType,
+                } = challenge;
                 return (
                   <TransformationChallenge
                     key={index}
@@ -194,7 +202,15 @@ export default function ProgressScreen() {
                     title={name}
                     image={fakeGraph}
                     onPress={() =>
-                      navigation.navigate('Challenge', {challenge})
+                      navigation.navigate('Challenge', {
+                        id: id,
+                        name: name,
+                        description: fieldDescription,
+                        fieldTitle: fieldTitle,
+                        type: type,
+                        duration: duration,
+                        unitType: unitType,
+                      })
                     }
                   />
                 );

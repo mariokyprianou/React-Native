@@ -12,18 +12,13 @@ export default gql`
   query ChallengeHistory {
     challengeHistory {
       challenge {
-        id
-        timerType
         name
-        description
-        answerBoxLabel
-        timeLimit
+        id
       }
       history {
         id
-        week
+        createdAt
         value
-        unit
       }
     }
   }

@@ -21,31 +21,63 @@ import {useRoute} from '@react-navigation/core';
 import processChallengeHistory from '../../utils/processChallengeHistory';
 import handleTimer from '../../utils/handleTimer';
 import handleStopwatch from '../../utils/handleStopwatch';
-import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
+import {useQuery} from '@apollo/client';
+import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
+  const {getPreferences, preferences} = useUserData();
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const navigation = useNavigation();
-  const [countdownInfo, setCountdownInfo] = useState();
+
   const {
-    params: {challenge},
+    params: {id, name, description, type, duration, fieldTitle, unitType},
   } = useRoute();
-  const {description, name, timeLimit} = challenge;
-  const {fakeChallengeHistory} = fakeProgressData();
-  const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
-  const timerType = 'STOPWATCH';
+  const formattedSeconds = new Date(duration * 1000)
+    .toISOString()
+    .substr(11, 8);
+  const timerData = handleTimer(formattedSeconds);
+  const stopwatchData = handleStopwatch();
+
+  const navigation = useNavigation();
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
   });
 
-  const formattedSeconds = new Date(timeLimit * 1000)
-    .toISOString()
-    .substr(11, 8);
+  const [weightLabel, setWeightLabel] = useState();
+  const [history, setHistory] = useState();
 
-  const timerData = handleTimer(formattedSeconds);
-  const stopwatchData = handleStopwatch();
+  useEffect(() => {
+    getPreferences();
+  }, []);
+
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
+
+  useQuery(ChallengeHistory, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      console.log(res.challengeHistory, '<---challenge history res');
+      const thisChallengeHistory = res.challengeHistory.filter(
+        (obj) => obj.challenge.id === id,
+      );
+      if (thisChallengeHistory.length > 0) {
+        const processedChallengeHistory = processChallengeHistory(
+          thisChallengeHistory.history,
+        );
+        setHistory(processedChallengeHistory);
+      }
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -114,13 +146,13 @@ export default function ChallengeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <ProgressChart data={historyData} />
+        <ProgressChart data={history} />
       </View>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
       </View>
       <Text style={styles.timerText}>
-        {timerType === 'COUNTDOWN'
+        {type === 'COUNTDOWN'
           ? msToHMSFull(timerData.remainingMS)
           : msToHMSFull(stopwatchData.elapsedMS)}
       </Text>

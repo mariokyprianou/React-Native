@@ -20,12 +20,12 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import processProgressData from '../../utils/processProgressData';
 import {useQuery} from '@apollo/client';
 import Progress from '../../apollo/queries/Progress';
+import Challenges from '../../apollo/queries/Challenges';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {startOfMonth} from 'date-fns';
@@ -55,8 +55,7 @@ export default function ProgressScreen() {
   });
 
   const [progressData, setProgressData] = useState();
-
-  const {fakeChallenges} = fakeProgressData();
+  const [challenges, setChallenges] = useState();
 
   useQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -69,6 +68,14 @@ export default function ProgressScreen() {
       const progressHistoryData = processProgressData(thisMonth[0].days);
 
       setProgressData(progressHistoryData);
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
+  });
+
+  useQuery(Challenges, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      setChallenges(res.challenges);
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
@@ -141,7 +148,6 @@ export default function ProgressScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (progressData) {
-    // console.log(progressData, '<---DATA');
     return (
       <SafeAreaView style={styles.safeArea}>
         {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
@@ -179,7 +185,7 @@ export default function ProgressScreen() {
                 image={fakeImage}
                 onPress={() => navigation.navigate('Transformation')}
               />
-              {fakeChallenges.map((challenge, index) => {
+              {challenges.map((challenge, index) => {
                 const {name} = challenge;
                 return (
                   <TransformationChallenge

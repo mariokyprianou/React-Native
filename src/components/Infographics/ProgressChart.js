@@ -18,18 +18,14 @@ export default function ProgressChart({
   background = true,
   selectable = false,
   data,
-  weightPreference = 'kg',
+  chartLabel,
+  chartDataPoints,
+  ticks,
+  interval,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-
-  const dataPoints = data.map((event, index) => {
-    return {x: index + 1, y: event.value};
-  });
-
-  const highestValue = Math.max(...dataPoints.map((point) => point.y));
-  const ticks = Math.ceil(highestValue / 5);
 
   const xLabels = data.map((event) => {
     return event.date;
@@ -70,7 +66,7 @@ export default function ProgressChart({
         contentContainerStyle={{alignItems: 'flex-end'}}>
         <View>
           <SlideBarChart
-            data={dataPoints}
+            data={chartDataPoints}
             barSpacing={44}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
@@ -81,7 +77,7 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={dataPoints.length * 53}
+            width={chartDataPoints.length * 53}
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}
@@ -92,12 +88,12 @@ export default function ProgressChart({
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
-              interval: 5,
+              interval: interval,
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: weightPreference,
+              axisLabel: chartLabel,
               axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
               axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),

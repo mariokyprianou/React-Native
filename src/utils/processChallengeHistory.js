@@ -9,7 +9,7 @@ import {format} from 'date-fns';
 
 export default processChallengeHistory = (data, weightPreference, unitType) =>
   data.map((event) => {
-    console.log(event, weightPreference, unitType, '<---result, pref, unit');
+    // console.log(event, weightPreference, unitType, '<---result, pref, unit');
     const newEvent = {...event};
     if (weightPreference === 'lb') {
       const convertedWeight = Math.round(newEvent.weight * 2.20462262185);

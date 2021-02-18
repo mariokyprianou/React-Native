@@ -31,7 +31,6 @@ export default function ChallengeScreen() {
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-
   const {
     params: {
       id,
@@ -50,23 +49,70 @@ export default function ChallengeScreen() {
     header: () => <Header title={name} goBack />,
   });
 
-  const [history, setHistory] = useState();
+  const [history, setHistory] = useState([]);
+  const [chartLabel, setChartLabel] = useState('');
+  const [chartDataPoints, setChartDataPoints] = useState([]);
+  const [chartTicks, setChartTicks] = useState(1);
+  const [chartInterval, setChartInterval] = useState(1);
 
   useQuery(ChallengeHistory, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    fetchPolicy: 'no-cache',
     onCompleted: (res) => {
       const thisChallengeHistory = res.challengeHistory.filter(
         (obj) => obj.challenge.id === id,
       );
-      const processedChallengeHistory = processChallengeHistory(
-        thisChallengeHistory[0].history,
-        weightPreference,
-        unitType,
-      );
-      setHistory(processedChallengeHistory);
+      if (thisChallengeHistory.length === 0) {
+        setHistory([]);
+      } else {
+        const processedChallengeHistory = processChallengeHistory(
+          thisChallengeHistory[0].history,
+          weightPreference,
+          unitType,
+        );
+        setHistory(processedChallengeHistory);
+      }
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
+
+  useEffect(() => {
+    if (type === 'STOPWATCH') {
+      setChartLabel('secs');
+      setChartTicks(6);
+      setChartInterval(30);
+    } else {
+      if (unitType === 'WEIGHT') {
+        setChartLabel(weightPreference);
+        setChartTicks(6);
+        setChartInterval(5);
+      } else if (unitType === 'REPS') {
+        setChartLabel('reps');
+        setChartTicks(6);
+        setChartInterval(5);
+      } else if (unitType === 'DISTANCE' && weightPreference === 'lb') {
+        setChartLabel('m');
+        setChartTicks(5);
+        setInterval(1);
+      } else if (unitType === 'DISTANCE' && weightPreference === 'kg') {
+        setChartLabel('km');
+        setChartTicks(5);
+        setInterval(1);
+      }
+    }
+
+    const dataPoints = history.map((event, index) => {
+      return {x: index + 1, y: event.value};
+    });
+    setChartDataPoints(dataPoints);
+
+    // const highestValue = Math.max(...dataPoints.map((point) => point.y));
+  }, [type, unitType, weightPreference, history]);
+
+  const formattedSeconds = new Date(duration * 1000)
+    .toISOString()
+    .substr(11, 8);
+  const timerData = handleTimer(formattedSeconds);
+  const stopwatchData = handleStopwatch();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -110,17 +156,17 @@ export default function ChallengeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressStart() {
-    if (timerType === 'COUNTDOWN') timerData.toggle();
-    if (timerType === 'STOPWATCH') stopwatchData.toggle();
+    if (type === 'COUNTDOWN') timerData.toggle();
+    if (type === 'STOPWATCH') stopwatchData.toggle();
   }
 
   function handlePressDone() {
     const {elapsedMS} = stopwatchData;
     const elapsed = msToHMSFull(elapsedMS);
-    if (timerType === 'COUNTDOWN') {
+    if (type === 'COUNTDOWN') {
       navigation.navigate('ChallengeEnd', {challenge});
       timerData.reset();
-    } else if (timerType === 'STOPWATCH') {
+    } else if (type === 'STOPWATCH') {
       navigation.navigate('ChallengeEnd', {
         challenge,
         history,
@@ -137,15 +183,21 @@ export default function ChallengeScreen() {
       <View style={styles.card}>
         <ProgressChart
           data={history}
-          weightPreference={weightPreference}
-          unitType={unitType}
+          chartLabel={chartLabel}
+          chartDataPoints={chartDataPoints}
+          ticks={chartTicks}
+          interval={chartInterval}
         />
       </View>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
       </View>
       {type !== 'OTHER' && (
-        <TimerView duration={duration} style={styles.timerText} type={type} />
+        <Text style={styles.timerText}>
+          {type === 'COUNTDOWN'
+            ? msToHMSFull(timerData.remainingMS)
+            : msToHMSFull(stopwatchData.elapsedMS)}
+        </Text>
       )}
       <View style={styles.buttonContainer}>
         <DefaultButton
@@ -163,21 +215,5 @@ export default function ChallengeScreen() {
         />
       </View>
     </View>
-  );
-}
-
-function TimerView(props) {
-  const formattedSeconds = new Date(props.duration * 1000)
-    .toISOString()
-    .substr(11, 8);
-  const timerData = handleTimer(formattedSeconds);
-  const stopwatchData = handleStopwatch();
-
-  return (
-    <Text style={props.style}>
-      {props.type === 'COUNTDOWN'
-        ? msToHMSFull(timerData.remainingMS)
-        : msToHMSFull(stopwatchData.elapsedMS)}
-    </Text>
   );
 }

@@ -89,7 +89,6 @@ export default function ProgressScreen() {
   useQuery(Challenges, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res, '<---challenges res');
       setChallenges(res.challenges);
     },
     onError: (err) => console.log(err, '<---progress images err'),

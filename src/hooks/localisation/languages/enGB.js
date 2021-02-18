@@ -63,7 +63,7 @@ const enGB = {
     InvalidFamilyName: 'Please enter your last name',
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
-      'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
+      'Password must include at least 1 lowercase, 1 uppercase, 1 numeric and 1 special character, and be eight characters or longer.',
     InvalidNotNewPassword:
       'Oops! Your password must consist of at least 8 alphanumeric, mixed-case characters. Please try again with a new password.',
     InvalidTsAndCs: 'Please accept the terms and conditions.',

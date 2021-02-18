@@ -46,12 +46,12 @@ export default function NotificationPermissionScreen() {
     // updateNotificationsPreferencesTo(true);
 
     const newPreferences = {
-      emails: preferences.emails,
-      errorReports: preferences.errorReports,
-      analytics: preferences.analytics,
-      downloadQuality: preferences.downloadQuality,
+      emails: preferences.emails || true,
+      errorReports: preferences.errorReports || true,
+      analytics: preferences.analytics || true,
+      downloadQuality: preferences.downloadQuality || "HIGH",
       notifications: enabled,
-      weightPreference: preferences.weightPreference,
+      weightPreference: preferences.weightPreference || 'KG',
     };
 
     setPreferences(newPreferences);

@@ -17,6 +17,6 @@ const selectEnv = () => {
 
 // const Environment = selectEnv();
 // const Environment = 'staging';
-const Environment = 'development';
+const Environment = 'staging';
 
 export default Environment;

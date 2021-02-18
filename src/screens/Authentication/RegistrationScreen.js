@@ -73,7 +73,7 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(countries);
+      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
 
       const indianRegions = data.allCountries.filter(
         (country) => country.country === 'India',
@@ -86,7 +86,8 @@ export default function RegisterScreen() {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(indianRegionsList);
+      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
+
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -209,13 +210,15 @@ export default function RegisterScreen() {
       email: email,
       password: password,
       gender: gender ? gender.toLowerCase() : null,
-      dateOfBirth: new Date(dateOfBirth),
-      country: country ? countryID : null,
+      dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
+      country: countryID || null,
       region: selectedCountry === 'India' ? regionLookup[region] : null,
       deviceUDID: deviceUid,
       timeZone: deviceTimeZone,
       programme: programmeId,
     };
+
+    console.log(data);
 
     execute({
       variables: {
@@ -292,20 +295,12 @@ export default function RegisterScreen() {
       type: 'text',
       label: AuthDict.FirstNameLabel,
       ...cellFormStyles,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-      },
     },
     {
       name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
       ...cellFormStyles,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-      },
     },
     {
       name: 'email',
@@ -316,10 +311,6 @@ export default function RegisterScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-      },
     },
     {
       name: 'password',
@@ -331,7 +322,7 @@ export default function RegisterScreen() {
       autoCorrect: false,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
     },
@@ -352,6 +343,7 @@ export default function RegisterScreen() {
       name: 'dateOfBirth',
       type: 'calendar',
       label: AuthDict.DobLabel,
+      maximumDate: new Date(),
       placeholder: '',
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,

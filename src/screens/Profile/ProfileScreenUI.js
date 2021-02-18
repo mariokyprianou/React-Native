@@ -38,6 +38,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
+import TimeZone from 'react-native-timezone';
 
 const notifications = [
   {
@@ -107,7 +108,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList(countries);
+      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
 
       const indianRegions = countryData.allCountries.filter(
         (country) => country.country === 'India',
@@ -120,7 +121,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(indianRegionsList);
+      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
+
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -274,6 +276,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
       region: newRegion,
+      timeZone: userData.timeZone,
     };
 
     await updateProfile({
@@ -302,6 +305,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       text: ProfileDict.LogoutModalText,
       buttons: [
         {
+          text: ProfileDict.Cancel,
+        },
+        {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
             await Auth.signOut()
@@ -319,6 +325,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               });
           },
         },
+        
       ],
     });
   }
@@ -416,16 +423,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        flex: 1,
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
+        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(10),
       },
       placeholder: userData.givenName,
       defaultValue: userData.givenName,
       style: {
+        ...cellFormStyles.style,
         ...textStyles.regular16_black100,
-        flex: 1,
-        paddingLeft: 0,
       },
     },
     {
@@ -434,16 +440,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        flex: 1,
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
+        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(10),    
       },
       placeholder: userData.familyName,
       defaultValue: userData.familyName,
-      style: {
+      style: { 
+         ...cellFormStyles.style,
         ...textStyles.regular16_black100,
-        flex: 1,
-        paddingLeft: 0,
       },
     },
     {
@@ -454,6 +459,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
+
       },
       inputStyle: {
         ...textStyles.regular16_black60,
@@ -484,6 +490,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       name: 'profile_dateOfBirth',
       type: 'calendar',
       label: ProfileDict.FormLabel5,
+      maximumDate: new Date(),
       dateFormat: (e) => {
         const formattedDate = format(e, 'yyyy-LL-dd');
         setNewDateOfBirth(formattedDate);

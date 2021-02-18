@@ -19,14 +19,16 @@ import {useRoute} from '@react-navigation/core';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {useMutation} from '@apollo/client';
 import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
+import UseData from '../../hooks/data/UseData';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+  const {getProgramme, programme} = UseData();
   const [formHeight, setFormHeight] = useState(150);
   let newStyle = {formHeight};
-  const {updateValue, getValueByName} = FormHook();
+  const {updateValue, getValueByName, cleanValues} = FormHook();
   const {
     params: {
       name,
@@ -49,6 +51,10 @@ export default function ChallengeEndScreen() {
   });
 
   const [sendResult] = useMutation(CompleteChallenge);
+
+  useEffect(() => {
+    getProgramme();
+  }, []);
 
   useEffect(() => {
     if (type === 'STOPWATCH') {
@@ -129,15 +135,19 @@ export default function ChallengeEndScreen() {
       .then((res) => console.log(res, '<---sendResult res'))
       .catch((err) => console.log(err, '<---sendResult err'));
 
-    // navigation.navigate('ChallengeComplete', {
-    //   history,
-    //   name,
-    //   elapsed,
-    //   chartLabel,
-    //   chartDataPoints,
-    //   chartInterval,
-    //   chartTicks,
-    // });
+    navigation.navigate('ChallengeComplete', {
+      history,
+      name,
+      elapsed,
+      chartLabel,
+      chartDataPoints,
+      chartInterval,
+      chartTicks,
+      result: challengeResult,
+      trainer: programme.trainer.name,
+    });
+
+    cleanValues();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

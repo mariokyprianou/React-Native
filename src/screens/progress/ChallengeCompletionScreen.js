@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, Text, Dimensions, Platform, ActionSheetIOS} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,19 +17,26 @@ import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
-import {FormHook} from 'the-core-ui-module-tdforms';
 import Share from 'react-native-share';
 
-export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
+export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const [challengeResult, setChallengeResult] = useState();
-  const {getValues, cleanValues} = FormHook();
   const {WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {historyData, name, elapsed},
+    params: {
+      history,
+      name,
+      elapsed,
+      chartLabel,
+      chartDataPoints,
+      chartInterval,
+      chartTicks,
+      result,
+      trainer,
+    },
   } = useRoute();
   const navigation = useNavigation();
 
@@ -44,16 +51,6 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
   });
 
   const screenWidth = Dimensions.get('screen').width;
-
-  useEffect(() => {
-    if (elapsed) {
-      setChallengeResult(elapsed);
-    } else {
-      const result = getValues('result').result;
-      setChallengeResult(result);
-    }
-    cleanValues();
-  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -178,16 +175,24 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
     <View style={styles.container}>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
-          {WorkoutDict.ChallengeComplete(name, trainerName)}
+          {WorkoutDict.ChallengeComplete(name, trainer)}
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart data={historyData} axis={false} background={false} />
+        <ProgressChart
+          data={history}
+          chartLabel={chartLabel}
+          chartDataPoints={chartDataPoints}
+          interval={chartInterval}
+          ticks={chartTicks}
+          axis={false}
+          background={false}
+        />
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
         <Text style={elapsed ? styles.timeResult : styles.resultText}>
-          {challengeResult}
+          {result}
         </Text>
       </View>
       <View style={styles.line} />

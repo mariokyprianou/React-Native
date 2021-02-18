@@ -93,7 +93,7 @@ export default function ProgressChart({
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: chartLabel,
+              axisLabel: axis ? chartLabel : null,
               axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
               axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),

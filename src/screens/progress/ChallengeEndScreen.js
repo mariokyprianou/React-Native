@@ -17,6 +17,8 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import {useMutation} from '@apollo/client';
+import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -24,10 +26,11 @@ export default function ChallengeEndScreen() {
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const [formHeight, setFormHeight] = useState(150);
   let newStyle = {formHeight};
-  const {updateValue} = FormHook();
+  const {updateValue, getValueByName} = FormHook();
   const {
     params: {
       name,
+      id,
       type,
       description,
       fieldTitle,
@@ -44,6 +47,8 @@ export default function ChallengeEndScreen() {
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
   });
+
+  const [sendResult] = useMutation(CompleteChallenge);
 
   useEffect(() => {
     if (type === 'STOPWATCH') {
@@ -110,18 +115,29 @@ export default function ChallengeEndScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function handleAddResult() {
+    const challengeResult = getValueByName('result');
 
-  function handleAddResult() {
-    // send result to back end
-    navigation.navigate('ChallengeComplete', {
-      history,
-      name,
-      elapsed,
-      chartLabel,
-      chartDataPoints,
-      chartInterval,
-      chartTicks,
-    });
+    await sendResult({
+      variables: {
+        input: {
+          challengeId: id,
+          result: challengeResult,
+        },
+      },
+    })
+      .then((res) => console.log(res, '<---sendResult res'))
+      .catch((err) => console.log(err, '<---sendResult err'));
+
+    // navigation.navigate('ChallengeComplete', {
+    //   history,
+    //   name,
+    //   elapsed,
+    //   chartLabel,
+    //   chartDataPoints,
+    //   chartInterval,
+    //   chartTicks,
+    // });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

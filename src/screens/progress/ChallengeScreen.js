@@ -173,6 +173,7 @@ export default function ChallengeScreen() {
 
     navigation.navigate('ChallengeEnd', {
       name,
+      id,
       type,
       description,
       fieldTitle,

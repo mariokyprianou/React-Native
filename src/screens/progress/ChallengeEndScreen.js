@@ -138,7 +138,7 @@ export default function ChallengeEndScreen() {
     navigation.navigate('ChallengeComplete', {
       history,
       name,
-      elapsed,
+      type,
       chartLabel,
       chartDataPoints,
       chartInterval,

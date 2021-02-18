@@ -29,7 +29,7 @@ export default function ChallengeCompletionScreen() {
     params: {
       history,
       name,
-      elapsed,
+      type,
       chartLabel,
       chartDataPoints,
       chartInterval,
@@ -191,8 +191,9 @@ export default function ChallengeCompletionScreen() {
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
-        <Text style={elapsed ? styles.timeResult : styles.resultText}>
-          {result}
+        <Text
+          style={type === 'STOPWATCH' ? styles.timeResult : styles.resultText}>
+          {`${result} ${chartLabel}`}
         </Text>
       </View>
       <View style={styles.line} />

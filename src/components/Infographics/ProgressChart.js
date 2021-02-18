@@ -20,8 +20,8 @@ export default function ProgressChart({
   data,
   chartLabel,
   chartDataPoints,
-  ticks,
   interval,
+  ticks,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();

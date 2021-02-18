@@ -52,8 +52,8 @@ export default function ChallengeScreen() {
   const [history, setHistory] = useState([]);
   const [chartLabel, setChartLabel] = useState('');
   const [chartDataPoints, setChartDataPoints] = useState([]);
-  const [chartTicks, setChartTicks] = useState(1);
   const [chartInterval, setChartInterval] = useState(1);
+  const [chartTicks, setChartTicks] = useState(1);
 
   useQuery(ChallengeHistory, {
     fetchPolicy: 'no-cache',
@@ -77,36 +77,42 @@ export default function ChallengeScreen() {
   });
 
   useEffect(() => {
-    if (type === 'STOPWATCH') {
-      setChartLabel('secs');
-      setChartTicks(6);
-      setChartInterval(30);
-    } else {
-      if (unitType === 'WEIGHT') {
-        setChartLabel(weightPreference);
-        setChartTicks(6);
-        setChartInterval(5);
-      } else if (unitType === 'REPS') {
-        setChartLabel('reps');
-        setChartTicks(6);
-        setChartInterval(5);
-      } else if (unitType === 'DISTANCE' && weightPreference === 'lb') {
-        setChartLabel('m');
-        setChartTicks(5);
-        setInterval(1);
-      } else if (unitType === 'DISTANCE' && weightPreference === 'kg') {
-        setChartLabel('km');
-        setChartTicks(5);
-        setInterval(1);
-      }
-    }
-
     const dataPoints = history.map((event, index) => {
       return {x: index + 1, y: event.value};
     });
     setChartDataPoints(dataPoints);
 
-    // const highestValue = Math.max(...dataPoints.map((point) => point.y));
+    const highestDataPoint = Math.max(...dataPoints.map((point) => point.y));
+    const highestValue =
+      highestDataPoint > 10
+        ? Math.ceil(highestDataPoint / 10) * 10
+        : highestDataPoint;
+    const intervals = [1, 2, 5, 10, 20, 30, 40, 50];
+    let interval;
+    let ticks;
+    intervals.forEach((interv) => {
+      let value = highestValue / interv;
+      if (value >= 3 && value <= 5) {
+        interval = interv;
+        ticks = Math.ceil(value);
+      }
+    });
+    setChartInterval(interval);
+    setChartTicks(ticks);
+
+    if (type === 'STOPWATCH') {
+      setChartLabel('secs');
+    } else {
+      if (unitType === 'WEIGHT') {
+        setChartLabel(weightPreference);
+      } else if (unitType === 'REPS') {
+        setChartLabel('reps');
+      } else if (unitType === 'DISTANCE' && weightPreference === 'lb') {
+        setChartLabel('m');
+      } else if (unitType === 'DISTANCE' && weightPreference === 'kg') {
+        setChartLabel('km');
+      }
+    }
   }, [type, unitType, weightPreference, history]);
 
   const formattedSeconds = new Date(duration * 1000)
@@ -186,8 +192,8 @@ export default function ChallengeScreen() {
           data={history}
           chartLabel={chartLabel}
           chartDataPoints={chartDataPoints}
-          ticks={chartTicks}
           interval={chartInterval}
+          ticks={chartTicks}
         />
       </View>
       <View style={styles.descriptionContainer}>

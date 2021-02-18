@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -29,6 +29,7 @@ import Challenges from '../../apollo/queries/Challenges';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {startOfMonth} from 'date-fns';
+import useUserData from '../../hooks/data/useUserData';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -38,6 +39,7 @@ export default function ProgressScreen() {
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
+  const {getPreferences, preferences} = useUserData();
   const {
     days,
     daysTextStyles,
@@ -56,6 +58,18 @@ export default function ProgressScreen() {
 
   const [progressData, setProgressData] = useState();
   const [challenges, setChallenges] = useState();
+  const [weightLabel, setWeightLabel] = useState();
+
+  useEffect(() => {
+    getPreferences();
+  }, []);
+
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
 
   useQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -75,6 +89,7 @@ export default function ProgressScreen() {
   useQuery(Challenges, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
+      console.log(res, '<---challenges res');
       setChallenges(res.challenges);
     },
     onError: (err) => console.log(err, '<---progress images err'),
@@ -186,6 +201,7 @@ export default function ProgressScreen() {
                 onPress={() => navigation.navigate('Transformation')}
               />
               {challenges.map((challenge, index) => {
+                // console.log(challenge, '<___CHALLENGE');
                 const {
                   name,
                   id,
@@ -209,7 +225,8 @@ export default function ProgressScreen() {
                         fieldTitle: fieldTitle,
                         type: type,
                         duration: duration,
-                        unitType: unitType,
+                        unitType: type === 'STOPWATCH' ? 'seconds' : unitType,
+                        weightPreference: weightLabel,
                       })
                     }
                   />

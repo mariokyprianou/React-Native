@@ -25,56 +25,45 @@ import {useQuery} from '@apollo/client';
 import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
-import useUserData from '../../hooks/data/useUserData';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {isConnected, isInternetReachable} = useNetInfo();
-  const {getPreferences, preferences} = useUserData();
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   const {
-    params: {id, name, description, type, duration, fieldTitle, unitType},
+    params: {
+      id,
+      name,
+      description,
+      type,
+      duration,
+      fieldTitle,
+      unitType,
+      weightPreference,
+    },
   } = useRoute();
-  const formattedSeconds = new Date(duration * 1000)
-    .toISOString()
-    .substr(11, 8);
-  const timerData = handleTimer(formattedSeconds);
-  const stopwatchData = handleStopwatch();
 
   const navigation = useNavigation();
   navigation.setOptions({
     header: () => <Header title={name} goBack />,
   });
 
-  const [weightLabel, setWeightLabel] = useState();
   const [history, setHistory] = useState();
-
-  useEffect(() => {
-    getPreferences();
-  }, []);
-
-  useEffect(() => {
-    if (preferences.weightPreference) {
-      const weightPreference = preferences.weightPreference.toLowerCase();
-      setWeightLabel(weightPreference);
-    }
-  }, [preferences]);
 
   useQuery(ChallengeHistory, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res.challengeHistory, '<---challenge history res');
       const thisChallengeHistory = res.challengeHistory.filter(
         (obj) => obj.challenge.id === id,
       );
-      if (thisChallengeHistory.length > 0) {
-        const processedChallengeHistory = processChallengeHistory(
-          thisChallengeHistory.history,
-        );
-        setHistory(processedChallengeHistory);
-      }
+      const processedChallengeHistory = processChallengeHistory(
+        thisChallengeHistory[0].history,
+        weightPreference,
+        unitType,
+      );
+      setHistory(processedChallengeHistory);
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
@@ -129,12 +118,12 @@ export default function ChallengeScreen() {
     const {elapsedMS} = stopwatchData;
     const elapsed = msToHMSFull(elapsedMS);
     if (timerType === 'COUNTDOWN') {
-      navigation.navigate('ChallengeEnd', {challenge, historyData});
+      navigation.navigate('ChallengeEnd', {challenge});
       timerData.reset();
     } else if (timerType === 'STOPWATCH') {
       navigation.navigate('ChallengeEnd', {
         challenge,
-        historyData,
+        history,
         elapsed,
         elapsedMS,
       });
@@ -146,16 +135,16 @@ export default function ChallengeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <ProgressChart data={history} />
+        <ProgressChart
+          data={history}
+          weightPreference={weightPreference}
+          unitType={unitType}
+        />
       </View>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
       </View>
-      <Text style={styles.timerText}>
-        {type === 'COUNTDOWN'
-          ? msToHMSFull(timerData.remainingMS)
-          : msToHMSFull(stopwatchData.elapsedMS)}
-      </Text>
+      <TimerView duration={duration} style={styles.timerText} />
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="start"
@@ -172,5 +161,21 @@ export default function ChallengeScreen() {
         />
       </View>
     </View>
+  );
+}
+
+function TimerView(props) {
+  const formattedSeconds = new Date(props.duration * 1000)
+    .toISOString()
+    .substr(11, 8);
+  const timerData = handleTimer(formattedSeconds);
+  const stopwatchData = handleStopwatch();
+
+  return (
+    <Text style={props.style}>
+      {type === 'COUNTDOWN'
+        ? msToHMSFull(timerData.remainingMS)
+        : msToHMSFull(stopwatchData.elapsedMS)}
+    </Text>
   );
 }

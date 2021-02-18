@@ -12,7 +12,6 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
-import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function ProgressChart({
   axis = true,
@@ -24,11 +23,9 @@ export default function ProgressChart({
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
 
   const dataPoints = data.map((event, index) => {
-    return {x: index + 1, y: event.weight};
+    return {x: index + 1, y: event.value};
   });
 
   const highestValue = Math.max(...dataPoints.map((point) => point.y));

@@ -144,7 +144,7 @@ export default function ChallengeScreen() {
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{description}</Text>
       </View>
-      <TimerView duration={duration} style={styles.timerText} />
+      <TimerView duration={duration} style={styles.timerText} type={type} />
       <View style={styles.buttonContainer}>
         <DefaultButton
           type="start"
@@ -173,7 +173,7 @@ function TimerView(props) {
 
   return (
     <Text style={props.style}>
-      {type === 'COUNTDOWN'
+      {props.type === 'COUNTDOWN'
         ? msToHMSFull(timerData.remainingMS)
         : msToHMSFull(stopwatchData.elapsedMS)}
     </Text>

@@ -170,16 +170,23 @@ export default function ChallengeScreen() {
   function handlePressDone() {
     const {elapsedMS} = stopwatchData;
     const elapsed = msToHMSFull(elapsedMS);
+
+    navigation.navigate('ChallengeEnd', {
+      name,
+      type,
+      description,
+      fieldTitle,
+      history,
+      elapsed,
+      chartLabel,
+      chartDataPoints,
+      chartInterval,
+      chartTicks,
+    });
+
     if (type === 'COUNTDOWN') {
-      navigation.navigate('ChallengeEnd', {challenge});
       timerData.reset();
     } else if (type === 'STOPWATCH') {
-      navigation.navigate('ChallengeEnd', {
-        challenge,
-        history,
-        elapsed,
-        elapsedMS,
-      });
       stopwatchData.reset();
     }
   }

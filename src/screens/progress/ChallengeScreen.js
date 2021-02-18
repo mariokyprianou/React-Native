@@ -68,6 +68,7 @@ export default function ChallengeScreen() {
           thisChallengeHistory[0].history,
           weightPreference,
           unitType,
+          type,
         );
         setHistory(processedChallengeHistory);
       }

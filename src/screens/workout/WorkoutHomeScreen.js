@@ -63,6 +63,7 @@ export default function WorkoutHomeScreen() {
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
   useEffect(() => {
+    setLoading(true)
     getProgramme();
   }, []);
 

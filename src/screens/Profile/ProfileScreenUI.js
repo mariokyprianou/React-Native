@@ -39,6 +39,8 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
 import TimeZone from 'react-native-timezone';
+import useLoading from '../../hooks/loading/useLoading';
+
 
 const notifications = [
   {
@@ -92,9 +94,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState(notifications);
-  const [updateLoading, setUpdateLoading] = useState(false);
 
   const {userData, setUserData} = useUserData();
+  const {setLoading} = useLoading();
 
   const formCountry = getValueByName('profile_country');
   useEffect(() => {
@@ -156,7 +158,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
-      console.log(userData.gender === null)
       if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
@@ -254,7 +255,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       return;
     }
 
-    setUpdateLoading(true);
+    setLoading(true);
 
     const dob = parseISO(newDateOfBirth || userData.dateOfBirth);
 
@@ -262,7 +263,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       countryLookup[profile_country] || countryLookup[userData.country];
 
     let newRegion =
-      profile_country !== 'India'
+      profile_country !== 'India' && userData.country !== "India"
         ? null
         : regionLookup[profile_region] || regionLookup[userData.region];
 
@@ -280,6 +281,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       timeZone: userData.timeZone,
     };
 
+
     await updateProfile({
       variables: {
         input: {
@@ -289,13 +291,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
+        console.log("newData", newData)
         setUserData(newData);
-        setUpdateLoading(false);
       })
       .catch((err) => {
         console.log(err, '<---error on updating');
-        setUpdateLoading(false);
-      });
+        displayAlert({
+          text: 'Unable to update settings',
+        });
+      }).finally(() => setLoading(false));
 
     cleanValues();
   }
@@ -589,19 +593,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     </View>
   );
 
-  const loader = () => (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: getHeight(287),
-        zIndex: 9,
-        elevation: 6,
-      }}>
-      <ActivityIndicator color={colors.black60} size="large" />
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -612,7 +603,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         {userCard()}
         {notificationsUI()}
         {form()}
-        {updateLoading && loader()}
         {buttons()}
       </ScrollView>
     </SafeAreaView>

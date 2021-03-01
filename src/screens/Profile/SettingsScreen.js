@@ -156,6 +156,9 @@ const SettingsScreen = ({}) => {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const updateSettingsAndNavigate = async () => {
+    navigation.goBack();
+
+    
     AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
 
     const {
@@ -229,7 +232,7 @@ const SettingsScreen = ({}) => {
           });
         } else {
           setPreferences(newPreferences);
-          navigation.goBack();
+          
         }
       })
       .catch((err) => {

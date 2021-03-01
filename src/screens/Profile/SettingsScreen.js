@@ -455,7 +455,7 @@ const SettingsScreen = ({}) => {
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: getLanguage() || languageDropdownData[0],
-      data: languageDropdownData,
+      data: getLanguage() ? [getLanguage(), ...languageDropdownData.filter(item => item !== getLanguage())] : languageDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(4),

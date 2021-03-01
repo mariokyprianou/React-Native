@@ -103,6 +103,8 @@ const hiIN = {
       'Oops! Ensure you have entered your current password, along with your new password, in order to make the change.',
     IncorrectEmailOrPassword:
       'Oops! Your email or password is incorrect. Please try again.',
+      IncorrectPassword:
+      'Oops! Your current password is incorrect. Please try again.',
     ForgotPasswordButtonText: 'Forgot password?',
     ForgotPasswordCodeLabel: 'PASSWORD RESET CODE',
     ForgotPasswordLabel: SharedDict.NewPassword,

@@ -79,7 +79,7 @@ const SettingsScreen = ({}) => {
   );
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
   const [downloadQuality, setDownloadQuality] = useState(
-    preferences.downloadQuality || 'HIGH',
+    preferences.downloadQuality || 'LOW',
   );
   const [weightPref, setWeightPref] = useState(
     preferences.weightPreference || 'KG',
@@ -94,18 +94,18 @@ const SettingsScreen = ({}) => {
 
   useEffect(() => {
     checkDownloadEnabled();
-
-    if (!preferences) {
-      getPreferences().then((res) => {
-        setMarketingPrefEmail(res.preferences.emails);
-        setMarketingPrefNotifications(res.preferences.notifications);
-        setPrefErrorReports(res.preferences.errorReports);
-        setPrefAnalytics(res.preferences.analytics);
-        setDownloadQuality(res.preferences.downloadQuality);
-        setWeightPref(res.preferences.weightPreference);
-      });
-    }
+    getPreferences()
+    
   }, []);
+
+  useEffect(()  => {
+    setMarketingPrefEmail(preferences.emails || false);
+    setMarketingPrefNotifications(preferences.notifications || false);
+    setPrefErrorReports(preferences.errorReports || false);
+    setPrefAnalytics(preferences.analytics || false);
+    setDownloadQuality(preferences.downloadQuality || "LOW");
+    setWeightPref(preferences.weightPreference || "KG");
+  }, [preferences])
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -188,9 +188,7 @@ const SettingsScreen = ({}) => {
     };
 
     console.log(
-      formTimeZone,
-      typeof formTimeZone,
-      '<----form time zone, typeof time zone',
+      "newPreferences", newPreferences
     );
 
     const newUserData = {
@@ -203,7 +201,7 @@ const SettingsScreen = ({}) => {
       timeZone: formTimeZone || userData.timeZone,
     };
 
-    console.log(newUserData)
+    console.log("newUserData", newUserData)
 
     updateProfile({
       variables: {

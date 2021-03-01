@@ -108,7 +108,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
+      setCountriesList( ['',...countries]);
 
       const indianRegions = countryData.allCountries.filter(
         (country) => country.country === 'India',
@@ -156,7 +156,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
-      if (!userData.gender) {
+      console.log(userData.gender === null)
+      if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
           value: AuthDict.RegistrationGendersFemale,
@@ -506,7 +507,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       placeholder:
         userData.dateOfBirth !== undefined && userData.dateOfBirth !== null
           ? format(parseISO(userData.dateOfBirth), 'dd/MM/yyyy')
-          : '',
+          : null,
     },
     {
       name: 'profile_country',
@@ -519,7 +520,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         paddingLeft: 0,
         paddingRight: getWidth(6),
       },
-      placeholder: userData.country || countriesList[1],
+      placeholder: userData.country || null,
       data: countriesList,
     },
   ];

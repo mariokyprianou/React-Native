@@ -38,6 +38,7 @@ import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
+import useLoading from '../../hooks/loading/useLoading';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -66,16 +67,27 @@ export default function MeetYourIconsScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [safeArea, setSafeArea] = useState(false);
   const {isConnected, isInternetReachable} = useNetInfo();
+  const { setLoading} = useLoading();
 
   // old fake data
   const currentTrainerId = 'Katrina'; // to be changed to getProgramme data
   const currentWeek = 4; // to be changed to getProgramme data
 
   useEffect(() => {
+    setLoading(true);
+  }, []);
+  
+  
+  useEffect(() => {
     if (activeIndex < 0) {
       setActiveIndex(0);
       return;
     }
+
+    if (!trainers || trainers.length === 0) {
+      return;
+    }
+    setLoading(false);
 
     const trainer = trainers[activeIndex];
     let programme = trainer.programmes[0];
@@ -90,7 +102,7 @@ export default function MeetYourIconsScreen() {
   }, [trainers, activeIndex, suggestedProgramme]);
 
   useEffect(() => {
-    if (!suggestedProgramme) {
+    if (!suggestedProgramme || !trainers || trainers.length === 0) {
       return;
     }
 

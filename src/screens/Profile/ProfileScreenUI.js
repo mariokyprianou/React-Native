@@ -40,6 +40,8 @@ import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
 import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 
 const notifications = [
@@ -316,9 +318,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
             await Auth.signOut()
-              .then((res) => {
+              .then(async (res) => {
                 console.log(res, '<----sign out res');
                 setUserData({});
+                AsyncStorage.removeItem('@ANALYTICS_ASKED');
+                AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 
                 navigation.reset({
                   index: 0,

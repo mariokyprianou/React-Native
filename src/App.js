@@ -116,11 +116,11 @@ const App = () => {
       <ApolloProvider client={client}>
         <ScaleProvider config={{height: 667, width: 375}}>
           <ThemeProvider>
+          <DictionaryProvider>
             <DataProvider>
               <UserDataProvider>
                 <CommonDataProvider>
                   <LoadingProvider>
-                    <DictionaryProvider>
                       <NavigationContainer>
                         <TDCountdown>
                           <FormProvider>
@@ -128,11 +128,12 @@ const App = () => {
                           </FormProvider>
                         </TDCountdown>
                       </NavigationContainer>
-                    </DictionaryProvider>
+                    
                   </LoadingProvider>
                 </CommonDataProvider>
               </UserDataProvider>
             </DataProvider>
+            </DictionaryProvider>
           </ThemeProvider>
         </ScaleProvider>
       </ApolloProvider>

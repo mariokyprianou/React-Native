@@ -13,9 +13,13 @@ import Onboarding from '../../apollo/queries/Onboarding';
 import Trainers from '../../apollo/queries/Trainers';
 import Legals from '../../apollo/queries/Legals';
 import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
+import useDictionary from '../localisation/useDictionary';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
+
+  const {dictionary} = useDictionary();
+  const {HelpMeChooseDict} = dictionary;
 
   const [onboarding, setOnboarding] = useState([]);
 
@@ -71,10 +75,10 @@ export default function DataProvider(props) {
         const qMap = res.programmeQuestionnaire.map((question) => {
           const answers = [];
           answers.push(
-            question.question.answer1,
-            question.question.answer2,
-            question.question.answer3,
-            question.question.answer4,
+            question.question && question.question.answer1 || "",
+            question.question && question.question.answer2 || "",
+            question.question && question.question.answer3 || "",
+            question.question && question.question.answer4 || "",
           );
           const formattedQuestion = answers.map((val, index) => {
             return {
@@ -87,12 +91,12 @@ export default function DataProvider(props) {
         const localQuestion = {
           orderIndex: 1,
           answers: [
-            {answerText: 'Home', key: '1'},
-            {answerText: 'Gym', key: '2'},
+            {answerText: HelpMeChooseDict.Home, key: '1'},
+            {answerText: HelpMeChooseDict.Gym, key: '2'},
           ],
           question: {
-            language: 'en',
-            question: 'Would you rather train at home or in the gym?',
+            language: HelpMeChooseDict.Locale,
+            question: HelpMeChooseDict.EnvironmentQuestion,
           },
         };
 

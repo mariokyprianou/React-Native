@@ -121,20 +121,8 @@ export default function UserDataProvider(props) {
         },
       },
     })
-      .then((res) => {
-        if (!res.data) {
-          displayAlert({
-            text: 'Unable to update settings',
-          });
-        } else {
-          setPreferences(newPreferences);
-          navigation.goBack();
-        }
-      })
       .catch((err) => {
-        displayAlert({
-          text: 'Unable to update settings',
-        });
+        console.log(err);
       });
   }, []);
 

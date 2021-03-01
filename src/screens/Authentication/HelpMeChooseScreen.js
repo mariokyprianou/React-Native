@@ -12,7 +12,6 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useData from '../../hooks/data/UseData';
 import SubmitProgrammeQuestionnaire from '../../apollo/mutations/SubmitProgrammeQuestionnaire';
 import {useMutation} from '@apollo/client';
 import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
@@ -24,7 +23,6 @@ import useLoading from '../../hooks/loading/useLoading';
 
 import getResponse from '../../utils/getResponse';
 import useCommonData from '../../hooks/data/useCommonData';
-import UseData from '../../hooks/data/UseData';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **

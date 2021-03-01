@@ -7,7 +7,7 @@
  */
 
 import React, {useRef, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Animated, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -19,6 +19,10 @@ import Header from '../../components/Headers/Header';
 import isRTL from '../../utils/isRTL';
 import useData from '../../hooks/data/UseData';
 import useCommonData from '../../hooks/data/useCommonData';
+import WalkthoughPaginationDots from '../../components/Views/WalkthroughPaginationDots';
+
+const width = Dimensions.get('window').width;
+
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -31,6 +35,8 @@ export default function OnboardingScreen() {
   const navigation = useNavigation();
 
   const {onboarding} = useCommonData();
+
+  const [scrollOffset, setScrollOfset] = useState(new Animated.Value(0));
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
@@ -117,18 +123,27 @@ export default function OnboardingScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+  function onScroll(e) {
+    const scrollSensitivity = 4 / 3;
+    const offset = e.nativeEvent.contentOffset.x / scrollSensitivity;
+    setScrollOfset(new Animated.Value(offset));
+  };
+
+  const position = Animated.divide(scrollOffset, width - getWidth(100));
 
   return (
     <View style={styles.container}>
       <Swiper
         style={{flexDirection: isRTL ? 'row-reverse' : 'row'}}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         ref={onboardSwiper}
         loop={false}
         onIndexChanged={(index) => {
           setActiveIndex(index);
         }}
-        dot={<View style={styles.dot} />}
-        activeDot={<View style={styles.activeDot} />}>
+        showsPagination={false}>
+          
         {onboarding.map(({title, description, image}) => (
           <OnboardingSliderItem
             image={image}
@@ -140,6 +155,8 @@ export default function OnboardingScreen() {
           />
         ))}
       </Swiper>
+      
+      <WalkthoughPaginationDots dots={onboarding.length} position={position} />
       <DefaultButton
         type="getStarted"
         icon="chevron"

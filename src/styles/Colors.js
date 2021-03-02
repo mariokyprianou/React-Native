@@ -30,6 +30,7 @@ const Colors = {
   tiffanyBlue100: 'rgba(116, 235, 231, 1)',
   paleBlue100: 'rgba(223, 232, 238, 1)',
   paleTurquoise0: 'rgba(191, 226, 224, 0)',
+  paleTurquoise40: 'rgba(191, 226, 224, 0.4)',
   paleTurquoise100: 'rgba(191, 226, 224, 1)',
   powderBlue0: 'rgba(197, 217, 228, 0)',
   powderBlue100: 'rgba(197, 217, 228, 1)',

@@ -25,7 +25,7 @@ export default function HelpMeChooseBar({
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
 
-  const activeWidth = (currentQuestion / totalQuestions) * 100;
+  const activeWidth = ((currentQuestion - 1)  / totalQuestions) * 100;
   
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -41,27 +41,18 @@ export default function HelpMeChooseBar({
     },
     gradient: {
       flex: 1,
-      borderBottomLeftRadius: radius(2),
-      borderTopLeftRadius: radius(2),
-      borderBottomRightRadius: activeWidth === 100 ? radius(2) : 0,
-      borderTopRightRadius: activeWidth === 100 ? radius(2) : 0,
+      borderRadius: radius(2),
     },
     activeBar: {
       width: `${activeWidth}%`,
       height: '100%',
-      borderBottomLeftRadius: radius(2),
-      borderTopLeftRadius: radius(2),
-      borderBottomRightRadius: activeWidth === 100 ? radius(2) : 0,
-      borderTopRightRadius: activeWidth === 100 ? radius(2) : 0,
+      borderRadius: radius(2),
       position: 'absolute',
     },
     inactiveBar: {
       width: `100%`,
-      backgroundColor: colors.paleTurquoise100,
-      borderBottomRightRadius: radius(2),
-      borderTopRightRadius: radius(2),
-      borderBottomLeftRadius: radius(2),
-      borderTopLeftRadius: radius(2),
+      backgroundColor: colors.paleTurquoise40,
+      borderRadius: radius(2),
     },
     text: {
       ...textStyles.light15_black100,

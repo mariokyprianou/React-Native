@@ -552,6 +552,11 @@ export default function ThemeProvider({children}) {
       width: getWidth(280),
       height: getHeight(125),
     },
+    buttonTextStyle: {
+      ...textStyles.regular16_black100,
+      lineHeight: getHeight(20),
+      color: colors.white100
+    },
   };
 
   const headerButtonConfig = {

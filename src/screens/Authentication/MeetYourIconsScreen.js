@@ -339,9 +339,12 @@ export default function MeetYourIconsScreen() {
     }
   };
 
+   // ** ** ** ** ** RENDER ** ** ** ** **
+
   return (
     <View style={styles.container}>
       {safeArea && <View style={styles.safeArea} />}
+     
       <Swiper
         ref={iconsSwiper}
         loop={false}
@@ -366,46 +369,8 @@ export default function MeetYourIconsScreen() {
               style={styles.sliderContainer}
               onScroll={onScroll}
               scrollEventThrottle={10}
+              showsVerticalScrollIndicator={false}
               bounces={false}>
-              <View style={styles.headerContainer}>
-                <View>
-                  <Image source={logo} style={styles.image} />
-                  <Text style={styles.selectText}>
-                    {MeetYourIconsDict.SelectYourProgramme}
-                  </Text>
-                </View>
-
-                <View style={styles.cantChooseContainer}>
-                  <CantChooseButton
-                    onPress={() => navigation.navigate('HelpMeChoose')}
-                    navigation={navigation}
-                  />
-                </View>
-              </View>
-
-              <View style={styles.leftIconContainer}>
-                <TouchableOpacity
-                  style={styles.arrowsTouchableStyle}
-                  onPress={() => handlePress('left')}
-                  disabled={activeIndex === 0 ? true : false}>
-                  <TDIcon
-                    input={isRTL() ? 'chevron-right' : 'chevron-left'}
-                    inputStyle={styles.icon}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.rightIconContainer}>
-                <TouchableOpacity
-                  style={styles.arrowsTouchableStyle}
-                  onPress={() => handlePress('right')}
-                  disabled={activeIndex === trainers.length - 1 ? true : false}>
-                  <TDIcon
-                    input={isRTL() ? 'chevron-left' : 'chevron-right'}
-                    inputStyle={styles.icon}
-                  />
-                </TouchableOpacity>
-              </View>
 
               <View style={styles.cardContainer}>
                 <TrainerCard
@@ -447,6 +412,49 @@ export default function MeetYourIconsScreen() {
           );
         })}
       </Swiper>
+    
+
+      <View style={styles.headerContainer}>
+        <View>
+          <Image source={logo} style={styles.image} />
+          <Text style={styles.selectText}>
+            {MeetYourIconsDict.SelectYourProgramme}
+          </Text>
+        </View>
+
+        <View style={styles.cantChooseContainer}>
+          <CantChooseButton
+            onPress={() => navigation.navigate('HelpMeChoose')}
+            navigation={navigation}
+          />
+        </View>
+      </View>
+
+      <View style={styles.leftIconContainer}>
+        <TouchableOpacity
+          style={styles.arrowsTouchableStyle}
+          onPress={() => handlePress('left')}
+          disabled={activeIndex === 0 ? true : false}>
+          <TDIcon
+            input={isRTL() ? 'chevron-right' : 'chevron-left'}
+            inputStyle={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.rightIconContainer}>
+        <TouchableOpacity
+          style={styles.arrowsTouchableStyle}
+          onPress={() => handlePress('right')}
+          disabled={activeIndex === trainers.length - 1 ? true : false}>
+          <TDIcon
+            input={isRTL() ? 'chevron-left' : 'chevron-right'}
+            inputStyle={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+
+
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
       </View>

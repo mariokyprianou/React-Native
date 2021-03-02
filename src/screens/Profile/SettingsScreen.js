@@ -409,8 +409,8 @@ const SettingsScreen = ({}) => {
     {
       customComponent: () => (
         <SettingsCell
-          title={SettingsDict.DataCollection.toUpperCase()}
-          titleTextStyle={styles.switchTitleStyle}
+          title={SettingsDict.DataCollection}
+          titleTextStyle={styles.headerTextStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
           descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(10)}}
           description={SettingsDict.DataCollectionText}

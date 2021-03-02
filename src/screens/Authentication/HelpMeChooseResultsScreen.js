@@ -19,6 +19,8 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import Header from '../../components/Headers/Header';
 import isIPhoneX from '../../utils/isIphoneX';
 import UseData from '../../hooks/data/UseData';
+import {useBackHandler} from '@react-native-community/hooks';
+
 
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
@@ -106,7 +108,13 @@ export default function HelpMeChooseResultsScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-
+  useBackHandler(() => {
+    if (!navigation.isFocused()) {
+      return false;
+    }
+    navigation.pop(2);
+    return true;
+  });
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>

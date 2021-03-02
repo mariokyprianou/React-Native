@@ -348,9 +348,9 @@ const SettingsScreen = ({}) => {
       placeholder: weightDropdownMap[weightPref],
       data: weightDropdownData,
       inputContainerStyle: {
-        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
      
     },
@@ -386,7 +386,8 @@ const SettingsScreen = ({}) => {
       data: downloadQualityDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
@@ -397,10 +398,10 @@ const SettingsScreen = ({}) => {
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: userData.timeZone,
-
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       data: timeZones,
     },
@@ -460,7 +461,8 @@ const SettingsScreen = ({}) => {
       data: getLanguage() ? [getLanguage(), ...languageDropdownData.filter(item => item !== getLanguage())] : languageDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
   ];

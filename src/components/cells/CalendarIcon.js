@@ -19,7 +19,8 @@ export default function ({enabled = true}) {
 
   return (
     <View style={{marginRight: getWidth(-5)}}>
-      <TDIcon input={icon} />
+      <TDIcon input={icon} inputStyle={{flex: 1, resizeMode: 'contain'}}
+     />
     </View>
   );
 }

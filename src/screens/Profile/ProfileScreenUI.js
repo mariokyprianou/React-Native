@@ -475,15 +475,14 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       name: 'profile_gender',
       type: 'dropdown',
       label: ProfileDict.FormLabel4,
-      ...cellFormStyles,
-      ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       data: gendersData,
       placeholder: gendersRef[userData.gender] || '',
-    
+      ...cellFormStyles,
+      ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(3),
+        paddingRight: getWidth(6),
         marginTop: -getHeight(5),
       },
     },

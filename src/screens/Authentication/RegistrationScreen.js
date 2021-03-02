@@ -338,6 +338,7 @@ export default function RegisterScreen() {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
@@ -351,9 +352,9 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
       inputContainerStyle: {
-        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
@@ -365,9 +366,9 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
       inputContainerStyle: {
-        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
   ];
@@ -382,9 +383,9 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
       inputContainerStyle: {
-        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       rightAccessory: () => <DropDownIcon />,
       data: regionsList,

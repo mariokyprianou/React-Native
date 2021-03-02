@@ -348,13 +348,12 @@ export default function MeetYourIconsScreen() {
       <Swiper
         ref={iconsSwiper}
         loop={false}
+        showsPagination={false}
         onIndexChanged={(index) =>{
-
           // reset suggested programme to prevent conflict between suggested && selected programme
           setSuggestedProgramme(null);
           setActiveIndex(index);
-        }}
-        showsPagination={false}>
+        }}>
         {trainers.map((trainer) => {
           let currentProgram =
             (selectedProgram &&
@@ -408,20 +407,21 @@ export default function MeetYourIconsScreen() {
                 })}
               </View>
               <Spacer height={180} />
+
+              <View style={styles.headerContainer}>
+                <View>
+                  <Image source={logo} style={styles.image} />
+                  <Text style={styles.selectText}>
+                    {MeetYourIconsDict.SelectYourProgramme}
+                  </Text>
+                </View>
+              </View>
             </ScrollView>
           );
         })}
       </Swiper>
-    
 
       <View style={styles.headerContainer}>
-        <View>
-          <Image source={logo} style={styles.image} />
-          <Text style={styles.selectText}>
-            {MeetYourIconsDict.SelectYourProgramme}
-          </Text>
-        </View>
-
         <View style={styles.cantChooseContainer}>
           <CantChooseButton
             onPress={() => navigation.navigate('HelpMeChoose')}

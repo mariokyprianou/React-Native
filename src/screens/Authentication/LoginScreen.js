@@ -162,6 +162,10 @@ export default function LoginScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
+      inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
+        paddingRight: getWidth(6),
+      },
      
      
     },

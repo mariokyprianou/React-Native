@@ -28,7 +28,7 @@ const TwoFieldChangeScreenUI = ({
   onPressChange,
 }) => {
   // MARK: - Hooks
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, cellFormConfig, cellFormStyles} = useTheme();
   const navigation = useNavigation();
 
@@ -69,8 +69,15 @@ const TwoFieldChangeScreenUI = ({
       ...cellFormStyles,
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
-        paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        
+      },
+      style: {
+        
+        lineHeight: fontSize(20),
+        flex: 1,
+        height: '100%',
+        
       },
     },
     {
@@ -81,7 +88,6 @@ const TwoFieldChangeScreenUI = ({
       ...cellFormStyles,
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
-        paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
     },

@@ -116,14 +116,14 @@ const SettingsScreen = ({}) => {
       alignItems: 'center',
       backgroundColor: colors.backgroundWhite100,
       justifyContent: 'space-between',
-      paddingVertical: getHeight(20),
+      paddingVertical: getHeight(10),
     },
     formContainer: {
       width: '90%',
     },
     headerTextStyle: {
       ...textStyles.bold20_black100,
-      marginBottom: getHeight(10),
+      marginBottom: getHeight(12),
       textAlign: 'left',
     },
     versionTextStyle: {
@@ -139,7 +139,7 @@ const SettingsScreen = ({}) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: getHeight(16),
+      marginBottom: getHeight(10),
     },
     switchDescriptionStyle: {
       ...textStyles.regular15_brownishGrey100,
@@ -332,7 +332,7 @@ const SettingsScreen = ({}) => {
     },
     {
       customComponent: () => (
-        <Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text>
+        <View style={{marginTop: getHeight(8)}}><Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text></View>
       ),
     },
   ];
@@ -348,9 +348,11 @@ const SettingsScreen = ({}) => {
       placeholder: weightDropdownMap[weightPref],
       data: weightDropdownData,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(4),
       },
+     
     },
   ];
 
@@ -410,7 +412,7 @@ const SettingsScreen = ({}) => {
           title={SettingsDict.DataCollection.toUpperCase()}
           titleTextStyle={styles.switchTitleStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
-          descriptionTextStyle={styles.switchDescriptionStyle}
+          descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(10)}}
           description={SettingsDict.DataCollectionText}
         />
       ),
@@ -425,7 +427,7 @@ const SettingsScreen = ({}) => {
           switchValue={prefErrorReports}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleErrorReports}
-          descriptionTextStyle={styles.switchDescriptionStyle}
+          descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(8)}}
           description={SettingsDict.ErrorReportsText}
         />
       ),
@@ -469,20 +471,30 @@ const SettingsScreen = ({}) => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
       <TDSettings cells={cells} config={settingsConfig} scrollEnabled={false} />
-      <Form cells={cells2} config={formConfig} />
+      <Spacer height={20}/>
+      {/* Weight */}
+      <Form cells={cells2} config={formConfig} />   
+      <Spacer height={25}/>
+
+      {/* Download */}
       <TDSettings
         cells={cells3}
         config={settingsConfig}
         scrollEnabled={false}
       />
+
+      {/* Download Quality */}
       <Form cells={cells4} config={formConfig} />
+      <Spacer height={25}/>
+      
+      {/* Data Collection */}
       <TDSettings
         cells={cells5}
         config={settingsConfig}
         scrollEnabled={false}
       />
       <Form cells={cells6} config={formConfig} />
-      <Spacer height={25} />
+      <Spacer height={20} />
       <VersionCell
         versionText={SettingsDict.VersionText}
         versionTextStyle={styles.versionTextStyle}

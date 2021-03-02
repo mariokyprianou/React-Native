@@ -284,12 +284,20 @@ export default function RegisterScreen() {
       type: 'text',
       label: AuthDict.FirstNameLabel,
       ...cellFormStyles,
+      inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'familyName',
       type: 'text',
       label: AuthDict.LastNameLabel,
       ...cellFormStyles,
+      inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'email',
@@ -300,6 +308,10 @@ export default function RegisterScreen() {
       textContentType: 'emailAddress',
       autoCompleteType: 'email',
       ...cellFormStyles,
+      inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
+        paddingRight: getWidth(6),
+      },
     },
     {
       name: 'password',
@@ -339,6 +351,7 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
@@ -352,6 +365,7 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },
@@ -368,6 +382,7 @@ export default function RegisterScreen() {
       ...cellFormStyles,
       ...dropdownStyle,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
       },

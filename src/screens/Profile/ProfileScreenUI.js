@@ -434,14 +434,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(10),
       },
       placeholder: userData.givenName,
       defaultValue: userData.givenName,
-      style: {
-        ...cellFormStyles.style,
-        ...textStyles.regular16_black100,
-      },
+      
     },
     {
       name: 'profile_lastName',
@@ -451,14 +447,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(10),    
       },
       placeholder: userData.familyName,
       defaultValue: userData.familyName,
-      style: { 
-         ...cellFormStyles.style,
-        ...textStyles.regular16_black100,
-      },
+      
     },
     {
       name: 'profile_email',
@@ -468,10 +460,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
-
-      },
-      inputStyle: {
-        ...textStyles.regular16_black60,
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       rightAccessory: () => (
         <TDIcon input="chevron-right" inputStyle={styles.icon} />
@@ -490,9 +480,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       rightAccessory: () => <DropDownIcon />,
       data: gendersData,
       placeholder: gendersRef[userData.gender] || '',
+    
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(3),
+        marginTop: -getHeight(5),
       },
     },
     {
@@ -511,6 +503,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       placeholder:
         userData.dateOfBirth !== undefined && userData.dateOfBirth !== null
@@ -527,6 +520,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         paddingLeft: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       placeholder: userData.country || null,
       data: countriesList,
@@ -547,6 +541,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       rightAccessory: () => <DropDownIcon />,
       data: regionsList,

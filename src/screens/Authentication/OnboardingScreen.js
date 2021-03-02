@@ -149,9 +149,6 @@ export default function OnboardingScreen() {
             image={image}
             header={title}
             text={description}
-            handlePress={handlePress}
-            activeIndex={activeIndex}
-            lastScreenIndex={onboarding.length - 1}
           />
         ))}
       </Swiper>

@@ -253,17 +253,6 @@ export default function RegisterScreen() {
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  const FormFooter = () => (
-    <View style={styles.formFooter.container}>
-      <DefaultButton
-        type="createAccount"
-        variant="white"
-        icon="chevron"
-        onPress={handleRegister}
-      />
-    </View>
-  );
-
   const linkText = [
     {
       pattern: AuthDict.TermsPattern,
@@ -418,7 +407,6 @@ export default function RegisterScreen() {
 
   const config = {
     ...cellFormConfig,
-    formFooter: FormFooter,
   };
 
   return (
@@ -427,10 +415,20 @@ export default function RegisterScreen() {
         contentContainerStyle={styles.scroll}
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={{marginHorizontal: getWidth(25)}}>
-          <Form cells={cells} config={{...cellFormConfig}} />
-          <Form cells={cells2} config={config} />
-        </View>
+        <> 
+          <View style={{marginHorizontal: getWidth(25)}}>
+            <Form cells={cells} config={{...cellFormConfig}} />
+            <Form cells={cells2} config={config} />
+          </View>
+          <View style={styles.formFooter.container}>
+            <DefaultButton
+              type="createAccount"
+              variant="white"
+              icon="chevron"
+              onPress={handleRegister}
+            />
+          </View>
+        </>
       </KeyboardAwareScrollView>
     </View>
   );

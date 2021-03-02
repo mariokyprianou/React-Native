@@ -15,21 +15,65 @@ index 4934d0f..4a349d6 100644
          isVisible={picker}
          datePickerModeAndroid="spinner"
          onConfirm={e => {
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js
+index e72354b..775449a 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js
+@@ -56,6 +56,7 @@ const AndroidWheelPicker = props => {
+   return (
+     <Modal
+       isVisible={picker}
++      useNativeDriver={true}
+       style={
+         props.modalContainer ? props.modalContainer : styles.modalContainer
+       }>
 diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
-index 439a0d3..b83788e 100644
+index 439a0d3..621e6b3 100644
 --- a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
 +++ b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
-@@ -15,7 +15,7 @@ export default function (props) {
+@@ -10,22 +10,26 @@ import {Text} from 'react-native';
+ import QuickPicker from 'quick-picker';
+ 
+ export default function (props) {
+-  const {picker, onEndEditing} = props;
++  const {picker,setPicker, onEndEditing} = props;
+ 
    React.useEffect(() => {
++    
      if (picker) {
        QuickPicker.open({
 -        items: ['', ...props.data],
 +        items: [...props.data],
          selectedValue: props.value,
          onValueChange: props.onChange,
++      
          onPressDone: (value) => {
+           props.onChange(value);
+           if (onEndEditing) {
+             onEndEditing();
+           }
++
+           QuickPicker.close();
+         },
+       });
++      setPicker(false);
+     }
+   }, [picker]);
+ 
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js
+index 415c726..54ef15b 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js
+@@ -109,6 +109,7 @@ export default React.memo(props => {
+         {...cell}
+         onEndEditing={onEndEditing}
+         picker={picker}
++        setPicker={setPicker}
+         data={cell.data}
+         close={handlePress}
+         onChange={handleChange}
 diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
-index 06cd661..b270cca 100644
+index 06cd661..d888f96 100644
 --- a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 +++ b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 @@ -13,12 +13,13 @@ import {ScaleHook} from 'react-native-design-to-component';
@@ -57,7 +101,7 @@ index 06cd661..b270cca 100644
 +      <TDIcon     
 +        input={visibility ? 'eye' : 'eye-slash'} 
 +        inputStyle={
-+          { icon: { size: fontSize(12) }}
++          { icon: { size: fontSize(12) }, color: cell.iconTintColor}
 +        } />
 +    </View>
 +  )

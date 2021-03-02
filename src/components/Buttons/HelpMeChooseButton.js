@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -15,7 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 // possible type - selected or null
 
 export default function HelpMeChooseButton({
-  type = 'unselected',
   letter,
   text,
   onPress,
@@ -23,6 +22,8 @@ export default function HelpMeChooseButton({
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
+
+  const [selected, setSelected] = useState(false);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -74,10 +75,10 @@ export default function HelpMeChooseButton({
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (type === 'selected') {
+  if (selected) {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={onPress} style={styles.touch}>
+        <TouchableOpacity activeOpacity={1} onPress={onPress} onPressOut={()=> setSelected(false)} style={styles.touch}>
           <LinearGradient
             style={{...styles.linearGradientStyle, ...styles.box}}
             start={{x: 0, y: 0}}
@@ -94,6 +95,8 @@ export default function HelpMeChooseButton({
     <View style={{...styles.container, ...styles.box, ...styles.unselectedBox}}>
       <TouchableOpacity
         onPress={onPress}
+        activeOpacity={1}
+        onPressIn={()=> setSelected(true)}
         style={{
           ...styles.touch,
           paddingHorizontal: getWidth(10),

@@ -2694,6 +2694,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/geolocation/-/geolocation-2.0.2.tgz#ba8b40f560ead8d014740d1cdea970b33f19312e"
   integrity sha512-tTNXRCgnhJBu79mulQwzabXRpDqfh/uaDqfHVpvF0nX4NTpolpy6mvTRiFg7eWFPGRArsnZz1EYp6rHfJWGgEA==
 
+"@react-native-community/hooks@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/hooks/-/hooks-2.6.0.tgz#dd5f19601eb3684c6bcdd3df3d0c04cf44c24cff"
+  integrity sha512-emBGKvhJ0h++lLJQ5ejsj+od9G67nEaihjvfSx7/JWvNrQGAhP9U0OZqgb9dkKzor9Ufaj9SGt8RNY97cGzttw==
+
 "@react-native-community/masked-view@^0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.10.tgz#5dda643e19e587793bc2034dd9bf7398ad43d401"
@@ -8897,6 +8902,11 @@ react-native-extra-dimensions-android@^1.2.5:
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
   integrity sha512-eorFo9X1vEqAWUkgcZ300yKBG1wtgNeE7tdWAH2CE+P50FGTniJg5Sr6l1iPWG8ZskQOuF+KeiSTFlDa4vLfMw==
 
+react-native-fast-image@^8.3.4:
+  version "8.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.3.4.tgz#79edca177e30311b19d59ff335625bcbe22650d7"
+  integrity sha512-LpzAdjUphihUpVEBn5fEv5AILe55rHav0YiZroPZ1rumKDhAl4u2cG01ku2Pb7l8sayjTsNu7FuURAlXUUDsow==
+
 react-native-gesture-handler@^1.6.1:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.8.0.tgz#18f61f51da50320f938957b0ee79bc58f47449dc"
@@ -10289,7 +10299,6 @@ text-table@^0.2.0:
 
 "the-core-ui-theme-base@https://bitbucket.org/thedistance/the-core-ui-theme-base":
   version "1.0.0"
-  uid "48bc73915a73e832eb41311e94628ca742ed13a9"
   resolved "https://bitbucket.org/thedistance/the-core-ui-theme-base#48bc73915a73e832eb41311e94628ca742ed13a9"
   dependencies:
     color "3.1.2"

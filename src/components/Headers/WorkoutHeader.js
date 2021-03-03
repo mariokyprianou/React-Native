@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {View, Text, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -14,9 +14,10 @@ import Header from './Header';
 import {useStopwatch} from 'the-core-ui-module-tdcountdown';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
 import UseData from '../../hooks/data/UseData';
+import FastImage from 'react-native-fast-image';
 
-const playIcon = require('../../../assets/icons/play.png');
-const pauseIcon = require('../../../assets/icons/pauseIcon.png');
+const playIcon = require('../../../assets/icons/playDark.png');
+const pauseIcon = require('../../../assets/icons/pauseDark.png');
 
 export default function ({currentExercise, totalExercises}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -109,7 +110,7 @@ function TimerView(props) {
   function toggle() {
     setIsWorkoutTimerRunning(!isWorkoutTimerRunning);
   }
-
+  
   return (
     <>
       <Text style={props.styles.titleTextStyle}>
@@ -120,11 +121,14 @@ function TimerView(props) {
         onPress={() => {
           toggle();
         }}>
-        <Image
-          style={props.styles.iconStyle}
-          source={!isWorkoutTimerRunning ? playIcon : pauseIcon}
-        />
+      <FastImage
+        style={props.styles.iconStyle}
+        source={!isWorkoutTimerRunning ? playIcon : pauseIcon}
+      />
+
+      
       </TouchableOpacity>
     </>
   );
 }
+

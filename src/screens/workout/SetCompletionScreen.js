@@ -38,6 +38,8 @@ export default function SetCompletionScreen({
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
+    containerStyle: {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: colors.brownishGrey60},
+    offModalTouchableStyle: { flex: 1, bottom: getHeight(300) },
     card: {
       height: restTime === 0 ? getHeight(302) : getHeight(349),
       width: '100%',
@@ -97,51 +99,43 @@ export default function SetCompletionScreen({
 
     setSetComplete(false);
 
-    // await addWeight({
-    //   variables: {
-    //     input: {
-    //       weight: weightToAdd,
-    //       reps: setReps,
-    //       setNumber: setNumber,
-    //       exerciseId: exercise,
-    //     },
-    //   },
-    // })
-    //   .then((res) => {
-    //     setSetComplete(false);
-    //     finishWorkout();
-    //   })
-    //   .catch((err) => console.log(err, '<---error on adding weight'));
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.card}>
-      <View style={styles.contentContainer}>
-        <TouchableOpacity onPress={() => setSetComplete(false)}>
-          {restTime ? (
-            <TimerView
-              title={WorkoutDict.GreatJob}
-              restTime={restTime}
-              setSetComplete={setSetComplete}
+    <View style={styles.containerStyle}>
+    <TouchableOpacity style={styles.offModalTouchableStyle} onPress={() => setSetComplete(false)}/>
+     
+        <View style={styles.card}>
+          <View style={styles.contentContainer}>
+            <View>
+              {restTime ? (
+                <TimerView
+                  title={WorkoutDict.GreatJob}
+                  restTime={restTime}
+                  setSetComplete={setSetComplete}
+                />
+              ) : (
+                <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
+              )}
+            </View>
+            <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
+            <View style={styles.weightSelectionContainer}>
+              <NumbersWheel weightPreference={weightPreference} />
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+            <DefaultButton
+              type="addWeight"
+              variant="gradient"
+              icon="chevron"
+              onPress={handleAddWeight}
             />
-          ) : (
-            <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
-          )}
-        </TouchableOpacity>
-        <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
-        <View style={styles.weightSelectionContainer}>
-          <NumbersWheel weightPreference={weightPreference} />
-        </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="addWeight"
-          variant="gradient"
-          icon="chevron"
-          onPress={handleAddWeight}
-        />
-      </View>
+          </View>
+        </View> 
+
+    
+   
     </View>
   );
 }

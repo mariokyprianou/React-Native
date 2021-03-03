@@ -653,7 +653,7 @@ export default function ThemeProvider({children}) {
       position: 'absolute',
       width: getWidth(230),
       height: '100%',
-      left: screenWidth / 2 - 105,
+      alignSelf: 'center',
       top: getHeight(90),
     },
     timerTextStyle: {

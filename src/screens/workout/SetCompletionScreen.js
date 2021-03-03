@@ -18,6 +18,7 @@ import {useMutation} from '@apollo/client';
 // import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import UseData from '../../hooks/data/UseData';
 import NumbersWheel from '../../components/Infographics/NumbersWheel';
+import HorizontalScrollPicker from '../../components/Infographics/HorizontalScrollPicker';
 
 export default function SetCompletionScreen({
   restTime,
@@ -34,7 +35,7 @@ export default function SetCompletionScreen({
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   // const [addWeight] = useMutation(AddExerciseWeight);
-  const {selectedWeight, weightsToUpload, setWeightsToUpload} = UseData();
+  const {selectedWeight, weightsToUpload, setWeightsToUpload, weightData, setSelectedWeight} = UseData();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -66,6 +67,8 @@ export default function SetCompletionScreen({
     weightSelectionContainer: {
       marginTop: getHeight(10),
       height: getHeight(69),
+      width: '100%',
+      justifyContent: 'center',
       backgroundColor: colors.white100,
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -120,9 +123,11 @@ export default function SetCompletionScreen({
               )}
             </View>
             <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
+            
             <View style={styles.weightSelectionContainer}>
-              <NumbersWheel weightPreference={weightPreference} />
-            </View>
+              <HorizontalScrollPicker weightPreference={weightPreference}  />
+            </View> 
+            
           </View>
           <View style={styles.buttonContainer}>
             <DefaultButton
@@ -133,9 +138,6 @@ export default function SetCompletionScreen({
             />
           </View>
         </View> 
-
-    
-   
     </View>
   );
 }

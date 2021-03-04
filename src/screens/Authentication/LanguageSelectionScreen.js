@@ -11,7 +11,7 @@ import {View, Image, Dimensions, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
@@ -104,15 +104,12 @@ export default function LanguageSelectionScreen() {
     inactiveColor: colors.brownishGrey100,
     activeColor: colors.brownishGrey100,
   };
-  const isFocused = useIsFocused();
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      {Platform.OS === 'android' && isFocused && (
-         <StatusBar translucent={false}  />
-      )}
+      
       <Video
         source={splashVideo}
         resizeMode='cover'

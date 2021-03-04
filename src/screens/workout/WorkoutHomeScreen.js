@@ -401,7 +401,6 @@ export default function WorkoutHomeScreen() {
     },
   };
 
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -410,7 +409,13 @@ export default function WorkoutHomeScreen() {
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
-          <Text style={styles.numberText}>{`${programme ? weekNumber === 1 ? programme.currentWeek.weekNumber : programme.currentWeek.weekNumber+1 : 1}`}</Text>
+          <Text style={styles.numberText}>{`${
+            programme
+              ? weekNumber === 1
+                ? programme.currentWeek.weekNumber
+                : programme.currentWeek.weekNumber + 1
+              : 1
+          }`}</Text>
         </View>
         <View style={styles.touchContainer}>
           <TouchableOpacity

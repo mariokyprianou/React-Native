@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,10 @@ import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import Header from '../../components/Headers/Header';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useMutation} from '@apollo/client';
+import UploadUrl from '../../apollo/mutations/UploadUrl';
+import UploadFailed from '../../apollo/mutations/UploadFailed';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
@@ -40,6 +44,10 @@ export default function TransformationScreen() {
     ),
   });
 
+  const [requestUrl] = useMutation(UploadUrl);
+  const [sendFailed] = useMutation(UploadFailed);
+  const [urlId, setUrlId] = useState();
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
@@ -56,10 +64,40 @@ export default function TransformationScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePhoto() {
-    console.log('set photo');
-    const takenAt = new Date();
-    // send to back end with today's date, format ProgressImage
+  async function handlePhoto(path, contentType) {
+    const URL = await requestUrl().catch((err) =>
+      console.log(err, '<---requestUrl err'),
+    );
+
+    setUrlId(URL.data.uploadUrl.id);
+
+    RNFetchBlob.fetch(
+      'PUT',
+      URL.data.uploadUrl.url,
+      {
+        'Content-Type': contentType,
+      },
+      RNFetchBlob.wrap(path),
+    )
+      .then((res) => {
+        let status = res.info().status;
+
+        if (status === 200 || status === 204) {
+          console.log('SUCCESS');
+        } else {
+          handleAddPhotoError();
+        }
+      })
+      .catch((err) => {
+        console.log(err, '<---fetch blob err');
+        handleAddPhotoError();
+      });
+  }
+
+  async function handleAddPhotoError() {
+    await sendFailed({variables: {id: urlId}})
+      .then((res) => console.log(res, '<---upload failed res'))
+      .catch((err) => console.log(err, '<---upload failed err'));
   }
 
   function handleSelectPhoto() {
@@ -80,15 +118,13 @@ export default function TransformationScreen() {
           ImagePicker.openPicker({
             mediaType: 'photo',
           }).then((cameraPhoto) => {
-            setPhoto(cameraPhoto.sourceURL);
+            const path = cameraPhoto.path;
+            const contentType = cameraPhoto.mime;
+            handlePhoto(path, contentType);
           });
         }
       })
       .catch((err) => console.log(err));
-  }
-
-  function handleCountdownStart() {
-    console.log('counting down');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -98,9 +134,8 @@ export default function TransformationScreen() {
         setPhoto={handlePhoto}
         overlayImage={overlay}
         overlayStyles={styles.overlay}
-        CustomCountdown={() => (
-          <CustomCountdown onPress={handleCountdownStart} />
-        )}
+        CustomCountdown={() => <CustomCountdown time={3000} />}
+        CountdownTime={3000}
         cameraButtonImage={cameraButton}
         backgroundColor={colors.backgroundWhite100}
       />

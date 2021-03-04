@@ -12,27 +12,20 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
-import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function ProgressChart({
   axis = true,
   background = true,
   selectable = false,
   data,
-  weightPreference = 'kg',
+  chartLabel,
+  chartDataPoints,
+  interval,
+  ticks,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
-
-  const dataPoints = data.map((event, index) => {
-    return {x: index + 1, y: event.weight};
-  });
-
-  const highestValue = Math.max(...dataPoints.map((point) => point.y));
-  const ticks = Math.ceil(highestValue / 5);
 
   const xLabels = data.map((event) => {
     return event.date;
@@ -73,7 +66,7 @@ export default function ProgressChart({
         contentContainerStyle={{alignItems: 'flex-end'}}>
         <View>
           <SlideBarChart
-            data={dataPoints}
+            data={chartDataPoints}
             barSpacing={44}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
@@ -84,7 +77,7 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={dataPoints.length * 53}
+            width={chartDataPoints.length * 53}
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}
@@ -95,12 +88,12 @@ export default function ProgressChart({
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
-              interval: 5,
+              interval: interval,
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: weightPreference,
+              axisLabel: axis ? chartLabel : null,
               axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
               axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),

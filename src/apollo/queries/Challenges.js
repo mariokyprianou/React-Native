@@ -12,11 +12,13 @@ export default gql`
   query Challenges {
     challenges {
       id
-      timerType
+      type
       name
-      description
-      answerBoxLabel
-      timeLimit
+      fieldDescription
+      fieldTitle
+      createdAt
+      duration
+      unitType
     }
   }
 `;

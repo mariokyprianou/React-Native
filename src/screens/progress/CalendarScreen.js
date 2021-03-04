@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -15,6 +15,10 @@ import Calendar from 'the-core-ui-module-tdcalendar';
 import Header from '../../components/Headers/Header';
 import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import processProgressData from '../../utils/processProgressData';
+import {useQuery} from '@apollo/client';
+import Progress from '../../apollo/queries/Progress';
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -30,19 +34,27 @@ export default function CalendarScreen() {
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
+  const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
 
   navigation.setOptions({
     header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
   });
 
-  const {fakeProgressHistory} = fakeProgressData();
+  const [progressHistoryData, setProgressHistoryData] = useState();
 
-  const progressHistoryData = fakeProgressHistory
-    .map((month) => {
-      return processProgressData(month.days);
-    })
-    .flat();
+  useQuery(Progress, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      const progressData = res.progress
+        .map((month) => {
+          return processProgressData(month.days);
+        })
+        .flat();
+      setProgressHistoryData(progressData);
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

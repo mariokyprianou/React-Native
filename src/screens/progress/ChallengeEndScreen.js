@@ -17,25 +17,31 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
-import useDictionary from '../../hooks/localisation/useDictionary';
+import {useMutation} from '@apollo/client';
+import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
+import UseData from '../../hooks/data/UseData';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
-  const {dictionary} = useDictionary();
+  const {getProgramme, programme} = UseData();
   const [formHeight, setFormHeight] = useState(150);
   let newStyle = {formHeight};
-  const {
-    ProgressDict: {ChallengeTime},
-  } = dictionary;
-  const {updateValue} = FormHook();
+  const {updateValue, getValueByName, cleanValues} = FormHook();
   const {
     params: {
-      challenge: {name, description, answerBoxLabel},
-      historyData,
+      name,
+      id,
+      type,
+      description,
+      fieldTitle,
+      history,
       elapsed,
-      elapsedMS,
+      chartLabel,
+      chartDataPoints,
+      chartInterval,
+      chartTicks,
     },
   } = useRoute();
   const navigation = useNavigation();
@@ -44,8 +50,14 @@ export default function ChallengeEndScreen() {
     header: () => <Header title={name} goBack />,
   });
 
+  const [sendResult] = useMutation(CompleteChallenge);
+
   useEffect(() => {
-    if (elapsed) {
+    getProgramme();
+  }, []);
+
+  useEffect(() => {
+    if (type === 'STOPWATCH') {
       updateValue({name: 'result', value: elapsed});
     }
   }, [elapsed]);
@@ -109,14 +121,33 @@ export default function ChallengeEndScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function handleAddResult() {
+    const challengeResult = getValueByName('result');
 
-  function handleAddResult() {
-    // send latest result to back end and update historyData using elapsedMS
+    await sendResult({
+      variables: {
+        input: {
+          challengeId: id,
+          result: challengeResult,
+        },
+      },
+    })
+      .then((res) => console.log(res, '<---sendResult res'))
+      .catch((err) => console.log(err, '<---sendResult err'));
+
     navigation.navigate('ChallengeComplete', {
-      historyData,
+      history,
       name,
-      elapsed,
+      type,
+      chartLabel,
+      chartDataPoints,
+      chartInterval,
+      chartTicks,
+      result: challengeResult,
+      trainer: programme.trainer.name,
     });
+
+    cleanValues();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -156,15 +187,19 @@ export default function ChallengeEndScreen() {
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.card}>
-          <ProgressChart data={historyData} />
+          <ProgressChart
+            data={history}
+            chartLabel={chartLabel}
+            chartDataPoints={chartDataPoints}
+            interval={chartInterval}
+            ticks={chartTicks}
+          />
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.description}>{description}</Text>
         </View>
         <View style={styles.answerBoxContainer}>
-          <Text style={styles.answerLabel}>
-            {elapsed ? ChallengeTime : answerBoxLabel}
-          </Text>
+          <Text style={styles.answerLabel}>{fieldTitle}</Text>
           <Form cells={cells} config={config} />
         </View>
         <View style={styles.buttonContainer}>

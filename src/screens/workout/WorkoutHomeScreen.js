@@ -474,7 +474,7 @@ export default function WorkoutHomeScreen() {
                   );
                   if (wasWorkoutToday === true) {
                     DisplayAlert({
-                      title: WorkoutDict.WorkoutCompetedWarningText,
+                      text: WorkoutDict.WorkoutCompetedWarningText,
                     });
                     return;
                   }

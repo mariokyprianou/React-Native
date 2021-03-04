@@ -7,17 +7,19 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, Image, Dimensions} from 'react-native';
+import {View, Image, Dimensions, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {languageRestart} from '../../utils/languageRestart';
+import Video from 'react-native-video';
 
 const splashImage = require('../../../assets/images/splash.png');
+const splashVideo = require('../../../assets/videos/splashScreen.mp4');
 
 export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -102,12 +104,27 @@ export default function LanguageSelectionScreen() {
     inactiveColor: colors.brownishGrey100,
     activeColor: colors.brownishGrey100,
   };
+  const isFocused = useIsFocused();
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <Image source={splashImage} style={styles.image} />
+      {Platform.OS === 'android' && isFocused && (
+         <StatusBar translucent={false}  />
+      )}
+      <Video
+        source={splashVideo}
+        resizeMode='cover'
+        style={{ position: 'absolute', top:0, bottom: 0, left: 0, right: 0}}
+        repeat={true}
+        muted={true}
+        paused={false}
+        controls={null}
+        playWhenInactive
+      />
+
+      {/* <Image source={splashImage} style={styles.image} /> */}
       <View style={styles.buttonContainer}>
         <Form {...{cells, config}} />
         <DefaultButton

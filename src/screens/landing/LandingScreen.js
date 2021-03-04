@@ -22,7 +22,11 @@ export default function LandingScreen(props) {
             routes: [{name: 'AuthContainer'}],
           }),
         )
-        .finally(() => SplashScreen.hide());
+        .finally(() => {
+          setTimeout(()=> {
+            SplashScreen.hide();
+          }, 500);
+        });
     }
     if (reset) {
       checkAuth();

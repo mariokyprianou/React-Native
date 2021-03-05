@@ -288,8 +288,9 @@ export default function WorkoutHomeScreen() {
 
   async function updateOrder(newList) {
     const storedData = updateStoredData(newList);
+
     const updatedWeek = structureWeek(
-      programme.currentWeek.workouts,
+      newList,
       storedData,
     );
 
@@ -299,13 +300,13 @@ export default function WorkoutHomeScreen() {
     let index = 0;
     const data = newList.filter((it) => !it.isRestDay);
     const newOrder = data.map((it) => {
-      index = index;
+      index = index + 1;
       return {
         index: index,
         id: it.id,
       };
     });
-
+    console.log(newOrder);
     await updateOrderMutation({
       variables: {
         input: newOrder,

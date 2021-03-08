@@ -53,7 +53,7 @@ export default function TransformationScreen() {
   const [userImages, setUserImages] = useState();
   const [selectedUrl, setSelectedUrl] = useState();
 
-  console.log(beforePic, typeof beforePic, '<---before pic');
+  // console.log(beforePic, typeof beforePic, '<---before pic');
 
   useQuery(ProgressImages, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),

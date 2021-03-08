@@ -161,7 +161,7 @@ export default function ProgressScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (progressData) {
+  if (progressData && challenges) {
     return (
       <SafeAreaView style={styles.safeArea}>
         {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}

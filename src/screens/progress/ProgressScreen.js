@@ -30,6 +30,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {startOfMonth} from 'date-fns';
 import useUserData from '../../hooks/data/useUserData';
+import {parseISO} from 'date-fns';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -74,12 +75,14 @@ export default function ProgressScreen() {
   useQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const startOfThisMonth = startOfMonth(new Date()).toISOString();
-      const thisMonth = res.progress.filter(
-        (month) => month.startOfMonth === startOfThisMonth,
+      const currentMonth = new Date().getMonth();
+      const thisMonth = res.progress.find(
+        (month) => {
+          return parseISO(month.startOfMonth).getMonth() === currentMonth;
+        }
       );
 
-      const progressHistoryData = processProgressData(thisMonth[0].days);
+      const progressHistoryData = processProgressData(thisMonth.days);
 
       setProgressData(progressHistoryData);
     },

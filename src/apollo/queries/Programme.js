@@ -22,6 +22,7 @@ export default gql`
       environment
       programmeImage
       currentWeek {
+        startedAt
         weekNumber
         workouts {
           id

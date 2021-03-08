@@ -12,7 +12,6 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useData from '../../hooks/data/UseData';
 import SubmitProgrammeQuestionnaire from '../../apollo/mutations/SubmitProgrammeQuestionnaire';
 import {useMutation} from '@apollo/client';
 import HelpMeChooseBar from '../../components/Infographics/HelpMeChooseBar';
@@ -20,10 +19,10 @@ import Spacer from '../../components/Utility/Spacer';
 import Header from '../../components/Headers/Header';
 import HelpMeChooseButton from '../../components/Buttons/HelpMeChooseButton';
 import displayAlert from '../../utils/DisplayAlert';
+import useLoading from '../../hooks/loading/useLoading';
 
 import getResponse from '../../utils/getResponse';
 import useCommonData from '../../hooks/data/useCommonData';
-import UseData from '../../hooks/data/UseData';
 
 export default function HelpMeChooseScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -35,6 +34,7 @@ export default function HelpMeChooseScreen() {
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict} = dictionary;
   const navigation = useNavigation();
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => (
@@ -98,6 +98,7 @@ export default function HelpMeChooseScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   async function submitQuestionnaire() {
+    setLoading(true);
     const answers = storedAnswers.filter(
       (it) => it.question !== null && it.question !== 'environment',
     );
@@ -132,7 +133,8 @@ export default function HelpMeChooseScreen() {
       .catch((err) => {
         showError('Server error', 'Unable to return program');
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   function showError(title, text) {

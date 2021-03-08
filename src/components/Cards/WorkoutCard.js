@@ -126,8 +126,9 @@ export default function WorkoutCard({
   return (
     <View style={styles.card}>
       <TouchableOpacity
+        activeOpacity={drag ? 0.2 : 1}
         style={styles.touch}
-        onLongPress={drag}
+        onLongPress={drag || null}
         onPress={
           title === WorkoutDict.RestDay ? null : () => onPressCard(workout)
         }>

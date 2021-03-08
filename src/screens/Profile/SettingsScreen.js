@@ -80,7 +80,7 @@ const SettingsScreen = ({}) => {
   );
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
   const [downloadQuality, setDownloadQuality] = useState(
-    preferences.downloadQuality || 'HIGH',
+    preferences.downloadQuality || 'LOW',
   );
   const [weightPref, setWeightPref] = useState(
     preferences.weightPreference || 'KG',
@@ -95,18 +95,18 @@ const SettingsScreen = ({}) => {
 
   useEffect(() => {
     checkDownloadEnabled();
-
-    if (!preferences) {
-      getPreferences().then((res) => {
-        setMarketingPrefEmail(res.preferences.emails);
-        setMarketingPrefNotifications(res.preferences.notifications);
-        setPrefErrorReports(res.preferences.errorReports);
-        setPrefAnalytics(res.preferences.analytics);
-        setDownloadQuality(res.preferences.downloadQuality);
-        setWeightPref(res.preferences.weightPreference);
-      });
-    }
+    getPreferences()
+    
   }, []);
+
+  useEffect(()  => {
+    setMarketingPrefEmail(preferences.emails || false);
+    setMarketingPrefNotifications(preferences.notifications || false);
+    setPrefErrorReports(preferences.errorReports || false);
+    setPrefAnalytics(preferences.analytics || false);
+    setDownloadQuality(preferences.downloadQuality || "LOW");
+    setWeightPref(preferences.weightPreference || "KG");
+  }, [preferences])
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -117,14 +117,14 @@ const SettingsScreen = ({}) => {
       alignItems: 'center',
       backgroundColor: colors.backgroundWhite100,
       justifyContent: 'space-between',
-      paddingVertical: getHeight(20),
+      paddingVertical: getHeight(10),
     },
     formContainer: {
       width: '90%',
     },
     headerTextStyle: {
       ...textStyles.bold20_black100,
-      marginBottom: getHeight(10),
+      marginBottom: getHeight(12),
       textAlign: 'left',
     },
     versionTextStyle: {
@@ -140,7 +140,7 @@ const SettingsScreen = ({}) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: getHeight(16),
+      marginBottom: getHeight(10),
     },
     switchDescriptionStyle: {
       ...textStyles.regular15_brownishGrey100,
@@ -157,6 +157,9 @@ const SettingsScreen = ({}) => {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const updateSettingsAndNavigate = async () => {
+    navigation.goBack();
+
+    
     AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
 
     const {
@@ -189,16 +192,21 @@ const SettingsScreen = ({}) => {
     };
 
     firebase.analytics().setAnalyticsCollectionEnabled(prefAnalytics);
+    console.log(
+      "newPreferences", newPreferences
+    );
 
     const newUserData = {
       familyName: userData.familyName,
       givenName: userData.givenName,
       gender: userData.gender,
       dateOfBirth: userData.dateOfBirth,
-      country: userData.country,
-      region: userData.region,
-      // timeZone: formTimeZone,
+      // country: userData.country,
+      // region: userData.region,
+      timeZone: formTimeZone || userData.timeZone,
     };
+
+    console.log("newUserData", newUserData)
 
     updateProfile({
       variables: {
@@ -226,7 +234,7 @@ const SettingsScreen = ({}) => {
           });
         } else {
           setPreferences(newPreferences);
-          navigation.goBack();
+          
         }
       })
       .catch((err) => {
@@ -326,7 +334,7 @@ const SettingsScreen = ({}) => {
     },
     {
       customComponent: () => (
-        <Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text>
+        <View style={{marginTop: getHeight(8)}}><Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text></View>
       ),
     },
   ];
@@ -343,8 +351,10 @@ const SettingsScreen = ({}) => {
       data: weightDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
+     
     },
   ];
 
@@ -378,7 +388,8 @@ const SettingsScreen = ({}) => {
       data: downloadQualityDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
@@ -389,10 +400,10 @@ const SettingsScreen = ({}) => {
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: userData.timeZone,
-
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       data: timeZones,
     },
@@ -401,10 +412,10 @@ const SettingsScreen = ({}) => {
     {
       customComponent: () => (
         <SettingsCell
-          title={SettingsDict.DataCollection.toUpperCase()}
-          titleTextStyle={styles.switchTitleStyle}
+          title={SettingsDict.DataCollection}
+          titleTextStyle={styles.headerTextStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
-          descriptionTextStyle={styles.switchDescriptionStyle}
+          descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(10)}}
           description={SettingsDict.DataCollectionText}
         />
       ),
@@ -419,7 +430,7 @@ const SettingsScreen = ({}) => {
           switchValue={prefErrorReports}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleErrorReports}
-          descriptionTextStyle={styles.switchDescriptionStyle}
+          descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(8)}}
           description={SettingsDict.ErrorReportsText}
         />
       ),
@@ -449,10 +460,11 @@ const SettingsScreen = ({}) => {
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: getLanguage() || languageDropdownData[0],
-      data: languageDropdownData,
+      data: getLanguage() ? [getLanguage(), ...languageDropdownData.filter(item => item !== getLanguage())] : languageDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(4),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
   ];
@@ -463,20 +475,30 @@ const SettingsScreen = ({}) => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
       <TDSettings cells={cells} config={settingsConfig} scrollEnabled={false} />
-      <Form cells={cells2} config={formConfig} />
+      <Spacer height={20}/>
+      {/* Weight */}
+      <Form cells={cells2} config={formConfig} />   
+      <Spacer height={25}/>
+
+      {/* Download */}
       <TDSettings
         cells={cells3}
         config={settingsConfig}
         scrollEnabled={false}
       />
+
+      {/* Download Quality */}
       <Form cells={cells4} config={formConfig} />
+      <Spacer height={25}/>
+      
+      {/* Data Collection */}
       <TDSettings
         cells={cells5}
         config={settingsConfig}
         scrollEnabled={false}
       />
       <Form cells={cells6} config={formConfig} />
-      <Spacer height={25} />
+      <Spacer height={20} />
       <VersionCell
         versionText={SettingsDict.VersionText}
         versionTextStyle={styles.versionTextStyle}

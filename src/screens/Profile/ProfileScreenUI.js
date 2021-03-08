@@ -39,6 +39,11 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
 import Intercom from 'react-native-intercom';
+import TimeZone from 'react-native-timezone';
+import useLoading from '../../hooks/loading/useLoading';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
 
 const notifications = [
   {
@@ -92,9 +97,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState(notifications);
-  const [updateLoading, setUpdateLoading] = useState(false);
 
   const {userData, setUserData} = useUserData();
+  const {setLoading} = useLoading();
 
   const formCountry = getValueByName('profile_country');
   useEffect(() => {
@@ -108,7 +113,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList(countries);
+      setCountriesList( ['',...countries]);
 
       const indianRegions = countryData.allCountries.filter(
         (country) => country.country === 'India',
@@ -121,7 +126,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(indianRegionsList);
+      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
+
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -155,7 +161,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
-      if (!userData.gender) {
+      if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
           value: AuthDict.RegistrationGendersFemale,
@@ -252,7 +258,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       return;
     }
 
-    setUpdateLoading(true);
+    setLoading(true);
 
     const dob = parseISO(newDateOfBirth || userData.dateOfBirth);
 
@@ -260,7 +266,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       countryLookup[profile_country] || countryLookup[userData.country];
 
     let newRegion =
-      profile_country !== 'India'
+      profile_country !== 'India' && userData.country !== "India"
         ? null
         : regionLookup[profile_region] || regionLookup[userData.region];
 
@@ -275,7 +281,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
       region: newRegion,
+      timeZone: userData.timeZone,
     };
+
 
     await updateProfile({
       variables: {
@@ -286,13 +294,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
+        console.log("newData", newData)
         setUserData(newData);
-        setUpdateLoading(false);
       })
       .catch((err) => {
         console.log(err, '<---error on updating');
-        setUpdateLoading(false);
-      });
+        displayAlert({
+          text: 'Unable to update settings',
+        });
+      }).finally(() => setLoading(false));
 
     cleanValues();
   }
@@ -303,13 +313,19 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       text: ProfileDict.LogoutModalText,
       buttons: [
         {
+          text: ProfileDict.Cancel,
+        },
+        {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
             await Auth.signOut()
-              .then((res) => {
+              .then(async (res) => {
                 console.log(res, '<----sign out res');
                 setUserData({});
                 Intercom.logout();
+                AsyncStorage.removeItem('@ANALYTICS_ASKED');
+                AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],
@@ -320,10 +336,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               });
           },
         },
-        {
-          text: ProfileDict.CancelButton,
-          style: 'cancel',
-        },
+
       ],
     });
   }
@@ -421,17 +434,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel1,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        flex: 1,
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.givenName,
       defaultValue: userData.givenName,
-      style: {
-        ...textStyles.regular16_black100,
-        flex: 1,
-        paddingLeft: 0,
-      },
+      
     },
     {
       name: 'profile_lastName',
@@ -439,17 +447,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       label: ProfileDict.FormLabel2,
       ...cellFormStyles,
       inputContainerStyle: {
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        flex: 1,
-        marginBottom: Platform.OS === 'android' ? getHeight(0) : getHeight(6),
       },
       placeholder: userData.familyName,
       defaultValue: userData.familyName,
-      style: {
-        ...textStyles.regular16_black100,
-        flex: 1,
-        paddingLeft: 0,
-      },
+      
     },
     {
       name: 'profile_email',
@@ -459,9 +462,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
-      },
-      inputStyle: {
-        ...textStyles.regular16_black60,
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       rightAccessory: () => (
         <TDIcon input="chevron-right" inputStyle={styles.icon} />
@@ -475,20 +477,22 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       name: 'profile_gender',
       type: 'dropdown',
       label: ProfileDict.FormLabel4,
-      ...cellFormStyles,
-      ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       data: gendersData,
       placeholder: gendersRef[userData.gender] || '',
+      ...cellFormStyles,
+      ...dropdownStyle,
       inputContainerStyle: {
         paddingHorizontal: 0,
-        paddingRight: getWidth(3),
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
       name: 'profile_dateOfBirth',
       type: 'calendar',
       label: ProfileDict.FormLabel5,
+      maximumDate: new Date(),
       dateFormat: (e) => {
         const formattedDate = format(e, 'yyyy-LL-dd');
         setNewDateOfBirth(formattedDate);
@@ -500,11 +504,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       placeholder:
         userData.dateOfBirth !== undefined && userData.dateOfBirth !== null
           ? format(parseISO(userData.dateOfBirth), 'dd/MM/yyyy')
-          : '',
+          : null,
     },
     {
       name: 'profile_country',
@@ -516,8 +521,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         paddingLeft: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
-      placeholder: userData.country || countriesList[1],
+      placeholder: userData.country || null,
       data: countriesList,
     },
   ];
@@ -536,6 +542,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       rightAccessory: () => <DropDownIcon />,
       data: regionsList,
@@ -586,19 +593,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     </View>
   );
 
-  const loader = () => (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: getHeight(287),
-        zIndex: 9,
-        elevation: 6,
-      }}>
-      <ActivityIndicator color={colors.black60} size="large" />
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -609,7 +603,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         {userCard()}
         {notificationsUI()}
         {form()}
-        {updateLoading && loader()}
         {buttons()}
       </ScrollView>
     </SafeAreaView>

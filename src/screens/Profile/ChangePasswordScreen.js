@@ -29,10 +29,18 @@ export default function ChangePasswordScreen() {
       changePasswordValue2: newPassword,
     } = getValues();
 
+    if (!oldPassword || !passwordRegex.test(oldPassword)) {
+      updateError({
+        name: 'changePasswordValue1',
+        value: AuthDict.IncorrectPassword,
+      });
+      return;
+    }
+    
     if (!newPassword || !passwordRegex.test(newPassword)) {
       updateError({
         name: 'changePasswordValue2',
-        value: AuthDict.ChangePasswordFail,
+        value: AuthDict.InvalidPassword,
       });
       return;
     }
@@ -48,17 +56,16 @@ export default function ChangePasswordScreen() {
       .catch((err) => {
         console.log(err);
         if (
-          err.code === 'InvalidParameterException' ||
           err.code === 'NotAuthorizedException'
         ) {
           updateError({
-            name: 'changePasswordValue2',
-            value: AuthDict.ChangePasswordFail,
+            name: 'changePasswordValue1',
+            value: AuthDict.IncorrectPassword,
           });
         }
-      });
+      }).finally(()=> cleanValues());
 
-    cleanValues();
+    
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **

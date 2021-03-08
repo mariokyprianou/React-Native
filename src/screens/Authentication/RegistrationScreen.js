@@ -77,7 +77,7 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(countries);
+      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
 
       const indianRegions = data.allCountries.filter(
         (country) => country.country === 'India',
@@ -90,7 +90,8 @@ export default function RegisterScreen() {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(indianRegionsList);
+      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
+
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -213,13 +214,15 @@ export default function RegisterScreen() {
       email: email,
       password: password,
       gender: gender ? gender.toLowerCase() : null,
-      dateOfBirth: new Date(dateOfBirth),
-      country: country ? countryID : null,
+      dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
+      country: countryID || null,
       region: selectedCountry === 'India' ? regionLookup[region] : null,
       deviceUDID: deviceUid,
       timeZone: deviceTimeZone,
       programme: programmeId,
     };
+
+    console.log(data);
 
     execute({
       variables: {
@@ -258,17 +261,6 @@ export default function RegisterScreen() {
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  const FormFooter = () => (
-    <View style={styles.formFooter.container}>
-      <DefaultButton
-        type="createAccount"
-        variant="white"
-        icon="chevron"
-        onPress={handleRegister}
-      />
-    </View>
-  );
-
   const linkText = [
     {
       pattern: AuthDict.TermsPattern,
@@ -301,7 +293,7 @@ export default function RegisterScreen() {
       label: AuthDict.FirstNameLabel,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
     },
@@ -311,7 +303,7 @@ export default function RegisterScreen() {
       label: AuthDict.LastNameLabel,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
     },
@@ -325,7 +317,7 @@ export default function RegisterScreen() {
       autoCompleteType: 'email',
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
     },
@@ -339,7 +331,7 @@ export default function RegisterScreen() {
       autoCorrect: false,
       ...cellFormStyles,
       inputContainerStyle: {
-        paddingHorizontal: 0,
+        ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
     },
@@ -354,12 +346,14 @@ export default function RegisterScreen() {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
       name: 'dateOfBirth',
       type: 'calendar',
       label: AuthDict.DobLabel,
+      maximumDate: new Date(),
       placeholder: '',
       dateFormat: (e) => format(e, 'dd/MM/yyyy'),
       rightAccessory: () => <CalendarIcon />,
@@ -368,6 +362,7 @@ export default function RegisterScreen() {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
     {
@@ -381,6 +376,7 @@ export default function RegisterScreen() {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
     },
   ];
@@ -397,6 +393,7 @@ export default function RegisterScreen() {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
       },
       rightAccessory: () => <DropDownIcon />,
       data: regionsList,
@@ -434,7 +431,6 @@ export default function RegisterScreen() {
 
   const config = {
     ...cellFormConfig,
-    formFooter: FormFooter,
   };
 
   return (
@@ -443,10 +439,20 @@ export default function RegisterScreen() {
         contentContainerStyle={styles.scroll}
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={{marginHorizontal: getWidth(25)}}>
-          <Form cells={cells} config={{...cellFormConfig}} />
-          <Form cells={cells2} config={config} />
-        </View>
+        <> 
+          <View style={{marginHorizontal: getWidth(25)}}>
+            <Form cells={cells} config={{...cellFormConfig}} />
+            <Form cells={cells2} config={config} />
+          </View>
+          <View style={styles.formFooter.container}>
+            <DefaultButton
+              type="createAccount"
+              variant="white"
+              icon="chevron"
+              onPress={handleRegister}
+            />
+          </View>
+        </>
       </KeyboardAwareScrollView>
     </View>
   );

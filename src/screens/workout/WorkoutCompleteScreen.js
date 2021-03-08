@@ -190,7 +190,6 @@ export default function WorkoutCompleteScreen() {
     Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
       {
         text: ProfileDict.Cancel,
-        style: 'cancel',
       },
       {
         text: ProfileDict.Ok,

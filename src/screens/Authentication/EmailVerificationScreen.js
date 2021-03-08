@@ -25,7 +25,7 @@ export default function EmailVerificationScreen() {
   const {
     params: {email, password, fromLogin},
   } = useRoute();
-  const {permissionsNeeded} = useUserData();
+  const {permissionsNeeded, updateDefaultPreferences} = useUserData();
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
   useEffect(() => {
@@ -34,6 +34,10 @@ export default function EmailVerificationScreen() {
         .then(async () => {
           clearInterval(interval);
           const permissionNeeded = await permissionsNeeded();
+
+          if (Platform.OS === "android") { 
+            updateDefaultPreferences()
+          }
 
           if (permissionNeeded) {
             navigation.navigate(permissionNeeded);
@@ -64,7 +68,6 @@ export default function EmailVerificationScreen() {
     Alert.alert(AuthDict.YouWillBeLoggedOut, '', [
       {
         text: 'Cancel',
-        style: 'cancel',
       },
       {
         text: 'Ok',
@@ -73,6 +76,10 @@ export default function EmailVerificationScreen() {
             navigation.goBack();
           } else {
             const permissionNeeded = await permissionsNeeded();
+
+            if (Platform.OS === "android") { 
+              updateDefaultPreferences()
+            }
 
             if (permissionNeeded) {
               navigation.navigate(permissionNeeded);

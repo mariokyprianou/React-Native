@@ -10,11 +10,12 @@ import {Platform} from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {useLazyQuery} from '@apollo/client';
+import {useLazyQuery, useMutation} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
+import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import * as R from 'ramda';
 import {format} from 'date-fns';
 import analytics from '@react-native-firebase/analytics';
@@ -144,6 +145,32 @@ export default function UserDataProvider(props) {
       });
   }, []);
 
+  const [updatePreferences] = useMutation(UpdatePreference);
+
+  const updateDefaultPreferences = useCallback(async () => {
+    const newPreferences = {
+      notifications: true,
+      emails: true,
+      errorReports: true,
+      analytics: true,
+      downloadQuality: "LOW",
+      weightPreference: "KG",
+    };
+
+    updatePreferences({
+      variables: {
+        input: {
+          ...newPreferences,
+        },
+      },
+    })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  
+
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({
@@ -152,6 +179,7 @@ export default function UserDataProvider(props) {
       preferences,
       getPreferences,
       setPreferences,
+      updateDefaultPreferences,
       permissionsNeeded,
       timeZones,
       setTimeZones,
@@ -164,6 +192,7 @@ export default function UserDataProvider(props) {
       preferences,
       getPreferences,
       setPreferences,
+      updateDefaultPreferences,
       permissionsNeeded,
       timeZones,
       setTimeZones,

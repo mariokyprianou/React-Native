@@ -23,6 +23,8 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import CanChangeDevice from '../apollo/queries/CanChangeDevice';
 import {getUniqueId} from 'react-native-device-info';
 import {useNavigation} from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
 
 const notificationCount = 2;
 
@@ -116,9 +118,11 @@ export default function TabContainer() {
   };
 
   function getTabBarVisibility(route) {
-    const routeName = route.state
-      ? route.state.routes[route.state.index].name
-      : route.name;
+    const routeName = getFocusedRouteNameFromRoute(route) || route.name;
+
+    // const routeName = route.state
+    //   ? route.state.routes[route.state.index].name
+    //   : route.name;
 
     if (
       routeName === 'Calendar' ||

@@ -27,9 +27,8 @@ const CustomCountdown = ({onPress}) => {
       width: getHeight(25),
     },
     iconContainer: {
-      alignItems: 'center',
       marginBottom: getHeight(6),
-      marginTop: getHeight(17),
+      marginTop: getHeight(-3),
       justifySelf: 'flex-end',
     },
     text: {

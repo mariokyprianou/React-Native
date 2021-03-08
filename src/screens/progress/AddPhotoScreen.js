@@ -65,6 +65,7 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
+    console.log('TAKING PHOTO');
     const URL = await requestUrl().catch((err) =>
       console.log(err, '<---requestUrl err'),
     );

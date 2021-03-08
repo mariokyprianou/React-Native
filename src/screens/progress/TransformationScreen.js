@@ -23,6 +23,7 @@ import ProgressImage from '../../apollo/queries/ProgressImage';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import formatProgressImages from '../../utils/formatProgressImages';
+import {format} from 'date-fns';
 
 const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
@@ -53,13 +54,18 @@ export default function TransformationScreen() {
   const [userImages, setUserImages] = useState();
   const [selectedUrl, setSelectedUrl] = useState();
 
-  // console.log(beforePic, typeof beforePic, '<---before pic');
-
   useQuery(ProgressImages, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const formattedImages = formatProgressImages(res.progressImages);
-      setUserImages(formattedImages);
+      const today = new Date();
+      const formattedToday = format(today, 'dd/LL/yyyy');
+      const emptyListObject = {value: today, label: formattedToday};
+      if (res.progressImages.length === 0) {
+        setUserImages([emptyListObject]);
+      } else {
+        const formattedImages = formatProgressImages(res.progressImages);
+        setUserImages(formattedImages);
+      }
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
@@ -133,6 +139,8 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleSelectDate(dateItem, imageToSelect) {
+    if (!dateItem.id) return;
+
     getImage({
       variables: {
         input: {
@@ -187,12 +195,12 @@ export default function TransformationScreen() {
           maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
           sliderSpacerHeight={styles.spacerHeight}
           sliderIcon={sliderThumb}
-          // DateSelectors={() => (
-          //   <CustomDateSelectors
-          //     onPress={handleSelectDate}
-          //     storedImages={userImages}
-          //   />
-          // )}
+          DateSelectors={() => (
+            <CustomDateSelectors
+              onPress={handleSelectDate}
+              storedImages={userImages}
+            />
+          )}
         />
         <View style={styles.buttonContainer}>
           <DefaultButton

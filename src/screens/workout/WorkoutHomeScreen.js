@@ -23,10 +23,11 @@ import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
 import addRestDays from '../../utils/addRestDays';
 import addWorkoutDates from '../../utils/addWorkoutDates';
-import {differenceInDays, addDays} from 'date-fns';
+import {differenceInDays, addDays, parseISO} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -34,10 +35,13 @@ export default function WorkoutHomeScreen() {
   const {textStyles, colors} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
+
   const [weekNumber, setWeekNumber] = useState(1);
+  const [stayTunedEnabled, setStayTunedEnabled] = useState(true);
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const navigation = useNavigation();
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => null,
@@ -59,41 +63,111 @@ export default function WorkoutHomeScreen() {
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
   useEffect(() => {
+    setLoading(true);
     getProgramme();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Check if week is completed
   useEffect(() => {
-    if (programme) {
-      const hasRemaining = programme.currentWeek.workouts.find(
-        (workout) => !workout.completedAt,
-      );
+    if (currentWeek) {
+      async function checkWeekComplete() {
+        const remaining = currentWeek.filter(
+          (it) => !it.isRestDay && !it.completedAt,
+        ).length;
 
-      if (!hasRemaining) {
-        const {weekNumber} = programme.currentWeek;
-        let duration = 0;
-        let reps = 0;
-        let sets = 0;
-        programme.currentWeek.workouts.map((workout) => {
-          duration += workout.duration || 0;
-          workout.exercises.map((exercise) => {
-            sets += exercise.sets.length;
-            exercise.sets.map((set) => (reps += set.quantity));
-          });
-        });
-
-        const weekCompleteProps = {
-          name: programme.trainer.name,
-          weekNumber: weekNumber,
-          totalDuration: duration,
-          totalReps: reps,
-          totalSets: sets,
-        };
-
-        completeWeek(weekCompleteProps);
+        // Still have workouts for current week
+        if (remaining > 0) {
+          setStayTunedEnabled(false);
+          return;
+        } else weekCompleted();
       }
+
+      checkWeekComplete();
     }
-  }, [programme]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWeek]);
+
+  async function weekCompleted() {
+    const shouldShowModal = await shouldShowWeekCompleteModal();
+
+    if (shouldShowModal) {
+      constructWeekCompleteModal();
+    }
+
+    // Check at least 7 days past week start date
+    const completeWeekLimitDate = addDays(
+      parseISO(programme.currentWeek.startedAt),
+      6,
+    );
+
+    // Passed limit date  note: === 0 means same date as today, we need next day
+    if (differenceInDays(new Date(), completeWeekLimitDate) > 0) {
+      callCompleteWeekMutation();
+    } else {
+      // Week completee not allowed, show stay tuned where needed
+      setStayTunedEnabled(true);
+    }
+  }
+
+  async function callCompleteWeekMutation() {
+    setLoading(true);
+    await completeWeekMutation()
+      .then((res) => {
+        const success = R.path(['data', 'completeWorkoutWeek'], res);
+
+        if (success) {
+          updateConsecutiveWorkouts();
+          updateStoredDays([]);
+          getProgramme();
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }
+
+  async function constructWeekCompleteModal() {
+    const {weekNumber} = programme.currentWeek;
+    let duration = 0;
+    let reps = 0;
+    let sets = 0;
+    programme.currentWeek.workouts.map((workout) => {
+      duration += workout.duration || 0;
+      workout.exercises.map((exercise) => {
+        sets += exercise.sets.length;
+        exercise.sets.map((set) => (reps += set.quantity));
+      });
+    });
+
+    const props = {
+      name: programme.trainer.name,
+      weekNumber: weekNumber,
+      totalDuration: duration,
+      totalReps: reps,
+      totalSets: sets,
+    };
+
+    // Set currentWeek id to prevent showing modal again for the same week
+    setModalShown();
+    navigation.navigate('WeekComplete', {...props});
+  }
+
+  async function shouldShowWeekCompleteModal() {
+    let idOfLastWeekShown =
+      (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '0';
+    return Number(idOfLastWeekShown) !== programme.currentWeek.weekNumber;
+  }
+
+  async function setModalShown() {
+    await AsyncStorage.setItem(
+      '@COMPLETE_WEEK_MODAL_NUMBER',
+      `${programme.currentWeek.weekNumber}`,
+    );
+  }
 
   const getNextWeek = (workouts) => {
     // Sort by index and isCompleted
@@ -106,20 +180,6 @@ export default function WorkoutHomeScreen() {
     return week;
   };
 
-  async function completeWeek(props) {
-    await completeWeekMutation()
-      .then((res) => {
-        const success = R.path(['data', 'completeWorkoutWeek'], res);
-
-        if (success) {
-          updateConsecutiveWorkouts();
-          updateStoredDays([]);
-          navigation.navigate('WeekComplete', {...props});
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-
   useEffect(() => {
     if (programme) {
       if (weekNumber === 1 && currentWeek) {
@@ -129,6 +189,8 @@ export default function WorkoutHomeScreen() {
         const nextWeek = getNextWeek(programme.nextWeek.workouts);
         setWorkoutsToDisplay(nextWeek);
       }
+
+      setLoading(false);
     }
   }, [weekNumber, programme]);
 
@@ -196,36 +258,11 @@ export default function WorkoutHomeScreen() {
       return;
     }
 
-    const firstDayNextWeek = addDays(
-      new Date(programme.currentWeek.workouts[0].completedAt),
-      7,
-    );
-    const programmeLength = programme.trainer.programmes.filter(
-      (prog) => prog.environment === programme.environment,
-    )[0].numberOfWeeks;
-
     if (direction === 'left') {
       setWeekNumber(1);
     }
     if (direction === 'right') {
-      // if (
-      //   programme.currentWeek.workouts.every(
-      //     (workout) => workout.completedAt !== null,
-      //   )
-      // ) {
-      //   navigation.navigate('StayTuned', {
-      //     name: programme?.trainer.name,
-      //     venue: programme?.environment,
-      //     image: programme?.programmeImage,
-      //     date: firstDayNextWeek,
-      //     type:
-      //       programme?.currentWeek.weekNumber === programmeLength
-      //         ? 'programmeComplete'
-      //         : 'workoutsComplete',
-      //   });
-      // } else {
       setWeekNumber(2);
-      // }
     }
   }
 
@@ -253,10 +290,8 @@ export default function WorkoutHomeScreen() {
 
   async function updateOrder(newList) {
     const storedData = updateStoredData(newList);
-    const updatedWeek = structureWeek(
-      programme.currentWeek.workouts,
-      storedData,
-    );
+
+    const updatedWeek = structureWeek(newList, storedData);
 
     setWorkoutsToDisplay(updatedWeek);
 
@@ -264,13 +299,13 @@ export default function WorkoutHomeScreen() {
     let index = 0;
     const data = newList.filter((it) => !it.isRestDay);
     const newOrder = data.map((it) => {
-      index = index;
+      index = index + 1;
       return {
         index: index,
         id: it.id,
       };
     });
-
+    console.log(newOrder);
     await updateOrderMutation({
       variables: {
         input: newOrder,
@@ -281,6 +316,27 @@ export default function WorkoutHomeScreen() {
         console.log('UpdateOrderRes', success);
       })
       .catch((err) => console.log(err));
+  }
+
+  async function showStayTunedModal() {
+    const firstDayNextWeek = addDays(
+      parseISO(programme.currentWeek.startedAt),
+      7,
+    );
+    const programmeLength = programme.trainer.programmes.filter(
+      (prog) => prog.environment === programme.environment,
+    )[0].numberOfWeeks;
+
+    navigation.navigate('StayTuned', {
+      name: programme?.trainer.name,
+      venue: programme?.environment,
+      image: programme?.programmeImage,
+      date: firstDayNextWeek,
+      type:
+        programme?.currentWeek.weekNumber === programmeLength
+          ? 'programmeComplete'
+          : 'workoutsComplete',
+    });
   }
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -353,7 +409,13 @@ export default function WorkoutHomeScreen() {
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
-          <Text style={styles.numberText}>{`${weekNumber}`}</Text>
+          <Text style={styles.numberText}>{`${
+            programme
+              ? weekNumber === 1
+                ? programme.currentWeek.weekNumber
+                : programme.currentWeek.weekNumber + 1
+              : 1
+          }`}</Text>
         </View>
         <View style={styles.touchContainer}>
           <TouchableOpacity
@@ -406,6 +468,9 @@ export default function WorkoutHomeScreen() {
                 }
                 onPressCard={async (workout) => {
                   if (weekNumber !== 1) {
+                    if (stayTunedEnabled) {
+                      showStayTunedModal();
+                    }
                     return;
                   }
 
@@ -414,7 +479,7 @@ export default function WorkoutHomeScreen() {
                   );
                   if (wasWorkoutToday === true) {
                     DisplayAlert({
-                      title: WorkoutDict.WorkoutCompetedWarningText,
+                      text: WorkoutDict.WorkoutCompetedWarningText,
                     });
                     return;
                   }

@@ -19,6 +19,8 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import Header from '../../components/Headers/Header';
 import isIPhoneX from '../../utils/isIphoneX';
 import UseData from '../../hooks/data/UseData';
+import {useBackHandler} from '@react-native-community/hooks';
+
 
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
@@ -47,26 +49,13 @@ export default function HelpMeChooseResultsScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    card: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: colors.backgroundWhite100,
-    },
-    imageContainer: {
-      width: '90%',
-      height: getHeight(70),
-      alignSelf: 'center',
-    },
-    fadeContainer: {
-      width: '100%',
-      height: getHeight(420),
-      top: 0,
-    },
+    containerStyle: {flex: 8, backgroundColor: colors.backgroundWhite100},
+    topContainerStyle: {flex: 1, width: '90%', alignSelf: 'center'},
+    middleContainerStyle: {flex: 6},
+    bottomContainerStyle: {flex: 1, alignSelf: 'center',justifyContent: 'center', marginBottom: isIPhoneX() ? getHeight(8) : 0},
     image: {
       width: '100%',
-      height: getHeight(420),
       resizeMode: 'cover',
-      backgroundColor: 'red',
     },
     titleContainer: {
       position: 'absolute',
@@ -88,13 +77,6 @@ export default function HelpMeChooseResultsScreen() {
       flex: 1,
       borderRadius: radius(2),
     },
-    buttonContainer: {
-      width: '100%',
-      flex: 1,
-      alignSelf: 'center',
-      justifyContent: 'center',
-      marginBottom: isIPhoneX() ? getHeight(8) : 0,
-    },
     name: {
       ...textStyles.bold18_white100,
       letterSpacing: 0.9,
@@ -107,11 +89,17 @@ export default function HelpMeChooseResultsScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-
+  useBackHandler(() => {
+    if (!navigation.isFocused()) {
+      return false;
+    }
+    navigation.pop(2);
+    return true;
+  });
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.card}>
-      <View style={styles.imageContainer}>
+    <View style={styles.containerStyle}>
+    <View style={styles.topContainerStyle}>
         <Text style={styles.title}>{HelpMeChooseDict.Result}</Text>
 
         <View style={styles.barContainer}>
@@ -122,26 +110,24 @@ export default function HelpMeChooseResultsScreen() {
             colors={[colors.tealish100, colors.tiffanyBlue100]}
           />
         </View>
-        <Text style={styles.name}>{capitalizedName}</Text>
-        <Text style={styles.result}>
-          {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
-        </Text>
-      </View>
-
+      
+    </View>
+    <View style={styles.middleContainerStyle}>
       <ImageBackground
-        source={programmeImage ? {uri: programmeImage} : fakeImage}
-        style={styles.image}>
-        <FadingBottomView color="black" height={420} />
+          source={programmeImage ? {uri: programmeImage} : fakeImage}
+          style={styles.image}>
+          <FadingBottomView color="black"/>
 
-        <View style={styles.titleContainer}>
-          <Text style={styles.name}>{capitalizedName}</Text>
-          <Text style={styles.result}>
-            {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
-          </Text>
-        </View>
-      </ImageBackground>
+          <View style={styles.titleContainer}>
+            <Text style={styles.name}>{capitalizedName}</Text>
+            <Text style={styles.result}>
+              {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
+            </Text>
+          </View>
+        </ImageBackground>
+    </View>
 
-      <View style={styles.buttonContainer}>
+    <View style={styles.bottomContainerStyle}>
         <DefaultButton
           type="programme"
           trainerName={capitalizedName}
@@ -149,7 +135,8 @@ export default function HelpMeChooseResultsScreen() {
           variant="transparentBlackBoldText"
           onPress={() => navigation.navigate('MeetYourIcons')}
         />
-      </View>
+    </View>
+
     </View>
   );
 }

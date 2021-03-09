@@ -17,6 +17,8 @@ import {
   StatusBar,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -37,10 +39,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
-import {useMutation} from '@apollo/client';
-import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
-import StartProgramme from '../../apollo/mutations/StartProgramme';
-import RestartProgramme from '../../apollo/mutations/RestartProgramme';
+import useLoading from '../../hooks/loading/useLoading';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -60,29 +59,27 @@ export default function MeetYourIconsScreen() {
   const {
     params: {switchProgramme},
   } = useRoute();
-  const {trainers, suggestedProgramme} = useCommonData();
-  const {
-    setProgrammeModalImage,
-    programme,
-    getProgramme,
-    updateStoredDays,
-  } = UseData();
+  const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
+  const {setProgrammeModalImage, programme} = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {isConnected, isInternetReachable} = useNetInfo();
-  const [restartProgramme] = useMutation(RestartProgramme);
-  const [continueProgramme] = useMutation(ContinueProgramme);
-  const [startProgramme] = useMutation(StartProgramme);
+  // const [restartProgramme] = useMutation(RestartProgramme);
+  // const [continueProgramme] = useMutation(ContinueProgramme);
+  // const [startProgramme] = useMutation(StartProgramme);
 
+  //const switchProgramme = true;
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
   const [safeArea, setSafeArea] = useState(false);
+  const {setLoading} = useLoading();
+
+  // for changeProgramme
   const [currentTrainerId, setCurrentTrainerId] = useState();
   const [currentWeekNumber, setCurrentWeekNumber] = useState();
   const [currentProgrammeId, setCurrentProgrammeId] = useState();
 
-  console.log(currentProgrammeId, '<--current programme id.');
-
+  // for changeProgramme
   useEffect(() => {
     if (programme) {
       setCurrentTrainerId(programme.trainer.id);
@@ -90,6 +87,7 @@ export default function MeetYourIconsScreen() {
     }
   }, [programme]);
 
+  // for changeProgramme
   useEffect(() => {
     if (trainers && currentTrainerId) {
       const findCurrentTrainer = trainers.filter(
@@ -103,18 +101,35 @@ export default function MeetYourIconsScreen() {
   }, [currentTrainerId, trainers]);
 
   useEffect(() => {
-    setSelectedTrainer(trainers[activeIndex]);
-    setSelectedProgram(trainers[activeIndex].programmes[0]);
-    // const programmeToDisplay = trainers[activeIndex].programmes.find(
-    //   (it) => it.id === currentProgrammeId,
-    // );
-    // const index = trainers[activeIndex].programmes.indexOf(programmeToDisplay);
-
-    // setSelectedProgram(trainers[activeIndex].programmes[index]);
-  }, [trainers, activeIndex, currentProgrammeId]);
+    setLoading(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if (!suggestedProgramme) {
+    if (activeIndex < 0) {
+      setActiveIndex(0);
+      return;
+    }
+
+    if (!trainers || trainers.length === 0) {
+      return;
+    }
+    setLoading(false);
+
+    const trainer = trainers[activeIndex];
+    let programme = trainer.programmes[0];
+
+    if (suggestedProgramme) {
+      programme = trainer.programmes.find(
+        (it) => it.environment === suggestedProgramme.environment,
+      );
+    }
+    setSelectedTrainer(trainer);
+    setSelectedProgram(programme);
+  }, [trainers, activeIndex, suggestedProgramme, setLoading]);
+
+  useEffect(() => {
+    if (!suggestedProgramme || !trainers || trainers.length === 0) {
       return;
     }
 
@@ -128,7 +143,15 @@ export default function MeetYourIconsScreen() {
         (it) => it.environment === suggestedProgramme.environment,
       )
     ) {
-      setActiveIndex(trainers.indexOf(trainer));
+      let index = trainers.indexOf(trainer);
+      if (index < 0) {
+        index = 0;
+      } else if (index >= trainers.length) {
+        index = trainers.length - 1;
+      }
+
+      setActiveIndex(index);
+      iconsSwiper.current.scrollTo(index, true);
     }
   }, [trainers, suggestedProgramme]);
 
@@ -184,8 +207,6 @@ export default function MeetYourIconsScreen() {
     },
     leftIconContainer: {
       width: getWidth(50),
-      alignItems: 'center',
-      height: getHeight(50),
       position: 'absolute',
       left: 0,
       top: getHeight(225),
@@ -193,12 +214,16 @@ export default function MeetYourIconsScreen() {
     },
     rightIconContainer: {
       width: getWidth(50),
-      alignItems: 'center',
-      height: getHeight(50),
       position: 'absolute',
       right: 0,
       top: getHeight(225),
       zIndex: 9,
+    },
+    arrowsTouchableStyle: {
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      padding: getWidth(18),
     },
     icon: {
       size: fontSize(18),
@@ -297,59 +322,57 @@ export default function MeetYourIconsScreen() {
   }
 
   async function handleRestartProgramme(id) {
-    restartProgramme({
-      variables: {
-        input: {
-          programme: id,
-        },
-      },
-    })
-      .then(() => {
-        getProgramme();
-        updateStoredDays([]);
-
-        submitAnalyticsEvent(false);
-        navigation.navigate('TabContainer');
-        setCurrentWeekNumber(1);
-      })
-      .catch((err) => console.log(err, '<---restart programme error'));
+    // restartProgramme({
+    //   variables: {
+    //     input: {
+    //       programme: id,
+    //     },
+    //   },
+    // })
+    //   .then(() => {
+    //     // getProgramme();
+    //     // updateStoredDays([]);
+    //     submitAnalyticsEvent(false);
+    //     navigation.navigate('TabContainer');
+    //     setCurrentWeekNumber(1);
+    //   })
+    //   .catch((err) => console.log(err, '<---restart programme error'));
   }
 
   async function handleContinueProgramme(id) {
-    continueProgramme({
-      variables: {
-        input: {
-          programme: id,
-        },
-      },
-    })
-      .then(() => {
-        submitAnalyticsEvent(false);
-        navigation.navigate('TabContainer');
-      })
-      .catch((err) => console.log(err, '<---continue programme error'));
+    // continueProgramme({
+    //   variables: {
+    //     input: {
+    //       programme: id,
+    //     },
+    //   },
+    // })
+    //   .then(() => {
+    //     submitAnalyticsEvent(false);
+    //     navigation.navigate('TabContainer');
+    //   })
+    //   .catch((err) => console.log(err, '<---continue programme error'));
   }
 
   async function handleStartNewProgramme(id) {
-    startProgramme({
-      variables: {
-        input: {
-          programme: id,
-        },
-      },
-    })
-      .then(() => {
-        getProgramme();
-        updateStoredDays([]);
-
-        submitAnalyticsEvent(true);
-        setProgrammeModalImage(selectedProgram.programmeImage);
-        navigation.navigate('TabContainer');
-        // setCurrentTrainerId();
-        // setCurrentWeekNumber();
-        // setCurrentProgrammeId();
-      })
-      .catch((err) => console.log(err, '<---start new programme error'));
+    // startProgramme({
+    //   variables: {
+    //     input: {
+    //       programme: id,
+    //     },
+    //   },
+    // })
+    //   .then(() => {
+    //     // getProgramme();
+    //     // updateStoredDays([]);
+    //     submitAnalyticsEvent(true);
+    //     setProgrammeModalImage(selectedProgram.programmeImage);
+    //     navigation.navigate('TabContainer');
+    //     // setCurrentTrainerId();
+    //     // setCurrentWeekNumber();
+    //     // setCurrentProgrammeId();
+    //   })
+    //   .catch((err) => console.log(err, '<---start new programme error'));
   }
 
   function submitAnalyticsEvent(newTrainer = false) {
@@ -369,15 +392,6 @@ export default function MeetYourIconsScreen() {
       },
     );
   }
-
-  const onScroll = (e) => {
-    const offset = e.nativeEvent.contentOffset.y;
-    if (offset > 0 && !safeArea) {
-      setSafeArea(true);
-    } else if (offset <= 0 && safeArea) {
-      setSafeArea(false);
-    }
-  };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (!isConnected && !isInternetReachable) {
@@ -410,19 +424,53 @@ export default function MeetYourIconsScreen() {
     );
   }
 
+  const onScroll = (e) => {
+    const offset = e.nativeEvent.contentOffset.y;
+    if (offset > 0 && !safeArea) {
+      setSafeArea(true);
+    } else if (offset <= 0 && safeArea) {
+      setSafeArea(false);
+    }
+  };
+
+  function submitAnalyticsEvent(newTrainer = false) {
+    if (programme && programme.trainer) {
+      firebaseLogEvent(analyticsEvents.leftTrainer, {
+        trainerId: programme.trainer.id,
+        programmeId: programme.id,
+      });
+    }
+    firebaseLogEvent(
+      newTrainer
+        ? analyticsEvents.selectedTrainer
+        : analyticsEvents.restartContinueTrainer,
+      {
+        trainerId: selectedTrainer.id,
+        programmeId: selectedProgram.id,
+      },
+    );
+  }
+  // ** ** ** ** ** RENDER ** ** ** ** **
+
   return (
     <View style={styles.container}>
       {safeArea && <View style={styles.safeArea} />}
+
       <Swiper
         ref={iconsSwiper}
         loop={false}
-        index={activeIndex}
-        onIndexChanged={(index) => setActiveIndex(index)}
-        showsPagination={false}>
+        showsPagination={false}
+        onIndexChanged={(index) => {
+          // reset suggested programme to prevent conflict between suggested && selected programme
+          setSuggestedProgramme(null);
+          setActiveIndex(index);
+        }}>
         {trainers.map((trainer) => {
-          const currentProgram =
-            trainer.programmes.find((it) => it.id === selectedProgram.id) ||
+          let currentProgram =
+            (selectedProgram &&
+              trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
+
           const {numberOfWeeks, description, firstWeek} = currentProgram;
           const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
 
@@ -431,50 +479,19 @@ export default function MeetYourIconsScreen() {
               style={styles.sliderContainer}
               onScroll={onScroll}
               scrollEventThrottle={10}
+              showsVerticalScrollIndicator={false}
               bounces={false}>
-              <View style={styles.headerContainer}>
-                <View>
-                  <Image source={logo} style={styles.image} />
-                  <Text style={styles.selectText}>
-                    {MeetYourIconsDict.SelectYourProgramme}
-                  </Text>
-                </View>
-                <View style={styles.cantChooseContainer}>
-                  <CantChooseButton
-                    onPress={() => navigation.navigate('HelpMeChoose')}
-                    navigation={navigation}
-                  />
-                </View>
-              </View>
-              <View style={styles.leftIconContainer}>
-                <TouchableOpacity
-                  onPress={() => handlePress('left')}
-                  disabled={activeIndex === 0 ? true : false}>
-                  <TDIcon
-                    input={isRTL() ? 'chevron-right' : 'chevron-left'}
-                    inputStyle={styles.icon}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.rightIconContainer}>
-                <TouchableOpacity
-                  onPress={() => handlePress('right')}
-                  disabled={activeIndex === trainers.length - 1 ? true : false}>
-                  <TDIcon
-                    input={isRTL() ? 'chevron-left' : 'chevron-right'}
-                    inputStyle={styles.icon}
-                  />
-                </TouchableOpacity>
-              </View>
               <View style={styles.cardContainer}>
                 <TrainerCard
                   trainer={trainer}
                   onPressGymHome={switchProgram}
                   currentProgram={currentProgram}
-                  suggestedEnv={suggestedProgramme?.environment || null}
+                  suggestedEnv={currentProgram?.environment || null}
                 />
               </View>
+
               <Spacer height={90} />
+
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{description}</Text>
                 <Text
@@ -500,10 +517,53 @@ export default function MeetYourIconsScreen() {
                 })}
               </View>
               <Spacer height={180} />
+
+              <View style={styles.headerContainer}>
+                <View>
+                  <Image source={logo} style={styles.image} />
+                  <Text style={styles.selectText}>
+                    {MeetYourIconsDict.SelectYourProgramme}
+                  </Text>
+                </View>
+              </View>
             </ScrollView>
           );
         })}
       </Swiper>
+
+      <View style={styles.headerContainer}>
+        <View style={styles.cantChooseContainer}>
+          <CantChooseButton
+            onPress={() => navigation.navigate('HelpMeChoose')}
+            navigation={navigation}
+          />
+        </View>
+      </View>
+
+      <View style={styles.leftIconContainer}>
+        <TouchableOpacity
+          style={styles.arrowsTouchableStyle}
+          onPress={() => handlePress('left')}
+          disabled={activeIndex === 0 ? true : false}>
+          <TDIcon
+            input={isRTL() ? 'chevron-right' : 'chevron-left'}
+            inputStyle={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.rightIconContainer}>
+        <TouchableOpacity
+          style={styles.arrowsTouchableStyle}
+          onPress={() => handlePress('right')}
+          disabled={activeIndex === trainers.length - 1 ? true : false}>
+          <TDIcon
+            input={isRTL() ? 'chevron-left' : 'chevron-right'}
+            inputStyle={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
       </View>

@@ -78,27 +78,27 @@ const App = () => {
   };
 
   useEffect(() => {
-    StatusBar.setBarStyle('dark-content');
-    let screenshotListener;
+    // StatusBar.setBarStyle('dark-content');
+    // let screenshotListener;
 
-    if (Platform.OS === 'ios') {
-      screenshotListener = ScreenCapture.addScreenshotListener(() => {
-        Alert.alert(
-          'Oops!',
-          'You cannot screen record or take screenshots whilst using the Power application. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
-          [{text: 'OK'}],
-          {cancelable: false},
-        );
-      });
-    }
+    // if (Platform.OS === 'ios') {
+    //   screenshotListener = ScreenCapture.addScreenshotListener(() => {
+    //     Alert.alert(
+    //       'Oops!',
+    //       'You cannot screen record or take screenshots whilst using the Power application. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+    //       [{text: 'OK'}],
+    //       {cancelable: false},
+    //     );
+    //   });
+    // }
     validateChecksum();
     languageSet();
     // Intercom.registerUnidentifiedUser();
 
     return () => {
-      if (Platform.OS === 'ios') {
-        screenshotListener.remove();
-      }
+      // if (Platform.OS === 'ios') {
+      //   screenshotListener.remove();
+      // }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -119,11 +119,11 @@ const App = () => {
       <ApolloProvider client={client}>
         <ScaleProvider config={{height: 667, width: 375}}>
           <ThemeProvider>
+          <DictionaryProvider>
             <DataProvider>
               <UserDataProvider>
                 <CommonDataProvider>
                   <LoadingProvider>
-                    <DictionaryProvider>
                       <NavigationContainer>
                         <TDCountdown>
                           <FormProvider>
@@ -131,11 +131,12 @@ const App = () => {
                           </FormProvider>
                         </TDCountdown>
                       </NavigationContainer>
-                    </DictionaryProvider>
+                    
                   </LoadingProvider>
                 </CommonDataProvider>
               </UserDataProvider>
             </DataProvider>
+            </DictionaryProvider>
           </ThemeProvider>
         </ScaleProvider>
       </ApolloProvider>

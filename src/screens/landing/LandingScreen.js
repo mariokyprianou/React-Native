@@ -24,8 +24,11 @@ export default function LandingScreen(props) {
             index: 0,
             routes: [{name: 'AuthContainer'}],
           });
-        })
-        .finally(() => SplashScreen.hide());
+        }).finally(() => {
+          setTimeout(()=> {
+            SplashScreen.hide();
+          }, 500);
+        });
     }
     if (reset) {
       checkAuth();

@@ -75,10 +75,8 @@ export default function WorkoutScreen() {
 
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setEnableScroll(false);
-    } else {
-      if (currentExerciseIndex > 0) {
+    } else if (newOffset < offset && currentExerciseIndex > 0) {
         setCurrentExerciseIndex(currentExerciseIndex - 1);
-      }
     }
 
     setOffset(newOffset);

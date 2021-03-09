@@ -26,7 +26,7 @@ export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
-  const {cleanValues, getValues} = FormHook();
+  const {cleanValues, getValues, cleanValueByName} = FormHook();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const [addNote] = useMutation(UpdateExerciseNote);
@@ -36,10 +36,11 @@ export default function NotesScreen() {
   const {
     params: {id, description},
   } = useRoute();
-  const {selectedWorkout, currentExerciseIndex} = useData();
+  const {selectedWorkout, currentExerciseIndex, setSelectedWorkout} = useData();
   const [savedNotes, setSavedNotes] = useState('');
 
   useEffect(() => {
+    console.log("set note", currentExerciseIndex);
     setSavedNotes(selectedWorkout.exercises[currentExerciseIndex].notes);
   }, [selectedWorkout, currentExerciseIndex]);
 
@@ -97,6 +98,22 @@ export default function NotesScreen() {
       },
     })
       .then((res) => {
+        console.log(res);
+        let workout = {...selectedWorkout};
+        let exercise = {
+          ...workout.exercises[currentExerciseIndex],
+          notes: newNote
+        };
+
+        workout.exercises[currentExerciseIndex] = {
+          ...workout.exercises[currentExerciseIndex],
+          notes: newNote
+        };;
+
+        console.log(workout.exercises[currentExerciseIndex]);
+        setSelectedWorkout(workout);
+
+        cleanValueByName('notes');
         navigation.goBack();
       })
       .catch((err) => console.log(err, '<---error on adding note'));

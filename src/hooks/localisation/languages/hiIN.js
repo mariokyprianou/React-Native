@@ -1,3 +1,35 @@
+const SharedDict = {
+  Cancel: 'Cancel',
+  Gym: 'Gym',
+  Home: 'Home',
+  Locale: 'en',
+  GoBack: 'Go back',
+  Login: 'Login',
+  Progress: 'Progress',
+  Share: 'Share',
+  Logout: 'Logout',
+  FirstName: 'FIRST NAME',
+  LastName: 'LAST NAME',
+  Email: 'EMAIL',
+  Password: 'PASSWORD',
+  Gender: 'GENDER',
+  Dob: 'DATE OF BIRTH',
+  Country: 'COUNTRY',
+  Region: 'REGION',
+  Delete: 'Delete',
+  Notifications: 'Notifications',
+  Sets: 'sets',
+  Reps: 'reps',
+  OldPassword: "OLD PASSWORD",
+  NewPassword: "NEW PASSWORD",
+  Analytics: 'Analytics',
+  ChangeEmail: 'Change Email',
+  ChangePassword: 'Change password',
+  VerifyEmail: 'Verify email'
+
+}
+
+
 const hiIN = {
   AppTitle: 'Power',
 
@@ -7,26 +39,26 @@ const hiIN = {
     AddWeight: 'ADD WEIGHT',
     AllowAnalytics: 'ALLOW ANALYTICS',
     AllowNotifications: 'ALLOW NOTIFICATIONS',
-    Cancel: 'CANCEL',
+    Cancel: SharedDict.Cancel.toUpperCase(),
     CantChoose: "CAN'T CHOOSE?",
     Challenge: 'CHALLENGE',
     ChangeDevice: 'CHANGE DEVICE',
-    ChangeEmail: 'CHANGE EMAIL',
-    ChangePassword: 'CHANGE PASSWORD',
+    ChangeEmail: SharedDict.ChangeEmail.toUpperCase(),
+    ChangePassword: SharedDict.ChangePassword.toUpperCase(),
     Continue: 'CONTINUE',
     ContinueFromWeek: 'CONTINUE FROM WEEK',
     CreateAccount: 'CREATE ACCOUNT',
     Done: 'DONE',
     GetStarted: 'GET STARTED',
-    GoBack: 'GO BACK',
-    GoBackLower: 'Go back',
-    Gym: 'GYM',
-    Home: 'HOME',
+    GoBack: SharedDict.GoBack.toUpperCase(), 
+    GoBackLower: SharedDict.GoBack,
+    Gym: SharedDict.Gym.toUpperCase(),
+    Home: SharedDict.Home.toUpperCase(),
     JumpIn: 'JUMP IN',
-    Login: 'LOGIN',
+    Login: SharedDict.Login.toUpperCase(),
     Pluralise: "'S",
     Programme: 'PROGRAMME',
-    Progress: 'PROGRESS',
+    Progress: SharedDict.Progress.toUpperCase(),
     QuestionMark: '?',
     RemindMe: 'REMIND ME',
     Resend: 'RESEND',
@@ -34,7 +66,7 @@ const hiIN = {
     RestartProgramme: 'RESTART PROGRAMME',
     SendResetRequest: 'SEND RESET REQUEST',
     SetLanguage: 'SET LANGUAGE',
-    Share: 'SHARE',
+    Share: SharedDict.Share.toUpperCase(),
     Start: 'START',
     StartNow: 'START NOW',
     StartWorkout: 'START WORKOUT',
@@ -44,26 +76,26 @@ const hiIN = {
     NeedHelp: 'Need help?',
     SaveChanges: 'Save changes',
     NeedToSignOut: 'Need to sign out?',
-    Logout: 'Logout',
+    Logout: SharedDict.Logout,
   },
 
   AuthDict: {
     FormTitle: 'Create your account to start your free trial',
-    FirstNameLabel: 'FIRST NAME',
-    LastNameLabel: 'LAST NAME',
-    EmailLabel: 'EMAIL',
-    PasswordLabel: 'PASSWORD',
-    GenderLabel: 'GENDER',
-    DobLabel: 'DATE OF BIRTH',
-    CountryLabel: 'COUNTRY',
-    RegionLabel: 'REGION',
+    FirstNameLabel: SharedDict.FirstName,
+    LastNameLabel: SharedDict.LastName,
+    EmailLabel: SharedDict.Email,
+    PasswordLabel: SharedDict.Password,
+    GenderLabel: SharedDict.Gender,
+    DobLabel: SharedDict.Dob,
+    CountryLabel: SharedDict.Country,
+    RegionLabel: SharedDict.Region,
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
     InvalidGivenName: 'Please enter your first name',
     InvalidFamilyName: 'Please enter your last name',
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
-      'Password must include at least 1 lowercase, 1 uppercase and 1 numeric character and be eight characters or longer.',
+      'Password must include at least 1 lowercase, 1 uppercase, 1 numeric and 1 special character, and be eight characters or longer.',
     InvalidNotNewPassword:
       'Oops! Your password must consist of at least 8 alphanumeric, mixed-case characters. Please try again with a new password.',
     InvalidTsAndCs: 'Please accept the terms and conditions.',
@@ -71,9 +103,11 @@ const hiIN = {
       'Oops! Ensure you have entered your current password, along with your new password, in order to make the change.',
     IncorrectEmailOrPassword:
       'Oops! Your email or password is incorrect. Please try again.',
+    IncorrectPassword:
+      'Oops! Your current password is incorrect. Please try again.',
     ForgotPasswordButtonText: 'Forgot password?',
     ForgotPasswordCodeLabel: 'PASSWORD RESET CODE',
-    ForgotPasswordLabel: 'NEW PASSWORD',
+    ForgotPasswordLabel: SharedDict.NewPassword,
     InvalidResetCode: 'Invalid code',
     ResetPasswordDescriptionText:
       'We’ve just emailed you a code to reset your password. Enter the code here, along with a new password to change it.',
@@ -89,17 +123,17 @@ const hiIN = {
     PrivacyPolicyScreenTitle: 'Privacy policy',
     NotYetLoggedIn:
       'You are not yet logged in - please verify your email address',
-    NotificationsPermissionsScreenTitle: 'Notifications',
+    NotificationsPermissionsScreenTitle: SharedDict.Notifications,
     NotificationsPermissionsText:
       'To send you workout updates, we need permission to send push notifications to your device.',
 
-    AnalyticsPermissionsScreenTitle: 'Analytics',
+    AnalyticsPermissionsScreenTitle: SharedDict.Analytics,
     AnalyticsPermissionsText:
       'To create the best workout programmes possible and keep improving the POWER experience, we need your permission to collect analytics from the app.',
 
-    LoginScreenTitle: 'Login',
+    LoginScreenTitle: SharedDict.Login,
 
-    VerifyEmailTitle: 'Verify email',
+    VerifyEmailTitle: SharedDict.VerifyEmail,
     VerificationLinkSent: 'Verification link sent',
     VerifyEmail:
       'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
@@ -158,46 +192,47 @@ const hiIN = {
   },
 
   ProfileDict: {
-    ChangeEmailScreenTitle: 'Change email',
-    ChangeEmailLabel1: 'OLD PASSWORD',
+    ChangeEmailScreenTitle: SharedDict.ChangeEmail,
+    ChangeEmailLabel1: SharedDict.OldPassword,
     ChangeEmailLabel2: 'NEW EMAIL',
-    ChangePasswordScreenTitle: 'Change password',
-    ChangePasswordLabel1: 'OLD PASSWORD',
-    ChangePasswordLabel2: 'NEW PASSWORD',
+    ChangePasswordScreenTitle: SharedDict.ChangePassword,
+    ChangePasswordLabel1: SharedDict.OldPassword,
+    ChangePasswordLabel2: SharedDict.NewPassword,
     IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
-    VerifyEmailScreenTitle: 'Verify email',
+    VerifyEmailScreenTitle: SharedDict.VerifyEmail,
     InvalidChangeEmailCode:
       'Oops! This code is not recognised; please enter the correct code to change your email address.',
     CodeLabel: 'CODE',
 
-    DeleteNotificationButtonTitle: 'Delete',
+    DeleteNotificationButtonTitle: SharedDict.Delete,
     MemberSince: 'Member since',
     WorkoutsComplete: 'Workouts complete',
     NeedToSignOut: 'Need to sign out?',
-    NotificationsTitle: 'Notifications',
+    NotificationsTitle: SharedDict.Notifications,
     PersonalDetails: 'Personal details',
-    FormLabel1: 'FIRST NAME',
-    FormLabel2: 'LAST NAME',
-    FormLabel3: 'EMAIL',
-    FormLabel4: 'GENDER',
-    FormLabel5: 'DATE OF BIRTH',
-    FormLabel6: 'COUNTRY',
-    FormLabel7: 'REGION',
+    FormLabel1: SharedDict.FirstName,
+    FormLabel2: SharedDict.LastName,
+    FormLabel3: SharedDict.Email,
+    FormLabel4: SharedDict.Gender,
+    FormLabel5: SharedDict.Dob,
+    FormLabel6: SharedDict.Country,
+    FormLabel7: SharedDict.Region,
 
-    NotificationDelete: 'Delete',
+    NotificationDelete: SharedDict.Delete,
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',
-    LogoutModalButton: 'Logout',
+    LogoutModalButton: SharedDict.Logout,
     YouWillBeLoggedOut:
       'If you continue you will be logged out - please verify your email address',
     Ok: 'Ok',
-    Cancel: 'Cancel',
+    CancelButton: SharedDict.Cancel,
+    Cancel:  SharedDict.Cancel,
   },
 
   ShareDict: {
     ShareProgress: 'Share your progress now!',
-    Cancel: 'Cancel',
-    Message: 'Share',
+    Cancel:  SharedDict.Cancel,
+    Message: SharedDict.Share,
   },
 
   SettingsDict: {
@@ -206,7 +241,7 @@ const hiIN = {
     MarketingPreferences: 'Marketing preferences',
     AppSettings: 'App settings',
     MarketingPrefEmail: 'Email',
-    MarketingPrefNotifications: 'Notifications',
+    MarketingPrefNotifications: SharedDict.Notifications,
     DownloadWorkouts: 'Download workouts',
     DownloadWorkoutsText:
       'Download this week’s workouts so you can train even without an internet connection.',
@@ -220,7 +255,7 @@ const hiIN = {
     ErrorReports: 'Error reports',
     ErrorReportsText:
       'We collect anonymous error reports to fix any issues quickly.',
-    Analytics: 'Analytics',
+    Analytics: SharedDict.Analytics,
     AnalyticsText:
       'Analytics help us improve our training programmes, develop new features and create updates so that the POWER app is the best experience possible for you.',
     Language: 'LANGUAGE',
@@ -232,7 +267,7 @@ const hiIN = {
   ProgressDict: {
     YourWorkouts: 'Your workouts',
     Your: 'Your',
-    Progress: 'progress',
+    Progress: SharedDict.Progress.toLowerCase(),
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
     ChallengeTime: 'TIME',
@@ -241,7 +276,7 @@ const hiIN = {
   TabsTitleDict: {
     Profile: 'Profile',
     Workouts: 'Workouts',
-    Progress: 'Progress',
+    Progress: SharedDict.Progress,
   },
 
   WorkoutDict: {
@@ -250,13 +285,12 @@ const hiIN = {
     exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
-    SetsText: 'sets',
+    SetsText: SharedDict.Sets,
     EasierSwitchText: 'EASIER',
     HarderSwitchText: 'HARDER',
 
     WeightsSetText: 'Set',
-    WeightsRepsText: 'reps',
-    WeightsUnitText: 'kg',
+    WeightsRepsText: SharedDict.Reps,
 
     RestDay: 'REST DAY',
     Day: 'Day',
@@ -269,8 +303,8 @@ const hiIN = {
     High: 'High',
     Intensity: 'Intensity',
     Mins: 'mins',
-    Reps: 'reps',
-    Sets: 'sets',
+    Reps: SharedDict.Reps,
+    Sets: SharedDict.Sets,
 
     GreatJob: 'Great job! Have a rest',
     GreatJobNoRest: 'Great job!',
@@ -324,6 +358,10 @@ const hiIN = {
     Result: 'RESULT',
     SuggestedProgramme: (name) =>
       `Based on your answers, we think ${name} would be the best trainer for you.`,
+    EnvironmentQuestion: 'Would you rather train at home or in the gym?',
+    Home: SharedDict.Home,
+    Gym: SharedDict.Gym,
+    Locale: SharedDict.Locale,
   },
 };
 

@@ -23,7 +23,7 @@ export default function ProfileUserCard({
 }) {
   // MARK: - Hooks
   const {colors, textStyles} = useTheme();
-  const {getHeight} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {dictionary} = useDictionary();
 
   const {ProfileDict} = dictionary;
@@ -58,6 +58,15 @@ export default function ProfileUserCard({
       color: colors.brownishGrey100,
       textAlign: 'left',
     },
+    settingsButtonStyle: {
+      position: 'absolute', 
+      top: getHeight(10), 
+      right: getWidth(10), 
+      width: getWidth(40), 
+      height: getWidth(40), 
+      alignItems: 'center', 
+      justifyContent: 'center'
+    }
   };
 
   // MARK: - Render
@@ -69,11 +78,7 @@ export default function ProfileUserCard({
           <Text style={styles.title}>{firstName}</Text>
           <Text style={styles.titleBlue}>{lastName}</Text>
         </View>
-        <TouchableOpacity
-          style={styles.topRightIconContainer}
-          onPress={onPressRightIcon}>
-          <TDIcon input={corkIcon} />
-        </TouchableOpacity>
+       
       </View>
       <Spacer height={20} />
       <View style={styles.rowContainer}>
@@ -90,6 +95,12 @@ export default function ProfileUserCard({
           <Text style={styles.title}>{workoutsComplete}</Text>
         </View>
       </View>
+
+      <TouchableOpacity
+          style={styles.settingsButtonStyle}
+          onPress={onPressRightIcon}>
+          <TDIcon input={corkIcon} />
+        </TouchableOpacity>
     </View>
   );
 }

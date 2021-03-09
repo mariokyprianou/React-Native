@@ -10,6 +10,8 @@ import {View, TouchableOpacity, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import LinearGradient from 'react-native-linear-gradient';
+import FastImage from 'react-native-fast-image';
+
 
 const completedIcon = require('../../../assets/icons/completedSet.png');
 export default function (props) {
@@ -38,7 +40,6 @@ export default function (props) {
     imageStyle: {
       width: getWidth(46),
       height: getWidth(46),
-      resizeMode: 'contain',
     },
   };
 
@@ -47,7 +48,7 @@ export default function (props) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.containerStyle}>
       {state === 'completed' ? (
-        <Image source={completedIcon} style={styles.imageStyle} />
+        <FastImage source={completedIcon} resizeMode={FastImage.resizeMode.contain} style={styles.imageStyle} />
       ) : state === 'active' ? (
         <LinearGradient
           style={styles.containerStyle}

@@ -473,29 +473,39 @@ export default function ThemeProvider({children}) {
   const cellFormStyles = {
     customPasswordStyle: {
       flex: 1,
+      height: getHeight(40),
       width: getWidth(50),
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      marginRight: getWidth(-5),
+      marginRight: getWidth(-8),
+      paddingRight: getWidth(4),
     },
     labelContainerStyle: {
       width: '100%',
       marginTop: getHeight(18),
+      
     },
+    
     labelTextStyle: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
     },
     iconTintColor: colors.black100,
+    
     style: {
-      ...textStyles.medium14_brownishGrey100,
+      ...textStyles.regular16_black100,
+      lineHeight: fontSize(20),
       flex: 1,
+      height: '100%',
+      
     },
     inputContainerStyle: {
       padding: 0,
       margin: 0,
-      paddingHorizontal: getWidth(6),
+      paddingHorizontal: 0,    
+      marginStart: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
+      marginTop: -getHeight(5),
     },
     inputStyle: {
       ...textStyles.regular16_black100,
@@ -503,7 +513,9 @@ export default function ThemeProvider({children}) {
       paddingHorizontal: 0,
       margin: 0,
       textAlign: 'left',
+      
     },
+    marginEnd: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
     writingDirection: isRTL() ? 'rtl' : 'ltr',
   };
 
@@ -539,6 +551,11 @@ export default function ThemeProvider({children}) {
       marginTop: getHeight(15),
       width: getWidth(280),
       height: getHeight(125),
+    },
+    buttonTextStyle: {
+      ...textStyles.regular16_black100,
+      lineHeight: getHeight(20),
+      color: colors.white100
     },
   };
 
@@ -636,7 +653,7 @@ export default function ThemeProvider({children}) {
       position: 'absolute',
       width: getWidth(230),
       height: '100%',
-      left: screenWidth / 2 - 105,
+      alignSelf: 'center',
       top: getHeight(90),
     },
     timerTextStyle: {

@@ -40,6 +40,10 @@ import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import RestartProgramme from '../../apollo/mutations/RestartProgramme';
+import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
+import StartProgramme from '../../apollo/mutations/StartProgramme';
+import {useMutation} from '@apollo/client';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -63,9 +67,9 @@ export default function MeetYourIconsScreen() {
   const {setProgrammeModalImage, programme} = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {isConnected, isInternetReachable} = useNetInfo();
-  // const [restartProgramme] = useMutation(RestartProgramme);
-  // const [continueProgramme] = useMutation(ContinueProgramme);
-  // const [startProgramme] = useMutation(StartProgramme);
+  const [restartProgramme] = useMutation(RestartProgramme);
+  const [continueProgramme] = useMutation(ContinueProgramme);
+  const [startProgramme] = useMutation(StartProgramme);
 
   //const switchProgramme = true;
   const [selectedTrainer, setSelectedTrainer] = useState();
@@ -322,57 +326,57 @@ export default function MeetYourIconsScreen() {
   }
 
   async function handleRestartProgramme(id) {
-    // restartProgramme({
-    //   variables: {
-    //     input: {
-    //       programme: id,
-    //     },
-    //   },
-    // })
-    //   .then(() => {
-    //     // getProgramme();
-    //     // updateStoredDays([]);
-    //     submitAnalyticsEvent(false);
-    //     navigation.navigate('TabContainer');
-    //     setCurrentWeekNumber(1);
-    //   })
-    //   .catch((err) => console.log(err, '<---restart programme error'));
+    restartProgramme({
+      variables: {
+        input: {
+          programme: id,
+        },
+      },
+    })
+      .then(() => {
+        // getProgramme();
+        // updateStoredDays([]);
+        submitAnalyticsEvent(false);
+        navigation.navigate('TabContainer');
+        setCurrentWeekNumber(1);
+      })
+      .catch((err) => console.log(err, '<---restart programme error'));
   }
 
   async function handleContinueProgramme(id) {
-    // continueProgramme({
-    //   variables: {
-    //     input: {
-    //       programme: id,
-    //     },
-    //   },
-    // })
-    //   .then(() => {
-    //     submitAnalyticsEvent(false);
-    //     navigation.navigate('TabContainer');
-    //   })
-    //   .catch((err) => console.log(err, '<---continue programme error'));
+    continueProgramme({
+      variables: {
+        input: {
+          programme: id,
+        },
+      },
+    })
+      .then(() => {
+        submitAnalyticsEvent(false);
+        navigation.navigate('TabContainer');
+      })
+      .catch((err) => console.log(err, '<---continue programme error'));
   }
 
   async function handleStartNewProgramme(id) {
-    // startProgramme({
-    //   variables: {
-    //     input: {
-    //       programme: id,
-    //     },
-    //   },
-    // })
-    //   .then(() => {
-    //     // getProgramme();
-    //     // updateStoredDays([]);
-    //     submitAnalyticsEvent(true);
-    //     setProgrammeModalImage(selectedProgram.programmeImage);
-    //     navigation.navigate('TabContainer');
-    //     // setCurrentTrainerId();
-    //     // setCurrentWeekNumber();
-    //     // setCurrentProgrammeId();
-    //   })
-    //   .catch((err) => console.log(err, '<---start new programme error'));
+    startProgramme({
+      variables: {
+        input: {
+          programme: id,
+        },
+      },
+    })
+      .then(() => {
+        // getProgramme();
+        // updateStoredDays([]);
+        submitAnalyticsEvent(true);
+        setProgrammeModalImage(selectedProgram.programmeImage);
+        navigation.navigate('TabContainer');
+        // setCurrentTrainerId();
+        // setCurrentWeekNumber();
+        // setCurrentProgrammeId();
+      })
+      .catch((err) => console.log(err, '<---start new programme error'));
   }
 
   function submitAnalyticsEvent(newTrainer = false) {

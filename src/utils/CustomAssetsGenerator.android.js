@@ -55,61 +55,55 @@ const generateWeekCompleteAsset = async ({
 };
 
 
-// const generateIntAchievementAsset = async ({
-//   imageUrl,
-//   achievedValue,
-//   subtitle,
-// }) => {
-//   try {
-//     let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
-//       imageUrl,
-//     );
-//     let base64EncodedImage = nativeAssetCreator.createBase64ImageForIntAchievement(
-//       pathToBgImageFromDocumentsDir,
-//       achievedValue,
-//       subtitle,
-//     );
-//     await ImagesCacheManager.unlinkFileFromRelevantPath(
-//       pathToBgImageFromDocumentsDir,
-//     );
-//     console.log('Asset generated!');
-//     const localImageToSharePath = await ImagesCacheManager.cacheBase64ImagePng(
-//       base64EncodedImage,
-//     );
-//     const localSharePath = 'file://' + localImageToSharePath;
-//     return localSharePath;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+const generateIntAchievementAsset = async ({
+  imageUrl,
+  achievedValue,
+  subtitle,
+}) => {
+  try {
+    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
+      imageUrl,
+    );
 
-// const generateStringAchievementAsset = async ({
-//   imageUrl,
-//   achievementValueString,
-//   subtitle,
-// }) => {
-//   try {
-//     let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
-//       imageUrl,
-//     );
-//     let base64EncodedImage = nativeAssetCreator.createBase64ImageForStringAchievement(
-//       pathToBgImageFromDocumentsDir,
-//       achievementValueString,
-//       subtitle,
-//     );
-//     await ImagesCacheManager.unlinkFileFromRelevantPath(
-//       pathToBgImageFromDocumentsDir,
-//     );
-//     console.log('Asset generated!');
-//     const localImageToSharePath = await ImagesCacheManager.cacheBase64ImagePng(
-//       base64EncodedImage,
-//     );
-//     const localSharePath = 'file://' + localImageToSharePath;
-//     return localSharePath;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+    const data = {
+      url: pathToBgImageFromDocumentsDir,
+      achievedValue: `${achievedValue}`,
+      subtitle: subtitle
+    }
+
+    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForIntAchievement(data);
+
+    const localSharePath = 'file:/' + modifiedImagePath;
+    return localSharePath;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const generateStringAchievementAsset = async ({
+  imageUrl,
+  achievementValueString,
+  subtitle,
+}) => {
+  try {
+    let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
+      imageUrl,
+    );
+
+    const data = {
+      url: pathToBgImageFromDocumentsDir,
+      achievedValue: achievementValueString,
+      subtitle: subtitle
+    }
+
+    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForStringAchievement(data);
+  
+    const localSharePath = 'file:/' + modifiedImagePath;
+    return localSharePath;
+  } catch (err) {
+    throw err;
+  }
+};
 
 // const generateGifAsset = async ({beforeImageUrl, afterImageUrl}) => {
 //   try {
@@ -132,24 +126,26 @@ const generateWeekCompleteAsset = async ({
 //   }
 // };
 
-// const generateSimpleShareableAsset = async (url) => {
-//   try {
-//     let pathFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(url);
-//     const {dirs} = RNFetchBlob.fs;
-//     let completePath = `${dirs.DocumentDir}/${pathFromDocumentsDir}`;
+const generateSimpleShareableAsset = async (url) => {
+  try {
+    let pathFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(url);
+    const {dirs} = RNFetchBlob.fs;
+    let completePath = `${dirs.DocumentDir}/${pathFromDocumentsDir}`;
 
-//     return completePath;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+    const localSharePath = 'file:/' + completePath;
+
+    return localSharePath;
+  } catch (err) {
+    throw err;
+  }
+};
 
 const CustomAssetsGenerator = {
   generateWeekCompleteAsset,
-  // generateIntAchievementAsset,
-  // generateStringAchievementAsset,
+  generateIntAchievementAsset,
+  generateStringAchievementAsset,
   // generateGifAsset,
-  // generateSimpleShareableAsset,
+  generateSimpleShareableAsset,
 };
 
 export default CustomAssetsGenerator;

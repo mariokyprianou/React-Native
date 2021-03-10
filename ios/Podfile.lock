@@ -377,7 +377,7 @@ PODS:
     - React
   - RNScreens (2.13.0):
     - React-Core
-  - RNShare (4.1.0):
+  - RNShare (4.1.2):
     - React-Core
   - RNSpringScrollView (2.0.23):
     - React
@@ -747,7 +747,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: dd8c286ab5dd4ba36d3a7fef8bff7e08711b5476
   RNScreens: 13f23e5498fb4aa749d19a5eda7f8792fbb9d01f
-  RNShare: 106a76243ac90f43ddb9028dcb78ade406b8adff
+  RNShare: d22507fa5e80c72f236b5622556cf831de5b1e93
   RNSpringScrollView: 8b0af44fda8b131d845b93bf5b1d0710152e4e61
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
@@ -772,4 +772,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 642479563502b8155eb376fa07792202e2f86a51
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

@@ -7,7 +7,6 @@
 
 import React from 'react';
 import {Platform, ActionSheetIOS} from 'react-native';
-// import RNFS from 'react-native-fs';
 
 import CustomAssetsGenerator from './CustomAssetsGenerator';
 import Share from 'react-native-share';
@@ -40,7 +39,7 @@ const shareWeekComplete = async ({
 const shareIntAchievemnt = async ({
   imageUrl = SampleImageUrl,
   achievedValue = 12,
-  subtitle = 'press-ups in \n 60 seconds',
+  subtitle = 'press-ups in\n60 seconds',
 }) => {
   try {
     let localSharePath = await CustomAssetsGenerator.generateIntAchievementAsset(

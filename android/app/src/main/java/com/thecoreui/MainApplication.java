@@ -13,6 +13,8 @@ import java.util.List;
 import com.thecoreui.SecretsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.bundlechecksum.RNBundleChecksumPackage;
+import com.thecoreui.assetCreator.AssetCreatorPackage;
+
 import io.intercom.android.sdk.Intercom;
 
 
@@ -29,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new GIFPackage());
       packages.add(new SecretsPackage());
+      packages.add(new AssetCreatorPackage());
       return packages;
     }
 

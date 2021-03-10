@@ -12,6 +12,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import uuid from 'react-native-uuid';
 
 const localFolderName = 'imageCache';
+let identifier = Platform.OS === 'ios' ? uuid.v1() : 'temp';
+
 
 // MARK: - Private file name & path functions
 
@@ -49,7 +51,7 @@ const localPathForImageFrom = (url, identifier) => {
 
 const localPathForNewPNGAsset = () => {
   const {dirs} = RNFetchBlob.fs;
-  let identifier = uuid.v1();
+  //let identifier = uuid.v1();
   const path = `${dirs.DocumentDir}/${localFolderName}/${identifier}.png`;
   return path;
 };
@@ -60,7 +62,7 @@ const cacheImageFromUrl = async (url) => {
   if (!url) {
     throw new Error('Saving image Error: missing URL');
   }
-  let identifier = uuid.v1();
+  //let identifier = uuid.v1();
   await checkLocalResForCachedImagesExists();
   let path = localPathForImageFrom(url, identifier);
   let pathFromDocumentsDir = pathFromDocumentsDirForImageFrom(url, identifier);

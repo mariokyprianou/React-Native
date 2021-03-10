@@ -18,7 +18,7 @@ import {SampleBase64, SampleImageUrl, SampleImageUrl2} from './SampleData';
 
 const shareWeekComplete = async ({
   imageUrl = SampleImageUrl,
-  title = "Week 3 complete with \nKatarina's home \nprogramme!",
+  title = "Week 3 complete with\nKatarina's home\nprogramme!",
   // `Week 3 complete with \n${name}'s ${programmeName.toLowerCase()}\n programme!`
   workoutsCompleted = 6,
   totalTimeTrained = '10:90:21',
@@ -104,15 +104,30 @@ const shareProgress = async ({
 // MARK: - Private share sub-functions
 
 const shareDirectlyToInstagramStory = async (path) => {
+  console.log(path);
+
   const shareSingleOptions = {
     backgroundImage: path,
     method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
     social: Share.Social.INSTAGRAM_STORIES,
+    
+    
+    ...Platform.select({
+      // Necessary due to bug in
+      // node_modules/react-native-share/android/src/main/java/cl/json/social/SingleShareIntent.java
+      android: {
+        forceDialog: true,
+      },
+    }),
   };
 
   return Share.shareSingle(shareSingleOptions)
     .then((res) => {
-      ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+      
+      // .then  is called before we actually share  :/
+      if (Platform.OS === 'ios') {
+          ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+      }
       return res;
     })
     .catch((err) => {

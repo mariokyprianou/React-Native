@@ -15,14 +15,7 @@ import {SampleBase64, SampleImageUrl, SampleImageUrl2} from './SampleData';
 
 const {iOSAssetCreator, GIFManager} = NativeModules;
 
-const mockAndroidCreator = {
-  createBase64ImageForWorkoutComplete: () => SampleBase64,
-  createBase64ImageForIntAchievement: () => SampleBase64,
-  createBase64ImageForStringAchievement: () => SampleBase64,
-};
-
-const nativeAssetCreator =
-  Platform.OS === 'ios' ? iOSAssetCreator : mockAndroidCreator;
+const nativeAssetCreator = iOSAssetCreator;
 
 const generateWeekCompleteAsset = async ({
   imageUrl,

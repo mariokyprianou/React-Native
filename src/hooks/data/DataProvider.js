@@ -316,7 +316,6 @@ export default function DataProvider(props) {
   const [getProgress] = useLazyQuery(Progress, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      console.log(res, '<---progress res');
       setProgress(res.progress);
     },
     onError: (error) => console.log(error, '<---progress query error'),

@@ -77,14 +77,16 @@ export default function ProgressScreen() {
   }, []);
 
   useEffect(() => {
-    const currentMonth = new Date().getMonth();
-    const thisMonth = progress.find((month) => {
-      return parseISO(month.startOfMonth).getMonth() === currentMonth;
-    });
+    if (progress) {
+      const currentMonth = new Date().getMonth();
+      const thisMonth = progress.find((month) => {
+        return parseISO(month.startOfMonth).getMonth() === currentMonth;
+      });
 
-    const progressHistoryData = processProgressData(thisMonth.days);
+      const progressHistoryData = processProgressData(thisMonth.days);
 
-    setProgressData(progressHistoryData);
+      setProgressData(progressHistoryData);
+    }
   }, [progress]);
 
   useQuery(Challenges, {

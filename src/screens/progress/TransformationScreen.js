@@ -17,7 +17,7 @@ import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {useQuery, useLazyQuery} from '@apollo/client';
+import {useQuery, useLazyQuery, useApolloClient} from '@apollo/client';
 import ProgressImages from '../../apollo/queries/ProgressImages';
 import ProgressImage from '../../apollo/queries/ProgressImage';
 import fetchPolicy from '../../utils/fetchPolicy';
@@ -31,6 +31,7 @@ const overlay = require('../../../assets/images/progressZero.png');
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
+  const client = useApolloClient();
   const {colors} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const screenWidth = Dimensions.get('screen').width;
@@ -53,7 +54,7 @@ export default function TransformationScreen() {
   const [userImages, setUserImages] = useState();
   const [selectedUrl, setSelectedUrl] = useState();
 
-  useQuery(ProgressImages, {
+  const [getImages] = useLazyQuery(ProgressImages, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       const today = new Date();
@@ -70,34 +71,47 @@ export default function TransformationScreen() {
   });
 
   useEffect(() => {
-    if (userImages) {
-      async function getPic(index) {
-        await getImage({
-          variables: {
-            input: {
-              id: userImages[index].id,
-              createdAt: userImages[index].createdAt,
-            },
-          },
-        });
-      }
-      getPic(0);
-      setBeforePic(selectedUrl);
+    getImages();
+  }, []);
 
+  async function getPic(image) {
+    client
+      .query({
+        query: ProgressImage,
+        fetchPolicy: 'no-cache',
+        variables: {
+          input: {
+            id: image.id,
+            createdAt: image.createdAt,
+          },
+        },
+      })
+      .then((res) => {
+        if (
+          beforePic === undefined &&
+          res.data.progressImage.id === userImages[0].id
+        ) {
+          setBeforePic(res.data.progressImage.url);
+        } else if (afterPic === undefined) {
+          setAfterPic(res.data.progressImage.url);
+        }
+      })
+      .catch((err) => console.log(err, 'getPic error'));
+  }
+
+  useEffect(() => {
+    if (userImages) {
+      getPic(userImages[0]);
       if (userImages.length > 1) {
-        getPic(userImages.length - 1);
-        setAfterPic(selectedUrl);
+        getPic(userImages[userImages.length - 1]);
       }
     }
-  }, [userImages, selectedUrl]);
-
-  // console.log(beforePic === afterPic, '<--before, after');
+  }, [userImages]);
 
   const [getImage] = useLazyQuery(ProgressImage, {
     fetchPolicy: 'no-cache',
     onCompleted: (res) => {
       setSelectedUrl(res.progressImage.url);
-      // console.log(selectedUrl, '<---selectedUrl');
     },
     onError: (err) => console.log(err, '<---get image err'),
   });

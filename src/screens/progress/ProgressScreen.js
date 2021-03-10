@@ -24,13 +24,12 @@ import TransformationChallenge from '../../components/Buttons/TransformationChal
 import Calendar from 'the-core-ui-module-tdcalendar';
 import processProgressData from '../../utils/processProgressData';
 import {useQuery} from '@apollo/client';
-import Progress from '../../apollo/queries/Progress';
 import Challenges from '../../apollo/queries/Challenges';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
-import {startOfMonth} from 'date-fns';
 import useUserData from '../../hooks/data/useUserData';
 import {parseISO} from 'date-fns';
+import UseData from '../../hooks/data/UseData';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -41,6 +40,7 @@ export default function ProgressScreen() {
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getPreferences, preferences} = useUserData();
+  const {progress, getProgress} = UseData();
   const {
     days,
     daysTextStyles,
@@ -72,20 +72,20 @@ export default function ProgressScreen() {
     }
   }, [preferences]);
 
-  useQuery(Progress, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      const currentMonth = new Date().getMonth();
-      const thisMonth = res.progress.find((month) => {
-        return parseISO(month.startOfMonth).getMonth() === currentMonth;
-      });
+  useEffect(() => {
+    getProgress();
+  }, []);
 
-      const progressHistoryData = processProgressData(thisMonth.days);
+  useEffect(() => {
+    const currentMonth = new Date().getMonth();
+    const thisMonth = progress.find((month) => {
+      return parseISO(month.startOfMonth).getMonth() === currentMonth;
+    });
 
-      setProgressData(progressHistoryData);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+    const progressHistoryData = processProgressData(thisMonth.days);
+
+    setProgressData(progressHistoryData);
+  }, [progress]);
 
   useQuery(Challenges, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),

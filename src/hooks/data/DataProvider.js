@@ -11,6 +11,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
+import Progress from '../../apollo/queries/Progress';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   differenceInDays,
@@ -309,6 +310,18 @@ export default function DataProvider(props) {
     return wasToday !== undefined ? true : false;
   }, []);
 
+  // Get progress data
+  const [progress, setProgress] = useState();
+
+  const [getProgress] = useLazyQuery(Progress, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      console.log(res, '<---progress res');
+      setProgress(res.progress);
+    },
+    onError: (error) => console.log(error, '<---progress query error'),
+  });
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -339,6 +352,8 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      progress,
+      getProgress,
     }),
     [
       programme,
@@ -367,6 +382,8 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      progress,
+      getProgress,
     ],
   );
 

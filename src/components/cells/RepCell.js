@@ -12,7 +12,6 @@ import useTheme from '../../hooks/theme/UseTheme';
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
 
-
 const completedIcon = require('../../../assets/icons/completedSet.png');
 export default function (props) {
   const {onPress = () => {}, quantity = '8', state = 'inactive'} = props;
@@ -45,21 +44,29 @@ export default function (props) {
 
   const content = () => <Text style={styles.textStyle}>{quantity}</Text>;
 
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.containerStyle}>
-      {state === 'completed' ? (
-        <FastImage source={completedIcon} resizeMode={FastImage.resizeMode.contain} style={styles.imageStyle} />
-      ) : state === 'active' ? (
-        <LinearGradient
-          style={styles.containerStyle}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={[colors.tiffanyBlue100, colors.tealish100]}>
-          {content()}
-        </LinearGradient>
-      ) : (
-        <View style={styles.containerStyle}>{content()}</View>
-      )}
-    </TouchableOpacity>
-  );
+  if (state === 'inactive') {
+    return <View style={styles.containerStyle}>{content()}</View>;
+  } else {
+    return (
+      <TouchableOpacity onPress={onPress} style={styles.containerStyle}>
+        {state === 'completed' ? (
+          <FastImage
+            source={completedIcon}
+            resizeMode={FastImage.resizeMode.contain}
+            style={styles.imageStyle}
+          />
+        ) : (
+          state === 'active' && (
+            <LinearGradient
+              style={styles.containerStyle}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={[colors.tiffanyBlue100, colors.tealish100]}>
+              {content()}
+            </LinearGradient>
+          )
+        )}
+      </TouchableOpacity>
+    );
+  }
 }

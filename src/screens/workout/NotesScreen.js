@@ -40,7 +40,6 @@ export default function NotesScreen() {
   const [savedNotes, setSavedNotes] = useState('');
 
   useEffect(() => {
-    console.log("set note", currentExerciseIndex);
     setSavedNotes(selectedWorkout.exercises[currentExerciseIndex].notes);
   }, [selectedWorkout, currentExerciseIndex]);
 
@@ -98,25 +97,22 @@ export default function NotesScreen() {
       },
     })
       .then((res) => {
-        console.log(res);
         let workout = {...selectedWorkout};
-        let exercise = {
-          ...workout.exercises[currentExerciseIndex],
-          notes: newNote
-        };
 
         workout.exercises[currentExerciseIndex] = {
           ...workout.exercises[currentExerciseIndex],
-          notes: newNote
-        };;
+          notes: newNote,
+        };
 
-        console.log(workout.exercises[currentExerciseIndex]);
         setSelectedWorkout(workout);
 
         cleanValueByName('notes');
         navigation.goBack();
       })
-      .catch((err) => console.log(err, '<---error on adding note'));
+      .catch((err) => {
+        console.log(err, '<---error on adding note');
+        navigation.goBack();
+      });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

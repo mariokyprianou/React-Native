@@ -99,8 +99,6 @@ export default function ExerciseView(props) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
-  const involvesWeights = true; //<----- use to check weight capture screen
-
   const onSetCompleted = (completedIndex) => {
     if (completedIndex + 1 === sets.length) {
       setEnableScroll(true);
@@ -131,8 +129,7 @@ export default function ExerciseView(props) {
     setCountDown(true);
 
     // show set completion modal with weights if applicable
-    if (involvesWeights) {
-      // TO DO change ^^ back to exercise.weight (and line 180)
+    if (exercise.weight) {
       setSelectedWeight(lastWeight);
       setSetComplete(true);
     }
@@ -197,7 +194,7 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          {involvesWeights && (
+          {exercise.weight && (
             <TouchableOpacity
               style={{
                 ...styles.weightTouchStyle,

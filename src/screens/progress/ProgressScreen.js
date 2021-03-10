@@ -76,11 +76,9 @@ export default function ProgressScreen() {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       const currentMonth = new Date().getMonth();
-      const thisMonth = res.progress.find(
-        (month) => {
-          return parseISO(month.startOfMonth).getMonth() === currentMonth;
-        }
-      );
+      const thisMonth = res.progress.find((month) => {
+        return parseISO(month.startOfMonth).getMonth() === currentMonth;
+      });
 
       const progressHistoryData = processProgressData(thisMonth.days);
 
@@ -143,7 +141,7 @@ export default function ProgressScreen() {
       shadowOpacity: 1,
       elevation: 6,
       backgroundColor: colors.white100,
-      marginBottom: getHeight(10),
+      marginBottom: '4%',
       alignSelf: 'center',
     },
     calendarTitle: {

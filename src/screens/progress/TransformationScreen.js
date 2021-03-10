@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Dimensions, Platform, Alert, Image} from 'react-native';
+import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -25,7 +25,6 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import formatProgressImages from '../../utils/formatProgressImages';
 import {format} from 'date-fns';
 
-const fakeBeforePic = require('../../../assets/fakeBefore.png');
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
 
@@ -71,40 +70,34 @@ export default function TransformationScreen() {
   });
 
   useEffect(() => {
-    if (userImages && (userImages.length === 1 || userImages.length === 2)) {
-      async function getBeforePicOnly() {
+    if (userImages) {
+      async function getPic(index) {
         await getImage({
           variables: {
             input: {
-              id: userImages[0].id,
-              createdAt: userImages[0].createdAt,
+              id: userImages[index].id,
+              createdAt: userImages[index].createdAt,
             },
           },
         });
       }
-      getBeforePicOnly();
+      getPic(0);
       setBeforePic(selectedUrl);
-    }
-    if (userImages && userImages.length === 2) {
-      async function getAfterPicOnly() {
-        await getImage({
-          variables: {
-            input: {
-              id: userImages[1].id,
-              createdAt: userImages[1].createdAt,
-            },
-          },
-        });
+
+      if (userImages.length > 1) {
+        getPic(userImages.length - 1);
+        setAfterPic(selectedUrl);
       }
-      getAfterPicOnly();
-      setAfterPic(selectedUrl);
     }
   }, [userImages, selectedUrl]);
+
+  // console.log(beforePic === afterPic, '<--before, after');
 
   const [getImage] = useLazyQuery(ProgressImage, {
     fetchPolicy: 'no-cache',
     onCompleted: (res) => {
       setSelectedUrl(res.progressImage.url);
+      // console.log(selectedUrl, '<---selectedUrl');
     },
     onError: (err) => console.log(err, '<---get image err'),
   });

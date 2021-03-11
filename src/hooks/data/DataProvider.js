@@ -161,9 +161,10 @@ export default function DataProvider(props) {
     let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
 
     // FUTURE
-    let futureWorkouts = workouts.filter((it) => !it.completedAt);
+    let futureWorkouts = workouts.filter((it) => !it.completedAt && !it.isRestDay);
     const futureRestDays = getStoredFutureRestDays(storedDays);
 
+  
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already

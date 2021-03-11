@@ -73,7 +73,6 @@ export default function NotesScreen() {
     subtitle: {
       ...textStyles.medium14_black100,
       marginTop: getHeight(30),
-      marginBottom: getHeight(13),
       textAlign: 'left',
     },
     buttonContainer: {
@@ -121,6 +120,7 @@ export default function NotesScreen() {
       name: 'notes',
       type: 'text',
       multiline: true,
+      minHeight: getHeight(70),
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
       defaultValue: savedNotes,
@@ -144,7 +144,6 @@ export default function NotesScreen() {
         <View style={styles.contentContainer}>
           <Text style={styles.description}>{description}</Text>
           <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
-          <Spacer height={15} />
           <Form cells={cells} config={config} />
         </View>
       </KeyboardAwareScrollView>

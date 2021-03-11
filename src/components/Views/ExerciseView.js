@@ -5,8 +5,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect, Component} from 'react';
-import {View, TouchableOpacity, Text, Image, StatusBar} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TouchableOpacity, Text, Image, Alert} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -159,6 +159,17 @@ export default function ExerciseView(props) {
     setEnableScroll(true);
   };
 
+  const handleSelectWeights = () => {
+    if (weightHistory.length === 0) {
+      Alert.alert(WorkoutDict.WorkoutNoWeightsWarning);
+    } else {
+      navigation.navigate('WeightCapture', {
+        weightHistory: weightHistory,
+        weightPreference: weightLabel,
+      });
+    }
+  };
+
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const RepsList = ({sets}) => {
@@ -200,12 +211,7 @@ export default function ExerciseView(props) {
                 ...styles.weightTouchStyle,
                 marginEnd: getWidth(40),
               }}
-              onPress={() =>
-                navigation.navigate('WeightCapture', {
-                  weightHistory: weightHistory,
-                  weightPreference: weightLabel,
-                })
-              }>
+              onPress={handleSelectWeights}>
               <Image source={weightIcon} />
               <Text style={styles.extraTextStyle}>
                 {WorkoutDict.WeightText}

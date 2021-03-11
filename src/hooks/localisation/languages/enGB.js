@@ -348,6 +348,8 @@ const enGB = {
     WorkoutCompetedWarningText:
       'Oops! You have already completed a workout for today.',
     WorkoutGoBackWarning: 'If you go back you will lose your workout progress',
+    WorkoutNoWeightsWarning:
+      'Once you have added a weight you will be able to view your weight history for this exercise',
   },
 
   HelpMeChooseDict: {

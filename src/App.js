@@ -75,7 +75,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    // StatusBar.setBarStyle('dark-content');
+    StatusBar.setBarStyle('dark-content');
     // let screenshotListener;
 
     // if (Platform.OS === 'ios') {
@@ -116,11 +116,11 @@ const App = () => {
       <ApolloProvider client={client}>
         <ScaleProvider config={{height: 667, width: 375}}>
           <ThemeProvider>
-          <DictionaryProvider>
-            <DataProvider>
-              <UserDataProvider>
-                <CommonDataProvider>
-                  <LoadingProvider>
+            <DictionaryProvider>
+              <DataProvider>
+                <UserDataProvider>
+                  <CommonDataProvider>
+                    <LoadingProvider>
                       <NavigationContainer>
                         <TDCountdown>
                           <FormProvider>
@@ -128,11 +128,10 @@ const App = () => {
                           </FormProvider>
                         </TDCountdown>
                       </NavigationContainer>
-                    
-                  </LoadingProvider>
-                </CommonDataProvider>
-              </UserDataProvider>
-            </DataProvider>
+                    </LoadingProvider>
+                  </CommonDataProvider>
+                </UserDataProvider>
+              </DataProvider>
             </DictionaryProvider>
           </ThemeProvider>
         </ScaleProvider>

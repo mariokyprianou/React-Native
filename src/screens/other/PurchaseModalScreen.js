@@ -6,7 +6,14 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import Intercom from 'react-native-intercom';
@@ -37,6 +44,7 @@ const PurchaseModalScreen = ({}) => {
     navigation.setOptions({
       header: () => <Header showModalCross white transparent />,
     });
+    StatusBar.setBarStyle('light-content');
   }, []);
 
   useEffect(() => {

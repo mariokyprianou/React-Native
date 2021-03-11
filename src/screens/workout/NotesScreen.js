@@ -44,7 +44,13 @@ export default function NotesScreen() {
   }, [selectedWorkout, currentExerciseIndex]);
 
   navigation.setOptions({
-    header: () => <Header title={WorkoutDict.Notes} showModalCross />,
+    header: () => (
+      <Header
+        title={WorkoutDict.Notes}
+        right="crossIcon"
+        rightAction={handleGoBack}
+      />
+    ),
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -84,6 +90,11 @@ export default function NotesScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function handleGoBack() {
+    cleanValueByName('notes');
+    navigation.goBack();
+  }
+
   async function handleAddNote() {
     const newNote = getValues('notes').notes;
 

@@ -322,7 +322,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 setUserData({});
                 AsyncStorage.removeItem('@ANALYTICS_ASKED');
                 AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
-
+                AsyncStorage.removeItem('@CURRENT_WEEK');
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

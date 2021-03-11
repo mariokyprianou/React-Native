@@ -42,8 +42,6 @@ import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
-
 const notifications = [
   {
     id: 789789787,
@@ -112,7 +110,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList( ['',...countries]);
+      setCountriesList(['', ...countries]);
 
       const indianRegions = countryData.allCountries.filter(
         (country) => country.country === 'India',
@@ -125,8 +123,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
-
+      setRegionsList(
+        Platform.OS === 'ios' ? ['', ...indianRegionsList] : indianRegionsList,
+      );
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -152,7 +151,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         const memberSince = res.profile.createdAt.slice(0, 4);
         const userProfile = {...res.profile, memberSince};
         setUserData(userProfile);
-        console.log(userData, '<--USER DATA');
       }
     },
     onError: (error) => console.log(error),
@@ -265,7 +263,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       countryLookup[profile_country] || countryLookup[userData.country];
 
     let newRegion =
-      profile_country !== 'India' && userData.country !== "India"
+      profile_country !== 'India' && userData.country !== 'India'
         ? null
         : regionLookup[profile_region] || regionLookup[userData.region];
 
@@ -283,7 +281,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       timeZone: userData.timeZone,
     };
 
-
     await updateProfile({
       variables: {
         input: {
@@ -293,7 +290,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
-        console.log("newData", newData)
+        console.log('newData', newData);
         setUserData(newData);
       })
       .catch((err) => {
@@ -301,7 +298,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         displayAlert({
           text: 'Unable to update settings',
         });
-      }).finally(() => setLoading(false));
+      })
+      .finally(() => setLoading(false));
 
     cleanValues();
   }
@@ -334,7 +332,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               });
           },
         },
-        
       ],
     });
   }
@@ -437,7 +434,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       },
       placeholder: userData.givenName,
       defaultValue: userData.givenName,
-      
     },
     {
       name: 'profile_lastName',
@@ -450,7 +446,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       },
       placeholder: userData.familyName,
       defaultValue: userData.familyName,
-      
     },
     {
       name: 'profile_email',
@@ -590,7 +585,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       <Spacer height={20} />
     </View>
   );
-
 
   return (
     <SafeAreaView style={styles.safeArea}>

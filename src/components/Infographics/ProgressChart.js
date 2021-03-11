@@ -64,10 +64,10 @@ export default function ProgressChart({
         horizontal={true}
         style={styles.scroll}
         contentContainerStyle={{alignItems: 'flex-end'}}>
-        <View>
+        <View style={{paddingRight: 10}}>
           <SlideBarChart
             data={chartDataPoints}
-            barSpacing={44}
+            barSpacing={58}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
               selectable
@@ -77,7 +77,11 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={chartDataPoints.length * 53}
+            width={
+              chartDataPoints.length === 1
+                ? chartDataPoints.length * 90
+                : chartDataPoints.length * 65
+            }
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}

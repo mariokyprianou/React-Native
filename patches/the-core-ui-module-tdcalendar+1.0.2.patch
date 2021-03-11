@@ -99,7 +99,7 @@ index 4187631..02ce06f 100644
                      {monthName} {year}
                    </Text>
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
-index 9c9dad3..4729705 100644
+index 9c9dad3..d654597 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
 +++ b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
 @@ -10,6 +10,7 @@ import React from "react";
@@ -110,6 +110,15 @@ index 9c9dad3..4729705 100644
  
  export default function DateCell({
    date,
+@@ -19,7 +20,7 @@ export default function DateCell({
+ }) {
+   // ** ** ** ** ** SETUP ** ** ** ** **
+   const { getWidth, fontSize } = ScaleHook();
+-
++console.log(status, "<---statuses")
+   // ** ** ** ** ** STYLES ** ** ** ** **
+ 
+   const sharedStyle = {
 @@ -41,6 +42,9 @@ export default function DateCell({
        solid: true,
        color: "#ffffff",
@@ -129,7 +138,7 @@ index 9c9dad3..4729705 100644
 -          <Text style={text}>{date}</Text>
 -          <View style={styles.iconContainer}>
 -            <TDIcon input="star" inputStyle={styles.icon} />
-+      {status === "newWeekNewProgramme" || status === "newWeek" ? (
++      {status === "NEW_PROGRAMME" || status === "NEW_WEEK" ? (
 +        <LinearGradient
 +          style={{...styles.gradient, ...sharedStyle, ...pill}}
 +          start={{x: 0, y: 0}}
@@ -137,7 +146,7 @@ index 9c9dad3..4729705 100644
 +          colors={['rgba(116, 235, 231, 1)', 'rgba(46, 193, 187, 1)']}>
 +          <View style={styles.newProgramme}>
 +            <Text style={ text }>{ date }</Text>
-+            { status === "newWeekNewProgramme" && 
++            { status === "NEW_PROGRAMME" && 
 +              <View style={styles.iconContainer}>
 +                <TDIcon input="star" inputStyle={styles.icon} />
 +              </View>

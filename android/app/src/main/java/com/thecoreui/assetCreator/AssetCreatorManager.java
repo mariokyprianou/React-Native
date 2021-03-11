@@ -65,6 +65,7 @@ public class AssetCreatorManager extends ReactContextBaseJavaModule {
 
         assetWidth = sourceBitmap.getWidth();
         assetHeight = sourceBitmap.getHeight();
+        utils.topPadding = assetHeight / 5;
 
         // Set image to canvas
         Bitmap newBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);
@@ -94,7 +95,7 @@ public class AssetCreatorManager extends ReactContextBaseJavaModule {
                 workoutsSpan, titleStyle, textWidth, Layout.Alignment.ALIGN_OPPOSITE, 0.8f, 0.0f, false);
 
          x = 0;
-         y = (assetHeight / 2) + utils.topPadding;
+         y = (assetHeight / 2) + (utils.topPadding / 2);
         utils.positionOnCanvas(newCanvas, workoutsLayout, x, y);
 
 
@@ -106,9 +107,9 @@ public class AssetCreatorManager extends ReactContextBaseJavaModule {
         StaticLayout totalTimeLayout = new StaticLayout(
                 timeSpan, titleStyle, textWidth, Layout.Alignment.ALIGN_OPPOSITE, 0.8f, 0.0f, false);
 
-        int extraSpacing = 10;
+        int extraSpacing = 15;
         x = 0;
-        y = (assetHeight / 2) + utils.topPadding + workoutsLayout.getHeight() + extraSpacing;
+        y = (assetHeight / 2) + (utils.topPadding / 2) + workoutsLayout.getHeight() + extraSpacing;
         utils.positionOnCanvas(newCanvas, totalTimeLayout, x, y);
 
 
@@ -138,6 +139,7 @@ public class AssetCreatorManager extends ReactContextBaseJavaModule {
 
         assetWidth = sourceBitmap.getWidth();
         assetHeight = sourceBitmap.getHeight();
+        utils.topPadding = assetHeight / 5;
 
         // Set image to canvas
         Bitmap newBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);
@@ -184,6 +186,7 @@ public class AssetCreatorManager extends ReactContextBaseJavaModule {
 
         assetWidth = sourceBitmap.getWidth();
         assetHeight = sourceBitmap.getHeight();
+        utils.topPadding = assetHeight / 5;
 
         // Set image to canvas
         Bitmap newBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);

@@ -44,6 +44,7 @@ public class Utils {
     public TextPaint getPaint() {
         TextPaint paintText = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         paintText.setStyle(Paint.Style.FILL);
+        paintText.setAntiAlias(true);
         paintText.setColor(ContextCompat.getColor(context, R.color.white));
 
         return paintText;
@@ -52,7 +53,9 @@ public class Utils {
 
     public Spannable completeWorkoutTitle(String title) {
         SpannableStringBuilder titleSpan = new SpannableStringBuilder(title);
-        titleSpan.setSpan(new AbsoluteSizeSpan(20), 0, titleSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        titleSpan.setSpan(new AbsoluteSizeSpan(16), 0, titleSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        titleSpan.setSpan(new CustomTypefaceSpan("", bold),0, titleSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
 
         return titleSpan;
     }
@@ -62,11 +65,11 @@ public class Utils {
         workoutsSpan.append("\n").append(workoutsCompletedText);
 
         // Set font sizes
-        workoutsSpan.setSpan(new AbsoluteSizeSpan(40), 0, workoutsCompleted.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        workoutsSpan.setSpan(new AbsoluteSizeSpan(35), 0, workoutsCompleted.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         workoutsSpan.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),0, workoutsCompleted.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         workoutsSpan.setSpan(new CustomTypefaceSpan("", bold),0, workoutsCompleted.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-        workoutsSpan.setSpan(new AbsoluteSizeSpan(18), workoutsCompleted.length(), workoutsSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        workoutsSpan.setSpan(new AbsoluteSizeSpan(16), workoutsCompleted.length(), workoutsSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         workoutsSpan.setSpan(new CustomTypefaceSpan("", medium),  workoutsCompleted.length(), workoutsSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         return workoutsSpan;
@@ -78,11 +81,11 @@ public class Utils {
         timeSpan.append("\n").append(totalTimeText);
 
         // Set font sizes
-        timeSpan.setSpan(new AbsoluteSizeSpan(40), 0, totalTime.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        timeSpan.setSpan(new AbsoluteSizeSpan(35), 0, totalTime.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         timeSpan.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),0, totalTime.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         timeSpan.setSpan(new CustomTypefaceSpan("", bold),0, totalTime.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-        timeSpan.setSpan(new AbsoluteSizeSpan(18), totalTime.length(), timeSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        timeSpan.setSpan(new AbsoluteSizeSpan(16), totalTime.length(), timeSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         timeSpan.setSpan(new CustomTypefaceSpan("", medium),  totalTime.length(), timeSpan.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         return timeSpan;
@@ -93,7 +96,7 @@ public class Utils {
         challengeSpan.append("\n").append(subtitle);
 
         // Set font sizes
-        challengeSpan.setSpan(new RelativeSizeSpan(3f), 0, achievedValue.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        challengeSpan.setSpan(new RelativeSizeSpan(3.5f), 0, achievedValue.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         challengeSpan.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),0, achievedValue.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         challengeSpan.setSpan(new CustomTypefaceSpan("", bold),0, achievedValue.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
@@ -108,7 +111,7 @@ public class Utils {
         challengeSpan.append("\n").append(subtitle);
 
         // Set font sizes
-        challengeSpan.setSpan(new RelativeSizeSpan(6f), 0, achievedValue.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        challengeSpan.setSpan(new RelativeSizeSpan(6.5f), 0, achievedValue.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         challengeSpan.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),0, achievedValue.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         challengeSpan.setSpan(new CustomTypefaceSpan("", bold),0, achievedValue.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 

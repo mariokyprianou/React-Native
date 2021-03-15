@@ -52,6 +52,10 @@ export default function TransformationScreen() {
   const [selectedUrl, setSelectedUrl] = useState();
 
   useEffect(() => {
+    setLoading(true);
+  }, []);
+
+  useEffect(() => {
     getImages();
   }, []);
 
@@ -87,6 +91,7 @@ export default function TransformationScreen() {
         getPic(userImages[userImages.length - 1]);
       }
     }
+    setLoading(false);
   }, [userImages]);
 
   const [getImage] = useLazyQuery(ProgressImage, {

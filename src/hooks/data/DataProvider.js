@@ -12,6 +12,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
 import Progress from '../../apollo/queries/Progress';
+import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   differenceInDays,
@@ -321,6 +322,17 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error, '<---progress query error'),
   });
 
+  // Get challenge history data
+  const [history, setHistory] = useState();
+
+  const [getHistory] = useLazyQuery(ChallengeHistory, {
+    fetchPolicy: 'no-cache',
+    onCompleted: (res) => {
+      setHistory(res.challengeHistory);
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
+  });
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -353,6 +365,8 @@ export default function DataProvider(props) {
       setWeightsToUpload,
       progress,
       getProgress,
+      history,
+      getHistory,
     }),
     [
       programme,
@@ -383,6 +397,8 @@ export default function DataProvider(props) {
       setWeightsToUpload,
       progress,
       getProgress,
+      history,
+      getHistory,
     ],
   );
 

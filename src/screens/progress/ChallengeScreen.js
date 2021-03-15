@@ -11,26 +11,22 @@ import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
-import {useTimer, useStopwatch} from 'the-core-ui-module-tdcountdown';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
 import {useRoute} from '@react-navigation/core';
-import processChallengeHistory from '../../utils/processChallengeHistory';
+import generateChartInfo from '../../utils/generateChartInfo';
 import handleTimer from '../../utils/handleTimer';
 import handleStopwatch from '../../utils/handleStopwatch';
-import {useQuery} from '@apollo/client';
-import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
-import fetchPolicy from '../../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
+import UseData from '../../hooks/data/UseData';
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {isConnected, isInternetReachable} = useNetInfo();
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const {history, getHistory} = UseData();
   const {
     params: {
       id,
@@ -49,74 +45,27 @@ export default function ChallengeScreen() {
     header: () => <Header title={name} goBack />,
   });
 
-  const [history, setHistory] = useState([]);
-  const [chartLabel, setChartLabel] = useState('');
-  const [chartDataPoints, setChartDataPoints] = useState([]);
-  const [chartInterval, setChartInterval] = useState(1);
-  const [chartTicks, setChartTicks] = useState(1);
+  const [chartInfo, setChartInfo] = useState(null);
 
-  useQuery(ChallengeHistory, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      const thisChallengeHistory = res.challengeHistory.filter(
-        (obj) => obj.challenge.id === id,
-      );
-      if (thisChallengeHistory.length === 0) {
-        setHistory([]);
-      } else {
-        const processedChallengeHistory = processChallengeHistory(
-          thisChallengeHistory[0].history,
+  useEffect(() => {
+    getHistory();
+  }, []);
+
+  useEffect(() => {
+    if (history) {
+      async function getInfo() {
+        const info = await generateChartInfo(
+          history,
+          id,
           weightPreference,
           unitType,
           type,
         );
-        while (processedChallengeHistory.length > 12) {
-          processedChallengeHistory.shift();
-        }
-        setHistory(processedChallengeHistory);
+        setChartInfo(info);
       }
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
-
-  useEffect(() => {
-    const dataPoints = history.map((event, index) => {
-      return {x: index + 1, y: event.value};
-    });
-    setChartDataPoints(dataPoints);
-
-    const highestDataPoint = Math.max(...dataPoints.map((point) => point.y));
-    const highestValue =
-      highestDataPoint > 10
-        ? Math.ceil(highestDataPoint / 10) * 10
-        : highestDataPoint;
-    const intervals = [1, 2, 5, 10, 20, 30, 40, 50];
-    let interval;
-    let ticks;
-    intervals.forEach((interv) => {
-      let value = highestValue / interv;
-      if (value >= 3 && value <= 5) {
-        interval = interv;
-        ticks = Math.ceil(value);
-      }
-    });
-    setChartInterval(interval);
-    setChartTicks(ticks);
-
-    if (type === 'STOPWATCH') {
-      setChartLabel('secs');
-    } else {
-      if (unitType === 'WEIGHT') {
-        setChartLabel(weightPreference);
-      } else if (unitType === 'REPS') {
-        setChartLabel('reps');
-      } else if (unitType === 'DISTANCE' && weightPreference === 'lb') {
-        setChartLabel('m');
-      } else if (unitType === 'DISTANCE' && weightPreference === 'kg') {
-        setChartLabel('km');
-      }
+      getInfo();
     }
-  }, [type, unitType, weightPreference, history]);
+  }, [history]);
 
   const formattedSeconds = new Date(duration * 1000)
     .toISOString()
@@ -180,12 +129,14 @@ export default function ChallengeScreen() {
       type,
       description,
       fieldTitle,
-      history,
+      processedHistory: chartInfo.processedHistory,
       elapsed,
-      chartLabel,
-      chartDataPoints,
-      chartInterval,
-      chartTicks,
+      unitType,
+      weightPreference,
+      chartLabel: chartInfo.chartLabel,
+      chartDataPoints: chartInfo.dataPoints,
+      chartInterval: chartInfo.interval,
+      chartTicks: chartInfo.ticks,
     });
 
     if (type === 'COUNTDOWN') {
@@ -196,42 +147,46 @@ export default function ChallengeScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <ProgressChart
-          data={history}
-          chartLabel={chartLabel}
-          chartDataPoints={chartDataPoints}
-          interval={chartInterval}
-          ticks={chartTicks}
-        />
+  if (chartInfo) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <ProgressChart
+            data={chartInfo.processedHistory}
+            chartLabel={chartInfo.chartLabel}
+            chartDataPoints={chartInfo.dataPoints}
+            interval={chartInfo.interval}
+            ticks={chartInfo.ticks}
+          />
+        </View>
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{description}</Text>
+        </View>
+        {type !== 'OTHER' && (
+          <Text style={styles.timerText}>
+            {type === 'COUNTDOWN'
+              ? msToHMSFull(timerData.remainingMS)
+              : msToHMSFull(stopwatchData.elapsedMS)}
+          </Text>
+        )}
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="start"
+            icon="chevron"
+            variant="gradient"
+            onPress={handlePressStart}
+          />
+          <Spacer height={20} />
+          <DefaultButton
+            type="done"
+            icon="chevron"
+            variant="white"
+            onPress={handlePressDone}
+          />
+        </View>
       </View>
-      <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-      {type !== 'OTHER' && (
-        <Text style={styles.timerText}>
-          {type === 'COUNTDOWN'
-            ? msToHMSFull(timerData.remainingMS)
-            : msToHMSFull(stopwatchData.elapsedMS)}
-        </Text>
-      )}
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="start"
-          icon="chevron"
-          variant="gradient"
-          onPress={handlePressStart}
-        />
-        <Spacer height={20} />
-        <DefaultButton
-          type="done"
-          icon="chevron"
-          variant="white"
-          onPress={handlePressDone}
-        />
-      </View>
-    </View>
-  );
+    );
+  } else {
+    return null;
+  }
 }

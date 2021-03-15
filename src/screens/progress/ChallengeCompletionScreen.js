@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Dimensions, Platform, ActionSheetIOS} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -18,24 +18,29 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
+import UseData from '../../hooks/data/UseData';
 
 export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const {history} = UseData();
   const {dictionary} = useDictionary();
   const {WorkoutDict, ShareDict} = dictionary;
   const {
     params: {
-      history,
+      // processedHistory,
       name,
       type,
-      chartLabel,
-      chartDataPoints,
-      chartInterval,
-      chartTicks,
+      // chartLabel,
+      // chartDataPoints,
+      // chartInterval,
+      // chartTicks,
       result,
       trainer,
+      id,
+      weightPreference,
+      unitType,
     },
   } = useRoute();
   const navigation = useNavigation();
@@ -51,6 +56,21 @@ export default function ChallengeCompletionScreen() {
   });
 
   const screenWidth = Dimensions.get('screen').width;
+  const [chartInfo, setChartInfo] = useState(null);
+
+  useEffect(() => {
+    async function getInfo() {
+      const info = await generateChartInfo(
+        history,
+        id,
+        weightPreference,
+        unitType,
+        type,
+      );
+      setChartInfo(info);
+    }
+    getInfo();
+  }, [history, id, weightPreference, unitType, type]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -179,22 +199,28 @@ export default function ChallengeCompletionScreen() {
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart
-          data={history}
-          chartLabel={chartLabel}
-          chartDataPoints={chartDataPoints}
-          interval={chartInterval}
-          ticks={chartTicks}
-          axis={false}
-          background={false}
-        />
+        {chartInfo && (
+          <ProgressChart
+            data={chartInfo.processedHistory}
+            chartLabel={chartInfo.chartLabel}
+            chartDataPoints={chartInfo.dataPoints}
+            interval={chartInfo.interval}
+            ticks={chartInfo.ticks}
+            axis={false}
+            background={false}
+          />
+        )}
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
-        <Text
-          style={type === 'STOPWATCH' ? styles.timeResult : styles.resultText}>
-          {`${result} ${chartLabel}`}
-        </Text>
+        {chartInfo && (
+          <Text
+            style={
+              type === 'STOPWATCH' ? styles.timeResult : styles.resultText
+            }>
+            {`${result} ${chartInfo.chartLabel}`}
+          </Text>
+        )}
       </View>
       <View style={styles.line} />
       <View style={styles.buttonContainer}>

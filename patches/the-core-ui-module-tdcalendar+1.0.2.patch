@@ -99,7 +99,7 @@ index 4187631..02ce06f 100644
                      {monthName} {year}
                    </Text>
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
-index 9c9dad3..d654597 100644
+index 9c9dad3..48eb784 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
 +++ b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
 @@ -10,6 +10,7 @@ import React from "react";
@@ -110,15 +110,6 @@ index 9c9dad3..d654597 100644
  
  export default function DateCell({
    date,
-@@ -19,7 +20,7 @@ export default function DateCell({
- }) {
-   // ** ** ** ** ** SETUP ** ** ** ** **
-   const { getWidth, fontSize } = ScaleHook();
--
-+console.log(status, "<---statuses")
-   // ** ** ** ** ** STYLES ** ** ** ** **
- 
-   const sharedStyle = {
 @@ -41,6 +42,9 @@ export default function DateCell({
        solid: true,
        color: "#ffffff",

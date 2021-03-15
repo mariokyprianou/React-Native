@@ -25,7 +25,7 @@ export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
-  const {getProgramme, programme} = UseData();
+  const {getProgramme, programme, history, getHistory} = UseData();
   const [formHeight, setFormHeight] = useState(150);
   let newStyle = {formHeight};
   const {updateValue, getValueByName, cleanValues} = FormHook();
@@ -36,8 +36,10 @@ export default function ChallengeEndScreen() {
       type,
       description,
       fieldTitle,
-      history,
+      processedHistory,
       elapsed,
+      unitType,
+      weightPreference,
       chartLabel,
       chartDataPoints,
       chartInterval,
@@ -132,22 +134,35 @@ export default function ChallengeEndScreen() {
         },
       },
     })
-      .then((res) => console.log(res, '<---sendResult res'))
-      .catch((err) => console.log(err, '<---sendResult err'));
+      .then(() => {
+        getHistory();
+      })
+      .then(() => {
+        // const info = await generateChartInfo(
+        //   history,
+        //   id,
+        //   weightPreference,
+        //   unitType,
+        //   type,
+        // );
 
-    navigation.navigate('ChallengeComplete', {
-      history,
-      name,
-      type,
-      chartLabel,
-      chartDataPoints,
-      chartInterval,
-      chartTicks,
-      result: challengeResult,
-      trainer: programme.trainer.name,
-    });
-
-    cleanValues();
+        navigation.navigate('ChallengeComplete', {
+          // processedHistory: info.processedHistory,
+          name,
+          type,
+          unitType,
+          id,
+          weightPreference,
+          // chartLabel: info.chartLabel,
+          // chartDataPoints: info.dataPoints,
+          // chartInterval: info.interval,
+          // chartTicks: info.ticks,
+          result: challengeResult,
+          trainer: programme.trainer.name,
+        });
+      })
+      .catch((err) => console.log(err, '<---sendResult err'))
+      .finally(() => cleanValues());
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -187,13 +202,15 @@ export default function ChallengeEndScreen() {
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.card}>
-          <ProgressChart
-            data={history}
-            chartLabel={chartLabel}
-            chartDataPoints={chartDataPoints}
-            interval={chartInterval}
-            ticks={chartTicks}
-          />
+          {processedHistory.length > 0 && (
+            <ProgressChart
+              data={processedHistory}
+              chartLabel={chartLabel}
+              chartDataPoints={chartDataPoints}
+              interval={chartInterval}
+              ticks={chartTicks}
+            />
+          )}
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.description}>{description}</Text>

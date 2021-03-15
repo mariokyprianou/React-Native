@@ -70,6 +70,9 @@ export default function ChallengeScreen() {
           unitType,
           type,
         );
+        while (processedChallengeHistory.length > 12) {
+          processedChallengeHistory.shift();
+        }
         setHistory(processedChallengeHistory);
       }
     },

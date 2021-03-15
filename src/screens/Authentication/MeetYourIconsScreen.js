@@ -63,51 +63,27 @@ export default function MeetYourIconsScreen() {
   const {
     params: {switchProgramme},
   } = useRoute();
-  const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
-  const {setProgrammeModalImage, programme} = UseData();
+  const {trainers, getTrainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
+  const {setProgrammeModalImage, programme, getProgramme, updateStoredDays} = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {isConnected, isInternetReachable} = useNetInfo();
   const [restartProgramme] = useMutation(RestartProgramme);
   const [continueProgramme] = useMutation(ContinueProgramme);
   const [startProgramme] = useMutation(StartProgramme);
 
-  //const switchProgramme = true;
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
-  // for changeProgramme
-  const [currentTrainerId, setCurrentTrainerId] = useState();
-  const [currentWeekNumber, setCurrentWeekNumber] = useState();
-  const [currentProgrammeId, setCurrentProgrammeId] = useState();
-
-  // for changeProgramme
-  useEffect(() => {
-    if (programme) {
-      setCurrentTrainerId(programme.trainer.id);
-      setCurrentWeekNumber(programme.currentWeek.weekNumber);
-    }
-  }, [programme]);
-
-  // for changeProgramme
-  useEffect(() => {
-    if (trainers && currentTrainerId) {
-      const findCurrentTrainer = trainers.filter(
-        (trainer) => trainer.id === currentTrainerId,
-      );
-      const findCurrentProgrammeId = findCurrentTrainer[0].programmes.filter(
-        (programme) => programme.userProgress,
-      );
-      setCurrentProgrammeId(findCurrentProgrammeId[0].id);
-    }
-  }, [currentTrainerId, trainers]);
-
+ 
   useEffect(() => {
     setLoading(true);
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   useEffect(() => {
     if (activeIndex < 0) {
@@ -325,58 +301,83 @@ export default function MeetYourIconsScreen() {
     setSelectedProgram(newProgramme);
   }
 
-  async function handleRestartProgramme(id) {
+  async function handleRestartProgramme() {
+
+    setLoading(true);
     restartProgramme({
       variables: {
         input: {
-          programme: id,
+          programme: selectedProgram.id,
         },
       },
     })
-      .then(() => {
-        // getProgramme();
-        // updateStoredDays([]);
+      .then((res) => {
+        console.log("restartProgramme", res);
         submitAnalyticsEvent(false);
-        navigation.navigate('TabContainer');
-        setCurrentWeekNumber(1);
+       
+        changedAssignedProgramme();
       })
-      .catch((err) => console.log(err, '<---restart programme error'));
+      .catch((err) => {
+        console.log(err, '<---restart programme error');
+        setLoading(false);
+      });
   }
 
-  async function handleContinueProgramme(id) {
+  async function handleContinueProgramme() {
+    if (selectedProgram.userProgress.isActive) {
+      navigation.navigate('TabContainer');
+      return;
+    }
+
+    setLoading(true);
     continueProgramme({
       variables: {
         input: {
-          programme: id,
+          programme: selectedProgram.id,
         },
       },
     })
-      .then(() => {
+      .then((res) => {
+        console.log("continueProgramme", res);
+
         submitAnalyticsEvent(false);
-        navigation.navigate('TabContainer');
+        changedAssignedProgramme();
       })
-      .catch((err) => console.log(err, '<---continue programme error'));
+      .catch((err) => {
+        console.log(err, '<---continue programme error');
+        setLoading(false);
+      });
   }
 
-  async function handleStartNewProgramme(id) {
+  async function handleStartNewProgramme() {
+
+    setLoading(true);
     startProgramme({
       variables: {
         input: {
-          programme: id,
+          programme: selectedProgram.id,
         },
       },
-    })
-      .then(() => {
-        // getProgramme();
-        // updateStoredDays([]);
+    }).then((res) => {
+        console.log("startProgramme", res);
+
         submitAnalyticsEvent(true);
-        setProgrammeModalImage(selectedProgram.programmeImage);
-        navigation.navigate('TabContainer');
-        // setCurrentTrainerId();
-        // setCurrentWeekNumber();
-        // setCurrentProgrammeId();
+        changedAssignedProgramme();
+        
       })
-      .catch((err) => console.log(err, '<---start new programme error'));
+      .catch((err) => {
+        console.log(err, '<---start new programme error');
+        setLoading(false);
+      });
+  }
+
+  function changedAssignedProgramme() {
+    updateStoredDays([]);
+    getProgramme();
+    getTrainers();
+  
+    setProgrammeModalImage(selectedProgram.programmeImage);
+    navigation.navigate('TabContainer');
   }
 
   function submitAnalyticsEvent(newTrainer = false) {
@@ -455,6 +456,38 @@ export default function MeetYourIconsScreen() {
     );
   }
   // ** ** ** ** ** RENDER ** ** ** ** **
+
+const programmeWithProgressView = (weekNumber) => (
+  
+  <View style={styles.buttonContainer}>
+      <DefaultButton
+        type="restartProgramme"
+        icon="chevron"
+        variant="gradient"
+        onPress={() => handleRestartProgramme()}
+      />
+      <Spacer height={20} />
+      <DefaultButton
+        type="continueFromWeek"
+        icon="chevron"
+        variant="white"
+        weekNo={weekNumber || 1}
+        onPress={() => handleContinueProgramme()}
+      />
+  </View>
+);
+
+
+const newProgrammeView = () => (
+  <View style={styles.buttonContainer}>
+    <DefaultButton
+      type="startNow"
+      icon="chevron"
+      variant="gradient"
+      onPress={() => handleStartNewProgramme()}
+    />
+  </View>
+)
 
   return (
     <View style={styles.container}>
@@ -571,34 +604,13 @@ export default function MeetYourIconsScreen() {
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />
       </View>
-      {switchProgramme === true && selectedProgram.id === currentProgrammeId ? (
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="restartProgramme"
-            icon="chevron"
-            variant="gradient"
-            onPress={() => handleRestartProgramme(selectedProgram.id)}
-          />
-          <Spacer height={20} />
-          <DefaultButton
-            type="continueFromWeek"
-            icon="chevron"
-            variant="white"
-            weekNo={currentWeekNumber}
-            onPress={() => handleContinueProgramme(selectedProgram.id)}
-          />
-        </View>
-      ) : switchProgramme === true &&
-        selectedProgram.id !== currentProgrammeId ? (
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="startNow"
-            icon="chevron"
-            variant="gradient"
-            onPress={() => handleStartNewProgramme(selectedProgram.id)}
-          />
-        </View>
-      ) : (
+      
+      {switchProgramme === true ? 
+        selectedProgram && selectedProgram.userProgress 
+        ? programmeWithProgressView(selectedProgram.userProgress.latestWeek) 
+        : newProgrammeView()
+    
+       : (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="startNow"

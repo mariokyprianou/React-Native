@@ -62,6 +62,7 @@ export default function WorkoutHomeScreen() {
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
+
   useEffect(() => {
     setLoading(true);
     getProgramme();
@@ -184,13 +185,14 @@ export default function WorkoutHomeScreen() {
     if (programme) {
       if (weekNumber === 1 && currentWeek) {
         setWorkoutsToDisplay(currentWeek);
+        setLoading(false);
       }
       if (weekNumber === 2) {
         const nextWeek = getNextWeek(programme.nextWeek.workouts);
         setWorkoutsToDisplay(nextWeek);
       }
 
-      setLoading(false);
+      
     }
   }, [weekNumber, programme]);
 

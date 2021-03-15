@@ -4,8 +4,8 @@
  * Email: christos.demetiou@thedistance.co.uk
  * Copyright (c) 2021 JM APP DEVELOPMENT LTD
  */
-import React, {useState, useMemo} from 'react';
-import {useQuery} from '@apollo/client';
+import React, {useState, useMemo, useEffect} from 'react';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './CommonDataContext';
@@ -31,6 +31,11 @@ export default function DataProvider(props) {
 
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
+  useEffect(() => {
+    console.log("CommondataProvider: useEffect");
+    getTrainers();
+  }, []);
+
   useQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
@@ -45,7 +50,7 @@ export default function DataProvider(props) {
     onError: (error) => console.log(error),
   });
 
-  useQuery(Trainers, {
+  const [getTrainers] = useLazyQuery(Trainers, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       if (res) {
@@ -113,6 +118,7 @@ export default function DataProvider(props) {
     () => ({
       onboarding,
       trainers,
+      getTrainers,
       legals,
       programmeQuestionnaire,
       suggestedProgramme,
@@ -121,6 +127,7 @@ export default function DataProvider(props) {
     [
       onboarding,
       trainers,
+      getTrainers,
       legals,
       programmeQuestionnaire,
       suggestedProgramme,

@@ -79,7 +79,7 @@ export default function TransformationScreen() {
   }
 
   useEffect(() => {
-    if (userImages[0].createdAt) {
+    if (userImages && userImages[0].createdAt) {
       getPic(userImages[0]);
       if (userImages.length > 1) {
         getPic(userImages[userImages.length - 1]);

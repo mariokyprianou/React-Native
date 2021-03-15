@@ -339,7 +339,7 @@ export default function DataProvider(props) {
   const [userImages, setUserImages] = useState();
 
   const [getImages] = useLazyQuery(ProgressImages, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    fetchPolicy: 'no-cache',
     onCompleted: (res) => {
       const today = new Date();
       const formattedToday = format(today, 'dd/LL/yyyy');

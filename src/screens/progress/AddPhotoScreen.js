@@ -21,6 +21,7 @@ import {useMutation} from '@apollo/client';
 import UploadUrl from '../../apollo/mutations/UploadUrl';
 import UploadFailed from '../../apollo/mutations/UploadFailed';
 import RNFetchBlob from 'rn-fetch-blob';
+import UseData from '../../hooks/data/UseData';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
@@ -31,6 +32,7 @@ export default function TransformationScreen() {
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
+  const {getImages} = UseData();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -85,6 +87,7 @@ export default function TransformationScreen() {
 
         if (status === 200 || status === 204) {
           console.log('SUCCESS');
+          getImages();
         } else {
           handleAddPhotoError();
         }

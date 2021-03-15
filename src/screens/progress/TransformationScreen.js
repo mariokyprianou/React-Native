@@ -17,13 +17,9 @@ import CustomDateSelectors from '../../components/Buttons/CustomDateSelectors';
 import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {useQuery, useLazyQuery, useApolloClient} from '@apollo/client';
-import ProgressImages from '../../apollo/queries/ProgressImages';
+import {useLazyQuery, useApolloClient} from '@apollo/client';
 import ProgressImage from '../../apollo/queries/ProgressImage';
-import fetchPolicy from '../../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
-import formatProgressImages from '../../utils/formatProgressImages';
-import {format} from 'date-fns';
+import UseData from '../../hooks/data/UseData';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -33,7 +29,7 @@ export default function TransformationScreen() {
   const {getHeight} = ScaleHook();
   const client = useApolloClient();
   const {colors} = useTheme();
-  const {isConnected, isInternetReachable} = useNetInfo();
+  const {userImages, getImages} = UseData();
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
@@ -51,24 +47,7 @@ export default function TransformationScreen() {
 
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
-  const [userImages, setUserImages] = useState();
   const [selectedUrl, setSelectedUrl] = useState();
-
-  const [getImages] = useLazyQuery(ProgressImages, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      const today = new Date();
-      const formattedToday = format(today, 'dd/LL/yyyy');
-      const emptyListObject = {value: today, label: formattedToday};
-      if (res.progressImages.length === 0) {
-        setUserImages([emptyListObject]);
-      } else {
-        const formattedImages = formatProgressImages(res.progressImages);
-        setUserImages(formattedImages);
-      }
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
 
   useEffect(() => {
     getImages();
@@ -100,7 +79,7 @@ export default function TransformationScreen() {
   }
 
   useEffect(() => {
-    if (userImages) {
+    if (userImages[0].createdAt) {
       getPic(userImages[0]);
       if (userImages.length > 1) {
         getPic(userImages[userImages.length - 1]);

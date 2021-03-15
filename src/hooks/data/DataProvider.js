@@ -13,6 +13,8 @@ import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
 import Progress from '../../apollo/queries/Progress';
 import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
+import ProgressImages from '../../apollo/queries/ProgressImages';
+import formatProgressImages from '../../utils/formatProgressImages';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   differenceInDays,
@@ -333,6 +335,25 @@ export default function DataProvider(props) {
     onError: (err) => console.log(err, '<---progress images err'),
   });
 
+  // Get progress images
+  const [userImages, setUserImages] = useState();
+
+  const [getImages] = useLazyQuery(ProgressImages, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      const today = new Date();
+      const formattedToday = format(today, 'dd/LL/yyyy');
+      const emptyListObject = {value: today, label: formattedToday};
+      if (res.progressImages.length === 0) {
+        setUserImages([emptyListObject]);
+      } else {
+        const formattedImages = formatProgressImages(res.progressImages);
+        setUserImages(formattedImages);
+      }
+    },
+    onError: (err) => console.log(err, '<---progress images err'),
+  });
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -367,6 +388,8 @@ export default function DataProvider(props) {
       getProgress,
       history,
       getHistory,
+      userImages,
+      getImages,
     }),
     [
       programme,
@@ -399,6 +422,8 @@ export default function DataProvider(props) {
       getProgress,
       history,
       getHistory,
+      userImages,
+      getImages,
     ],
   );
 

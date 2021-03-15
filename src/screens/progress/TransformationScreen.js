@@ -20,6 +20,7 @@ import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {useLazyQuery, useApolloClient} from '@apollo/client';
 import ProgressImage from '../../apollo/queries/ProgressImage';
 import UseData from '../../hooks/data/UseData';
+import useLoading from '../../hooks/loading/useLoading';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -33,6 +34,7 @@ export default function TransformationScreen() {
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
+  const {setLoading} = useLoading();
   const navigation = useNavigation();
   navigation.setOptions({
     header: () => (

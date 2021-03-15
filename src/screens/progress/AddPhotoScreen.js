@@ -22,6 +22,7 @@ import UploadUrl from '../../apollo/mutations/UploadUrl';
 import UploadFailed from '../../apollo/mutations/UploadFailed';
 import RNFetchBlob from 'rn-fetch-blob';
 import UseData from '../../hooks/data/UseData';
+import useLoading from '../../hooks/loading/useLoading';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
@@ -30,6 +31,7 @@ export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors} = useTheme();
+  const {setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const {getImages} = UseData();
@@ -68,6 +70,8 @@ export default function TransformationScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
     console.log('TAKING PHOTO');
+    setLoading(true);
+
     const URL = await requestUrl().catch((err) =>
       console.log(err, '<---requestUrl err'),
     );
@@ -88,8 +92,11 @@ export default function TransformationScreen() {
         if (status === 200 || status === 204) {
           console.log('SUCCESS');
           getImages();
+          setLoading(false);
+          navigation.goBack();
         } else {
           handleAddPhotoError();
+          setLoading(false);
         }
       })
       .catch((err) => {

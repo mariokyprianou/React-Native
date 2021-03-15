@@ -260,6 +260,8 @@ export default function DataProvider(props) {
   // Current Workout data
   const [selectedWorkout, setSelectedWorkout] = useState();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [completedExercises, setCompletedExercises] = useState([]);
+
 
   const [workoutTime, setWorkoutTime] = useState(0);
   const [isWorkoutTimerRunning, setIsWorkoutTimerRunning] = useState(false);
@@ -340,6 +342,8 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      completedExercises,
+      setCompletedExercises
     }),
     [
       programme,
@@ -368,6 +372,8 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      completedExercises,
+      setCompletedExercises
     ],
   );
 

@@ -31,7 +31,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, setEnableScroll} = props;
+  const {exercise, index} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -101,7 +101,6 @@ export default function ExerciseView(props) {
 
   const onSetCompleted = (completedIndex) => {
     if (completedIndex + 1 === sets.length) {
-      setEnableScroll(true);
       setCurrentSet(sets.length);
     } else {
       setCurrentSet(currentSet + 1);
@@ -135,28 +134,26 @@ export default function ExerciseView(props) {
     }
   };
 
-  const finishWorkout = () => {
-    // redirect to workout complete screen if clicking off the final rest timer:
-    if (
-      currentSet === sets.length &&
-      index === selectedWorkout.exercises.length - 1
-    ) {
-      props.workoutFinished();
-    }
-  };
+  async function checkShouldFinishExercise() {
+        // On timer done, check if exercise is done
+        if (currentSet === sets.length  ) {
+          props.exerciseFinished();
+        }
+    
+  }
 
   const onCancelTimer = () => {
     setCountDown(false);
-    finishWorkout();
+    checkShouldFinishExercise();
   };
 
   const onFinishTimer = () => {
     setCountDown(false);
+    checkShouldFinishExercise()
   };
 
   const onExerciseCompleted = () => {
     onSetCompleted(sets.length - 1);
-    setEnableScroll(true);
   };
 
   const handleSelectWeights = () => {
@@ -257,7 +254,6 @@ export default function ExerciseView(props) {
         <SetCompletionScreen
           restTime={msToHMS(restTime)}
           setSetComplete={setSetComplete}
-          finishWorkout={finishWorkout}
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}
           exercise={exercise.id}

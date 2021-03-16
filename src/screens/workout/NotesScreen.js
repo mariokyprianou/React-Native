@@ -26,7 +26,7 @@ export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
-  const {cleanValues, getValues} = FormHook();
+  const {cleanValues, getValues, cleanValueByName} = FormHook();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const [addNote] = useMutation(UpdateExerciseNote);
@@ -36,7 +36,7 @@ export default function NotesScreen() {
   const {
     params: {id, description},
   } = useRoute();
-  const {selectedWorkout, currentExerciseIndex} = useData();
+  const {selectedWorkout, currentExerciseIndex, setSelectedWorkout} = useData();
   const [savedNotes, setSavedNotes] = useState('');
 
   useEffect(() => {
@@ -44,7 +44,13 @@ export default function NotesScreen() {
   }, [selectedWorkout, currentExerciseIndex]);
 
   navigation.setOptions({
-    header: () => <Header title={WorkoutDict.Notes} showModalCross />,
+    header: () => (
+      <Header
+        title={WorkoutDict.Notes}
+        right="crossIcon"
+        rightAction={handleGoBack}
+      />
+    ),
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -73,7 +79,6 @@ export default function NotesScreen() {
     subtitle: {
       ...textStyles.medium14_black100,
       marginTop: getHeight(30),
-      marginBottom: getHeight(13),
       textAlign: 'left',
     },
     buttonContainer: {
@@ -85,6 +90,11 @@ export default function NotesScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  function handleGoBack() {
+    cleanValueByName('notes');
+    navigation.goBack();
+  }
+
   async function handleAddNote() {
     const newNote = getValues('notes').notes;
 
@@ -97,9 +107,22 @@ export default function NotesScreen() {
       },
     })
       .then((res) => {
+        let workout = {...selectedWorkout};
+
+        workout.exercises[currentExerciseIndex] = {
+          ...workout.exercises[currentExerciseIndex],
+          notes: newNote,
+        };
+
+        setSelectedWorkout(workout);
+
+        cleanValueByName('notes');
         navigation.goBack();
       })
-      .catch((err) => console.log(err, '<---error on adding note'));
+      .catch((err) => {
+        console.log(err, '<---error on adding note');
+        navigation.goBack();
+      });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -108,6 +131,7 @@ export default function NotesScreen() {
       name: 'notes',
       type: 'text',
       multiline: true,
+      minHeight: getHeight(70),
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
       defaultValue: savedNotes,
@@ -131,7 +155,6 @@ export default function NotesScreen() {
         <View style={styles.contentContainer}>
           <Text style={styles.description}>{description}</Text>
           <Text style={styles.subtitle}>{WorkoutDict.YourNotes}</Text>
-          <Spacer height={15} />
           <Form cells={cells} config={config} />
         </View>
       </KeyboardAwareScrollView>

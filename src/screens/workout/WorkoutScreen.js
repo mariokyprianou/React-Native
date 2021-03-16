@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -25,10 +25,12 @@ export default function WorkoutScreen() {
     currentExerciseIndex,
     setCurrentExerciseIndex,
     setIsWorkoutTimerRunning,
+    completedExercises,
+    setCompletedExercises
   } = useData();
 
   const [offset, setOffset] = useState(0);
-  const [enableScroll, setEnableScroll] = useState(false);
+
 
   navigation.setOptions({
     header: () => (
@@ -56,11 +58,8 @@ export default function WorkoutScreen() {
   function handleIndex(newOffset) {
     if (newOffset > offset) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
-      setEnableScroll(false);
-    } else {
-      if (currentExerciseIndex > 0) {
+    } else if (newOffset < offset && currentExerciseIndex > 0) {
         setCurrentExerciseIndex(currentExerciseIndex - 1);
-      }
     }
 
     setOffset(newOffset);
@@ -71,12 +70,28 @@ export default function WorkoutScreen() {
     navigation.navigate('WorkoutComplete');
   }
 
+  useEffect(() => {
+    console.log("completedExercises changed", completedExercises);
+    console.log(completedExercises.length, selectedWorkout.exercises.length)
+    if (completedExercises.length === selectedWorkout.exercises.length) {
+      workoutFinished()
+    }
+  }, [completedExercises]);
+
+  function exerciseFinished() {
+    let index = completedExercises.indexOf(currentExerciseIndex);
+
+    if (index === -1) {
+      setCompletedExercises(prev => [...prev, currentExerciseIndex]);
+    }
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
       <View style={styles.headerBorder} />
       <ScrollView
-        scrollEnabled={enableScroll}
+        scrollEnabled={true}
         keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={20} //how often we update the position of the indicator bar
@@ -91,8 +106,7 @@ export default function WorkoutScreen() {
           <ExerciseView
             {...screen}
             index={index}
-            workoutFinished={workoutFinished}
-            setEnableScroll={setEnableScroll}
+            exerciseFinished={exerciseFinished}
           />
         ))}
       </ScrollView>

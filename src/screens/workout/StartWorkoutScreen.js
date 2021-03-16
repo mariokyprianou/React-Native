@@ -28,6 +28,7 @@ export default function StartWorkoutScreen() {
     setCurrentExerciseIndex,
     setWorkoutTime,
     setIsWorkoutTimerRunning,
+    setCompletedExercises
   } = useData();
 
   const [topViewProps, setTopViewProps] = useState({});
@@ -104,6 +105,7 @@ export default function StartWorkoutScreen() {
     setCurrentExerciseIndex(0);
     setWorkoutTime(0);
     setIsWorkoutTimerRunning(true);
+    setCompletedExercises([]);
     navigation.navigate('Workout');
   }
 

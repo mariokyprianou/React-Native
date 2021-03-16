@@ -296,7 +296,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       .catch((err) => {
         console.log(err, '<---error on updating');
         displayAlert({
-          text: 'Unable to update settings',
+          text: ProfileDict.UnableToUpdate,
         });
       })
       .finally(() => setLoading(false));
@@ -321,7 +321,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 setUserData({});
                 AsyncStorage.removeItem('@ANALYTICS_ASKED');
                 AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
-
+                AsyncStorage.removeItem('@CURRENT_WEEK');
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

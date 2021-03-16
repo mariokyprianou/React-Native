@@ -67,7 +67,7 @@ export default function MeetYourIconsScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [safeArea, setSafeArea] = useState(false);
   const {isConnected, isInternetReachable} = useNetInfo();
-  const { setLoading} = useLoading();
+  const {setLoading} = useLoading();
 
   // old fake data
   const currentTrainerId = 'Katrina'; // to be changed to getProgramme data
@@ -75,9 +75,9 @@ export default function MeetYourIconsScreen() {
 
   useEffect(() => {
     setLoading(true);
+    StatusBar.setBarStyle('light-content');
   }, []);
-  
-  
+
   useEffect(() => {
     if (activeIndex < 0) {
       setActiveIndex(0);
@@ -275,7 +275,6 @@ export default function MeetYourIconsScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
-    
     if (direction === 'left' && activeIndex !== 0) {
       iconsSwiper.current.scrollTo(activeIndex - 1, true);
     }
@@ -339,17 +338,17 @@ export default function MeetYourIconsScreen() {
     }
   };
 
-   // ** ** ** ** ** RENDER ** ** ** ** **
+  // ** ** ** ** ** RENDER ** ** ** ** **
 
   return (
     <View style={styles.container}>
       {safeArea && <View style={styles.safeArea} />}
-     
+
       <Swiper
         ref={iconsSwiper}
         loop={false}
         showsPagination={false}
-        onIndexChanged={(index) =>{
+        onIndexChanged={(index) => {
           // reset suggested programme to prevent conflict between suggested && selected programme
           setSuggestedProgramme(null);
           setActiveIndex(index);
@@ -370,7 +369,6 @@ export default function MeetYourIconsScreen() {
               scrollEventThrottle={10}
               showsVerticalScrollIndicator={false}
               bounces={false}>
-
               <View style={styles.cardContainer}>
                 <TrainerCard
                   trainer={trainer}
@@ -402,6 +400,7 @@ export default function MeetYourIconsScreen() {
                       date={date}
                       duration={duration}
                       intensity={intensity}
+                      onPressCard={() => null}
                     />
                   );
                 })}
@@ -453,7 +452,6 @@ export default function MeetYourIconsScreen() {
           />
         </TouchableOpacity>
       </View>
-
 
       <View style={styles.fadeContainer}>
         <FadingBottomView color="blue" height={70} />

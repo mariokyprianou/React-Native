@@ -69,13 +69,14 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
-    if (currentWeek) {
+    if (programme && currentWeek) {
       async function checkWeekComplete() {
+        
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,
         ).length;
 
-        // Still have workouts for current week
+        //Still have workouts for current week
         if (remaining > 0) {
           setStayTunedEnabled(false);
           return;
@@ -84,7 +85,7 @@ export default function WorkoutHomeScreen() {
 
       checkWeekComplete();
     }
-  }, [currentWeek]);
+  }, [programme, currentWeek]);
 
   async function weekCompleted() {
     const shouldShowModal = await shouldShowWeekCompleteModal();
@@ -92,7 +93,7 @@ export default function WorkoutHomeScreen() {
     if (shouldShowModal) {
       constructWeekCompleteModal();
     }
-
+    
     // Check at least 7 days past week start date
     const completeWeekLimitDate = addDays(
       parseISO(programme.currentWeek.startedAt),

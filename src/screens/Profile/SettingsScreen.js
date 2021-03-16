@@ -31,7 +31,7 @@ const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getValues} = FormHook();
   const {dictionary, getLanguage, setLanguage} = useDictionary();
-  const {SettingsDict, LanguageDict} = dictionary;
+  const {SettingsDict, LanguageDict, ProfileDict} = dictionary;
   const {getHeight, getWidth} = ScaleHook();
   const {
     colors,
@@ -94,18 +94,17 @@ const SettingsScreen = ({}) => {
 
   useEffect(() => {
     checkDownloadEnabled();
-    getPreferences()
-    
+    getPreferences();
   }, []);
 
-  useEffect(()  => {
+  useEffect(() => {
     setMarketingPrefEmail(preferences.emails || false);
     setMarketingPrefNotifications(preferences.notifications || false);
     setPrefErrorReports(preferences.errorReports || false);
     setPrefAnalytics(preferences.analytics || false);
-    setDownloadQuality(preferences.downloadQuality || "LOW");
-    setWeightPref(preferences.weightPreference || "KG");
-  }, [preferences])
+    setDownloadQuality(preferences.downloadQuality || 'LOW');
+    setWeightPref(preferences.weightPreference || 'KG');
+  }, [preferences]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -158,7 +157,6 @@ const SettingsScreen = ({}) => {
   const updateSettingsAndNavigate = async () => {
     navigation.goBack();
 
-    
     AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(downloadWorkouts));
 
     const {
@@ -190,9 +188,7 @@ const SettingsScreen = ({}) => {
       weightPreference: newWeightPref,
     };
 
-    console.log(
-      "newPreferences", newPreferences
-    );
+    console.log('newPreferences', newPreferences);
 
     const newUserData = {
       familyName: userData.familyName,
@@ -204,7 +200,7 @@ const SettingsScreen = ({}) => {
       timeZone: formTimeZone || userData.timeZone,
     };
 
-    console.log("newUserData", newUserData)
+    console.log('newUserData', newUserData);
 
     updateProfile({
       variables: {
@@ -228,16 +224,15 @@ const SettingsScreen = ({}) => {
       .then((res) => {
         if (!res.data) {
           displayAlert({
-            text: 'Unable to update settings',
+            text: ProfileDict.UnableToUpdate,
           });
         } else {
           setPreferences(newPreferences);
-          
         }
       })
       .catch((err) => {
         displayAlert({
-          text: 'Unable to update settings',
+          text: ProfileDict.UnableToUpdate,
         });
       });
   };
@@ -332,7 +327,9 @@ const SettingsScreen = ({}) => {
     },
     {
       customComponent: () => (
-        <View style={{marginTop: getHeight(8)}}><Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text></View>
+        <View style={{marginTop: getHeight(8)}}>
+          <Text style={styles.headerTextStyle}>{SettingsDict.AppSettings}</Text>
+        </View>
       ),
     },
   ];
@@ -352,7 +349,6 @@ const SettingsScreen = ({}) => {
         paddingRight: getWidth(6),
         marginTop: -getHeight(5),
       },
-     
     },
   ];
 
@@ -413,7 +409,10 @@ const SettingsScreen = ({}) => {
           title={SettingsDict.DataCollection}
           titleTextStyle={styles.headerTextStyle}
           titleSwitchContainerStyle={styles.switchTitleContainerStyle}
-          descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(10)}}
+          descriptionTextStyle={{
+            ...styles.switchDescriptionStyle,
+            marginBottom: getHeight(10),
+          }}
           description={SettingsDict.DataCollectionText}
         />
       ),
@@ -428,7 +427,10 @@ const SettingsScreen = ({}) => {
           switchValue={prefErrorReports}
           switchStyle={styles.switchStyle}
           onSwitchChange={onToggleErrorReports}
-          descriptionTextStyle={{...styles.switchDescriptionStyle, marginBottom: getHeight(8)}}
+          descriptionTextStyle={{
+            ...styles.switchDescriptionStyle,
+            marginBottom: getHeight(8),
+          }}
           description={SettingsDict.ErrorReportsText}
         />
       ),
@@ -458,7 +460,12 @@ const SettingsScreen = ({}) => {
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
       placeholder: getLanguage() || languageDropdownData[0],
-      data: getLanguage() ? [getLanguage(), ...languageDropdownData.filter(item => item !== getLanguage())] : languageDropdownData,
+      data: getLanguage()
+        ? [
+            getLanguage(),
+            ...languageDropdownData.filter((item) => item !== getLanguage()),
+          ]
+        : languageDropdownData,
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingRight: getWidth(6),
@@ -473,10 +480,10 @@ const SettingsScreen = ({}) => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
       <TDSettings cells={cells} config={settingsConfig} scrollEnabled={false} />
-      <Spacer height={20}/>
+      <Spacer height={20} />
       {/* Weight */}
-      <Form cells={cells2} config={formConfig} />   
-      <Spacer height={25}/>
+      <Form cells={cells2} config={formConfig} />
+      <Spacer height={25} />
 
       {/* Download */}
       <TDSettings
@@ -487,8 +494,8 @@ const SettingsScreen = ({}) => {
 
       {/* Download Quality */}
       <Form cells={cells4} config={formConfig} />
-      <Spacer height={25}/>
-      
+      <Spacer height={25} />
+
       {/* Data Collection */}
       <TDSettings
         cells={cells5}

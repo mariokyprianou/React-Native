@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -32,6 +32,7 @@ export default function TakeARestScreen() {
   navigation.setOptions({
     header: () => <></>,
   });
+  StatusBar.setBarStyle('light-content');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

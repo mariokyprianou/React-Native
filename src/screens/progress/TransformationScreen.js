@@ -178,10 +178,10 @@ export default function TransformationScreen() {
     )
       .then((result) => {
         if (result === RESULTS.UNAVAILABLE) {
-          Alert.alert('This function is not available on this device');
+          Alert.alert(ProgressDict.FunctionNotAvailable);
         }
         if (result === RESULTS.BLOCKED) {
-          Alert.alert('Unable to access camera');
+          Alert.alert(ProgressDict.NoCamera);
         }
         if (result === RESULTS.GRANTED) {
           navigation.navigate('AddPhoto');

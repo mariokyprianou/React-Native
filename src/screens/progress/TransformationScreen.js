@@ -49,17 +49,22 @@ export default function TransformationScreen() {
 
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
-  const [selectedUrl, setSelectedUrl] = useState();
+
+
 
   useEffect(() => {
-    setLoading(true);
-  }, []);
 
-  useEffect(() => {
-    getImages();
+    // Only request images if we dont have them already
+    if (!userImages) {
+      setLoading(true);
+      console.log(" useEffect - calls getImages")
+      getImages();
+    }
+   
   }, []);
 
   async function getPic(image) {
+
     client
       .query({
         query: ProgressImage,
@@ -72,35 +77,39 @@ export default function TransformationScreen() {
         },
       })
       .then((res) => {
-        if (
-          beforePic === undefined &&
-          res.data.progressImage.id === userImages[0].id
-        ) {
+        if (beforePic === undefined) {
           setBeforePic(res.data.progressImage.url);
         } else if (afterPic === undefined) {
           setAfterPic(res.data.progressImage.url);
         }
+        setLoading(false);
       })
       .catch((err) => console.log(err, 'getPic error'));
   }
 
+
+  // Got images get first pic
   useEffect(() => {
-    if (userImages && userImages[0].createdAt) {
+    if (userImages && !beforePic && userImages[0].createdAt) {
+      console.log("userImages useEffect - calls getPic(0)")
+      setLoading(true);
+
       getPic(userImages[0]);
-      if (userImages.length > 1) {
-        getPic(userImages[userImages.length - 1]);
-      }
     }
-    setLoading(false);
+    
   }, [userImages]);
 
-  const [getImage] = useLazyQuery(ProgressImage, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      setSelectedUrl(res.progressImage.url);
-    },
-    onError: (err) => console.log(err, '<---get image err'),
-  });
+
+  // Before pic was set, go for after pic if available
+  useEffect(()=> {
+
+    if (beforePic && !afterPic && userImages.length > 1) {
+      console.log("beforePic useEffect - calls getPic(last)")
+      setLoading(true);
+      getPic(userImages[userImages.length - 1]);
+    }
+  }, [beforePic]);
+
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -133,21 +142,31 @@ export default function TransformationScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleSelectDate(dateItem, imageToSelect) {
     if (!dateItem.id) return;
+    setLoading(true);
 
-    getImage({
-      variables: {
-        input: {
-          id: dateItem.id,
-          createdAt: dateItem.createdAt,
+    client
+      .query({
+        query: ProgressImage,
+        fetchPolicy: 'no-cache',
+        variables: {
+          input: {
+            id: dateItem.id,
+            createdAt: dateItem.createdAt,
+          },
         },
-      },
-    });
-
-    if (selectedUrl && imageToSelect === 'before') {
-      setBeforePic(selectedUrl);
-    } else if (selectedUrl && imageToSelect === 'after') {
-      setAfterPic(selectedUrl);
-    }
+      })
+      .then((res) => {
+        let url = res.data.progressImage.url;
+        
+        if (imageToSelect === 'before') {
+          setBeforePic(url);
+        } else if (imageToSelect === 'after') {
+          setAfterPic(url);
+        }
+      })
+      .catch((err) => console.log(err, 'getPic error'))
+      .finally(() => setLoading(false));
+    
   }
 
   function handleNavigateAddPhoto() {
@@ -174,7 +193,7 @@ export default function TransformationScreen() {
   function handleShare() {}
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (userImages) {
+  
     return (
       <View style={styles.container}>
         <TDSlideshow
@@ -188,12 +207,12 @@ export default function TransformationScreen() {
           maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
           sliderSpacerHeight={styles.spacerHeight}
           sliderIcon={sliderThumb}
-          DateSelectors={() => (
-            <CustomDateSelectors
+          DateSelectors={userImages ? () => 
+            (<CustomDateSelectors
               onPress={handleSelectDate}
               storedImages={userImages}
-            />
-          )}
+          />) : () => <></>}
+            
         />
         <View style={styles.buttonContainer}>
           <DefaultButton
@@ -205,6 +224,6 @@ export default function TransformationScreen() {
         </View>
       </View>
     );
-  }
-  return null;
+  
+ 
 }

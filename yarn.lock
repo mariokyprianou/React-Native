@@ -5057,6 +5057,11 @@ domutils@^1.7.0:
     dom-serializer "0"
     domelementtype "1"
 
+dooboolab-welcome@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.2.0.tgz#295818ce85a8e97dc90c0ec0510b4008e2d722dc"
+  integrity sha512-XgEbjJHAsKLge/e8jtuHsv84Ovg1Gx0GvnOTOmOlVGV1643nduTAkT3fyo/mxKbzvyXBr47RHaJAY4R2toI0UA==
+
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
@@ -8971,6 +8976,13 @@ react-native-hooks@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/react-native-hooks/-/react-native-hooks-0.9.0.tgz#589fc2390296d9afe03327298dabcf0a1f350910"
   integrity sha512-yqSAH0zxqjYHYPo6mPut3dEROoB5qMvsAbN3EK0MDQrWA5zdqmzgTEpS9/qwXaIyllk6hQbHxYnRTWq2uq4tJQ==
+
+react-native-iap@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-6.0.0.tgz#c87e66e17a9a41928496982de43f37f76283d96c"
+  integrity sha512-cG3sHuvkOBBGK5vXz9vE3UgcwJEhYTHEpsMeqfEokqMmqXo5p5SQV4VvZwd25PiF8+wHiWyDSXhCMdyDhvCsWw==
+  dependencies:
+    dooboolab-welcome "^1.2.0"
 
 react-native-image-crop-picker@^0.35.1:
   version "0.35.1"

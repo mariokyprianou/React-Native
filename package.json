@@ -53,6 +53,7 @@
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fast-image": "^8.3.4",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-iap": "^6.0.0",
     "react-native-image-crop-picker": "^0.35.1",
     "react-native-intercom": "^18.0.0",
     "react-native-keyboard-aware-scrollview": "^2.1.0",

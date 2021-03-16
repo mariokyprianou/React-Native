@@ -38,12 +38,7 @@ import addWorkoutDates from '../../utils/addWorkoutDates';
 import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
-import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
-import RestartProgramme from '../../apollo/mutations/RestartProgramme';
-import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
-import StartProgramme from '../../apollo/mutations/StartProgramme';
-import {useMutation} from '@apollo/client';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -63,13 +58,9 @@ export default function MeetYourIconsScreen() {
   const {
     params: {switchProgramme},
   } = useRoute();
-  const {trainers, getTrainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
-  const {setProgrammeModalImage, programme, getProgramme, updateStoredDays} = UseData();
-  const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
+  const {setProgrammeModalImage, programme} = UseData();
   const {isConnected, isInternetReachable} = useNetInfo();
-  const [restartProgramme] = useMutation(RestartProgramme);
-  const [continueProgramme] = useMutation(ContinueProgramme);
-  const [startProgramme] = useMutation(StartProgramme);
 
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
@@ -301,101 +292,27 @@ export default function MeetYourIconsScreen() {
     setSelectedProgram(newProgramme);
   }
 
-  async function handleRestartProgramme() {
-
-    setLoading(true);
-    restartProgramme({
-      variables: {
-        input: {
-          programme: selectedProgram.id,
-        },
-      },
-    })
-      .then((res) => {
-        console.log("restartProgramme", res);
-        submitAnalyticsEvent(false);
-       
-        changedAssignedProgramme();
-      })
-      .catch((err) => {
-        console.log(err, '<---restart programme error');
-        setLoading(false);
-      });
-  }
-
-  async function handleContinueProgramme() {
-    if (selectedProgram.userProgress.isActive) {
-      navigation.navigate('TabContainer');
-      return;
-    }
-
-    setLoading(true);
-    continueProgramme({
-      variables: {
-        input: {
-          programme: selectedProgram.id,
-        },
-      },
-    })
-      .then((res) => {
-        console.log("continueProgramme", res);
-
-        submitAnalyticsEvent(false);
-        changedAssignedProgramme();
-      })
-      .catch((err) => {
-        console.log(err, '<---continue programme error');
-        setLoading(false);
-      });
-  }
-
-  async function handleStartNewProgramme() {
-
-    setLoading(true);
-    startProgramme({
-      variables: {
-        input: {
-          programme: selectedProgram.id,
-        },
-      },
-    }).then((res) => {
-        console.log("startProgramme", res);
-
-        submitAnalyticsEvent(true);
-        changedAssignedProgramme();
-        
-      })
-      .catch((err) => {
-        console.log(err, '<---start new programme error');
-        setLoading(false);
-      });
-  }
-
-  function changedAssignedProgramme() {
-    updateStoredDays([]);
-    getProgramme();
-    getTrainers();
   
-    setProgrammeModalImage(selectedProgram.programmeImage);
-    navigation.navigate('TabContainer');
-  }
 
-  function submitAnalyticsEvent(newTrainer = false) {
-    if (programme && programme.trainer) {
-      firebaseLogEvent(analyticsEvents.leftTrainer, {
-        trainerId: programme.trainer.id,
-        programmeId: programme.id,
-      });
+  function changedAssignedProgramme(type) {
+
+    if (type === 'continue') {
+      if (selectedProgram.userProgress.isActive) {
+        navigation.navigate('TabContainer');
+        return;
+      }
     }
-    firebaseLogEvent(
-      newTrainer
-        ? analyticsEvents.selectedTrainer
-        : analyticsEvents.restartContinueTrainer,
-      {
-        trainerId: selectedTrainer.id,
-        programmeId: selectedProgram.id,
-      },
-    );
+
+    navigation.navigate('Congratulations', {
+      switchProgramme: true,
+      currentProgramme: programme,
+      newProgramme: selectedProgram,
+      trainerId: selectedTrainer.id,
+      newTrainer: selectedTrainer.name,
+      environment: selectedProgram.environment,
+      programmeId: selectedProgram.id,
+      type: type
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -438,23 +355,7 @@ export default function MeetYourIconsScreen() {
     }
   };
 
-  function submitAnalyticsEvent(newTrainer = false) {
-    if (programme && programme.trainer) {
-      firebaseLogEvent(analyticsEvents.leftTrainer, {
-        trainerId: programme.trainer.id,
-        programmeId: programme.id,
-      });
-    }
-    firebaseLogEvent(
-      newTrainer
-        ? analyticsEvents.selectedTrainer
-        : analyticsEvents.restartContinueTrainer,
-      {
-        trainerId: selectedTrainer.id,
-        programmeId: selectedProgram.id,
-      },
-    );
-  }
+  
   // ** ** ** ** ** RENDER ** ** ** ** **
 
 const programmeWithProgressView = (weekNumber) => (
@@ -464,7 +365,7 @@ const programmeWithProgressView = (weekNumber) => (
         type="restartProgramme"
         icon="chevron"
         variant="gradient"
-        onPress={() => handleRestartProgramme()}
+        onPress={() => changedAssignedProgramme('restart')}
       />
       <Spacer height={20} />
       <DefaultButton
@@ -472,7 +373,7 @@ const programmeWithProgressView = (weekNumber) => (
         icon="chevron"
         variant="white"
         weekNo={weekNumber || 1}
-        onPress={() => handleContinueProgramme()}
+        onPress={() => changedAssignedProgramme('continue')}
       />
   </View>
 );
@@ -484,7 +385,7 @@ const newProgrammeView = () => (
       type="startNow"
       icon="chevron"
       variant="gradient"
-      onPress={() => handleStartNewProgramme()}
+      onPress={() => changedAssignedProgramme('start')}
     />
   </View>
 )

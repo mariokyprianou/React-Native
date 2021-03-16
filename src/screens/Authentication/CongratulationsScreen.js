@@ -25,6 +25,12 @@ import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
+import useCommonData from '../../hooks/data/useCommonData';
+import useLoading from '../../hooks/loading/useLoading';
+import RestartProgramme from '../../apollo/mutations/RestartProgramme';
+import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
+import StartProgramme from '../../apollo/mutations/StartProgramme';
+import {useMutation} from '@apollo/client';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -34,13 +40,26 @@ export default function CongratulationsScreen() {
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
+
+
+  // Switch programme parsms
+  const {  params: {switchProgramme, type, currentProgramme, newProgramme } } = useRoute();
+
   const {
-    params: {switchProgramme, trainerId, newTrainer, environment, programmeId},
+    params: { trainerId, newTrainer, environment, programmeId},
   } = useRoute();
+
   const navigation = useNavigation();
 
-  const {programmeModalImage} = UseData();
+  const [restartProgramme] = useMutation(RestartProgramme);
+  const [continueProgramme] = useMutation(ContinueProgramme);
+  const [startProgramme] = useMutation(StartProgramme);
+
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+
+  const { getTrainers } = useCommonData();
+  const {programmeModalImage, setProgrammeModalImage, programme, getProgramme, updateStoredDays} = UseData();
+  const {setLoading} = useLoading();
 
   navigation.setOptions({
     header: () => null,
@@ -168,6 +187,115 @@ export default function CongratulationsScreen() {
     }
   }
 
+  function handleNewProgramme() {
+    switch(type) {
+      case 'restart': 
+        handleRestartProgramme();
+        break;
+      case 'continue': 
+        handleContinueProgramme();
+        break;
+      case 'start': 
+        handleStartNewProgramme();
+        break;
+    }
+  }
+
+  async function handleRestartProgramme() {
+
+    setLoading(true);
+    restartProgramme({
+      variables: {
+        input: {
+          programme: programmeId,
+        },
+      },
+    })
+      .then((res) => {
+        console.log("restartProgramme", res);
+        submitAnalyticsEvent(false);
+       
+        changedAssignedProgramme();
+      })
+      .catch((err) => {
+        console.log(err, '<---restart programme error');
+        setLoading(false);
+      });
+  }
+
+  async function handleContinueProgramme() {
+
+    setLoading(true);
+    continueProgramme({
+      variables: {
+        input: {
+          programme: programmeId,
+        },
+      },
+    })
+      .then((res) => {
+        console.log("continueProgramme", res);
+
+        submitAnalyticsEvent(false);
+        changedAssignedProgramme();
+      })
+      .catch((err) => {
+        console.log(err, '<---continue programme error');
+        setLoading(false);
+      });
+  }
+
+  async function handleStartNewProgramme() {
+
+    setLoading(true);
+    startProgramme({
+      variables: {
+        input: {
+          programme: programmeId,
+        },
+      },
+    }).then((res) => {
+        console.log("startProgramme", res);
+
+        submitAnalyticsEvent(true);
+        changedAssignedProgramme();
+        
+      })
+      .catch((err) => {
+        console.log(err, '<---start new programme error');
+        setLoading(false);
+      });
+  }
+
+  async function changedAssignedProgramme() {
+    await updateStoredDays([]);
+    await getProgramme();
+    await getTrainers();
+  
+    setProgrammeModalImage(newProgramme.programmeImage);
+    navigation.navigate('TabContainer');
+    setLoading(false)
+  }
+
+  
+  function submitAnalyticsEvent(newTrainer = false) {
+    if (programme && currentProgramme.trainer) {
+      firebaseLogEvent(analyticsEvents.leftTrainer, {
+        trainerId: currentProgramme.trainer.id,
+        programmeId: currentProgramme.id,
+      });
+    }
+    firebaseLogEvent(
+      newTrainer
+        ? analyticsEvents.selectedTrainer
+        : analyticsEvents.restartContinueTrainer,
+      {
+        trainerId: newTrainer.id,
+        programmeId: programmeId.id,
+      },
+    );
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
@@ -196,7 +324,7 @@ export default function CongratulationsScreen() {
               type="jumpIn"
               icon="chevron"
               variant="white"
-              onPress={handlePressStart}
+              onPress={handleNewProgramme}
             />
             <Text style={styles.switchedText}>
               {WorkoutDict.SwitchedByMistake}

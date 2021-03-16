@@ -14,6 +14,7 @@ import {
   Image,
   Platform,
   ActionSheetIOS,
+  StatusBar,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -64,6 +65,8 @@ export default function CongratulationsScreen() {
   navigation.setOptions({
     header: () => null,
   });
+
+  StatusBar.setBarStyle('light-content');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

@@ -5,8 +5,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect, Component} from 'react';
-import {View, TouchableOpacity, Text, Image, StatusBar} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TouchableOpacity, Text, Image, Alert} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -31,7 +31,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, setEnableScroll} = props;
+  const {exercise, index} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -99,11 +99,8 @@ export default function ExerciseView(props) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
-  const involvesWeights = true; //<----- use to check weight capture screen
-
   const onSetCompleted = (completedIndex) => {
     if (completedIndex + 1 === sets.length) {
-      setEnableScroll(true);
       setCurrentSet(sets.length);
     } else {
       setCurrentSet(currentSet + 1);
@@ -131,35 +128,43 @@ export default function ExerciseView(props) {
     setCountDown(true);
 
     // show set completion modal with weights if applicable
-    if (involvesWeights) {
-      // TO DO change ^^ back to exercise.weight (and line 180)
+    if (exercise.weight) {
       setSelectedWeight(lastWeight);
       setSetComplete(true);
     }
   };
 
-  const finishWorkout = () => {
-    // redirect to workout complete screen if clicking off the final rest timer:
-    if (
-      currentSet === sets.length &&
-      index === selectedWorkout.exercises.length - 1
-    ) {
-      props.workoutFinished();
-    }
-  };
+  async function checkShouldFinishExercise() {
+        // On timer done, check if exercise is done
+        if (currentSet === sets.length  ) {
+          props.exerciseFinished();
+        }
+    
+  }
 
   const onCancelTimer = () => {
     setCountDown(false);
-    finishWorkout();
+    checkShouldFinishExercise();
   };
 
   const onFinishTimer = () => {
     setCountDown(false);
+    checkShouldFinishExercise()
   };
 
   const onExerciseCompleted = () => {
     onSetCompleted(sets.length - 1);
-    setEnableScroll(true);
+  };
+
+  const handleSelectWeights = () => {
+    if (weightHistory.length === 0) {
+      Alert.alert(WorkoutDict.WorkoutNoWeightsWarning);
+    } else {
+      navigation.navigate('WeightCapture', {
+        weightHistory: weightHistory,
+        weightPreference: weightLabel,
+      });
+    }
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -197,18 +202,13 @@ export default function ExerciseView(props) {
         </Text>
 
         <View style={styles.extraContainerStyle}>
-          {involvesWeights && (
+          {exercise.weight && (
             <TouchableOpacity
               style={{
                 ...styles.weightTouchStyle,
                 marginEnd: getWidth(40),
               }}
-              onPress={() =>
-                navigation.navigate('WeightCapture', {
-                  weightHistory: weightHistory,
-                  weightPreference: weightLabel,
-                })
-              }>
+              onPress={handleSelectWeights}>
               <Image source={weightIcon} />
               <Text style={styles.extraTextStyle}>
                 {WorkoutDict.WeightText}
@@ -254,7 +254,6 @@ export default function ExerciseView(props) {
         <SetCompletionScreen
           restTime={msToHMS(restTime)}
           setSetComplete={setSetComplete}
-          finishWorkout={finishWorkout}
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}
           exercise={exercise.id}

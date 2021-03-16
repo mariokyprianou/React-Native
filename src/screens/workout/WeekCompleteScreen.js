@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
@@ -45,6 +45,7 @@ export default function WeekCompleteScreen() {
   navigation.setOptions({
     header: () => <></>,
   });
+  StatusBar.setBarStyle('light-content');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

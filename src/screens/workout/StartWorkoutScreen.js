@@ -29,6 +29,7 @@ export default function StartWorkoutScreen() {
     setCurrentExerciseIndex,
     setWorkoutTime,
     setIsWorkoutTimerRunning,
+    setCompletedExercises
   } = useData();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
@@ -107,6 +108,7 @@ export default function StartWorkoutScreen() {
     setCurrentExerciseIndex(0);
     setWorkoutTime(0);
     setIsWorkoutTimerRunning(true);
+    setCompletedExercises([]);
 
     firebaseLogEvent(analyticsEvents.startedWorkout, {
       workoutId: selectedWorkout.id,

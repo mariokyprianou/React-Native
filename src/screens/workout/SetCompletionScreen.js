@@ -23,7 +23,6 @@ import HorizontalScrollPicker from '../../components/Infographics/HorizontalScro
 export default function SetCompletionScreen({
   restTime,
   setSetComplete,
-  finishWorkout,
   setReps,
   setNumber,
   exercise,

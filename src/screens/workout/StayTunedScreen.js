@@ -7,7 +7,7 @@
  */
 
 import React, {useState} from 'react';
-import {View, Text, ImageBackground, Alert} from 'react-native';
+import {View, Text, ImageBackground, Alert, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -39,6 +39,7 @@ export default function StayTuned() {
   navigation.setOptions({
     header: () => <></>,
   });
+  StatusBar.setBarStyle('light-content');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

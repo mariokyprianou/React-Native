@@ -161,9 +161,10 @@ export default function DataProvider(props) {
     let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
 
     // FUTURE
-    let futureWorkouts = workouts.filter((it) => !it.completedAt);
+    let futureWorkouts = workouts.filter((it) => !it.completedAt && !it.isRestDay);
     const futureRestDays = getStoredFutureRestDays(storedDays);
 
+  
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already
@@ -259,6 +260,8 @@ export default function DataProvider(props) {
   // Current Workout data
   const [selectedWorkout, setSelectedWorkout] = useState();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [completedExercises, setCompletedExercises] = useState([]);
+
 
   const [workoutTime, setWorkoutTime] = useState(0);
   const [isWorkoutTimerRunning, setIsWorkoutTimerRunning] = useState(false);
@@ -339,6 +342,8 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      completedExercises,
+      setCompletedExercises
     }),
     [
       programme,
@@ -367,6 +372,8 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
+      completedExercises,
+      setCompletedExercises
     ],
   );
 

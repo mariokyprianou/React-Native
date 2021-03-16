@@ -71,10 +71,8 @@ export default function MeetYourIconsScreen() {
  
   useEffect(() => {
     setLoading(true);
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    StatusBar.setBarStyle('light-content');
   }, []);
-
 
   useEffect(() => {
     if (activeIndex < 0) {
@@ -450,6 +448,7 @@ const newProgrammeView = () => (
                       date={date}
                       duration={duration}
                       intensity={intensity}
+                      onPressCard={() => null}
                     />
                   );
                 })}

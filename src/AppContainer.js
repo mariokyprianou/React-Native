@@ -13,6 +13,7 @@ import LandingScreen from './screens/landing/LandingScreen';
 import useLoading from './hooks/loading/useLoading';
 import LoadingView from './components/Views/LoadingView';
 import ChangeDeviceScreen from './screens/Authentication/ChangeDeviceScreen';
+import PurchaseModalScreen from './screens/other/PurchaseModalScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function AppContainer() {
@@ -45,6 +46,11 @@ export default function AppContainer() {
         <AppStack.Screen
           name="ChangeDevice"
           component={ChangeDeviceScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+         <AppStack.Screen
+          name="PurchaseModal"
+          component={PurchaseModalScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
       </AppStack.Navigator>

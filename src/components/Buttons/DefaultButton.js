@@ -24,6 +24,7 @@ export default function DefaultButton({
   onPress,
   disabled,
   capitalise,
+  customText = '',
   customSubtext,
   promptText,
 }) {
@@ -250,14 +251,17 @@ export default function DefaultButton({
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
 
-  const text = buttonText[type] || '';
-  const finalText =
+  const text = buttonText[type] || customText;
+  let finalText = capitalise === false ? text :
     variant === 'white' ||
     variant === 'gradient' ||
     variant === 'transparentBlackBoldText' ||
-    capitalise
+    capitalise 
       ? text.toUpperCase()
       : text;
+
+  
+
 
   const renderButtonText = () => {
     if (customSubtext) {

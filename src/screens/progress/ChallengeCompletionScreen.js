@@ -28,20 +28,7 @@ export default function ChallengeCompletionScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {
-      // processedHistory,
-      name,
-      type,
-      // chartLabel,
-      // chartDataPoints,
-      // chartInterval,
-      // chartTicks,
-      result,
-      trainer,
-      id,
-      weightPreference,
-      unitType,
-    },
+    params: {name, type, result, trainer, id, weightPreference, unitType},
   } = useRoute();
   const navigation = useNavigation();
 

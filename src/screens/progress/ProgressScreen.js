@@ -164,81 +164,81 @@ export default function ProgressScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (progressData && challenges) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
-        <ScrollView style={styles.screen}>
-          <View style={styles.container}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
-              <Text
-                style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
-            </View>
-            <View style={styles.calendarContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-                <Text style={styles.calendarTitle}>
-                  {ProgressDict.YourWorkouts}
-                </Text>
-                <Calendar
-                  days={days}
-                  daysTextStyles={daysTextStyles}
-                  daysContainerStyles={daysContainerStyles}
-                  firstDayOfWeek="Monday"
-                  calendarType="single-month"
-                  showPrevNextDays={false}
-                  datesSelectable={false}
-                  dateCellStyles={dateCellStyles}
-                  cellData={progressData}
-                  pillWidth={pillWidth}
-                  lookupStyleTable={lookupStyleTable}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.boxWrapper}>
-              <TransformationChallenge
-                type="progress"
-                title="Transformation"
-                image={fakeImage}
-                onPress={() => navigation.navigate('Transformation')}
-              />
-              {challenges.map((challenge, index) => {
-                // console.log(challenge, '<___CHALLENGE');
-                const {
-                  name,
-                  id,
-                  fieldDescription,
-                  type,
-                  duration,
-                  fieldTitle,
-                  unitType,
-                } = challenge;
-                return (
-                  <TransformationChallenge
-                    key={index}
-                    type="challenge"
-                    title={name}
-                    image={fakeGraph}
-                    onPress={() =>
-                      navigation.navigate('Challenge', {
-                        id: id,
-                        name: name,
-                        description: fieldDescription,
-                        fieldTitle: fieldTitle,
-                        type: type,
-                        duration: duration,
-                        unitType: type === 'STOPWATCH' ? 'seconds' : unitType,
-                        weightPreference: weightLabel,
-                      })
-                    }
-                  />
-                );
-              })}
-            </View>
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
+      <ScrollView style={styles.screen}>
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
+            <Text
+              style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-  return null;
+          <View style={styles.calendarContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+              <Text style={styles.calendarTitle}>
+                {ProgressDict.YourWorkouts}
+              </Text>
+              <Calendar
+                days={days}
+                daysTextStyles={daysTextStyles}
+                daysContainerStyles={daysContainerStyles}
+                firstDayOfWeek="Monday"
+                calendarType="single-month"
+                showPrevNextDays={false}
+                datesSelectable={false}
+                dateCellStyles={dateCellStyles}
+                cellData={progressData}
+                pillWidth={pillWidth}
+                lookupStyleTable={lookupStyleTable}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.boxWrapper}>
+            {challenges && (
+              <>
+                <TransformationChallenge
+                  type="progress"
+                  title="Transformation"
+                  image={fakeImage}
+                  onPress={() => navigation.navigate('Transformation')}
+                />
+                {challenges.map((challenge, index) => {
+                  const {
+                    name,
+                    id,
+                    fieldDescription,
+                    type,
+                    duration,
+                    fieldTitle,
+                    unitType,
+                  } = challenge;
+                  return (
+                    <TransformationChallenge
+                      key={index}
+                      type="challenge"
+                      title={name}
+                      image={fakeGraph}
+                      onPress={() =>
+                        navigation.navigate('Challenge', {
+                          id: id,
+                          name: name,
+                          description: fieldDescription,
+                          fieldTitle: fieldTitle,
+                          type: type,
+                          duration: duration,
+                          unitType: type === 'STOPWATCH' ? 'seconds' : unitType,
+                          weightPreference: weightLabel,
+                        })
+                      }
+                    />
+                  );
+                })}
+              </>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }

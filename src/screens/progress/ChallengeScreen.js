@@ -147,10 +147,11 @@ export default function ChallengeScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (chartInfo) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.card}>
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.card}>
+        {chartInfo && (
           <ProgressChart
             data={chartInfo.processedHistory}
             chartLabel={chartInfo.chartLabel}
@@ -158,35 +159,33 @@ export default function ChallengeScreen() {
             interval={chartInfo.interval}
             ticks={chartInfo.ticks}
           />
-        </View>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>{description}</Text>
-        </View>
-        {type !== 'OTHER' && (
-          <Text style={styles.timerText}>
-            {type === 'COUNTDOWN'
-              ? msToHMSFull(timerData.remainingMS)
-              : msToHMSFull(stopwatchData.elapsedMS)}
-          </Text>
         )}
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="start"
-            icon="chevron"
-            variant="gradient"
-            onPress={handlePressStart}
-          />
-          <Spacer height={20} />
-          <DefaultButton
-            type="done"
-            icon="chevron"
-            variant="white"
-            onPress={handlePressDone}
-          />
-        </View>
       </View>
-    );
-  } else {
-    return null;
-  }
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.description}>{description}</Text>
+      </View>
+      {type !== 'OTHER' && (
+        <Text style={styles.timerText}>
+          {type === 'COUNTDOWN'
+            ? msToHMSFull(timerData.remainingMS)
+            : msToHMSFull(stopwatchData.elapsedMS)}
+        </Text>
+      )}
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="start"
+          icon="chevron"
+          variant="gradient"
+          onPress={handlePressStart}
+        />
+        <Spacer height={20} />
+        <DefaultButton
+          type="done"
+          icon="chevron"
+          variant="white"
+          onPress={handlePressDone}
+        />
+      </View>
+    </View>
+  );
 }

@@ -16,7 +16,7 @@ import {
   Alert
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Intercom from 'react-native-intercom';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -28,8 +28,6 @@ import useLoading from '../../hooks/loading/useLoading';
 
 import * as RNIap from 'react-native-iap'; 
 import {
-  purchaseErrorListener,
-  purchaseUpdatedListener,
   flushFailedPurchasesCachedAsPendingAndroid,
   useIAP,
   requestSubscription,
@@ -54,7 +52,7 @@ const PurchaseModalScreen = ({}) => {
   const {setLoading} = useLoading();
 
   // MARK: - Local
-  const [subscribedProductId, setSubscribedProdutId] = useState();
+  const [currentSubscription, setCurrentSubscription] = useState();
 
   const [yearlySubscription, setYearlySubscription] = useState({productId: 'app.power.subscription.yearly', price: 24 });
   const [monthlySubscription, setMonthlySubscription] = useState({productId: 'app.power.subscription.monthly', price: 4 });
@@ -63,7 +61,10 @@ const PurchaseModalScreen = ({}) => {
     connected,
     products,
     subscriptions,
+    availablePurchases,
+    getAvailablePurchases,
     getSubscriptions,
+    finishTransaction,
     currentPurchase,
     currentPurchaseError,
   } = useIAP();
@@ -104,16 +105,30 @@ const PurchaseModalScreen = ({}) => {
       }
     });
 
-    await getSubcribedProuduct();
-
     setLoading(false);
    
   },  [getSubscriptions]);
 
-  const getSubcribedProuduct = useCallback(async () => {
-    //setSubscribedProdutId(await getActiveSubscriptionId());
-  }, []);
 
+
+  useEffect(() => {
+    const checkCurrentPurchase = async purchase => {
+    if (purchase) {
+      const receipt = purchase.transactionReceipt;
+      if (receipt)
+        try {
+
+          // todo -- backend call with receipt data
+          // on backend return, do the below
+          // const ackResult = await finishTransaction(purchase);
+         console.log('ackResult', ackResult);
+        } catch (ackErr) {
+          console.warn('ackErr', ackErr);
+        }
+      }
+    };
+    checkCurrentPurchase(currentPurchase);
+  }, [currentPurchase, finishTransaction]);
 
   useEffect(() => {
     if (currentPurchaseError)
@@ -122,6 +137,34 @@ const PurchaseModalScreen = ({}) => {
         JSON.stringify(currentPurchaseError?.message),
       );
   }, [currentPurchaseError, currentPurchaseError?.message]);
+
+
+
+  useEffect(() => {
+    
+    if (currentSubscription && products.includes(currentSubscription.productId)) {
+      // todo - do backend restore
+    }
+  }, [currentSubscription]);
+
+
+  useEffect(() => {
+    console.log("availablePurchases",availablePurchases)
+    if (availablePurchases && availablePurchases.length > 0) {
+     
+      availablePurchases.forEach(it => {
+        switch (it.productId) {
+        case yearlySubscription.productId:
+          setCurrentSubscription(it);
+          break
+        case monthlySubscription.productId:
+          setCurrentSubscription(it);
+          break
+        }
+      });
+    }
+    
+  }, [availablePurchases, setCurrentSubscription]);
 
 
   const purchase = (item) => {
@@ -138,7 +181,7 @@ const PurchaseModalScreen = ({}) => {
     purchase(monthlySubscription.productId);
   };
   const onPressRestoreSubscription = () => {
-    // TODO
+    getAvailablePurchases();
   };
 
   const displayMessenger = () => {

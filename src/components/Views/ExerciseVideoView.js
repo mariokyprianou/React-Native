@@ -44,8 +44,6 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   useEffect(() => {
-    console.log(currentExerciseIndex);
-
     // Autoplay if its current exercise and there is remaining video
     if (
       index === currentExerciseIndex &&

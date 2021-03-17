@@ -282,6 +282,7 @@ const enGB = {
     WeekText: 'Week',
 
     exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatTextSecs: (sets, secs) => `${sets} SETS || ${secs} SECS`,
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
     SetsText: SharedDict.Sets,

@@ -238,7 +238,8 @@ export default function UserDataProvider(props) {
       firebaseLogEvent,
       analyticsEvents,
       changeDevice,
-      suspendedAccount
+      suspendedAccount,
+      setSuspendedAccount
     }),
     [
       userData,
@@ -253,7 +254,8 @@ export default function UserDataProvider(props) {
       firebaseLogEvent,
       analyticsEvents,
       changeDevice,
-      suspendedAccount
+      suspendedAccount,
+      setSuspendedAccount
     ],
   );
 

@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {StyleSheet, Platform, View, Image} from 'react-native';
+import {StyleSheet, Platform, View, Image, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import useTheme from '../hooks/theme/UseTheme';
@@ -20,6 +20,10 @@ import isIphoneX from '../utils/isIphoneX';
 import {useNavigation} from '@react-navigation/native';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import useUserData from '../hooks/data/useUserData';
+import * as ScreenCapture from 'expo-screen-capture';
+import displayAlert from '../utils/DisplayAlert';
+import ScreenshotTaken from '../apollo/mutations/ScreenshotTaken';
+import {useMutation} from '@apollo/client';
 
 
 const notificationCount = 2;
@@ -34,14 +38,57 @@ export default function TabContainer() {
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  const {changeDevice} = useUserData();
+  const {changeDevice, setSuspendedAccount} = useUserData();
+  
+  const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
 
   useEffect(() => {
     if (changeDevice && changeDevice.newDeviceId) {
-      navigation.navigate('ChangeDevice', {...changeDevice});
+      //navigation.navigate('ChangeDevice', {...changeDevice});
     }
   }, [changeDevice]);
+
+  useEffect(() => {
+    let screenshotListener;
+
+    if (Platform.OS === 'ios') {
+      screenshotListener = ScreenCapture.addScreenshotListener(() => {
+
+        displayAlert({
+          text: TabsTitleDict.ScreenShotMessage,
+          buttons: [
+            {
+              text: TabsTitleDict.ScreenShotButton,
+              onPress: () => {
+                increaseShotTaken()
+                  .then((res) => {
+                    if (res && res.data.screenshotTaken && res.data.screenshotTaken.success) {
+                      if (res.data.screenshotTaken.screenshotsTaken >= 7) {
+                          setSuspendedAccount(true);
+                      }
+                    }
+                    
+                  })
+                  .catch((err) => {
+                    console.log("increaseShotTaken - err", err)
+                  });
+              },
+            },
+          ]
+        });
+       
+      });
+    }
+  
+
+    return () => {
+      if (Platform.OS === 'ios') {
+        screenshotListener.remove();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   const tabIcons = {

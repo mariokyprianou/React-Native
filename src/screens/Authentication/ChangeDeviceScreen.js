@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import getResponse from '../../utils/getResponse';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
@@ -23,12 +24,18 @@ export default function ChangeDeviceScreen() {
   const {ChangeDeviceDict} = dictionary;
   const navigation = useNavigation();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {setLoading} = useLoading();
 
   const [changeDevice] = useMutation(ChangeDevice);
 
   const {
     params: {canChangeDevice, newDeviceId},
   } = useRoute();
+
+
+  useEffect(()=> {
+    setLoading(false);
+  }, []);
 
   // MARK: - Actions
   const onPressButton = () => {

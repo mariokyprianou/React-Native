@@ -16,11 +16,9 @@ import {FormProvider} from 'the-core-ui-module-tdforms';
 import DataProvider from './hooks/data/DataProvider';
 import QuickPicker from 'quick-picker';
 import {TDCountdown} from 'the-core-ui-module-tdcountdown';
-import * as ScreenCapture from 'expo-screen-capture';
 import isValidChecksum from './utils/checksumValidation';
 import AppContainer from './AppContainer';
 import {useAsyncStorage} from '@react-native-community/async-storage';
-// import Intercom from 'react-native-intercom';
 import Amplify from 'aws-amplify';
 import {TDGraphQLProvider} from './apollo/Client';
 import UserDataProvider from './hooks/data/UserDataProvider';
@@ -79,28 +77,10 @@ const App = () => {
 
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
-    // let screenshotListener;
-
-    // if (Platform.OS === 'ios') {
-    //   screenshotListener = ScreenCapture.addScreenshotListener(() => {
-    //     Alert.alert(
-    //       'Oops!',
-    //       'You cannot screen record or take screenshots whilst using the Power application. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
-    //       [{text: 'OK'}],
-    //       {cancelable: false},
-    //     );
-    //   });
-    // }
+    
     validateChecksum();
     languageSet();
-    // Intercom.registerUnidentifiedUser();
 
-    return () => {
-      // if (Platform.OS === 'ios') {
-      //   screenshotListener.remove();
-      // }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!validChecksum) {

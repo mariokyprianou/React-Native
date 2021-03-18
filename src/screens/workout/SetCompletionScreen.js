@@ -111,7 +111,7 @@ export default function SetCompletionScreen({
         <View style={styles.card}>
           <View style={styles.contentContainer}>
             <View>
-              {restTime ? (
+              {restTime && restTime > 0 ? (
                 <TimerView
                   title={WorkoutDict.GreatJob}
                   restTime={restTime}

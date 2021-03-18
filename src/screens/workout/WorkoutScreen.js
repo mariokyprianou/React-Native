@@ -72,15 +72,17 @@ export default function WorkoutScreen() {
 
   useEffect(() => {
     console.log("completedExercises changed", completedExercises);
-    console.log(completedExercises.length, selectedWorkout.exercises.length)
     if (completedExercises.length === selectedWorkout.exercises.length) {
       workoutFinished()
     }
   }, [completedExercises]);
 
   function exerciseFinished() {
+
+    // check if specific exercise was already completed
     let index = completedExercises.indexOf(currentExerciseIndex);
 
+    // if not add it 
     if (index === -1) {
       setCompletedExercises(prev => [...prev, currentExerciseIndex]);
     }

@@ -47,7 +47,7 @@ export default function ExerciseView(props) {
   const [sets, setSets] = useState([]);
   const [currentSet, setCurrentSet] = useState(0);
   const [restTime, setRestTime] = useState();
-  const [setComplete, setSetComplete] = useState(false);
+  const [setComplete, setSetComplete] = useState(null);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
   const [weightLabel, setWeightLabel] = useState();
@@ -100,16 +100,20 @@ export default function ExerciseView(props) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   const onSetCompleted = (completedIndex) => {
+    
+    // Move to next Set
     if (completedIndex + 1 === sets.length) {
       setCurrentSet(sets.length);
     } else {
       setCurrentSet(currentSet + 1);
     }
 
-    // Update Sets
+    // Update Sets states
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
-        setRestTime((it.restTime || 0) * 1000);
+        if (it.restTime && it.restTime > 0) {
+            setRestTime(it.restTime * 1000);
+        }
         return {
           ...it,
           state: 'completed',
@@ -122,23 +126,35 @@ export default function ExerciseView(props) {
       }
       return it;
     });
+   
     setSets(newSets);
 
     // start rest timer
-    setCountDown(true);
-
+    if (restTime) {
+      setCountDown(true);
+    }
+    
     // show set completion modal with weights if applicable
     if (exercise.weight) {
       setSelectedWeight(lastWeight);
       setSetComplete(true);
     }
+
   };
 
+
+  // Finished weight submition, check if it was last set
+  useEffect(() => {
+    if (setComplete === false) {
+      checkShouldFinishExercise();
+    }
+  }, [setComplete])
+
   async function checkShouldFinishExercise() {
-        // On timer done, check if exercise is done
-        if (currentSet === sets.length  ) {
-          props.exerciseFinished();
-        }
+      // On timer done, check if exercise is done
+      if (currentSet === sets.length) {
+        props.exerciseFinished();
+      }
     
   }
 
@@ -154,6 +170,11 @@ export default function ExerciseView(props) {
 
   const onExerciseCompleted = () => {
     onSetCompleted(sets.length - 1);
+
+     // If we dont have rest time or weight option just finish exercise set immediatelly
+     if ((!restTime || restTime === 0) && !exercise.weight) {
+      props.exerciseFinished();
+    }
   };
 
   const handleSelectWeights = () => {
@@ -252,7 +273,7 @@ export default function ExerciseView(props) {
       </View>
       {setComplete && (
         <SetCompletionScreen
-          restTime={msToHMS(restTime)}
+          restTime={restTime && restTime > 0 ? msToHMS(restTime): 0}
           setSetComplete={setSetComplete}
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}

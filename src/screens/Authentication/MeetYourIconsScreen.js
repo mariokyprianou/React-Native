@@ -39,6 +39,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
+import useUserData from '../../hooks/data/useUserData';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logo.png');
@@ -59,7 +60,9 @@ export default function MeetYourIconsScreen() {
     params: {switchProgramme},
   } = useRoute();
   const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
-  const {setProgrammeModalImage, programme} = UseData();
+  const {setProgrammeModalImage, programme, completedFreeWorkouts} = UseData();
+  const { isSubscriptionActive } = useUserData();
+   
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const [selectedTrainer, setSelectedTrainer] = useState();
@@ -293,12 +296,17 @@ export default function MeetYourIconsScreen() {
   
 
   function changedAssignedProgramme(type) {
-
+    
     if (type === 'continue') {
       if (selectedProgram.userProgress.isActive) {
         navigation.navigate('TabContainer');
         return;
       }
+    }
+
+    if (completedFreeWorkouts && !isSubscriptionActive) {
+      navigation.navigate('PurchaseModal');
+      return;
     }
 
     navigation.navigate('Congratulations', {

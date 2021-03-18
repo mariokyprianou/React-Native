@@ -59,9 +59,10 @@ export default function WorkoutHomeScreen() {
     getConsecutiveWorkouts,
     clearConsecutiveDays,
     wasLastWorkoutToday,
+    completedFreeWorkouts
   } = useData();
 
-  const { suspendedAccount } = useUserData();
+  const { suspendedAccount, isSubscriptionActive } = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -478,6 +479,13 @@ export default function WorkoutHomeScreen() {
                     })
                     return;
                    }
+
+                   if (completedFreeWorkouts && !isSubscriptionActive) {
+                    navigation.navigate('PurchaseModal');
+                    return;
+                   }
+
+
                   if (weekNumber !== 1) {
                     if (stayTunedEnabled) {
                       showStayTunedModal();

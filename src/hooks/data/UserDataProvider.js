@@ -20,6 +20,7 @@ import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import CanChangeDevice from '../../apollo/queries/CanChangeDevice';
+import GetSubscription from '../../apollo/queries/GetSubscription';
 import * as R from 'ramda';
 import {format} from 'date-fns';
 import analytics from '@react-native-firebase/analytics';
@@ -176,6 +177,7 @@ export default function UserDataProvider(props) {
 
   const [changeDevice, setChangeDevice] = useState(null);
   const [suspendedAccount, setSuspendedAccount] = useState(false);
+  const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
 
 
   const [getProfile] = useLazyQuery(CanChangeDevice, {
@@ -208,11 +210,25 @@ export default function UserDataProvider(props) {
   },  []);
 
 
+  const [checkUserSubscription] = useLazyQuery(GetSubscription, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      if (res && res.subscription) {
+        console.log('subscription',res.subscription);
+        const {isActive} = res.subscription;
+        setIsSubscriptionActive(isActive);
+      }
+    },
+    onError: (error) => console.log(error),
+  });
+
+
   useEffect(()=> {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then((_res) => {
           getProfile();
+          checkUserSubscription();
         })
         .catch(err => {
           console.log("UserDataProvider - checkAuth", err);
@@ -239,7 +255,8 @@ export default function UserDataProvider(props) {
       analyticsEvents,
       changeDevice,
       suspendedAccount,
-      setSuspendedAccount
+      setSuspendedAccount,
+      isSubscriptionActive
     }),
     [
       userData,
@@ -255,7 +272,8 @@ export default function UserDataProvider(props) {
       analyticsEvents,
       changeDevice,
       suspendedAccount,
-      setSuspendedAccount
+      setSuspendedAccount,
+      isSubscriptionActive
     ],
   );
 

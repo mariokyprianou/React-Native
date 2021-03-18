@@ -17,20 +17,16 @@ import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
 import isIphoneX from '../utils/isIphoneX';
-import {useLazyQuery} from '@apollo/client';
-import fetchPolicy from '../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
-import CanChangeDevice from '../apollo/queries/CanChangeDevice';
-import {getUniqueId} from 'react-native-device-info';
 import {useNavigation} from '@react-navigation/native';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import useUserData from '../hooks/data/useUserData';
 
 
 const notificationCount = 2;
 
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {isConnected, isInternetReachable} = useNetInfo();
+  
   const navigation = useNavigation();
 
   const {fontSize, getHeight, getWidth} = ScaleHook();
@@ -38,32 +34,15 @@ export default function TabContainer() {
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  const [getProfile] = useLazyQuery(CanChangeDevice, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res && res.profile) {
-        const {canChangeDevice, deviceUDID} = res.profile;
-        checkDeviceId(canChangeDevice, deviceUDID);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
+  const {changeDevice} = useUserData();
 
-  async function checkDeviceId(canChangeDevice, existingId) {
-    const deviceId = getUniqueId();
-
-    // This is a new device
-    if (deviceId !== existingId) {
-      navigation.navigate('ChangeDevice', {
-        canChangeDevice: canChangeDevice,
-        newDeviceId: deviceId,
-      });
-    }
-  }
 
   useEffect(() => {
-    getProfile();
-  }, []);
+    if (changeDevice && changeDevice.newDeviceId) {
+      navigation.navigate('ChangeDevice', {...changeDevice});
+    }
+  }, [changeDevice]);
+
 
   const tabIcons = {
     workout: require('../../assets/icons/workout.png'),

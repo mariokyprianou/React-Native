@@ -280,7 +280,9 @@ const hiIN = {
   WorkoutDict: {
     WeekText: 'Week',
 
-    exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatText: (sets, reps) => (sets === 1) ? `${sets} SET || ${reps} REPS` : `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatTextSecs: (sets, secs) =>  (sets === 1) ? `${sets} SETS || ${secs} SECS` : `${sets} SET || ${secs} SECS`,
+  
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
     SetsText: SharedDict.Sets,

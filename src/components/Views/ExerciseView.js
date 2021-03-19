@@ -17,7 +17,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
-import {useQuery} from '@apollo/client';
+import {useQuery, useLazyQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -56,6 +56,10 @@ export default function ExerciseView(props) {
 
   useEffect(() => {
     getPreferences();
+
+    if (exercise.weight) {
+        getWeightHistory();
+    }
   }, []);
 
   useEffect(() => {
@@ -91,7 +95,7 @@ export default function ExerciseView(props) {
     setSets(sets);
   }, []);
 
-  useQuery(GetExerciseWeight, {
+  const [getWeightHistory] =  useLazyQuery(GetExerciseWeight, {
     variables: {exercise: exercise.id},
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
@@ -195,6 +199,7 @@ export default function ExerciseView(props) {
       Alert.alert(WorkoutDict.WorkoutNoWeightsWarning);
     } else {
       navigation.navigate('WeightCapture', {
+        exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
       });

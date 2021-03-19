@@ -66,7 +66,7 @@ export default function SetsTable({date, weightData, weightPreference}) {
             scrollEnabled={false}
             renderItem={({item}) => (
               <SetTableRow
-                setNumber={item.setNumber}
+                setNumber={item.setNumber+1}
                 reps={item.reps}
                 weight={item.weight}
                 weightPreference={weightPreference}

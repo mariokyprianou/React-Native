@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -30,6 +30,10 @@ export default function WorkoutScreen() {
   } = useData();
 
   const [offset, setOffset] = useState(0);
+
+  useEffect(() => {  
+      StatusBar.setBarStyle('dark-content');
+  })
 
 
   navigation.setOptions({

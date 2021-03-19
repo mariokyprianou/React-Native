@@ -46,13 +46,14 @@ export default function NotificationPermissionScreen() {
     // updateNotificationsPreferencesTo(true);
 
     const newPreferences = {
-      emails: preferences.emails || true,
-      errorReports: preferences.errorReports || true,
-      analytics: preferences.analytics || true,
-      downloadQuality: preferences.downloadQuality || "HIGH",
+      emails: enabled,
+      errorReports: preferences.errorReports,
+      analytics: preferences.analytics,
+      downloadQuality: preferences.downloadQuality,
       notifications: enabled,
-      weightPreference: preferences.weightPreference || 'KG',
+      weightPreference: preferences.weightPreference,
     };
+
 
     setPreferences(newPreferences);
 
@@ -80,7 +81,7 @@ export default function NotificationPermissionScreen() {
     saveSetting(true);
   };
   const onPressBottomButton = () => {
-    disallowNotifications();
+    saveSetting(false);
   };
 
   const navigateForward = () => {

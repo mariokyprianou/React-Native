@@ -13,13 +13,24 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
 
 export default function (props) {
-  const {name} = props.exercise;
-
-  const {getWidth, fontSize, getHeight} = ScaleHook();
+  // ** ** ** ** ** SETUP ** ** ** ** **
+  const {getWidth, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {exerciseInfoFormatText} = dictionary.WorkoutDict;
+  const {
+    exerciseInfoFormatText,
+    exerciseInfoFormatTextSecs,
+  } = dictionary.WorkoutDict;
 
+  const {name} = props.exercise;
+  const sets = props.sets;
+  const type = props.setType;
+  const reps = sets.reduce((n, {quantity}) => n + quantity, 0);
+  const exerciseNameTitle = isRTL()
+    ? `${name} :${props.index}/${props.total}`
+    : `${props.index}/${props.total}: ${name}`;
+
+  // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     touchableStyle: {
       height: getHeight(77),
@@ -47,19 +58,18 @@ export default function (props) {
     },
   };
 
-  const exerciseNameTitle = isRTL()
-    ? `${name} :${props.index}/${props.total}`
-    : `${props.index}/${props.total}: ${name}`;
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  // ** ** ** ** ** RENDER ** ** ** ** **
 
-  const sets = props.sets;
-  const reps = sets.reduce((n, {quantity}) => n + quantity, 0);
   return (
     <TouchableOpacity activeOpacity={1} style={styles.touchableStyle}>
       <View style={styles.containerStyle}>
         <View>
           <Text style={styles.exerciseNameStyle}>{exerciseNameTitle}</Text>
           <Text style={styles.exerciseInfoStyle}>
-            {exerciseInfoFormatText(sets.length, reps)}
+            {type === 'REPS'
+              ? exerciseInfoFormatText(sets.length, reps)
+              : exerciseInfoFormatTextSecs(sets.length, reps)}
           </Text>
         </View>
       </View>

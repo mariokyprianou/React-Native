@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-const addRestDays = (ddata) => {
-  const data = ddata.map((currentDay, index) => {
+const addRestDays = (workoutsData) => {
+  const data = workoutsData.map((currentDay, index) => {
     return {
       ...currentDay,
       day: index + 1,
@@ -29,8 +29,6 @@ const addRestDays = (ddata) => {
     res.push(data[4]);
     res.push(restDay);
 
-    // data.splice(3, 0, restDay);
-    // data.splice(6, 0, restDay);
   } else if (data.length === 4) {
     res.push(data[0]);
     res.push(data[1]);
@@ -40,8 +38,6 @@ const addRestDays = (ddata) => {
     res.push(restDay);
     res.push(restDay);
 
-    // data.splice(2, 0, restDay);
-    // data.splice(5, 0, restDay, restDay);
   } else if (data.length === 3) {
     res.push(data[0]);
     res.push(restDay);
@@ -50,11 +46,20 @@ const addRestDays = (ddata) => {
     res.push(data[2]);
     res.push(restDay);
     res.push(restDay);
-
-    // data.splice(1, 0, restDay);
-    // data.splice(3, 0, restDay);
-    // data.splice(5, 0, restDay, restDay);
   }
+  else {
+    data.map((workoutDay)=> {
+      res.push(workoutDay)
+    })
+
+    const restdaysNeeded  =  7 - res.length;
+
+    for (let i = 0; i <= restdaysNeeded; i++) {
+      res.push(restDay);
+    }
+
+  }
+  
   return res;
 };
 

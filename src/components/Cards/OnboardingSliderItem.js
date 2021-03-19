@@ -61,7 +61,7 @@ export default function OnboardingSliderItem({
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
         <Image source={url} style={styles.image} />
-        <FadingBottomView color="white" height={60} />
+        <FadingBottomView customStart={colors.white0} customEnd={colors.backgroundWhite100} color="custom" height={140} />
       </View>
       <Text style={styles.header}>{header}</Text>
       <Text style={styles.text}>{text}</Text>

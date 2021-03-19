@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -30,6 +30,10 @@ export default function WorkoutScreen() {
   } = useData();
 
   const [offset, setOffset] = useState(0);
+
+  useEffect(() => {  
+      StatusBar.setBarStyle('dark-content');
+  })
 
 
   navigation.setOptions({
@@ -72,15 +76,17 @@ export default function WorkoutScreen() {
 
   useEffect(() => {
     console.log("completedExercises changed", completedExercises);
-    console.log(completedExercises.length, selectedWorkout.exercises.length)
     if (completedExercises.length === selectedWorkout.exercises.length) {
       workoutFinished()
     }
   }, [completedExercises]);
 
   function exerciseFinished() {
+
+    // check if specific exercise was already completed
     let index = completedExercises.indexOf(currentExerciseIndex);
 
+    // if not add it 
     if (index === -1) {
       setCompletedExercises(prev => [...prev, currentExerciseIndex]);
     }

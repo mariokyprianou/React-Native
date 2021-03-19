@@ -17,7 +17,7 @@ import {useSafeArea} from 'react-native-safe-area-context';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
-import {useQuery} from '@apollo/client';
+import {useQuery, useLazyQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -47,14 +47,27 @@ export default function ExerciseView(props) {
   const [sets, setSets] = useState([]);
   const [currentSet, setCurrentSet] = useState(0);
   const [restTime, setRestTime] = useState();
-  const [setComplete, setSetComplete] = useState(false);
+  const [setComplete, setSetComplete] = useState(null);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
-  const [weightLabel, setWeightLabel] = useState();
+  const [weightLabel, setWeightLabel] = useState('kg');
+
+  const [exerciseCompleted, setExerciseCompleted] = useState(false);
 
   useEffect(() => {
     getPreferences();
+
+    if (exercise.weight) {
+        getWeightHistory();
+    }
   }, []);
+
+  useEffect(() => {
+    if (exerciseCompleted) {
+      props.exerciseFinished && props.exerciseFinished();
+    }
+
+  }, [exerciseCompleted]);
 
   useEffect(() => {
     if (preferences.weightPreference) {
@@ -82,7 +95,7 @@ export default function ExerciseView(props) {
     setSets(sets);
   }, []);
 
-  useQuery(GetExerciseWeight, {
+  const [getWeightHistory] =  useLazyQuery(GetExerciseWeight, {
     variables: {exercise: exercise.id},
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
@@ -100,16 +113,20 @@ export default function ExerciseView(props) {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   const onSetCompleted = (completedIndex) => {
+    
+    // Move to next Set
     if (completedIndex + 1 === sets.length) {
       setCurrentSet(sets.length);
     } else {
       setCurrentSet(currentSet + 1);
     }
 
-    // Update Sets
+    // Update Sets states
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
-        setRestTime((it.restTime || 0) * 1000);
+        if (it.restTime && it.restTime > 0) {
+            setRestTime(it.restTime * 1000);
+        }
         return {
           ...it,
           state: 'completed',
@@ -122,23 +139,35 @@ export default function ExerciseView(props) {
       }
       return it;
     });
+   
     setSets(newSets);
 
     // start rest timer
-    setCountDown(true);
-
+    if (restTime) {
+      setCountDown(true);
+    }
+    
     // show set completion modal with weights if applicable
     if (exercise.weight) {
       setSelectedWeight(lastWeight);
       setSetComplete(true);
     }
+
   };
 
+
+  // Finished weight submition, check if it was last set
+  useEffect(() => {
+    if (setComplete === false) {
+      checkShouldFinishExercise();
+    }
+  }, [setComplete])
+
   async function checkShouldFinishExercise() {
-        // On timer done, check if exercise is done
-        if (currentSet === sets.length  ) {
-          props.exerciseFinished();
-        }
+      // On timer done, check if exercise is done
+      if (currentSet === sets.length) {
+        finishExercise();
+      }
     
   }
 
@@ -154,13 +183,23 @@ export default function ExerciseView(props) {
 
   const onExerciseCompleted = () => {
     onSetCompleted(sets.length - 1);
+
+     // If we dont have rest time or weight option just finish exercise set immediatelly
+     if ((!restTime || restTime === 0) && !exercise.weight) {
+      finishExercise();
+    }
   };
+
+  async function finishExercise() {
+    setExerciseCompleted(true);
+  }
 
   const handleSelectWeights = () => {
     if (weightHistory.length === 0) {
       Alert.alert(WorkoutDict.WorkoutNoWeightsWarning);
     } else {
       navigation.navigate('WeightCapture', {
+        exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
       });
@@ -191,9 +230,9 @@ export default function ExerciseView(props) {
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
-          <TouchableOpacity onPress={countDown ? null : onExerciseCompleted}>
-            <Image source={completeIcon} />
-            <Image style={styles.checkIconStyle} source={checkIcon} />
+          <TouchableOpacity activeOpacity={exerciseCompleted ? 1.0 : 0.1} onPress={exerciseCompleted || countDown ? null : onExerciseCompleted}>
+            <Image source={completeIcon} style={{ opacity: exerciseCompleted ? 0.4 : 1.0}}  />
+            <Image style={{...styles.checkIconStyle, opacity: exerciseCompleted ? 0.4 : 1.0}} source={checkIcon} />
           </TouchableOpacity>
         </View>
 
@@ -252,7 +291,7 @@ export default function ExerciseView(props) {
       </View>
       {setComplete && (
         <SetCompletionScreen
-          restTime={msToHMS(restTime)}
+          restTime={restTime && restTime > 0 ? msToHMS(restTime): 0}
           setSetComplete={setSetComplete}
           setReps={sets[currentSet - 1].quantity}
           setNumber={sets[currentSet - 1].setNumber}

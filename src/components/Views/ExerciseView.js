@@ -52,9 +52,18 @@ export default function ExerciseView(props) {
   const [weightHistory, setWeightHistory] = useState([]);
   const [weightLabel, setWeightLabel] = useState();
 
+  const [exerciseCompleted, setExerciseCompleted] = useState(false);
+
   useEffect(() => {
     getPreferences();
   }, []);
+
+  useEffect(() => {
+    if (exerciseCompleted) {
+      props.exerciseFinished && props.exerciseFinished();
+    }
+
+  }, [exerciseCompleted]);
 
   useEffect(() => {
     if (preferences.weightPreference) {
@@ -153,7 +162,7 @@ export default function ExerciseView(props) {
   async function checkShouldFinishExercise() {
       // On timer done, check if exercise is done
       if (currentSet === sets.length) {
-        props.exerciseFinished();
+        finishExercise();
       }
     
   }
@@ -173,9 +182,13 @@ export default function ExerciseView(props) {
 
      // If we dont have rest time or weight option just finish exercise set immediatelly
      if ((!restTime || restTime === 0) && !exercise.weight) {
-      props.exerciseFinished();
+      finishExercise();
     }
   };
+
+  async function finishExercise() {
+    setExerciseCompleted(true);
+  }
 
   const handleSelectWeights = () => {
     if (weightHistory.length === 0) {
@@ -212,9 +225,9 @@ export default function ExerciseView(props) {
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
-          <TouchableOpacity onPress={countDown ? null : onExerciseCompleted}>
-            <Image source={completeIcon} />
-            <Image style={styles.checkIconStyle} source={checkIcon} />
+          <TouchableOpacity activeOpacity={exerciseCompleted ? 1.0 : 0.1} onPress={exerciseCompleted || countDown ? null : onExerciseCompleted}>
+            <Image source={completeIcon} style={{ opacity: exerciseCompleted ? 0.4 : 1.0}}  />
+            <Image style={{...styles.checkIconStyle, opacity: exerciseCompleted ? 0.4 : 1.0}} source={checkIcon} />
           </TouchableOpacity>
         </View>
 

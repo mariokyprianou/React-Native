@@ -40,12 +40,7 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
   const listRef = useRef();
 
   useEffect(() => {
-    //cant scroll after 50 ??
-    // setTimeout(function(){
-    //     listRef?.current?.scrollToIndex({animated: true, index: 150});
-        //listRef?.current?.scrollToEnd();
-        //listRef?.current?.scrollToOffset({ offset:120 * itemSize });
-        //  }, 2000);
+    setSelectedWeight(data[2]);
   }, []);
 
   const style = {
@@ -113,11 +108,6 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
       </View>
     );
   };
-
-//   getItemLayout = (data, index) => (
-//     { length: 204, offset: itemSize * (index-2), index }
-//   )
-
   
 
   return (
@@ -139,8 +129,7 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
         data={I18nManager.isRTL ? data.reverse() : data}
         onMomentumScrollEnd={() => {
           const index = Math.round(active.current / itemSize);
-          setSelectedWeight(index - 2);
-          //onChange(data[index + 2]);
+          setSelectedWeight(data[index + 2]);
         }}
         keyExtractor={(_, i) => String(i)}
         renderItem={renderItem}

@@ -50,7 +50,7 @@ export default function ExerciseView(props) {
   const [setComplete, setSetComplete] = useState(null);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
-  const [weightLabel, setWeightLabel] = useState();
+  const [weightLabel, setWeightLabel] = useState('kg');
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
 

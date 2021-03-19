@@ -20,15 +20,13 @@ const SharedDict = {
   Notifications: 'Notifications',
   Sets: 'sets',
   Reps: 'reps',
-  OldPassword: "OLD PASSWORD",
-  NewPassword: "NEW PASSWORD",
+  OldPassword: 'OLD PASSWORD',
+  NewPassword: 'NEW PASSWORD',
   Analytics: 'Analytics',
   ChangeEmail: 'Change Email',
   ChangePassword: 'Change password',
-  VerifyEmail: 'Verify email'
-
-}
-
+  VerifyEmail: 'Verify email',
+};
 
 const urIN = {
   AppTitle: 'Power',
@@ -50,7 +48,7 @@ const urIN = {
     CreateAccount: 'CREATE ACCOUNT',
     Done: 'DONE',
     GetStarted: 'GET STARTED',
-    GoBack: SharedDict.GoBack.toUpperCase(), 
+    GoBack: SharedDict.GoBack.toUpperCase(),
     GoBackLower: SharedDict.GoBack,
     Gym: SharedDict.Gym.toUpperCase(),
     Home: SharedDict.Home.toUpperCase(),
@@ -103,7 +101,7 @@ const urIN = {
       'Oops! Ensure you have entered your current password, along with your new password, in order to make the change.',
     IncorrectEmailOrPassword:
       'Oops! Your email or password is incorrect. Please try again.',
-      IncorrectPassword:
+    IncorrectPassword:
       'Oops! Your current password is incorrect. Please try again.',
     ForgotPasswordButtonText: 'Forgot password?',
     ForgotPasswordCodeLabel: 'PASSWORD RESET CODE',
@@ -224,12 +222,13 @@ const urIN = {
     YouWillBeLoggedOut:
       'If you continue you will be logged out - please verify your email address',
     Ok: 'Ok',
-    Cancel:  SharedDict.Cancel,
+    Cancel: SharedDict.Cancel,
+    UnableToUpdate: 'Unable to update settings',
   },
 
   ShareDict: {
     ShareProgress: 'Share your progress now!',
-    Cancel:  SharedDict.Cancel,
+    Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
   },
 
@@ -269,6 +268,8 @@ const urIN = {
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
     ChallengeTime: 'TIME',
+    FunctionNotAvailable: 'This function is not available on this device',
+    NoCamera: 'Unable to access camera',
   },
 
   TabsTitleDict: {
@@ -281,7 +282,7 @@ const urIN = {
     WeekText: 'Week',
 
     exerciseInfoFormatText: (sets, reps) => (sets === 1) ? `${sets} SET || ${reps} REPS` : `${sets} SETS || ${reps} REPS`,
-    exerciseInfoFormatTextSecs: (sets, secs) =>  (sets === 1) ? `${sets} SETS || ${secs} SECS` : `${sets} SET || ${secs} SECS`,
+    exerciseInfoFormatTextSecs: (sets, secs) =>  (sets === 1) ? `${sets} SET || ${secs} SECS` : `${sets} SETS || ${secs} SECS`,
   
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
@@ -349,6 +350,8 @@ const urIN = {
     WorkoutCompetedWarningText:
       'Oops! You have already completed a workout for today.',
     WorkoutGoBackWarning: 'If you go back you will lose your workout progress',
+    WorkoutNoWeightsWarning:
+      'Once you have added a weight you will be able to view your weight history for this exercise',
   },
 
   HelpMeChooseDict: {

@@ -34,7 +34,7 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
     },
     dropdownContainer: {
       height: getHeight(30),
-      width: getWidth(125),
+      width: getWidth(130),
     },
     dropdownBox: {
       backgroundColor: colors.white80,
@@ -43,13 +43,9 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
       borderBottomLeftRadius: radius(18),
       borderBottomRightRadius: radius(18),
     },
-    dropdownList: {
-      backgroundColor: colors.white80,
-    },
     dropdownArrow: {
-      position: 'absolute',
+      // position: 'absolute',
       top: getHeight(-3),
-      right: isRTL() ? 90 : 0,
     },
     arrowStyle: {
       height: getHeight(18),
@@ -59,6 +55,9 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
     label: {
       ...textStyles.semiBold14_brownishGrey100,
       lineHeight: fontSize(18),
+    },
+    dropdownList: {
+      backgroundColor: colors.white80,
     },
     item: {
       justifyContent: 'flex-start',

@@ -39,6 +39,7 @@ export default function ChallengeEndScreen() {
       fieldTitle,
       processedHistory,
       elapsed,
+      elapsedMS,
       unitType,
       weightPreference,
       chartLabel,
@@ -127,7 +128,12 @@ export default function ChallengeEndScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddResult() {
     setLoading(true);
-    const challengeResult = getValueByName('result');
+    let challengeResult = '';
+    if (type === 'STOPWATCH') {
+      challengeResult = elapsedMS.toString();
+    } else {
+      challengeResult = getValueByName('result');
+    }
 
     await sendResult({
       variables: {
@@ -142,6 +148,12 @@ export default function ChallengeEndScreen() {
       })
       .then(() => {
         setLoading(false);
+
+        if (type === 'STOPWATCH') {
+          challengeResult = Math.round(
+            Number(challengeResult) / 1000,
+          ).toString();
+        }
 
         navigation.navigate('ChallengeComplete', {
           name,

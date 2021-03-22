@@ -129,14 +129,15 @@ export default function ChallengeScreen() {
       type,
       description,
       fieldTitle,
-      processedHistory: chartInfo.processedHistory,
+      processedHistory: chartInfo ? chartInfo.processedHistory : [],
       elapsed,
+      elapsedMS,
       unitType,
       weightPreference,
-      chartLabel: chartInfo.chartLabel,
-      chartDataPoints: chartInfo.dataPoints,
-      chartInterval: chartInfo.interval,
-      chartTicks: chartInfo.ticks,
+      chartLabel: chartInfo ? chartInfo.chartLabel : '',
+      chartDataPoints: chartInfo ? chartInfo.dataPoints : [],
+      chartInterval: chartInfo ? chartInfo.interval : 0,
+      chartTicks: chartInfo ? chartInfo.ticks : 0,
     });
 
     if (type === 'COUNTDOWN') {
@@ -147,6 +148,7 @@ export default function ChallengeScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+  // console.log(chartInfo, '<---CHART INFO');
 
   return (
     <View style={styles.container}>

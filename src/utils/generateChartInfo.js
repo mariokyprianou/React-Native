@@ -33,7 +33,13 @@ export default generateChartInfo = (
   }
 
   const dataPoints = processedHistory.map((event, index) => {
-    return {x: index + 1, y: event.value};
+    let y = '';
+    if (type === 'STOPWATCH') {
+      y = (Number(event.value) / 1000).toString();
+    } else {
+      y = event.value;
+    }
+    return {x: index + 1, y: y};
   });
 
   const highestDataPoint = Math.max(...dataPoints.map((point) => point.y));
@@ -65,6 +71,17 @@ export default generateChartInfo = (
       chartLabel = 'km';
     }
   }
+
+  console.log(
+    {
+      processedHistory: processedHistory,
+      dataPoints: dataPoints,
+      interval: interval,
+      ticks: ticks,
+      chartLabel: chartLabel,
+    },
+    '<----IS THIS GOOD',
+  );
 
   return {
     processedHistory: processedHistory,

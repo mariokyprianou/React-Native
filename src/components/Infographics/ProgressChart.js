@@ -82,7 +82,7 @@ export default function ProgressChart({
                 ? chartDataPoints.length * 90
                 : chartDataPoints.length * 65 + 20
             }
-            axisWidth={getWidth(35)}
+            axisWidth={getWidth(42)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}
             style={{

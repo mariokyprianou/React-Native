@@ -13,8 +13,6 @@ export default processChallengeHistory = (
   unitType,
   type,
 ) => {
-  if (unitType === 'REPS' || type === 'STOPWATCH') return;
-
   return data.map((event) => {
     const newEvent = {...event};
 

@@ -52,7 +52,7 @@ export default function ChallengeEndScreen() {
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () => <Header title={name} goBack />,
+    header: () => <Header title={name} goBack leftAction={handleGoBack} />,
   });
 
   const [sendResult] = useMutation(CompleteChallenge);
@@ -171,6 +171,11 @@ export default function ChallengeEndScreen() {
         setLoading(false);
       })
       .finally(() => cleanValues());
+  }
+
+  function handleGoBack() {
+    navigation.goBack();
+    cleanValues();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

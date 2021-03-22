@@ -173,13 +173,17 @@ export default function ChallengeScreen() {
         </Text>
       )}
       <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="start"
-          icon="chevron"
-          variant="gradient"
-          onPress={handlePressStart}
-        />
-        <Spacer height={20} />
+        {type !== 'OTHER' && (
+          <>
+            <DefaultButton
+              type="start"
+              icon="chevron"
+              variant="gradient"
+              onPress={handlePressStart}
+            />
+            <Spacer height={20} />
+          </>
+        )}
         <DefaultButton
           type="done"
           icon="chevron"

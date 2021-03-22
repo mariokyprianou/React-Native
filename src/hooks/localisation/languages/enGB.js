@@ -268,8 +268,10 @@ const enGB = {
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
     ChallengeTime: 'TIME',
-    FunctionNotAvailable: 'This function is not available on this device',
-    NoCamera: 'Unable to access camera',
+    FunctionNotAvailable:
+      "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
+    NoCamera:
+      "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
   },
 
   TabsTitleDict: {
@@ -281,9 +283,15 @@ const enGB = {
   WorkoutDict: {
     WeekText: 'Week',
 
-    exerciseInfoFormatText: (sets, reps) => (sets === 1) ? `${sets} SET || ${reps} REPS` : `${sets} SETS || ${reps} REPS`,
-    exerciseInfoFormatTextSecs: (sets, secs) =>  (sets === 1) ? `${sets} SET || ${secs} SECS` : `${sets} SETS || ${secs} SECS`,
-  
+    exerciseInfoFormatText: (sets, reps) =>
+      sets === 1
+        ? `${sets} SET || ${reps} REPS`
+        : `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatTextSecs: (sets, secs) =>
+      sets === 1
+        ? `${sets} SET || ${secs} SECS`
+        : `${sets} SETS || ${secs} SECS`,
+
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
     SetsText: SharedDict.Sets,

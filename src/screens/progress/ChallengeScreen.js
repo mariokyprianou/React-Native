@@ -148,7 +148,6 @@ export default function ChallengeScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  // console.log(chartInfo, '<---CHART INFO');
 
   return (
     <View style={styles.container}>

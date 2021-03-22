@@ -20,6 +20,7 @@ import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {useMutation} from '@apollo/client';
 import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
 import UseData from '../../hooks/data/UseData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -46,6 +47,7 @@ export default function ChallengeEndScreen() {
       chartTicks,
     },
   } = useRoute();
+  const {setLoading} = useLoading();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -124,6 +126,7 @@ export default function ChallengeEndScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddResult() {
+    setLoading(true);
     const challengeResult = getValueByName('result');
 
     await sendResult({
@@ -138,30 +141,22 @@ export default function ChallengeEndScreen() {
         getHistory();
       })
       .then(() => {
-        // const info = await generateChartInfo(
-        //   history,
-        //   id,
-        //   weightPreference,
-        //   unitType,
-        //   type,
-        // );
+        setLoading(false);
 
         navigation.navigate('ChallengeComplete', {
-          // processedHistory: info.processedHistory,
           name,
           type,
           unitType,
           id,
           weightPreference,
-          // chartLabel: info.chartLabel,
-          // chartDataPoints: info.dataPoints,
-          // chartInterval: info.interval,
-          // chartTicks: info.ticks,
           result: challengeResult,
           trainer: programme.trainer.name,
         });
       })
-      .catch((err) => console.log(err, '<---sendResult err'))
+      .catch((err) => {
+        console.log(err, '<---sendResult err');
+        setLoading(false);
+      })
       .finally(() => cleanValues());
   }
 

@@ -55,6 +55,12 @@ export default generateChartInfo = (
     if (value >= 3 && value <= 5) {
       interval = interv;
       ticks = Math.ceil(value);
+    } else if (highestValue === 1) {
+      interval = 1;
+      ticks = 1;
+    } else if (highestValue === 2) {
+      interval = 1;
+      ticks = 2;
     }
   });
 

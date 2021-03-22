@@ -74,7 +74,7 @@ export default function ChallengeScreen() {
   const stopwatchData = handleStopwatch();
 
   useEffect(() => {
-    if (timerData.remainingMS === 0) {
+    if (type === 'COUNTDOWN' && timerData.remainingMS === 0) {
       handlePressDone();
     }
   }, [timerData.remainingMS]);

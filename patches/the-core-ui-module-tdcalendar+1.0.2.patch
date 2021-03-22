@@ -1,3 +1,16 @@
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js b/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js
+index feb9794..a9ca8b2 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js
+@@ -96,7 +96,7 @@ export default function Calendar({
+         titleTextStyles={monthTitleTextStyles || defaultMonthTitleTextStyles}
+         calendarType={calendarType || defaultCalendarType}
+         monthNames={calendarMonthNames || defaultCalendarMonthNames}
+-        datesSelectable={datesSelectable || defaultDatesSelectable}
++        datesSelectable={false}
+         dateCellStyles={dateCellStyles || defaultDateCellStyles}
+         pillWidth={pillWidth || defaultPillWidth}
+         lookupStyleTable={lookupStyleTable || defaultLookupStyleTable}
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
 index 4187631..02ce06f 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js

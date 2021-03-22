@@ -50,21 +50,18 @@ export default function TransformationScreen() {
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
 
-
-
   useEffect(() => {
-
-    // Only request images if we dont have them already
+    // Only request images if we don't have them already
     if (!userImages) {
       setLoading(true);
-      console.log(" useEffect - calls getImages")
+      console.log(' useEffect - calls getImages');
       getImages();
+    } else {
+      setLoading(false);
     }
-   
-  }, []);
+  }, [userImages]);
 
   async function getPic(image) {
-
     client
       .query({
         query: ProgressImage,
@@ -87,29 +84,24 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err, 'getPic error'));
   }
 
-
   // Got images get first pic
   useEffect(() => {
     if (userImages && !beforePic && userImages[0].createdAt) {
-      console.log("userImages useEffect - calls getPic(0)")
+      console.log('userImages useEffect - calls getPic(0)');
       setLoading(true);
 
       getPic(userImages[0]);
     }
-    
   }, [userImages]);
 
-
   // Before pic was set, go for after pic if available
-  useEffect(()=> {
-
+  useEffect(() => {
     if (beforePic && !afterPic && userImages.length > 1) {
-      console.log("beforePic useEffect - calls getPic(last)")
+      console.log('beforePic useEffect - calls getPic(last)');
       setLoading(true);
       getPic(userImages[userImages.length - 1]);
     }
   }, [beforePic]);
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -157,7 +149,7 @@ export default function TransformationScreen() {
       })
       .then((res) => {
         let url = res.data.progressImage.url;
-        
+
         if (imageToSelect === 'before') {
           setBeforePic(url);
         } else if (imageToSelect === 'after') {
@@ -166,7 +158,6 @@ export default function TransformationScreen() {
       })
       .catch((err) => console.log(err, 'getPic error'))
       .finally(() => setLoading(false));
-    
   }
 
   function handleNavigateAddPhoto() {
@@ -193,37 +184,39 @@ export default function TransformationScreen() {
   function handleShare() {}
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  
-    return (
-      <View style={styles.container}>
-        <TDSlideshow
-          beforePic={beforePic ? {uri: beforePic} : overlay}
-          afterPic={afterPic ? {uri: afterPic} : overlay}
-          imageWidth={styles.image.width}
-          imageHeight={styles.image.height}
-          sliderSpacerHeight={styles.spacerHeight}
-          sliderStyles={styles.sliderStyles}
-          minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
-          maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
-          sliderSpacerHeight={styles.spacerHeight}
-          sliderIcon={sliderThumb}
-          DateSelectors={userImages ? () => 
-            (<CustomDateSelectors
-              onPress={handleSelectDate}
-              storedImages={userImages}
-          />) : () => <></>}
-            
+
+  return (
+    <View style={styles.container}>
+      <TDSlideshow
+        beforePic={beforePic ? {uri: beforePic} : overlay}
+        afterPic={afterPic ? {uri: afterPic} : overlay}
+        imageWidth={styles.image.width}
+        imageHeight={styles.image.height}
+        sliderSpacerHeight={styles.spacerHeight}
+        sliderStyles={styles.sliderStyles}
+        minimumTrackTintColor={styles.sliderStyles.minimumTrackTintColor}
+        maximumTrackTintColor={styles.sliderStyles.maximumTrackTintColor}
+        sliderSpacerHeight={styles.spacerHeight}
+        sliderIcon={sliderThumb}
+        DateSelectors={
+          userImages
+            ? () => (
+                <CustomDateSelectors
+                  onPress={handleSelectDate}
+                  storedImages={userImages}
+                />
+              )
+            : () => <></>
+        }
+      />
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="addPhoto"
+          variant="gradient"
+          icon="chevron"
+          onPress={handleNavigateAddPhoto}
         />
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="addPhoto"
-            variant="gradient"
-            icon="chevron"
-            onPress={handleNavigateAddPhoto}
-          />
-        </View>
       </View>
-    );
-  
- 
+    </View>
+  );
 }

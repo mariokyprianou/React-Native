@@ -73,6 +73,12 @@ export default function ChallengeScreen() {
   const timerData = handleTimer(formattedSeconds);
   const stopwatchData = handleStopwatch();
 
+  useEffect(() => {
+    if (timerData.remainingMS === 0) {
+      handlePressDone();
+    }
+  }, [timerData.remainingMS]);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {

@@ -72,17 +72,6 @@ export default generateChartInfo = (
     }
   }
 
-  console.log(
-    {
-      processedHistory: processedHistory,
-      dataPoints: dataPoints,
-      interval: interval,
-      ticks: ticks,
-      chartLabel: chartLabel,
-    },
-    '<----IS THIS GOOD',
-  );
-
   return {
     processedHistory: processedHistory,
     dataPoints: dataPoints,

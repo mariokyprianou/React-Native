@@ -51,7 +51,6 @@ export default function ChallengeScreen() {
   });
 
   const [chartInfo, setChartInfo] = useState(null);
-  console.log(chartInfo, '<---chartInfo');
 
   useEffect(() => {
     getHistory();

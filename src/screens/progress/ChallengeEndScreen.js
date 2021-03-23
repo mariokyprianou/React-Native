@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Platform} from 'react-native';
+import {StyleSheet, View, Text, Platform, Image} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -21,12 +21,17 @@ import {useMutation} from '@apollo/client';
 import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
+import useDictionary from '../../hooks/localisation/useDictionary';
+
+const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const {getProgramme, programme, history, getHistory} = UseData();
+  const {dictionary} = useDictionary();
+  const {ProgressDict} = dictionary;
   const [formHeight, setFormHeight] = useState(150);
   let newStyle = {formHeight};
   const {updateValue, getValueByName, cleanValues} = FormHook();
@@ -124,6 +129,18 @@ export default function ChallengeEndScreen() {
       alignItems: 'center',
       bottom: getHeight(40),
     },
+    zeroChart: {
+      ...textStyles.semiBold10_brownGrey100,
+      lineHeight: fontSize(12),
+      marginTop: getHeight(18),
+      marginLeft: getWidth(15),
+      marginBottom: getHeight(20),
+    },
+    image: {
+      height: getHeight(120),
+      width: getWidth(250),
+      alignSelf: 'center',
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -216,7 +233,7 @@ export default function ChallengeEndScreen() {
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.card}>
-          {processedHistory.length > 0 && (
+          {processedHistory.length > 0 ? (
             <ProgressChart
               data={processedHistory}
               chartLabel={chartLabel}
@@ -224,6 +241,15 @@ export default function ChallengeEndScreen() {
               interval={chartInterval}
               ticks={chartTicks}
             />
+          ) : (
+            processedHistory.length === 0 && (
+              <>
+                <Text style={styles.zeroChart}>
+                  {ProgressDict.ChallengeZeroChart}
+                </Text>
+                <Image source={zeroStateImage} style={styles.image} />
+              </>
+            )
           )}
         </View>
         <View style={styles.descriptionContainer}>

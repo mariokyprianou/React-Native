@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {useNavigation} from '@react-navigation/native';
@@ -21,12 +21,17 @@ import generateChartInfo from '../../utils/generateChartInfo';
 import handleTimer from '../../utils/handleTimer';
 import handleStopwatch from '../../utils/handleStopwatch';
 import UseData from '../../hooks/data/UseData';
+import useDictionary from '../../hooks/localisation/useDictionary';
+
+const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {history, getHistory} = UseData();
+  const {dictionary} = useDictionary();
+  const {ProgressDict} = dictionary;
   const {
     params: {
       id,
@@ -46,6 +51,7 @@ export default function ChallengeScreen() {
   });
 
   const [chartInfo, setChartInfo] = useState(null);
+  console.log(chartInfo, '<---chartInfo');
 
   useEffect(() => {
     getHistory();
@@ -117,6 +123,18 @@ export default function ChallengeScreen() {
       alignItems: 'center',
       bottom: getHeight(40),
     },
+    zeroChart: {
+      ...textStyles.semiBold10_brownGrey100,
+      lineHeight: fontSize(12),
+      marginTop: getHeight(18),
+      marginLeft: getWidth(15),
+      marginBottom: getHeight(20),
+    },
+    image: {
+      height: getHeight(120),
+      width: getWidth(250),
+      alignSelf: 'center',
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -158,7 +176,7 @@ export default function ChallengeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        {chartInfo && (
+        {chartInfo && chartInfo.processedHistory.length > 0 ? (
           <ProgressChart
             data={chartInfo.processedHistory}
             chartLabel={chartInfo.chartLabel}
@@ -166,6 +184,16 @@ export default function ChallengeScreen() {
             interval={chartInfo.interval}
             ticks={chartInfo.ticks}
           />
+        ) : (
+          chartInfo &&
+          chartInfo.processedHistory.length === 0 && (
+            <>
+              <Text style={styles.zeroChart}>
+                {ProgressDict.ChallengeZeroChart}
+              </Text>
+              <Image source={zeroStateImage} style={styles.image} />
+            </>
+          )
         )}
       </View>
       <View style={styles.descriptionContainer}>

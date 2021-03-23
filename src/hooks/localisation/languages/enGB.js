@@ -268,6 +268,7 @@ const enGB = {
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
     ChallengeTime: 'TIME',
+    ChallengeZeroChart: 'Complete challenges to see your progress here!',
     FunctionNotAvailable:
       "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
     NoCamera:

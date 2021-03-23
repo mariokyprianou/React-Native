@@ -54,6 +54,7 @@ const enGB = {
     Home: SharedDict.Home.toUpperCase(),
     JumpIn: 'JUMP IN',
     Login: SharedDict.Login.toUpperCase(),
+    Pause: 'PAUSE',
     Pluralise: "'S",
     Programme: 'PROGRAMME',
     Progress: SharedDict.Progress.toUpperCase(),

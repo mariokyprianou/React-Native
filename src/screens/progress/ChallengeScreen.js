@@ -51,6 +51,7 @@ export default function ChallengeScreen() {
   });
 
   const [chartInfo, setChartInfo] = useState(null);
+  const [buttonPaused, setButtonPaused] = useState(false);
 
   useEffect(() => {
     getHistory();
@@ -138,6 +139,7 @@ export default function ChallengeScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressStart() {
+    setButtonPaused(!buttonPaused);
     if (type === 'COUNTDOWN') timerData.toggle();
     if (type === 'STOPWATCH') stopwatchData.toggle();
   }
@@ -209,8 +211,8 @@ export default function ChallengeScreen() {
         {type !== 'OTHER' && (
           <>
             <DefaultButton
-              type="start"
-              icon="chevron"
+              type={buttonPaused ? 'pause' : 'start'}
+              icon={buttonPaused ? 'pause' : 'play'}
               variant="gradient"
               onPress={handlePressStart}
             />

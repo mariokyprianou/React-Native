@@ -69,7 +69,7 @@ const enGB = {
     StartNow: 'START NOW',
     StartWorkout: 'START WORKOUT',
     TryAgain: 'TRY AGAIN',
-    ThreeSecs: '3s',
+    Secs: (time) => `${time}s`,
     Skip: 'Skip',
     NeedHelp: 'Need help?',
     SaveChanges: 'Save changes',

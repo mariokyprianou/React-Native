@@ -25,7 +25,11 @@ import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
+const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
+const countdown0 = require('../../../assets/images/countdown0s.png');
+const countdown5 = require('../../../assets/images/countdown5s.png');
+const countdown10 = require('../../../assets/images/countdown10s.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -51,6 +55,7 @@ export default function TransformationScreen() {
   const [requestUrl] = useMutation(UploadUrl);
   const [sendFailed] = useMutation(UploadFailed);
   const [urlId, setUrlId] = useState();
+  const [time, setTime] = useState(0);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -145,10 +150,15 @@ export default function TransformationScreen() {
         setPhoto={handlePhoto}
         overlayImage={overlay}
         overlayStyles={styles.overlay}
-        CustomCountdown={() => <CustomCountdown time={3000} />}
-        CountdownTime={3000}
+        CustomCountdown={() => <CustomCountdown time={time} />}
+        CountdownTime={time}
         cameraButtonImage={cameraButton}
+        cameraFadedButton={cameraFadedButton}
         backgroundColor={colors.backgroundWhite100}
+        countdown0={countdown0}
+        countdown5={countdown5}
+        countdown10={countdown10}
+        setTime={setTime}
       />
     </View>
   );

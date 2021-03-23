@@ -13,38 +13,41 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
 
-const reminder = require('../../../assets/icons/reminder.png');
+const reminder = require('../../../assets/images/countdownTimer.png');
 
-const CustomCountdown = () => {
-  const {getHeight, fontSize} = ScaleHook();
+const CustomCountdown = ({time}) => {
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
   const {textStyles} = useTheme();
 
+  const countdownText = (time / 1000).toString();
+
   const styles = {
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     countdownStyle: {
       height: getHeight(25),
       width: getHeight(25),
     },
     iconContainer: {
-      marginBottom: getHeight(6),
-      marginTop: getHeight(-3),
-      justifySelf: 'flex-end',
+      marginRight: getWidth(7),
     },
     text: {
       ...textStyles.semiBold14_black100,
       lineHeight: fontSize(15),
-      textAlign: 'center',
     },
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.iconContainer}>
         <TDIcon input={reminder} inputStyle={{style: styles.countdownStyle}} />
       </View>
-      <Text style={styles.text}>{ButtonDict.ThreeSecs}</Text>
-    </>
+      <Text style={styles.text}>{ButtonDict.Secs(countdownText)}</Text>
+    </View>
   );
 };
 

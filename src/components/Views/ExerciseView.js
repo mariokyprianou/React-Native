@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, Image, Alert} from 'react-native';
+import {View, TouchableOpacity, Text, Image, Alert, ScrollView} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -236,10 +236,11 @@ export default function ExerciseView(props) {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.exerciseDescriptionStyle}>
-          {exercise.coachingTips}
-        </Text>
+        <ScrollView>
+           <Text style={styles.exerciseDescriptionStyle}>{exercise.coachingTips}</Text>
+        </ScrollView>
 
+        
         <View style={styles.extraContainerStyle}>
           {exercise.weight && (
             <TouchableOpacity
@@ -281,6 +282,7 @@ export default function ExerciseView(props) {
           </View>
           <RepsList sets={sets} />
         </View>
+      
         {countDown && restTime > 0 && (
           <TimerView
             duration={msToHMS(restTime)}

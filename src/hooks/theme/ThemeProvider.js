@@ -576,7 +576,7 @@ export default function ThemeProvider({children}) {
   };
 
   const exerciseViewStyle = {
-    contentStyle: {},
+    contentStyle: {flex: 1},
     titleContainerStyle: {
       marginTop: getWidth(20),
       marginHorizontal: getWidth(20),
@@ -611,6 +611,7 @@ export default function ThemeProvider({children}) {
     },
     setsContainerStyle: {
       marginHorizontal: getWidth(20),
+      marginBottom: getHeight(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',

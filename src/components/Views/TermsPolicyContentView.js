@@ -40,7 +40,7 @@ export default function TermsPolicyContentView({isHtml, content}) {
     },
     bottomView: {
       position: 'absolute',
-      bottom: getHeight(80),
+      bottom: 0,
       left: 0,
       right: 0,
     },
@@ -70,7 +70,7 @@ export default function TermsPolicyContentView({isHtml, content}) {
         </View>
       </ScrollView>
       <View style={styles.bottomView}>
-        <FadingBottomView height={150} />
+        <FadingBottomView height={250} />
       </View>
     </>
   );

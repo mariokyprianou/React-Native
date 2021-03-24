@@ -35,8 +35,8 @@ export default function EmailVerificationScreen() {
           clearInterval(interval);
           const permissionNeeded = await permissionsNeeded();
 
-          if (Platform.OS === "android") { 
-            updateDefaultPreferences()
+          if (Platform.OS === 'android') {
+            updateDefaultPreferences();
           }
 
           if (permissionNeeded) {
@@ -77,8 +77,8 @@ export default function EmailVerificationScreen() {
           } else {
             const permissionNeeded = await permissionsNeeded();
 
-            if (Platform.OS === "android") { 
-              updateDefaultPreferences()
+            if (Platform.OS === 'android') {
+              updateDefaultPreferences();
             }
 
             if (permissionNeeded) {
@@ -102,6 +102,7 @@ export default function EmailVerificationScreen() {
       bottomButtonType="goBackLower"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}
+      emailVerification={true}
     />
   );
 }

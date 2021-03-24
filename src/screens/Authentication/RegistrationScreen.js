@@ -60,7 +60,8 @@ export default function RegisterScreen() {
   const {setLoading} = useLoading();
 
   navigation.setOptions({
-    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
+    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack leftAction={() => navigation.pop(2)}
+    />,
   });
 
   const gendersData = [

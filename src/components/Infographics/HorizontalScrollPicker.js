@@ -19,13 +19,14 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
     const {getWidth, getHeight, radius, fontSize} = ScaleHook();
     const {colors, textStyles} = useTheme();
     const { weightData, setSelectedWeight} = UseData();
-    let data = weightData.slice(0,50);
+    let data = weightData.slice(0,51);
 
   const itemSize = getWidth(70);
   const scrollAnimatedValue = useRef(new Animated.Value(0)).current;
   const scrollListener = useRef(null);
   const active = useRef(0);
-  data = ['', '', ...data, '', ''];
+  data = [-1, -1, ...data, -1, -1];
+
 
   useEffect(() => {
     scrollListener.current && clearInterval(scrollListener.current);
@@ -102,7 +103,7 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
           },
         ]}>
         <Text numberOfLines={1} ellipsizeMode='clip' style={style.listItemText}>
-          {item ? `${item}${weightPreference}` : ''}
+          {item >=0 ? `${item}${weightPreference}` : ''}
         </Text>
         </Animated.View>
       </View>

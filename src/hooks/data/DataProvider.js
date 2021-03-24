@@ -292,7 +292,7 @@ export default function DataProvider(props) {
 
   useEffect(() => {
     const weightsArray = [];
-    for (let i = 1; i < 201; i++) {
+    for (let i = 0; i < 201; i++) {
       weightsArray.push(i);
     }
     setWeightData(weightsArray);

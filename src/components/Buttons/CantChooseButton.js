@@ -47,6 +47,7 @@ export default function CantChooseButton({onPress}) {
       height: getWidth(20),
       backgroundColor: colors.brownishGrey100,
       borderRadius: radius(14),
+      justifyContent: 'center',
     },
     largerButton: {
       height: getHeight(28),

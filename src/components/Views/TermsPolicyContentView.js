@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {ScrollView, View, Text} from 'react-native';
+import {ScrollView, View, Text, Dimensions, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import WebView from 'react-native-webview';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -16,6 +16,13 @@ export default function TermsPolicyContentView({isHtml, content}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
+
+  const screenWidth = Dimensions.get('screen').width;
+  const spacing =
+    '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
+  const htmlWithWidth = `<html><head><meta name="viewport" content="width=${screenWidth}"></head>${content}${
+    Platform.OS === 'ios' ? spacing : ''
+  }</html>`;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -54,23 +61,25 @@ export default function TermsPolicyContentView({isHtml, content}) {
     <>
       <ScrollView
         keyboardShouldPersistTaps="handled"
+        scrollEnabled={false}
         style={styles.scrollViewContainer}>
         <View style={styles.webViewContainer}>
           {isHtml ? (
             <WebView
               style={styles.webView}
-              source={{html: content}}
+              source={{html: htmlWithWidth}}
               scalesPageToFit={false}
-              scrollEnabled={false}
+              scrollEnabled={true}
               userAgent={'mobileapp'}
+              showsVerticalScrollIndicator={false}
             />
           ) : (
             <Text style={styles.text}>{content}</Text>
           )}
         </View>
       </ScrollView>
-      <View style={styles.bottomView}>
-        <FadingBottomView height={250} />
+      <View style={styles.bottomView} pointerEvents="none">
+        <FadingBottomView height={280} />
       </View>
     </>
   );

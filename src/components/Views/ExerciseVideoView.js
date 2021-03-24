@@ -31,7 +31,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const [isPaused, setIsPaused] = useState(true);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
-  const [showControls, setShowControls] = useState(false);
+  const [showControls, setShowControls] = useState(true);
 
   const [currentVideo, setCurrentVideo] = useState('video');
 
@@ -86,6 +86,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   useEffect(() => {
+    console.log(showControls)
     if (showControls) {
       Animated.timing(fadeAnimation, {
         toValue: 1,
@@ -127,10 +128,14 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     </Animated.View>
   );
 
+
+
   return (
     <View style={styles.container}>
       <View style={{height: getHeight(300)}}>
         <VideoView {...videoProps} ref={videoRef} />
+
+        {/* Controls not showing so render a touch view to allow showing them */}
         {!showControls && (
           <TouchableOpacity
             style={{

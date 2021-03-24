@@ -111,6 +111,7 @@ export default function ExerciseView(props) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  
 
   const onSetCompleted = (completedIndex) => {
     
@@ -182,7 +183,18 @@ export default function ExerciseView(props) {
   };
 
   const onExerciseCompleted = () => {
-    onSetCompleted(sets.length - 1);
+    //onSetCompleted(sets.length - 1);
+    setCurrentSet(sets.length);
+
+    // Update Sets states as completed
+    const newSets = sets.map((it) => {
+      return {
+        ...it,
+        state: 'completed',
+      };
+    });
+   
+    setSets(newSets);
 
      // If we dont have rest time or weight option just finish exercise set immediatelly
      if ((!restTime || restTime === 0) && !exercise.weight) {

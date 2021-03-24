@@ -28,6 +28,7 @@ const PermissionScreenUI = ({
   onPressButton,
   onPressBottomButton,
   disabled = false,
+  closeModal = true
 }) => {
   // MARK: - Hooks
   const {getHeight, getWidth} = ScaleHook();
@@ -35,7 +36,7 @@ const PermissionScreenUI = ({
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () => <Header title={title} showModalCross={true} />,
+    header: () =>  <Header title={title} showModalCross={closeModal} />,
     ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 

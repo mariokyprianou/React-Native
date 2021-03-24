@@ -28,8 +28,9 @@ export default function EmailVerificationScreen() {
   const {permissionsNeeded, updateDefaultPreferences} = useUserData();
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
+
   useEffect(() => {
-    const interval = setInterval(async () => {
+    let interval = setInterval(async () => {
       await Auth.signIn(email, password)
         .then(async () => {
           clearInterval(interval);
@@ -52,6 +53,12 @@ export default function EmailVerificationScreen() {
           console.log('not yet verified', error);
         });
     }, 1000);
+
+  return () => {
+    clearInterval(interval);
+    interval = null;
+  }
+
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -74,18 +81,8 @@ export default function EmailVerificationScreen() {
         onPress: async () => {
           if (fromLogin === true) {
             navigation.goBack();
-          } else {
-            const permissionNeeded = await permissionsNeeded();
-
-            if (Platform.OS === "android") { 
-              updateDefaultPreferences()
-            }
-
-            if (permissionNeeded) {
-              navigation.navigate(permissionNeeded);
-            } else {
-              navigation.navigate('MeetYourIcons', {switchProgramme: false});
-            }
+           } else {
+            navigation.navigate('MeetYourIcons', {switchProgramme: false});
           }
         },
       },
@@ -97,6 +94,7 @@ export default function EmailVerificationScreen() {
     <PermissionScreenUI
       title={AuthDict.VerifyEmailTitle}
       text={AuthDict.VerifyEmail}
+      closeModal={false}
       image={require('../../../assets/images/verifyEmailImage.png')}
       buttonType="resend"
       bottomButtonType="goBackLower"

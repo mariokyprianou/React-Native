@@ -15,6 +15,7 @@ import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
 import PercentageBar from '../Infographics/PercentageBar';
 import Spacer from '../Utility/Spacer';
+import FastImage from 'react-native-fast-image';
 
 export default function TrainerCard({
   trainer,
@@ -74,7 +75,7 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image
+        <FastImage
           source={{uri: currentProgram.programmeImage}}
           style={styles.image}
         />

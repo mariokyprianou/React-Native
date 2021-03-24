@@ -13,6 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from '../Views/FadingBottomView';
 import TDIcon from 'the-core-ui-component-tdicon';
 import isRTL from '../../utils/isRTL';
+import FastImage from 'react-native-fast-image';
 
 export default function OnboardingSliderItem({
   image,
@@ -35,11 +36,10 @@ export default function OnboardingSliderItem({
       width: getWidth(210),
       alignSelf: 'center',
       justifyContent: 'flex-end',
-    },
+        },
     image: {
       height: '100%',
       width: '100%',
-      resizeMode: 'contain',
       position: 'absolute',
       top: getHeight(0),
     },
@@ -60,7 +60,7 @@ export default function OnboardingSliderItem({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <Image source={url} style={styles.image} />
+        <FastImage resizeMode={FastImage.resizeMode.contain} source={url} style={styles.image} />
         <FadingBottomView customStart={colors.white0} customEnd={colors.backgroundWhite100} color="custom" height={140} />
       </View>
       <Text style={styles.header}>{header}</Text>

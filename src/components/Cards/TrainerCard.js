@@ -87,6 +87,7 @@ export default function TrainerCard({
           <GymHomeSelector
             onPress={onPressGymHome}
             text={suggestedEnv ? suggestedEnv : currentProgram.environment}
+            singleProgramme={trainer.programmes.length === 1 ? true : false}
           />
         </View>
         <View style={styles.barsContainer}>

@@ -66,7 +66,7 @@ export default function SetsTable({date, weightData, weightPreference}) {
             scrollEnabled={false}
             renderItem={({item}) => (
               <SetTableRow
-                setNumber={item.setNumber+1}
+                setNumber={item.setNumber + 1}
                 reps={item.reps}
                 weight={item.weight}
                 weightPreference={weightPreference}
@@ -76,7 +76,9 @@ export default function SetsTable({date, weightData, weightPreference}) {
           />
         </View>
       </ScrollView>
-      <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
+      <View
+        style={{position: 'absolute', bottom: 0, left: 0, right: 0}}
+        pointerEvents="none">
         <FadingBottomView height={80} />
       </View>
     </>

@@ -500,26 +500,23 @@ export default function ThemeProvider({children}) {
     labelContainerStyle: {
       width: '100%',
       marginTop: getHeight(18),
-      
     },
-    
     labelTextStyle: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
     },
     iconTintColor: colors.black100,
-    
     style: {
       ...textStyles.regular16_black100,
       lineHeight: fontSize(20),
+
       flex: 1,
       height: '100%',
-      
     },
     inputContainerStyle: {
       padding: 0,
       margin: 0,
-      paddingHorizontal: 0,    
+      paddingHorizontal: 0,
       marginStart: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
       marginTop: -getHeight(5),
     },
@@ -529,7 +526,6 @@ export default function ThemeProvider({children}) {
       paddingHorizontal: 0,
       margin: 0,
       textAlign: 'left',
-      
     },
     marginEnd: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
     writingDirection: isRTL() ? 'rtl' : 'ltr',
@@ -571,7 +567,7 @@ export default function ThemeProvider({children}) {
     buttonTextStyle: {
       ...textStyles.regular16_black100,
       lineHeight: getHeight(20),
-      color: colors.white100
+      color: colors.white100,
     },
   };
 

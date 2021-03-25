@@ -36,8 +36,8 @@ export default function EmailVerificationScreen() {
           clearInterval(interval);
           const permissionNeeded = await permissionsNeeded();
 
-          if (Platform.OS === "android") { 
-            updateDefaultPreferences()
+          if (Platform.OS === 'android') {
+            updateDefaultPreferences();
           }
 
           if (permissionNeeded) {

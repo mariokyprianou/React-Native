@@ -67,16 +67,15 @@ export default function WorkoutCompleteScreen() {
     let sets = 0;
     let seconds = 0;
 
-
     selectedWorkout.exercises.map((exercise) => {
       sets += exercise.sets.length;
       exercise.sets.map((set) => {
-        switch(exercise.setType) {
-          case "REPS": {
+        switch (exercise.setType) {
+          case 'REPS': {
             reps += set.quantity;
             break;
           }
-          case "TIME": {
+          case 'TIME': {
             seconds += set.quantity;
             break;
           }
@@ -91,7 +90,7 @@ export default function WorkoutCompleteScreen() {
       reps,
       sets,
       overviewImage,
-      seconds
+      seconds,
     });
   }, [selectedWorkout]);
 
@@ -258,6 +257,7 @@ export default function WorkoutCompleteScreen() {
             variant="white"
             icon="chevron"
             onPress={submitWorkout}
+            disabled={selectedEmoji ? false : true}
           />
         </View>
         <Spacer height={50} />

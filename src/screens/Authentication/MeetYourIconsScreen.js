@@ -456,8 +456,8 @@ export default function MeetYourIconsScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.fadeContainer}>
-        <FadingBottomView color="blue" height={70} />
+      <View style={styles.fadeContainer} pointerEvents="none">
+        <FadingBottomView color="blue" height={100} />
       </View>
       {switchProgramme === true && selectedTrainer.id === currentTrainerId ? (
         <View style={styles.buttonContainer}>

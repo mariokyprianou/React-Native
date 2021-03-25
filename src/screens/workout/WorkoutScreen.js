@@ -104,12 +104,15 @@ export default function WorkoutScreen() {
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
         {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView
+            <ExerciseView
             {...screen}
             index={index}
             exerciseFinished={exerciseFinished}
           />
+         
+          
         ))}
+        
       </ScrollView>
     </View>
   );

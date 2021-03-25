@@ -10,6 +10,7 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import { useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Colors from '../../styles/Colors';
 import isRTL from '../../utils/isRTL';
@@ -18,7 +19,22 @@ import ThemeContext from './ThemeContext';
 export default function ThemeProvider({children}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
 
-  const screenWidth = Dimensions.get('screen').width;
+  const insets = useSafeAreaInsets();
+
+  const SCREEN_WIDTH = Dimensions.get('screen').width;
+  const SCREEN_HEIGHT = Dimensions.get('screen').height;
+
+  const HEADER_HEIGHT = 64 + insets.top;
+
+  const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT;
+
+  const Constants = {
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    HEADER_HEIGHT,
+    EXERCISE_VIEW_HEIGHT
+  };
+
 
   const colors = {
     ...Colors,
@@ -578,7 +594,7 @@ export default function ThemeProvider({children}) {
   const exerciseViewStyle = {
     contentStyle: {flex: 1},
     titleContainerStyle: {
-      marginTop: getWidth(20),
+      marginTop: getWidth(15),
       marginHorizontal: getWidth(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -589,7 +605,7 @@ export default function ThemeProvider({children}) {
       textAlign: 'left',
     },
     exerciseDescriptionStyle: {
-      marginTop: getHeight(10),
+      marginTop: getHeight(5),
       marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
@@ -622,8 +638,8 @@ export default function ThemeProvider({children}) {
     },
     extraContainerStyle: {
       flexDirection: 'row',
-      marginTop: getHeight(16),
-      marginBottom: getHeight(20),
+      marginTop: getHeight(10),
+      marginBottom: getHeight(10),
       marginHorizontal: getWidth(20),
     },
     weightTouchStyle: {
@@ -673,6 +689,7 @@ export default function ThemeProvider({children}) {
       dropdownStyle,
       headerButtonConfig,
       exerciseViewStyle,
+      Constants
     }),
     [
       colors,
@@ -683,6 +700,7 @@ export default function ThemeProvider({children}) {
       dropdownStyle,
       headerButtonConfig,
       exerciseViewStyle,
+      Constants
     ],
   );
 

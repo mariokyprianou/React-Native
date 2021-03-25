@@ -36,7 +36,7 @@ export default function ChangePasswordScreen() {
       });
       return;
     }
-    
+
     if (!newPassword || !passwordRegex.test(newPassword)) {
       updateError({
         name: 'changePasswordValue2',
@@ -52,20 +52,17 @@ export default function ChangePasswordScreen() {
       .then((data) => {
         console.log(data);
         navigation.goBack();
+        cleanValues();
       })
       .catch((err) => {
         console.log(err);
-        if (
-          err.code === 'NotAuthorizedException'
-        ) {
+        if (err.code === 'NotAuthorizedException') {
           updateError({
             name: 'changePasswordValue1',
             value: AuthDict.IncorrectPassword,
           });
         }
-      }).finally(()=> cleanValues());
-
-    
+      });
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **

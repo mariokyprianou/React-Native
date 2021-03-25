@@ -73,7 +73,7 @@ index 415c726..54ef15b 100644
          close={handlePress}
          onChange={handleChange}
 diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
-index 06cd661..d888f96 100644
+index 06cd661..fa6c8f3 100644
 --- a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 +++ b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
 @@ -13,12 +13,13 @@ import {ScaleHook} from 'react-native-design-to-component';
@@ -99,7 +99,7 @@ index 06cd661..d888f96 100644
 +  const powerCustomRightAccessory = () => (
 +    <View style={cell.customPasswordStyle}>
 +      <TDIcon     
-+        input={visibility ? 'eye' : 'eye-slash'} 
++        input={visibility ?  'eye-slash' : 'eye'} 
 +        inputStyle={
 +          { icon: { size: fontSize(12) }, color: cell.iconTintColor}
 +        } />

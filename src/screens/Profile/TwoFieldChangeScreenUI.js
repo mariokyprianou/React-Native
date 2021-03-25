@@ -73,7 +73,7 @@ const TwoFieldChangeScreenUI = ({
         
       },
       style: {
-        
+        ...cellFormStyles.style,
         lineHeight: fontSize(20),
         flex: 1,
         height: '100%',
@@ -89,6 +89,13 @@ const TwoFieldChangeScreenUI = ({
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
+      },
+      style: {
+        ...cellFormStyles.style,
+        lineHeight: fontSize(20),
+        flex: 1,
+        height: '100%',
+        
       },
     },
   ];

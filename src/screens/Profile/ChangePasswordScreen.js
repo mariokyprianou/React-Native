@@ -5,29 +5,39 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TwoFieldChangeScreenUI from './TwoFieldChangeScreenUI';
 import {Auth} from 'aws-amplify';
 import {passwordRegex} from '../../utils/regex';
 import {useNavigation} from '@react-navigation/native';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function ChangePasswordScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
   const {ProfileDict} = dictionary;
-  const {getValues, cleanValues, updateError} = FormHook();
+  const {getValues, cleanValues, cleanErrors, updateError} = FormHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+
+  useEffect(() => {
+
+    return () => {
+      cleanValues();
+      cleanErrors();
+    }  
+  }, [])
   const onPressChange = () => {
     const {
       changePasswordValue1: oldPassword,
       changePasswordValue2: newPassword,
     } = getValues();
+    cleanErrors();
 
     if (!oldPassword || !passwordRegex.test(oldPassword)) {
       updateError({
@@ -63,7 +73,13 @@ export default function ChangePasswordScreen() {
             value: AuthDict.IncorrectPassword,
           });
         }
-      }).finally(()=> cleanValues());
+        else if (err.code === 'LimitExceededException') {
+          displayAlert({
+            text: err.message,
+            onPress: () => navigation.pop(),
+          });
+        }
+      });
 
     
   };

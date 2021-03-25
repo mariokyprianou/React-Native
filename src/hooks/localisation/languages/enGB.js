@@ -197,6 +197,8 @@ const enGB = {
     ChangePasswordLabel2: SharedDict.NewPassword,
     IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
     VerifyEmailScreenTitle: SharedDict.VerifyEmail,
+    VerifyEmailScreenInfo:
+      'We’ve sent a code to your new email address. Please enter it here.',
     InvalidChangeEmailCode:
       'Oops! This code is not recognised; please enter the correct code to change your email address.',
     CodeLabel: 'CODE',
@@ -281,9 +283,15 @@ const enGB = {
   WorkoutDict: {
     WeekText: 'Week',
 
-    exerciseInfoFormatText: (sets, reps) => (sets === 1) ? `${sets} SET || ${reps} REPS` : `${sets} SETS || ${reps} REPS`,
-    exerciseInfoFormatTextSecs: (sets, secs) =>  (sets === 1) ? `${sets} SET || ${secs} SECS` : `${sets} SETS || ${secs} SECS`,
-  
+    exerciseInfoFormatText: (sets, reps) =>
+      sets === 1
+        ? `${sets} SET || ${reps} REPS`
+        : `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatTextSecs: (sets, secs) =>
+      sets === 1
+        ? `${sets} SET || ${secs} SECS`
+        : `${sets} SETS || ${secs} SECS`,
+
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
     SetsText: SharedDict.Sets,

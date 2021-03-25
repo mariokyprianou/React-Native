@@ -70,14 +70,8 @@ const TwoFieldChangeScreenUI = ({
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
-        
-      },
-      style: {
-        
-        lineHeight: fontSize(20),
-        flex: 1,
-        height: '100%',
-        
+        paddingRight: getWidth(6),
+        marginTop: 0,
       },
     },
     {
@@ -89,6 +83,7 @@ const TwoFieldChangeScreenUI = ({
       inputContainerStyle: {
         ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
+        marginTop: 0,
       },
     },
   ];
@@ -103,7 +98,7 @@ const TwoFieldChangeScreenUI = ({
       flex: 1,
       backgroundColor: colors.backgroundWhite100,
       justifyContent: 'space-between',
-      paddingVertical: getHeight(40),
+      paddingBottom: getHeight(40),
       alignItems: 'center',
     },
     scrollViewContainer: {

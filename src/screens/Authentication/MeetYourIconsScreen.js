@@ -76,6 +76,9 @@ export default function MeetYourIconsScreen() {
   useEffect(() => {
     setLoading(true);
     StatusBar.setBarStyle('light-content');
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    }
   }, []);
 
   useEffect(() => {

@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, ImageBackground, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -29,10 +29,15 @@ export default function TakeARestScreen() {
 
   const {programme, programmeModalImage} = useData();
 
-  navigation.setOptions({
-    header: () => <></>,
-  });
-  StatusBar.setBarStyle('light-content');
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => <></>,
+    });
+    StatusBar.setBarStyle('light-content');
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    }
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

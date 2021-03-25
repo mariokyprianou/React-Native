@@ -31,11 +31,6 @@ export default function WorkoutScreen() {
 
   const [offset, setOffset] = useState(0);
 
-  useEffect(() => {  
-      StatusBar.setBarStyle('dark-content');
-  })
-
-
   navigation.setOptions({
     header: () => (
       <WorkoutHeader

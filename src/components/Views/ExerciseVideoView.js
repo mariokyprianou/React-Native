@@ -86,7 +86,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   useEffect(() => {
-    console.log(showControls)
+
     if (showControls) {
       Animated.timing(fadeAnimation, {
         toValue: 1,

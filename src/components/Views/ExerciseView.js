@@ -154,7 +154,15 @@ export default function ExerciseView(props) {
       setSetComplete(true);
     }
 
+
+
+    // Handle no weight or rest time
+    // If we dont have rest time or weight option just finish exercise set immediatelly
+    if (completedIndex === sets.length - 1 && (!restTime || restTime === 0) && !exercise.weight) {
+      finishExercise();
+    }
   };
+  
 
 
   // Finished weight submition, check if it was last set

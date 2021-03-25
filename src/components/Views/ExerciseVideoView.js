@@ -59,7 +59,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   }, [currentExerciseIndex, index]);
 
   const videoProps = {
-    height: getHeight(300),
+    height: getHeight(385),
     url: videos[currentVideo],
     skipCache: !isDownloadEnabled,
     autoplay: false, //index === currentExerciseIndex,
@@ -110,7 +110,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       style={{
         opacity: fadeAnimation,
         alignSelf: 'center',
-        position: 'absolute',
+         position: 'absolute',
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
         backgroundColor: colors.black10,
@@ -130,9 +130,12 @@ export default function ({video, videoEasy, videoEasiest, index}) {
 
 
 
+
+
+
   return (
     <View style={styles.container}>
-      <View style={{height: getHeight(300)}}>
+      <View style={{height: getHeight(385)}}>
         <VideoView {...videoProps} ref={videoRef} />
 
         {/* Controls not showing so render a touch view to allow showing them */}

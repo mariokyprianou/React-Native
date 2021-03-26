@@ -19,12 +19,16 @@ import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
 import UseData from '../../hooks/data/UseData';
+import useProgressData from '../../hooks/data/useProgressData';
+
+
+const screenWidth = Dimensions.get('screen').width;
 
 export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {history} = UseData();
+  const {history} = useProgressData();
   const {dictionary} = useDictionary();
   const {WorkoutDict, ShareDict} = dictionary;
   const {
@@ -32,19 +36,20 @@ export default function ChallengeCompletionScreen() {
   } = useRoute();
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.ChallengeCompleteTitle}
-        right="crossIcon"
-        rightAction={() => navigation.navigate('Progress')}
-      />
-    ),
-  });
-
-  const screenWidth = Dimensions.get('screen').width;
   const [chartInfo, setChartInfo] = useState(null);
 
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={WorkoutDict.ChallengeCompleteTitle}
+          right="crossIcon"
+          rightAction={() => navigation.navigate('Progress')}
+        />
+      ),
+    });
+  }, []);
+  
   useEffect(() => {
     async function getInfo() {
       const info = await generateChartInfo(
@@ -175,6 +180,7 @@ export default function ChallengeCompletionScreen() {
 
   function handleDone() {
     navigation.navigate('Progress');
+   
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

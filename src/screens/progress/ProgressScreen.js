@@ -23,13 +23,10 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import processProgressData from '../../utils/processProgressData';
-import {useQuery} from '@apollo/client';
-import Challenges from '../../apollo/queries/Challenges';
-import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import useUserData from '../../hooks/data/useUserData';
 import {parseISO} from 'date-fns';
-import UseData from '../../hooks/data/UseData';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -40,7 +37,7 @@ export default function ProgressScreen() {
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getPreferences, preferences} = useUserData();
-  const {progress, getProgress} = UseData();
+  const {progress, getProgress, challenges, getChallenges} = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -53,16 +50,18 @@ export default function ProgressScreen() {
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => null,
-  });
-
+  
   const [progressData, setProgressData] = useState();
-  const [challenges, setChallenges] = useState();
   const [weightLabel, setWeightLabel] = useState();
 
   useEffect(() => {
+    navigation.setOptions({
+      header: () => null,
+    });
+  
     getPreferences();
+    getProgress();
+    getChallenges();
   }, []);
 
   useEffect(() => {
@@ -72,9 +71,7 @@ export default function ProgressScreen() {
     }
   }, [preferences]);
 
-  useEffect(() => {
-    getProgress();
-  }, []);
+
 
   useEffect(() => {
     if (progress) {
@@ -89,13 +86,7 @@ export default function ProgressScreen() {
     }
   }, [progress]);
 
-  useQuery(Challenges, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      setChallenges(res.challenges);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+  
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -213,6 +204,7 @@ export default function ProgressScreen() {
                     fieldTitle,
                     unitType,
                   } = challenge;
+
                   return (
                     <TransformationChallenge
                       key={index}

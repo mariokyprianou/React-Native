@@ -22,6 +22,7 @@ import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
@@ -29,12 +30,16 @@ export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
-  const {getProgramme, programme, history, getHistory} = UseData();
+
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-  const [formHeight, setFormHeight] = useState(150);
-  let newStyle = {formHeight};
   const {updateValue, getValueByName, cleanValues} = FormHook();
+  const {setLoading} = useLoading();
+  const navigation = useNavigation();
+  
+  const {programme} = UseData();
+  const {getHistory} = useProgressData();
+  
   const {
     params: {
       name,
@@ -53,17 +58,19 @@ export default function ChallengeEndScreen() {
       chartTicks,
     },
   } = useRoute();
-  const {setLoading} = useLoading();
-  const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => <Header title={name} goBack leftAction={handleGoBack} />,
-  });
+ 
+  const [formHeight, setFormHeight] = useState(150);
+  let newStyle = {formHeight};
+
 
   const [sendResult] = useMutation(CompleteChallenge);
 
   useEffect(() => {
-    getProgramme();
+    navigation.setOptions({
+      header: () => <Header title={name} goBack leftAction={handleGoBack} />,
+    });
+
   }, []);
 
   useEffect(() => {
@@ -161,8 +168,8 @@ export default function ChallengeEndScreen() {
         },
       },
     })
-      .then(() => {
-        getHistory();
+      .then(async () => {
+        await getHistory();
       })
       .then(() => {
         setLoading(false);

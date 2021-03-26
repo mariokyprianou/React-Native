@@ -316,46 +316,6 @@ export default function DataProvider(props) {
     return wasToday !== undefined ? true : false;
   }, []);
 
-  // Get progress data
-  const [progress, setProgress] = useState();
-
-  const [getProgress] = useLazyQuery(Progress, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      setProgress(res.progress);
-    },
-    onError: (error) => console.log(error, '<---progress query error'),
-  });
-
-  // Get challenge history data
-  const [history, setHistory] = useState();
-
-  const [getHistory] = useLazyQuery(ChallengeHistory, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      setHistory(res.challengeHistory);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
-
-  // Get progress images
-  const [userImages, setUserImages] = useState();
-
-  const [getImages] = useLazyQuery(ProgressImages, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      const today = new Date();
-      const formattedToday = format(today, 'dd/LL/yyyy');
-      const emptyListObject = {value: today, label: formattedToday};
-      if (res.progressImages.length === 0) {
-        setUserImages([emptyListObject]);
-      } else {
-        const formattedImages = formatProgressImages(res.progressImages);
-        setUserImages(formattedImages);
-      }
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -387,12 +347,6 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
-      progress,
-      getProgress,
-      history,
-      getHistory,
-      userImages,
-      getImages,
       completedExercises,
       setCompletedExercises
     }),
@@ -423,12 +377,6 @@ export default function DataProvider(props) {
       wasLastWorkoutToday,
       weightsToUpload,
       setWeightsToUpload,
-      progress,
-      getProgress,
-      history,
-      getHistory,
-      userImages,
-      getImages,
       completedExercises,
       setCompletedExercises
     ],

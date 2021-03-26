@@ -21,6 +21,7 @@ import {useLazyQuery, useApolloClient} from '@apollo/client';
 import ProgressImage from '../../apollo/queries/ProgressImage';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -30,78 +31,29 @@ export default function TransformationScreen() {
   const {getHeight} = ScaleHook();
   const client = useApolloClient();
   const {colors} = useTheme();
-  const {userImages, getImages} = UseData();
+  const {userImages, beforePic, setBeforePic, afterPic, setAfterPic, getImageUrl, imageUrls} = useProgressData();
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const {setLoading} = useLoading();
   const navigation = useNavigation();
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={ProgressDict.TransformationScreenTitle}
-        goBack
-        right="shareIcon"
-        rightAction={handleShare}
-      />
-    ),
-  });
+ 
 
-  const [beforePic, setBeforePic] = useState();
-  const [afterPic, setAfterPic] = useState();
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={ProgressDict.TransformationScreenTitle}
+          goBack
+          right="shareIcon"
+          rightAction={handleShare}
+        />
+      ),
+    });
 
-  useEffect(() => {
-    // Only request images if we don't have them already
-    if (!userImages) {
-      setLoading(true);
-      console.log(' useEffect - calls getImages');
-      getImages();
-    } else {
-      setLoading(false);
-    }
-  }, [userImages]);
+  }, []);
 
-  async function getPic(image) {
-    client
-      .query({
-        query: ProgressImage,
-        fetchPolicy: 'no-cache',
-        variables: {
-          input: {
-            id: image.id,
-            createdAt: image.createdAt,
-          },
-        },
-      })
-      .then((res) => {
-        if (beforePic === undefined) {
-          setBeforePic(res.data.progressImage.url);
-        } else if (afterPic === undefined) {
-          setAfterPic(res.data.progressImage.url);
-        }
-        setLoading(false);
-      })
-      .catch((err) => console.log(err, 'getPic error'));
-  }
-
-  // Got images get first pic
-  useEffect(() => {
-    if (userImages && !beforePic && userImages[0].createdAt) {
-      console.log('userImages useEffect - calls getPic(0)');
-      setLoading(true);
-
-      getPic(userImages[0]);
-    }
-  }, [userImages]);
-
-  // Before pic was set, go for after pic if available
-  useEffect(() => {
-    if (beforePic && !afterPic && userImages.length > 1) {
-      console.log('beforePic useEffect - calls getPic(last)');
-      setLoading(true);
-      getPic(userImages[userImages.length - 1]);
-    }
-  }, [beforePic]);
+  
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -136,28 +88,24 @@ export default function TransformationScreen() {
     if (!dateItem.id) return;
     setLoading(true);
 
-    client
-      .query({
-        query: ProgressImage,
-        fetchPolicy: 'no-cache',
-        variables: {
-          input: {
-            id: dateItem.id,
-            createdAt: dateItem.createdAt,
-          },
-        },
-      })
-      .then((res) => {
-        let url = res.data.progressImage.url;
 
-        if (imageToSelect === 'before') {
-          setBeforePic(url);
-        } else if (imageToSelect === 'after') {
-          setAfterPic(url);
-        }
-      })
-      .catch((err) => console.log(err, 'getPic error'))
-      .finally(() => setLoading(false));
+    // Check if we already have tthe url for this image
+    const existingImage = imageUrls.find((it) => it.id === dateItem.id); 
+
+    let url = null;
+    if (existingImage) {
+      url = existingImage.url;
+    }
+    else {
+        url = await getImageUrl(dateItem);
+    }
+
+    if (imageToSelect === 'before') {
+      setBeforePic(url);
+    } else if (imageToSelect === 'after') {
+      setAfterPic(url);
+    }
+    setLoading(false);
   }
 
   function handleNavigateAddPhoto() {

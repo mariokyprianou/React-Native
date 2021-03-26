@@ -14,12 +14,13 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import Header from '../../components/Headers/Header';
 import processProgressData from '../../utils/processProgressData';
-import UseData from '../../hooks/data/UseData';
+import useProgressData from '../../hooks/data/useProgressData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {singleCalendarStyles, colors, textStyles} = useTheme();
-  const {progress, getProgress} = UseData();
+  const {progress, getProgress} = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -32,15 +33,17 @@ export default function CalendarScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
+  const {setLoading} = useLoading();
 
-  navigation.setOptions({
-    header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
-  });
 
   const [progressHistoryData, setProgressHistoryData] = useState();
 
   useEffect(() => {
-    getProgress();
+    navigation.setOptions({
+      header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
+    });
+    setLoading(true);
+  
   }, []);
 
   useEffect(() => {
@@ -50,7 +53,9 @@ export default function CalendarScreen() {
       })
       .flat();
     setProgressHistoryData(progressData);
-  }, []);
+
+    setLoading(false);
+  }, [progress]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

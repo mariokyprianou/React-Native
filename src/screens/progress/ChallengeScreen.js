@@ -20,16 +20,16 @@ import {useRoute} from '@react-navigation/core';
 import generateChartInfo from '../../utils/generateChartInfo';
 import handleTimer from '../../utils/handleTimer';
 import handleStopwatch from '../../utils/handleStopwatch';
-import UseData from '../../hooks/data/UseData';
+import useProgressData from '../../hooks/data/useProgressData';
 import useDictionary from '../../hooks/localisation/useDictionary';
 
 const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
 export default function ChallengeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const navigation = useNavigation();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {history, getHistory} = UseData();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const {
@@ -45,16 +45,22 @@ export default function ChallengeScreen() {
     },
   } = useRoute();
 
-  const navigation = useNavigation();
-  navigation.setOptions({
-    header: () => <Header title={name} goBack />,
-  });
+  const {history, getHistory} = useProgressData();
 
   const [chartInfo, setChartInfo] = useState(null);
   const [buttonPaused, setButtonPaused] = useState(false);
 
+  // Time based 
+  const formattedSeconds = new Date(duration * 1000)
+  .toISOString()
+  .substr(11, 8);
+const timerData = handleTimer(formattedSeconds);
+const stopwatchData = handleStopwatch();
+
   useEffect(() => {
-    getHistory();
+    navigation.setOptions({
+      header: () => <Header title={name} goBack />,
+    });
   }, []);
 
   useEffect(() => {
@@ -67,17 +73,14 @@ export default function ChallengeScreen() {
           unitType,
           type,
         );
+
         setChartInfo(info);
       }
       getInfo();
     }
   }, [history]);
 
-  const formattedSeconds = new Date(duration * 1000)
-    .toISOString()
-    .substr(11, 8);
-  const timerData = handleTimer(formattedSeconds);
-  const stopwatchData = handleStopwatch();
+ 
 
   useEffect(() => {
     if (type === 'COUNTDOWN' && timerData.remainingMS === 0) {

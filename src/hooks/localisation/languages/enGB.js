@@ -198,6 +198,8 @@ const enGB = {
     ChangePasswordLabel2: SharedDict.NewPassword,
     IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
     VerifyEmailScreenTitle: SharedDict.VerifyEmail,
+    VerifyEmailScreenInfo:
+      'We’ve sent a code to your new email address. Please enter it here.',
     InvalidChangeEmailCode:
       'Oops! This code is not recognised; please enter the correct code to change your email address.',
     CodeLabel: 'CODE',

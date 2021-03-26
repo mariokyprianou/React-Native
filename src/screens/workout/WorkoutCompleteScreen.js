@@ -65,10 +65,22 @@ export default function WorkoutCompleteScreen() {
 
     let reps = 0;
     let sets = 0;
+    let seconds = 0;
 
     selectedWorkout.exercises.map((exercise) => {
       sets += exercise.sets.length;
-      exercise.sets.map((set) => (reps += set.quantity));
+      exercise.sets.map((set) => {
+        switch (exercise.setType) {
+          case 'REPS': {
+            reps += set.quantity;
+            break;
+          }
+          case 'TIME': {
+            seconds += set.quantity;
+            break;
+          }
+        }
+      });
     });
 
     const {overviewImage} = selectedWorkout;
@@ -78,6 +90,7 @@ export default function WorkoutCompleteScreen() {
       reps,
       sets,
       overviewImage,
+      seconds,
     });
   }, [selectedWorkout]);
 
@@ -244,6 +257,7 @@ export default function WorkoutCompleteScreen() {
             variant="white"
             icon="chevron"
             onPress={submitWorkout}
+            disabled={selectedEmoji ? false : true}
           />
         </View>
         <Spacer height={50} />

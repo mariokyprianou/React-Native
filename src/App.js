@@ -28,6 +28,7 @@ import Secrets from './environment/Secrets';
 import LoadingProvider from './hooks/loading/LoadingProvider';
 import CommonDataProvider from './hooks/data/CommonDataProvider';
 import getTimeZoneOffset from './utils/getTimeZoneOffset';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -113,6 +114,7 @@ const App = () => {
       {Platform.OS === 'android' && (
         <StatusBar translucent backgroundColor="transparent" />
       )}
+      <SafeAreaProvider>
       <ApolloProvider client={client}>
         <ScaleProvider config={{height: 667, width: 375}}>
           <ThemeProvider>
@@ -136,6 +138,7 @@ const App = () => {
           </ThemeProvider>
         </ScaleProvider>
       </ApolloProvider>
+      </SafeAreaProvider>
 
       <QuickPicker />
     </>

@@ -60,7 +60,13 @@ export default function RegisterScreen() {
   const {setLoading} = useLoading();
 
   navigation.setOptions({
-    header: () => <Header title={AuthDict.RegistrationScreenTitle} goBack />,
+    header: () => (
+      <Header
+        title={AuthDict.RegistrationScreenTitle}
+        goBack
+        leftAction={() => navigation.pop(2)}
+      />
+    ),
   });
 
   const gendersData = [
@@ -73,7 +79,7 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(Platform.OS === "ios" ? ['',...countries] : countries);
+      setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
 
       const indianRegions = data.allCountries.filter(
         (country) => country.country === 'India',
@@ -86,8 +92,9 @@ export default function RegisterScreen() {
       setRegionLookup(indianRegionsLookup);
 
       const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(Platform.OS === "ios" ? ['',...indianRegionsList] : indianRegionsList);
-
+      setRegionsList(
+        Platform.OS === 'ios' ? ['', ...indianRegionsList] : indianRegionsList,
+      );
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -431,7 +438,7 @@ export default function RegisterScreen() {
         contentContainerStyle={styles.scroll}
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <> 
+        <>
           <View style={{marginHorizontal: getWidth(25)}}>
             <Form cells={cells} config={{...cellFormConfig}} />
             <Form cells={cells2} config={config} />

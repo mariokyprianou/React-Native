@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -44,7 +44,13 @@ export default function CongratulationsScreen() {
     header: () => null,
   });
 
-  StatusBar.setBarStyle('light-content');
+
+  useEffect(() => {
+    StatusBar.setBarStyle('light-content');
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    }
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

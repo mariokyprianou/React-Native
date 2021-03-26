@@ -6,18 +6,17 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, Image, Alert} from 'react-native';
+import {View, TouchableOpacity, Text, Image, Alert, ScrollView, Dimensions} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import ExerciseVideoView from './ExerciseVideoView';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import {useSafeArea} from 'react-native-safe-area-context';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
-import {useQuery, useLazyQuery} from '@apollo/client';
+import {useLazyQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -35,8 +34,8 @@ export default function ExerciseView(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
-  const insets = useSafeArea();
-  const {exerciseViewStyle} = useTheme();
+  const {exerciseViewStyle, Constants} = useTheme();
+
   const styles = exerciseViewStyle;
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
@@ -111,6 +110,7 @@ export default function ExerciseView(props) {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  
 
   const onSetCompleted = (completedIndex) => {
     
@@ -153,7 +153,15 @@ export default function ExerciseView(props) {
       setSetComplete(true);
     }
 
+
+
+    // Handle no weight or rest time
+    // If we dont have rest time or weight option just finish exercise set immediatelly
+    if (completedIndex === sets.length - 1 && (!restTime || restTime === 0) && !exercise.weight) {
+      finishExercise();
+    }
   };
+  
 
 
   // Finished weight submition, check if it was last set
@@ -182,7 +190,18 @@ export default function ExerciseView(props) {
   };
 
   const onExerciseCompleted = () => {
-    onSetCompleted(sets.length - 1);
+    //onSetCompleted(sets.length - 1);
+    setCurrentSet(sets.length);
+
+    // Update Sets states as completed
+    const newSets = sets.map((it) => {
+      return {
+        ...it,
+        state: 'completed',
+      };
+    });
+   
+    setSets(newSets);
 
      // If we dont have rest time or weight option just finish exercise set immediatelly
      if ((!restTime || restTime === 0) && !exercise.weight) {
@@ -224,8 +243,11 @@ export default function ExerciseView(props) {
     );
   };
 
+ 
+
+
   return (
-    <View style={{height: getHeight(667 - 56 - insets.top)}}>
+    <View  style={{ height: Constants.EXERCISE_VIEW_HEIGHT}}>
       <ExerciseVideoView {...exercise} index={index} />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
@@ -236,10 +258,11 @@ export default function ExerciseView(props) {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.exerciseDescriptionStyle}>
-          {exercise.coachingTips}
-        </Text>
+        <ScrollView>
+           <Text style={styles.exerciseDescriptionStyle}>{exercise.coachingTips}</Text>
+        </ScrollView>
 
+        
         <View style={styles.extraContainerStyle}>
           {exercise.weight && (
             <TouchableOpacity
@@ -281,6 +304,7 @@ export default function ExerciseView(props) {
           </View>
           <RepsList sets={sets} />
         </View>
+      
         {countDown && restTime > 0 && (
           <TimerView
             duration={msToHMS(restTime)}
@@ -299,6 +323,7 @@ export default function ExerciseView(props) {
           weightPreference={weightLabel}
         />
       )}
+
     </View>
   );
 }

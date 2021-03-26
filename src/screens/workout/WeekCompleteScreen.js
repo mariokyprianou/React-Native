@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, Image, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -40,10 +40,15 @@ export default function WeekCompleteScreen() {
   const navigation = useNavigation();
   const {programmeModalImage} = UseData();
 
-  navigation.setOptions({
-    header: () => <></>,
-  });
-  StatusBar.setBarStyle('light-content');
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => <></>,
+    });
+    StatusBar.setBarStyle('light-content');
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    }
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

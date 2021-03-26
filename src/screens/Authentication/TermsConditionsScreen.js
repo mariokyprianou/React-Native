@@ -43,7 +43,7 @@ export default function TermsConditionsScreen() {
       position: 'absolute',
       bottom: 0,
       width: '100%',
-      paddingBottom: getHeight(40),
+      marginBottom: getHeight(40),
       alignItems: 'center',
       backgroundColor: colors.white100,
     },

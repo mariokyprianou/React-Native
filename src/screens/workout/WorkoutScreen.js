@@ -31,11 +31,6 @@ export default function WorkoutScreen() {
 
   const [offset, setOffset] = useState(0);
 
-  useEffect(() => {  
-      StatusBar.setBarStyle('dark-content');
-  })
-
-
   navigation.setOptions({
     header: () => (
       <WorkoutHeader
@@ -109,12 +104,15 @@ export default function WorkoutScreen() {
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
         {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView
+            <ExerciseView
             {...screen}
             index={index}
             exerciseFinished={exerciseFinished}
           />
+         
+          
         ))}
+        
       </ScrollView>
     </View>
   );

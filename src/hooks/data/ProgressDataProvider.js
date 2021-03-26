@@ -58,7 +58,7 @@ export default function DataProvider(props) {
   });
 
   // Get progress images
-  const [userImages, setUserImages] = useState();
+  const [userImages, setUserImages] = useState([]);
 
   const [getImages] = useLazyQuery(ProgressImages, {
     fetchPolicy: 'no-cache',

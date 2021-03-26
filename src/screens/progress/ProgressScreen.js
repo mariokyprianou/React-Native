@@ -37,7 +37,7 @@ export default function ProgressScreen() {
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getPreferences, preferences} = useUserData();
-  const {progress, getProgress, challenges, getChallenges} = useProgressData();
+  const {progress, getProgress, challenges, getChallenges, userImages, getImages} = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -62,6 +62,9 @@ export default function ProgressScreen() {
     getPreferences();
     getProgress();
     getChallenges();
+    if ( userImages.length === 0) {
+      getImages();
+    }
   }, []);
 
   useEffect(() => {

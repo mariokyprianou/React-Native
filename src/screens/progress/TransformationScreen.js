@@ -31,7 +31,7 @@ export default function TransformationScreen() {
   const {getHeight} = ScaleHook();
   const client = useApolloClient();
   const {colors} = useTheme();
-  const {userImages, setUserImages, getUserImages, beforePic, setBeforePic, afterPic, setAfterPic, getImageUrl, imageUrls} = useProgressData();
+  const {userImages, setUserImages, getImages, beforePic, setBeforePic, afterPic, setAfterPic, getImageUrl, imageUrls} = useProgressData();
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
@@ -51,8 +51,8 @@ export default function TransformationScreen() {
       ),
     });
     return () => {
-      setUserImages([]);
-      getUserImages();
+      // setUserImages([]);
+      // getImages();
     }
   }, []);
 
@@ -81,8 +81,9 @@ export default function TransformationScreen() {
     buttonContainer: {
       width: '100%',
       alignItems: 'center',
-      position: userImages?.length >= 2 ? undefined : 'absolute',
+      position: 'absolute',
       bottom: 40,
+      
     },
   };
 

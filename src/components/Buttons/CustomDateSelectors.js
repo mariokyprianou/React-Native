@@ -77,7 +77,7 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
     <View style={styles.dropdown}>
       <DropDownPicker
         items={storedImages}
-        defaultValue={storedImages[0].value}
+        defaultValue={storedImages[0] && storedImages[0].value}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}
@@ -90,7 +90,7 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
       />
       <DropDownPicker
         items={storedImages}
-        defaultValue={storedImages[storedImages.length - 1].value}
+        defaultValue={storedImages[storedImages.length - 1] && storedImages[storedImages.length - 1].value}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}

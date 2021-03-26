@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useRef, useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -22,6 +22,7 @@ export default function ProgressChart({
   chartDataPoints,
   interval,
   ticks,
+  scrollToEnd = false
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -57,14 +58,18 @@ export default function ProgressChart({
     );
   };
 
+  const ref = useRef(null);
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
       <ScrollView
+        ref={ref}
+        onContentSizeChange={() => scrollToEnd && ref.current.scrollToEnd({animated: true}) }
         horizontal={true}
         style={styles.scroll}
         contentContainerStyle={{alignItems: 'flex-end'}}>
-        <View style={{paddingRight: 10}}>
+        <View style={{paddingStart: getWidth(10), paddingEnd: getWidth(20)}}>
           <SlideBarChart
             data={chartDataPoints}
             barSpacing={chartDataPoints.length === 1 ? 58 : 60}
@@ -77,10 +82,10 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={
+            width={ 
               chartDataPoints.length === 1
                 ? chartDataPoints.length * 90
-                : chartDataPoints.length * 65 + 20
+                : chartDataPoints.length * 75
             }
             axisWidth={getWidth(42)}
             axisHeight={getHeight(35)}
@@ -105,8 +110,10 @@ export default function ProgressChart({
             xAxisProps={{
               axisMarkerLabels: xLabels,
               markerTopPadding: getHeight(10),
+              
               axisLabelStyle: {
                 ...textStyles.semiBold10_brownGrey100,
+                
               },
             }}
           />

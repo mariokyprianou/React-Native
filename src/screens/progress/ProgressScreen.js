@@ -89,7 +89,6 @@ export default function ProgressScreen() {
     }
   }, [progress]);
 
-  
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

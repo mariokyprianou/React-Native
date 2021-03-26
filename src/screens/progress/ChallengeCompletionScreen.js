@@ -201,6 +201,7 @@ export default function ChallengeCompletionScreen() {
             ticks={chartInfo.ticks}
             axis={false}
             background={false}
+            scrollToEnd={true}
           />
         )}
       </View>

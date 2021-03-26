@@ -76,6 +76,9 @@ export default function DataProvider(props) {
     onError: (err) => console.log(err, '<---progress images err'),
   });
 
+  
+
+
   const [challenges, setChallenges] = useState();
 
   const [getChallenges] = useLazyQuery(Challenges, {
@@ -140,32 +143,60 @@ export default function DataProvider(props) {
   },  [imageUrls]);
 
 
-  useEffect(() => {
+  async function checkImages(images) {
+    console.log("userImages", images.length);
 
-    async function checkImages(images) {
-      console.log("userImages", images);
+    const url = await getImageUrl(images[0]);
+    setBeforePic(url);
+    console.log("setBeforePic --- done");
 
-      const url = await getImageUrl(images[0]);
-      setBeforePic(url);
 
-    
-      if (images.length > 1) {
-         const url2 = await getImageUrl(images[images.length - 1]);
-        setAfterPic(url2);
+  
+    if (images.length > 1) {
+      const url2 = await getImageUrl(images[images.length - 1]);
+      setAfterPic(url2);
+      console.log("setAfterPic --- done");
 
-      }
-      
+
     }
+    return true;
+  }
+
+  useEffect(() => {
    
     if (userImages) {
-    const images = userImages.filter(it => it.id);
-    if (images && images.length > 0) {
-      checkImages(images);
+      const images = userImages.filter(it => it.id);
+      if (images && images.length > 0) {
+        checkImages(images);
+      }
     }
-  }
+
 
   }, [userImages, setBeforePic, setAfterPic]);
 
+
+  const getImagesSync = useCallback(async () => {
+
+    return client.query({
+      query: ProgressImages,
+      fetchPolicy: 'no-cache',
+    })
+    .then(async (res) => {
+      console.log(res)
+      const today = new Date();
+      const formattedToday = format(today, 'dd/LL/yyyy');
+      const emptyListObject = {value: today, label: formattedToday};
+      if (res.data.progressImages.length === 0) {
+        setUserImages([emptyListObject]);
+      } else {
+        const formattedImages = formatProgressImages(res.data.progressImages);
+        setUserImages(formattedImages);
+        return await checkImages(formattedImages);
+      }
+
+    })
+    .catch((err) => console.log(err, 'getImageUrl error'));
+  },  []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -176,6 +207,7 @@ export default function DataProvider(props) {
       history,
       getHistory,
       userImages,
+      setUserImages,
       getImages,
       challenges,
       getChallenges,
@@ -184,7 +216,8 @@ export default function DataProvider(props) {
       afterPic,
       setAfterPic,
       getImageUrl,
-      imageUrls
+      imageUrls,
+      getImagesSync
     }),
     [
       progress,
@@ -192,6 +225,7 @@ export default function DataProvider(props) {
       history,
       getHistory,
       userImages,
+      setUserImages,
       getImages,
       challenges,
       getChallenges,
@@ -200,7 +234,8 @@ export default function DataProvider(props) {
       afterPic,
       setAfterPic,
       getImageUrl,
-      imageUrls
+      imageUrls,
+      getImagesSync
     ],
   );
 

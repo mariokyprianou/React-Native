@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +23,7 @@ import UploadFailed from '../../apollo/mutations/UploadFailed';
 import RNFetchBlob from 'rn-fetch-blob';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
@@ -38,23 +39,26 @@ export default function TransformationScreen() {
   const {setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-  const {getImages} = UseData();
+  const {getImages, getImagesSync} = useProgressData();
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={ProgressDict.Upload}
-        goBack
-        right="photoSelectIcon"
-        rightAction={handleSelectPhoto}
-      />
-    ),
-  });
 
-  const [requestUrl] = useMutation(UploadUrl);
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={ProgressDict.Upload}
+          goBack
+          right="photoSelectIcon"
+          rightAction={handleSelectPhoto}
+        />
+      ),
+    });
+  }, [])
+
+  const [requestUplaodUrl] = useMutation(UploadUrl);
   const [sendFailed] = useMutation(UploadFailed);
-  const [urlId, setUrlId] = useState();
+
   const [time, setTime] = useState(0);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -74,46 +78,55 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
-    console.log('TAKING PHOTO');
+    console.log('Init uplaod Photo');
     setLoading(true);
 
-    const URL = await requestUrl().catch((err) =>
-      console.log(err, '<---requestUrl err'),
-    );
-
-    setUrlId(URL.data.uploadUrl.id);
-
+    const uploadUrlRes = await requestUplaodUrl()
+      .catch((err) =>
+        console.log(err, '<---requestUrl err'),
+      );
+    console.log("uploadUrlRes", uploadUrlRes);
+    const { url , id } = uploadUrlRes.data.uploadUrl;
+    
     RNFetchBlob.fetch(
-      'PUT',
-      URL.data.uploadUrl.url,
-      {
-        'Content-Type': contentType,
-      },
+      'PUT', url, { 'Content-Type': contentType },
       RNFetchBlob.wrap(path),
     )
-      .then((res) => {
-        let status = res.info().status;
+    .uploadProgress((written, total) => {
+      console.log('uploaded', written / total);
+    })
+    .then(async (res) => {
+        let { status } = res.info();
+       
 
         if (status === 200 || status === 204) {
-          console.log('SUCCESS');
-          getImages();
-          setLoading(false);
+          console.log('Upload done --- SUCCESS');
+        
+          const finished = await getImagesSync();
+          console.log("getImagesSync -- finished getting updatted images and setting 1st and last")
+
           navigation.goBack();
-        } else {
-          handleAddPhotoError();
           setLoading(false);
+        } else {
+          console.log("Upload failed", res)
+          handleAddPhotoError(id);
         }
       })
       .catch((err) => {
         console.log(err, '<---fetch blob err');
-        handleAddPhotoError();
+        handleAddPhotoError(id);
       });
+      
   }
 
-  async function handleAddPhotoError() {
-    await sendFailed({variables: {id: urlId}})
+  async function handleAddPhotoError(id) {
+    await sendFailed({variables: {id: id}})
       .then((res) => console.log(res, '<---upload failed res'))
-      .catch((err) => console.log(err, '<---upload failed err'));
+      .catch((err) => console.log(err, '<---upload failed err'))
+      .finally(()=> {
+        setLoading(false);
+        Alert.alert(ProgressDict.UploadFailed);
+      });
   }
 
   function handleSelectPhoto() {
@@ -124,6 +137,7 @@ export default function TransformationScreen() {
       }),
     )
       .then((result) => {
+        console.log(result)
         if (result === RESULTS.UNAVAILABLE) {
           Alert.alert(ProgressDict.FunctionNotAvailable);
         }
@@ -133,10 +147,10 @@ export default function TransformationScreen() {
         if (result === RESULTS.GRANTED) {
           ImagePicker.openPicker({
             mediaType: 'photo',
+            compressImageQuality: 0.7,
           }).then((cameraPhoto) => {
-            const path = cameraPhoto.path;
-            const contentType = cameraPhoto.mime;
-            handlePhoto(path, contentType);
+            const { path, mime }= cameraPhoto;
+            handlePhoto(path, mime);
           });
         }
       })

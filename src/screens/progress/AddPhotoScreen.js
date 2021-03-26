@@ -61,6 +61,9 @@ export default function TransformationScreen() {
 
   const [time, setTime] = useState(0);
 
+  const [cameraButtonActive, setCameraButtonActive] = useState(true);
+
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
@@ -106,7 +109,7 @@ export default function TransformationScreen() {
           console.log("getImagesSync -- finished getting updatted images and setting 1st and last")
 
           navigation.goBack();
-          setLoading(false);
+          setCameraButtonActive(true);
         } else {
           console.log("Upload failed", res)
           handleAddPhotoError(id);
@@ -124,7 +127,7 @@ export default function TransformationScreen() {
       .then((res) => console.log(res, '<---upload failed res'))
       .catch((err) => console.log(err, '<---upload failed err'))
       .finally(()=> {
-        setLoading(false);
+        setCameraButtonActive(true);
         Alert.alert(ProgressDict.UploadFailed);
       });
   }
@@ -173,6 +176,9 @@ export default function TransformationScreen() {
         countdown5={countdown5}
         countdown10={countdown10}
         setTime={setTime}
+        setLoading={setLoading}
+        cameraButtonActive={cameraButtonActive}
+        setCameraButtonActive={setCameraButtonActive}
       />
     </View>
   );

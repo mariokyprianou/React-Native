@@ -158,16 +158,18 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..fef8b11 100644
+index f41ddff..3b78301 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -7,28 +7,41 @@
+@@ -6,29 +6,45 @@
+  * Copyright (c) 2020 The Distance
   */
  
- import React, { useState } from "react";
+-import React, { useState } from "react";
 -import { View, Image, TouchableOpacity, Platform, Alert } from "react-native";
 -import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
 -import ImagePicker from "react-native-image-crop-picker";
++import React, { useEffect, useState } from "react";
 +import { View, Image, TouchableOpacity, Dimensions } from "react-native";
  import { RNCamera } from "react-native-camera";
  import TDIcon from "the-core-ui-component-tdicon";
@@ -194,6 +196,9 @@ index f41ddff..fef8b11 100644
 +  countdown5,
 +  countdown10,
 +  setTime,
++  setLoading,
++  cameraButtonActive,
++  setCameraButtonActive
  }) => {
    // ******* SETUP *******
 +  overlayStyles && checkStylesIncHeight(overlayStyles);
@@ -205,13 +210,13 @@ index f41ddff..fef8b11 100644
    const [cameraType, setCameraType] = useState("back");
 -  const { getHeight, fontSize } = ScaleHook();
 +  const [showCountdownOptions, setShowCountdownOptions] = useState(false);
-+  const [cameraButtonActive, setCameraButtonActive] = useState(true);
++
 +  const { getHeight, fontSize, getWidth } = ScaleHook();
 +  const screenWidth = Dimensions.get("screen").width;
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +49,7 @@ const AddPhoto = ({
+@@ -36,7 +52,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
@@ -220,7 +225,7 @@ index f41ddff..fef8b11 100644
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,65 +68,88 @@ const AddPhoto = ({
+@@ -55,65 +71,92 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -307,7 +312,7 @@ index f41ddff..fef8b11 100644
 -        }
 -      })
 -      .catch((err) => console.log(err));
-+  async function handlePhotoClick() {
++  function handlePhotoClick() {
 +    setCameraButtonActive(false);
 +
 +    const options = { quality: 0.5, base64: true };
@@ -318,7 +323,6 @@ index f41ddff..fef8b11 100644
 +      const data = await cameraRef.takePictureAsync(options);
 +      const contentType = mime.lookup(data.uri)
 +      setPhoto(data.uri, contentType);
-+      setCameraButtonActive(true);
 +    }, timeout)
    }
  
@@ -332,6 +336,11 @@ index f41ddff..fef8b11 100644
 +    setShowCountdownOptions(false);
 +  }
 +
++  useEffect(()=> {
++
++   setLoading(!cameraButtonActive);
++  }, [cameraButtonActive])
++
    // ******* RENDER *******
  
    return (
@@ -344,7 +353,7 @@ index f41ddff..fef8b11 100644
        <View style={styles.cameraContainer}>
          <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
            {({ camera }) => {
-@@ -121,7 +157,7 @@ const AddPhoto = ({
+@@ -121,7 +164,7 @@ const AddPhoto = ({
              if (overlayImage) {
                return (
                  <View style={styles.overlay}>
@@ -353,7 +362,7 @@ index f41ddff..fef8b11 100644
                  </View>
                );
              } else {
-@@ -131,21 +167,45 @@ const AddPhoto = ({
+@@ -131,21 +174,47 @@ const AddPhoto = ({
          </RNCamera>
          <View style={styles.buttonContainer}>
            {CustomCountdown && (
@@ -380,7 +389,7 @@ index f41ddff..fef8b11 100644
 +          { showCountdownOptions === false ?
 +            <>
 +              <View style={styles.cameraButtonContainer}>
-+                <TouchableOpacity onPress={handlePhotoClick}>
++                <TouchableOpacity onPress={cameraButtonActive ? handlePhotoClick : null} >
 +                  <TDIcon
 +                    input={cameraButtonActive === true ? cameraButtonImage : cameraFadedButton}
 +                    inputStyle={
@@ -410,6 +419,8 @@ index f41ddff..fef8b11 100644
 +              </TouchableOpacity>    
 +            </Animatable.View>
 +        }
++
++        {!cameraButtonActive && <View style={{height: '100%', width: '100%', backgroundColor: 'white', opacity:0.5}}/> }
          </View>
        </View>
      </View>

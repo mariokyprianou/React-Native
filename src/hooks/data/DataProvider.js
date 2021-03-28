@@ -27,6 +27,8 @@ import {
   getStoredFutureRestDays,
   getWeekArrayWithPastDays,
 } from './WeekStructureUtils';
+import addWorkoutDates from '../../utils/addWorkoutDates';
+import addRestDays from '../../utils/addRestDays';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -35,6 +37,7 @@ export default function DataProvider(props) {
   const [programmeModalImage, setProgrammeModalImage] = useState();
 
   const [currentWeek, setCurrentWeek] = useState();
+  const [nextWeek, setNextWeek] = useState();
 
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
@@ -213,8 +216,39 @@ export default function DataProvider(props) {
     }
 
     setCurrentWeek(week);
+
+
     return week;
   }, []);
+
+
+  useEffect(()=> {
+    if (currentWeek && programme) {
+      const lastDate = currentWeek.reduce((a, b) => a.exactDate > b.exactDate ? a : b).exactDate;
+
+      const nextWeekStartDate = addDays(lastDate, 1);
+
+      // Don't set next week if already correct
+      if (nextWeek) {
+        let isSameStartDay = 
+        differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
+        nextWeekStartDate.getDay() ===  nextWeek[0].exactDate.getDay()
+
+        if (isSameStartDay) return;
+      }
+
+      if (!programme.nextWeek) return;
+
+      let weekWorkout = programme.nextWeek.workouts
+      .slice()
+      .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
+
+      const week = addWorkoutDates(addRestDays(weekWorkout), nextWeekStartDate);
+
+      setNextWeek(week);
+    }
+
+  }, [currentWeek, programme]);
 
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -331,6 +365,7 @@ export default function DataProvider(props) {
       isWorkoutTimerRunning,
       setIsWorkoutTimerRunning,
       currentWeek,
+      nextWeek,
       updateStoredDays,
       structureWeek,
       updateConsecutiveWorkouts,
@@ -361,6 +396,7 @@ export default function DataProvider(props) {
       isWorkoutTimerRunning,
       setIsWorkoutTimerRunning,
       currentWeek,
+      nextWeek,
       updateStoredDays,
       structureWeek,
       updateConsecutiveWorkouts,

@@ -6,19 +6,22 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView, StatusBar} from 'react-native';
+import {StyleSheet, View, ScrollView, StatusBar, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useData from '../../hooks/data/UseData';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {colors} = useTheme();
   const navigation = useNavigation();
   const {getHeight} = ScaleHook();
+  const {dictionary} = useDictionary();
+  const {WorkoutDict, ProfileDict} = dictionary;
 
   const {
     selectedWorkout,
@@ -36,9 +39,27 @@ export default function WorkoutScreen() {
       <WorkoutHeader
         currentExercise={currentExerciseIndex + 1}
         totalExercises={selectedWorkout.exercises.length}
+        rightAction={checkGoBack}
       />
     ),
   });
+
+  function checkGoBack() {
+    Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
+      {
+        text: ProfileDict.Cancel,
+        style: 'cancel',
+      },
+      {
+        text: ProfileDict.Ok,
+        onPress: () => {
+          navigation.pop();
+        },
+      },
+    ]);
+  }
+
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scrollViewContainer: {

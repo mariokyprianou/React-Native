@@ -19,7 +19,7 @@ import FastImage from 'react-native-fast-image';
 const playIcon = require('../../../assets/icons/playDark.png');
 const pauseIcon = require('../../../assets/icons/pauseDark.png');
 
-export default function ({currentExercise, totalExercises}) {
+export default function ({currentExercise, totalExercises, rightAction}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -86,6 +86,7 @@ export default function ({currentExercise, totalExercises}) {
         customLeft={headerLeft}
         customTitle={headerTitle}
         showModalCross
+        rightAction={rightAction}
       />
     );
   };

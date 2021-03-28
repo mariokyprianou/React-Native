@@ -5,8 +5,11 @@
  * Copyright (c) 2021 JM APP DEVELOPMENT LTD
  */
 
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {Platform} from 'react-native';
+import {Auth} from 'aws-amplify';
+import {getUniqueId} from 'react-native-device-info';
+
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -16,6 +19,8 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
+import CanChangeDevice from '../../apollo/queries/CanChangeDevice';
+import GetSubscription from '../../apollo/queries/GetSubscription';
 import * as R from 'ramda';
 import {format} from 'date-fns';
 import analytics from '@react-native-firebase/analytics';
@@ -176,7 +181,70 @@ export default function UserDataProvider(props) {
       });
   }, []);
 
-  
+
+  const [changeDevice, setChangeDevice] = useState(null);
+  const [suspendedAccount, setSuspendedAccount] = useState(false);
+  const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
+
+
+  const [getProfile] = useLazyQuery(CanChangeDevice, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      if (res && res.profile) {
+        const {canChangeDevice, deviceUDID, screenshotsTaken} = res.profile;
+
+        if (screenshotsTaken >= 7) {
+          setSuspendedAccount(true);
+        }
+        
+        checkDeviceId(canChangeDevice, deviceUDID);
+      }
+    },
+    onError: (error) => console.log(error),
+  });
+
+  const checkDeviceId = useCallback(async (canChangeDevice, existingId) => {
+    const deviceId = getUniqueId();
+
+    // This is a new device
+    if (deviceId !== existingId) {
+      setChangeDevice({
+        canChangeDevice: canChangeDevice,
+        newDeviceId: deviceId
+      })
+    }
+   
+  },  []);
+
+
+  const [checkUserSubscription] = useLazyQuery(GetSubscription, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      if (res && res.subscription) {
+        console.log('subscription',res.subscription);
+        const {isActive} = res.subscription;
+        setIsSubscriptionActive(isActive);
+      }
+    },
+    onError: (error) => console.log(error),
+  });
+
+
+  useEffect(()=> {
+    async function checkAuth() {
+      await Auth.currentAuthenticatedUser()
+        .then((_res) => {
+          getProfile();
+          checkUserSubscription();
+        })
+        .catch(err => {
+          console.log("UserDataProvider - checkAuth", err);
+        });
+      }
+   
+    checkAuth();
+    
+  }, [Auth.currentAuthenticatedUser])  
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
@@ -192,6 +260,10 @@ export default function UserDataProvider(props) {
       setTimeZones,
       firebaseLogEvent,
       analyticsEvents,
+      changeDevice,
+      suspendedAccount,
+      setSuspendedAccount,
+      isSubscriptionActive
     }),
     [
       userData,
@@ -205,6 +277,10 @@ export default function UserDataProvider(props) {
       setTimeZones,
       firebaseLogEvent,
       analyticsEvents,
+      changeDevice,
+      suspendedAccount,
+      setSuspendedAccount,
+      isSubscriptionActive
     ],
   );
 

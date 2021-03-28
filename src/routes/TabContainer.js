@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {StyleSheet, Platform, View, Image} from 'react-native';
+import {StyleSheet, Platform, View, Image, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import useTheme from '../hooks/theme/UseTheme';
@@ -17,20 +17,20 @@ import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
 import isIphoneX from '../utils/isIphoneX';
-import {useLazyQuery} from '@apollo/client';
-import fetchPolicy from '../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
-import CanChangeDevice from '../apollo/queries/CanChangeDevice';
-import {getUniqueId} from 'react-native-device-info';
 import {useNavigation} from '@react-navigation/native';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import useUserData from '../hooks/data/useUserData';
+import * as ScreenCapture from 'expo-screen-capture';
+import displayAlert from '../utils/DisplayAlert';
+import ScreenshotTaken from '../apollo/mutations/ScreenshotTaken';
+import {useMutation} from '@apollo/client';
 
 
 const notificationCount = 2;
 
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {isConnected, isInternetReachable} = useNetInfo();
+  
   const navigation = useNavigation();
 
   const {fontSize, getHeight, getWidth} = ScaleHook();
@@ -38,32 +38,58 @@ export default function TabContainer() {
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  const [getProfile] = useLazyQuery(CanChangeDevice, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res && res.profile) {
-        const {canChangeDevice, deviceUDID} = res.profile;
-        checkDeviceId(canChangeDevice, deviceUDID);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
+  const {changeDevice, setSuspendedAccount} = useUserData();
+  
+  const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
-  async function checkDeviceId(canChangeDevice, existingId) {
-    const deviceId = getUniqueId();
-
-    // This is a new device
-    if (deviceId !== existingId) {
-      navigation.navigate('ChangeDevice', {
-        canChangeDevice: canChangeDevice,
-        newDeviceId: deviceId,
-      });
-    }
-  }
 
   useEffect(() => {
-    getProfile();
+    if (changeDevice && changeDevice.newDeviceId) {
+      //navigation.navigate('ChangeDevice', {...changeDevice});
+    }
+  }, [changeDevice]);
+
+  useEffect(() => {
+    let screenshotListener;
+
+    if (Platform.OS === 'ios') {
+      screenshotListener = ScreenCapture.addScreenshotListener(() => {
+
+        displayAlert({
+          text: TabsTitleDict.ScreenShotMessage,
+          buttons: [
+            {
+              text: TabsTitleDict.ScreenShotButton,
+              onPress: () => {
+                increaseShotTaken()
+                  .then((res) => {
+                    if (res && res.data.screenshotTaken && res.data.screenshotTaken.success) {
+                      if (res.data.screenshotTaken.screenshotsTaken >= 7) {
+                          setSuspendedAccount(true);
+                      }
+                    }
+                    
+                  })
+                  .catch((err) => {
+                    console.log("increaseShotTaken - err", err)
+                  });
+              },
+            },
+          ]
+        });
+       
+      });
+    }
+  
+
+    return () => {
+      if (Platform.OS === 'ios') {
+        screenshotListener.remove();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   const tabIcons = {
     workout: require('../../assets/icons/workout.png'),

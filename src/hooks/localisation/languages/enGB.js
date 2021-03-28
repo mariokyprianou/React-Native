@@ -26,6 +26,7 @@ const SharedDict = {
   ChangeEmail: 'Change Email',
   ChangePassword: 'Change password',
   VerifyEmail: 'Verify email',
+  Ok: 'OK'
 };
 
 const enGB = {
@@ -225,7 +226,7 @@ const enGB = {
     LogoutModalButton: SharedDict.Logout,
     YouWillBeLoggedOut:
       'If you continue you will be logged out - please verify your email address',
-    Ok: 'Ok',
+    Ok: SharedDict.Ok,
     CancelButton: SharedDict.Cancel,
     Cancel: SharedDict.Cancel,
     UnableToUpdate: 'Unable to update settings',
@@ -286,9 +287,14 @@ const enGB = {
     Profile: 'Profile',
     Workouts: 'Workouts',
     Progress: SharedDict.Progress,
+    ScreenShotMessage: 'Screen record or taking screenshots whilst using the Power application, can lead to suspending your account. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+    ScreenshotButton: SharedDict.Ok
   },
 
   WorkoutDict: {
+
+    SuspendedAccount: 'Your account has been suspended due to taking screenshots/screen recordings of Power content, therefore you cannot complete any workouts for the time being. Please reach out to customer service for more information.',
+
     WeekText: 'Week',
 
     exerciseInfoFormatText: (sets, reps) =>

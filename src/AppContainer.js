@@ -14,6 +14,7 @@ import useLoading from './hooks/loading/useLoading';
 import LoadingView from './components/Views/LoadingView';
 import ChangeDeviceScreen from './screens/Authentication/ChangeDeviceScreen';
 
+import PurchaseModalScreen from './screens/other/PurchaseModalScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 import WeekCompleteScreen from './screens/workout/WeekCompleteScreen';
 import WorkoutScreen from './screens/workout/WorkoutScreen';
@@ -57,6 +58,11 @@ export default function AppContainer() {
           component={ChangeDeviceScreen}
         />
 
+        <AppStack.Screen
+          name="PurchaseModal"
+          component={PurchaseModalScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
         
       
         <AppStack.Screen
@@ -109,6 +115,7 @@ export default function AppContainer() {
           component={ChallengeCompletionScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
+       
       </AppStack.Navigator>
       {loading && LoadingView()}
     </>

@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,10 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  Alert
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Intercom from 'react-native-intercom';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -23,8 +24,22 @@ import Header from '../../components/Headers/Header';
 import Spacer from '../../components/Utility/Spacer';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
+
+import * as RNIap from 'react-native-iap'; 
+import {
+  flushFailedPurchasesCachedAsPendingAndroid,
+  useIAP,
+  requestSubscription,
+} from 'react-native-iap';
+
+
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
+
+const products = ['app.power.subscription.yearly', 'app.power.subscription.monthly'];
+
+
 
 const PurchaseModalScreen = ({}) => {
   // MARK: - Hooks
@@ -34,45 +49,140 @@ const PurchaseModalScreen = ({}) => {
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {setLoading} = useLoading();
 
   // MARK: - Local
-  const [yearlyMonthPrice, setYearlyMonthPrice] = useState(2);
-  const [yearlyYearPrice, setYearlyYearPrice] = useState(yearlyMonthPrice * 12);
-  const [monthlyMonthPrice, setMonthlyMonthPrice] = useState(4);
-  const [savingsPercentage, setSavingsPercentage] = useState(0);
+  const [currentSubscription, setCurrentSubscription] = useState();
+
+  const [yearlySubscription, setYearlySubscription] = useState({productId: 'app.power.subscription.yearly', price: 24 });
+  const [monthlySubscription, setMonthlySubscription] = useState({productId: 'app.power.subscription.monthly', price: 4 });
+
+  const {
+    connected,
+    products,
+    subscriptions,
+    availablePurchases,
+    getAvailablePurchases,
+    getSubscriptions,
+    finishTransaction,
+    currentPurchase,
+    currentPurchaseError,
+  } = useIAP();
 
   // MARK: - Use Effect
   useEffect(() => {
+    setLoading(true);
     navigation.setOptions({
       header: () => <Header showModalCross white transparent />,
     });
     StatusBar.setBarStyle('light-content');
+    RNIap.initConnection();
+    
     return () => {
       StatusBar.setBarStyle('dark-content');
     }
   }, []);
 
+  // On connect successfull, get available Subscriptions
+  useEffect(() => {
+    if (connected) fetchSubscriptions();
+  }, [fetchSubscriptions, connected]);
+
+  // Get available Subscriptions
+  const fetchSubscriptions = useCallback(async () => {
+    await flushFailedPurchasesCachedAsPendingAndroid();
+    
+    const IAPProducts = (await getSubscriptions(products)) || [];
+
+    console.log("IAPProducts",IAPProducts)
+    IAPProducts.forEach(it => {
+      switch (it.productId) {
+      case yearlySubscription.productId:
+        setYearlySubscription({productId: yearlySubscription.productId, price: it.localizedPrice });
+        break
+      case monthlySubscription.productId:
+        setMonthlySubscription({productId: monthlySubscription.productId, price: it.localizedPrice });
+        break
+      }
+    });
+
+    setLoading(false);
+   
+  },  [getSubscriptions]);
+
+
 
   useEffect(() => {
-    if (!yearlyMonthPrice || !monthlyMonthPrice) {
-      return;
+    const checkCurrentPurchase = async purchase => {
+    if (purchase) {
+      const receipt = purchase.transactionReceipt;
+      if (receipt)
+        try {
+
+          // todo -- backend call with receipt data
+          // on backend return, do the below
+          // const ackResult = await finishTransaction(purchase);
+         console.log('ackResult', ackResult);
+        } catch (ackErr) {
+          console.warn('ackErr', ackErr);
+        }
+      }
+    };
+    checkCurrentPurchase(currentPurchase);
+  }, [currentPurchase, finishTransaction]);
+
+  useEffect(() => {
+    if (currentPurchaseError)
+      Alert.alert(
+        'purchase error',
+        JSON.stringify(currentPurchaseError?.message),
+      );
+  }, [currentPurchaseError, currentPurchaseError?.message]);
+
+
+
+  useEffect(() => {
+    
+    if (currentSubscription && products.includes(currentSubscription.productId)) {
+      // todo - do backend restore
     }
-    const yearYearPrice = yearlyMonthPrice * 12; // 24
-    const monthYearPrice = monthlyMonthPrice * 12; //
-    setYearlyYearPrice(yearYearPrice);
-    const percentage = (yearYearPrice / monthYearPrice) * 100;
-    setSavingsPercentage(percentage);
-  }, [yearlyMonthPrice, monthlyMonthPrice]);
+  }, [currentSubscription]);
+
+
+  useEffect(() => {
+    console.log("availablePurchases",availablePurchases)
+    if (availablePurchases && availablePurchases.length > 0) {
+     
+      availablePurchases.forEach(it => {
+        switch (it.productId) {
+        case yearlySubscription.productId:
+          setCurrentSubscription(it);
+          break
+        case monthlySubscription.productId:
+          setCurrentSubscription(it);
+          break
+        }
+      });
+    }
+    
+  }, [availablePurchases, setCurrentSubscription]);
+
+
+  const purchase = (item) => {
+    requestSubscription(item.productId);
+  };
+
 
   // MARK: - Actions
-  const onPressFirstButton = () => {
-    // TODO
+  const onPressYearlySubscription = () => {
+    purchase(yearlySubscription.productId);
+
   };
-  const onPressSecondButton = () => {
-    // TODO
+  const onPressMonthlySubscription = () => {
+    purchase(monthlySubscription.productId);
   };
-  const onPressThirdButton = () => {
-    // TODO
+  const onPressRestoreSubscription = () => {
+    getAvailablePurchases();
   };
 
   const displayMessenger = () => {
@@ -134,25 +244,28 @@ const PurchaseModalScreen = ({}) => {
         type={'customText'}
         variant="gradient"
         icon="chevron"
-        onPress={onPressFirstButton}
-        customText={PurchaseDict.YearlyButtonTitle(yearlyMonthPrice)}
-        customSubtext={PurchaseDict.YearlyButtonSubTitle(yearlyYearPrice)}
-        promptText={PurchaseDict.SavePrompt(savingsPercentage)}
+        onPress={onPressYearlySubscription}
+        capitalise={false}
+        customText={PurchaseDict.YearlyButtonTitle(yearlySubscription.price / 12)}
+        customSubtext={PurchaseDict.YearlyButtonSubTitle(yearlySubscription.price)}
+        promptText={PurchaseDict.SavePrompt(50)}
       />
       <Spacer height={20} />
       <DefaultButton
         type={'customText'}
         variant="white"
         icon="chevron"
-        onPress={onPressSecondButton}
-        customText={PurchaseDict.MonthlyButtonTitle(monthlyMonthPrice)}
+        capitalise={false}
+        onPress={onPressMonthlySubscription}
+        customText={PurchaseDict.MonthlyButtonTitle(monthlySubscription.price)}
         customSubtext={PurchaseDict.MonthlyButtonSubTitle}
       />
       <Spacer height={15} />
       <DefaultButton
         type={'customText'}
         variant="transparentGreyText"
-        onPress={onPressThirdButton}
+        onPress={onPressRestoreSubscription}
+        capitalise={false}
         customText={PurchaseDict.RestorePurchaseButton}
       />
       <View style={styles.textContainer}>

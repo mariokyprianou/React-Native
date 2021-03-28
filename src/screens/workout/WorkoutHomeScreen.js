@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -18,6 +18,7 @@ import WorkoutCard from '../../components/Cards/WorkoutCard';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import isRTL from '../../utils/isRTL';
 import useData from '../../hooks/data/UseData';
+import useUserData from '../../hooks/data/useUserData';
 import {useMutation} from '@apollo/client';
 import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
@@ -58,7 +59,10 @@ export default function WorkoutHomeScreen() {
     getConsecutiveWorkouts,
     clearConsecutiveDays,
     wasLastWorkoutToday,
+    completedFreeWorkouts
   } = useData();
+
+  const { suspendedAccount, isSubscriptionActive } = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -484,6 +488,19 @@ export default function WorkoutHomeScreen() {
                     : null
                 }
                 onPressCard={async (workout) => {
+                   if (suspendedAccount === true) {
+                    DisplayAlert({
+                      text: WorkoutDict.SuspendedAccount
+                    })
+                    return;
+                   }
+
+                   if (completedFreeWorkouts && !isSubscriptionActive) {
+                    navigation.navigate('PurchaseModal');
+                    return;
+                   }
+
+
                   if (weekNumber !== 1) {
                     if (stayTunedEnabled) {
                       showStayTunedModal();

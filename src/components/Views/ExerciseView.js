@@ -22,6 +22,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
+import displayAlert from '../../utils/DisplayAlert';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -213,7 +214,7 @@ export default function ExerciseView(props) {
 
   const handleSelectWeights = () => {
     if (weightHistory.length === 0) {
-      Alert.alert(WorkoutDict.WorkoutNoWeightsWarning);
+      displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
     } else {
       navigation.navigate('WeightCapture', {
         exerciseName: exercise.name,

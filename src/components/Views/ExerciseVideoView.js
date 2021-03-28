@@ -31,7 +31,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const [isPaused, setIsPaused] = useState(true);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
-  const [showControls, setShowControls] = useState(false);
+  const [showControls, setShowControls] = useState(true);
 
   const [currentVideo, setCurrentVideo] = useState('video');
 
@@ -44,8 +44,6 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   useEffect(() => {
-    console.log(currentExerciseIndex);
-
     // Autoplay if its current exercise and there is remaining video
     if (
       index === currentExerciseIndex &&
@@ -61,7 +59,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   }, [currentExerciseIndex, index]);
 
   const videoProps = {
-    height: getHeight(300),
+    height: getHeight(385),
     url: videos[currentVideo],
     skipCache: !isDownloadEnabled,
     autoplay: false, //index === currentExerciseIndex,
@@ -88,6 +86,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   useEffect(() => {
+
     if (showControls) {
       Animated.timing(fadeAnimation, {
         toValue: 1,
@@ -111,7 +110,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       style={{
         opacity: fadeAnimation,
         alignSelf: 'center',
-        position: 'absolute',
+         position: 'absolute',
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
         backgroundColor: colors.black10,
@@ -129,10 +128,17 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     </Animated.View>
   );
 
+
+
+
+
+
   return (
     <View style={styles.container}>
-      <View style={{height: getHeight(300)}}>
+      <View style={{height: getHeight(385)}}>
         <VideoView {...videoProps} ref={videoRef} />
+
+        {/* Controls not showing so render a touch view to allow showing them */}
         {!showControls && (
           <TouchableOpacity
             style={{

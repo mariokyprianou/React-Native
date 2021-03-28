@@ -158,16 +158,18 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..a803e0a 100644
+index f41ddff..c7f7e4f 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -7,28 +7,31 @@
+@@ -6,29 +6,45 @@
+  * Copyright (c) 2020 The Distance
   */
  
- import React, { useState } from "react";
+-import React, { useState } from "react";
 -import { View, Image, TouchableOpacity, Platform, Alert } from "react-native";
 -import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
 -import ImagePicker from "react-native-image-crop-picker";
++import React, { useEffect, useState } from "react";
 +import { View, Image, TouchableOpacity, Dimensions } from "react-native";
  import { RNCamera } from "react-native-camera";
  import TDIcon from "the-core-ui-component-tdicon";
@@ -175,6 +177,8 @@ index f41ddff..a803e0a 100644
  import { ScaleHook } from "react-native-design-to-component";
 +import { defaultProps } from "../defaultProps";
 +import { checkStylesIncHeight, checkString } from "../utils";
++import * as mime from 'react-native-mime-types';
++import * as Animatable from 'react-native-animatable';
  
  const AddPhoto = ({
 -  handlePhotoClick,
@@ -184,8 +188,17 @@ index f41ddff..a803e0a 100644
    overlayImage,
    overlayStyles,
    CustomCountdown,
++  CountdownTime,
    cameraButtonImage,
++  cameraFadedButton,
 +  backgroundColor,
++  countdown0,
++  countdown5,
++  countdown10,
++  setTime,
++  setLoading,
++  cameraButtonActive,
++  setCameraButtonActive
  }) => {
    // ******* SETUP *******
 +  overlayStyles && checkStylesIncHeight(overlayStyles);
@@ -196,21 +209,23 @@ index f41ddff..a803e0a 100644
    const [cameraRef, setCameraRef] = useState();
    const [cameraType, setCameraType] = useState("back");
 -  const { getHeight, fontSize } = ScaleHook();
++  const [showCountdownOptions, setShowCountdownOptions] = useState(false);
++
 +  const { getHeight, fontSize, getWidth } = ScaleHook();
 +  const screenWidth = Dimensions.get("screen").width;
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +39,7 @@ const AddPhoto = ({
+@@ -36,7 +52,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
 -      height: getHeight(550),
-+      height: '100%', // was 550
++      height: '100%', 
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,50 +58,52 @@ const AddPhoto = ({
+@@ -55,65 +71,93 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -223,7 +238,7 @@ index f41ddff..a803e0a 100644
        alignItems: "center",
 -      justifyContent: "space-around",
 +      height: getHeight(90), 
-       paddingVertical: getHeight(15), 
+       paddingVertical: getHeight(15),
 -      backgroundColor: "white",
 +      backgroundColor: backgroundColor
 +        ? backgroundColor
@@ -234,8 +249,19 @@ index f41ddff..a803e0a 100644
 -      color: "black",
 +    countdownButtonContainer: {
 +      position: "absolute",
-+      left: getWidth(80),
-+      paddingTop: getHeight(24),
++      left: getWidth(75),
++    },
++    countdownOptionsContainer: {
++      flexDirection: 'row',
++      marginLeft: getWidth(150),
++      justifyContent: 'space-between',
++      alignItems: 'center',
++      width: getWidth(170),
++      height: getHeight(50),
++    },
++    countdownOption: {
++      height: getHeight(30),
++      width: getHeight(30),
 +    },
 +    cameraButtonContainer: {
 +      position: "absolute",
@@ -286,14 +312,37 @@ index f41ddff..a803e0a 100644
 -        }
 -      })
 -      .catch((err) => console.log(err));
-+  async function handlePhotoClick(camera) {
++  function handlePhotoClick() {
++    setCameraButtonActive(false);
++
 +    const options = { quality: 0.5, base64: true };
-+    const data = await camera.takePictureAsync(options);
-+    setPhoto(data.uri);
++
++    const timeout = CountdownTime ? CountdownTime : 0;
++
++    setTimeout(async () => {
++      const data = await cameraRef.takePictureAsync(options);
++      const contentType = mime.lookup(data.uri)
++
++      setPhoto(data.uri, contentType);
++    }, timeout)
    }
  
    function handleSwitchView() {
-@@ -109,11 +114,6 @@ const AddPhoto = ({
+     if (cameraType === "back") setCameraType("front");
+     if (cameraType === "front") setCameraType("back");
+   }
++
++  function handleChangeCountdown(newTime) {
++    setTime(newTime);
++    setShowCountdownOptions(false);
++  }
++
++  useEffect(()=> {
++
++   setLoading(!cameraButtonActive);
++  }, [cameraButtonActive])
++
+   // ******* RENDER *******
  
    return (
      <View style={styles.pageContainer}>
@@ -305,7 +354,7 @@ index f41ddff..a803e0a 100644
        <View style={styles.cameraContainer}>
          <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
            {({ camera }) => {
-@@ -121,7 +121,7 @@ const AddPhoto = ({
+@@ -121,7 +165,7 @@ const AddPhoto = ({
              if (overlayImage) {
                return (
                  <View style={styles.overlay}>
@@ -314,15 +363,18 @@ index f41ddff..a803e0a 100644
                  </View>
                );
              } else {
-@@ -131,17 +131,24 @@ const AddPhoto = ({
+@@ -131,21 +175,47 @@ const AddPhoto = ({
          </RNCamera>
          <View style={styles.buttonContainer}>
            {CustomCountdown && (
 -            <View style={styles.sideButtons}>
-+            <View style={styles.countdownButtonContainer}>
-               <CustomCountdown />
+-              <CustomCountdown />
++            <View style={ styles.countdownButtonContainer }>
++              <TouchableOpacity onPress={() => setShowCountdownOptions(!showCountdownOptions)} style={{flex: 1}}>
++                <CustomCountdown />
++              </TouchableOpacity>  
              </View>
-           )}
+-          )}
 -          <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
 -            <TDIcon
 -              input={cameraButtonImage ? cameraButtonImage : "dot-circle"}
@@ -330,23 +382,49 @@ index f41ddff..a803e0a 100644
 -            />
 -          </TouchableOpacity>
 -          <View style={styles.sideButtons}>
-+          <View style={styles.cameraButtonContainer}>
-+            <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
-+              <TDIcon
-+                input={cameraButtonImage ? cameraButtonImage : "dot-circle"}
-+                inputStyle={
-+                  cameraButtonImage
-+                    ? styles.cameraButtonImage
-+                    : styles.cameraButton
-+                }
-+              />
-+            </TouchableOpacity>
-+          </View>
+-            <TouchableOpacity onPress={handleSwitchView}>
+-              <TDIcon input="sync" inputStyle={styles.rotateButton} />
+-            </TouchableOpacity>
+-          </View>
++          ) }
++          { showCountdownOptions === false ?
++            <>
++              <View style={styles.cameraButtonContainer}>
++                <TouchableOpacity onPress={cameraButtonActive ? handlePhotoClick : null} >
++                  <TDIcon
++                    input={cameraButtonActive === true ? cameraButtonImage : cameraFadedButton}
++                    inputStyle={
++                      cameraButtonImage
++                        ? styles.cameraButtonImage
++                        : styles.cameraButton
++                    }
++                  />
++                </TouchableOpacity>
++              </View>
++              <View style={styles.rotateButtonContainer}>
++                <TouchableOpacity onPress={handleSwitchView}>
++                  <TDIcon input="sync" inputStyle={styles.rotateButton} />
++                </TouchableOpacity>
++              </View>
++            </>
++            :
++            <Animatable.View style={ styles.countdownOptionsContainer } animation={'fadeInLeft'}>
++              <TouchableOpacity onPress={() => handleChangeCountdown(0)}>
++                <Image source={countdown0} style={styles.countdownOption}/>
++              </TouchableOpacity>
++              <TouchableOpacity onPress={() => handleChangeCountdown(5000)}>
++                <Image source={countdown5} style={styles.countdownOption}/>
++              </TouchableOpacity>
++              <TouchableOpacity onPress={() => handleChangeCountdown(10000)}>
++                <Image source={countdown10} style={styles.countdownOption}/>
++              </TouchableOpacity>    
++            </Animatable.View>
++        }
 +
-+          <View style={styles.rotateButtonContainer}>
-             <TouchableOpacity onPress={handleSwitchView}>
-               <TDIcon input="sync" inputStyle={styles.rotateButton} />
-             </TouchableOpacity>
++        {!cameraButtonActive && <View style={{height: '100%', width: '100%', backgroundColor: 'white', opacity:0.5}}/> }
+         </View>
+       </View>
+     </View>
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
 deleted file mode 100644
 index 507924f..0000000
@@ -429,10 +507,10 @@ index 507924f..0000000
 -
 -export default Header;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 1bbdec1..6317ef0 100644
+index 1bbdec1..7cb7cfe 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-@@ -6,38 +6,48 @@
+@@ -6,70 +6,80 @@
   * Copyright (c) 2020 The Distance
   */
  
@@ -498,7 +576,13 @@ index 1bbdec1..6317ef0 100644
  
    // ******* STYLES *******
    const styles = StyleSheet.create({
-@@ -50,26 +60,26 @@ const ImageSlider = ({
+     imagesContainer: {
+       width: "100%",
+-      height: "50%",
++      height: _imageHeight,
+       left: leftAlign,
+     },
+     beforeContainer: {
        position: "absolute",
        left: 0,
        top: 0,
@@ -532,7 +616,7 @@ index 1bbdec1..6317ef0 100644
        marginLeft: -afterImageLeft,
      },
      button: {
-@@ -96,57 +106,52 @@ const ImageSlider = ({
+@@ -96,57 +106,51 @@ const ImageSlider = ({
    });
  
    // ******* FUNCTIONS *******
@@ -542,6 +626,7 @@ index 1bbdec1..6317ef0 100644
 +    setAfterImageLeft(value);
 +  }
 +
++  console.log(afterPic)
    // ******* RENDER *******
    return (
      <View>
@@ -551,28 +636,26 @@ index 1bbdec1..6317ef0 100644
 -          {beforePic && (
 -            <Image source={{ uri: beforePic }} style={styles.beforeImage} />
 -          )}
-+          {beforePic && <Image source={beforePic} style={styles.beforeImage} />}
++          {beforePic && <Image source={beforePic} style={styles.beforeImage} onError={({ nativeEvent: {error} }) => console.log(error)} />}
          </View>
          <View style={styles.afterContainer}>
 -          {afterPic && (
 -            <Image source={{ uri: afterPic }} style={styles.afterImage} />
 -          )}
-+          {afterPic && <Image source={afterPic} style={styles.afterImage} />}
++          {afterPic && <Image source={afterPic} style={styles.afterImage} onError={({ nativeEvent: {error} }) => console.log(error)} />}
          </View>
        </View>
 -      <View style={sliderSpacerHeight} />
-+      <View
-+        style={
-+          sliderSpacerHeight ? sliderSpacerHeight : defaultSliderSpacerHeight
-+        }
-+      />
++     
        <Slider
          style={{
 -          width: sliderStyles.width,
 -          height: sliderStyles.height,
            alignSelf: "center",
-+          ...defaultSliderStyles,
-+          ...sliderStyles,
++          height: getHeight(42),
++          width: '100%',
++          position:'absolute',
++          bottom: - getHeight(22),   
          }}
 -        minimumValue={0}
 -        maximumValue={imageWidth}

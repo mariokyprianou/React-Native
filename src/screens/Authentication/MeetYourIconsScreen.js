@@ -72,6 +72,9 @@ export default function MeetYourIconsScreen() {
   useEffect(() => {
     setLoading(true);
     StatusBar.setBarStyle('light-content');
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    }
   }, []);
 
   useEffect(() => {
@@ -501,8 +504,8 @@ const newProgrammeView = () => (
         </TouchableOpacity>
       </View>
 
-      <View style={styles.fadeContainer}>
-        <FadingBottomView color="blue" height={70} />
+      <View style={styles.fadeContainer} pointerEvents="none">
+        <FadingBottomView color="blue" height={100} />
       </View>
       
       {switchProgramme === true ? 

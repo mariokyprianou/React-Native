@@ -13,7 +13,16 @@ import LandingScreen from './screens/landing/LandingScreen';
 import useLoading from './hooks/loading/useLoading';
 import LoadingView from './components/Views/LoadingView';
 import ChangeDeviceScreen from './screens/Authentication/ChangeDeviceScreen';
+
 import {TransitionPresets} from '@react-navigation/stack';
+import WeekCompleteScreen from './screens/workout/WeekCompleteScreen';
+import WorkoutScreen from './screens/workout/WorkoutScreen';
+import NotesScreen from './screens/workout/NotesScreen';
+import WeightCaptureScreen from './screens/workout/WeightCaptureScreen';
+import TakeARestScreen from './screens/workout/TakeARestScreen';
+import StayTunedScreen from './screens/workout/StayTunedScreen';
+import WorkoutCompleteScreen from './screens/workout/WorkoutCompleteScreen';
+import ChallengeCompletionScreen from './screens/progress/ChallengeCompletionScreen';
 
 export default function AppContainer() {
   const {loading} = useLoading();
@@ -42,9 +51,62 @@ export default function AppContainer() {
             headerShown: false,
           }}
         />
+
         <AppStack.Screen
           name="ChangeDevice"
           component={ChangeDeviceScreen}
+        />
+
+        
+      
+        <AppStack.Screen
+          name="WeekComplete"
+          component={WeekCompleteScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+       
+        <AppStack.Screen
+          name="Workout"
+          component={WorkoutScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+       
+        <AppStack.Screen
+          name="Notes"
+          component={NotesScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+       
+        <AppStack.Screen
+          name="WeightCapture"
+          component={WeightCaptureScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+        
+        <AppStack.Screen
+          name="TakeARest"
+          component={TakeARestScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+        
+        <AppStack.Screen
+          name="StayTuned"
+          component={StayTunedScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+       
+        <AppStack.Screen
+          name="WorkoutComplete"
+          component={WorkoutCompleteScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+
+
+
+
+        <AppStack.Screen
+          name="ChallengeComplete"
+          component={ChallengeCompletionScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
       </AppStack.Navigator>

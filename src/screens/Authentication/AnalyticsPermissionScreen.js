@@ -31,13 +31,14 @@ export default function AnalyticsPermissionScreen() {
 
   const saveSetting = async (enabled) => {
     const newPreferences = {
-      emails: preferences.emails || true,
-      downloadQuality: preferences.downloadQuality || "HIGH",
-      notifications: preferences.notifications || true,
+      emails: preferences.emails,
+      downloadQuality: preferences.downloadQuality,
+      notifications: preferences.notifications,
       errorReports: enabled,
       analytics: enabled,
-      weightPreference: preferences.weightPreference || "KG",
+      weightPreference: preferences.weightPreference,
     };
+
     setPreferences(newPreferences);
     await AsyncStorage.setItem('@ANALYTICS_ASKED', 'true')
       .then(() => {

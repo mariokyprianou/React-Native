@@ -46,26 +46,24 @@ export default function (props) {
 
   if (state === 'inactive') {
     return <View style={styles.containerStyle}>{content()}</View>;
+  } else if (state === 'completed') {
+    return (
+      <FastImage
+        source={completedIcon}
+        resizeMode={FastImage.resizeMode.contain}
+        style={styles.imageStyle}
+      />
+    );
   } else {
     return (
       <TouchableOpacity onPress={onPress} style={styles.containerStyle}>
-        {state === 'completed' ? (
-          <FastImage
-            source={completedIcon}
-            resizeMode={FastImage.resizeMode.contain}
-            style={styles.imageStyle}
-          />
-        ) : (
-          state === 'active' && (
-            <LinearGradient
-              style={styles.containerStyle}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              colors={[colors.tiffanyBlue100, colors.tealish100]}>
-              {content()}
-            </LinearGradient>
-          )
-        )}
+        <LinearGradient
+          style={styles.containerStyle}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={[colors.tiffanyBlue100, colors.tealish100]}>
+          {content()}
+        </LinearGradient>
       </TouchableOpacity>
     );
   }

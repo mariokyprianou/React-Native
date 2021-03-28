@@ -10,6 +10,7 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import { useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Colors from '../../styles/Colors';
 import isRTL from '../../utils/isRTL';
@@ -18,7 +19,22 @@ import ThemeContext from './ThemeContext';
 export default function ThemeProvider({children}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
 
-  const screenWidth = Dimensions.get('screen').width;
+  const insets = useSafeAreaInsets();
+
+  const SCREEN_WIDTH = Dimensions.get('screen').width;
+  const SCREEN_HEIGHT = Dimensions.get('screen').height;
+
+  const HEADER_HEIGHT = 64 + insets.top;
+
+  const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT;
+
+  const Constants = {
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    HEADER_HEIGHT,
+    EXERCISE_VIEW_HEIGHT
+  };
+
 
   const colors = {
     ...Colors,
@@ -433,15 +449,15 @@ export default function ThemeProvider({children}) {
       width: getWidth(45),
     },
     lookupStyleTable: {
-      newWeek: {
+      NEW_WEEK: {
         pill: calendarPillStyles.pillNewWeek,
         text: calendarTextStyles.textNewWeek,
       },
-      newWeekNewProgramme: {
+      NEW_PROGRAMME: {
         pill: calendarPillStyles.pillNewWeek,
         text: calendarTextStyles.textNewWeek,
       },
-      workoutComplete: {
+      WORKOUT_COMPLETE: {
         pill: calendarPillStyles.pillWorkoutComplete,
         text: calendarTextStyles.textWorkoutComplete,
       },
@@ -484,26 +500,23 @@ export default function ThemeProvider({children}) {
     labelContainerStyle: {
       width: '100%',
       marginTop: getHeight(18),
-      
     },
-    
     labelTextStyle: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
     },
     iconTintColor: colors.black100,
-    
     style: {
       ...textStyles.regular16_black100,
       lineHeight: fontSize(20),
+
       flex: 1,
       height: '100%',
-      
     },
     inputContainerStyle: {
       padding: 0,
       margin: 0,
-      paddingHorizontal: 0,    
+      paddingHorizontal: 0,
       marginStart: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
       marginTop: -getHeight(5),
     },
@@ -513,7 +526,6 @@ export default function ThemeProvider({children}) {
       paddingHorizontal: 0,
       margin: 0,
       textAlign: 'left',
-      
     },
     marginEnd: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
     writingDirection: isRTL() ? 'rtl' : 'ltr',
@@ -555,7 +567,7 @@ export default function ThemeProvider({children}) {
     buttonTextStyle: {
       ...textStyles.regular16_black100,
       lineHeight: getHeight(20),
-      color: colors.white100
+      color: colors.white100,
     },
   };
 
@@ -576,9 +588,9 @@ export default function ThemeProvider({children}) {
   };
 
   const exerciseViewStyle = {
-    contentStyle: {},
+    contentStyle: {flex: 1},
     titleContainerStyle: {
-      marginTop: getWidth(20),
+      marginTop: getWidth(15),
       marginHorizontal: getWidth(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -589,7 +601,7 @@ export default function ThemeProvider({children}) {
       textAlign: 'left',
     },
     exerciseDescriptionStyle: {
-      marginTop: getHeight(10),
+      marginTop: getHeight(5),
       marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
@@ -611,6 +623,7 @@ export default function ThemeProvider({children}) {
     },
     setsContainerStyle: {
       marginHorizontal: getWidth(20),
+      marginBottom: getHeight(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -621,8 +634,8 @@ export default function ThemeProvider({children}) {
     },
     extraContainerStyle: {
       flexDirection: 'row',
-      marginTop: getHeight(16),
-      marginBottom: getHeight(20),
+      marginTop: getHeight(10),
+      marginBottom: getHeight(10),
       marginHorizontal: getWidth(20),
     },
     weightTouchStyle: {
@@ -672,6 +685,7 @@ export default function ThemeProvider({children}) {
       dropdownStyle,
       headerButtonConfig,
       exerciseViewStyle,
+      Constants
     }),
     [
       colors,
@@ -682,6 +696,7 @@ export default function ThemeProvider({children}) {
       dropdownStyle,
       headerButtonConfig,
       exerciseViewStyle,
+      Constants
     ],
   );
 

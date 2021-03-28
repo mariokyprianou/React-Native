@@ -47,7 +47,11 @@ const PurchaseModalScreen = ({}) => {
       header: () => <Header showModalCross white transparent />,
     });
     StatusBar.setBarStyle('light-content');
+    return () => {
+      StatusBar.setBarStyle('dark-content');
+    }
   }, []);
+
 
   useEffect(() => {
     if (!yearlyMonthPrice || !monthlyMonthPrice) {

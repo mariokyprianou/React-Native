@@ -11,6 +11,10 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
+import Progress from '../../apollo/queries/Progress';
+import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
+import ProgressImages from '../../apollo/queries/ProgressImages';
+import formatProgressImages from '../../utils/formatProgressImages';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   differenceInDays,
@@ -292,7 +296,7 @@ export default function DataProvider(props) {
 
   useEffect(() => {
     const weightsArray = [];
-    for (let i = 1; i < 201; i++) {
+    for (let i = 0; i < 201; i++) {
       weightsArray.push(i);
     }
     setWeightData(weightsArray);
@@ -311,6 +315,7 @@ export default function DataProvider(props) {
 
     return wasToday !== undefined ? true : false;
   }, []);
+
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 

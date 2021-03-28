@@ -11,17 +11,15 @@ import {View, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import DropDownPicker from 'react-native-dropdown-picker';
 import useTheme from '../../hooks/theme/UseTheme';
-import useTransformation from '../../hooks/data/useTransformation';
 import isRTL from '../../utils/isRTL';
 
 const arrowDown = require('../../../assets/icons/sortDown.png');
 const arrowUp = require('../../../assets/icons/sortUp.png');
 
-const CustomDateSelectors = ({onPress}) => {
+const CustomDateSelectors = ({onPress, storedImages}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {transformationImages} = useTransformation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -33,10 +31,11 @@ const CustomDateSelectors = ({onPress}) => {
       top: getHeight(20),
       left: getWidth(20),
       zIndex: 9,
+      height: getHeight(170)
     },
     dropdownContainer: {
       height: getHeight(30),
-      width: getWidth(125),
+      width: getWidth(130),
     },
     dropdownBox: {
       backgroundColor: colors.white80,
@@ -45,13 +44,9 @@ const CustomDateSelectors = ({onPress}) => {
       borderBottomLeftRadius: radius(18),
       borderBottomRightRadius: radius(18),
     },
-    dropdownList: {
-      backgroundColor: colors.white80,
-    },
     dropdownArrow: {
-      position: 'absolute',
+      // position: 'absolute',
       top: getHeight(-3),
-      right: isRTL() ? 90 : 0,
     },
     arrowStyle: {
       height: getHeight(18),
@@ -61,6 +56,9 @@ const CustomDateSelectors = ({onPress}) => {
     label: {
       ...textStyles.semiBold14_brownishGrey100,
       lineHeight: fontSize(18),
+    },
+    dropdownList: {
+      backgroundColor: colors.white80,
     },
     item: {
       justifyContent: 'flex-start',
@@ -79,8 +77,8 @@ const CustomDateSelectors = ({onPress}) => {
   return (
     <View style={styles.dropdown}>
       <DropDownPicker
-        items={transformationImages}
-        defaultValue={transformationImages[0].value}
+        items={storedImages}
+        defaultValue={storedImages[0] && storedImages[0].value}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}
@@ -92,8 +90,8 @@ const CustomDateSelectors = ({onPress}) => {
         customArrowUp={customUp}
       />
       <DropDownPicker
-        items={transformationImages}
-        defaultValue={transformationImages[0].value}
+        items={storedImages}
+        defaultValue={storedImages[storedImages.length - 1] && storedImages[storedImages.length - 1].value}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}

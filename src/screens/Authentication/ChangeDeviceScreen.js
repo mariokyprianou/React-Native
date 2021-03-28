@@ -82,7 +82,7 @@ export default function ChangeDeviceScreen() {
       onPressBottomButton={onPressBottomButton}
       disabled={!canChangeDevice}
       icon="chevron"
-      backNavigation={false}
+      closeModal={false}
     />
   );
 }

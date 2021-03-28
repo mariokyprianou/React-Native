@@ -19,13 +19,14 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
     const {getWidth, getHeight, radius, fontSize} = ScaleHook();
     const {colors, textStyles} = useTheme();
     const { weightData, setSelectedWeight} = UseData();
-    let data = weightData.slice(0,50);
+    let data = weightData.slice(0,51);
 
   const itemSize = getWidth(70);
   const scrollAnimatedValue = useRef(new Animated.Value(0)).current;
   const scrollListener = useRef(null);
   const active = useRef(0);
-  data = ['', '', ...data, '', ''];
+  data = [-1, -1, ...data, -1, -1];
+
 
   useEffect(() => {
     scrollListener.current && clearInterval(scrollListener.current);
@@ -40,12 +41,7 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
   const listRef = useRef();
 
   useEffect(() => {
-    //cant scroll after 50 ??
-    // setTimeout(function(){
-    //     listRef?.current?.scrollToIndex({animated: true, index: 150});
-        //listRef?.current?.scrollToEnd();
-        //listRef?.current?.scrollToOffset({ offset:120 * itemSize });
-        //  }, 2000);
+    setSelectedWeight(data[2]);
   }, []);
 
   const style = {
@@ -107,17 +103,12 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
           },
         ]}>
         <Text numberOfLines={1} ellipsizeMode='clip' style={style.listItemText}>
-          {item ? `${item}${weightPreference}` : ''}
+          {item >=0 ? `${item}${weightPreference}` : ''}
         </Text>
         </Animated.View>
       </View>
     );
   };
-
-//   getItemLayout = (data, index) => (
-//     { length: 204, offset: itemSize * (index-2), index }
-//   )
-
   
 
   return (
@@ -139,8 +130,7 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
         data={I18nManager.isRTL ? data.reverse() : data}
         onMomentumScrollEnd={() => {
           const index = Math.round(active.current / itemSize);
-          setSelectedWeight(index - 2);
-          //onChange(data[index + 2]);
+          setSelectedWeight(data[index + 2]);
         }}
         keyExtractor={(_, i) => String(i)}
         renderItem={renderItem}

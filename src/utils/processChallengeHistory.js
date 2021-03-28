@@ -7,13 +7,27 @@
  */
 import {format} from 'date-fns';
 
-export default processChallengeHistory = (data, preference) =>
-  data.map((event) => {
+export default processChallengeHistory = (
+  data,
+  weightPreference,
+  unitType,
+  type,
+) => {
+  return data.map((event) => {
     const newEvent = {...event};
-    if (preference === 'lb') {
-      const convertedWeight = Math.round(newEvent.weight * 2.20462262185);
-      newEvent.weight = convertedWeight;
+
+    if (unitType === 'WEIGHT' && weightPreference === 'lb') {
+      const convertedWeight = Math.round(newEvent.value * 2.20462262185);
+      newEvent.value = convertedWeight;
     }
+
+    if (unitType === 'DISTANCE' && weightPreference === 'lb') {
+      const convertedDistance = newEvent.value * 0.621371;
+      newEvent.value = convertedDistance;
+    }
+
     newEvent.date = format(new Date(event.createdAt), 'dd/LL');
+
     return newEvent;
   });
+};

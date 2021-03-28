@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {View, StyleSheet, ScrollView, Alert} from 'react-native';
+import {View, StyleSheet, ScrollView, Alert, Text} from 'react-native';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
@@ -26,7 +26,7 @@ import useLoading from '../../hooks/loading/useLoading';
 export default function VerifyChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
-  const {colors, cellFormConfig, cellFormStyles} = useTheme();
+  const {colors, cellFormConfig, cellFormStyles, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {ProfileDict} = dictionary;
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
@@ -82,6 +82,10 @@ export default function VerifyChangeEmailScreen() {
     formContainer: {
       width: '90%',
       alignSelf: 'center',
+    },
+    text: {
+      ...textStyles.regular15_brownishGrey100,
+      marginTop: getHeight(30),
     },
   });
 
@@ -177,6 +181,7 @@ export default function VerifyChangeEmailScreen() {
         style={styles.scrollViewContainer}>
         <View style={styles.formContainer}>
           <Form cells={cells} config={config} />
+          <Text style={styles.text}>{ProfileDict.VerifyEmailScreenInfo}</Text>
         </View>
       </ScrollView>
       <DefaultButton

@@ -63,16 +63,15 @@ export default function SliderProgressView({
     },
     sliderContainer: {
       width: '100%',
-      height: height || getHeight(4),
+      height:  height || getHeight(4),
       alignItems: 'stretch',
       justifyContent: 'center',
       alignContent: 'center',
     },
     thumbStyle: {
-      width: getWidth(42),
-      height: getHeight(22),
       backgroundColor: 'transparent',
       alignItems: 'center',
+      justifyContent: 'center'
     },
   });
 
@@ -103,7 +102,7 @@ export default function SliderProgressView({
             }
           }}
           thumbStyle={styles.thumbStyle}
-          thumbTouchSize={{width: getWidth(42), height: getHeight(22)}}
+          thumbTouchSize={{width: getWidth(62), height: getHeight(42)}}
           trackStyle={{backgroundColor: 'transparent'}}
           minimumTrackTintColor={'transparent'}
           maximumTrackTintColor={'transparent'}

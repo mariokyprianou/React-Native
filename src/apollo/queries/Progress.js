@@ -13,7 +13,6 @@ export default gql`
     progress {
       startOfMonth
       days {
-        id
         date
         type
       }

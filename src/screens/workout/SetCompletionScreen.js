@@ -28,6 +28,7 @@ export default function SetCompletionScreen({
   exercise,
   weightPreference,
 }) {
+
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -41,7 +42,7 @@ export default function SetCompletionScreen({
     containerStyle: {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: colors.brownishGrey60},
     offModalTouchableStyle: { flex: 1, bottom: getHeight(300) },
     card: {
-      height: restTime === 0 ? getHeight(302) : getHeight(349),
+      height: restTime ? getHeight(302) : getHeight(349),
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(15),
@@ -57,7 +58,7 @@ export default function SetCompletionScreen({
     title: {
       ...textStyles.bold22_black100,
       textAlign: 'center',
-      marginBottom: restTime === 0 ? 0 : getHeight(20),
+      marginBottom: restTime ? 0 : getHeight(20),
     },
     text: {
       ...textStyles.regular15_brownishGrey100,

@@ -39,13 +39,13 @@ export default function TermsConditionsScreen() {
         backgroundColor: colors.backgroundWhite100,
       },
     },
-
     buttonContainer: {
       position: 'absolute',
       bottom: 0,
       width: '100%',
       marginBottom: getHeight(40),
       alignItems: 'center',
+      backgroundColor: colors.white100,
     },
   };
 
@@ -56,7 +56,7 @@ export default function TermsConditionsScreen() {
   return (
     <View style={styles.render.container}>
       <TermsPolicyContentView
-        isHtml={false}
+        isHtml={true}
         content={legals.termsAndConditions}
       />
       <View style={styles.buttonContainer}>

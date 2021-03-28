@@ -42,6 +42,7 @@ import Intercom from 'react-native-intercom';
 import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const notifications = [
   {
@@ -97,6 +98,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const [storedNotifications, setStoredNotifications] = useState(notifications);
 
   const {userData, setUserData} = useUserData();
+  const {setUserImages} = useProgressData();
   const {setLoading} = useLoading();
 
   const formCountry = getValueByName('profile_country');
@@ -111,7 +113,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList(['', ...countries]);
+      setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
 
       const indianRegions = countryData.allCountries.filter(
         (country) => country.country === 'India',
@@ -152,7 +154,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         const memberSince = res.profile.createdAt.slice(0, 4);
         const userProfile = {...res.profile, memberSince};
         setUserData(userProfile);
-        console.log(userData, '<--USER DATA');
       }
     },
     onError: (error) => console.log(error),
@@ -269,9 +270,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         ? null
         : regionLookup[profile_region] || regionLookup[userData.region];
 
-    if (profile_country === 'India' && !newRegion) {
-      newRegion = regionLookup[regionsList[0]];
-    }
+
+        // Let region be null as its optional
+    // if (profile_country === 'India' && !newRegion) {
+    //   newRegion = regionLookup[regionsList[0]];
+    // }
 
     const newVals = {
       givenName: profile_firstName || userData.givenName,
@@ -279,7 +282,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       gender: profile_gender?.toLowerCase() || userData.gender,
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
-      region: newRegion,
+      region: newRegion || userData.region,
       timeZone: userData.timeZone,
     };
 
@@ -322,6 +325,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 console.log(res, '<----sign out res');
                 setUserData({});
                 Intercom.logout();
+                setUserImages([])
                 AsyncStorage.removeItem('@ANALYTICS_ASKED');
                 AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
                 AsyncStorage.removeItem('@CURRENT_WEEK');

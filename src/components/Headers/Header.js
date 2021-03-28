@@ -10,7 +10,7 @@ import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {useNavigation} from '@react-navigation/native';
-import {useSafeArea} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
 import isRTL from '../../utils/isRTL';
@@ -37,16 +37,12 @@ export default function Header({
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getWidth, fontSize, getHeight} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, Constants} = useTheme();
   const navigation = useNavigation();
-  const {dictionary} = useDictionary();
-  const {} = dictionary;
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchText, setSearchText] = useState(null);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
-  const insets = useSafeArea();
-  const height = 64 + insets.top;
+  const insets = useSafeAreaInsets();
+  const height = Constants.HEADER_HEIGHT;
 
   const styles = {
     container: {

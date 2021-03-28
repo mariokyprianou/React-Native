@@ -130,8 +130,8 @@ export default function NotesScreen() {
     {
       name: 'notes',
       type: 'text',
+      maxHeight: getHeight(120),
       multiline: true,
-      minHeight: getHeight(70),
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
       defaultValue: savedNotes,

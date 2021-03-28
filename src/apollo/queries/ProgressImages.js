@@ -11,8 +11,8 @@ import gql from 'graphql-tag';
 export default gql`
   query ProgressImages {
     progressImages {
-      takenAt
-      imageUrl
+      id
+      createdAt
     }
   }
 `;

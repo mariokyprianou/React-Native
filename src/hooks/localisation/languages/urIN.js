@@ -54,6 +54,7 @@ const urIN = {
     Home: SharedDict.Home.toUpperCase(),
     JumpIn: 'JUMP IN',
     Login: SharedDict.Login.toUpperCase(),
+    Pause: 'PAUSE',
     Pluralise: "'S",
     Programme: 'PROGRAMME',
     Progress: SharedDict.Progress.toUpperCase(),
@@ -69,7 +70,7 @@ const urIN = {
     StartNow: 'START NOW',
     StartWorkout: 'START WORKOUT',
     TryAgain: 'TRY AGAIN',
-    ThreeSecs: '3s',
+    Secs: (time) => `${time}s`,
     Skip: 'Skip',
     NeedHelp: 'Need help?',
     SaveChanges: 'Save changes',
@@ -198,6 +199,8 @@ const urIN = {
     ChangePasswordLabel2: SharedDict.NewPassword,
     IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
     VerifyEmailScreenTitle: SharedDict.VerifyEmail,
+    VerifyEmailScreenInfo:
+      'We’ve sent a code to your new email address. Please enter it here.',
     InvalidChangeEmailCode:
       'Oops! This code is not recognised; please enter the correct code to change your email address.',
     CodeLabel: 'CODE',
@@ -270,8 +273,13 @@ const urIN = {
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
     ChallengeTime: 'TIME',
-    FunctionNotAvailable: 'This function is not available on this device',
-    NoCamera: 'Unable to access camera',
+    ChallengeZeroChart: 'Complete challenges to see your progress here!',
+    FunctionNotAvailable:
+      "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
+    NoCamera:
+      "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
+    UploadFailed:
+      "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
   },
 
   TabsTitleDict: {
@@ -283,7 +291,15 @@ const urIN = {
   WorkoutDict: {
     WeekText: 'Week',
 
-    exerciseInfoFormatText: (sets, reps) => `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatText: (sets, reps) =>
+      sets === 1
+        ? `${sets} SET || ${reps} REPS`
+        : `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatTextSecs: (sets, secs) =>
+      sets === 1
+        ? `${sets} SET || ${secs} SECS`
+        : `${sets} SETS || ${secs} SECS`,
+
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
     SetsText: SharedDict.Sets,

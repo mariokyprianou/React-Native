@@ -29,7 +29,7 @@ export default function StartWorkoutScreen() {
     setCurrentExerciseIndex,
     setWorkoutTime,
     setIsWorkoutTimerRunning,
-    setCompletedExercises
+    setCompletedExercises,
   } = useData();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
@@ -127,7 +127,7 @@ export default function StartWorkoutScreen() {
         <WorkoutImageView {...topViewProps} />
         <ExerciseList exercises={selectedWorkout.exercises} />
       </ScrollView>
-      <View style={styles.fadeContainer}>
+      <View style={styles.fadeContainer} pointerEvents="none">
         <FadingBottomView height={80} />
       </View>
       <View style={styles.buttonContainer}>

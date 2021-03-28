@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 
-export default function GymHomeSelector({onPress, text}) {
+export default function GymHomeSelector({onPress, text, singleProgramme}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -49,23 +49,17 @@ export default function GymHomeSelector({onPress, text}) {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleSelect() {
-    if (buttonText === ButtonDict.Gym) {
-      setButtonText(ButtonDict.Home);
-      onPress('HOME');
-    }
-    if (buttonText === ButtonDict.Home) {
-      setButtonText(ButtonDict.Gym);
-      onPress('GYM');
-    }
-  }
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.pill}>
-      <TouchableOpacity onPress={onPress} style={styles.touch}>
+      <TouchableOpacity
+        onPress={!singleProgramme ? onPress : null}
+        activeOpacity={singleProgramme ? 1 : 0.2}
+        style={styles.touch}>
         <Text style={styles.text}>{text}</Text>
-        <TDIcon input={buttonIcon} inputStyle={styles.icon} />
+        {!singleProgramme && (
+          <TDIcon input={buttonIcon} inputStyle={styles.icon} />
+        )}
       </TouchableOpacity>
     </View>
   );

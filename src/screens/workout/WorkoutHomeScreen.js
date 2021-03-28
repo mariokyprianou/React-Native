@@ -131,16 +131,29 @@ export default function WorkoutHomeScreen() {
       });
   }
 
+
   async function constructWeekCompleteModal() {
     const {weekNumber} = programme.currentWeek;
     let duration = 0;
     let reps = 0;
     let sets = 0;
+    let seconds = 0;
     programme.currentWeek.workouts.map((workout) => {
       duration += workout.duration || 0;
       workout.exercises.map((exercise) => {
         sets += exercise.sets.length;
-        exercise.sets.map((set) => (reps += set.quantity));
+        exercise.sets.map((set) => {
+          switch(exercise.setType) {
+            case "REPS": {
+              reps += set.quantity;
+              break;
+            }
+            case "TIME": {
+              seconds += set.quantity;
+              break;
+            }
+          }
+        });
       });
     });
 
@@ -150,7 +163,9 @@ export default function WorkoutHomeScreen() {
       totalDuration: duration,
       totalReps: reps,
       totalSets: sets,
+      totalSeconds: seconds
     };
+
 
     // Set currentWeek id to prevent showing modal again for the same week
     setModalShown();

@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,28 +17,52 @@ import CustomCountdown from '../../components/Buttons/CustomCountdown';
 import Header from '../../components/Headers/Header';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useMutation} from '@apollo/client';
+import UploadUrl from '../../apollo/mutations/UploadUrl';
+import UploadFailed from '../../apollo/mutations/UploadFailed';
+import RNFetchBlob from 'rn-fetch-blob';
+import UseData from '../../hooks/data/UseData';
+import useLoading from '../../hooks/loading/useLoading';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
+const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
 const overlay = require('../../../assets/images/cameraPerson.png');
+const countdown0 = require('../../../assets/images/countdown0s.png');
+const countdown5 = require('../../../assets/images/countdown5s.png');
+const countdown10 = require('../../../assets/images/countdown10s.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors} = useTheme();
+  const {setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
+  const {getImages, getImagesSync} = useProgressData();
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={ProgressDict.Upload}
-        goBack
-        right="photoSelectIcon"
-        rightAction={handleSelectPhoto}
-      />
-    ),
-  });
+
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={ProgressDict.Upload}
+          goBack
+          right="photoSelectIcon"
+          rightAction={handleSelectPhoto}
+        />
+      ),
+    });
+  }, [])
+
+  const [requestUplaodUrl] = useMutation(UploadUrl);
+  const [sendFailed] = useMutation(UploadFailed);
+
+  const [time, setTime] = useState(0);
+
+  const [cameraButtonActive, setCameraButtonActive] = useState(true);
+
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -56,10 +80,56 @@ export default function TransformationScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePhoto() {
-    console.log('set photo');
-    const takenAt = new Date();
-    // send to back end with today's date, format ProgressImage
+  async function handlePhoto(path, contentType) {
+    console.log('Init uplaod Photo');
+    setLoading(true);
+
+    const uploadUrlRes = await requestUplaodUrl()
+      .catch((err) =>
+        console.log(err, '<---requestUrl err'),
+      );
+    console.log("uploadUrlRes", uploadUrlRes);
+    const { url , id } = uploadUrlRes.data.uploadUrl;
+    
+    RNFetchBlob.fetch(
+      'PUT', url, { 'Content-Type': contentType },
+      RNFetchBlob.wrap(path),
+    )
+    .uploadProgress((written, total) => {
+      console.log('uploaded', written / total);
+    })
+    .then(async (res) => {
+        let { status } = res.info();
+       
+
+        if (status === 200 || status === 204) {
+          console.log('Upload done --- SUCCESS');
+        
+          const finished = await getImagesSync();
+          console.log("getImagesSync -- finished getting updatted images and setting 1st and last")
+
+          navigation.goBack();
+          setCameraButtonActive(true);
+        } else {
+          console.log("Upload failed", res)
+          handleAddPhotoError(id);
+        }
+      })
+      .catch((err) => {
+        console.log(err, '<---fetch blob err');
+        handleAddPhotoError(id);
+      });
+      
+  }
+
+  async function handleAddPhotoError(id) {
+    await sendFailed({variables: {id: id}})
+      .then((res) => console.log(res, '<---upload failed res'))
+      .catch((err) => console.log(err, '<---upload failed err'))
+      .finally(()=> {
+        setCameraButtonActive(true);
+        Alert.alert(ProgressDict.UploadFailed);
+      });
   }
 
   function handleSelectPhoto() {
@@ -70,6 +140,7 @@ export default function TransformationScreen() {
       }),
     )
       .then((result) => {
+        console.log(result)
         if (result === RESULTS.UNAVAILABLE) {
           Alert.alert(ProgressDict.FunctionNotAvailable);
         }
@@ -79,16 +150,14 @@ export default function TransformationScreen() {
         if (result === RESULTS.GRANTED) {
           ImagePicker.openPicker({
             mediaType: 'photo',
+            compressImageQuality: 0.7,
           }).then((cameraPhoto) => {
-            setPhoto(cameraPhoto.sourceURL);
+            const { path, mime }= cameraPhoto;
+            handlePhoto(path, mime);
           });
         }
       })
       .catch((err) => console.log(err));
-  }
-
-  function handleCountdownStart() {
-    console.log('counting down');
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -98,11 +167,18 @@ export default function TransformationScreen() {
         setPhoto={handlePhoto}
         overlayImage={overlay}
         overlayStyles={styles.overlay}
-        CustomCountdown={() => (
-          <CustomCountdown onPress={handleCountdownStart} />
-        )}
+        CustomCountdown={() => <CustomCountdown time={time} />}
+        CountdownTime={time}
         cameraButtonImage={cameraButton}
+        cameraFadedButton={cameraFadedButton}
         backgroundColor={colors.backgroundWhite100}
+        countdown0={countdown0}
+        countdown5={countdown5}
+        countdown10={countdown10}
+        setTime={setTime}
+        setLoading={setLoading}
+        cameraButtonActive={cameraButtonActive}
+        setCameraButtonActive={setCameraButtonActive}
       />
     </View>
   );

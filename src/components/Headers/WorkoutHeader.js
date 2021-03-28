@@ -24,8 +24,6 @@ export default function ({currentExercise, totalExercises}) {
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
-  const screenWidth = Dimensions.get('screen').width;
-
   const styles = {
     leftContainerStyle: {
       width: getWidth(54),

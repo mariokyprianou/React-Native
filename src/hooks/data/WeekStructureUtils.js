@@ -36,12 +36,18 @@ const initializeRestDays = (numberOfWorkouts) => {
   return storedDays;
 };
 
+const dateBeforeDate = (first, second) => 
+  first.setHours(0, 0, 0, 0) < second.setHours(0, 0, 0, 0)
+
+
+
 const getStoredPastRestDays = (storedDays) => {
   const now = new Date();
 
   let pastRestDays = storedDays.filter(
-    (it) => differenceInDays(it.exactDate, now) < 0,
+    (it) => dateBeforeDate(it.exactDate, now),
   );
+
   pastRestDays = pastRestDays.map((it) => {
     const formattedDate = format(it.exactDate, 'iiii, do LLL');
     return {

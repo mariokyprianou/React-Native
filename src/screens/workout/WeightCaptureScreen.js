@@ -37,7 +37,7 @@ export default function WeightCaptureScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {weightHistory, weightPreference},
+    params: {exerciseName = "Squats", weightHistory, weightPreference},
   } = useRoute();
   const today = new Date();
   const date = format(today, 'do LLL yyyy');
@@ -47,6 +47,7 @@ export default function WeightCaptureScreen() {
   });
 
   const historyData = processChallengeHistory(weightHistory, weightPreference);
+
 
   const dropdownData = historyData
     .map((event) => `${event.reps}`)
@@ -70,6 +71,7 @@ export default function WeightCaptureScreen() {
     title: {
       ...textStyles.bold20_black100,
       textAlign: 'left',
+    
     },
     subtitleContainer: {
       width: '90%',
@@ -140,11 +142,16 @@ export default function WeightCaptureScreen() {
     ...cellFormConfig,
   };
 
+
+  
+  let titletext = exerciseName.length > 20 ? `${exerciseName.substring(0, 17)}...` : exerciseName;
+  titletext = `${titletext} -`;
+  
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Squats -</Text>
+          <Text style={styles.title}>{titletext}</Text>
           <Form {...{cells, config}} />
         </View>
         <View style={styles.subtitleContainer}>

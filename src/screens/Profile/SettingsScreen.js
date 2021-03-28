@@ -483,7 +483,10 @@ const SettingsScreen = ({}) => {
       keyboardShouldPersistTaps="handled"
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
-      <TDSettings cells={cells} config={settingsConfig} scrollEnabled={false} />
+      <TDSettings cells={cells}
+       config={settingsConfig}
+       scrollProps={{scrollEnabled: false}}
+      />
       <Spacer height={20} />
       {/* Weight */}
       <Form cells={cells2} config={formConfig} />
@@ -493,7 +496,7 @@ const SettingsScreen = ({}) => {
       <TDSettings
         cells={cells3}
         config={settingsConfig}
-        scrollEnabled={false}
+        scrollProps={{scrollEnabled: false}}
       />
 
       {/* Download Quality */}
@@ -504,7 +507,7 @@ const SettingsScreen = ({}) => {
       <TDSettings
         cells={cells5}
         config={settingsConfig}
-        scrollEnabled={false}
+        scrollProps={{scrollEnabled: false}}
       />
       <Form cells={cells6} config={formConfig} />
       <Spacer height={20} />

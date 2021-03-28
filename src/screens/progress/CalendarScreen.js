@@ -6,19 +6,21 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import Header from '../../components/Headers/Header';
-import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import processProgressData from '../../utils/processProgressData';
+import useProgressData from '../../hooks/data/useProgressData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {singleCalendarStyles, colors, textStyles} = useTheme();
+  const {progress, getProgress} = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -31,18 +33,29 @@ export default function CalendarScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
+  const {setLoading} = useLoading();
 
-  navigation.setOptions({
-    header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
-  });
 
-  const {fakeProgressHistory} = fakeProgressData();
+  const [progressHistoryData, setProgressHistoryData] = useState();
 
-  const progressHistoryData = fakeProgressHistory
-    .map((month) => {
-      return processProgressData(month.days);
-    })
-    .flat();
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => <Header title={ProgressDict.YourWorkouts} goBack />,
+    });
+    setLoading(true);
+  
+  }, []);
+
+  useEffect(() => {
+    const progressData = progress
+      .map((month) => {
+        return processProgressData(month.days);
+      })
+      .flat();
+    setProgressHistoryData(progressData);
+
+    setLoading(false);
+  }, [progress]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

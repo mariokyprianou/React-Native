@@ -24,7 +24,14 @@ export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const [userData, setUserData] = useState({});
-  const [preferences, setPreferences] = useState({});
+  const [preferences, setPreferences] = useState({
+    notifications: false,
+    emails: false,
+    errorReports: false,
+    analytics: false,
+    downloadQuality: "LOW",
+    weightPreference: "KG",
+  });
 
   const [timeZones, setTimeZones] = useState([
     'Asia/Kolkata',

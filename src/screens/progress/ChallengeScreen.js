@@ -34,7 +34,7 @@ export default function ChallengeScreen() {
   } = useRoute();
   const {description, name, timeLimit} = challenge;
   const {fakeChallengeHistory} = fakeProgressData();
-  const historyData = processChallengeHistory(fakeChallengeHistory[0].history);
+  const historyData = []; //processChallengeHistory(fakeChallengeHistory[0].history);
   const timerType = 'STOPWATCH';
   navigation.setOptions({
     header: () => <Header title={name} goBack />,

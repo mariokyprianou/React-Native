@@ -203,10 +203,8 @@ export default function ExerciseView(props) {
    
     setSets(newSets);
 
-     // If we dont have rest time or weight option just finish exercise set immediatelly
-     if ((!restTime || restTime === 0) && !exercise.weight) {
-      finishExercise();
-    }
+   finishExercise();
+    
   };
 
   async function finishExercise() {

@@ -31,6 +31,7 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
       top: getHeight(20),
       left: getWidth(20),
       zIndex: 9,
+      height: getHeight(170)
     },
     dropdownContainer: {
       height: getHeight(30),

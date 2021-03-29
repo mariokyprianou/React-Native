@@ -66,6 +66,7 @@ export default function WorkoutHomeScreen() {
   useEffect(() => {
     setLoading(true);
     getProgramme();
+    shouldShowWarning();
   }, []);
 
   // Check if week is completed
@@ -206,9 +207,9 @@ export default function WorkoutHomeScreen() {
       }
 
       const previousWorkoutDates = [];
-      const completedWorkouts = programme.currentWeek.workouts.filter(
-        (workout) => workout.completedAt !== null,
-      );
+      const completedWorkouts = programme.currentWeek.workouts
+        .filter((workout) => workout.completedAt !== null)
+        .sort((a, b) => new Date(a.completedAt) - new Date(b.completedAt));
       completedWorkouts.forEach((workout) =>
         previousWorkoutDates.push(workout.completedAt),
       );

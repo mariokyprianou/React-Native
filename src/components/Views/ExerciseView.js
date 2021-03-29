@@ -158,6 +158,7 @@ export default function ExerciseView(props) {
     if (exercise.weight) {
       setSelectedWeight(lastWeight);
       setSetComplete(true);
+      setEnableScroll(false);
     }
 
     // Handle no weight or rest time

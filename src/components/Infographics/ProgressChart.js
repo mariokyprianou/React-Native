@@ -74,7 +74,7 @@ export default function ProgressChart({
         <View>
           <SlideBarChart
             data={dataPoints}
-            barSpacing={44}
+            barSpacing={dataPoints.length === 1 ? 58 : 60}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
               selectable
@@ -84,7 +84,11 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={dataPoints.length * 53}
+            width={
+              dataPoints.length === 1
+                ? dataPoints.length * 90
+                : dataPoints.length * 75
+            }
             axisWidth={getWidth(35)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}

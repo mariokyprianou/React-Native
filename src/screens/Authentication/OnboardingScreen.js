@@ -124,6 +124,7 @@ export default function OnboardingScreen() {
   return (
     <View style={styles.container}>
       <Swiper
+        style={{flexDirection: 'row'}}
         onScroll={onScroll}
         scrollEventThrottle={16}
         ref={onboardSwiper}

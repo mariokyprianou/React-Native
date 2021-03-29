@@ -66,7 +66,6 @@ export default function WorkoutHomeScreen() {
   useEffect(() => {
     setLoading(true);
     getProgramme();
-    shouldShowWarning();
   }, []);
 
   // Check if week is completed
@@ -495,7 +494,7 @@ export default function WorkoutHomeScreen() {
                   };
 
                   const warning = await shouldShowWarning();
-                  console.log(warning, '<---WARNING?');
+
                   if (warning === true) {
                     await AsyncStorage.setItem(
                       '@LAST_WARNING_DATE',

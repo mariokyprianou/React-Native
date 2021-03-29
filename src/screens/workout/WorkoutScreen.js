@@ -29,10 +29,11 @@ export default function WorkoutScreen() {
     setCurrentExerciseIndex,
     setIsWorkoutTimerRunning,
     completedExercises,
-    setCompletedExercises
+    setCompletedExercises,
   } = useData();
 
   const [offset, setOffset] = useState(0);
+  const [enableScroll, setEnableScroll] = useState(true);
 
   navigation.setOptions({
     header: () => (
@@ -59,7 +60,6 @@ export default function WorkoutScreen() {
     ]);
   }
 
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scrollViewContainer: {
@@ -79,7 +79,7 @@ export default function WorkoutScreen() {
     if (newOffset > offset) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
     } else if (newOffset < offset && currentExerciseIndex > 0) {
-        setCurrentExerciseIndex(currentExerciseIndex - 1);
+      setCurrentExerciseIndex(currentExerciseIndex - 1);
     }
 
     setOffset(newOffset);
@@ -91,20 +91,19 @@ export default function WorkoutScreen() {
   }
 
   useEffect(() => {
-    console.log("completedExercises changed", completedExercises);
+    console.log('completedExercises changed', completedExercises);
     if (completedExercises.length === selectedWorkout.exercises.length) {
-      workoutFinished()
+      workoutFinished();
     }
   }, [completedExercises]);
 
   function exerciseFinished() {
-
     // check if specific exercise was already completed
     let index = completedExercises.indexOf(currentExerciseIndex);
 
-    // if not add it 
+    // if not add it
     if (index === -1) {
-      setCompletedExercises(prev => [...prev, currentExerciseIndex]);
+      setCompletedExercises((prev) => [...prev, currentExerciseIndex]);
     }
   }
 
@@ -113,7 +112,7 @@ export default function WorkoutScreen() {
     <View>
       <View style={styles.headerBorder} />
       <ScrollView
-        scrollEnabled={true}
+        scrollEnabled={enableScroll}
         keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={20} //how often we update the position of the indicator bar
@@ -125,15 +124,13 @@ export default function WorkoutScreen() {
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
         {selectedWorkout.exercises.map((screen, index) => (
-            <ExerciseView
+          <ExerciseView
             {...screen}
             index={index}
             exerciseFinished={exerciseFinished}
+            setEnableScroll={setEnableScroll}
           />
-         
-          
         ))}
-        
       </ScrollView>
     </View>
   );

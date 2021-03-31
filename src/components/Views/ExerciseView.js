@@ -48,59 +48,22 @@ export default function ExerciseView(props) {
   const styles = exerciseViewStyle;
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const {selectedWorkout, setSelectedWeight} = UseData();
+  const {selectedWorkout, setSelectedWeight, currentExerciseIndex} = UseData();
   const {getPreferences, preferences} = useUserData();
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
   const [currentSet, setCurrentSet] = useState(0);
+
+  // Rest time of the active set
   const [restTime, setRestTime] = useState();
+
   const [setComplete, setSetComplete] = useState(null);
   const [lastWeight, setLastWeight] = useState('20');
   const [weightHistory, setWeightHistory] = useState([]);
   const [weightLabel, setWeightLabel] = useState('kg');
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
-
-  useEffect(() => {
-    getPreferences();
-
-    if (exercise.weight) {
-      getWeightHistory();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (exerciseCompleted) {
-      props.exerciseFinished && props.exerciseFinished();
-    }
-  }, [exerciseCompleted]);
-
-  useEffect(() => {
-    if (preferences.weightPreference) {
-      const weightPreference = preferences.weightPreference.toLowerCase();
-      setWeightLabel(weightPreference);
-    }
-  }, [preferences]);
-
-  useEffect(() => {
-    let sets = props.sets;
-
-    sets = sets.map((it, index) => {
-      if (index === 0) {
-        return {
-          ...it,
-          state: 'active',
-        };
-      }
-      return {
-        ...it,
-        state: 'inactive',
-      };
-    });
-
-    setSets(sets);
-  }, []);
 
   const [getWeightHistory] = useLazyQuery(GetExerciseWeight, {
     variables: {exercise: exercise.id},
@@ -117,6 +80,69 @@ export default function ExerciseView(props) {
     onError: (error) => console.log(error, '<---- error fetching weights'),
   });
 
+
+
+  // To observe sets are behaving as expected
+  useEffect(()=> {
+    if (index === currentExerciseIndex) {
+      console.log(sets)
+    }
+  }, [sets]);
+
+
+  // Initial render
+  useEffect(() => {
+    getPreferences();
+
+    if (exercise.weight) {
+      getWeightHistory();
+    }
+  }, []);
+
+
+  // Mark current exercise as complete
+  useEffect(() => {
+    if (exerciseCompleted) {
+      props.exerciseFinished && props.exerciseFinished();
+    }
+  }, [exerciseCompleted]);
+
+
+  // Set weight preference
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
+
+
+  // Initialise sets, Sort and set states
+  useEffect(() => {
+    let sets = props.sets.slice().sort((a,b) => a.setNumber > b.setNumber);
+
+    sets = sets.map((it, index) => {
+      if (index === 0) {
+        if (it.restTime && it.restTime > 0) {
+          setRestTime(it.restTime * 1000);
+        }
+        return {
+          ...it,
+          state: 'active',
+        };
+      }
+      return {
+        ...it,
+        state: 'inactive',
+      };
+    });
+
+    setSets(sets);
+  }, []);
+
+
+  
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   const onSetCompleted = (completedIndex) => {
@@ -130,14 +156,15 @@ export default function ExerciseView(props) {
     // Update Sets states
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
-        if (it.restTime && it.restTime > 0) {
-          setRestTime(it.restTime * 1000);
-        }
         return {
           ...it,
           state: 'completed',
         };
       } else if (index === completedIndex + 1) {
+       
+        if (it.restTime && it.restTime > 0) {
+          setRestTime(it.restTime * 1000);
+        }
         return {
           ...it,
           state: 'active',
@@ -188,21 +215,18 @@ export default function ExerciseView(props) {
 
   const onCancelTimer = () => {
     setCountDown(false);
-    setEnableScroll(true);
     checkShouldFinishExercise();
   };
 
   const onFinishTimer = () => {
     setCountDown(false);
-    setEnableScroll(true);
     checkShouldFinishExercise();
   };
 
   const onExerciseCompleted = () => {
-    //onSetCompleted(sets.length - 1);
     setCurrentSet(sets.length);
 
-    // Update Sets states as completed
+    // Update all Sets states as completed
     const newSets = sets.map((it) => {
       return {
         ...it,
@@ -211,11 +235,11 @@ export default function ExerciseView(props) {
     });
 
     setSets(newSets);
-
     finishExercise();
   };
 
   async function finishExercise() {
+    setEnableScroll(true);
     setExerciseCompleted(true);
   }
 

@@ -669,15 +669,15 @@ export default function ThemeProvider({children}) {
       flex: 1,
     },
     timerTextContainer: {
-      position: 'absolute',
-      width: getWidth(230),
+      width: '100%',
       height: '100%',
-      alignSelf: 'center',
-      top: getHeight(90),
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     timerTextStyle: {
       ...textStyles.bold76_black100,
-      lineHeight: getHeight(80),
+      lineHeight: getHeight(100),
+      textAlign: 'center',
     },
   };
 

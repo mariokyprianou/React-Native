@@ -125,7 +125,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
          position: 'absolute',
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
-        backgroundColor: colors.black10,
+        backgroundColor: colors.black20,
       }}
       useNativeDriver={true}>
       <ControlsView

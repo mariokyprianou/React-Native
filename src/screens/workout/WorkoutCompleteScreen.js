@@ -26,6 +26,7 @@ import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
 import AsyncStorage from '@react-native-community/async-storage';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -37,10 +38,11 @@ export default function WorkoutCompleteScreen() {
 
   const {
     selectedWorkout,
-    workoutTime,
     weightsToUpload,
     setWeightsToUpload,
   } = UseData();
+
+  const { setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
 
   const [completeWorkout] = useMutation(CompleteWorkout);
   const [addWeight] = useMutation(AddExerciseWeight);
@@ -59,6 +61,10 @@ export default function WorkoutCompleteScreen() {
       />
     ),
   });
+
+  useEffect(()=> {
+    setIsWorkoutTimerRunning(false);
+  }, []);
 
   useEffect(() => {
     const duration = workoutTime ? Math.ceil(workoutTime / 1000 / 60) : 0;

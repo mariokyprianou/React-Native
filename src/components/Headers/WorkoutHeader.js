@@ -15,6 +15,7 @@ import {useStopwatch} from 'the-core-ui-module-tdcountdown';
 import {msToHMSFull} from '../../utils/dateTimeUtils';
 import UseData from '../../hooks/data/UseData';
 import FastImage from 'react-native-fast-image';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 const playIcon = require('../../../assets/icons/playDark.png');
 const pauseIcon = require('../../../assets/icons/pauseDark.png');
@@ -104,7 +105,7 @@ function TimerView(props) {
     workoutTime,
     isWorkoutTimerRunning,
     setIsWorkoutTimerRunning,
-  } = UseData();
+  } = useWorkoutTimer();
 
   function toggle() {
     setIsWorkoutTimerRunning(!isWorkoutTimerRunning);

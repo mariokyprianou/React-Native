@@ -27,6 +27,7 @@ import UserDataProvider from './hooks/data/UserDataProvider';
 import Secrets from './environment/Secrets';
 import LoadingProvider from './hooks/loading/LoadingProvider';
 import CommonDataProvider from './hooks/data/CommonDataProvider';
+import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import getTimeZoneOffset from './utils/getTimeZoneOffset';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -122,6 +123,7 @@ const App = () => {
               <DataProvider>
                 <UserDataProvider>
                   <CommonDataProvider>
+                    <WorkoutTimerProvider>
                     <LoadingProvider>
                       <NavigationContainer>
                         <TDCountdown>
@@ -131,6 +133,7 @@ const App = () => {
                         </TDCountdown>
                       </NavigationContainer>
                     </LoadingProvider>
+                    </WorkoutTimerProvider>
                   </CommonDataProvider>
                 </UserDataProvider>
               </DataProvider>

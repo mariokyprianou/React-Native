@@ -27,7 +27,6 @@ export default function WorkoutScreen() {
     selectedWorkout,
     currentExerciseIndex,
     setCurrentExerciseIndex,
-    setIsWorkoutTimerRunning,
     completedExercises,
     setCompletedExercises,
   } = useData();
@@ -79,7 +78,7 @@ export default function WorkoutScreen() {
   }
 
   function workoutFinished() {
-    setIsWorkoutTimerRunning(false);
+    //etIsWorkoutTimerRunning(false);
     navigation.navigate('WorkoutComplete');
   }
 

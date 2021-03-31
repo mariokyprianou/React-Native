@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { Platform } from 'react-native';
 import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import { useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -22,11 +23,16 @@ export default function ThemeProvider({children}) {
   const insets = useSafeAreaInsets();
 
   const SCREEN_WIDTH = Dimensions.get('screen').width;
-  const SCREEN_HEIGHT = Dimensions.get('screen').height;
+
+  // Height is fetched from window instead of screen as it gives us different value 
+  // for Android when there is a system solf navigation present
+  const SCREEN_HEIGHT = Dimensions.get('window').height;
 
   const HEADER_HEIGHT = 64 + insets.top;
 
-  const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT;
+  const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' ? insets.top : 0;
+
+  const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT + SYSTEM_SOFT_NAV_HEIGHT;
 
   const Constants = {
     SCREEN_WIDTH,

@@ -325,6 +325,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 AsyncStorage.removeItem('@ANALYTICS_ASKED');
                 AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
                 AsyncStorage.removeItem('@CURRENT_WEEK');
+                AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

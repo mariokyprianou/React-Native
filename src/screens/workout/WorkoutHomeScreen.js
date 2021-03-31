@@ -95,13 +95,14 @@ export default function WorkoutHomeScreen() {
     }
 
     // Check at least 7 days past week start date
-    const completeWeekLimitDate = addDays(
+    let completeWeekLimitDate = addDays(
       parseISO(programme.currentWeek.startedAt),
       6,
-    );
+    ).setHours(0, 0, 0, 0);
 
     // Passed limit date  note: === 0 means same date as today, we need next day
-    if (differenceInDays(new Date(), completeWeekLimitDate) > 0) {
+    const now = new Date().setHours(0, 0, 0, 0);
+    if (differenceInDays(now, completeWeekLimitDate) > 0) {
       callCompleteWeekMutation();
     } else {
       // Week completee not allowed, show stay tuned where needed
@@ -110,14 +111,16 @@ export default function WorkoutHomeScreen() {
   }
 
   async function callCompleteWeekMutation() {
+
     setLoading(true);
     await completeWeekMutation()
-      .then((res) => {
+      .then(async (res) => {
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
-          updateConsecutiveWorkouts();
-          updateStoredDays([]);
+          await updateConsecutiveWorkouts();
+          await AsyncStorage.removeItem('@CURRENT_WEEK');
+          await AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
           getProgramme();
         } else {
           setLoading(false);
@@ -170,7 +173,7 @@ export default function WorkoutHomeScreen() {
 
   async function shouldShowWeekCompleteModal() {
     let idOfLastWeekShown =
-      (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '0';
+      (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '-1';
     return Number(idOfLastWeekShown) !== programme.currentWeek.weekNumber;
   }
 

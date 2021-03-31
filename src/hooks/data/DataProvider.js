@@ -215,6 +215,7 @@ export default function DataProvider(props) {
       }
     }
 
+    week = week.sort((a, b) => a.exactDate > b.exactDate);
     setCurrentWeek(week);
 
 

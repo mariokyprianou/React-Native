@@ -17,7 +17,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {colors} = useTheme();
+  const {colors, Constants} = useTheme();
   const navigation = useNavigation();
   const {getHeight} = ScaleHook();
   const {dictionary} = useDictionary();
@@ -32,7 +32,6 @@ export default function WorkoutScreen() {
     setCompletedExercises,
   } = useData();
 
-  const [offset, setOffset] = useState(0);
   const [enableScroll, setEnableScroll] = useState(true);
 
   navigation.setOptions({
@@ -76,13 +75,7 @@ export default function WorkoutScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleIndex(newOffset) {
-    if (newOffset > offset) {
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
-    } else if (newOffset < offset && currentExerciseIndex > 0) {
-      setCurrentExerciseIndex(currentExerciseIndex - 1);
-    }
-
-    setOffset(newOffset);
+    setCurrentExerciseIndex(Math.round(newOffset / Constants.EXERCISE_VIEW_HEIGHT));
   }
 
   function workoutFinished() {

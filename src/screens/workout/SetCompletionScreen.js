@@ -40,16 +40,14 @@ export default function SetCompletionScreen({
   // const [addWeight] = useMutation(AddExerciseWeight);
   const {selectedWeight, weightsToUpload, setWeightsToUpload, setSelectedWeight} = UseData();
 
-
   // Selected value passed to horizontal scroll to preselect
   const [selected, setSelected] = useState(20);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     containerStyle: {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: colors.brownishGrey60},
-    offModalTouchableStyle: { flex: 1, bottom: getHeight(300) },
+    offModalTouchableStyle: { flex: 1 },
     card: {
-      height: restTime ? getHeight(302) : getHeight(349),
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(15),
@@ -69,7 +67,6 @@ export default function SetCompletionScreen({
     },
     text: {
       ...textStyles.regular15_brownishGrey100,
-      marginTop: getHeight(22),
     },
     weightSelectionContainer: {
       marginTop: getHeight(10),
@@ -86,7 +83,7 @@ export default function SetCompletionScreen({
     buttonContainer: {
       width: '100%',
       alignItems: 'center',
-      marginTop: getHeight(30),
+      marginVertical: getHeight(30),
     },
   });
 
@@ -186,6 +183,7 @@ function TimerView(props) {
     timerText: {
       textAlign: 'center',
       ...textStyles.bold34_black100,
+      marginBottom: getHeight(22),
     },
   };
 

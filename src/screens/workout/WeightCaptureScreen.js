@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -17,11 +17,13 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Spacer from '../../components/Utility/Spacer';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import SetsTable from '../../components/Infographics/SetsTable';
-import format from 'date-fns/format';
 import processChallengeHistory from '../../utils/processChallengeHistory';
-import {Form} from 'the-core-ui-module-tdforms';
+import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {useRoute} from '@react-navigation/core';
+import format from 'date-fns/format';
+import { differenceInDays, parseISO } from 'date-fns';
+
 
 export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -36,22 +38,79 @@ export default function WeightCaptureScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
+  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
+
   const {
     params: {exerciseName = "Squats", weightHistory, weightPreference, setType},
   } = useRoute();
-  const today = new Date();
-  const date = format(today, 'do LLL yyyy');
+  
+  const [historyData, setHistoryData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [dropdownData, setDropDownData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState();
 
-  navigation.setOptions({
-    header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
-  });
+
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
+    });
+  }, []);
 
 
-  const historyData = processChallengeHistory(weightHistory, weightPreference);
+  useEffect(()=> {
 
-  const dropdownData = historyData
+    const data = processChallengeHistory(weightHistory, weightPreference);
+    setHistoryData(data);
+    setFilteredData(data);
+
+    const dropdown = data
     .map((event) => `${event.quantity}`)
     .filter((value, index, self) => self.indexOf(value) === index);
+
+    setDropDownData(dropdown);
+
+    
+    if (data.length > 0) {
+      setSelectedDate(parseISO(data.pop().createdAt));
+    }
+
+  },[weightHistory, weightPreference])
+
+
+  const dropDownSelect = getValues('repsHistory').repsHistory;
+
+  useEffect(()=> {
+  if (historyData.length === 0) return;
+
+  if (!dropDownSelect) {
+      setFilteredData(historyData)
+    }
+    else {
+      setFilteredData(historyData.filter(it => it.quantity === Number(dropDownSelect)))
+    }
+  }, [historyData, dropDownSelect])
+
+
+  useEffect(()=> {
+    if (historyData.length === 0 || !selectedDate) return;
+
+    setFilteredData(filteredData.filter(it =>  isSameDay(parseISO(it.createdAt), selectedDate)));
+
+  }, [selectedDate])
+
+  useEffect(()=> {
+    console.log("FilteredData", filteredData);
+
+  }, [filteredData]);
+  
+  function setDate(date) {
+    setSelectedDate(date);
+  }
+
+  function isSameDay(first, second) {
+    return differenceInDays(first.setHours(0, 0, 0, 0), second.setHours(0, 0, 0, 0)) === 0 &&
+        first.getDay() ===  second.getDay()
+  }
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -117,7 +176,7 @@ export default function WeightCaptureScreen() {
       name: 'repsHistory',
       type: 'dropdown',
       placeholder: 'Reps',
-      data: dropdownData,
+      data: ['', ...dropdownData],
       underline: false,
       rightAccessory: () => (
         <View>
@@ -159,19 +218,26 @@ export default function WeightCaptureScreen() {
         </View>
         <View style={styles.chartCard}>
           <ProgressChart
-            data={historyData}
+            data={filteredData}
             weightPreference={weightPreference}
+            setDate={setDate}
           />
         </View>
         <Spacer height={30} />
-        <View style={{...styles.chartCard, ...styles.scrollCard}}>
+        {selectedDate &&
+        (
+          <View style={{...styles.chartCard, ...styles.scrollCard}}>
           <SetsTable
-            date={date}
-            weightData={historyData}
+          
+            date={format(selectedDate, 'do LLL yyyy')}
+            weightData={filteredData}
             weightPreference={weightPreference}
             setType={setType}
+            dropDownSelect={dropDownSelect}
           />
         </View>
+        )}
+        
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="done"

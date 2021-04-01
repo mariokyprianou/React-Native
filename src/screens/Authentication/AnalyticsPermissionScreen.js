@@ -14,6 +14,7 @@ import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function AnalyticsPermissionScreen() {
   // MARK: - Hooks
@@ -22,6 +23,8 @@ export default function AnalyticsPermissionScreen() {
 
   const navigation = useNavigation();
   const {preferences, getPreferences, setPreferences} = useUserData();
+  const {setLoading} = useLoading();
+
   const [updatePreferences] = useMutation(UpdatePreference);
 
   // MARK: - Logic
@@ -30,6 +33,8 @@ export default function AnalyticsPermissionScreen() {
   }, []);
 
   const saveSetting = async (enabled) => {
+    setLoading(true);
+
     const newPreferences = {
       emails: preferences.emails,
       downloadQuality: preferences.downloadQuality,
@@ -57,7 +62,8 @@ export default function AnalyticsPermissionScreen() {
       })
       .catch((err) => {
         console.log(err, '<---analytics permissions error');
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   // MARK: - Actions

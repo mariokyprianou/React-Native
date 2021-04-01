@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -14,14 +14,11 @@ import SetTableRow from './SetTableRow';
 import {FlatList} from 'the-core-ui-module-tdlist';
 import FadingBottomView from '../Views/FadingBottomView';
 
-export default function SetsTable({date, weightData, weightPreference, setType}) {
+export default function SetsTable({date, weightData, weightPreference, setType, dropDownSelect}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const listRef = useRef();
-
-  let history = [...weightData];
-  const formattedHistory = history.reverse();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -52,6 +49,20 @@ export default function SetsTable({date, weightData, weightPreference, setType})
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  let history = weightData;
+  const formattedHistory = history.reverse();
+
+  const [data, setData] = useState(formattedHistory);
+
+
+  
+
+  useEffect(()=> {
+  
+  const formattedHistory = weightData.reverse();
+  setData(formattedHistory)
+
+  }, [weightData]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
 
@@ -62,7 +73,7 @@ export default function SetsTable({date, weightData, weightPreference, setType})
           <Text style={styles.title}>{date}</Text>
           <FlatList
             ref={listRef}
-            data={formattedHistory}
+            data={data}
             scrollEnabled={false}
             renderItem={({item}) => (
               <SetTableRow

@@ -322,6 +322,18 @@ export default function DataProvider(props) {
     return wasToday !== undefined ? true : false;
   }, []);
 
+
+  const reset = useCallback(()=> {
+    setProgramme(null);
+    setCurrentWeek(null);
+    setNextWeek(null);
+
+    AsyncStorage.removeItem('@ANALYTICS_ASKED');
+    AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+    AsyncStorage.removeItem('@CURRENT_WEEK');
+    AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -350,7 +362,8 @@ export default function DataProvider(props) {
       weightsToUpload,
       setWeightsToUpload,
       completedExercises,
-      setCompletedExercises
+      setCompletedExercises,
+      reset
     }),
     [
       programme,
@@ -377,7 +390,8 @@ export default function DataProvider(props) {
       weightsToUpload,
       setWeightsToUpload,
       completedExercises,
-      setCompletedExercises
+      setCompletedExercises,
+      reset
     ],
   );
 

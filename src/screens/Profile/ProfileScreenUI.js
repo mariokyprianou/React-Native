@@ -41,6 +41,7 @@ import useUserData from '../../hooks/data/useUserData';
 import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
+import useData from '../../hooks/data/UseData';
 
 const notifications = [
   {
@@ -96,6 +97,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const [storedNotifications, setStoredNotifications] = useState(notifications);
 
   const {userData, setUserData} = useUserData();
+  const {reset} = useData();
   const {setLoading} = useLoading();
 
   const formCountry = getValueByName('profile_country');
@@ -327,10 +329,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               .then(async (res) => {
                 console.log(res, '<----sign out res');
                 setUserData({});
-                AsyncStorage.removeItem('@ANALYTICS_ASKED');
-                AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
-                AsyncStorage.removeItem('@CURRENT_WEEK');
-                AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+                reset();
+                
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

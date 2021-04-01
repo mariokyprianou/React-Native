@@ -14,7 +14,7 @@ import UseData from '../../hooks/data/UseData';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-const  HorizontalScrollPicker = ({weightPreference, selected}) => {
+const  HorizontalScrollPicker = ({weightPreference, selected = 20}) => {
 
     const {getWidth, getHeight, radius, fontSize} = ScaleHook();
     const {colors, textStyles} = useTheme();
@@ -42,7 +42,10 @@ const  HorizontalScrollPicker = ({weightPreference, selected}) => {
 
 
   useEffect(() => {
+
+    setTimeout(()=> {
     listRef.current.scrollToIndex({animated: true, index: selected})
+  }, 200)
   }, [selected]);
 
   const style = {

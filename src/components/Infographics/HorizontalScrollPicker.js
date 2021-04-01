@@ -14,11 +14,11 @@ import UseData from '../../hooks/data/UseData';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-const  HorizontalScrollPicker = ({weightPreference}) => {
+const  HorizontalScrollPicker = ({weightPreference, selected}) => {
 
     const {getWidth, getHeight, radius, fontSize} = ScaleHook();
     const {colors, textStyles} = useTheme();
-    const { weightData, setSelectedWeight} = UseData();
+    const { weightData, selectedWeight, setSelectedWeight} = UseData();
     let data = weightData.slice(0,51);
 
   const itemSize = getWidth(70);
@@ -40,9 +40,10 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
 
   const listRef = useRef();
 
+
   useEffect(() => {
-    setSelectedWeight(data[2]);
-  }, []);
+    listRef.current.scrollToIndex({animated: true, index: selected})
+  }, [selected]);
 
   const style = {
     container: {
@@ -110,6 +111,9 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
     );
   };
   
+  const getItemLayout = (data, index) => (
+    { length: data.length, offset: itemSize * index, index }
+  )
 
   return (
       <View style={style.container}>
@@ -118,6 +122,7 @@ const  HorizontalScrollPicker = ({weightPreference}) => {
       ref={listRef} 
         // initialNumToRender={200}
         // getItemLayout={this.getItemLayout}
+        getItemLayout={getItemLayout}
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         scrollToOverflowEnabled={true}

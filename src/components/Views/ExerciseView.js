@@ -39,7 +39,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, setEnableScroll} = props;
+  const {exercise, index, setEnableScroll, weightLabel} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -59,9 +59,8 @@ export default function ExerciseView(props) {
   const [restTime, setRestTime] = useState();
 
   const [setComplete, setSetComplete] = useState(null);
-  const [lastWeight, setLastWeight] = useState('20');
+  
   const [weightHistory, setWeightHistory] = useState([]);
-  const [weightLabel, setWeightLabel] = useState('kg');
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
 
@@ -70,16 +69,11 @@ export default function ExerciseView(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       if (res.getExerciseWeight.length > 0) {
-        const lastIndex = res.getExerciseWeight.length - 1;
-        if (res.getExerciseWeight[lastIndex].weight) {
-          setLastWeight(res.getExerciseWeight[lastIndex].weight);
-        }
         setWeightHistory(res.getExerciseWeight);
       }
     },
     onError: (error) => console.log(error, '<---- error fetching weights'),
   });
-
 
 
   // To observe sets are behaving as expected
@@ -92,7 +86,6 @@ export default function ExerciseView(props) {
 
   // Initial render
   useEffect(() => {
-    getPreferences();
 
     if (exercise.weight) {
       getWeightHistory();
@@ -106,15 +99,6 @@ export default function ExerciseView(props) {
       props.exerciseFinished && props.exerciseFinished();
     }
   }, [exerciseCompleted]);
-
-
-  // Set weight preference
-  useEffect(() => {
-    if (preferences.weightPreference) {
-      const weightPreference = preferences.weightPreference.toLowerCase();
-      setWeightLabel(weightPreference);
-    }
-  }, [preferences]);
 
 
   // Initialise sets, Sort and set states
@@ -183,7 +167,6 @@ export default function ExerciseView(props) {
 
     // show set completion modal with weights if applicable
     if (exercise.weight) {
-      setSelectedWeight(lastWeight);
       setSetComplete(true);
       setEnableScroll(false);
     }
@@ -235,6 +218,7 @@ export default function ExerciseView(props) {
     });
 
     setSets(newSets);
+
     finishExercise();
   };
 
@@ -251,6 +235,7 @@ export default function ExerciseView(props) {
         exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
+        setType: props.setType
       });
     }
   };
@@ -358,9 +343,11 @@ export default function ExerciseView(props) {
         <SetCompletionScreen
           restTime={restTime && restTime > 0 ? msToHMS(restTime) : 0}
           setSetComplete={setSetComplete}
-          setReps={sets[currentSet - 1].quantity}
-          setNumber={sets[currentSet - 1].setNumber}
+          currentSet={sets[currentSet - 1]}
+          exerciseHistory={weightHistory}
+          setWeightHistory={setWeightHistory}
           exercise={exercise.id}
+          setType={props.setType}
           weightPreference={weightLabel}
         />
       )}

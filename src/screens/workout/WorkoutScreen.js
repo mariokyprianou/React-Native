@@ -14,6 +14,7 @@ import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useData from '../../hooks/data/UseData';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -31,7 +32,24 @@ export default function WorkoutScreen() {
     setCompletedExercises,
   } = useData();
 
+  const {getPreferences, preferences} = useUserData();
+
   const [enableScroll, setEnableScroll] = useState(true);
+
+  const [weightLabel, setWeightLabel] = useState('kg');
+
+  useEffect(() => {
+    getPreferences()
+  }, []);
+
+  // Set weight preference
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
+
 
   navigation.setOptions({
     header: () => (
@@ -121,6 +139,7 @@ export default function WorkoutScreen() {
             index={index}
             exerciseFinished={exerciseFinished}
             setEnableScroll={setEnableScroll}
+            weightLabel={weightLabel}
           />
         ))}
       </ScrollView>

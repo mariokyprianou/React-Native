@@ -163,7 +163,7 @@ export default function WorkoutCompleteScreen() {
 
     let intensity = Math.ceil(selectedIntensity);
     if (intensity === 0) intensity = 1;
-    
+
     const workoutComplete = {
       workoutId: selectedWorkout.id,
       date: new Date().toISOString(),
@@ -175,27 +175,27 @@ export default function WorkoutCompleteScreen() {
 
     console.log("workoutComplete", workoutComplete)
 
-    // completeWorkout({
-    //   variables: {
-    //     input: {
-    //       ...workoutComplete,
-    //     },
-    //   },
-    // })
-    //   .then((res) => {
-    //     const success = R.path(['data', 'completeWorkout'], res);
+    completeWorkout({
+      variables: {
+        input: {
+          ...workoutComplete,
+        },
+      },
+    })
+      .then((res) => {
+        const success = R.path(['data', 'completeWorkout'], res);
 
-    //     if (success) {
-    //       setWeightsToUpload([]);
+        if (success) {
+          setWeightsToUpload([]);
 
-    //       navigation.reset({
-    //         index: 0,
-    //         routes: [{name: 'TabContainer'}],
-    //       });
-    //     }
-    //   })
-    //   .catch((err) => console.log(err, '<---workout complete error'))
-    //   .finally(()=> setLoading(false));
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'TabContainer'}],
+          });
+        }
+      })
+      .catch((err) => console.log(err, '<---workout complete error'))
+      .finally(()=> setLoading(false));
   }
 
   function checkGoBack() {

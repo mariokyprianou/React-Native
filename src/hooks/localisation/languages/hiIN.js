@@ -1,3 +1,4 @@
+
 const SharedDict = {
   Cancel: 'Cancel',
   Gym: 'Gym',
@@ -20,12 +21,18 @@ const SharedDict = {
   Notifications: 'Notifications',
   Sets: 'sets',
   Reps: 'reps',
+  Secs: 'secs',
   OldPassword: 'OLD PASSWORD',
   NewPassword: 'NEW PASSWORD',
   Analytics: 'Analytics',
   ChangeEmail: 'Change Email',
   ChangePassword: 'Change password',
   VerifyEmail: 'Verify email',
+
+  Female: 'Female',
+  Male: 'Male',
+  Other: 'Other',
+  PreferNotToSay: 'Prefer not to say',
 };
 
 const hiIN = {
@@ -114,10 +121,10 @@ const hiIN = {
     TermsAndConditionsScreenTitle: 'Terms & conditions',
     ResetPasswordScreenTitle: 'Forgot password',
     RegistrationScreenTitle: 'Create account',
-    RegistrationGendersFemale: 'Female',
-    RegistrationGendersMale: 'Male',
-    RegistrationGendersOther: 'Other',
-    RegistrationGendersPreferNot: 'Prefer not to say',
+    RegistrationGendersFemale: SharedDict.Female,
+    RegistrationGendersMale: SharedDict.Male,
+    RegistrationGendersOther: SharedDict.Other,
+    RegistrationGendersPreferNot: SharedDict.PreferNotToSay,
     PrivacyPolicyScreenTitle: 'Privacy policy',
     NotYetLoggedIn:
       'You are not yet logged in - please verify your email address',
@@ -197,6 +204,8 @@ const hiIN = {
     ChangePasswordLabel2: SharedDict.NewPassword,
     IncorrectEmail: 'Oops! Your email is incorrect. Please try again',
     VerifyEmailScreenTitle: SharedDict.VerifyEmail,
+    VerifyEmailScreenInfo:
+      'We’ve sent a code to your new email address. Please enter it here.',
     InvalidChangeEmailCode:
       'Oops! This code is not recognised; please enter the correct code to change your email address.',
     CodeLabel: 'CODE',
@@ -281,9 +290,15 @@ const hiIN = {
   WorkoutDict: {
     WeekText: 'Week',
 
-    exerciseInfoFormatText: (sets, reps) => (sets === 1) ? `${sets} SET || ${reps} REPS` : `${sets} SETS || ${reps} REPS`,
-    exerciseInfoFormatTextSecs: (sets, secs) =>  (sets === 1) ? `${sets} SET || ${secs} SECS` : `${sets} SETS || ${secs} SECS`,
-  
+    exerciseInfoFormatText: (sets, reps) =>
+      sets === 1
+        ? `${sets} SET || ${reps} REPS`
+        : `${sets} SETS || ${reps} REPS`,
+    exerciseInfoFormatTextSecs: (sets, secs) =>
+      sets === 1
+        ? `${sets} SET || ${secs} SECS`
+        : `${sets} SETS || ${secs} SECS`,
+
     WeightText: 'WEIGHT',
     NotesText: 'NOTES',
     SetsText: SharedDict.Sets,
@@ -292,6 +307,7 @@ const hiIN = {
 
     WeightsSetText: 'Set',
     WeightsRepsText: SharedDict.Reps,
+    WeightsRepsSecsText: SharedDict.Secs,
 
     RestDay: 'REST DAY',
     Day: 'Day',
@@ -366,6 +382,13 @@ const hiIN = {
     Gym: SharedDict.Gym,
     Locale: SharedDict.Locale,
   },
+
+  GenderDict: {
+    Female: SharedDict.Female,
+    Male: SharedDict.Male,
+    Other: SharedDict.Other,
+    PreferNotToSay: SharedDict.PreferNotToSay
+  }
 };
 
 export default hiIN;

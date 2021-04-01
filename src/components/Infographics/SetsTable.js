@@ -14,7 +14,7 @@ import SetTableRow from './SetTableRow';
 import {FlatList} from 'the-core-ui-module-tdlist';
 import FadingBottomView from '../Views/FadingBottomView';
 
-export default function SetsTable({date, weightData, weightPreference}) {
+export default function SetsTable({date, weightData, weightPreference, setType}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -66,8 +66,9 @@ export default function SetsTable({date, weightData, weightPreference}) {
             scrollEnabled={false}
             renderItem={({item}) => (
               <SetTableRow
-                setNumber={item.setNumber + 1}
-                reps={item.reps}
+                setNumber={item.setNumber}
+                reps={item.quantity}
+                setType={setType}
                 weight={item.weight}
                 weightPreference={weightPreference}
               />

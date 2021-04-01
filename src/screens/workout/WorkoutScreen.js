@@ -6,39 +6,76 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView, StatusBar} from 'react-native';
+import {StyleSheet, View, ScrollView, StatusBar, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useData from '../../hooks/data/UseData';
+import useDictionary from '../../hooks/localisation/useDictionary';
+import useUserData from '../../hooks/data/useUserData';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {colors} = useTheme();
+  const {colors, Constants} = useTheme();
   const navigation = useNavigation();
   const {getHeight} = ScaleHook();
+  const {dictionary} = useDictionary();
+  const {WorkoutDict, ProfileDict} = dictionary;
 
   const {
     selectedWorkout,
     currentExerciseIndex,
     setCurrentExerciseIndex,
-    setIsWorkoutTimerRunning,
     completedExercises,
-    setCompletedExercises
+    setCompletedExercises,
   } = useData();
 
-  const [offset, setOffset] = useState(0);
+  const {getPreferences, preferences} = useUserData();
+
+  const [enableScroll, setEnableScroll] = useState(true);
+
+  const [weightLabel, setWeightLabel] = useState('kg');
+
+  useEffect(() => {
+    getPreferences()
+  }, []);
+
+  // Set weight preference
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
+
 
   navigation.setOptions({
     header: () => (
       <WorkoutHeader
         currentExercise={currentExerciseIndex + 1}
         totalExercises={selectedWorkout.exercises.length}
+        rightAction={checkGoBack}
       />
     ),
   });
+
+  function checkGoBack() {
+    Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
+      {
+        text: ProfileDict.Cancel,
+        style: 'cancel',
+      },
+      {
+        text: ProfileDict.Ok,
+        onPress: () => {
+          navigation.pop();
+        },
+      },
+    ]);
+  }
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scrollViewContainer: {
@@ -55,35 +92,28 @@ export default function WorkoutScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleIndex(newOffset) {
-    if (newOffset > offset) {
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
-    } else if (newOffset < offset && currentExerciseIndex > 0) {
-        setCurrentExerciseIndex(currentExerciseIndex - 1);
-    }
-
-    setOffset(newOffset);
+    setCurrentExerciseIndex(Math.round(newOffset / Constants.EXERCISE_VIEW_HEIGHT));
   }
 
   function workoutFinished() {
-    setIsWorkoutTimerRunning(false);
+    //etIsWorkoutTimerRunning(false);
     navigation.navigate('WorkoutComplete');
   }
 
   useEffect(() => {
-    console.log("completedExercises changed", completedExercises);
+    console.log('completedExercises changed', completedExercises);
     if (completedExercises.length === selectedWorkout.exercises.length) {
-      workoutFinished()
+      workoutFinished();
     }
   }, [completedExercises]);
 
   function exerciseFinished() {
-
     // check if specific exercise was already completed
     let index = completedExercises.indexOf(currentExerciseIndex);
 
-    // if not add it 
+    // if not add it
     if (index === -1) {
-      setCompletedExercises(prev => [...prev, currentExerciseIndex]);
+      setCompletedExercises((prev) => [...prev, currentExerciseIndex]);
     }
   }
 
@@ -92,7 +122,7 @@ export default function WorkoutScreen() {
     <View>
       <View style={styles.headerBorder} />
       <ScrollView
-        scrollEnabled={true}
+        scrollEnabled={enableScroll}
         keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={20} //how often we update the position of the indicator bar
@@ -104,15 +134,14 @@ export default function WorkoutScreen() {
           handleIndex(event.nativeEvent.contentOffset.y)
         }>
         {selectedWorkout.exercises.map((screen, index) => (
-            <ExerciseView
+          <ExerciseView
             {...screen}
             index={index}
             exerciseFinished={exerciseFinished}
+            setEnableScroll={setEnableScroll}
+            weightLabel={weightLabel}
           />
-         
-          
         ))}
-        
       </ScrollView>
     </View>
   );

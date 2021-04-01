@@ -19,13 +19,16 @@ import {useMutation} from '@apollo/client';
 import UseData from '../../hooks/data/UseData';
 import NumbersWheel from '../../components/Infographics/NumbersWheel';
 import HorizontalScrollPicker from '../../components/Infographics/HorizontalScrollPicker';
+import { type } from 'ramda';
 
 export default function SetCompletionScreen({
   restTime,
   setSetComplete,
-  setReps,
-  setNumber,
+  currentSet,
+  exerciseHistory,
+  setWeightHistory,
   exercise,
+  setType,
   weightPreference,
 }) {
 
@@ -35,7 +38,11 @@ export default function SetCompletionScreen({
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   // const [addWeight] = useMutation(AddExerciseWeight);
-  const {selectedWeight, weightsToUpload, setWeightsToUpload, weightData, setSelectedWeight} = UseData();
+  const {selectedWeight, weightsToUpload, setWeightsToUpload, setSelectedWeight} = UseData();
+
+
+  // Selected value passed to horizontal scroll to preselect
+  const [selected, setSelected] = useState(20);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -83,6 +90,17 @@ export default function SetCompletionScreen({
     },
   });
 
+
+  useEffect(()=> {
+
+    if (exerciseHistory.length > 0) {
+      const lastWeight = exerciseHistory[exerciseHistory.length - 1].weight;
+      console.log("Last weight",lastWeight);
+      setSelected(lastWeight);
+    }
+  }, [exerciseHistory]);
+
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
     let weightToAdd = Number(selectedWeight);
@@ -91,15 +109,24 @@ export default function SetCompletionScreen({
       weightToAdd = Math.round(weightToAdd / 2.20462262185);
     }
 
-    const weightDetails = {
-      weight: weightToAdd,
-      reps: setReps,
-      setNumber: setNumber,
+    let weightDetails = {
       exerciseId: exercise,
+      weight: weightToAdd,
+      setNumber: currentSet.setNumber,
+      setType: setType,
+      quantity: currentSet.quantity,
     };
 
     setWeightsToUpload([...weightsToUpload, weightDetails]);
 
+
+    // Add to history so it sshows on the graph
+    weightDetails = {
+      ...weightDetails,
+      createdAt: new Date().toISOString()
+    };
+
+    setWeightHistory([...exerciseHistory, weightDetails]);
     setSetComplete(false);
 
   }
@@ -125,7 +152,7 @@ export default function SetCompletionScreen({
             <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
             
             <View style={styles.weightSelectionContainer}>
-              <HorizontalScrollPicker weightPreference={weightPreference}  />
+              <HorizontalScrollPicker weightPreference={weightPreference} selected={selected}  />
             </View> 
             
           </View>

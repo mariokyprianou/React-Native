@@ -13,8 +13,9 @@ export default gql`
     getExerciseWeight(exercise: $exercise) {
       weight
       createdAt
-      reps
       setNumber
+      setType
+      quantity
     }
   }
 `;

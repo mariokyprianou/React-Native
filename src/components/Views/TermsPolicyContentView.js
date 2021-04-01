@@ -19,10 +19,8 @@ export default function TermsPolicyContentView({isHtml, content}) {
 
   const screenWidth = Dimensions.get('screen').width;
   const spacing =
-    '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
-  const htmlWithWidth = `<html><head><meta name="viewport" content="width=${screenWidth}"></head>${content}${
-    Platform.OS === 'ios' ? spacing : ''
-  }</html>`;
+    '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>br><br><br><br><br>';
+  const htmlWithWidth = `<html><head><meta name="viewport" content="width=${screenWidth}"></head>${content}${spacing}</html>`;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

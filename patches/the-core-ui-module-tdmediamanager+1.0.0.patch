@@ -1,8 +1,8 @@
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..ee37fa8 100644
+index c1656ea..03a2baa 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-@@ -5,29 +5,36 @@
+@@ -5,29 +5,40 @@
   * Copyright (c) 2020 The Distance
   */
  
@@ -21,10 +21,14 @@ index c1656ea..ee37fa8 100644
  	const videoPlayer = useRef(null);
  
 +	useImperativeHandle(ref, () => ({
-+    pause: () => {
++	pause: () => {
 +			onPaused()
-+    }
++	},
++	reset: () => {
++		setTimeout(() => onSeek(0), 100);
++	}
 +  }));
++
 +
  	const [containerHeight, setContainerHeight] = useState('31%');
  	const [currentTime, setCurrentTime] = useState(0);
@@ -43,7 +47,24 @@ index c1656ea..ee37fa8 100644
  		if (props.startInFullScreen) {
  			onFullScreen();
  		}
-@@ -57,7 +64,7 @@ export default function VideoView(props) {
+@@ -37,7 +48,7 @@ export default function VideoView(props) {
+ 		} else {
+ 			checkForLocalFile();
+ 		}
+-	}, []);
++	}, [props.url]);
+ 
+ 	async function checkForLocalFile() {
+ 		const res = await getLocalFile(props.url);
+@@ -50,14 +61,14 @@ export default function VideoView(props) {
+ 	}
+ 
+ 	const onSeek = (seek) => {
+-		videoPlayer.seek(seek);
++		videoPlayer.current.seek(seek);
+ 	};
+ 
+ 	const onPaused = (newPlayerState) => {
  		setPaused(!paused);
  		setPlayerState(newPlayerState);
  
@@ -52,7 +73,7 @@ index c1656ea..ee37fa8 100644
  	};
  
  	const onReplay = () => {
-@@ -79,7 +86,7 @@ export default function VideoView(props) {
+@@ -79,7 +90,7 @@ export default function VideoView(props) {
  		setDuration(data.duration);
  		setIsLoading(false);
  
@@ -61,7 +82,7 @@ index c1656ea..ee37fa8 100644
  	};
  
  	const onLoadStart = (data) => {
-@@ -103,11 +110,9 @@ export default function VideoView(props) {
+@@ -103,11 +114,9 @@ export default function VideoView(props) {
  	const onSeeking = (newCurrentTime) => setCurrentTime(newCurrentTime);
  
  	const onFullScreen = () => {
@@ -74,7 +95,7 @@ index c1656ea..ee37fa8 100644
  			setContainerHeight('31%');
  		}
  		setIsFullScreen(!isFullScreen);
-@@ -120,7 +125,7 @@ export default function VideoView(props) {
+@@ -120,7 +129,7 @@ export default function VideoView(props) {
  	const renderToolbar = () => <></>;
  
  	return (
@@ -83,7 +104,7 @@ index c1656ea..ee37fa8 100644
  			<Video
  				onEnd={onEnd}
  				onLoad={onLoad}
-@@ -135,9 +140,12 @@ export default function VideoView(props) {
+@@ -135,9 +144,12 @@ export default function VideoView(props) {
  				}}
  				style={styles.mediaPlayer}
  				volume={props.volume || 13}
@@ -97,7 +118,7 @@ index c1656ea..ee37fa8 100644
  				isFullScreen={isFullScreen}
  				duration={duration}
  				isLoading={isLoading}
-@@ -153,6 +161,8 @@ export default function VideoView(props) {
+@@ -153,6 +165,8 @@ export default function VideoView(props) {
  				fadeOutDelay={3000}
  				showOnStart={false}
  			/>
@@ -106,7 +127,7 @@ index c1656ea..ee37fa8 100644
  		</View>
  	);
  }
-@@ -175,5 +185,10 @@ const styles = StyleSheet.create({
+@@ -175,5 +189,10 @@ const styles = StyleSheet.create({
  		bottom: 0,
  		right: 0,
  		backgroundColor: 'black',

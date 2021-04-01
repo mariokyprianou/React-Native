@@ -6,7 +6,15 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, Image, Alert, ScrollView, Dimensions} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Alert,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -22,6 +30,7 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
+import displayAlert from '../../utils/DisplayAlert';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -30,7 +39,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index} = props;
+  const {exercise, index, setEnableScroll, weightLabel} = props;
   const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
@@ -39,47 +48,68 @@ export default function ExerciseView(props) {
   const styles = exerciseViewStyle;
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const {selectedWorkout, setSelectedWeight} = UseData();
+  const {selectedWorkout, setSelectedWeight, currentExerciseIndex} = UseData();
   const {getPreferences, preferences} = useUserData();
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
   const [currentSet, setCurrentSet] = useState(0);
+
+  // Rest time of the active set
   const [restTime, setRestTime] = useState();
+
   const [setComplete, setSetComplete] = useState(null);
-  const [lastWeight, setLastWeight] = useState('20');
+  
   const [weightHistory, setWeightHistory] = useState([]);
-  const [weightLabel, setWeightLabel] = useState('kg');
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
 
+  const [getWeightHistory] = useLazyQuery(GetExerciseWeight, {
+    variables: {exercise: exercise.id},
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (res) => {
+      if (res.getExerciseWeight.length > 0) {
+        setWeightHistory(res.getExerciseWeight);
+      }
+    },
+    onError: (error) => console.log(error, '<---- error fetching weights'),
+  });
+
+
+  // To observe sets are behaving as expected
+  useEffect(()=> {
+    if (index === currentExerciseIndex) {
+      console.log(sets)
+    }
+  }, [sets]);
+
+
+  // Initial render
   useEffect(() => {
-    getPreferences();
 
     if (exercise.weight) {
-        getWeightHistory();
+      getWeightHistory();
     }
   }, []);
 
+
+  // Mark current exercise as complete
   useEffect(() => {
     if (exerciseCompleted) {
       props.exerciseFinished && props.exerciseFinished();
     }
-
   }, [exerciseCompleted]);
 
-  useEffect(() => {
-    if (preferences.weightPreference) {
-      const weightPreference = preferences.weightPreference.toLowerCase();
-      setWeightLabel(weightPreference);
-    }
-  }, [preferences]);
 
+  // Initialise sets, Sort and set states
   useEffect(() => {
-    let sets = props.sets;
+    let sets = props.sets.slice().sort((a,b) => a.setNumber > b.setNumber);
 
     sets = sets.map((it, index) => {
       if (index === 0) {
+        if (it.restTime && it.restTime > 0) {
+          setRestTime(it.restTime * 1000);
+        }
         return {
           ...it,
           state: 'active',
@@ -94,26 +124,12 @@ export default function ExerciseView(props) {
     setSets(sets);
   }, []);
 
-  const [getWeightHistory] =  useLazyQuery(GetExerciseWeight, {
-    variables: {exercise: exercise.id},
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res.getExerciseWeight.length > 0) {
-        const lastIndex = res.getExerciseWeight.length - 1;
-        if (res.getExerciseWeight[lastIndex].weight) {
-          setLastWeight(res.getExerciseWeight[lastIndex].weight);
-        }
-        setWeightHistory(res.getExerciseWeight);
-      }
-    },
-    onError: (error) => console.log(error, '<---- error fetching weights'),
-  });
 
-  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   
 
+  // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+
   const onSetCompleted = (completedIndex) => {
-    
     // Move to next Set
     if (completedIndex + 1 === sets.length) {
       setCurrentSet(sets.length);
@@ -124,14 +140,15 @@ export default function ExerciseView(props) {
     // Update Sets states
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
-        if (it.restTime && it.restTime > 0) {
-            setRestTime(it.restTime * 1000);
-        }
         return {
           ...it,
           state: 'completed',
         };
       } else if (index === completedIndex + 1) {
+       
+        if (it.restTime && it.restTime > 0) {
+          setRestTime(it.restTime * 1000);
+        }
         return {
           ...it,
           state: 'active',
@@ -139,44 +156,44 @@ export default function ExerciseView(props) {
       }
       return it;
     });
-   
+
     setSets(newSets);
 
     // start rest timer
     if (restTime) {
       setCountDown(true);
+      setEnableScroll(false);
     }
-    
+
     // show set completion modal with weights if applicable
     if (exercise.weight) {
-      setSelectedWeight(lastWeight);
       setSetComplete(true);
+      setEnableScroll(false);
     }
 
-
-
     // Handle no weight or rest time
-    // If we dont have rest time or weight option just finish exercise set immediatelly
-    if (completedIndex === sets.length - 1 && (!restTime || restTime === 0) && !exercise.weight) {
+    // If we dont have rest time or weight option just finish exercise set immediately
+    if (
+      completedIndex === sets.length - 1 &&
+      (!restTime || restTime === 0) &&
+      !exercise.weight
+    ) {
       finishExercise();
     }
   };
-  
-
 
   // Finished weight submition, check if it was last set
   useEffect(() => {
     if (setComplete === false) {
       checkShouldFinishExercise();
     }
-  }, [setComplete])
+  }, [setComplete]);
 
   async function checkShouldFinishExercise() {
-      // On timer done, check if exercise is done
-      if (currentSet === sets.length) {
-        finishExercise();
-      }
-    
+    // On timer done, check if exercise is done
+    if (currentSet === sets.length) {
+      finishExercise();
+    }
   }
 
   const onCancelTimer = () => {
@@ -186,39 +203,39 @@ export default function ExerciseView(props) {
 
   const onFinishTimer = () => {
     setCountDown(false);
-    checkShouldFinishExercise()
+    checkShouldFinishExercise();
   };
 
   const onExerciseCompleted = () => {
-    //onSetCompleted(sets.length - 1);
     setCurrentSet(sets.length);
 
-    // Update Sets states as completed
+    // Update all Sets states as completed
     const newSets = sets.map((it) => {
       return {
         ...it,
         state: 'completed',
       };
     });
-   
+
     setSets(newSets);
 
-   finishExercise();
-    
+    finishExercise();
   };
 
   async function finishExercise() {
+    setEnableScroll(true);
     setExerciseCompleted(true);
   }
 
   const handleSelectWeights = () => {
     if (weightHistory.length === 0) {
-      Alert.alert(WorkoutDict.WorkoutNoWeightsWarning);
+      displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
     } else {
       navigation.navigate('WeightCapture', {
         exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
+        setType: props.setType
       });
     }
   };
@@ -241,26 +258,37 @@ export default function ExerciseView(props) {
     );
   };
 
- 
-
-
   return (
-    <View  style={{ height: Constants.EXERCISE_VIEW_HEIGHT}}>
+    <View style={{height: Constants.EXERCISE_VIEW_HEIGHT}}>
       <ExerciseVideoView {...exercise} index={index} />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
-          <TouchableOpacity activeOpacity={exerciseCompleted ? 1.0 : 0.1} onPress={exerciseCompleted || countDown ? null : onExerciseCompleted}>
-            <Image source={completeIcon} style={{ opacity: exerciseCompleted ? 0.4 : 1.0}}  />
-            <Image style={{...styles.checkIconStyle, opacity: exerciseCompleted ? 0.4 : 1.0}} source={checkIcon} />
+          <TouchableOpacity
+            activeOpacity={exerciseCompleted ? 1.0 : 0.1}
+            onPress={
+              exerciseCompleted || countDown ? null : onExerciseCompleted
+            }>
+            <Image
+              source={completeIcon}
+              style={{opacity: exerciseCompleted ? 0.4 : 1.0}}
+            />
+            <Image
+              style={{
+                ...styles.checkIconStyle,
+                opacity: exerciseCompleted ? 0.4 : 1.0,
+              }}
+              source={checkIcon}
+            />
           </TouchableOpacity>
         </View>
 
         <ScrollView>
-           <Text style={styles.exerciseDescriptionStyle}>{exercise.coachingTips}</Text>
+          <Text style={styles.exerciseDescriptionStyle}>
+            {exercise.coachingTips}
+          </Text>
         </ScrollView>
 
-        
         <View style={styles.extraContainerStyle}>
           {exercise.weight && (
             <TouchableOpacity
@@ -302,7 +330,7 @@ export default function ExerciseView(props) {
           </View>
           <RepsList sets={sets} />
         </View>
-      
+
         {countDown && restTime > 0 && (
           <TimerView
             duration={msToHMS(restTime)}
@@ -313,15 +341,16 @@ export default function ExerciseView(props) {
       </View>
       {setComplete && (
         <SetCompletionScreen
-          restTime={restTime && restTime > 0 ? msToHMS(restTime): 0}
+          restTime={restTime && restTime > 0 ? msToHMS(restTime) : 0}
           setSetComplete={setSetComplete}
-          setReps={sets[currentSet - 1].quantity}
-          setNumber={sets[currentSet - 1].setNumber}
+          currentSet={sets[currentSet - 1]}
+          exerciseHistory={weightHistory}
+          setWeightHistory={setWeightHistory}
           exercise={exercise.id}
+          setType={props.setType}
           weightPreference={weightLabel}
         />
       )}
-
     </View>
   );
 }

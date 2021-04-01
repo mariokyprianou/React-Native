@@ -16,6 +16,7 @@ import ExerciseCell from '../../components/cells/ExerciseCell';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import useData from '../../hooks/data/UseData';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function StartWorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -26,10 +27,10 @@ export default function StartWorkoutScreen() {
     selectedWorkout,
     getDownloadEnabled,
     setCurrentExerciseIndex,
-    setWorkoutTime,
-    setIsWorkoutTimerRunning,
     setCompletedExercises,
   } = useData();
+
+  const {setWorkoutTime, setIsWorkoutTimerRunning} = useWorkoutTimer();
 
   const [topViewProps, setTopViewProps] = useState({});
 

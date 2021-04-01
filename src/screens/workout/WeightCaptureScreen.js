@@ -37,7 +37,7 @@ export default function WeightCaptureScreen() {
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
   const {
-    params: {exerciseName = "Squats", weightHistory, weightPreference},
+    params: {exerciseName = "Squats", weightHistory, weightPreference, setType},
   } = useRoute();
   const today = new Date();
   const date = format(today, 'do LLL yyyy');
@@ -46,11 +46,11 @@ export default function WeightCaptureScreen() {
     header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
   });
 
+
   const historyData = processChallengeHistory(weightHistory, weightPreference);
 
-
   const dropdownData = historyData
-    .map((event) => `${event.reps}`)
+    .map((event) => `${event.quantity}`)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -169,6 +169,7 @@ export default function WeightCaptureScreen() {
             date={date}
             weightData={historyData}
             weightPreference={weightPreference}
+            setType={setType}
           />
         </View>
         <View style={styles.buttonContainer}>

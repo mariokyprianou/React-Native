@@ -14,6 +14,7 @@ import Trainers from '../../apollo/queries/Trainers';
 import Legals from '../../apollo/queries/Legals';
 import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
 import useDictionary from '../localisation/useDictionary';
+import isRTL from '../../utils/isRTL';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -37,7 +38,12 @@ export default function DataProvider(props) {
       if (res) {
         const data = [];
         res.onboardingScreens.forEach((screen) => {
-          data.unshift(screen);
+          const isRightToLeft = isRTL();
+          if (isRightToLeft === true) {
+            data.unshift(screen);
+          } else {
+            data.push(screen);
+          }
         });
         setOnboarding(data);
       }
@@ -75,10 +81,10 @@ export default function DataProvider(props) {
         const qMap = res.programmeQuestionnaire.map((question) => {
           const answers = [];
           answers.push(
-            question.question && question.question.answer1 || "",
-            question.question && question.question.answer2 || "",
-            question.question && question.question.answer3 || "",
-            question.question && question.question.answer4 || "",
+            (question.question && question.question.answer1) || '',
+            (question.question && question.question.answer2) || '',
+            (question.question && question.question.answer3) || '',
+            (question.question && question.question.answer4) || '',
           );
           const formattedQuestion = answers.map((val, index) => {
             return {

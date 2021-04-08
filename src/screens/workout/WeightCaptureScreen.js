@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
-import ProgressChart from '../../components/Infographics/ProgressChart';
+import WeightChart from '../../components/Infographics/WeightChart';
 import Spacer from '../../components/Utility/Spacer';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import SetsTable from '../../components/Infographics/SetsTable';
@@ -199,7 +199,7 @@ export default function WeightCaptureScreen() {
           <Text style={styles.subtitle}>{WorkoutDict.PickAWeight}</Text>
         </View>
         <View style={styles.chartCard}>
-          <ProgressChart
+          <WeightChart
             data={filteredData}
             weightPreference={weightPreference}
             setDate={setDate}

@@ -1,10 +1,3 @@
-/*
- * Jira Ticket:
- * Created Date: Wed, 11th Nov 2020, 08:48:54 am
- * Author: Jodi Dublon
- * Email: jodi.dublon@thedistance.co.uk
- * Copyright (c) 2020 The Distance
- */
 
 import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
@@ -15,12 +8,13 @@ import {LinearGradient, Stop} from 'react-native-svg';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import parseISO from 'date-fns/parseISO';
 
-export default function ProgressChart({
+export default function WeightChart({
   axis = true,
   background = true,
   selectable = false,
   data,
   weightPreference = 'kg',
+  setDate
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -76,7 +70,11 @@ export default function ProgressChart({
           <SlideBarChart
             data={dataPoints}
             barSpacing={dataPoints.length === 1 ? 58 : 60}
-            selectionChangedCallback={(bar) => console.log(bar)}
+            selectionChangedCallback={(bar) => {
+              console.log(data[bar]);
+              setDate && setDate(bar);
+            }
+            }
             renderFillGradient={(props) =>
               selectable
                 ? defaultBarChartFillGradient(props)

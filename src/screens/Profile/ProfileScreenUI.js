@@ -42,6 +42,7 @@ import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
 import useData from '../../hooks/data/UseData';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const notifications = [
   {
@@ -98,6 +99,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   const {userData, setUserData} = useUserData();
   const {reset} = useData();
+  const {setUserImages} = useProgressData();
   const {setLoading} = useLoading();
 
   const formCountry = getValueByName('profile_country');
@@ -153,7 +155,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         const memberSince = res.profile.createdAt.slice(0, 4);
         const userProfile = {...res.profile, memberSince};
         setUserData(userProfile);
-        console.log(userData, '<--USER DATA');
       }
     },
     onError: (error) => console.log(error),
@@ -329,6 +330,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
               .then(async (res) => {
                 console.log(res, '<----sign out res');
                 setUserData({});
+                setUserImages([])
                 reset();
                 
                 navigation.reset({

@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Dimensions, Platform, ActionSheetIOS} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,43 +17,52 @@ import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
-import {FormHook} from 'the-core-ui-module-tdforms';
 import Share from 'react-native-share';
+import UseData from '../../hooks/data/UseData';
+import useProgressData from '../../hooks/data/useProgressData';
 
-export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
+
+const screenWidth = Dimensions.get('screen').width;
+
+export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const {history} = useProgressData();
   const {dictionary} = useDictionary();
-  const [challengeResult, setChallengeResult] = useState();
-  const {getValues, cleanValues} = FormHook();
   const {WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {historyData, name, elapsed},
+    params: {name, type, result, trainer, id, weightPreference, unitType},
   } = useRoute();
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.ChallengeCompleteTitle}
-        right="crossIcon"
-        rightAction={() => navigation.navigate('Progress')}
-      />
-    ),
-  });
+  const [chartInfo, setChartInfo] = useState(null);
 
-  const screenWidth = Dimensions.get('screen').width;
-
-  useEffect(() => {
-    if (elapsed) {
-      setChallengeResult(elapsed);
-    } else {
-      const result = getValues('result').result;
-      setChallengeResult(result);
-    }
-    cleanValues();
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={WorkoutDict.ChallengeCompleteTitle}
+          right="crossIcon"
+          rightAction={() => navigation.navigate('Progress')}
+        />
+      ),
+    });
   }, []);
+  
+  useEffect(() => {
+    async function getInfo() {
+      const info = await generateChartInfo(
+        history,
+        id,
+        weightPreference,
+        unitType,
+        type,
+      );
+      setChartInfo(info);
+    }
+    getInfo();
+  }, [history, id, weightPreference, unitType, type]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -171,6 +180,7 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
 
   function handleDone() {
     navigation.navigate('Progress');
+   
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -178,17 +188,33 @@ export default function ChallengeCompletionScreen({trainerName = 'Katrina'}) {
     <View style={styles.container}>
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>
-          {WorkoutDict.ChallengeComplete(name, trainerName)}
+          {WorkoutDict.ChallengeComplete(name, trainer)}
         </Text>
       </View>
       <View style={styles.card}>
-        <ProgressChart data={historyData} axis={false} background={false} />
+        {chartInfo && (
+          <ProgressChart
+            data={chartInfo.processedHistory}
+            chartLabel={chartInfo.chartLabel}
+            chartDataPoints={chartInfo.dataPoints}
+            interval={chartInfo.interval}
+            ticks={chartInfo.ticks}
+            axis={false}
+            background={false}
+            scrollToEnd={true}
+          />
+        )}
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
-        <Text style={elapsed ? styles.timeResult : styles.resultText}>
-          {challengeResult}
-        </Text>
+        {chartInfo && (
+          <Text
+            style={
+              type === 'STOPWATCH' ? styles.timeResult : styles.resultText
+            }>
+            {`${result} ${chartInfo.chartLabel}`}
+          </Text>
+        )}
       </View>
       <View style={styles.line} />
       <View style={styles.buttonContainer}>

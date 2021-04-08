@@ -6,34 +6,27 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useRef, useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
-import useDictionary from '../../hooks/localisation/useDictionary';
-import parseISO from 'date-fns/parseISO';
 
 export default function ProgressChart({
   axis = true,
   background = true,
   selectable = false,
   data,
-  weightPreference = 'kg',
+  chartLabel,
+  chartDataPoints,
+  interval,
+  ticks,
+  scrollToEnd = false
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
-
-  const dataPoints = data.map((event, index) => {
-    return {x: index + 1, y: event.weight};
-  });
-
-  const highestValue = Math.max(...dataPoints.map((point) => point.y));
-  const ticks = Math.ceil(highestValue / 5);
 
   const xLabels = data.map((event) => {
     return event.date;
@@ -65,17 +58,21 @@ export default function ProgressChart({
     );
   };
 
+  const ref = useRef(null);
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View>
       <ScrollView
+        ref={ref}
+        onContentSizeChange={() => scrollToEnd && ref.current.scrollToEnd({animated: true}) }
         horizontal={true}
         style={styles.scroll}
         contentContainerStyle={{alignItems: 'flex-end'}}>
-        <View>
+        <View style={{paddingStart: getWidth(10), paddingEnd: getWidth(20)}}>
           <SlideBarChart
-            data={dataPoints}
-            barSpacing={dataPoints.length === 1 ? 58 : 60}
+            data={chartDataPoints}
+            barSpacing={chartDataPoints.length === 1 ? 58 : 60}
             selectionChangedCallback={(bar) => console.log(bar)}
             renderFillGradient={(props) =>
               selectable
@@ -85,12 +82,12 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={
-              dataPoints.length === 1
-                ? dataPoints.length * 90
-                : dataPoints.length * 75
+            width={ 
+              chartDataPoints.length === 1
+                ? chartDataPoints.length * 90
+                : chartDataPoints.length * 75
             }
-            axisWidth={getWidth(35)}
+            axisWidth={getWidth(42)}
             axisHeight={getHeight(35)}
             height={getHeight(200)}
             style={{
@@ -100,12 +97,12 @@ export default function ProgressChart({
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
-              interval: 5,
+              interval: interval,
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: weightPreference,
+              axisLabel: axis ? chartLabel : null,
               axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
               axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),
@@ -113,8 +110,10 @@ export default function ProgressChart({
             xAxisProps={{
               axisMarkerLabels: xLabels,
               markerTopPadding: getHeight(10),
+              
               axisLabelStyle: {
                 ...textStyles.semiBold10_brownGrey100,
+                
               },
             }}
           />

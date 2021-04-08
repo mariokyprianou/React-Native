@@ -61,6 +61,7 @@ const enGB = {
     Home: SharedDict.Home.toUpperCase(),
     JumpIn: 'JUMP IN',
     Login: SharedDict.Login.toUpperCase(),
+    Pause: 'PAUSE',
     Pluralise: "'S",
     Programme: 'PROGRAMME',
     Progress: SharedDict.Progress.toUpperCase(),
@@ -76,7 +77,7 @@ const enGB = {
     StartNow: 'START NOW',
     StartWorkout: 'START WORKOUT',
     TryAgain: 'TRY AGAIN',
-    ThreeSecs: '3s',
+    Secs: (time) => `${time}s`,
     Skip: 'Skip',
     NeedHelp: 'Need help?',
     SaveChanges: 'Save changes',
@@ -277,8 +278,13 @@ const enGB = {
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
     ChallengeTime: 'TIME',
-    FunctionNotAvailable: 'This function is not available on this device',
-    NoCamera: 'Unable to access camera',
+    ChallengeZeroChart: 'Complete challenges to see your progress here!',
+    FunctionNotAvailable:
+      "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
+    NoCamera:
+      "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
+    UploadFailed:
+      "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
   },
 
   TabsTitleDict: {

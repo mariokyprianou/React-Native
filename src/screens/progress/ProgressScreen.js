@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -20,11 +20,13 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import useData from '../../hooks/data/UseData';
-import fakeProgressData from '../../hooks/data/FakeProgressData'; // to delete
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
 import Calendar from 'the-core-ui-module-tdcalendar';
 import processProgressData from '../../utils/processProgressData';
+import {useNetInfo} from '@react-native-community/netinfo';
+import useUserData from '../../hooks/data/useUserData';
+import {parseISO} from 'date-fns';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -33,6 +35,9 @@ export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
+  const {isConnected, isInternetReachable} = useNetInfo();
+  const {getPreferences, preferences} = useUserData();
+  const {progress, getProgress, challenges, getChallenges, userImages, getImages} = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -43,27 +48,48 @@ export default function ProgressScreen() {
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-
-  // const [
-  //   progress,
-  //   // getProgress,
-  //   // challenges,
-  //   // getChallenges,
-  //   // challengeHistory,
-  //   // getChallengeHistory,
-  //   // progressHistory,
-  //   // getProgressHistory,
-  //   // progressImages,
-  //   // getProgressImages,
-  // ] = useData();
-  // console.log(progress);
-  const {fakeProgress, fakeChallenges} = fakeProgressData();
-  const progressData = processProgressData(fakeProgress.days);
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => null,
-  });
+  
+  const [progressData, setProgressData] = useState();
+  const [weightLabel, setWeightLabel] = useState();
+
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => null,
+    });
+  
+    getPreferences();
+    getProgress();
+    getChallenges();
+    if ( userImages.length === 0) {
+      getImages();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (preferences.weightPreference) {
+      const weightPreference = preferences.weightPreference.toLowerCase();
+      setWeightLabel(weightPreference);
+    }
+  }, [preferences]);
+
+
+
+  useEffect(() => {
+    if (progress) {
+      const currentMonth = new Date().getMonth();
+      const thisMonth = progress.find((month) => {
+        return parseISO(month.startOfMonth).getMonth() === currentMonth;
+
+      });
+
+      const progressHistoryData = processProgressData(thisMonth.days);
+
+      setProgressData(progressHistoryData);
+    }
+  }, [progress]);
+
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -111,7 +137,7 @@ export default function ProgressScreen() {
       shadowOpacity: 1,
       elevation: 6,
       backgroundColor: colors.white100,
-      marginBottom: getHeight(10),
+      marginBottom: '4%',
       alignSelf: 'center',
     },
     calendarTitle: {
@@ -163,24 +189,49 @@ export default function ProgressScreen() {
             </TouchableOpacity>
           </View>
           <View style={styles.boxWrapper}>
-            <TransformationChallenge
-              type="progress"
-              title="Transformation"
-              image={fakeImage}
-              onPress={() => navigation.navigate('Transformation')}
-            />
-            {fakeChallenges.map((challenge, index) => {
-              const {name} = challenge;
-              return (
+            {challenges && (
+              <>
                 <TransformationChallenge
-                  key={index}
-                  type="challenge"
-                  title={name}
-                  image={fakeGraph}
-                  onPress={() => navigation.navigate('Challenge', {challenge})}
+                  type="progress"
+                  title="Transformation"
+                  image={fakeImage}
+                  onPress={() => navigation.navigate('Transformation')}
                 />
-              );
-            })}
+                {[challenges[0]].map((challenge, index) => {
+                  const {
+                    name,
+                    id,
+                    fieldDescription,
+                    type,
+                    duration,
+                    fieldTitle,
+                    unitType,
+                  } = challenge;
+
+                  return (
+                    <TransformationChallenge
+                      key={index}
+                      type="challenge"
+                      title={name}
+                      image={fakeGraph}
+                      onPress={() =>
+                        navigation.navigate('Challenge', {
+                          id: id,
+                          name: name,
+                          description: fieldDescription,
+                          fieldTitle: fieldTitle,
+                          type: type,
+                          duration: duration,
+                          unitType: type === 'STOPWATCH' ? 'seconds' : unitType,
+                          weightPreference: weightLabel,
+                        })
+                      }
+                    />
+                  );
+                })}
+                <View style={{ width: '48%'}}/>
+              </>
+            )}
           </View>
         </View>
       </ScrollView>

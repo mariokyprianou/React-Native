@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Platform} from 'react-native';
+import {StyleSheet, View, Text, Platform, Image} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -17,35 +17,64 @@ import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
+import {useMutation} from '@apollo/client';
+import CompleteChallenge from '../../apollo/mutations/CompleteChallenge';
+import UseData from '../../hooks/data/UseData';
+import useLoading from '../../hooks/loading/useLoading';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import useProgressData from '../../hooks/data/useProgressData';
+
+const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+
   const {dictionary} = useDictionary();
-  const [formHeight, setFormHeight] = useState(150);
-  let newStyle = {formHeight};
-  const {
-    ProgressDict: {ChallengeTime},
-  } = dictionary;
-  const {updateValue} = FormHook();
+  const {ProgressDict} = dictionary;
+  const {updateValue, getValueByName, cleanValues} = FormHook();
+  const {setLoading} = useLoading();
+  const navigation = useNavigation();
+  
+  const {programme} = UseData();
+  const {getHistory} = useProgressData();
+  
   const {
     params: {
-      challenge: {name, description, answerBoxLabel},
-      historyData,
+      name,
+      id,
+      type,
+      description,
+      fieldTitle,
+      processedHistory,
       elapsed,
       elapsedMS,
+      unitType,
+      weightPreference,
+      chartLabel,
+      chartDataPoints,
+      chartInterval,
+      chartTicks,
     },
   } = useRoute();
-  const navigation = useNavigation();
 
-  navigation.setOptions({
-    header: () => <Header title={name} goBack />,
-  });
+ 
+  const [formHeight, setFormHeight] = useState(150);
+  let newStyle = {formHeight};
+
+
+  const [sendResult] = useMutation(CompleteChallenge);
 
   useEffect(() => {
-    if (elapsed) {
+    navigation.setOptions({
+      header: () => <Header title={name} goBack leftAction={handleGoBack} />,
+    });
+
+  }, []);
+
+  useEffect(() => {
+    if (type === 'STOPWATCH') {
       updateValue({name: 'result', value: elapsed});
     }
   }, [elapsed]);
@@ -59,6 +88,7 @@ export default function ChallengeEndScreen() {
     },
     scroll: {
       alignItems: 'center',
+      height: '100%',
       backgroundColor: colors.backgroundWhite100,
     },
     card: {
@@ -101,22 +131,75 @@ export default function ChallengeEndScreen() {
       backgroundColor: colors.black30,
     },
     buttonContainer: {
-      height: getHeight(90),
+      position: 'absolute',
       width: '100%',
       alignItems: 'center',
-      marginTop: getHeight(120),
+      bottom: getHeight(40),
+    },
+    zeroChart: {
+      ...textStyles.semiBold10_brownGrey100,
+      lineHeight: fontSize(12),
+      marginTop: getHeight(18),
+      marginLeft: getWidth(15),
+      marginBottom: getHeight(20),
+    },
+    image: {
+      height: getHeight(120),
+      width: getWidth(250),
+      alignSelf: 'center',
     },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  async function handleAddResult() {
+    setLoading(true);
+    let challengeResult = '';
+    if (type === 'STOPWATCH') {
+      challengeResult = elapsedMS.toString();
+    } else {
+      challengeResult = getValueByName('result');
+    }
 
-  function handleAddResult() {
-    // send latest result to back end and update historyData using elapsedMS
-    navigation.navigate('ChallengeComplete', {
-      historyData,
-      name,
-      elapsed,
-    });
+    await sendResult({
+      variables: {
+        input: {
+          challengeId: id,
+          result: challengeResult,
+        },
+      },
+    })
+      .then(async () => {
+        await getHistory();
+      })
+      .then(() => {
+        setLoading(false);
+
+        if (type === 'STOPWATCH') {
+          challengeResult = Math.round(
+            Number(challengeResult) / 1000,
+          ).toString();
+        }
+
+        navigation.navigate('ChallengeComplete', {
+          name,
+          type,
+          unitType,
+          id,
+          weightPreference,
+          result: challengeResult,
+          trainer: programme.trainer.name,
+        });
+      })
+      .catch((err) => {
+        console.log(err, '<---sendResult err');
+        setLoading(false);
+      })
+      .finally(() => cleanValues());
+  }
+
+  function handleGoBack() {
+    navigation.goBack();
+    cleanValues();
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -127,6 +210,7 @@ export default function ChallengeEndScreen() {
       placeholder: '',
       ...cellFormStyles,
       multiline: true,
+      keyboardType: 'numeric',
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
       borderBottomWidth: 1,
@@ -150,21 +234,36 @@ export default function ChallengeEndScreen() {
   };
 
   return (
-    <View style={{height: '100%', width: '100%'}}>
+    <View style={styles.container}>
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scroll}
         enableOnAndroid={true}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.card}>
-          <ProgressChart data={historyData} />
+          {processedHistory.length > 0 ? (
+            <ProgressChart
+              data={processedHistory}
+              chartLabel={chartLabel}
+              chartDataPoints={chartDataPoints}
+              interval={chartInterval}
+              ticks={chartTicks}
+            />
+          ) : (
+            processedHistory.length === 0 && (
+              <>
+                <Text style={styles.zeroChart}>
+                  {ProgressDict.ChallengeZeroChart}
+                </Text>
+                <Image source={zeroStateImage} style={styles.image} />
+              </>
+            )
+          )}
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.description}>{description}</Text>
         </View>
         <View style={styles.answerBoxContainer}>
-          <Text style={styles.answerLabel}>
-            {elapsed ? ChallengeTime : answerBoxLabel}
-          </Text>
+          <Text style={styles.answerLabel}>{fieldTitle}</Text>
           <Form cells={cells} config={config} />
         </View>
         <View style={styles.buttonContainer}>

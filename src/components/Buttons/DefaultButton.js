@@ -34,6 +34,8 @@ export default function DefaultButton({
 
   const reminderIcon = require('../../../assets/icons/reminder.png');
   const shareIcon = require('../../../assets/icons/share.png');
+  const playIcon = require('../../../assets/icons/play.png');
+  const pauseIcon = require('../../../assets/icons/pauseIcon.png');
 
   const [pressed, setPressed] = useState(false);
 
@@ -136,6 +138,7 @@ export default function DefaultButton({
     goBackLower: ButtonDict.GoBack,
     jumpIn: ButtonDict.JumpIn,
     login: ButtonDict.Login,
+    pause: ButtonDict.Pause,
     programme: ButtonDict.Programme,
     remindMe: ButtonDict.RemindMe,
     resend: ButtonDict.Resend,
@@ -158,6 +161,8 @@ export default function DefaultButton({
   const iconType = {
     share: shareIcon,
     reminder: reminderIcon,
+    play: playIcon,
+    pause: pauseIcon,
     chevron: isRTL() ? 'chevron-left' : 'chevron-right',
   };
 
@@ -177,6 +182,14 @@ export default function DefaultButton({
       height: getHeight(18),
       width: getWidth(18),
       tintColor: variant === 'gradient' ? colors.white100 : colors.black100,
+    },
+    play: {
+      height: getHeight(12),
+      width: getWidth(10),
+    },
+    pause: {
+      height: getHeight(12),
+      width: getWidth(10),
     },
     imageProps: {
       resizeMode: 'contain',

@@ -1,18 +1,18 @@
 /*
  * Jira Ticket:
- * Created Date: Wed, 25th Nov 2020, 15:33:50 pm
+ * Created Date: Thu, 11th Feb 2021, 14:45:34 pm
  * Author: Jodi Dublon
  * Email: jodi.dublon@thedistance.co.uk
- * Copyright (c) 2020 The Distance
+ * Copyright (c) 2021 The Distance
  */
 
 import gql from 'graphql-tag';
 
 export default gql`
-  query ProgressImages {
-    progressImages {
+  mutation UploadUrl {
+    uploadUrl {
       id
-      createdAt
+      url
     }
   }
 `;

@@ -54,12 +54,9 @@ export default function WeightCaptureScreen() {
     navigation.setOptions({
       header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
     });
-  }, []);
-
-
-  useEffect(()=> {
 
     const data = processChallengeHistory(weightHistory, weightPreference);
+
     setHistoryData(data);
     setFilteredData(data);
 
@@ -69,48 +66,33 @@ export default function WeightCaptureScreen() {
 
     setDropDownData(dropdown);
 
-    
+    // Initial date is last available3 date from historic date
     if (data.length > 0) {
       setSelectedDate(parseISO(data.pop().createdAt));
     }
 
-  },[weightHistory, weightPreference])
+  }, []);
 
 
   const dropDownSelect = getValues('repsHistory').repsHistory;
 
+  // Drop down changed
   useEffect(()=> {
-  if (historyData.length === 0) return;
+  const data = processChallengeHistory(weightHistory, weightPreference);
 
   if (!dropDownSelect) {
-      setFilteredData(historyData)
+      setFilteredData(data)
     }
     else {
-      setFilteredData(historyData.filter(it => it.quantity === Number(dropDownSelect)))
+      setFilteredData(data.filter(it => it.quantity === Number(dropDownSelect)))
     }
   }, [historyData, dropDownSelect])
-
-
-  useEffect(()=> {
-    if (historyData.length === 0 || !selectedDate) return;
-
-    setFilteredData(filteredData.filter(it =>  isSameDay(parseISO(it.createdAt), selectedDate)));
-
-  }, [selectedDate])
-
-  useEffect(()=> {
-    console.log("FilteredData", filteredData);
-
-  }, [filteredData]);
   
-  function setDate(date) {
-    setSelectedDate(date);
+  function setDate(index) {    
+    setSelectedDate(parseISO(filteredData[index].createdAt));
   }
 
-  function isSameDay(first, second) {
-    return differenceInDays(first.setHours(0, 0, 0, 0), second.setHours(0, 0, 0, 0)) === 0 &&
-        first.getDay() ===  second.getDay()
-  }
+
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -221,6 +203,7 @@ export default function WeightCaptureScreen() {
             data={filteredData}
             weightPreference={weightPreference}
             setDate={setDate}
+            selectable={true}
           />
         </View>
         <Spacer height={30} />
@@ -228,7 +211,7 @@ export default function WeightCaptureScreen() {
         (
           <View style={{...styles.chartCard, ...styles.scrollCard}}>
           <SetsTable
-          
+            selectedDate={selectedDate}
             date={format(selectedDate, 'do LLL yyyy')}
             weightData={filteredData}
             weightPreference={weightPreference}

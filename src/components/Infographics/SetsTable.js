@@ -13,8 +13,10 @@ import useTheme from '../../hooks/theme/UseTheme';
 import SetTableRow from './SetTableRow';
 import {FlatList} from 'the-core-ui-module-tdlist';
 import FadingBottomView from '../Views/FadingBottomView';
+import parseISO from 'date-fns/parseISO';
+import { differenceInDays } from 'date-fns';
 
-export default function SetsTable({date, weightData, weightPreference, setType, dropDownSelect}) {
+export default function SetsTable({selectedDate, date, weightData, weightPreference, setType, dropDownSelect}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -49,43 +51,50 @@ export default function SetsTable({date, weightData, weightPreference, setType, 
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  let history = weightData;
-  const formattedHistory = history.reverse();
+  // let history = weightData;
+  // const formattedHistory = history.reverse();
 
-  const [data, setData] = useState(formattedHistory);
+  const [data, setData] = useState([]);
 
-
-  
 
   useEffect(()=> {
+    const tbdt = weightData.filter(it =>  isSameDay(parseISO(it.createdAt), selectedDate))
+
   
-  const formattedHistory = weightData.reverse();
+  const formattedHistory = tbdt.reverse();
+
+  console.log("formattedHistory",formattedHistory)
   setData(formattedHistory)
 
-  }, [weightData]);
+  }, [weightData, selectedDate]);
 
+
+  function isSameDay(first, second) {
+    return differenceInDays(first.setHours(0, 0, 0, 0), second.setHours(0, 0, 0, 0)) === 0 &&
+        first.getDay() ===  second.getDay()
+  }
   // ** ** ** ** ** RENDER ** ** ** ** **
+
 
   return (
     <>
       <ScrollView style={styles.container}>
         <View style={styles.tableContainer}>
           <Text style={styles.title}>{date}</Text>
-          <FlatList
-            ref={listRef}
-            data={data}
-            scrollEnabled={false}
-            renderItem={({item}) => (
-              <SetTableRow
-                setNumber={item.setNumber}
-                reps={item.quantity}
-                setType={setType}
-                weight={item.weight}
-                weightPreference={weightPreference}
-              />
-            )}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-          />
+
+          {data.map( (item, index) => {
+            return <View style={{height: getHeight(35)}}>
+                  <SetTableRow
+                    setNumber={item.setNumber}
+                    reps={item.quantity}
+                    setType={setType}
+                    weight={item.weight}
+                    weightPreference={weightPreference}
+                  />
+                  {index !== data.length -1  &&  <View style={styles.separator} />}
+              </View>
+          })}
+          
         </View>
       </ScrollView>
       <View

@@ -231,6 +231,7 @@ export default function ExerciseView(props) {
     if (weightHistory.length === 0) {
       displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
     } else {
+
       navigation.navigate('WeightCapture', {
         exerciseName: exercise.name,
         weightHistory: weightHistory,

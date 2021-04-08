@@ -13,6 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
 import {LinearGradient, Stop} from 'react-native-svg';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import parseISO from 'date-fns/parseISO';
 
 export default function ProgressChart({
   axis = true,
@@ -20,6 +21,7 @@ export default function ProgressChart({
   selectable = false,
   data,
   weightPreference = 'kg',
+  setDate
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -75,7 +77,11 @@ export default function ProgressChart({
           <SlideBarChart
             data={dataPoints}
             barSpacing={dataPoints.length === 1 ? 58 : 60}
-            selectionChangedCallback={(bar) => console.log(bar)}
+            selectionChangedCallback={(bar) => {
+              console.log(data[bar]);
+              setDate && setDate(bar);
+            }
+            }
             renderFillGradient={(props) =>
               selectable
                 ? defaultBarChartFillGradient(props)

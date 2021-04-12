@@ -151,9 +151,12 @@ export default function TransformationScreen() {
     try {
       // TODO - Supply relevant urls
       let res = await PowerShareAssetsManager.shareProgress({
+        backgroundImageUrl: url,
         beforeImageUrl: beforePic,
         afterImageUrl: afterPic,
         colour: colour,
+        beforeDate: 'Date before',
+        afterDate: 'Date After',
       });
       console.log('Share res', res);
       firebaseLogEvent(analyticsEvents.shareTransformation, {});

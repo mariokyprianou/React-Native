@@ -91,15 +91,21 @@ const shareProgrammeStart = async ({imageUrl = SampleImageUrl}) => {
 };
 
 const shareProgress = async ({
+  backgroundImageUrl = SampleImageUrl,
   beforeImageUrl = SampleImageUrl,
   afterImageUrl = SampleImageUrl2,
-  colour = "WHITE"
+  colour = "WHITE",
+  beforeDate,
+  afterDate,
 }) => {
   try {
     let localSharePath = await CustomAssetsGenerator.generateGifAsset({
+      backgroundImageUrl,
       beforeImageUrl,
       afterImageUrl,
-      colour
+      colour,
+      beforeDate,
+      afterDate,
     });
     return shareDirectlyToInstagramStory(localSharePath);
   } catch (err) {

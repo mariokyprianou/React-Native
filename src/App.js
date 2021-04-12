@@ -26,6 +26,7 @@ import Secrets from './environment/Secrets';
 import LoadingProvider from './hooks/loading/LoadingProvider';
 import CommonDataProvider from './hooks/data/CommonDataProvider';
 import ProgressDataProvider from './hooks/data/ProgressDataProvider';
+import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import getTimeZoneOffset from './utils/getTimeZoneOffset';
 import {firebase} from '@react-native-firebase/analytics';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -107,6 +108,7 @@ const App = () => {
                 <UserDataProvider>
                   <CommonDataProvider>
                     <ProgressDataProvider>
+                      <WorkoutTimerProvider>
                       <LoadingProvider>
                         <NavigationContainer>
                           <TDCountdown>
@@ -116,6 +118,7 @@ const App = () => {
                           </TDCountdown>
                         </NavigationContainer>
                       </LoadingProvider>
+                      </WorkoutTimerProvider>
                     </ProgressDataProvider>
                   </CommonDataProvider>
                 </UserDataProvider>

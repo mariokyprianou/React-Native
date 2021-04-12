@@ -42,6 +42,7 @@ import Intercom from 'react-native-intercom';
 import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
+import useData from '../../hooks/data/UseData';
 import useProgressData from '../../hooks/data/useProgressData';
 
 const notifications = [
@@ -80,7 +81,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict, AuthDict} = dictionary;
+  const {ProfileDict, AuthDict, GenderDict} = dictionary;
   const {getValueByName, updateValue} = FormHook();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {
@@ -98,6 +99,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const [storedNotifications, setStoredNotifications] = useState(notifications);
 
   const {userData, setUserData} = useUserData();
+  const {reset} = useData();
   const {setUserImages} = useProgressData();
   const {setLoading} = useLoading();
 
@@ -161,28 +163,29 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
+      console.log(userData.gender)
       if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
-          value: AuthDict.RegistrationGendersFemale,
+          value: GenderDict.Female,
         });
       }
     }
   }, [updateValue]);
 
   const gendersData = [
-    AuthDict.RegistrationGendersFemale,
-    AuthDict.RegistrationGendersMale,
-    // AuthDict.RegistrationGendersOther,
-    // AuthDict.RegistrationGendersPreferNot,
+   GenderDict.Female,
+   GenderDict.Male,
+   GenderDict.Other,
+   GenderDict.PreferNotToSay
   ];
 
   const gendersRef = {
-    female: 'Female',
-    male: 'Male',
-    // other: 'Other',
-    // preferNotToSay: 'Prefer not to say',
-  };
+    female: GenderDict.Female,
+    male: GenderDict.Male,
+    other: GenderDict.Other,
+    null: GenderDict.PreferNotToSay
+  }
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -276,16 +279,20 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     //   newRegion = regionLookup[regionsList[0]];
     // }
 
+    const gender = gendersData.includes(profile_gender) ? profile_gender === GenderDict.PreferNotToSay ? null 
+    : profile_gender?.toLowerCase() : userData.gender;
+
     const newVals = {
       givenName: profile_firstName || userData.givenName,
       familyName: profile_lastName || userData.familyName,
-      gender: profile_gender?.toLowerCase() || userData.gender,
+      gender: gender,
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
       region: newRegion || userData.region,
       timeZone: userData.timeZone,
     };
 
+    console.log(newVals)
     await updateProfile({
       variables: {
         input: {
@@ -326,9 +333,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 setUserData({});
                 Intercom.logout();
                 setUserImages([])
-                AsyncStorage.removeItem('@ANALYTICS_ASKED');
-                AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
-                AsyncStorage.removeItem('@CURRENT_WEEK');
+                reset();
+                
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],

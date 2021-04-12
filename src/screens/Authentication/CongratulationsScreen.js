@@ -32,6 +32,8 @@ import RestartProgramme from '../../apollo/mutations/RestartProgramme';
 import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
 import StartProgramme from '../../apollo/mutations/StartProgramme';
 import {useMutation} from '@apollo/client';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -185,6 +187,9 @@ export default function CongratulationsScreen() {
 
   function handlePressStart() {
     if (switchProgramme === true) {
+
+      // Reset this when switching program otherwise modal won't show for new program
+      AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
       navigation.reset({
         index: 0,
         routes: [{name: 'TabContainer'}], // add params for which programme selected

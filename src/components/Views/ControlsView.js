@@ -70,13 +70,13 @@ export default function ({
       flexDirection: 'row',
       marginRight: getWidth(25),
       alignItems: 'center',
-      opacity: easierAvailable ? 1 : 0.4,
+      opacity: easierAvailable ? 1 : 0.5,
     },
     harderTouchableStyle: {
       flexDirection: 'row',
       marginLeft: getWidth(25),
       alignItems: 'center',
-      opacity: harderAvailable ? 1 : 0.4,
+      opacity: harderAvailable ? 1 : 0.5,
     },
     intensityIconStyle: {
       margin: getWidth(10),

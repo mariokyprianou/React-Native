@@ -23,7 +23,6 @@ import WalkthoughPaginationDots from '../../components/Views/WalkthroughPaginati
 
 const width = Dimensions.get('window').width;
 
-
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
@@ -109,15 +108,6 @@ export default function OnboardingScreen() {
     );
   };
 
-  function handlePress(direction) {
-    if (direction === 'left') {
-      onboardSwiper.current.scrollTo(activeIndex - 1, true);
-    }
-    if (direction === 'right') {
-      onboardSwiper.current.scrollTo(activeIndex + 1, true);
-    }
-  }
-
   function handlePressGetStarted() {
     navigation.navigate('MeetYourIcons', {switchProgramme: false});
   }
@@ -127,14 +117,14 @@ export default function OnboardingScreen() {
     const scrollSensitivity = 4 / 3;
     const offset = e.nativeEvent.contentOffset.x / scrollSensitivity;
     setScrollOfset(new Animated.Value(offset));
-  };
+  }
 
   const position = Animated.divide(scrollOffset, width - getWidth(100));
 
   return (
     <View style={styles.container}>
       <Swiper
-        style={{flexDirection: isRTL ? 'row-reverse' : 'row'}}
+        style={{flexDirection: 'row'}}
         onScroll={onScroll}
         scrollEventThrottle={16}
         ref={onboardSwiper}
@@ -143,7 +133,6 @@ export default function OnboardingScreen() {
           setActiveIndex(index);
         }}
         showsPagination={false}>
-          
         {onboarding.map(({title, description, image}) => (
           <OnboardingSliderItem
             image={image}
@@ -152,7 +141,7 @@ export default function OnboardingScreen() {
           />
         ))}
       </Swiper>
-      
+
       <WalkthoughPaginationDots dots={onboarding.length} position={position} />
       <DefaultButton
         type="getStarted"

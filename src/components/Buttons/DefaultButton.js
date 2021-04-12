@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -37,6 +37,8 @@ export default function DefaultButton({
   const shareIcon = require('../../../assets/icons/share.png');
   const playIcon = require('../../../assets/icons/play.png');
   const pauseIcon = require('../../../assets/icons/pauseIcon.png');
+
+  const [pressed, setPressed] = useState(false);
 
   const {ButtonDict} = dictionary;
 
@@ -273,9 +275,19 @@ export default function DefaultButton({
       ? text.toUpperCase()
       : text;
 
-  
 
+  useEffect(()=> {
+    if (pressed) {
+      setTimeout(() => setPressed(false), 1000);
+    }
 
+  }, [pressed]);
+
+  const handlePress = () => {
+    setPressed(true);
+    onPress();
+  }
+ 
   const renderButtonText = () => {
     if (customSubtext) {
       return (
@@ -299,7 +311,7 @@ export default function DefaultButton({
   if (variant === 'gradient') {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={onPress} style={styles.touch}>
+        <TouchableOpacity onPress={pressed ? null : handlePress} style={styles.touch}>
           <LinearGradient
             style={styles.gradient}
             start={{x: 0, y: 0}}
@@ -328,7 +340,7 @@ export default function DefaultButton({
   if (type === 'continueFromWeek') {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={onPress} style={styles.touch}>
+        <TouchableOpacity onPress={pressed ? null : handlePress} style={styles.touch}>
           <Text style={styles.text}>{`${buttonText[type]} ${weekNo}`}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
@@ -344,7 +356,7 @@ export default function DefaultButton({
   if (type === 'programme') {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={onPress} style={styles.touch}>
+        <TouchableOpacity onPress={pressed ? null : handlePress} style={styles.touch}>
           <Text
             style={
               styles.text
@@ -364,7 +376,7 @@ export default function DefaultButton({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={onPress}
+        onPress={pressed ? null : handlePress}
         style={styles.touch}
         disabled={disabled}>
         {renderButtonText()}

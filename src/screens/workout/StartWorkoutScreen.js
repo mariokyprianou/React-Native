@@ -17,6 +17,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import useData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function StartWorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,12 +28,11 @@ export default function StartWorkoutScreen() {
     selectedWorkout,
     getDownloadEnabled,
     setCurrentExerciseIndex,
-    setWorkoutTime,
-    setIsWorkoutTimerRunning,
     setCompletedExercises,
   } = useData();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {setWorkoutTime, setIsWorkoutTimerRunning} = useWorkoutTimer();
 
   const [topViewProps, setTopViewProps] = useState({});
 

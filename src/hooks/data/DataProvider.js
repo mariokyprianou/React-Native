@@ -11,10 +11,6 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
-import Progress from '../../apollo/queries/Progress';
-import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
-import ProgressImages from '../../apollo/queries/ProgressImages';
-import formatProgressImages from '../../utils/formatProgressImages';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   differenceInDays,
@@ -31,6 +27,8 @@ import {
   getStoredFutureRestDays,
   getWeekArrayWithPastDays,
 } from './WeekStructureUtils';
+import addWorkoutDates from '../../utils/addWorkoutDates';
+import addRestDays from '../../utils/addRestDays';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -39,6 +37,7 @@ export default function DataProvider(props) {
   const [programmeModalImage, setProgrammeModalImage] = useState();
 
   const [currentWeek, setCurrentWeek] = useState();
+  const [nextWeek, setNextWeek] = useState();
 
   // 3 workouts are allowed without subscription
   const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
@@ -159,7 +158,7 @@ export default function DataProvider(props) {
         ...workout,
         name: workout.name.toUpperCase(),
         date: formattedDate,
-        exactDate: workout.completedAt,
+        exactDate: new Date(workout.completedAt),
         day: workoutIndex,
       };
     });
@@ -220,9 +219,40 @@ export default function DataProvider(props) {
       }
     }
 
+    week = week.sort((a, b) => a.exactDate > b.exactDate);
     setCurrentWeek(week);
+
     return week;
   }, []);
+
+
+  useEffect(()=> {
+    if (currentWeek && programme) {
+      const lastDate = currentWeek.reduce((a, b) => a.exactDate > b.exactDate ? a : b).exactDate;
+
+      const nextWeekStartDate = addDays(new Date(lastDate), 1);
+
+      // Don't set next week if already correct
+      if (nextWeek) {
+        let isSameStartDay = 
+        differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
+        nextWeekStartDate.getDay() ===  nextWeek[0].exactDate.getDay()
+
+        if (isSameStartDay) return;
+      }
+
+      if (!programme.nextWeek) return;
+
+      let weekWorkout = programme.nextWeek.workouts
+      .slice()
+      .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
+
+      const week = addWorkoutDates(addRestDays(weekWorkout), nextWeekStartDate);
+
+      setNextWeek(week);
+    }
+
+  }, [currentWeek, programme]);
 
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -276,30 +306,6 @@ export default function DataProvider(props) {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [completedExercises, setCompletedExercises] = useState([]);
 
-
-  const [workoutTime, setWorkoutTime] = useState(0);
-  const [isWorkoutTimerRunning, setIsWorkoutTimerRunning] = useState(false);
-  const intervalRef = useRef();
-
-  const cancelInterval = useCallback(async () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = undefined;
-  }, []);
-
-  useEffect(() => {
-    if (isWorkoutTimerRunning) {
-      intervalRef.current = setInterval(
-        () => setWorkoutTime((prevMS) => prevMS + 1000),
-        1000,
-      );
-    } else {
-      cancelInterval();
-    }
-    return () => {
-      cancelInterval();
-    };
-  }, [isWorkoutTimerRunning]);
-
   const [selectedWeight, setSelectedWeight] = useState(20);
 
   const [weightData, setWeightData] = useState([]);
@@ -327,6 +333,17 @@ export default function DataProvider(props) {
   }, []);
 
 
+  const reset = useCallback(()=> {
+    setProgramme(null);
+    setCurrentWeek(null);
+    setNextWeek(null);
+
+    AsyncStorage.removeItem('@ANALYTICS_ASKED');
+    AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+    AsyncStorage.removeItem('@CURRENT_WEEK');
+    AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -341,12 +358,9 @@ export default function DataProvider(props) {
       getDownloadEnabled,
       isDownloadEnabled,
       currentExerciseIndex,
-      setCurrentExerciseIndex,
-      workoutTime,
-      setWorkoutTime,
-      isWorkoutTimerRunning,
-      setIsWorkoutTimerRunning,
+      setCurrentExerciseIndex,      
       currentWeek,
+      nextWeek,
       updateStoredDays,
       structureWeek,
       updateConsecutiveWorkouts,
@@ -359,7 +373,8 @@ export default function DataProvider(props) {
       weightsToUpload,
       setWeightsToUpload,
       completedExercises,
-      setCompletedExercises
+      setCompletedExercises,
+      reset
     }),
     [
       programme,
@@ -373,11 +388,8 @@ export default function DataProvider(props) {
       isDownloadEnabled,
       currentExerciseIndex,
       setCurrentExerciseIndex,
-      workoutTime,
-      setWorkoutTime,
-      isWorkoutTimerRunning,
-      setIsWorkoutTimerRunning,
       currentWeek,
+      nextWeek,
       updateStoredDays,
       structureWeek,
       updateConsecutiveWorkouts,
@@ -390,7 +402,8 @@ export default function DataProvider(props) {
       weightsToUpload,
       setWeightsToUpload,
       completedExercises,
-      setCompletedExercises
+      setCompletedExercises,
+      reset
     ],
   );
 

@@ -1,3 +1,4 @@
+
 const SharedDict = {
   Cancel: 'Cancel',
   Gym: 'Gym',
@@ -20,13 +21,18 @@ const SharedDict = {
   Notifications: 'Notifications',
   Sets: 'sets',
   Reps: 'reps',
+  Secs: 'secs',
   OldPassword: 'OLD PASSWORD',
   NewPassword: 'NEW PASSWORD',
   Analytics: 'Analytics',
   ChangeEmail: 'Change Email',
   ChangePassword: 'Change password',
   VerifyEmail: 'Verify email',
-  Ok: 'OK'
+  Ok: 'OK',
+  Female: 'Female',
+  Male: 'Male',
+  Other: 'Other',
+  PreferNotToSay: 'Prefer not to say',
 };
 
 const enGB = {
@@ -116,10 +122,10 @@ const enGB = {
     TermsAndConditionsScreenTitle: 'Terms & conditions',
     ResetPasswordScreenTitle: 'Forgot password',
     RegistrationScreenTitle: 'Create account',
-    RegistrationGendersFemale: 'Female',
-    RegistrationGendersMale: 'Male',
-    RegistrationGendersOther: 'Other',
-    RegistrationGendersPreferNot: 'Prefer not to say',
+    RegistrationGendersFemale: SharedDict.Female,
+    RegistrationGendersMale: SharedDict.Male,
+    RegistrationGendersOther: SharedDict.Other,
+    RegistrationGendersPreferNot: SharedDict.PreferNotToSay,
     PrivacyPolicyScreenTitle: 'Privacy policy',
     NotYetLoggedIn:
       'You are not yet logged in - please verify your email address',
@@ -314,6 +320,7 @@ const enGB = {
 
     WeightsSetText: 'Set',
     WeightsRepsText: SharedDict.Reps,
+    WeightsRepsSecsText: SharedDict.Secs,
 
     RestDay: 'REST DAY',
     Day: 'Day',
@@ -388,6 +395,13 @@ const enGB = {
     Gym: SharedDict.Gym,
     Locale: SharedDict.Locale,
   },
+
+  GenderDict: {
+    Female: SharedDict.Female,
+    Male: SharedDict.Male,
+    Other: SharedDict.Other,
+    PreferNotToSay: SharedDict.PreferNotToSay
+  }
 };
 
 export default enGB;

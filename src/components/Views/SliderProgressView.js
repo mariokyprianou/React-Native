@@ -14,6 +14,7 @@ import Slider from 'react-native-slider';
 
 const thumbIcon = require('../../../assets/icons/slider.png');
 export default function SliderProgressView({
+  min = 0,
   progress = 50,
   max = 100,
   slider = false,
@@ -92,7 +93,7 @@ export default function SliderProgressView({
       {slider && (
         <Slider
           style={styles.sliderContainer}
-          minimumValue={0}
+          minimumValue={min}
           maximumValue={max}
           value={currentProgress}
           onValueChange={(value) => {

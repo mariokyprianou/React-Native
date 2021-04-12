@@ -42,8 +42,7 @@ export default function TransformationScreen() {
   const {getImages, getImagesSync} = useProgressData();
   const navigation = useNavigation();
 
-
-  useEffect(()=> {
+  useEffect(() => {
     navigation.setOptions({
       header: () => (
         <Header
@@ -54,7 +53,7 @@ export default function TransformationScreen() {
         />
       ),
     });
-  }, [])
+  }, []);
 
   const [requestUplaodUrl] = useMutation(UploadUrl);
   const [sendFailed] = useMutation(UploadFailed);
@@ -62,7 +61,6 @@ export default function TransformationScreen() {
   const [time, setTime] = useState(0);
 
   const [cameraButtonActive, setCameraButtonActive] = useState(true);
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -81,37 +79,40 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
-    console.log('Init uplaod Photo');
+    const newPath =
+      Platform.OS === 'android' ? path : path.replace('file://', 'private');
     setLoading(true);
 
-    const uploadUrlRes = await requestUplaodUrl()
-      .catch((err) =>
-        console.log(err, '<---requestUrl err'),
-      );
-    console.log("uploadUrlRes", uploadUrlRes);
-    const { url , id } = uploadUrlRes.data.uploadUrl;
-    
+    const uploadUrlRes = await requestUplaodUrl().catch((err) =>
+      console.log(err, '<---requestUrl err'),
+    );
+    console.log('uploadUrlRes', uploadUrlRes);
+    const {url, id} = uploadUrlRes.data.uploadUrl;
+
     RNFetchBlob.fetch(
-      'PUT', url, { 'Content-Type': contentType },
-      RNFetchBlob.wrap(path),
+      'PUT',
+      url,
+      {'Content-Type': 'application/octet-stream'},
+      RNFetchBlob.wrap(newPath),
     )
-    .uploadProgress((written, total) => {
-      console.log('uploaded', written / total);
-    })
-    .then(async (res) => {
-        let { status } = res.info();
-       
+      .uploadProgress((written, total) => {
+        console.log('uploaded', written / total);
+      })
+      .then(async (res) => {
+        let {status} = res.info();
 
         if (status === 200 || status === 204) {
           console.log('Upload done --- SUCCESS');
-        
+
           const finished = await getImagesSync();
-          console.log("getImagesSync -- finished getting updatted images and setting 1st and last")
+          console.log(
+            'getImagesSync -- finished getting updatted images and setting 1st and last',
+          );
 
           navigation.goBack();
           setCameraButtonActive(true);
         } else {
-          console.log("Upload failed", res)
+          console.log('Upload failed', res);
           handleAddPhotoError(id);
         }
       })
@@ -119,14 +120,13 @@ export default function TransformationScreen() {
         console.log(err, '<---fetch blob err');
         handleAddPhotoError(id);
       });
-      
   }
 
   async function handleAddPhotoError(id) {
     await sendFailed({variables: {id: id}})
       .then((res) => console.log(res, '<---upload failed res'))
       .catch((err) => console.log(err, '<---upload failed err'))
-      .finally(()=> {
+      .finally(() => {
         setCameraButtonActive(true);
         Alert.alert(ProgressDict.UploadFailed);
       });
@@ -140,7 +140,7 @@ export default function TransformationScreen() {
       }),
     )
       .then((result) => {
-        console.log(result)
+        console.log(result);
         if (result === RESULTS.UNAVAILABLE) {
           Alert.alert(ProgressDict.FunctionNotAvailable);
         }
@@ -152,7 +152,7 @@ export default function TransformationScreen() {
             mediaType: 'photo',
             compressImageQuality: 0.7,
           }).then((cameraPhoto) => {
-            const { path, mime }= cameraPhoto;
+            const {path, mime} = cameraPhoto;
             handlePhoto(path, mime);
           });
         }

@@ -36,7 +36,7 @@ export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {AuthDict} = dictionary;
+  const {AuthDict, GenderDict} = dictionary;
   const [termsAndConditions, setTerms] = useState('off');
   const {
     cellFormStyles,
@@ -74,10 +74,10 @@ export default function RegisterScreen() {
   });
 
   const gendersData = [
-    AuthDict.RegistrationGendersFemale,
-    AuthDict.RegistrationGendersMale,
-    // AuthDict.RegistrationGendersOther,
-    // AuthDict.RegistrationGendersPreferNot,
+    GenderDict.Female,
+    GenderDict.Male,
+    GenderDict.Other,
+    GenderDict.PreferNotToSay
   ];
 
   useQuery(AllCountries, {
@@ -215,12 +215,15 @@ export default function RegisterScreen() {
     }
     setLoading(true);
 
+    const correctGender = !gender || gender === GenderDict.PreferNotToSay ? null 
+    : gender.toLowerCase();
+
     const data = {
       givenName: givenName,
       familyName: familyName,
       email: email,
       password: password,
-      gender: gender ? gender.toLowerCase() : null,
+      gender: correctGender,
       dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
       country: countryID || null,
       region: selectedCountry === 'India' ? regionLookup[region] : null,

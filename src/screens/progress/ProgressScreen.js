@@ -81,6 +81,7 @@ export default function ProgressScreen() {
       const currentMonth = new Date().getMonth();
       const thisMonth = progress.find((month) => {
         return parseISO(month.startOfMonth).getMonth() === currentMonth;
+
       });
 
       const progressHistoryData = processProgressData(thisMonth.days);
@@ -196,7 +197,7 @@ export default function ProgressScreen() {
                   image={fakeImage}
                   onPress={() => navigation.navigate('Transformation')}
                 />
-                {challenges.map((challenge, index) => {
+                {[challenges[0]].map((challenge, index) => {
                   const {
                     name,
                     id,
@@ -228,6 +229,7 @@ export default function ProgressScreen() {
                     />
                   );
                 })}
+                <View style={{ width: '48%'}}/>
               </>
             )}
           </View>

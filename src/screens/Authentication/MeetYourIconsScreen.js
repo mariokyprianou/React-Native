@@ -77,7 +77,7 @@ export default function MeetYourIconsScreen() {
     StatusBar.setBarStyle('light-content');
     return () => {
       StatusBar.setBarStyle('dark-content');
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -419,7 +419,10 @@ const newProgrammeView = () => (
             trainer.programmes[0];
 
           const {numberOfWeeks, description, firstWeek} = currentProgram;
-          const extendedWeek = addWorkoutDates(addRestDays(firstWeek));
+          const extendedWeek = addWorkoutDates(
+            addRestDays(firstWeek),
+            new Date(),
+          );
 
           return (
             <ScrollView

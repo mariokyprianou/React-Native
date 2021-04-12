@@ -14,6 +14,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 export default function SetTableRow({
   setNumber,
   reps,
+  setType = "REPS",
   weight,
   weightPreference,
 }) {
@@ -44,7 +45,7 @@ export default function SetTableRow({
           styles.text
         }>{`${WorkoutDict.WeightsSetText} ${setNumber}`}</Text>
       <Text
-        style={styles.text}>{`${reps} ${WorkoutDict.WeightsRepsText}`}</Text>
+        style={styles.text}>{`${reps} ${setType === "SECS" ? WorkoutDict.WeightsRepsSecsText : WorkoutDict.WeightsRepsText}`}</Text>
       <Text style={styles.text}>{`${weight} ${weightPreference}`}</Text>
     </View>
   );

@@ -19,14 +19,14 @@ import SliderProgressView from '../../components/Views/SliderProgressView';
 import IconTextView from '../../components/Infographics/IconTextView';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import Spacer from '../../components/Utility/Spacer';
-import {useStopwatch} from 'the-core-ui-module-tdcountdown';
 import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
-import AsyncStorage from '@react-native-community/async-storage';
 import useUserData from '../../hooks/data/useUserData';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
+import useLoading from '../../hooks/loading/useLoading';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -39,28 +39,36 @@ export default function WorkoutCompleteScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {
     selectedWorkout,
-    workoutTime,
     weightsToUpload,
     setWeightsToUpload,
   } = UseData();
 
+  const {setLoading} = useLoading();
+  const { setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
+
   const [completeWorkout] = useMutation(CompleteWorkout);
   const [addWeight] = useMutation(AddExerciseWeight);
 
-  const [selectedIntensity, setSelectedIntensity] = useState(50);
+  const [selectedIntensity, setSelectedIntensity] = useState(10);
   const [selectedEmoji, setSelectedEmoji] = useState();
 
   const [stats, setStats] = useState({});
 
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={WorkoutDict.WorkoutComplete}
-        showModalCross
-        rightAction={checkGoBack}
-      />
-    ),
-  });
+  
+
+  useEffect(()=> {
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={WorkoutDict.WorkoutComplete}
+          showModalCross
+          rightAction={checkGoBack}
+        />
+      ),
+    });
+
+    setIsWorkoutTimerRunning(false);
+  }, []);
 
   useEffect(() => {
     const duration = workoutTime ? Math.ceil(workoutTime / 1000 / 60) : 0;
@@ -77,7 +85,7 @@ export default function WorkoutCompleteScreen() {
             reps += set.quantity;
             break;
           }
-          case 'TIME': {
+          case 'TIME', 'SECS': {
             seconds += set.quantity;
             break;
           }
@@ -153,26 +161,21 @@ export default function WorkoutCompleteScreen() {
     if (!selectedEmoji) {
       return;
     }
+    setLoading(true);
 
-    weightsToUpload.forEach((weightObject) => {
-      addWeight({
-        variables: {
-          input: weightObject,
-        },
-      })
-        .then((res) => console.log(res, '<----add weights res'))
-        .catch((err) => console.log(err, '<---add weights error'));
-    });
-
-    setWeightsToUpload([]);
+    let intensity = Math.ceil(selectedIntensity);
+    if (intensity === 0) intensity = 1;
 
     const workoutComplete = {
       workoutId: selectedWorkout.id,
-      date: new Date(),
-      intensity: Math.ceil(selectedIntensity),
+      date: new Date().toISOString(),
+      intensity: intensity,
       emoji: selectedEmoji,
       timeTaken: stats.duration,
+      weightsUsed: weightsToUpload
     };
+
+    console.log("workoutComplete", workoutComplete)
 
     completeWorkout({
       variables: {
@@ -189,6 +192,7 @@ export default function WorkoutCompleteScreen() {
             workoutId: selectedWorkout.id,
             workoutName: selectedWorkout.name,
           });
+          setWeightsToUpload([]);
 
           navigation.reset({
             index: 0,
@@ -196,7 +200,8 @@ export default function WorkoutCompleteScreen() {
           });
         }
       })
-      .catch((err) => console.log(err, '<---workout complete error'));
+      .catch((err) => console.log(err, '<---workout complete error'))
+      .finally(()=> setLoading(false));
   }
 
   function checkGoBack() {
@@ -245,7 +250,8 @@ export default function WorkoutCompleteScreen() {
           <View style={styles.sliderContainer}>
             <SliderProgressView
               slider={true}
-              max={100}
+              min={0}
+              max={20}
               progress={selectedIntensity}
               setProgress={setSelectedIntensity}
               height={getHeight(4)}

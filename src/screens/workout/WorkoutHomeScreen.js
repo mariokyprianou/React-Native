@@ -53,6 +53,7 @@ export default function WorkoutHomeScreen() {
     getProgramme,
     setSelectedWorkout,
     currentWeek,
+    nextWeek,
     updateStoredDays,
     structureWeek,
     updateConsecutiveWorkouts,
@@ -77,7 +78,6 @@ export default function WorkoutHomeScreen() {
   useEffect(() => {
     if (programme && currentWeek) {
       async function checkWeekComplete() {
-        
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,
         ).length;
@@ -99,15 +99,16 @@ export default function WorkoutHomeScreen() {
     if (shouldShowModal) {
       constructWeekCompleteModal();
     }
-    
+
     // Check at least 7 days past week start date
-    const completeWeekLimitDate = addDays(
+    let completeWeekLimitDate = addDays(
       parseISO(programme.currentWeek.startedAt),
       6,
-    );
+    ).setHours(0, 0, 0, 0);
 
     // Passed limit date  note: === 0 means same date as today, we need next day
-    if (differenceInDays(new Date(), completeWeekLimitDate) > 0) {
+    const now = new Date().setHours(0, 0, 0, 0);
+    if (differenceInDays(now, completeWeekLimitDate) > 0) {
       callCompleteWeekMutation();
     } else {
       // Week completee not allowed, show stay tuned where needed
@@ -116,14 +117,16 @@ export default function WorkoutHomeScreen() {
   }
 
   async function callCompleteWeekMutation() {
+
     setLoading(true);
     await completeWeekMutation()
-      .then((res) => {
+      .then(async (res) => {
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
-          updateConsecutiveWorkouts();
-          updateStoredDays([]);
+          await updateConsecutiveWorkouts();
+          await AsyncStorage.removeItem('@CURRENT_WEEK');
+          await AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
           getProgramme();
         } else {
           setLoading(false);
@@ -134,7 +137,6 @@ export default function WorkoutHomeScreen() {
         setLoading(false);
       });
   }
-
 
   async function constructWeekCompleteModal() {
     const {weekNumber} = programme.currentWeek;
@@ -147,12 +149,12 @@ export default function WorkoutHomeScreen() {
       workout.exercises.map((exercise) => {
         sets += exercise.sets.length;
         exercise.sets.map((set) => {
-          switch(exercise.setType) {
-            case "REPS": {
+          switch (exercise.setType) {
+            case 'REPS': {
               reps += set.quantity;
               break;
             }
-            case "TIME": {
+            case 'TIME': {
               seconds += set.quantity;
               break;
             }
@@ -167,9 +169,8 @@ export default function WorkoutHomeScreen() {
       totalDuration: duration,
       totalReps: reps,
       totalSets: sets,
-      totalSeconds: seconds
+      totalSeconds: seconds,
     };
-
 
     // Set currentWeek id to prevent showing modal again for the same week
     setModalShown();
@@ -178,7 +179,7 @@ export default function WorkoutHomeScreen() {
 
   async function shouldShowWeekCompleteModal() {
     let idOfLastWeekShown =
-      (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '0';
+      (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '-1';
     return Number(idOfLastWeekShown) !== programme.currentWeek.weekNumber;
   }
 
@@ -189,25 +190,13 @@ export default function WorkoutHomeScreen() {
     );
   }
 
-  const getNextWeek = (workouts) => {
-    // Sort by index and isCompleted
-    let weekWorkout = workouts
-      .slice()
-      .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
-
-    const week = addWorkoutDates(addRestDays(weekWorkout), false);
-
-    return week;
-  };
-
   useEffect(() => {
     if (programme) {
       if (weekNumber === 1 && currentWeek) {
         setWorkoutsToDisplay(currentWeek);
         setLoading(false);
       }
-      if (weekNumber === 2) {
-        const nextWeek = getNextWeek(programme.nextWeek.workouts);
+      if (weekNumber === 2 && nextWeek) {
         setWorkoutsToDisplay(nextWeek);
       }
 
@@ -227,9 +216,9 @@ export default function WorkoutHomeScreen() {
       }
 
       const previousWorkoutDates = [];
-      const completedWorkouts = programme.currentWeek.workouts.filter(
-        (workout) => workout.completedAt !== null,
-      );
+      const completedWorkouts = programme.currentWeek.workouts
+        .filter((workout) => workout.completedAt !== null)
+        .sort((a, b) => new Date(a.completedAt) - new Date(b.completedAt));
       completedWorkouts.forEach((workout) =>
         previousWorkoutDates.push(workout.completedAt),
       );
@@ -340,10 +329,11 @@ export default function WorkoutHomeScreen() {
   }
 
   async function showStayTunedModal() {
-    const firstDayNextWeek = addDays(
-      parseISO(programme.currentWeek.startedAt),
-      7,
-    );
+    const lastDate = currentWeek.reduce((a, b) =>
+      a.exactDate > b.exactDate ? a : b,
+    ).exactDate;
+    const nextWeekStartDate = addDays(lastDate, 1);
+
     const programmeLength = programme.trainer.programmes.filter(
       (prog) => prog.environment === programme.environment,
     )[0].numberOfWeeks;
@@ -352,7 +342,7 @@ export default function WorkoutHomeScreen() {
       name: programme?.trainer.name,
       venue: programme?.environment,
       image: programme?.programmeImage,
-      date: firstDayNextWeek,
+      date: nextWeekStartDate,
       type:
         programme?.currentWeek.weekNumber === programmeLength
           ? 'programmeComplete'

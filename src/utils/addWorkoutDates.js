@@ -8,10 +8,10 @@
 
 import {addDays, format} from 'date-fns';
 
-const addWorkoutDates = (data, thisWeek) => {
+const addWorkoutDates = (data, startDate) => {
   const newData = data.map((workout, index) => {
-    const today = new Date();
-    const date = thisWeek ? addDays(today, index) : addDays(today, index + 7);
+    
+    const date =  addDays(startDate, index);
     const formattedDate = format(date, 'iiii, do LLL');
 
     if (workout.workout) {
@@ -20,6 +20,7 @@ const addWorkoutDates = (data, thisWeek) => {
         intensity: workout.workout.intensity,
         duration: workout.workout.duration,
         date: formattedDate,
+        exactDate: date,
         day: workout.day,
       };
     } else {

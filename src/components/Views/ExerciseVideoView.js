@@ -34,6 +34,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const [showControls, setShowControls] = useState(true);
 
   const [currentVideo, setCurrentVideo] = useState('video');
+  const [ended, setEnded] = useState(false);
 
   const videoRef = useRef();
 
@@ -42,6 +43,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       width: '100%',
     },
   };
+
 
   useEffect(() => {
     // Autoplay if its current exercise and there is remaining video
@@ -57,6 +59,13 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       videoRef.current.pause();
     }
   }, [currentExerciseIndex, index]);
+
+
+  // Video url has changed 
+  useEffect(()=> {
+    setEnded(false);
+    setIsPaused(false);
+  }, [currentVideo]);
 
   const videoProps = {
     height: getHeight(385),
@@ -77,6 +86,9 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     },
     onEnd: () => {
       setCurrentProgress(videoDuration);
+      setEnded(true)
+      setIsPaused(true)
+      //videoRef.current.reset()
     },
 
     onError: (error) => console.log('Error loading video:', error),
@@ -113,12 +125,18 @@ export default function ({video, videoEasy, videoEasiest, index}) {
          position: 'absolute',
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
-        backgroundColor: colors.black10,
+        backgroundColor: colors.black20,
       }}
       useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
-          videoRef.current.pause();
+
+          if (ended) {
+            setEnded(false);
+            setIsPaused(false);
+            videoRef.current.reset();
+          }
+          else videoRef.current.pause();
         }}
         isPaused={isPaused}
         videos={videos}
@@ -157,7 +175,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
           progress={currentProgress}
           height={getHeight(5)}
         />
-        {controls()}
+        {showControls && controls()}
       </View>
     </View>
   );

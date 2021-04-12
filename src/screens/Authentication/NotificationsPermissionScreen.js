@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {useMutation} from '@apollo/client';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import useUserData from '../../hooks/data/useUserData';
+import useLoading from '../../hooks/loading/useLoading';
 
 // import {Notifications} from 'react-native-notifications';
 // import {NotificationsHook} from 'the-core-ui-module-tdnotifications';
@@ -27,6 +28,8 @@ export default function NotificationPermissionScreen() {
   // const {updateNotificationsPreferencesTo} = NotificationsHook();
 
   const {preferences, getPreferences, setPreferences} = useUserData();
+  const {setLoading} = useLoading();
+
 
   const [updatePreferences] = useMutation(UpdatePreference);
 
@@ -35,13 +38,9 @@ export default function NotificationPermissionScreen() {
     getPreferences();
   }, []);
 
-  const disallowNotifications = () => {
-    return AsyncStorage.setItem('@NOTIFICATIONS_ASKED', 'false').then((res) => {
-      navigateForward();
-    });
-  };
-
   const saveSetting = async (enabled) => {
+    setLoading(true);
+
     // Notifications.registerRemoteNotifications();
     // updateNotificationsPreferencesTo(true);
 
@@ -73,7 +72,8 @@ export default function NotificationPermissionScreen() {
       })
       .catch((err) => {
         console.log(err, '<---notifications screen error');
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   // MARK: - Actions

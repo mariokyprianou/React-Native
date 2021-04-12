@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState, useContext} from 'react';
 import {View, Animated, Image, ImageBackground, StyleSheet} from 'react-native';
 import Colors from '../../styles/Colors';
@@ -6,7 +5,7 @@ import isIphoneX from '../../utils/isIphoneX';
 import {ScaleHook} from 'react-native-design-to-component';
 import isRTL from '../../utils/isRTL';
 
-export default function({dots, position}) {
+export default function ({dots, position}) {
   const {getHeight, getWidth, radius} = ScaleHook();
 
   let data = [];
@@ -21,13 +20,6 @@ export default function({dots, position}) {
       bottom: getHeight(135),
     },
   };
-
-  if (isRTL()) {
-    styles.paginationDotsContainer = {
-        ...styles.paginationDotsContainer,
-        transform: [{ rotateY: '180deg'}],
-    }
-  }
 
   return (
     <View style={styles.paginationDotsContainer}>

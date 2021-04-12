@@ -33,8 +33,7 @@ const fileTypeFrom = (url) => {
   const urlPath = url.split('?')[0];
   const urlSeparated = urlPath.split('.');
   const fileType = urlSeparated[urlSeparated.length - 1];
-  //return fileType;
-  return "png";
+  return fileType;
 };
 
 const pathFromDocumentsDirForImageFrom = (url, identifier) => {
@@ -59,14 +58,14 @@ const localPathForNewPNGAsset = () => {
 
 // MARK: - Exposed Functions for Writing & Deleting
 
-const cacheImageFromUrl = async (url, customIdentifier = identifier) => {
+const cacheImageFromUrl = async (url) => {
   if (!url) {
     throw new Error('Saving image Error: missing URL');
   }
   //let identifier = uuid.v1();
   await checkLocalResForCachedImagesExists();
-  let path = localPathForImageFrom(url, customIdentifier);
-  let pathFromDocumentsDir = pathFromDocumentsDirForImageFrom(url, customIdentifier);
+  let path = localPathForImageFrom(url, identifier);
+  let pathFromDocumentsDir = pathFromDocumentsDirForImageFrom(url, identifier);
 
   return RNFetchBlob.config({
     fileCache: true,

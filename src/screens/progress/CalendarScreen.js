@@ -16,6 +16,7 @@ import Header from '../../components/Headers/Header';
 import processProgressData from '../../utils/processProgressData';
 import useProgressData from '../../hooks/data/useProgressData';
 import useLoading from '../../hooks/loading/useLoading';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -47,12 +48,17 @@ export default function CalendarScreen() {
   }, []);
 
   useEffect(() => {
+    if (progress) {
     const progressData = progress
       .map((month) => {
         return processProgressData(month.days);
       })
       .flat();
     setProgressHistoryData(progressData);
+    }
+    else {
+      displayAlert({text: "There is no progress available at this time."})
+    }
 
     setLoading(false);
   }, [progress]);

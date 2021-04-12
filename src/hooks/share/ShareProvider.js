@@ -26,14 +26,11 @@ export default function DataProvider(props) {
             query: ShareMedia,
             fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
             variables: {
-                input: {
                 type: shareType
-                },
             },
         })
         .then((res) => {
-            console.log("getShareData", res.data)
-            return res.data;
+            return res.data.shareMedia;
         })
         .catch((err) => console.log(err, 'getShareData error'));
     }, []);

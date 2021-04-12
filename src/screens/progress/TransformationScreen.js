@@ -9,6 +9,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import Share from 'react-native-share';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {TDSlideshow} from 'the-core-ui-module-tdslideshow';
@@ -23,6 +24,8 @@ import ProgressImage from '../../apollo/queries/ProgressImage';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import useShare from '../../hooks/share/useShare';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -40,6 +43,8 @@ export default function TransformationScreen() {
   const navigation = useNavigation();
   
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {ShareMediaType, getShareData} = useShare();
+
  
 
   useEffect(()=> {
@@ -136,8 +141,28 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err));
   }
 
-  function handleShare() {
-    firebaseLogEvent(analyticsEvents.shareTransformation, {});
+  async function handleShare() {
+    
+    setLoading(true)
+    const { colour, url }  = await getShareData(ShareMediaType.progress);
+
+    // url here should be the frame named for the shared image
+
+    try {
+      // TODO - Supply relevant urls
+      let res = await PowerShareAssetsManager.shareProgress({
+        beforeImageUrl: beforePic,
+        afterImageUrl: afterPic,
+        colour: colour,
+      });
+      console.log('Share res', res);
+      firebaseLogEvent(analyticsEvents.shareTransformation, {});
+      
+    } catch (error) {
+      console.error(error);
+    }
+
+    setLoading(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

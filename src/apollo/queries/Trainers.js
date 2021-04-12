@@ -17,7 +17,10 @@ export default gql`
         id
         numberOfWeeks
         programmeImage
-        progressStartShareMediaImage
+        progressStartShareMediaImage {
+          url
+          colour
+        }
         environment
         fatLoss
         fitness

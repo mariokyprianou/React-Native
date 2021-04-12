@@ -20,6 +20,10 @@ import {useRoute} from '@react-navigation/core';
 import Share from 'react-native-share';
 import useUserData from '../../hooks/data/useUserData';
 import useProgressData from '../../hooks/data/useProgressData';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import {SampleImageUrl} from '../../utils/SampleData';
+import useLoading from '../../hooks/loading/useLoading';
+import useShare from '../../hooks/share/useShare';
 
 
 const screenWidth = Dimensions.get('screen').width;
@@ -32,12 +36,15 @@ export default function ChallengeCompletionScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict, ShareDict} = dictionary;
   const {
-    params: {name, type, result, trainer, id, weightPreference, unitType},
+    params: {name, type, result, trainer, id, weightPreference, unitType, ellapsedTime, description},
   } = useRoute();
   const navigation = useNavigation();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {setLoading} = useLoading();
+  const {ShareMediaType, getShareData} = useShare();
 
   const [chartInfo, setChartInfo] = useState(null);
+
 
   useEffect(()=> {
     navigation.setOptions({
@@ -125,62 +132,46 @@ export default function ChallengeCompletionScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const url = 'www.google.com';
-  const shareOptions = Platform.select({
-    ios: {
-      activityItemSources: [
-        {
-          // For sharing url with custom title.
-          placeholderItem: {
-            type: 'url',
-            content: url,
-          },
-          item: {
-            default: {type: 'url', content: url},
-          },
-          subject: {
-            default: ShareDict.ShareProgress,
-          },
-          linkMetadata: {
-            originalUrl: url,
-            url,
-            title: ShareDict.ShareProgress,
-          },
-        },
-      ],
-    },
-    default: {
-      title: ShareDict.ShareProgress,
-      subject: ShareDict.ShareProgress,
-      message: `${ShareDict.Message} ${url}`,
-    },
-  });
 
-  function handleShare() {
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showShareActionSheetWithOptions(
-        {
-          url: '',
-          message: ShareDict.ShareProgress,
-        },
-        (error) => console.log(error),
-        (success, method) => {
-          if (success) {
-            shareEvent();
-            console.log('Successfully shared', success);
-          }
-        },
-      );
-    } else {
-      Share.open({shareOptions})
+  async function handleShare() {
+    setLoading(true)
+    
+    const { colour, url } = await getShareData(ShareMediaType.challengeComplete);
+
+    // Achievement either int or string value on the banner
+    let isTimeBased = type === "STOPWATCH";
+
+    if (isTimeBased) {
+      PowerShareAssetsManager.shareStringAchievement({
+        imageUrl: url,
+        achievementValueString: ellapsedTime,
+        subtitle: description,
+        colour: colour
+      })
         .then((res) => {
-          shareEvent();
-          console.log(res);
+          shareEvent()
         })
         .catch((err) => {
-          err && console.log(err);
-        });
+          console.log('SHARE ERR: ', err);
+        })
+        .finally(()=> setLoading(false));
     }
+    else {
+      PowerShareAssetsManager.shareIntAchievemnt({
+        imageUrl: url,
+        achievedValue: result,
+        subtitle: description,
+        colour: colour,
+      })
+        .then((res) => {
+          shareEvent();
+        })
+        .catch((err) => {
+
+        })
+        .finally(()=> setLoading(false));
+    }
+     
   }
 
   function shareEvent() {

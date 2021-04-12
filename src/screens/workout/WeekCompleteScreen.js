@@ -19,6 +19,10 @@ import Header from '../../components/Headers/Header';
 import {useRoute} from '@react-navigation/core';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import {SampleImageUrl} from '../../utils/SampleData';
+import useShare from '../../hooks/share/useShare';
+import useLoading from '../../hooks/loading/useLoading';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -37,10 +41,14 @@ export default function WeekCompleteScreen() {
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
+  const {WorkoutDict, ShareDict} = dictionary;
   const navigation = useNavigation();
   const {programme, programmeModalImage} = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {ShareMediaType, getShareData} = useShare();
+  const {setLoading} = useLoading();
+
+
 
   useEffect(() => {
     navigation.setOptions({
@@ -85,13 +93,41 @@ export default function WeekCompleteScreen() {
     },
   };
 
+
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleShare() {
-    firebaseLogEvent(analyticsEvents.shareCompletedWorkout, {
-      trainerId: programme.trainer.id,
-      programmeId: programme.id,
-    });
+   
     // handle share
+  async function handleShare() {
+    setLoading(true)
+    const { colour, url } = await getShareData(ShareMediaType.progress);
+
+    const mins = totalDuration % 60;
+    const hrs = (totalDuration - mins)/60;
+    const totalTimeTrained = hrs.toString() + ":" + (mins<10?"00":"") + mins.toString() + ":00";
+
+    try {
+      const programmeName = 'home';
+      // TODO: - Hook up relevant values
+      // TODO: -  Display loading
+      let res = await PowerShareAssetsManager.shareWeekComplete({
+        imageUrl: url,
+        title: ShareDict.WeekCompleteTitle(weekNumber, name, programmeName.toLowerCase()),
+        workoutsCompleted: 6,
+        totalTimeTrained: totalTimeTrained,
+        colour: colour
+      });
+
+      firebaseLogEvent(analyticsEvents.shareCompletedWorkout, {
+        trainerId: programme.trainer.id,
+        programmeId: programme.id,
+      });
+
+    } catch (err) {
+      console.log('SHARE ERR: ', err);
+    }
+
+    setLoading(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

@@ -76,7 +76,9 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
+
     if (programme && currentWeek) {
+      
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,

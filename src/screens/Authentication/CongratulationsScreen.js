@@ -23,7 +23,6 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import {useRoute} from '@react-navigation/core';
-import Share from 'react-native-share';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import useCommonData from '../../hooks/data/useCommonData';
@@ -34,6 +33,10 @@ import StartProgramme from '../../apollo/mutations/StartProgramme';
 import {useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+import {SampleImageUrl} from '../../utils/SampleData';
+
+import useShare from '../../hooks/share/useShare';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -63,6 +66,7 @@ export default function CongratulationsScreen() {
   const { getTrainers } = useCommonData();
   const {programmeModalImage, setProgrammeModalImage, programme, getProgramme, updateStoredDays} = UseData();
   const {setLoading} = useLoading();
+  const {ShareMediaType, getShareData} = useShare();
 
   navigation.setOptions({
     header: () => null,
@@ -120,62 +124,23 @@ export default function CongratulationsScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const url = 'www.google.com';
-  const shareOptions = Platform.select({
-    ios: {
-      activityItemSources: [
-        {
-          // For sharing url with custom title.
-          placeholderItem: {
-            type: 'url',
-            content: url,
-          },
-          item: {
-            default: {type: 'url', content: url},
-          },
-          subject: {
-            default: ShareDict.ShareProgress,
-          },
-          linkMetadata: {
-            originalUrl: url,
-            url,
-            title: ShareDict.ShareProgress,
-          },
-        },
-      ],
-    },
-    default: {
-      title: ShareDict.ShareProgress,
-      subject: ShareDict.ShareProgress,
-      message: `${ShareDict.Message} ${url}`,
-    },
-  });
 
-  function handlePressShare() {
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showShareActionSheetWithOptions(
-        {
-          url: '',
-          message: ShareDict.ShareProgress,
-        },
-        (error) => console.log(error),
-        (success, method) => {
-          if (success) {
-            shareEvent();
-            console.log('Successfully shared', success);
-          }
-        },
-      );
-    } else {
-      Share.open({shareOptions})
-        .then((res) => {
-          shareEvent();
-          console.log(res);
-        })
-        .catch((err) => {
-          err && console.log(err);
-        });
-    }
+  async function handlePressShare() {
+    setLoading(true);
+
+    const prog = newProgramme || currentProgramme;
+    const url = prog.progressStartShareMediaImage.url || prog.programmeImage;
+
+    PowerShareAssetsManager.shareProgrammeStart({
+      imageUrl: url,
+    })
+      .then((res) => {
+        shareEvent();
+      })
+      .catch((err) => {
+        console.log("ERR", err);
+      })
+      .finally(()=> setLoading(false));
   }
 
   function shareEvent() {

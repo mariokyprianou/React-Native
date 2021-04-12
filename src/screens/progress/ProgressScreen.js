@@ -197,7 +197,7 @@ export default function ProgressScreen() {
                   image={fakeImage}
                   onPress={() => navigation.navigate('Transformation')}
                 />
-                {[challenges[0]].map((challenge, index) => {
+                {challenges.map((challenge, index) => {
                   const {
                     name,
                     id,

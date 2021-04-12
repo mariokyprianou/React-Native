@@ -188,6 +188,8 @@ export default function ChallengeEndScreen() {
           weightPreference,
           result: challengeResult,
           trainer: programme.trainer.name,
+          ellapsedTime: elapsedMS && getValueByName('result'),
+          description: description
         });
       })
       .catch((err) => {

@@ -534,6 +534,7 @@ const newProgrammeView = () => (
               setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: false,
+                newProgramme: selectedProgram,
                 trainerId: selectedTrainer.id,
                 newTrainer: selectedTrainer.name,
                 environment: selectedProgram.environment,

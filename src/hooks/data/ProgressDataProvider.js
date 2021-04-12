@@ -34,7 +34,6 @@ export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
   const client = useApolloClient();
 
-
   // Get progress data
   const [progress, setProgress] = useState();
 

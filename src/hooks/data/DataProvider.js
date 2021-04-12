@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
-import {useLazyQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
@@ -30,6 +30,7 @@ import {
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
+
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
@@ -41,7 +42,6 @@ export default function DataProvider(props) {
 
   // 3 workouts are allowed without subscription
   const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
-
 
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(async (numberOfWorkouts) => {

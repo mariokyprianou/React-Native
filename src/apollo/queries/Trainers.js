@@ -17,6 +17,7 @@ export default gql`
         id
         numberOfWeeks
         programmeImage
+        progressStartShareMediaImage
         environment
         fatLoss
         fitness

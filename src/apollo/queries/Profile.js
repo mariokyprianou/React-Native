@@ -24,6 +24,7 @@ export default gql`
       createdAt
       updatedAt
       completedWorkouts
+      screenshotsTaken
     }
   }
 `;

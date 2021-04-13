@@ -54,7 +54,7 @@ const PurchaseModalScreen = ({}) => {
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
-  const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {firebaseLogEvent, analyticsEvents, userData} = useUserData();
   const {setLoading} = useLoading();
 
   // MARK: - Local
@@ -76,7 +76,6 @@ const PurchaseModalScreen = ({}) => {
   const [googleSubscribe] = useMutation(RegisterGooglePlaySubscription);
   const [appleSubscribe] = useMutation(RegisterAppStoreSubscription);
 
-
   // MARK: - Use Effect
   useEffect(() => {
     setLoading(true);
@@ -84,6 +83,7 @@ const PurchaseModalScreen = ({}) => {
       header: () => <Header showModalCross white transparent />,
     });
     StatusBar.setBarStyle('light-content');
+
     initConnection();
     
     return () => {
@@ -157,6 +157,9 @@ const PurchaseModalScreen = ({}) => {
   
                 const ackResult = await finishTransaction(purchase);
                 console.log('ackResult', ackResult);
+               
+                firebaseLogEvent(analyticsEvents.newSubscription, {email: userData.email});
+
               }).catch((err) => console.log(err));
           }
            

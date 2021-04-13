@@ -24,6 +24,7 @@ import GetSubscription from '../../apollo/queries/GetSubscription';
 import * as R from 'ramda';
 import {format} from 'date-fns';
 import analytics from '@react-native-firebase/analytics';
+import Profile from '../../apollo/queries/Profile';
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -187,10 +188,12 @@ export default function UserDataProvider(props) {
   const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
 
 
-  const [getProfile] = useLazyQuery(CanChangeDevice, {
+  const [getProfile] = useLazyQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       if (res && res.profile) {
+        setUserData(res.profile);
+
         const {canChangeDevice, deviceUDID, screenshotsTaken} = res.profile;
 
         if (screenshotsTaken >= 7) {

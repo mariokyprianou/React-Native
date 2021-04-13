@@ -169,9 +169,9 @@ const enGB = {
   PurchaseDict: {
     Info:
       'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
-    YearlyButtonTitle: (price) => `YEARLY \u2022 £${price} / month`,
-    YearlyButtonSubTitle: (price) => `£${price} / year billed annually`,
-    MonthlyButtonTitle: (price) => `MONTHLY \u2022 £${price} / month`,
+    YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / month`,
+    YearlyButtonSubTitle: (price) => `${price} / year billed annually`,
+    MonthlyButtonTitle: (price) => `MONTHLY \u2022 ${price} / month`,
     SavePrompt: (percentage) => `Save ${percentage}%`,
     MonthlyButtonSubTitle: 'billed monthly',
     RestorePurchaseButton: 'Restore purchases',

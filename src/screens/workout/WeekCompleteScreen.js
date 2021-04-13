@@ -100,11 +100,15 @@ export default function WeekCompleteScreen() {
     // handle share
   async function handleShare() {
     setLoading(true)
-    const { colour, url } = await getShareData(ShareMediaType.progress);
+    const { colour, url } = await getShareData(ShareMediaType.weekComplete);
+    console.log("url", url)
+    let mins = totalDuration % 60;
+    let hrs = (totalDuration - mins)/60;
+    
+    hrs = hrs === 0 ? "00" : hrs < 10 ? `0${hrs}` : hrs;
+    mins = mins === 0 ? "00" : mins < 10 ? `0${mins}` : mins;
 
-    const mins = totalDuration % 60;
-    const hrs = (totalDuration - mins)/60;
-    const totalTimeTrained = hrs.toString() + ":" + (mins<10?"00":"") + mins.toString() + ":00";
+    const totalTimeTrained = hrs.toString() + ":" + mins.toString() + ":00";
 
     try {
       const programmeName = 'home';
@@ -126,6 +130,8 @@ export default function WeekCompleteScreen() {
     } catch (err) {
       console.log('SHARE ERR: ', err);
     }
+
+  
 
     setLoading(false);
   }

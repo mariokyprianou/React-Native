@@ -243,7 +243,7 @@ const enGB = {
     Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
 
-    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with \n${name}'s ${programmeName.toLowerCase()}\n programme!`
+    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`
   },
 
   SettingsDict: {

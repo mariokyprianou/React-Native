@@ -24,7 +24,7 @@ export default function DataProvider(props) {
 
         return client.query({
             query: ShareMedia,
-            fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+            fetchPolicy: 'no-cache',
             variables: {
                 type: shareType
             },

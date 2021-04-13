@@ -116,7 +116,7 @@ const shareProgress = async ({
 // MARK: - Private share sub-functions
 
 const shareDirectlyToInstagramStory = async (path) => {
-  console.log(path);
+  console.log("shareDirectlyToInstagramStory", path);
 
   // Path should always be this for Android
   // file://data/user/0/com.powerdigitallimited.power/files/imageCache/temp.png

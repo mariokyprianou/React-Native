@@ -12,7 +12,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import uuid from 'react-native-uuid';
 
 const localFolderName = 'imageCache';
-let identifier = Platform.OS === 'ios' ? uuid.v1() : 'temp';
+let identifier = uuid.v1();
 
 
 // MARK: - Private file name & path functions
@@ -33,7 +33,7 @@ const fileTypeFrom = (url) => {
   const urlPath = url.split('?')[0];
   const urlSeparated = urlPath.split('.');
   const fileType = urlSeparated[urlSeparated.length - 1];
-  return fileType;
+  return "png"; //fileType;
 };
 
 const pathFromDocumentsDirForImageFrom = (url, identifier) => {
@@ -57,8 +57,8 @@ const localPathForNewPNGAsset = () => {
 };
 
 // MARK: - Exposed Functions for Writing & Deleting
-
-const cacheImageFromUrl = async (url) => {
+// Added identifier param so we can store files with specific names 
+const cacheImageFromUrl = async (url, identifier = uuid.v1()) => {
   if (!url) {
     throw new Error('Saving image Error: missing URL');
   }

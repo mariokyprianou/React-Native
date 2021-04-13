@@ -110,6 +110,12 @@ const unlinkFileFromRelevantPath = async (path) => {
   await RNFetchBlob.fs.unlink(completePath);
 };
 
+const unlinkCacheDir = async () => {
+  const {dirs} = RNFetchBlob.fs;
+  const completePath = `${dirs.DocumentDir}/${localFolderName}`;
+  await RNFetchBlob.fs.unlink(completePath);
+};
+
 // const saveBase
 
 const ImagesCacheManager = {
@@ -117,6 +123,7 @@ const ImagesCacheManager = {
   cacheBase64ImagePng,
   unlinkFileFromRelevantPath,
   unlinkFileFromAbsolutePath,
+  unlinkCacheDir,
 };
 
 export default ImagesCacheManager;

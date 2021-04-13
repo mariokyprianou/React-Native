@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, Dimensions, Platform, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import Share from 'react-native-share';
@@ -26,6 +26,10 @@ import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
 import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
 import useShare from '../../hooks/share/useShare';
+import ImagesCacheManager from '../../utils/ImagesCacheManager';
+import parseISO from 'date-fns/parseISO';
+import format from 'date-fns/format';
+import { differenceInDays } from 'date-fns';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -45,7 +49,11 @@ export default function TransformationScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {ShareMediaType, getShareData} = useShare();
 
- 
+
+  const [selectedBeforeDate, setSelectedBeforeDate] = useState(userImages[0] && userImages[0].value);
+  const [selectedAfterDate, setSelectedAfterDate] = useState(userImages[userImages.length - 1] && userImages[userImages.length - 1].value);
+
+  
 
   useEffect(()=> {
     navigation.setOptions({
@@ -101,6 +109,7 @@ export default function TransformationScreen() {
     setLoading(true);
 
 
+
     // Check if we already have tthe url for this image
     const existingImage = imageUrls.find((it) => it.id === dateItem.id); 
 
@@ -113,8 +122,10 @@ export default function TransformationScreen() {
     }
 
     if (imageToSelect === 'before') {
+      setSelectedBeforeDate(dateItem.value);
       setBeforePic(url);
     } else if (imageToSelect === 'after') {
+      setSelectedAfterDate(dateItem.value);
       setAfterPic(url);
     }
     setLoading(false);
@@ -141,22 +152,33 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err));
   }
 
-  async function handleShare() {
+  function isSameDay(first, second) {
+    return differenceInDays(first.setHours(0, 0, 0, 0), second.setHours(0, 0, 0, 0)) === 0 &&
+        first.getDay() ===  second.getDay()
+  }
+
+  const handleShare = useCallback(async () => {
     
     setLoading(true)
     const { colour, url }  = await getShareData(ShareMediaType.progress);
-
-    // url here should be the frame named for the shared image
+    console.log("Url", url);
+    console.log("Before", beforePic);
+    console.log("After ", afterPic);
 
     try {
-      // TODO - Supply relevant urls
+      let beforeDate = parseISO(selectedBeforeDate);
+      beforeDate = isSameDay(new Date(), beforeDate) ? "TODAY" :  format(beforeDate, 'dd/LL/yyyy');
+      
+      let afterDate = parseISO(selectedAfterDate);
+      afterDate = isSameDay(new Date(), afterDate) ? "TODAY" :  format(afterDate, 'dd/LL/yyyy');
+      
       let res = await PowerShareAssetsManager.shareProgress({
         backgroundImageUrl: url,
         beforeImageUrl: beforePic,
         afterImageUrl: afterPic,
         colour: colour,
-        beforeDate: 'Date before',
-        afterDate: 'Date After',
+        beforeDate: beforeDate,
+        afterDate: afterDate,
       });
       console.log('Share res', res);
       firebaseLogEvent(analyticsEvents.shareTransformation, {});
@@ -166,10 +188,9 @@ export default function TransformationScreen() {
     }
 
     setLoading(false);
-  }
+  }, [beforePic, afterPic, selectedBeforeDate, selectedAfterDate, getShareData]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-
   return (
     <View style={styles.container}>
       <TDSlideshow
@@ -189,6 +210,8 @@ export default function TransformationScreen() {
                 <CustomDateSelectors
                   onPress={handleSelectDate}
                   storedImages={userImages}
+                  setSelectedBeforeDate={setSelectedBeforeDate}
+                  setSelectedAfterDate={setSelectedAfterDate}
                 />
               )
             : () => <></>

@@ -1,38 +1,40 @@
 package com.thecoreui;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.RectF;
-import android.os.Environment;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.facebook.react.bridge.Callback;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.thecoreui.assetCreator.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.GenericDeclaration;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class GIFManager extends ReactContextBaseJavaModule {
     private static ReactApplicationContext reactContext;
+    private Utils utils;
+    private TextPaint titleStyle = new TextPaint();
 
     GIFManager(ReactApplicationContext context) {
         super(context);
         reactContext = context;
+        utils = new Utils(reactContext);
     }
 
     @NonNull
@@ -125,6 +127,145 @@ public class GIFManager extends ReactContextBaseJavaModule {
         }
         encoder.finish();
         return bos.toByteArray();
+    }
+
+
+
+    @ReactMethod
+    public void createVideoFile(ReadableMap map, Promise promise) throws ExecutionException, InterruptedException, IOException {
+
+        String colorString = map.getString("colour");
+        titleStyle = utils.getPaint(colorString != null ? colorString : "WHITE");
+
+
+        // Background image
+        String backgroundImageUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("url");
+        Bitmap sourceBitmap = utils.getBitmap(backgroundImageUri);
+
+        Bitmap.Config config = sourceBitmap.getConfig();
+        if (config == null) {
+            config = Bitmap.Config.ARGB_8888;
+        }
+        int assetWidth = utils.assetWidth;
+        int assetHeight = utils.assetHeight;
+        Log.e("Dimensions: ", "width: "+ assetWidth + " height: "+ assetHeight);
+
+        // Before image canvas
+        Bitmap backgroundBeforeBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);
+        Canvas imageBeforeCanvas = new Canvas(backgroundBeforeBitmap);
+        imageBeforeCanvas.drawBitmap(sourceBitmap, 0f, 0f, null);
+
+        String beforePicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("beforeUrl");
+        Bitmap image1Bitmap = Glide.with(reactContext).asBitmap().load(beforePicUri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into((int) (assetWidth * 0.8), assetHeight / 2).get();
+        imageBeforeCanvas.drawBitmap(image1Bitmap,(int) (assetWidth * 0.1), (int) (assetHeight * 0.2), null);
+
+        // After image canvas
+        Bitmap backgroundAfterBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);
+        Canvas imageAfterCanvas = new Canvas(backgroundAfterBitmap);
+        imageAfterCanvas.drawBitmap(sourceBitmap, 0f, 0f, null);
+        String afterPicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("afterUrl");
+        Bitmap image2Bitmap = Glide.with(reactContext).asBitmap().load(afterPicUri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into((int) (assetWidth * 0.8), assetHeight / 2).get();
+        imageAfterCanvas.drawBitmap(image2Bitmap,(int) (assetWidth * 0.1), (int) (assetHeight * 0.2), null);
+
+
+        // Date Text UI
+        String beforeDate = map.getString("beforeDate");
+        Spannable beforeSpan = utils.transformationDate(beforeDate);
+        StaticLayout textBeforeLayout = new StaticLayout(
+                beforeSpan, titleStyle, imageBeforeCanvas.getWidth(), Layout.Alignment.ALIGN_NORMAL, 0.8f, 0.0f, false);
+
+        String afterDate = map.getString("afterDate");
+        Spannable afterSpan = utils.transformationDate(afterDate);
+        StaticLayout textAfterLayout = new StaticLayout(
+                afterSpan, titleStyle, imageBeforeCanvas.getWidth(), Layout.Alignment.ALIGN_OPPOSITE, 0.8f, 0.0f, false);
+
+        // Add text on images
+        float textPositionY = (assetHeight / 4f) + (assetHeight / 2f) + 20;
+        float textLeftPositionX = assetWidth * 0.1f;
+        float textRightPositionX = -(assetWidth * 0.1f);
+
+        utils.positionOnCanvas(imageBeforeCanvas, textBeforeLayout, textLeftPositionX, textPositionY);
+        utils.positionOnCanvas(imageBeforeCanvas, textAfterLayout, textRightPositionX, textPositionY);
+
+        utils.positionOnCanvas(imageAfterCanvas, textBeforeLayout, textLeftPositionX, textPositionY);
+        utils.positionOnCanvas(imageAfterCanvas, textAfterLayout, textRightPositionX, textPositionY);
+
+        /**  Save images **/
+        File beforeImageFile = new File(beforePicUri);
+        utils.saveImage(backgroundBeforeBitmap, beforeImageFile);
+        Log.d("beforeImageFile", beforeImageFile.getAbsolutePath());
+
+        File afterImageFile = new File(afterPicUri);
+        utils.saveImage(backgroundAfterBitmap, afterImageFile);
+        Log.d("afterImageFile", afterImageFile.getAbsolutePath());
+
+
+        // Start frame creation
+
+
+        int targetWidth = utils.assetWidth;
+        int targetHeight = utils.assetHeight;
+
+        double numberOfImages = 10;
+        double chunkWidth = targetWidth / numberOfImages;
+
+        ArrayList<Bitmap> bitmapList = new ArrayList<Bitmap>();
+        ArrayList<Bitmap> secondBitmapList = new ArrayList<Bitmap>();
+        for (int i = 1; i <= numberOfImages; i++) {
+            final Bitmap mergedBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+            final Canvas canvas = new Canvas(mergedBitmap);
+
+            double beforeWidth = i * chunkWidth;
+            if (beforeWidth == 0.0) {
+                beforeWidth = 1.0;
+            }
+            else if (beforeWidth == targetWidth) {
+                beforeWidth = beforeWidth - 1f;
+            }
+            Bitmap croppedImage1 = Bitmap.createBitmap(backgroundBeforeBitmap, 0, 0, (int)beforeWidth, targetHeight);
+
+            double afterWidth = (numberOfImages - i) * chunkWidth;
+            if (afterWidth == 0.0) {
+                afterWidth = 1.0;
+            }
+            else if (afterWidth == targetWidth) {
+                afterWidth = afterWidth - 1f;
+            }
+
+            Bitmap croppedImage2 = Bitmap.createBitmap(backgroundAfterBitmap, (int)beforeWidth, 0, (int)afterWidth, targetHeight);
+
+            canvas.drawBitmap(croppedImage1, 0f, 0f, null);
+            canvas.drawBitmap(croppedImage2, (float) beforeWidth, 0f, null);
+
+            bitmapList.add(mergedBitmap);
+
+            Bitmap mergedBitmap2 = mergedBitmap.copy(mergedBitmap.getConfig(), true);
+            secondBitmapList.add(0, mergedBitmap2);
+
+            Log.d("", "Created image: " + Integer.toString(i));
+        }
+
+        ArrayList<Bitmap> finalBitmapList = new ArrayList<Bitmap>();
+        finalBitmapList.addAll(secondBitmapList);
+        finalBitmapList.addAll(bitmapList);
+
+
+        // File to store video in
+        File dir = new File(reactContext.getFilesDir().getAbsolutePath(), "video");
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+
+        File file = new File(dir, "video.mp4");
+
+
+        promise.resolve(file.getAbsolutePath());
     }
 }
 

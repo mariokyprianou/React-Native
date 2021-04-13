@@ -19,6 +19,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,8 +31,8 @@ public class Utils {
     int padding = 10;
     int topPadding = 40;
 
-    int assetWidth = 1080;
-    int assetHeight = 1920;
+    public int assetWidth = 1080;
+    public int assetHeight = 1920;
 
     Context context;
 
@@ -175,7 +176,12 @@ public class Utils {
         Log.e("Screen Dimensions", " width = "+displayMetrics.widthPixels+ " height = "+ displayMetrics.heightPixels );
 
 
-        Bitmap sourceBitmap = Glide.with(context).asBitmap().load(imagePath).submit().get();
+        Bitmap sourceBitmap = Glide.with(context)
+                .asBitmap()
+                .load(imagePath)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .submit().get();
 
         assetWidth = sourceBitmap.getWidth();
         assetHeight = sourceBitmap.getHeight();

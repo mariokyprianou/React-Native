@@ -111,26 +111,47 @@ const generateStringAchievementAsset = async ({
   }
 };
 
-// const generateGifAsset = async ({beforeImageUrl, afterImageUrl}) => {
-//   try {
-//     let localPathToBeforeImage = await ImagesCacheManager.cacheImageFromUrl(
-//       beforeImageUrl,
-//     );
-//     let localPathToAfterImage = await ImagesCacheManager.cacheImageFromUrl(
-//       afterImageUrl,
-//     );
-//     const localGifPath = await GIFManager.fetch(
-//       localPathToBeforeImage,
-//       localPathToAfterImage,
-//     );
-//     console.log('Gif created!');
-//     await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToBeforeImage);
-//     await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToAfterImage);
-//     return localGifPath;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+const generateGifAsset = async (
+  {
+    backgroundImageUrl,
+    beforeImageUrl,
+    afterImageUrl,
+    colour,
+    beforeDate,
+    afterDate,
+  }) => {
+  try {
+    let localPathToBackground = await ImagesCacheManager.cacheImageFromUrl(
+      backgroundImageUrl, 'back'
+    );
+    let localPathToBeforeImage = await ImagesCacheManager.cacheImageFromUrl(
+      beforeImageUrl, 'before'
+    );
+    let localPathToAfterImage = await ImagesCacheManager.cacheImageFromUrl(
+      afterImageUrl, 'after'
+    );
+
+    const data = {
+      url: localPathToBackground,
+      beforeUrl: localPathToBeforeImage,
+      afterUrl: localPathToAfterImage,
+      colour,
+      beforeDate,
+      afterDate,
+    }
+
+    const localGifPath = await GIFManager.createVideoFile(data);
+
+    console.log('Gif created!');
+    // await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToBackground);
+    // await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToBeforeImage);
+    // await ImagesCacheManager.unlinkFileFromRelevantPath(localPathToAfterImage);
+    const localSharePath = 'file:/' + localGifPath;
+    return localSharePath;
+  } catch (err) {
+    throw err;
+  }
+};
 
 const generateSimpleShareableAsset = async (url) => {
   try {
@@ -150,7 +171,7 @@ const CustomAssetsGenerator = {
   generateWeekCompleteAsset,
   generateIntAchievementAsset,
   generateStringAchievementAsset,
-  // generateGifAsset,
+  generateGifAsset,
   generateSimpleShareableAsset,
 };
 

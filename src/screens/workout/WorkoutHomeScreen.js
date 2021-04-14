@@ -94,6 +94,7 @@ export default function WorkoutHomeScreen() {
         } else weekCompleted();
       }
 
+      console.log("WeekStartedAt:", programme.currentWeek.startedAt);
       checkWeekComplete();
     }
   }, [programme, currentWeek]);

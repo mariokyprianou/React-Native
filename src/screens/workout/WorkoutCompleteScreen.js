@@ -188,7 +188,7 @@ export default function WorkoutCompleteScreen() {
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
-          firebaseLogEvent(analyticsEvents.completeWorkout, {
+          firebaseLogEvent(analyticsEvents.completedWorkout, {
             workoutId: selectedWorkout.id,
             workoutName: selectedWorkout.name,
           });

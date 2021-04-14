@@ -68,20 +68,26 @@ export default function ExerciseView(props) {
     variables: {exercise: exercise.id},
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      if (res.getExerciseWeight.length > 0) {
+      if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
         setWeightHistory(res.getExerciseWeight);
       }
+      else {
+        setWeightHistory([]);
+      }
     },
-    onError: (error) => console.log(error, '<---- error fetching weights'),
+    onError: (error) => {
+      setWeightHistory([]);
+      console.log(error, '<---- error fetching weights');
+    }
   });
 
 
   // To observe sets are behaving as expected
-  useEffect(()=> {
-    if (index === currentExerciseIndex) {
-      console.log(sets)
-    }
-  }, [sets]);
+  // useEffect(()=> {
+  //   if (index === currentExerciseIndex) {
+  //     console.log(sets)
+  //   }
+  // }, [sets]);
 
 
   // Initial render
@@ -228,16 +234,19 @@ export default function ExerciseView(props) {
   }
 
   const handleSelectWeights = () => {
-    if (weightHistory.length === 0) {
-      displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
-    } else {
+    if (!weightHistory || !exercise.name || !props.setType || !weightLabel) return;
 
-      navigation.navigate('WeightCapture', {
+    if (weightHistory.length > 0) {
+     navigation.navigate('WeightCapture', {
         exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
         setType: props.setType
       });
+    
+    }
+    else {
+      displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
     }
   };
 

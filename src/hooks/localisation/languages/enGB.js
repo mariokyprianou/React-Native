@@ -167,6 +167,7 @@ const enGB = {
   },
 
   PurchaseDict: {
+    InfoTitle: 'Join POWER.',
     Info:
       'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
     YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / month`,

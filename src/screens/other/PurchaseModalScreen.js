@@ -25,6 +25,8 @@ import Spacer from '../../components/Utility/Spacer';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import Video from 'react-native-video';
+
 
 import * as RNIap from 'react-native-iap'; 
 import {
@@ -38,10 +40,12 @@ import RegisterGooglePlaySubscription from '../../apollo/mutations/RegisterGoogl
 import RegisterAppStoreSubscription from '../../apollo/mutations/RegisterAppStoreSubscription';
 import { Platform } from 'react-native';
 import { useMutation } from '@apollo/client';
+import { TouchableOpacity } from 'react-native';
 
 
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
+const purchaseModalVideo = require('../../../assets/videos/purchaseModalVideo.m4v');
 
 const productIds = ['app.power.subscription.yearly', 'app.power.subscription.monthly'];
 
@@ -80,15 +84,12 @@ const PurchaseModalScreen = ({}) => {
   useEffect(() => {
     setLoading(true);
     navigation.setOptions({
-      header: () => <Header showModalCross white transparent />,
+      header: () => <Header showModalCross black transparent />,
     });
-    StatusBar.setBarStyle('light-content');
+    StatusBar.setBarStyle('dark-content');
 
     initConnection();
     
-    return () => {
-      StatusBar.setBarStyle('dark-content');
-    }
   }, []);
 
   // On connect successfull, get available Subscriptions
@@ -116,7 +117,7 @@ const PurchaseModalScreen = ({}) => {
       });
       setLoading(false);
 
-    });
+    }).catch((err)=> console.log(err)).finally(() => setLoading(false));
   },  [flushFailedPurchasesCachedAsPendingAndroid, getSubscriptions]);
 
 
@@ -256,39 +257,75 @@ const PurchaseModalScreen = ({}) => {
       ...textStyles.medium15_brownishGrey100,
       textAlign: 'center',
     },
-    imageView: {
-      width: getWidth(375),
-      height: getHeight(317),
-      marginBottom: getHeight(27),
-    },
+    videoViewStyle: { width: '100%',  height: getHeight(317), marginBottom: getHeight(24),},
     termsTitle: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
       marginBottom: getHeight(5),
+    },
+    infoTitleStyle: {
+      ...textStyles.bold22_black100,
+      textAlign: 'left',
+      marginBottom: getHeight(6),
     },
     termsText: {
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
       marginBottom: getHeight(30),
     },
+    needHelpTouchable: {
+      width: '50%', 
+      height: getHeight(50),
+      marginBottom: getHeight(20),
+    },
+    needHelpViewStyle: {
+      justifyContent: 'center', //Centered vertically
+      alignItems: 'center', // Centered horizontally
+      flex:1
+    },
+    needHelpTextStyle: {
+      ...textStyles.semiBold16_brownishGrey100,
+      color: colors.tealish100,
+      textDecorationLine: 'underline',
+      textAlign: 'center',
+    
+    }
   });
 
   // MARK: - Render
 
-  const yearlyMonthPrice = yearlySubscription.price / 12.00;
+
+
+  const yearlyMonthPrice = yearlySubscription.price / 12;
   const yearlyDiscount = yearlyMonthPrice / monthlySubscription.price * 100;
+
+
+  const renderNeedHelp = () => 
+    <TouchableOpacity style={styles.needHelpTouchable} onPress={displayMessenger}>
+      <View style={styles.needHelpViewStyle}><Text style={styles.needHelpTextStyle}>Need Help?</Text></View>
+    </TouchableOpacity>
+
 
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
-      <Image
-        style={styles.imageView}
-        source={purchaseImage}
-        resizeMode={'cover'}
+
+      <Video
+        source={purchaseModalVideo}
+        resizeMode='cover'
+        style={styles.videoViewStyle}
+        repeat={true}
+        muted={true}
+        paused={false}
+        controls={null}
+        playWhenInactive
       />
+    
       <View style={styles.textContainer}>
+      <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
+
         <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
       </View>
       <DefaultButton
@@ -319,6 +356,7 @@ const PurchaseModalScreen = ({}) => {
         capitalise={false}
         customText={PurchaseDict.RestorePurchaseButton}
       />
+      {renderNeedHelp()}
       <View style={styles.textContainer}>
         <Text style={styles.termsTitle}>
           {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}

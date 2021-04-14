@@ -256,7 +256,7 @@ const SettingsScreen = ({}) => {
   const languageDropdownData = [
     LanguageDict.English,
     LanguageDict.Hindi,
-    LanguageDict.Urdu,
+    //LanguageDict.Urdu,
   ];
 
   const downloadQualityDropdownData = [

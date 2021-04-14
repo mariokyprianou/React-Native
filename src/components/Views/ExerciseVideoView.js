@@ -70,6 +70,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const videoProps = {
     height: getHeight(385),
     url: videos[currentVideo],
+    filename: videos[currentVideo].split('/').pop().split('?').shift(),
     skipCache: !isDownloadEnabled,
     autoplay: false, //index === currentExerciseIndex,
     muted: true,

@@ -31,6 +31,8 @@ import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
 
+import {cacheWeekVideos} from './VideoCacheUtils';
+
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
@@ -253,6 +255,13 @@ export default function DataProvider(props) {
     }
 
   }, [currentWeek, programme]);
+  
+  
+  const initCacheWeekVideos = useCallback(async (workouts) => {
+    if (isConnected) {
+      cacheWeekVideos(workouts);
+    }
+  }, [isConnected]);
 
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -266,6 +275,8 @@ export default function DataProvider(props) {
 
       
       setProgrammeModalImage(data.programmeImage);
+      initCacheWeekVideos(data.currentWeek.workouts);
+
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 
@@ -374,7 +385,8 @@ export default function DataProvider(props) {
       setWeightsToUpload,
       completedExercises,
       setCompletedExercises,
-      reset
+      reset,
+      initCacheWeekVideos,
     }),
     [
       programme,
@@ -403,7 +415,8 @@ export default function DataProvider(props) {
       setWeightsToUpload,
       completedExercises,
       setCompletedExercises,
-      reset
+      reset,
+      initCacheWeekVideos,
     ],
   );
 

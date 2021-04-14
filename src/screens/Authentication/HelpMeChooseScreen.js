@@ -132,7 +132,7 @@ export default function HelpMeChooseScreen() {
       })
       .catch((err) => {
         showError('Server error', 'Unable to return program');
-        console.log(err);
+        console.log("submitQuestionnaire", err);
       })
       .finally(() => setLoading(false));
   }

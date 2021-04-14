@@ -28,6 +28,7 @@ import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
 import useLoading from '../../hooks/loading/useLoading';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -194,6 +195,11 @@ export default function WorkoutHomeScreen() {
       }
 
       setLoading(false);
+    }
+
+    if (programme === null) {
+      setLoading(false);
+      displayAlert({text: 'Unable to load data. Try again later.'});
     }
   }, [weekNumber, programme]);
 

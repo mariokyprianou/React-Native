@@ -129,7 +129,7 @@ export default function UserDataProvider(props) {
       },
     })
       .catch((err) => {
-        console.log(err);
+        console.log("updateDefaultPreferences", err);
       });
   }, []);
 

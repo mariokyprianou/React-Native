@@ -266,8 +266,14 @@ export default function DataProvider(props) {
         storedDays,
       );
       setProgramme(data);
+      
     },
-    onError: (error) => console.log(error),
+    onError: (error) => {
+      console.log(error);
+      setCurrentWeek(null);
+      setNextWeek(null);
+      setProgramme(null);
+    }
   });
 
   useEffect(() => {

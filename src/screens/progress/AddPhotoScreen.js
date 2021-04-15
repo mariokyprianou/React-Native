@@ -119,7 +119,8 @@ export default function TransformationScreen() {
       .catch((err) => {
         console.log(err, '<---fetch blob err');
         handleAddPhotoError(id);
-      });
+      })
+      .finally(()=> setLoading(false));
   }
 
   async function handleAddPhotoError(id) {

@@ -27,6 +27,7 @@ import * as R from 'ramda';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
+import displayAlert from '../../utils/DisplayAlert';
 
 
 export default function WorkoutCompleteScreen() {
@@ -206,20 +207,26 @@ export default function WorkoutCompleteScreen() {
       .finally(()=> setLoading(false));
   }
 
+
   function checkGoBack() {
-    Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
-      {
-        text: ProfileDict.Cancel,
-        style: 'cancel',
-      },
-      {
-        text: ProfileDict.Ok,
-        onPress: async () => {
-          setWeightsToUpload([]);
-          navigation.navigate('WorkoutHome');
+
+    displayAlert({
+      title: null,
+      text: WorkoutDict.WorkoutGoBackWarning,
+      buttons: [
+        {
+          text: ProfileDict.Cancel,
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: ProfileDict.Ok,
+          onPress: async () => {
+            setWeightsToUpload([]);
+            navigation.navigate('WorkoutHome');
+          },
+        },
+      ],
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

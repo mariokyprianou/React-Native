@@ -61,7 +61,8 @@ export default function SetsTable({selectedDate, date, weightData, weightPrefere
     const tbdt = weightData.filter(it =>  isSameDay(parseISO(it.createdAt), selectedDate))
 
   
-  const formattedHistory = tbdt.reverse();
+  
+  const formattedHistory = tbdt.sort((a,b)=> a.setNumber > b.setNumber);
 
   console.log("formattedHistory",formattedHistory)
   setData(formattedHistory)
@@ -85,7 +86,7 @@ export default function SetsTable({selectedDate, date, weightData, weightPrefere
           {data.map( (item, index) => {
             return <View style={{height: getHeight(35)}}>
                   <SetTableRow
-                    setNumber={item.setNumber}
+                    setNumber={item.setNumber + 1}
                     reps={item.quantity}
                     setType={setType}
                     weight={item.weight}

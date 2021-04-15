@@ -138,6 +138,7 @@ const  HorizontalScrollPicker = ({weightPreference, selected = 20}) => {
         data={I18nManager.isRTL ? data.reverse() : data}
         onMomentumScrollEnd={() => {
           const index = Math.round(active.current / itemSize);
+          console.log("onMomentumScrollEnd", index)
           setSelectedWeight(data[index + 2]);
         }}
         keyExtractor={(_, i) => String(i)}

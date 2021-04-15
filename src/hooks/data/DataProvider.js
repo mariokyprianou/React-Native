@@ -304,6 +304,11 @@ export default function DataProvider(props) {
 
   const [selectedWeight, setSelectedWeight] = useState(20);
 
+
+  useEffect(()=> {
+    console.log("selectedWeight useEffect", selectedWeight);
+  }, [selectedWeight]);
+  
   const [weightData, setWeightData] = useState([]);
 
   useEffect(() => {

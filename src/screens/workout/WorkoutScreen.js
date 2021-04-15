@@ -30,6 +30,7 @@ export default function WorkoutScreen() {
     setCurrentExerciseIndex,
     completedExercises,
     setCompletedExercises,
+    setWeightsToUpload
   } = useData();
 
   const {getPreferences, preferences} = useUserData();
@@ -70,6 +71,7 @@ export default function WorkoutScreen() {
       {
         text: ProfileDict.Ok,
         onPress: () => {
+          setWeightsToUpload([]);
           navigation.pop();
         },
       },

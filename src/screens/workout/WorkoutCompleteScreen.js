@@ -207,6 +207,7 @@ export default function WorkoutCompleteScreen() {
       {
         text: ProfileDict.Ok,
         onPress: async () => {
+          setWeightsToUpload([]);
           navigation.navigate('WorkoutHome');
         },
       },

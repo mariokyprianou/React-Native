@@ -49,7 +49,7 @@ export default function CalendarScreen() {
   useEffect(() => {
     if (progress) {
     const progressData = progress
-      .map((month, index) => {
+      .map((month) => {
         return processProgressData(month.days);
       }).reverse().flat();
 

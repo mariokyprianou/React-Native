@@ -26,6 +26,8 @@ import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 import useLoading from '../../hooks/loading/useLoading';
+import {useBackHandler} from '@react-native-community/hooks';
+
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -67,6 +69,12 @@ export default function WorkoutCompleteScreen() {
 
     setIsWorkoutTimerRunning(false);
   }, []);
+
+
+  useBackHandler(() => {
+    checkGoBack()
+      return true;
+  });
 
   useEffect(() => {
     const duration = workoutTime ? Math.ceil(workoutTime / 1000 / 60) : 0;

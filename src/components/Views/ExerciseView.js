@@ -11,9 +11,6 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  Alert,
-  ScrollView,
-  Dimensions,
 } from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
@@ -31,6 +28,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -301,9 +299,10 @@ export default function ExerciseView(props) {
           </TouchableOpacity>
         </View>
 
+
         <ScrollView>
           <Text style={styles.exerciseDescriptionStyle}>
-            {exercise.coachingTips}
+            {exercise.coachingTips}     
           </Text>
         </ScrollView>
 

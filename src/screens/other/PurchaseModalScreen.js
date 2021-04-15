@@ -233,6 +233,7 @@ const PurchaseModalScreen = ({}) => {
   }, [availablePurchases, setCurrentSubscription]);
 
   const purchase = (sub) => {
+    console.log('Purchase: ', sub);
     requestSubscription(sub.productId);
   };
 
@@ -311,7 +312,10 @@ const PurchaseModalScreen = ({}) => {
 
   // MARK: - Render
 
-  const yearlyMonthPrice = Math.round((yearlySubscription.price / 12) * 100);
+  const yearlyMonthPrice =
+    Platform.OS === 'ios'
+      ? Math.round((yearlySubscription.price / 12) * 100)
+      : yearlySubscription.price / 12;
   const yearlyDiscount = Math.round(
     (yearlyMonthPrice / monthlySubscription.price) * 100,
   );

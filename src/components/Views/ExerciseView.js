@@ -83,11 +83,11 @@ export default function ExerciseView(props) {
 
 
   // To observe sets are behaving as expected
-  // useEffect(()=> {
-  //   if (index === currentExerciseIndex) {
-  //     console.log(sets)
-  //   }
-  // }, [sets]);
+  useEffect(()=> {
+    if (index === currentExerciseIndex) {
+      console.log(sets)
+    }
+  }, [sets]);
 
 
   // Initial render
@@ -131,7 +131,25 @@ export default function ExerciseView(props) {
   }, []);
 
 
+  // Finished weight submition, check if it was last set
+  useEffect(() => {
+    if (setComplete === false) {
+      checkShouldFinishExercise();
+    }
+  }, [setComplete]);
+
   
+  // Enable/disable scroll based on any set completion modal showing
+  useEffect(()=> {
+
+    if ((countDown && restTime > 0) || setComplete) {
+      setEnableScroll(false);
+    }
+    else {
+      setEnableScroll(true);
+    }
+  }, [countDown, restTime, setComplete]);
+
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -168,13 +186,11 @@ export default function ExerciseView(props) {
     // start rest timer
     if (restTime) {
       setCountDown(true);
-      setEnableScroll(false);
     }
 
     // show set completion modal with weights if applicable
     if (exercise.weight) {
       setSetComplete(true);
-      setEnableScroll(false);
     }
 
     // Handle no weight or rest time
@@ -187,13 +203,6 @@ export default function ExerciseView(props) {
       finishExercise();
     }
   };
-
-  // Finished weight submition, check if it was last set
-  useEffect(() => {
-    if (setComplete === false) {
-      checkShouldFinishExercise();
-    }
-  }, [setComplete]);
 
   async function checkShouldFinishExercise() {
     // On timer done, check if exercise is done
@@ -229,7 +238,6 @@ export default function ExerciseView(props) {
   };
 
   async function finishExercise() {
-    setEnableScroll(true);
     setExerciseCompleted(true);
   }
 

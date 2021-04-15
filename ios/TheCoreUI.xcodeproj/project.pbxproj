@@ -12,6 +12,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A53750726285C480076321B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A53750626285C480076321B /* GoogleService-Info.plist */; };
 		20FD9FB02FA349BB97450145 /* proximanova-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E47962DD0F964BB0BF2875E2 /* proximanova-medium.otf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -25,10 +26,6 @@
 		4AA4DFA624BF099000EA0A56 /* FontAwesome5_Pro_Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AA4DFA224BF099000EA0A56 /* FontAwesome5_Pro_Light.ttf */; };
 		61720B52558F499CB288D41C /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5652FA8072B94CFE8E2B4DC8 /* proximanova-regular.otf */; };
 		6FC19CC5258123FD00628EDE /* Secrets.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC19CC4258123FD00628EDE /* Secrets.generated.swift */; };
-		7256B3842603BCE000DA0685 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7256B3832603BCE000DA0685 /* GoogleService-Info.plist */; };
-		7256B3852603BCE000DA0685 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7256B3832603BCE000DA0685 /* GoogleService-Info.plist */; };
-		7256B3862603BCE000DA0685 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7256B3832603BCE000DA0685 /* GoogleService-Info.plist */; };
-		7256B3872603BCE000DA0685 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7256B3832603BCE000DA0685 /* GoogleService-Info.plist */; };
 		72AF1DD1315B0D5C71548AAD /* libPods-thecoreui-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30F9D918DE7918BCF809FAB5 /* libPods-thecoreui-tvOSTests.a */; };
 		7CE2211324AB6671001D8ECD /* Secrets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 7CE2210F24AB6671001D8ECD /* Secrets.stencil */; };
 		7CE2211524AB6671001D8ECD /* SecretsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2211224AB6671001D8ECD /* SecretsManager.m */; };
@@ -70,6 +67,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = thecoreui/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = thecoreui/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = thecoreui/main.m; sourceTree = "<group>"; };
+		1A53750626285C480076321B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B3E9A78BA4C483ABC0E0CBB /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2AFAF27344334CD1BFBE069B /* proximanova-semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "proximanova-semibold.otf"; path = "../assets/fonts/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* thecoreui-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "thecoreui-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +88,6 @@
 		6EB853C643B4558E69A518D7 /* Pods-thecoreui-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-thecoreui-tvOS.release.xcconfig"; path = "Target Support Files/Pods-thecoreui-tvOS/Pods-thecoreui-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		6FC19CC4258123FD00628EDE /* Secrets.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.generated.swift; path = Helpers/Secrets.generated.swift; sourceTree = SOURCE_ROOT; };
 		716A57A560824F9B9A8BF88F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		7256B3832603BCE000DA0685 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7CE2210E24AB6671001D8ECD /* SecretsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretsManager.h; sourceTree = "<group>"; };
 		7CE2210F24AB6671001D8ECD /* Secrets.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Secrets.stencil; sourceTree = "<group>"; };
 		7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TheCoreUI-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -172,6 +169,7 @@
 		13B07FAE1A68108700A75B9A /* thecoreui */ = {
 			isa = PBXGroup;
 			children = (
+				1A53750626285C480076321B /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -219,7 +217,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				7256B3832603BCE000DA0685 /* GoogleService-Info.plist */,
 				4AA4DF9F24BF099000EA0A56 /* FontAwesome5_Pro_Brands.ttf */,
 				4AA4DFA224BF099000EA0A56 /* FontAwesome5_Pro_Light.ttf */,
 				4AA4DFA024BF099000EA0A56 /* FontAwesome5_Pro_Regular.ttf */,
@@ -429,7 +426,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7256B3852603BCE000DA0685 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,7 +445,7 @@
 				20FD9FB02FA349BB97450145 /* proximanova-medium.otf in Resources */,
 				61720B52558F499CB288D41C /* proximanova-regular.otf in Resources */,
 				3197C94839C44A20910BD3C2 /* proximanova-semibold.otf in Resources */,
-				7256B3842603BCE000DA0685 /* GoogleService-Info.plist in Resources */,
+				1A53750726285C480076321B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,7 +454,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
-				7256B3862603BCE000DA0685 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,7 +461,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7256B3872603BCE000DA0685 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

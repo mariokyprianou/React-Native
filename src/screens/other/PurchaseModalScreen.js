@@ -13,7 +13,7 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
-  Alert
+  Alert,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -26,30 +26,29 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
 import Video from 'react-native-video';
+import * as R from 'ramda';
 
-
-import * as RNIap from 'react-native-iap'; 
+import * as RNIap from 'react-native-iap';
 import {
   flushFailedPurchasesCachedAsPendingAndroid,
   useIAP,
   requestSubscription,
   initConnection,
-  getSubscriptions
+  getSubscriptions,
 } from 'react-native-iap';
 import RegisterGooglePlaySubscription from '../../apollo/mutations/RegisterGooglePlaySubscription';
 import RegisterAppStoreSubscription from '../../apollo/mutations/RegisterAppStoreSubscription';
-import { Platform } from 'react-native';
-import { useMutation } from '@apollo/client';
-import { TouchableOpacity } from 'react-native';
-
-
+import {Platform} from 'react-native';
+import {useMutation} from '@apollo/client';
+import {TouchableOpacity} from 'react-native';
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
 const purchaseModalVideo = require('../../../assets/videos/purchaseModalVideo.m4v');
 
-const productIds = ['app.power.subscription.yearly', 'app.power.subscription.monthly'];
-
-
+const productIds = [
+  'app.power.subscription.yearly',
+  'app.power.subscription.monthly',
+];
 
 const PurchaseModalScreen = ({}) => {
   // MARK: - Hooks
@@ -64,8 +63,16 @@ const PurchaseModalScreen = ({}) => {
   // MARK: - Local
   const [currentSubscription, setCurrentSubscription] = useState();
 
-  const [yearlySubscription, setYearlySubscription] = useState({productId: 'app.power.subscription.yearly', localizedPrice:"£24.00", price: 24 });
-  const [monthlySubscription, setMonthlySubscription] = useState({productId: 'app.power.subscription.monthly', localizedPrice: "£4.00", price: 4 });
+  const [yearlySubscription, setYearlySubscription] = useState({
+    productId: 'app.power.subscription.yearly',
+    localizedPrice: '£24.00',
+    price: 24,
+  });
+  const [monthlySubscription, setMonthlySubscription] = useState({
+    productId: 'app.power.subscription.monthly',
+    localizedPrice: '£4.00',
+    price: 4,
+  });
 
   const {
     connected,
@@ -89,7 +96,6 @@ const PurchaseModalScreen = ({}) => {
     StatusBar.setBarStyle('dark-content');
 
     initConnection();
-    
   }, []);
 
   // On connect successfull, get available Subscriptions
@@ -99,71 +105,87 @@ const PurchaseModalScreen = ({}) => {
 
   // Get available Subscriptions
   const fetchSubscriptions = useCallback(async () => {
-   
     await flushFailedPurchasesCachedAsPendingAndroid();
-   
-    getSubscriptions(productIds).then(res=> {
 
-      console.log("subscriptions", res.length);
-      res.forEach(it => {
-        switch (it.productId) {
-        case yearlySubscription.productId:
-          setYearlySubscription({productId: yearlySubscription.productId, localizedPrice: it.localizedPrice, price: it.price });
-          break
-        case monthlySubscription.productId:
-          setMonthlySubscription({productId: monthlySubscription.productId, localizedPrice: it.localizedPrice, price: it.price });
-          break
-        }
-      });
-      setLoading(false);
-
-    }).catch((err)=> console.log(err)).finally(() => setLoading(false));
-  },  [flushFailedPurchasesCachedAsPendingAndroid, getSubscriptions]);
-
+    getSubscriptions(productIds)
+      .then((res) => {
+        console.log('Subscriptions', res);
+        res.forEach((it) => {
+          switch (it.productId) {
+            case yearlySubscription.productId:
+              setYearlySubscription({
+                productId: yearlySubscription.productId,
+                localizedPrice: it.localizedPrice,
+                price: it.price,
+              });
+              break;
+            case monthlySubscription.productId:
+              setMonthlySubscription({
+                productId: monthlySubscription.productId,
+                localizedPrice: it.localizedPrice,
+                price: it.price,
+              });
+              break;
+          }
+        });
+        setLoading(false);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
+  }, [flushFailedPurchasesCachedAsPendingAndroid, getSubscriptions]);
 
   // Current purchase result
   useEffect(() => {
-    const checkCurrentPurchase = async purchase => {
-    if (purchase) {
-      const receipt = purchase.transactionReceipt;
-      if (receipt)
+    const checkCurrentPurchase = async (purchase) => {
+      if (purchase) {
+        const receipt = purchase.transactionReceipt;
+        if (receipt) console.log('Receipt: ', receipt);
         try {
           if (Platform.OS === 'ios') {
-           
             appleSubscribe({
               variables: {
                 input: {
-                  receiptData: receipt
+                  receiptData: receipt,
                 },
               },
-            }).then(async (res) => {
-                const success = R.path(['registerAppStoreSubscription'], res);
-                console.log('appleSubscribeRes', success);
-  
-                const ackResult = await finishTransaction(purchase);
-                console.log('ackResult', ackResult);
-              }).catch((err) => console.log(err));
-          }
-          else {
-          
+            })
+              .then(async (res) => {
+                const success = R.path(
+                  ['data', 'registerAppStoreSubscription', 'success'],
+                  res,
+                );
+                console.log('Subscribed Success:', success);
+
+                await finishTransaction(purchase);
+
+                firebaseLogEvent(analyticsEvents.newSubscription, {
+                  email: userData.email,
+                });
+              })
+              .catch((err) => console.log(err));
+          } else {
             googleSubscribe({
               variables: {
                 input: {
-                  receiptData: receipt
+                  receiptData: receipt,
                 },
               },
-            }).then(async (res) => {
-                const success = R.path(['registerGooglePlaySubscription'], res);
-                console.log('googleSubscribeRes', success);
-  
-                const ackResult = await finishTransaction(purchase);
-                console.log('ackResult', ackResult);
-               
-                firebaseLogEvent(analyticsEvents.newSubscription, {email: userData.email});
+            })
+              .then(async (res) => {
+                const success = R.path(
+                  ['data', 'registerGooglePlaySubscription', 'success'],
+                  res,
+                );
+                console.log('Subscribed Success:', success);
 
-              }).catch((err) => console.log(err));
+                await finishTransaction(purchase);
+
+                firebaseLogEvent(analyticsEvents.newSubscription, {
+                  email: userData.email,
+                });
+              })
+              .catch((err) => console.log(err));
           }
-           
         } catch (ackErr) {
           console.warn('ackErr', ackErr);
         }
@@ -171,11 +193,9 @@ const PurchaseModalScreen = ({}) => {
     };
 
     checkCurrentPurchase(currentPurchase);
-
   }, [currentPurchase, finishTransaction]);
 
-
-   // Current purchase error
+  // Current purchase error
   useEffect(() => {
     if (currentPurchaseError)
       Alert.alert(
@@ -184,50 +204,44 @@ const PurchaseModalScreen = ({}) => {
       );
   }, [currentPurchaseError, currentPurchaseError?.message]);
 
-
-  // Restore 
+  // Restore
   useEffect(() => {
-    
     // We already have subscription and is valid
-    if (currentSubscription && products.includes(currentSubscription.productId)) {
+    if (
+      currentSubscription &&
+      products.includes(currentSubscription.productId)
+    ) {
       // todo - do backend restore
     }
   }, [currentSubscription]);
 
-
   // Set current subscription state
   useEffect(() => {
-    console.log("availablePurchases",availablePurchases)
+    console.log('availablePurchases', availablePurchases);
     if (availablePurchases && availablePurchases.length > 0) {
-     
-      availablePurchases.forEach(it => {
+      availablePurchases.forEach((it) => {
         switch (it.productId) {
-        case yearlySubscription.productId:
-          setCurrentSubscription(it);
-          break
-        case monthlySubscription.productId:
-          setCurrentSubscription(it);
-          break
+          case yearlySubscription.productId:
+            setCurrentSubscription(it);
+            break;
+          case monthlySubscription.productId:
+            setCurrentSubscription(it);
+            break;
         }
       });
     }
-    
   }, [availablePurchases, setCurrentSubscription]);
 
-
-  const purchase = (item) => {
-    console.log(item)
-    requestSubscription(item.productId);
+  const purchase = (sub) => {
+    requestSubscription(sub.productId);
   };
-
 
   // MARK: - Actions
   const onPressYearlySubscription = () => {
-    purchase(yearlySubscription.productId);
-
+    purchase(yearlySubscription);
   };
   const onPressMonthlySubscription = () => {
-    purchase(monthlySubscription.productId);
+    purchase(monthlySubscription);
   };
   const onPressRestoreSubscription = () => {
     getAvailablePurchases();
@@ -257,7 +271,11 @@ const PurchaseModalScreen = ({}) => {
       ...textStyles.medium15_brownishGrey100,
       textAlign: 'center',
     },
-    videoViewStyle: { width: '100%',  height: getHeight(317), marginBottom: getHeight(24),},
+    videoViewStyle: {
+      width: '100%',
+      height: getHeight(317),
+      marginBottom: getHeight(24),
+    },
     termsTitle: {
       ...textStyles.medium14_brownishGrey100,
       textAlign: 'left',
@@ -274,47 +292,48 @@ const PurchaseModalScreen = ({}) => {
       marginBottom: getHeight(30),
     },
     needHelpTouchable: {
-      width: '50%', 
+      width: '50%',
       height: getHeight(50),
       marginBottom: getHeight(20),
     },
     needHelpViewStyle: {
       justifyContent: 'center', //Centered vertically
       alignItems: 'center', // Centered horizontally
-      flex:1
+      flex: 1,
     },
     needHelpTextStyle: {
       ...textStyles.semiBold16_brownishGrey100,
       color: colors.tealish100,
       textDecorationLine: 'underline',
       textAlign: 'center',
-    
-    }
+    },
   });
 
   // MARK: - Render
 
+  const yearlyMonthPrice = Math.round((yearlySubscription.price / 12) * 100);
+  const yearlyDiscount = Math.round(
+    (yearlyMonthPrice / monthlySubscription.price) * 100,
+  );
 
-
-  const yearlyMonthPrice = yearlySubscription.price / 12;
-  const yearlyDiscount = yearlyMonthPrice / monthlySubscription.price * 100;
-
-
-  const renderNeedHelp = () => 
-    <TouchableOpacity style={styles.needHelpTouchable} onPress={displayMessenger}>
-      <View style={styles.needHelpViewStyle}><Text style={styles.needHelpTextStyle}>Need Help?</Text></View>
+  const renderNeedHelp = () => (
+    <TouchableOpacity
+      style={styles.needHelpTouchable}
+      onPress={displayMessenger}>
+      <View style={styles.needHelpViewStyle}>
+        <Text style={styles.needHelpTextStyle}>Need Help?</Text>
+      </View>
     </TouchableOpacity>
-
+  );
 
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
-
       <Video
         source={purchaseModalVideo}
-        resizeMode='cover'
+        resizeMode="cover"
         style={styles.videoViewStyle}
         repeat={true}
         muted={true}
@@ -322,9 +341,9 @@ const PurchaseModalScreen = ({}) => {
         controls={null}
         playWhenInactive
       />
-    
+
       <View style={styles.textContainer}>
-      <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
+        <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
 
         <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
       </View>
@@ -334,8 +353,12 @@ const PurchaseModalScreen = ({}) => {
         icon="chevron"
         onPress={onPressYearlySubscription}
         capitalise={false}
-        customText={PurchaseDict.YearlyButtonTitle(yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice)}
-        customSubtext={PurchaseDict.YearlyButtonSubTitle(yearlySubscription.localizedPrice)}
+        customText={PurchaseDict.YearlyButtonTitle(
+          yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
+        )}
+        customSubtext={PurchaseDict.YearlyButtonSubTitle(
+          yearlySubscription.localizedPrice,
+        )}
         promptText={PurchaseDict.SavePrompt(yearlyDiscount)}
       />
       <Spacer height={20} />
@@ -345,7 +368,9 @@ const PurchaseModalScreen = ({}) => {
         icon="chevron"
         capitalise={false}
         onPress={onPressMonthlySubscription}
-        customText={PurchaseDict.MonthlyButtonTitle(monthlySubscription.localizedPrice)}
+        customText={PurchaseDict.MonthlyButtonTitle(
+          monthlySubscription.localizedPrice,
+        )}
         customSubtext={PurchaseDict.MonthlyButtonSubTitle}
       />
       <Spacer height={15} />

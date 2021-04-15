@@ -84,9 +84,16 @@ export default function TransformationScreen() {
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
     setLoading(true);
 
-    const uploadUrlRes = await requestUplaodUrl().catch((err) =>
-      console.log(err, '<---requestUrl err'),
-    );
+    const uploadUrlRes = await requestUplaodUrl().catch((err) => {
+      console.log(err, '<---requestUrl err');
+      setLoading(false);
+      setCameraButtonActive(true);
+      Alert.alert(ProgressDict.UploadFailed);
+      return;
+    });
+
+    if (!uploadUrlRes || !uploadUrlRes.data) return;
+
     const {url, id} = uploadUrlRes.data.uploadUrl;
 
     RNFetchBlob.fetch(
@@ -153,8 +160,20 @@ export default function TransformationScreen() {
             mediaType: 'photo',
             compressImageQuality: 0.7,
           }).then((cameraPhoto) => {
-            const {path, mime} = cameraPhoto;
+            const {path, mime, size} = cameraPhoto;
+
+            if (size) {
+              console.log("Image size in MB: ", size / 1000000);
+              const limit = 1000000 * 20; // 20MB in bytes
+              if (size > limit) {
+                // error
+              }
+            }
             handlePhoto(path, mime);
+          }).catch(()=>{
+            setLoading(false);
+            console.log("ImagePicker", err);
+            Alert.alert(ProgressDict.UploadFailed);
           });
         }
       })

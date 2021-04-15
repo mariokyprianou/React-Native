@@ -29,6 +29,8 @@ import {getUniqueId} from 'react-native-device-info';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import displayAlert from '../../utils/DisplayAlert';
 import useLoading from '../../hooks/loading/useLoading';
+import {useBackHandler} from '@react-native-community/hooks';
+
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -67,6 +69,12 @@ export default function RegisterScreen() {
         leftAction={() => navigation.pop(2)}
       />
     ),
+  });
+
+
+  useBackHandler(() => {
+    navigation.pop(2);
+    return true;
   });
 
   const gendersData = [

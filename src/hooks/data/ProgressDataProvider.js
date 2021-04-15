@@ -182,7 +182,6 @@ export default function DataProvider(props) {
       fetchPolicy: 'no-cache',
     })
     .then(async (res) => {
-      console.log(res)
       const today = new Date();
       const formattedToday = format(today, 'dd/LL/yyyy');
       const emptyListObject = {value: today, label: formattedToday};

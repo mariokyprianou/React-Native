@@ -79,6 +79,7 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
+
     const newPath =
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
     setLoading(true);
@@ -86,13 +87,12 @@ export default function TransformationScreen() {
     const uploadUrlRes = await requestUplaodUrl().catch((err) =>
       console.log(err, '<---requestUrl err'),
     );
-    console.log('uploadUrlRes', uploadUrlRes);
     const {url, id} = uploadUrlRes.data.uploadUrl;
 
     RNFetchBlob.fetch(
       'PUT',
       url,
-      {'Content-Type': 'application/octet-stream'},
+      {'Content-Type': contentType},
       RNFetchBlob.wrap(newPath),
     )
       .uploadProgress((written, total) => {

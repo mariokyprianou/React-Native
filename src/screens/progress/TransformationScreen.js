@@ -130,7 +130,7 @@ export default function TransformationScreen() {
           navigation.navigate('AddPhoto');
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("Error add photo: ", err));
   }
 
   function handleShare() {}

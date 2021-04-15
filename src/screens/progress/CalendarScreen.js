@@ -47,14 +47,16 @@ export default function CalendarScreen() {
   }, []);
 
   useEffect(() => {
+    if (progress) {
     const progressData = progress
-      .map((month) => {
+      .map((month, index) => {
         return processProgressData(month.days);
-      })
-      .flat();
+      }).reverse().flat();
+
     setProgressHistoryData(progressData);
 
     setLoading(false);
+    }
   }, [progress]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **

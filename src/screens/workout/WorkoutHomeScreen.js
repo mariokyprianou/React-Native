@@ -199,7 +199,7 @@ export default function WorkoutHomeScreen() {
 
     if (programme === null) {
       setLoading(false);
-      displayAlert({text: 'Unable to load data. Try again later.'});
+      //displayAlert({text: 'Unable to load data. Try again later.'});
     }
   }, [weekNumber, programme]);
 

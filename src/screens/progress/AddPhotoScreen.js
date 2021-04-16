@@ -62,6 +62,7 @@ export default function TransformationScreen() {
   const [time, setTime] = useState(0);
 
   const [cameraButtonActive, setCameraButtonActive] = useState(true);
+  const [cameraViewVisible, setCameraViewVisible] = useState(true);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -89,6 +90,7 @@ export default function TransformationScreen() {
       console.log(err, '<---requestUrl err');
       setLoading(false);
       setCameraButtonActive(true);
+      setCameraViewVisible(true);
       displayAlert({text:ProgressDict.UploadFailed });
       return;
     });
@@ -118,7 +120,9 @@ export default function TransformationScreen() {
           );
 
           navigation.goBack();
+          setLoading(false);
           setCameraButtonActive(true);
+          setCameraViewVisible(true);
         } else {
           console.log('Upload failed', res);
           handleAddPhotoError(id);
@@ -127,8 +131,7 @@ export default function TransformationScreen() {
       .catch((err) => {
         console.log(err, '<---fetch blob err');
         handleAddPhotoError(id);
-      })
-      .finally(()=> setLoading(false));
+      });
   }
 
   async function handleAddPhotoError(id) {
@@ -136,12 +139,17 @@ export default function TransformationScreen() {
       .then((res) => console.log(res, '<---upload failed res'))
       .catch((err) => console.log(err, '<---upload failed err'))
       .finally(() => {
+        setLoading(false);
         setCameraButtonActive(true);
+        setCameraViewVisible(true);
         displayAlert({text:ProgressDict.UploadFailed });
       });
   }
 
   function handleSelectPhoto() {
+    setCameraButtonActive(false);
+    setCameraViewVisible(false);
+
     request(
       Platform.select({
         ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
@@ -149,13 +157,17 @@ export default function TransformationScreen() {
       }),
     )
       .then((result) => {
-        console.log(result);
+        if (result !== RESULTS.GRANTED) {
+          setLoading(false);
+          setCameraButtonActive(true);
+          setCameraViewVisible(true);
+        }
+
         if (result === RESULTS.UNAVAILABLE) {
-          displayAlert({text:ProgressDict.FunctionNotAvailable });
-         
+          displayAlert({text:ProgressDict.FunctionNotAvailable });      
         }
         if (result === RESULTS.BLOCKED) {
-          displayAlert({text:ProgressDict.NoCamera });
+          displayAlert({text:ProgressDict.NoCamera });    
         }
         if (result === RESULTS.GRANTED) {
           ImagePicker.openPicker({
@@ -172,20 +184,29 @@ export default function TransformationScreen() {
               }
             }
             handlePhoto(path, mime);
-          }).catch(()=>{
-            setLoading(false);
+          }).catch(()=> {
             console.log("ImagePicker", err);
             displayAlert({text:ProgressDict.UploadFailed });
+
+            setLoading(false);
+            setCameraButtonActive(true);
+            setCameraViewVisible(true);
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        setCameraButtonActive(true);
+        setCameraViewVisible(true);
+      });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
       <TDAddPhoto
+        cameraViewVisible={cameraViewVisible}
         setPhoto={handlePhoto}
         overlayImage={overlay}
         overlayStyles={styles.overlay}

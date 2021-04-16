@@ -6,7 +6,7 @@
 //
 
 #import "GIFManager.h"
-#import "thecoreui-Swift.h"
+#import "TheCoreUI-Swift.h"
 
 #import <UIKit/UIKit.h>
 #import <ImageIO/ImageIO.h>
@@ -49,6 +49,15 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
   
   NSMutableArray *newArray = [[NSMutableArray alloc] init];
   [newArray addObjectsFromArray:secondArray];
+  [newArray addObject:afterImage];
+  [newArray addObjectsFromArray:array];
+  [newArray addObject:beforeImage];
+  [newArray addObjectsFromArray:secondArray];
+  [newArray addObject:afterImage];
+  [newArray addObjectsFromArray:array];
+  [newArray addObject:beforeImage];
+  [newArray addObjectsFromArray:secondArray];
+  [newArray addObject:afterImage];
   [newArray addObjectsFromArray:array];
   [newArray addObject:beforeImage];
   return newArray;
@@ -61,6 +70,24 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
 
   [beforeImage drawInRect:CGRectMake(0,0,beforeImage.size.width, size.height)];
   [afterImage drawInRect:CGRectMake(beforeImage.size.width, 0, afterImage.size.width, size.height)];
+  UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
+
+  UIGraphicsEndImageContext();
+  return finalImage;
+}
+
+- (UIImage *)createShareImage:(UIImage *)backgroundImage :(UIImage *)foregroundImage {
+  CGSize size = CGSizeMake(backgroundImage.size.width, backgroundImage.size.height);
+
+  UIGraphicsBeginImageContext(size);
+
+  [backgroundImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+  
+  CGFloat foregroundImageWidth = size.width * 0.9;
+  CGFloat foregroundImageX = size.width * 0.05;
+  CGFloat foregroundImageHeight = size.height / 2.0;
+  CGFloat foregroundImageY = size.height * 0.2;
+  [foregroundImage drawInRectAspectFillWithRect:CGRectMake(foregroundImageX, foregroundImageY, foregroundImageWidth, foregroundImageHeight)];
   UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
 
   UIGraphicsEndImageContext();
@@ -110,5 +137,33 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
 
     return cropped;
 }
+
+RCT_EXPORT_METHOD(createVideoFile:(NSDictionary*)data resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *beforeImagePath = data[@"beforeUrl"];
+  NSString *afterImagePath = data[@"afterUrl"];
+  NSString *backgroundImagePath = data[@"url"];
+  NSString *beforeDate = data[@"beforeDate"];
+  NSString *afterDate = data[@"afterDate"];
+  NSString *colour = data[@"colour"];
+  
+  SwiftAssetCreator *creator = [SwiftAssetCreator new];
+  UIImage *beforeImage = [creator loadImageFrom:beforeImagePath];
+  UIImage *afterImage = [creator loadImageFrom:afterImagePath];
+  UIImage *backgroundImage = [creator loadImageFrom:backgroundImagePath];
+  
+  UIImage *beforeFullImage = [self createShareImage:backgroundImage :beforeImage];
+  UIImage *afterFullImage = [self createShareImage:backgroundImage :afterImage];
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UIImage *beforeFullTextImage = [creator encodeTransformationImageWithImage:beforeFullImage beforeDate:beforeDate afterDate:afterDate color:colour];
+    UIImage *afterFullTextImage = [creator encodeTransformationImageWithImage:afterFullImage beforeDate:beforeDate afterDate:afterDate color:colour];
+    
+    NSArray *array = [self getImages:beforeFullTextImage :afterFullTextImage];
+    [creator encodeVideoWithAllImages:array videoSize:backgroundImage.size completion:^(NSString * _Nullable videoPath) {
+      resolve(videoPath);
+    }];
+  });
+}
+
 
 @end

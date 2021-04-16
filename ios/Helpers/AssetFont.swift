@@ -64,3 +64,27 @@ enum AssetFontType {
     }
   }
 }
+
+enum AssetFontColor {
+  case transformation(String)
+  
+  var color: UIColor {
+    switch self {
+    case .transformation(let colorString):
+      switch colorString {
+      case "WHITE":
+        return .white
+      case "BLACK":
+        return .black
+      case "BLUE":
+        return .blue
+      case "RED":
+        return .red
+      case "GREEN":
+        return .green
+      default:
+        return .white
+      }
+    }
+  }
+}

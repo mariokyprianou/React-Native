@@ -12,6 +12,10 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A18EDC526288B1A00FA444C /* GIFManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18EDC326288B1A00FA444C /* GIFManager.m */; };
+		1A18EDCE2628909C00FA444C /* AssetCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18EDCA2628909C00FA444C /* AssetCreator.m */; };
+		1A18EDCF2628909C00FA444C /* AssetFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A18EDCB2628909C00FA444C /* AssetFont.swift */; };
+		1A18EDD02628909C00FA444C /* SwiftAssetCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A18EDCD2628909C00FA444C /* SwiftAssetCreator.swift */; };
 		1A53750726285C480076321B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A53750626285C480076321B /* GoogleService-Info.plist */; };
 		20FD9FB02FA349BB97450145 /* proximanova-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E47962DD0F964BB0BF2875E2 /* proximanova-medium.otf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -67,6 +71,12 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = thecoreui/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = thecoreui/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = thecoreui/main.m; sourceTree = "<group>"; };
+		1A18EDC326288B1A00FA444C /* GIFManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFManager.m; sourceTree = "<group>"; };
+		1A18EDC426288B1A00FA444C /* GIFManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFManager.h; sourceTree = "<group>"; };
+		1A18EDCA2628909C00FA444C /* AssetCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetCreator.m; sourceTree = "<group>"; };
+		1A18EDCB2628909C00FA444C /* AssetFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetFont.swift; sourceTree = "<group>"; };
+		1A18EDCC2628909C00FA444C /* AssetCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetCreator.h; sourceTree = "<group>"; };
+		1A18EDCD2628909C00FA444C /* SwiftAssetCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftAssetCreator.swift; sourceTree = "<group>"; };
 		1A53750626285C480076321B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B3E9A78BA4C483ABC0E0CBB /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2AFAF27344334CD1BFBE069B /* proximanova-semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "proximanova-semibold.otf"; path = "../assets/fonts/proximanova-semibold.otf"; sourceTree = "<group>"; };
@@ -198,11 +208,17 @@
 		7CE2210D24AB6671001D8ECD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				1A18EDCC2628909C00FA444C /* AssetCreator.h */,
+				1A18EDCA2628909C00FA444C /* AssetCreator.m */,
+				1A18EDCB2628909C00FA444C /* AssetFont.swift */,
+				1A18EDCD2628909C00FA444C /* SwiftAssetCreator.swift */,
+				1A18EDC426288B1A00FA444C /* GIFManager.h */,
+				1A18EDC326288B1A00FA444C /* GIFManager.m */,
 				6FC19CC4258123FD00628EDE /* Secrets.generated.swift */,
 				7CE2210E24AB6671001D8ECD /* SecretsManager.h */,
+				7CE2211224AB6671001D8ECD /* SecretsManager.m */,
 				7CE2210F24AB6671001D8ECD /* Secrets.stencil */,
 				7CE2211024AB6671001D8ECD /* TheCoreUI-Bridging-Header.h */,
-				7CE2211224AB6671001D8ECD /* SecretsManager.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -778,9 +794,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FC19CC5258123FD00628EDE /* Secrets.generated.swift in Sources */,
+				1A18EDC526288B1A00FA444C /* GIFManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				1A18EDCF2628909C00FA444C /* AssetFont.swift in Sources */,
 				7CE2211524AB6671001D8ECD /* SecretsManager.m in Sources */,
+				1A18EDCE2628909C00FA444C /* AssetCreator.m in Sources */,
+				1A18EDD02628909C00FA444C /* SwiftAssetCreator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

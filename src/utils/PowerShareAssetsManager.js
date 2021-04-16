@@ -20,7 +20,7 @@ const shareWeekComplete = async ({
   title = "Week 3 complete with\nKatarina's home\nprogramme!",
   workoutsCompleted = 6,
   totalTimeTrained = '10:90:21',
-  colour = "WHITE"
+  colour = 'WHITE',
 }) => {
   try {
     let localSharePath = await CustomAssetsGenerator.generateWeekCompleteAsset({
@@ -28,7 +28,7 @@ const shareWeekComplete = async ({
       title,
       workoutsCompleted,
       totalTimeTrained,
-      colour
+      colour,
     });
 
     return shareDirectlyToInstagramStory(localSharePath);
@@ -41,7 +41,7 @@ const shareIntAchievemnt = async ({
   imageUrl = SampleImageUrl,
   achievedValue = 12,
   subtitle = 'press-ups in\n60 seconds',
-  colour = "WHITE"
+  colour = 'WHITE',
 }) => {
   try {
     let localSharePath = await CustomAssetsGenerator.generateIntAchievementAsset(
@@ -49,7 +49,7 @@ const shareIntAchievemnt = async ({
         imageUrl,
         achievedValue,
         subtitle,
-        colour
+        colour,
       },
     );
     return shareDirectlyToInstagramStory(localSharePath);
@@ -62,7 +62,7 @@ const shareStringAchievement = async ({
   imageUrl = SampleImageUrl,
   achievementValueString = '00:06:31',
   subtitle = '1 mile run',
-  colour = "WHITE"
+  colour = 'WHITE',
 }) => {
   try {
     let localSharePath = await CustomAssetsGenerator.generateStringAchievementAsset(
@@ -70,7 +70,7 @@ const shareStringAchievement = async ({
         imageUrl,
         achievementValueString,
         subtitle,
-        colour
+        colour,
       },
     );
     return shareDirectlyToInstagramStory(localSharePath);
@@ -94,7 +94,7 @@ const shareProgress = async ({
   backgroundImageUrl = SampleImageUrl,
   beforeImageUrl = SampleImageUrl,
   afterImageUrl = SampleImageUrl2,
-  colour = "WHITE",
+  colour = 'WHITE',
   beforeDate,
   afterDate,
 }) => {
@@ -107,7 +107,7 @@ const shareProgress = async ({
       beforeDate,
       afterDate,
     });
-    return shareDirectlyToInstagramStory(localSharePath);
+    return shareDirectlyToInstagramStory(localSharePath, true);
   } catch (err) {
     throw err;
   }
@@ -115,18 +115,20 @@ const shareProgress = async ({
 
 // MARK: - Private share sub-functions
 
-const shareDirectlyToInstagramStory = async (path) => {
-  console.log("shareDirectlyToInstagramStory", path);
+const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
+  console.log('shareDirectlyToInstagramStory', path);
 
   // Path should always be this for Android
   // file://data/user/0/com.powerdigitallimited.power/files/imageCache/temp.png
 
   const shareSingleOptions = {
-    backgroundImage: path,
-    method: Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
+    //backgroundImage: path,
+    backgroundVideo: path,
+    method: isVideo
+      ? Share.InstagramStories.SHARE_BACKGROUND_VIDEO
+      : Share.InstagramStories.SHARE_BACKGROUND_IMAGE,
     social: Share.Social.INSTAGRAM_STORIES,
-    
-    
+
     ...Platform.select({
       // Necessary due to bug in
       // node_modules/react-native-share/android/src/main/java/cl/json/social/SingleShareIntent.java
@@ -138,15 +140,14 @@ const shareDirectlyToInstagramStory = async (path) => {
 
   return Share.shareSingle(shareSingleOptions)
     .then((res) => {
-      
       // .then  is called before we actually share  :/
       if (Platform.OS === 'ios') {
-          ImagesCacheManager.unlinkFileFromAbsolutePath(path);
+        ImagesCacheManager.unlinkFileFromAbsolutePath(path);
       }
       return res;
     })
     .catch((err) => {
-      console.log("Err", err);
+      console.log('Err', err);
       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
       throw err;
     });

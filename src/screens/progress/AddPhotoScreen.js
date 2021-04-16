@@ -7,7 +7,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View, Platform, Alert} from 'react-native';
+import {View, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -24,6 +24,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
+import displayAlert from '../../utils/DisplayAlert';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
@@ -88,7 +89,7 @@ export default function TransformationScreen() {
       console.log(err, '<---requestUrl err');
       setLoading(false);
       setCameraButtonActive(true);
-      Alert.alert(ProgressDict.UploadFailed);
+      displayAlert({text:ProgressDict.UploadFailed });
       return;
     });
 
@@ -136,7 +137,7 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err, '<---upload failed err'))
       .finally(() => {
         setCameraButtonActive(true);
-        Alert.alert(ProgressDict.UploadFailed);
+        displayAlert({text:ProgressDict.UploadFailed });
       });
   }
 
@@ -150,10 +151,11 @@ export default function TransformationScreen() {
       .then((result) => {
         console.log(result);
         if (result === RESULTS.UNAVAILABLE) {
-          Alert.alert(ProgressDict.FunctionNotAvailable);
+          displayAlert({text:ProgressDict.FunctionNotAvailable });
+         
         }
         if (result === RESULTS.BLOCKED) {
-          Alert.alert(ProgressDict.NoCamera);
+          displayAlert({text:ProgressDict.NoCamera });
         }
         if (result === RESULTS.GRANTED) {
           ImagePicker.openPicker({
@@ -173,7 +175,7 @@ export default function TransformationScreen() {
           }).catch(()=>{
             setLoading(false);
             console.log("ImagePicker", err);
-            Alert.alert(ProgressDict.UploadFailed);
+            displayAlert({text:ProgressDict.UploadFailed });
           });
         }
       })

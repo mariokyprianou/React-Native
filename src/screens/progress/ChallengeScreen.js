@@ -61,10 +61,13 @@ const stopwatchData = handleStopwatch();
     navigation.setOptions({
       header: () => <Header title={name} goBack />,
     });
+
+    getHistory();
   }, []);
 
   useEffect(() => {
     if (history) {
+
       async function getInfo() {
         const info = await generateChartInfo(
           history,

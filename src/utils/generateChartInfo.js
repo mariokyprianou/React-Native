@@ -5,7 +5,10 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2021 The Distance
  */
+import getGraphTicksInterval from './getGraphTicksInterval';
 import processChallengeHistory from './processChallengeHistory';
+
+
 
 export default generateChartInfo = (
   history,
@@ -14,6 +17,7 @@ export default generateChartInfo = (
   unitType,
   type,
 ) => {
+
   let processedHistory = [];
   let chartLabel = '';
 
@@ -43,26 +47,14 @@ export default generateChartInfo = (
   });
 
   const highestDataPoint = Math.max(...dataPoints.map((point) => point.y));
+
+
   const highestValue =
     highestDataPoint > 10
       ? Math.ceil(highestDataPoint / 10) * 10
       : highestDataPoint;
-  const intervals = [1, 2, 5, 10, 20, 30, 40, 50];
-  let interval;
-  let ticks;
-  intervals.forEach((interv) => {
-    let value = highestValue / interv;
-    if (value >= 3 && value <= 5) {
-      interval = interv;
-      ticks = Math.ceil(value);
-    } else if (highestValue === 1) {
-      interval = 1;
-      ticks = 1;
-    } else if (highestValue === 2) {
-      interval = 1;
-      ticks = 2;
-    }
-  });
+   
+  const { ticks, interval } = getGraphTicksInterval(highestValue);
 
   if (type === 'STOPWATCH') {
     chartLabel = 'secs';

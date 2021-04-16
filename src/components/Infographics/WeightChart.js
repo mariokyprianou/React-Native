@@ -27,7 +27,8 @@ export default function WeightChart({
   });
 
   const highestValue = Math.max(...dataPoints.map((point) => point.y));
-  const ticks = Math.ceil(highestValue / 5);
+
+  const { ticks, interval } = getGraphTicksInterval(highestValue);
 
   const xLabels = data.map((event) => {
     return event.date;
@@ -98,7 +99,7 @@ export default function WeightChart({
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
-              interval: 5,
+              interval: interval,
               horizontalLineColor: colors.white100,
               verticalLineColor: colors.white100,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},

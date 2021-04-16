@@ -79,6 +79,19 @@ export default function ChallengeEndScreen() {
     }
   }, [elapsed]);
 
+
+  // Update value without any symbols/letters/space
+  useEffect(()=> {
+    const value = getValueByName('result');
+    
+    if (value) {
+      const updatedValue = value.replace(/[^0-9]/g, '');
+      updateValue({name: 'result', value: updatedValue});
+    }
+
+  }, [getValueByName('result'), updateValue]);
+
+  
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
@@ -210,7 +223,7 @@ export default function ChallengeEndScreen() {
       placeholder: '',
       ...cellFormStyles,
       multiline: true,
-      keyboardType: 'numeric',
+      keyboardType: 'number-pad',
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
       borderBottomWidth: 1,

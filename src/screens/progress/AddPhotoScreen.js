@@ -86,12 +86,29 @@ export default function TransformationScreen() {
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
     setLoading(true);
 
+    await RNFetchBlob.fs.stat(newPath)
+      .then((stats) => {
+        const { size } = stats;
+        if (size) {
+          console.log("Image size in MB: ", size / 1000000);
+          const limit = 1000000 * 20; // 20MB in bytes
+          if (size > limit) {
+            displayAlert({text: ProgressDict.TooLargeSizeImage});
+            resetScreenState();
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err, '<---requestUrl err');
+        displayAlert({text:ProgressDict.UploadFailed });
+        resetScreenState();
+        return;
+      })
+
     const uploadUrlRes = await requestUplaodUrl().catch((err) => {
       console.log(err, '<---requestUrl err');
-      setLoading(false);
-      setCameraButtonActive(true);
-      setCameraViewVisible(true);
       displayAlert({text:ProgressDict.UploadFailed });
+      resetScreenState();
       return;
     });
 
@@ -116,13 +133,11 @@ export default function TransformationScreen() {
 
           const finished = await getImagesSync();
           console.log(
-            'getImagesSync -- finished getting updatted images and setting 1st and last',
+            'getImagesSync -- finished getting updated images and setting 1st and last',
           );
 
           navigation.goBack();
-          setLoading(false);
-          setCameraButtonActive(true);
-          setCameraViewVisible(true);
+          resetScreenState();
         } else {
           console.log('Upload failed', res);
           handleAddPhotoError(id);
@@ -139,10 +154,8 @@ export default function TransformationScreen() {
       .then((res) => console.log(res, '<---upload failed res'))
       .catch((err) => console.log(err, '<---upload failed err'))
       .finally(() => {
-        setLoading(false);
-        setCameraButtonActive(true);
-        setCameraViewVisible(true);
         displayAlert({text:ProgressDict.UploadFailed });
+        resetScreenState();
       });
   }
 
@@ -158,9 +171,7 @@ export default function TransformationScreen() {
     )
       .then((result) => {
         if (result !== RESULTS.GRANTED) {
-          setLoading(false);
-          setCameraButtonActive(true);
-          setCameraViewVisible(true);
+          resetScreenState();
         }
 
         if (result === RESULTS.UNAVAILABLE) {
@@ -170,36 +181,36 @@ export default function TransformationScreen() {
           displayAlert({text:ProgressDict.NoCamera });    
         }
         if (result === RESULTS.GRANTED) {
+
+          // compression rates tested:
+          // Android 0.92 compressed 12.6MB --> 8.8MB  about 70%
+          // IOS 0.99 compressed 7.7MB -> 3.6MB about 46%
+
           ImagePicker.openPicker({
             mediaType: 'photo',
-            compressImageQuality: 0.7,
+            compressImageQuality: Platform.OS === 'android' ? 0.92 : 0.99,
+            forceJpg: true
           }).then((cameraPhoto) => {
-            const {path, mime, size} = cameraPhoto;
+            const {path, mime} = cameraPhoto;
 
-            if (size) {
-              console.log("Image size in MB: ", size / 1000000);
-              const limit = 1000000 * 20; // 20MB in bytes
-              if (size > limit) {
-                // error
-              }
-            }
             handlePhoto(path, mime);
           }).catch(()=> {
-            console.log("ImagePicker", err);
             displayAlert({text:ProgressDict.UploadFailed });
-
-            setLoading(false);
-            setCameraButtonActive(true);
-            setCameraViewVisible(true);
+            resetScreenState();
           });
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
-        setCameraButtonActive(true);
-        setCameraViewVisible(true);
+        resetScreenState();
       });
+  }
+
+
+  function resetScreenState() {
+    setLoading(false);
+    setCameraButtonActive(true);
+    setCameraViewVisible(true);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

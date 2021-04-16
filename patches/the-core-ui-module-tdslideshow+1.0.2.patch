@@ -158,10 +158,10 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..c7f7e4f 100644
+index f41ddff..153673a 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -6,29 +6,45 @@
+@@ -6,29 +6,47 @@
   * Copyright (c) 2020 The Distance
   */
  
@@ -179,10 +179,12 @@ index f41ddff..c7f7e4f 100644
 +import { checkStylesIncHeight, checkString } from "../utils";
 +import * as mime from 'react-native-mime-types';
 +import * as Animatable from 'react-native-animatable';
++import { Platform } from "react-native";
  
  const AddPhoto = ({
 -  handlePhotoClick,
 -  setActiveViewIndex,
++  cameraViewVisible,
    setPhoto,
 -  cameraHeaderText,
    overlayImage,
@@ -216,7 +218,7 @@ index f41ddff..c7f7e4f 100644
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +52,7 @@ const AddPhoto = ({
+@@ -36,7 +54,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
@@ -225,7 +227,7 @@ index f41ddff..c7f7e4f 100644
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,65 +71,93 @@ const AddPhoto = ({
+@@ -55,73 +73,103 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -315,13 +317,14 @@ index f41ddff..c7f7e4f 100644
 +  function handlePhotoClick() {
 +    setCameraButtonActive(false);
 +
-+    const options = { quality: 0.5, base64: true };
++    const options = { quality: Platform.OS === 'android' ? 0.92 : 0.99, base64: false };
 +
 +    const timeout = CountdownTime ? CountdownTime : 0;
 +
 +    setTimeout(async () => {
 +      const data = await cameraRef.takePictureAsync(options);
 +      const contentType = mime.lookup(data.uri)
++      console.log(data)
 +
 +      setPhoto(data.uri, contentType);
 +    }, timeout)
@@ -352,9 +355,10 @@ index f41ddff..c7f7e4f 100644
 -        cameraHeaderText={cameraHeaderText}
 -      />
        <View style={styles.cameraContainer}>
++      {cameraViewVisible ? (
          <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
            {({ camera }) => {
-@@ -121,7 +165,7 @@ const AddPhoto = ({
+             setCameraRef(camera);
              if (overlayImage) {
                return (
                  <View style={styles.overlay}>
@@ -363,8 +367,16 @@ index f41ddff..c7f7e4f 100644
                  </View>
                );
              } else {
-@@ -131,21 +175,47 @@ const AddPhoto = ({
+@@ -129,23 +177,55 @@ const AddPhoto = ({
+             }
+           }}
          </RNCamera>
++        ) : (
++          <View style={{...styles.camera, backgroundColor: 'grey'}}>
++                  <Image source={overlayImage} style={{...styles.overlayImage, marginTop: getHeight(50)}} />
++              
++          </View>
++        )}
          <View style={styles.buttonContainer}>
            {CustomCountdown && (
 -            <View style={styles.sideButtons}>
@@ -507,7 +519,7 @@ index 507924f..0000000
 -
 -export default Header;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 1bbdec1..7cb7cfe 100644
+index 1bbdec1..3bc1327 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 @@ -6,70 +6,80 @@
@@ -616,7 +628,7 @@ index 1bbdec1..7cb7cfe 100644
        marginLeft: -afterImageLeft,
      },
      button: {
-@@ -96,57 +106,51 @@ const ImageSlider = ({
+@@ -96,57 +106,50 @@ const ImageSlider = ({
    });
  
    // ******* FUNCTIONS *******
@@ -626,7 +638,6 @@ index 1bbdec1..7cb7cfe 100644
 +    setAfterImageLeft(value);
 +  }
 +
-+  console.log(afterPic)
    // ******* RENDER *******
    return (
      <View>

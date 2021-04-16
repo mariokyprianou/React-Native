@@ -18,7 +18,6 @@ import formatProgressImages from '../../utils/formatProgressImages';
 import AsyncStorage from '@react-native-community/async-storage';
 import ProgressImage from '../../apollo/queries/ProgressImage';
 
-
 import {
   differenceInDays,
   differenceInCalendarDays,
@@ -28,7 +27,6 @@ import {
 } from 'date-fns';
 
 import {Auth} from 'aws-amplify';
-
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -75,9 +73,6 @@ export default function DataProvider(props) {
     onError: (err) => console.log(err, '<---progress images err'),
   });
 
-  
-
-
   const [challenges, setChallenges] = useState();
 
   const [getChallenges] = useLazyQuery(Challenges, {
@@ -88,8 +83,7 @@ export default function DataProvider(props) {
     onError: (err) => console.log(err, '<---progress images err'),
   });
 
-
-  useEffect(()=> {
+  useEffect(() => {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then((_res) => {
@@ -98,103 +92,85 @@ export default function DataProvider(props) {
           getImages();
 
           getChallenges();
-          
         })
-        .catch(err => {
-          console.log("UserDataProvider - checkAuth", err);
+        .catch((err) => {
+          console.log('UserDataProvider - checkAuth', err);
         });
-      }
-   
+    }
+
     checkAuth();
-    
-  }, [Auth.currentAuthenticatedUser])  
-
-
+  }, [Auth.currentAuthenticatedUser]);
 
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
 
-
   const [imageUrls, setImageUrls] = useState([]);
 
-  const getImageUrl = useCallback(async (image) => {
+  const getImageUrl = useCallback(
+    async (image) => {
+      return client
+        .query({
+          query: ProgressImage,
+          fetchPolicy: 'no-cache',
+          variables: {
+            input: {
+              id: image.id,
+              createdAt: image.createdAt,
+            },
+          },
+        })
+        .then((res) => {
+          const {url, id} = res.data.progressImage;
+          setImageUrls([...imageUrls, {id: id, url: url}]);
 
-    return client.query({
-      query: ProgressImage,
-      fetchPolicy: 'no-cache',
-      variables: {
-        input: {
-          id: image.id,
-          createdAt: image.createdAt,
-        },
-      },
-    })
-    .then((res) => {
-      const { url , id} = res.data.progressImage;
-      setImageUrls([
-        ...imageUrls,
-        { id: id, url: url}
-      ]);
-
-      return url;
-    })
-    .catch((err) => console.log(err, 'getImageUrl error'));
-  },  [imageUrls]);
-
+          return url;
+        })
+        .catch((err) => console.log(err, 'getImageUrl error'));
+    },
+    [imageUrls],
+  );
 
   async function checkImages(images) {
-    console.log("userImages", images.length);
-
     const url = await getImageUrl(images[0]);
     setBeforePic(url);
-    console.log("setBeforePic --- done");
 
-
-  
     if (images.length > 1) {
       const url2 = await getImageUrl(images[images.length - 1]);
       setAfterPic(url2);
-      console.log("setAfterPic --- done");
-
-
     }
+
     return true;
   }
 
   useEffect(() => {
-   
     if (userImages) {
-      const images = userImages.filter(it => it.id);
+      const images = userImages.filter((it) => it.id);
       if (images && images.length > 0) {
         checkImages(images);
       }
     }
-
-
   }, [userImages, setBeforePic, setAfterPic]);
 
-
   const getImagesSync = useCallback(async () => {
-
-    return client.query({
-      query: ProgressImages,
-      fetchPolicy: 'no-cache',
-    })
-    .then(async (res) => {
-      const today = new Date();
-      const formattedToday = format(today, 'dd/LL/yyyy');
-      const emptyListObject = {value: today, label: formattedToday};
-      if (res.data.progressImages.length === 0) {
-        setUserImages([emptyListObject]);
-      } else {
-        const formattedImages = formatProgressImages(res.data.progressImages);
-        setUserImages(formattedImages);
-        return await checkImages(formattedImages);
-      }
-
-    })
-    .catch((err) => console.log(err, 'getImageUrl error'));
-  },  []);
+    return client
+      .query({
+        query: ProgressImages,
+        fetchPolicy: 'no-cache',
+      })
+      .then(async (res) => {
+        const today = new Date();
+        const formattedToday = format(today, 'dd/LL/yyyy');
+        const emptyListObject = {value: today, label: formattedToday};
+        if (res.data.progressImages.length === 0) {
+          setUserImages([emptyListObject]);
+        } else {
+          const formattedImages = formatProgressImages(res.data.progressImages);
+          setUserImages(formattedImages);
+          return await checkImages(formattedImages);
+        }
+      })
+      .catch((err) => console.log(err, 'getImageUrl error'));
+  }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -215,7 +191,7 @@ export default function DataProvider(props) {
       setAfterPic,
       getImageUrl,
       imageUrls,
-      getImagesSync
+      getImagesSync,
     }),
     [
       progress,
@@ -233,7 +209,7 @@ export default function DataProvider(props) {
       setAfterPic,
       getImageUrl,
       imageUrls,
-      getImagesSync
+      getImagesSync,
     ],
   );
 

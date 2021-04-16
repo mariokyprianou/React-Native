@@ -29,7 +29,7 @@ import useShare from '../../hooks/share/useShare';
 import ImagesCacheManager from '../../utils/ImagesCacheManager';
 import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
-import { differenceInDays } from 'date-fns';
+import {differenceInDays} from 'date-fns';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -39,40 +39,44 @@ export default function TransformationScreen() {
   const {getHeight} = ScaleHook();
   const client = useApolloClient();
   const {colors} = useTheme();
-  const {userImages, setUserImages, getImages, beforePic, setBeforePic, afterPic, setAfterPic, getImageUrl, imageUrls} = useProgressData();
+  const {
+    userImages,
+    setUserImages,
+    getImages,
+    beforePic,
+    setBeforePic,
+    afterPic,
+    setAfterPic,
+    getImageUrl,
+    imageUrls,
+  } = useProgressData();
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const {setLoading} = useLoading();
   const navigation = useNavigation();
-  
+
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {ShareMediaType, getShareData} = useShare();
 
+  const [selectedBeforeDate, setSelectedBeforeDate] = useState(
+    userImages[0] && userImages[0].value,
+  );
+  const [selectedAfterDate, setSelectedAfterDate] = useState(
+    userImages[userImages.length - 1] &&
+      userImages[userImages.length - 1].value,
+  );
 
-  const [selectedBeforeDate, setSelectedBeforeDate] = useState(userImages[0] && userImages[0].value);
-  const [selectedAfterDate, setSelectedAfterDate] = useState(userImages[userImages.length - 1] && userImages[userImages.length - 1].value);
-
-  
-
-  useEffect(()=> {
-    navigation.setOptions({
-      header: () => (
-        <Header
-          title={ProgressDict.TransformationScreenTitle}
-          goBack
-          right="shareIcon"
-          rightAction={handleShare}
-        />
-      ),
-    });
-    return () => {
-      // setUserImages([]);
-      // getImages();
-    }
-  }, []);
-
-  
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={ProgressDict.TransformationScreenTitle}
+        goBack
+        right="shareIcon"
+        rightAction={handleShare}
+      />
+    ),
+  });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -99,7 +103,6 @@ export default function TransformationScreen() {
       alignItems: 'center',
       position: 'absolute',
       bottom: 40,
-      
     },
   };
 
@@ -108,17 +111,14 @@ export default function TransformationScreen() {
     if (!dateItem.id) return;
     setLoading(true);
 
-
-
     // Check if we already have tthe url for this image
-    const existingImage = imageUrls.find((it) => it.id === dateItem.id); 
+    const existingImage = imageUrls.find((it) => it.id === dateItem.id);
 
     let url = null;
     if (existingImage) {
       url = existingImage.url;
-    }
-    else {
-        url = await getImageUrl(dateItem);
+    } else {
+      url = await getImageUrl(dateItem);
     }
 
     if (imageToSelect === 'before') {
@@ -153,25 +153,29 @@ export default function TransformationScreen() {
   }
 
   function isSameDay(first, second) {
-    return differenceInDays(first.setHours(0, 0, 0, 0), second.setHours(0, 0, 0, 0)) === 0 &&
-        first.getDay() ===  second.getDay()
+    return (
+      differenceInDays(
+        first.setHours(0, 0, 0, 0),
+        second.setHours(0, 0, 0, 0),
+      ) === 0 && first.getDay() === second.getDay()
+    );
   }
 
   const handleShare = useCallback(async () => {
-    
-    setLoading(true)
-    const { colour, url }  = await getShareData(ShareMediaType.progress);
-    console.log("Url", url);
-    console.log("Before", beforePic);
-    console.log("After ", afterPic);
+    setLoading(true);
+    const {colour, url} = await getShareData(ShareMediaType.progress);
 
     try {
       let beforeDate = parseISO(selectedBeforeDate);
-      beforeDate = isSameDay(new Date(), beforeDate) ? "TODAY" :  format(beforeDate, 'dd/LL/yyyy');
-      
+      beforeDate = isSameDay(new Date(), beforeDate)
+        ? 'TODAY'
+        : format(beforeDate, 'dd/LL/yyyy');
+
       let afterDate = parseISO(selectedAfterDate);
-      afterDate = isSameDay(new Date(), afterDate) ? "TODAY" :  format(afterDate, 'dd/LL/yyyy');
-      
+      afterDate = isSameDay(new Date(), afterDate)
+        ? 'TODAY'
+        : format(afterDate, 'dd/LL/yyyy');
+
       let res = await PowerShareAssetsManager.shareProgress({
         backgroundImageUrl: url,
         beforeImageUrl: beforePic,
@@ -180,15 +184,19 @@ export default function TransformationScreen() {
         beforeDate: beforeDate,
         afterDate: afterDate,
       });
-      console.log('Share res', res);
       firebaseLogEvent(analyticsEvents.shareTransformation, {});
-      
     } catch (error) {
       console.error(error);
     }
 
     setLoading(false);
-  }, [beforePic, afterPic, selectedBeforeDate, selectedAfterDate, getShareData]);
+  }, [
+    beforePic,
+    afterPic,
+    selectedBeforeDate,
+    selectedAfterDate,
+    getShareData,
+  ]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

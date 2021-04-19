@@ -19,6 +19,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.thecoreui.assetCreator.Utils;
 
+import org.jcodec.api.android.AndroidSequenceEncoder;
+import org.jcodec.common.model.ColorSpace;
+import org.jcodec.common.model.Picture;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -156,22 +160,26 @@ public class GIFManager extends ReactContextBaseJavaModule {
         imageBeforeCanvas.drawBitmap(sourceBitmap, 0f, 0f, null);
 
         String beforePicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("beforeUrl");
-        Bitmap image1Bitmap = Glide.with(reactContext).asBitmap().load(beforePicUri)
+        double margin = assetWidth * 0.05;
+        double width = assetWidth - (margin * 2);
+        Bitmap image1Bitmap = resize(Glide.with(reactContext).asBitmap().load(beforePicUri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into((int) (assetWidth * 0.8), assetHeight / 2).get();
-        imageBeforeCanvas.drawBitmap(image1Bitmap,(int) (assetWidth * 0.1), (int) (assetHeight * 0.2), null);
+                .into((int) width, assetHeight / 2).get()
+                , (int) width, assetHeight / 2);
+        imageBeforeCanvas.drawBitmap(image1Bitmap,(int) margin, (int) (assetHeight * 0.2), null);
 
         // After image canvas
         Bitmap backgroundAfterBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);
         Canvas imageAfterCanvas = new Canvas(backgroundAfterBitmap);
         imageAfterCanvas.drawBitmap(sourceBitmap, 0f, 0f, null);
         String afterPicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("afterUrl");
-        Bitmap image2Bitmap = Glide.with(reactContext).asBitmap().load(afterPicUri)
+        Bitmap image2Bitmap = resize(Glide.with(reactContext).asBitmap().load(afterPicUri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into((int) (assetWidth * 0.8), assetHeight / 2).get();
-        imageAfterCanvas.drawBitmap(image2Bitmap,(int) (assetWidth * 0.1), (int) (assetHeight * 0.2), null);
+                .into((int) width, assetHeight / 2).get()
+                , (int) width, assetHeight / 2);
+        imageAfterCanvas.drawBitmap(image2Bitmap,(int) margin, (int) (assetHeight * 0.2), null);
 
 
         // Date Text UI
@@ -209,8 +217,8 @@ public class GIFManager extends ReactContextBaseJavaModule {
         // Start frame creation
 
 
-        int targetWidth = utils.assetWidth;
-        int targetHeight = utils.assetHeight;
+        int targetWidth = utils.assetWidth % 2 == 0 ? utils.assetWidth : utils.assetWidth - 1;
+        int targetHeight = utils.assetHeight % 2 == 0 ? utils.assetHeight : utils.assetHeight - 1;
 
         double numberOfImages = 10;
         double chunkWidth = targetWidth / numberOfImages;
@@ -262,10 +270,44 @@ public class GIFManager extends ReactContextBaseJavaModule {
             dir.mkdir();
         }
 
-        File file = new File(dir, "video.mp4");
+        try {
+            File file = new File(dir, "video.mp4");
+            AndroidSequenceEncoder encoder = AndroidSequenceEncoder.createSequenceEncoder(file, 16);
 
+            for (int i = 0; i < finalBitmapList.size(); i++) {
+                Bitmap bitmap = finalBitmapList.get(i);
+                if (bitmap.getHeight() > 0 && bitmap.getWidth() > 0) {
+                    encoder.encodeImage(bitmap);
+                }
+            }
+            encoder.finish();
 
-        promise.resolve(file.getAbsolutePath());
+            promise.resolve(file.getAbsolutePath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > ratioBitmap) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
     }
 }
 

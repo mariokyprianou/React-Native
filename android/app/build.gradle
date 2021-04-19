@@ -258,6 +258,9 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'io.intercom.android:intercom-sdk-base:7.2.0'
 
+    implementation 'org.jcodec:jcodec:0.2.3'
+    implementation 'org.jcodec:jcodec-android:0.2.3'
+
 
     // To fix react-native-camera conflict
 //    implementation platform("com.google.firebase:firebase-bom:25.8.0")

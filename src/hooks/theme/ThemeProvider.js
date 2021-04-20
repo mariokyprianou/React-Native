@@ -24,19 +24,16 @@ export default function ThemeProvider({children}) {
 
   const SCREEN_WIDTH = Dimensions.get('screen').width;
 
+    // Need this for both platforms
+    const HEADER_HEIGHT = 64 + insets.top;
+
+
   // Height is fetched from window instead of screen as it gives us different value 
   // for Android when there is a system soft navigation present
   const SCREEN_HEIGHT = Dimensions.get('window').height;
+  const hasSoftNavigation = Dimensions.get('window').height !== Dimensions.get('screen').height;
 
-  // Need this for both platforms
-  const HEADER_HEIGHT = 64 + insets.top;
-
-  //const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' ? insets.top : 0;
-
-  // Potentially needs ( - insets.bottom ) to resolve issue noted on PDL-741
-  const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' ? insets.top - insets.bottom : 0;
-
-
+  const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' && hasSoftNavigation ? insets.top : 0;
 
   const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT + SYSTEM_SOFT_NAV_HEIGHT;
 

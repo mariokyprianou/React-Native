@@ -122,7 +122,7 @@ const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
   // file://data/user/0/com.powerdigitallimited.power/files/imageCache/temp.png
 
   const shareSingleOptions = {
-    //backgroundImage: path,
+    backgroundImage: path,
     backgroundVideo: path,
     method: isVideo
       ? Share.InstagramStories.SHARE_BACKGROUND_VIDEO

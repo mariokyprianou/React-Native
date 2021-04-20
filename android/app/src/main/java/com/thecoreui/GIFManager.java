@@ -97,7 +97,19 @@ public class GIFManager extends ReactContextBaseJavaModule {
 
         ArrayList<Bitmap> finalBitmapList = new ArrayList<Bitmap>();
         finalBitmapList.addAll(secondBitmapList);
+        finalBitmapList.add(image1Bitmap);
         finalBitmapList.addAll(bitmapList);
+        finalBitmapList.add(image2Bitmap);
+
+        finalBitmapList.addAll(secondBitmapList);
+        finalBitmapList.add(image1Bitmap);
+        finalBitmapList.addAll(bitmapList);
+        finalBitmapList.add(image2Bitmap);
+
+        finalBitmapList.addAll(secondBitmapList);
+        finalBitmapList.add(image1Bitmap);
+        finalBitmapList.addAll(bitmapList);
+        finalBitmapList.add(image2Bitmap);
 
         try {
             byte[] gifData = generateGIF(finalBitmapList);
@@ -162,11 +174,11 @@ public class GIFManager extends ReactContextBaseJavaModule {
         String beforePicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("beforeUrl");
         double margin = assetWidth * 0.05;
         double width = assetWidth - (margin * 2);
-        Bitmap image1Bitmap = resize(Glide.with(reactContext).asBitmap().load(beforePicUri)
+        Bitmap image1Bitmap = Glide.with(reactContext).asBitmap().load(beforePicUri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into((int) width, assetHeight / 2).get()
-                , (int) width, assetHeight / 2);
+                .centerCrop()
+                .submit((int) width, assetHeight / 2).get();
         imageBeforeCanvas.drawBitmap(image1Bitmap,(int) margin, (int) (assetHeight * 0.2), null);
 
         // After image canvas
@@ -174,11 +186,11 @@ public class GIFManager extends ReactContextBaseJavaModule {
         Canvas imageAfterCanvas = new Canvas(backgroundAfterBitmap);
         imageAfterCanvas.drawBitmap(sourceBitmap, 0f, 0f, null);
         String afterPicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("afterUrl");
-        Bitmap image2Bitmap = resize(Glide.with(reactContext).asBitmap().load(afterPicUri)
+        Bitmap image2Bitmap = Glide.with(reactContext).asBitmap().load(afterPicUri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into((int) width, assetHeight / 2).get()
-                , (int) width, assetHeight / 2);
+                .centerCrop()
+                .submit((int) width, assetHeight / 2).get();
         imageAfterCanvas.drawBitmap(image2Bitmap,(int) margin, (int) (assetHeight * 0.2), null);
 
 
@@ -194,9 +206,9 @@ public class GIFManager extends ReactContextBaseJavaModule {
                 afterSpan, titleStyle, imageBeforeCanvas.getWidth(), Layout.Alignment.ALIGN_OPPOSITE, 0.8f, 0.0f, false);
 
         // Add text on images
-        float textPositionY = (assetHeight / 4f) + (assetHeight / 2f) + 20;
-        float textLeftPositionX = assetWidth * 0.1f;
-        float textRightPositionX = -(assetWidth * 0.1f);
+        float textPositionY = (assetHeight * 0.2f) + (assetHeight / 2f) + 20;
+        float textLeftPositionX = (float) margin;
+        float textRightPositionX = -(float) margin;
 
         utils.positionOnCanvas(imageBeforeCanvas, textBeforeLayout, textLeftPositionX, textPositionY);
         utils.positionOnCanvas(imageBeforeCanvas, textAfterLayout, textRightPositionX, textPositionY);
@@ -262,10 +274,14 @@ public class GIFManager extends ReactContextBaseJavaModule {
         ArrayList<Bitmap> finalBitmapList = new ArrayList<Bitmap>();
         finalBitmapList.addAll(secondBitmapList);
         finalBitmapList.addAll(bitmapList);
+        finalBitmapList.addAll(secondBitmapList);
+        finalBitmapList.addAll(bitmapList);
+        finalBitmapList.addAll(secondBitmapList);
+        finalBitmapList.addAll(bitmapList);
 
 
         // File to store video in
-        File dir = new File(reactContext.getFilesDir().getAbsolutePath(), "video");
+        File dir = new File(reactContext.getFilesDir().getAbsolutePath(), "imageCache");
         if(!dir.exists()){
             dir.mkdir();
         }
@@ -286,27 +302,6 @@ public class GIFManager extends ReactContextBaseJavaModule {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
-        if (maxHeight > 0 && maxWidth > 0) {
-            int width = image.getWidth();
-            int height = image.getHeight();
-            float ratioBitmap = (float) width / (float) height;
-            float ratioMax = (float) maxWidth / (float) maxHeight;
-
-            int finalWidth = maxWidth;
-            int finalHeight = maxHeight;
-            if (ratioMax > ratioBitmap) {
-                finalWidth = (int) ((float)maxHeight * ratioBitmap);
-            } else {
-                finalHeight = (int) ((float)maxWidth / ratioBitmap);
-            }
-            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-            return image;
-        } else {
-            return image;
         }
     }
 }

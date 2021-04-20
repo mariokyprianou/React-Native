@@ -37,32 +37,28 @@ export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
   const {colors} = useTheme();
-  const {setLoading} = useLoading();
+  const {loading, setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-  const {getImages, getImagesSync} = useProgressData();
+  const {getImagesSync} = useProgressData();
   const navigation = useNavigation();
 
-  useEffect(() => {
-    navigation.setOptions({
-      header: () => (
-        <Header
-          title={ProgressDict.Upload}
-          goBack
-          right="photoSelectIcon"
-          rightAction={handleSelectPhoto}
-        />
-      ),
-    });
-  }, []);
+  navigation.setOptions({
+    header: () => (
+      <Header
+        title={ProgressDict.Upload}
+        goBack
+        right="photoSelectIcon"
+        rightAction={loading ? ()=> {} : handleSelectPhoto}
+      />
+    ),
+  });
 
   const [requestUplaodUrl] = useMutation(UploadUrl);
   const [sendFailed] = useMutation(UploadFailed);
 
   const [time, setTime] = useState(0);
 
-  const [cameraButtonActive, setCameraButtonActive] = useState(true);
-  const [cameraViewVisible, setCameraViewVisible] = useState(true);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -82,33 +78,41 @@ export default function TransformationScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
 
+    if (!loading) {
+      setLoading(true);
+    }
+
     const newPath =
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
-    setLoading(true);
 
-    await RNFetchBlob.fs.stat(newPath)
+    const validSize = await RNFetchBlob.fs.stat(newPath)
       .then((stats) => {
         const { size } = stats;
         if (size) {
           console.log("Image size in MB: ", size / 1000000);
           const limit = 1000000 * 20; // 20MB in bytes
           if (size > limit) {
-            displayAlert({text: ProgressDict.TooLargeSizeImage});
-            resetScreenState();
+            return false;
           }
+          return true;
         }
       })
       .catch((err) => {
         console.log(err, '<---requestUrl err');
         displayAlert({text:ProgressDict.UploadFailed });
-        resetScreenState();
-        return;
+        setLoading(false);
+        return false;
       })
+
+    if (!validSize) {
+      displayAlert({text: ProgressDict.TooLargeSizeImage});
+      setLoading(false);
+    }
 
     const uploadUrlRes = await requestUplaodUrl().catch((err) => {
       console.log(err, '<---requestUrl err');
       displayAlert({text:ProgressDict.UploadFailed });
-      resetScreenState();
+      setLoading(false);
       return;
     });
 
@@ -131,13 +135,13 @@ export default function TransformationScreen() {
         if (status === 200 || status === 204) {
           console.log('Upload done --- SUCCESS');
 
-          const finished = await getImagesSync();
+          await getImagesSync();
           console.log(
             'getImagesSync -- finished getting updated images and setting 1st and last',
           );
 
           navigation.goBack();
-          resetScreenState();
+          setLoading(false);
         } else {
           console.log('Upload failed', res);
           handleAddPhotoError(id);
@@ -155,13 +159,13 @@ export default function TransformationScreen() {
       .catch((err) => console.log(err, '<---upload failed err'))
       .finally(() => {
         displayAlert({text:ProgressDict.UploadFailed });
-        resetScreenState();
+        setLoading(false);
       });
   }
 
   function handleSelectPhoto() {
-    setCameraButtonActive(false);
-    setCameraViewVisible(false);
+
+    setLoading(true);
 
     request(
       Platform.select({
@@ -171,7 +175,7 @@ export default function TransformationScreen() {
     )
       .then((result) => {
         if (result !== RESULTS.GRANTED) {
-          resetScreenState();
+          setLoading(false);
         }
 
         if (result === RESULTS.UNAVAILABLE) {
@@ -196,28 +200,20 @@ export default function TransformationScreen() {
             handlePhoto(path, mime);
           }).catch(()=> {
             displayAlert({text:ProgressDict.UploadFailed });
-            resetScreenState();
+            setLoading(false);
           });
         }
       })
       .catch((err) => {
         console.log(err);
-        resetScreenState();
+        setLoading(false);
       });
-  }
-
-
-  function resetScreenState() {
-    setLoading(false);
-    setCameraButtonActive(true);
-    setCameraViewVisible(true);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
       <TDAddPhoto
-        cameraViewVisible={cameraViewVisible}
         setPhoto={handlePhoto}
         overlayImage={overlay}
         overlayStyles={styles.overlay}
@@ -231,8 +227,7 @@ export default function TransformationScreen() {
         countdown10={countdown10}
         setTime={setTime}
         setLoading={setLoading}
-        cameraButtonActive={cameraButtonActive}
-        setCameraButtonActive={setCameraButtonActive}
+        cameraEnabled={!loading}
       />
     </View>
   );

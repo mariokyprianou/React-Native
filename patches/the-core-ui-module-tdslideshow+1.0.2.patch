@@ -158,10 +158,10 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..153673a 100644
+index f41ddff..5e7c50b 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -6,29 +6,47 @@
+@@ -6,29 +6,45 @@
   * Copyright (c) 2020 The Distance
   */
  
@@ -184,7 +184,7 @@ index f41ddff..153673a 100644
  const AddPhoto = ({
 -  handlePhotoClick,
 -  setActiveViewIndex,
-+  cameraViewVisible,
++  cameraEnabled,
    setPhoto,
 -  cameraHeaderText,
    overlayImage,
@@ -199,8 +199,6 @@ index f41ddff..153673a 100644
 +  countdown10,
 +  setTime,
 +  setLoading,
-+  cameraButtonActive,
-+  setCameraButtonActive
  }) => {
    // ******* SETUP *******
 +  overlayStyles && checkStylesIncHeight(overlayStyles);
@@ -218,7 +216,7 @@ index f41ddff..153673a 100644
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +54,7 @@ const AddPhoto = ({
+@@ -36,7 +52,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
@@ -227,7 +225,7 @@ index f41ddff..153673a 100644
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,73 +73,103 @@ const AddPhoto = ({
+@@ -55,73 +71,99 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -315,7 +313,7 @@ index f41ddff..153673a 100644
 -      })
 -      .catch((err) => console.log(err));
 +  function handlePhotoClick() {
-+    setCameraButtonActive(false);
++    
 +
 +    const options = { quality: Platform.OS === 'android' ? 0.92 : 0.99, base64: false };
 +
@@ -323,9 +321,10 @@ index f41ddff..153673a 100644
 +
 +    setTimeout(async () => {
 +      const data = await cameraRef.takePictureAsync(options);
-+      const contentType = mime.lookup(data.uri)
-+      console.log(data)
 +
++      setLoading(true);
++
++      const contentType = mime.lookup(data.uri)
 +      setPhoto(data.uri, contentType);
 +    }, timeout)
    }
@@ -340,11 +339,6 @@ index f41ddff..153673a 100644
 +    setShowCountdownOptions(false);
 +  }
 +
-+  useEffect(()=> {
-+
-+   setLoading(!cameraButtonActive);
-+  }, [cameraButtonActive])
-+
    // ******* RENDER *******
  
    return (
@@ -355,7 +349,7 @@ index f41ddff..153673a 100644
 -        cameraHeaderText={cameraHeaderText}
 -      />
        <View style={styles.cameraContainer}>
-+      {cameraViewVisible ? (
++      {cameraEnabled ? (
          <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
            {({ camera }) => {
              setCameraRef(camera);
@@ -367,7 +361,7 @@ index f41ddff..153673a 100644
                  </View>
                );
              } else {
-@@ -129,23 +177,55 @@ const AddPhoto = ({
+@@ -129,23 +171,55 @@ const AddPhoto = ({
              }
            }}
          </RNCamera>
@@ -402,9 +396,9 @@ index f41ddff..153673a 100644
 +          { showCountdownOptions === false ?
 +            <>
 +              <View style={styles.cameraButtonContainer}>
-+                <TouchableOpacity onPress={cameraButtonActive ? handlePhotoClick : null} >
++                <TouchableOpacity onPress={cameraEnabled ? handlePhotoClick : null} >
 +                  <TDIcon
-+                    input={cameraButtonActive === true ? cameraButtonImage : cameraFadedButton}
++                    input={cameraEnabled === true ? cameraButtonImage : cameraFadedButton}
 +                    inputStyle={
 +                      cameraButtonImage
 +                        ? styles.cameraButtonImage
@@ -433,7 +427,7 @@ index f41ddff..153673a 100644
 +            </Animatable.View>
 +        }
 +
-+        {!cameraButtonActive && <View style={{height: '100%', width: '100%', backgroundColor: 'white', opacity:0.5}}/> }
++        {!cameraEnabled && <View style={{height: '100%', width: '100%', backgroundColor: 'white', opacity:0.5}}/> }
          </View>
        </View>
      </View>

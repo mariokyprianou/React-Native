@@ -5,8 +5,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {ScrollView, View, Text, Alert} from 'react-native';
+import React, {useEffect} from 'react';
+import {ScrollView, View, Text, Alert, Linking} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 
@@ -25,13 +25,20 @@ export default function Screen() {
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict} = dictionary;
+  const onlyNumbersRegex = /^\d+$/;
 
   navigation.setOptions({
     header: () => <Header title={AuthDict.ResetPasswordScreenTitle} goBack />,
   });
 
   const {cellFormStyles, cellFormConfig, textStyles, colors} = useTheme();
-  const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
+  const {
+    cleanErrors,
+    getValues,
+    updateError,
+    cleanValues,
+    updateValue,
+  } = FormHook();
   const {getHeight, getWidth} = ScaleHook();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -58,6 +65,41 @@ export default function Screen() {
       textAlign: 'left',
     },
   };
+
+  // MARK: - Deep linking
+
+  const handleUrl = (url = '') => {
+    console.log('Handle url:', url);
+    const receivedCode = url.substr(url.length - 6);
+    if (url.includes('forgotPassword') && onlyNumbersRegex.test(receivedCode)) {
+      updateValue({name: 'code', value: receivedCode});
+    }
+  };
+
+  const handleUrlEvent = (event = {}) => {
+    const {url} = event;
+    handleUrl(url);
+  };
+
+  const setup = () => {
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then((url) => {
+        handleUrl(url);
+      });
+    } else {
+      Linking.addEventListener('url', handleUrlEvent);
+    }
+  };
+
+  // MARK: - Effects
+  useEffect(() => {
+    setup();
+    return () => {
+      cleanValues();
+      cleanErrors();
+      Linking.removeEventListener('url', handleUrlEvent);
+    };
+  }, []);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleChangePassword() {

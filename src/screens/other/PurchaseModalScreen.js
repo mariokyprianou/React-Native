@@ -139,7 +139,6 @@ const PurchaseModalScreen = ({}) => {
     const checkCurrentPurchase = async (purchase) => {
       if (purchase) {
         const receipt = purchase.transactionReceipt;
-        if (receipt) console.log('Receipt: ', receipt);
         try {
           if (Platform.OS === 'ios') {
             appleSubscribe({
@@ -164,10 +163,13 @@ const PurchaseModalScreen = ({}) => {
               })
               .catch((err) => console.log(err));
           } else {
+            const productId = R.path(['productId'], purchase);
+            const purchaseToken = R.path(['purchaseToken'], purchase);
             googleSubscribe({
               variables: {
                 input: {
-                  receiptData: receipt,
+                  productId: productId,
+                  purchaseToken: purchaseToken,
                 },
               },
             })

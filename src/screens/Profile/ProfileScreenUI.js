@@ -120,16 +120,22 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         (country) => country.country === 'India',
       )[0].regions;
 
-      const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-        let {region, id} = obj;
-        return {...acc, [region]: id};
-      }, {});
-      setRegionLookup(indianRegionsLookup);
+      if (indianRegions) {
+        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+          let {region, id} = obj;
+          return {...acc, [region]: id};
+        }, {});
+        setRegionLookup(indianRegionsLookup);
 
-      const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(
-        Platform.OS === 'ios' ? ['', ...indianRegionsList] : indianRegionsList,
-      );
+        const indianRegionsList = indianRegions.map((region) => region.region);
+        setRegionsList(
+          Platform.OS === 'ios' ? ['', ...indianRegionsList] : indianRegionsList,
+        );
+      }
+      else {
+        setRegionLookup([]);
+        setRegionsList([]);
+      }
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -533,8 +539,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   ];
 
   if (
-    formCountry === 'India' ||
-    (!formCountry && userData.country === 'India')
+    (formCountry === 'India' ||
+    (!formCountry && userData.country === 'India')) && regionsList.length > 0
   ) {
     cells.push({
       name: 'profile_region',

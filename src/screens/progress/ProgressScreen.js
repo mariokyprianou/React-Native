@@ -79,10 +79,6 @@ export default function ProgressScreen() {
   useEffect(() => {
     if (progress) {
       const currentMonth = new Date().getMonth();
-      console.log("progress", progress[0])
-
-      // latest month
-      //const thisMonth = progress.sort((a, b) => parseISO(a.startOfMonth) - parseISO(b.startOfMonth))[0];
 
       let thisMonth = progress.find((month) => {
         return parseISO(month.startOfMonth).getMonth() === currentMonth;

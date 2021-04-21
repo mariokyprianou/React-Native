@@ -58,14 +58,10 @@ export default function SetsTable({selectedDate, date, weightData, weightPrefere
 
 
   useEffect(()=> {
-    const tbdt = weightData.filter(it =>  isSameDay(parseISO(it.createdAt), selectedDate))
-
-  
-  
-  const formattedHistory = tbdt.sort((a,b)=> a.setNumber > b.setNumber);
-
-  console.log("formattedHistory",formattedHistory)
-  setData(formattedHistory)
+    const filteredData = weightData.filter(it =>  isSameDay(parseISO(it.createdAt), selectedDate));
+    const formattedHistory = filteredData.sort((a, b)=> parseISO(a.createdAt) - parseISO(b.createdAt) || a.setNumber > b.setNumber);
+    
+    setData(formattedHistory);
 
   }, [weightData, selectedDate]);
 

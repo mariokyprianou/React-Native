@@ -55,7 +55,9 @@ export default function WeightCaptureScreen() {
       header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
     });
 
-    const data = processChallengeHistory(weightHistory, weightPreference, "WEIGHT");
+    const data = processChallengeHistory(weightHistory, weightPreference, "WEIGHT")
+        .sort((a, b)=> parseISO(a.createdAt) - parseISO(b.createdAt) || a.setNumber > b.setNumber);
+    
 
     setHistoryData(data);
     setFilteredData(data);
@@ -78,7 +80,8 @@ export default function WeightCaptureScreen() {
 
   // Drop down changed
   useEffect(()=> {
-  const data = processChallengeHistory(weightHistory, weightPreference, "WEIGHT");
+  const data = processChallengeHistory(weightHistory, weightPreference, "WEIGHT")
+      .sort((a, b)=> parseISO(a.createdAt) - parseISO(b.createdAt) || a.setNumber > b.setNumber);
 
   if (!dropDownSelect) {
       setFilteredData(data)

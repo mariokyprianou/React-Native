@@ -107,12 +107,15 @@ export default function SetCompletionScreen({
       weightToAdd = Math.round(weightToAdd / 2.20462262185);
     }
 
+    
+
     let weightDetails = {
       exerciseId: exercise,
       weight: weightToAdd,
       setNumber: currentSet.setNumber,
       setType: setType,
       quantity: currentSet.quantity,
+      completedAt: new Date()
     };
 
     setWeightsToUpload([...weightsToUpload, weightDetails]);

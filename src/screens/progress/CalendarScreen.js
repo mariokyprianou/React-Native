@@ -16,6 +16,8 @@ import Header from '../../components/Headers/Header';
 import processProgressData from '../../utils/processProgressData';
 import useProgressData from '../../hooks/data/useProgressData';
 import useLoading from '../../hooks/loading/useLoading';
+import parseISO from 'date-fns/parseISO';
+import { startOfMonth, lastDayOfMonth, eachDayOfInterval } from 'date-fns';
 
 export default function CalendarScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -45,17 +47,69 @@ export default function CalendarScreen() {
     setLoading(true);
   
   }, []);
+  function monthDiff(dateFrom, dateTo) {
+    return dateTo.getMonth() - dateFrom.getMonth() + 
+      (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+   }
+
+   function sameMonth(dateFrom, dateTo) {
+    return dateTo.getMonth() === dateFrom.getMonth() &&
+      dateTo.getFullYear() === dateFrom.getFullYear()
+   }
 
   useEffect(() => {
-    if (progress) {
-    const progressData = progress
-      .map((month) => {
-        return processProgressData(month.days);
-      }).reverse().flat();
+    if (progress && progress.length > 0) {
 
-    setProgressHistoryData(progressData);
+      // Code for adding missing months
+      let completeProgress = progress.slice();
+      
+      // earliest month
+      let earliestMonth = completeProgress.sort((a, b) => parseISO(a.startOfMonth) - parseISO(b.startOfMonth))[0];
 
-    setLoading(false);
+      earliestMonth = parseISO(earliestMonth.startOfMonth);
+      const currentMonth = new Date();
+
+      let checkMonths = monthDiff(earliestMonth, currentMonth); // replace witth months to add
+
+      // Iteerate all months from earliest till now
+      for (let i = 1; i <= checkMonths; i++) {
+        let newMonth = new Date(earliestMonth);
+        newMonth.setMonth(newMonth.getMonth() + i);
+
+        // If there is no data for iteration month, generate it
+        if (!completeProgress.find((it)=> sameMonth(parseISO(it.startOfMonth), newMonth))) {
+
+          const firstOfMonth = startOfMonth(newMonth);
+          const lastOfMonth = lastDayOfMonth(newMonth);
+          const daysOfMonthArray = eachDayOfInterval({
+            start: firstOfMonth,
+            end: lastOfMonth,
+          });
+
+          const days = daysOfMonthArray.map((date) => {
+            return {"__typename": "ProgressDay", "date": date.toISOString(), "type": "noData"};
+          });
+
+          completeProgress.push({
+            "__typename": "ProgressMonth", 
+            "days": [...days], 
+            "startOfMonth": newMonth.toISOString()
+          })
+        }
+
+      }
+
+      // Sort months again
+      completeProgress = completeProgress.sort((a, b) => parseISO(b.startOfMonth) - parseISO(a.startOfMonth));
+
+      const progressData = completeProgress
+        .map((month) => {
+          return processProgressData(month.days);
+        }).reverse().flat();
+
+      setProgressHistoryData(progressData);
+
+      setLoading(false);
     }
   }, [progress]);
 

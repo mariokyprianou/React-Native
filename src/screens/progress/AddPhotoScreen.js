@@ -90,11 +90,8 @@ export default function TransformationScreen() {
         const { size } = stats;
         if (size) {
           console.log("Image size in MB: ", size / 1000000);
-          const limit = 1000000 * 20; // 20MB in bytes
-          if (size > limit) {
-            return false;
-          }
-          return true;
+          const limit = 1000000 * 20; // 20MB in bytes 
+          return size <= limit;
         }
       })
       .catch((err) => {
@@ -105,8 +102,10 @@ export default function TransformationScreen() {
       })
 
     if (!validSize) {
+      console.log("Image size exceeds limit");
       displayAlert({text: ProgressDict.TooLargeSizeImage});
       setLoading(false);
+      return;
     }
 
     const uploadUrlRes = await requestUplaodUrl().catch((err) => {

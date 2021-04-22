@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {Platform, ActionSheetIOS} from 'react-native';
+import {Platform, ActionSheetIOS, Linking} from 'react-native';
 
 import CustomAssetsGenerator from './CustomAssetsGenerator';
 import Share from 'react-native-share';
@@ -117,9 +117,9 @@ const shareProgress = async ({
 
 const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
   console.log('shareDirectlyToInstagramStory', path);
-
+  
   // Path should always be this for Android
-  // file://data/user/0/com.powerdigitallimited.power/files/imageCache/temp.png
+  // file://data/user/0/com.powerdigitallimited.power/files/imageCache/...
 
   const shareSingleOptions = {
     backgroundImage: path,
@@ -141,6 +141,7 @@ const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
   return Share.shareSingle(shareSingleOptions)
     .then((res) => {
       // .then  is called before we actually share  :/
+      console.log('res', res);
       if (Platform.OS === 'ios') {
         ImagesCacheManager.unlinkFileFromAbsolutePath(path);
       }
@@ -152,6 +153,25 @@ const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
       throw err;
     });
 };
+
+const isInstagramAvailable = async () => {
+
+  return Linking.canOpenURL(`instagram://user`)
+    .then(supported => {
+      return supported;
+    })
+    .catch(error => {
+      return false;
+    });
+};
+
+const promptIsntagramAppDownload = () => {
+  Linking.openURL(
+    Platform.OS === "ios"
+      ? "https://apps.apple.com/gb/app/instagram/id389801252"
+      : "market://details?id=com.instagram.android"
+  );
+}
 
 // WIP for share multiple - depreciated
 
@@ -187,6 +207,8 @@ const PowerShareAssetsManager = {
   shareStringAchievement,
   shareProgrammeStart,
   shareProgress,
+  isInstagramAvailable,
+  promptIsntagramAppDownload
 };
 
 export default PowerShareAssetsManager;

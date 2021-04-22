@@ -24,6 +24,7 @@ import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
 import {SampleImageUrl} from '../../utils/SampleData';
 import useLoading from '../../hooks/loading/useLoading';
 import useShare from '../../hooks/share/useShare';
+import displayAlert from '../../utils/DisplayAlert';
 
 
 const screenWidth = Dimensions.get('screen').width;
@@ -34,7 +35,7 @@ export default function ChallengeCompletionScreen() {
   const {colors, textStyles} = useTheme();
   const {history} = useProgressData();
   const {dictionary} = useDictionary();
-  const {WorkoutDict, ShareDict} = dictionary;
+  const {WorkoutDict, ShareDict, ProfileDict} = dictionary;
   const {
     params: {name, type, result, trainer, id, weightPreference, unitType, ellapsedTime, description},
   } = useRoute();
@@ -134,6 +135,31 @@ export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   async function handleShare() {
+
+    const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
+
+    if (!isInstaAvailable) {
+      displayAlert({
+        title: null,
+        text: ShareDict.InstaPromptText,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: async () => {
+              PowerShareAssetsManager.promptIsntagramAppDownload();
+            },
+          },
+        ],
+      });
+
+      return;
+    }
+
+
     setLoading(true)
     
     const { colour, url } = await getShareData(ShareMediaType.challengeComplete);

@@ -241,6 +241,10 @@ const urIN = {
     ShareProgress: 'Share your progress now!',
     Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
+
+    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
+ 
+    InstaPromptText: 'Share to Instagram by downloading the app!'
   },
 
   SettingsDict: {

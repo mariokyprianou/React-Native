@@ -34,9 +34,11 @@ import {useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
+
 import {SampleImageUrl} from '../../utils/SampleData';
 
 import useShare from '../../hooks/share/useShare';
+import displayAlert from '../../utils/DisplayAlert';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -45,7 +47,7 @@ export default function CongratulationsScreen() {
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {MeetYourIconsDict, WorkoutDict, ShareDict} = dictionary;
+  const {MeetYourIconsDict, WorkoutDict, ShareDict, ProfileDict} = dictionary;
 
 
   // Switch programme parsms
@@ -126,6 +128,30 @@ export default function CongratulationsScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   async function handlePressShare() {
+
+    const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
+
+    if (!isInstaAvailable) {
+      displayAlert({
+        title: null,
+        text: ShareDict.InstaPromptText,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: async () => {
+              PowerShareAssetsManager.promptIsntagramAppDownload();
+            },
+          },
+        ],
+      });
+
+      return;
+    }
+
     setLoading(true);
 
     const prog = newProgramme || currentProgramme;

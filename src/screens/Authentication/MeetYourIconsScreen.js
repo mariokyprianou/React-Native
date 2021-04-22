@@ -299,7 +299,8 @@ export default function MeetYourIconsScreen() {
   
 
   function changedAssignedProgramme(type) {
-    
+
+
     if (type === 'continue') {
       if (selectedProgram.userProgress.isActive) {
         navigation.navigate('TabContainer');
@@ -520,7 +521,8 @@ const newProgrammeView = () => (
       </View>
       
       {switchProgramme === true ? 
-        selectedProgram && selectedProgram.userProgress 
+      // Check if selected programme already has user porgress
+        selectedProgram && selectedProgram.userProgress && selectedProgram.userProgress.latestWeek > 0
         ? programmeWithProgressView(selectedProgram.userProgress.latestWeek) 
         : newProgrammeView()
     

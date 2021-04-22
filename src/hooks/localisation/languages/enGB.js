@@ -244,7 +244,10 @@ const enGB = {
     Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
 
-    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`
+    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
+ 
+    InstaPromptText: 'Share to Instagram by downloading the app!'
+ 
   },
 
   SettingsDict: {

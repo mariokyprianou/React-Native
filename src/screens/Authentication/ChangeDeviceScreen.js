@@ -17,6 +17,7 @@ import getResponse from '../../utils/getResponse';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import {useBackHandler} from '@react-native-community/hooks';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
@@ -32,6 +33,9 @@ export default function ChangeDeviceScreen() {
     params: {canChangeDevice, newDeviceId},
   } = useRoute();
 
+  useBackHandler(() => {
+    return true;
+  });
 
   useEffect(()=> {
     setLoading(false);
@@ -89,7 +93,7 @@ export default function ChangeDeviceScreen() {
       onPressBottomButton={onPressBottomButton}
       disabled={!canChangeDevice}
       icon="chevron"
-      closeModal={false}
+      closeModal={__DEV__ || false}
     />
   );
 }

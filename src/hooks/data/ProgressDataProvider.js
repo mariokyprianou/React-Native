@@ -26,7 +26,7 @@ import {
   parseISO,
 } from 'date-fns';
 
-import {Auth} from 'aws-amplify';
+import {Auth, Hub} from 'aws-amplify';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -100,6 +100,37 @@ export default function DataProvider(props) {
 
     checkAuth();
   }, [Auth.currentAuthenticatedUser]);
+
+  useEffect(() => {
+    async function checkAuth() {
+      await Auth.currentAuthenticatedUser()
+        .then((_res) => {
+          getProgress();
+          getHistory();
+          getImages();
+
+          getChallenges();
+        })
+        .catch((err) => {
+          console.log('UserDataProvider - checkAuth', err);
+        });
+    }
+
+    Hub.listen("auth", (data) => {
+      const { payload } = data;
+      console.log("new event has happend ", data);
+      if (payload.event === "signIn") {
+        console.log("user has signed in");
+        checkAuth();
+      }
+      if (payload.event === "signOut") {
+        console.log("user has signed out");
+      }
+    });
+
+    checkAuth();
+  }, []);
+
 
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();

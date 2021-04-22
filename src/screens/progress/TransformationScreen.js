@@ -30,6 +30,7 @@ import ImagesCacheManager from '../../utils/ImagesCacheManager';
 import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 import {differenceInDays} from 'date-fns';
+import displayAlert from '../../utils/DisplayAlert';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -52,7 +53,7 @@ export default function TransformationScreen() {
   } = useProgressData();
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
-  const {ProgressDict} = dictionary;
+  const {ProgressDict, ShareDict, ProfileDict} = dictionary;
   const {setLoading} = useLoading();
   const navigation = useNavigation();
 
@@ -162,6 +163,32 @@ export default function TransformationScreen() {
   }
 
   const handleShare = useCallback(async () => {
+
+    const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
+
+    if (!isInstaAvailable) {
+      displayAlert({
+        title: null,
+        text: ShareDict.InstaPromptText,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: async () => {
+              PowerShareAssetsManager.promptIsntagramAppDownload();
+            },
+          },
+        ],
+      });
+
+      return;
+    }
+
+
+
     setLoading(true);
     const {colour, url} = await getShareData(ShareMediaType.progress);
 

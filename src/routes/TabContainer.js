@@ -45,7 +45,7 @@ export default function TabContainer() {
 
   useEffect(() => {
     if (changeDevice && changeDevice.newDeviceId) {
-      //navigation.navigate('ChangeDevice', {...changeDevice});
+      navigation.navigate('ChangeDevice', {...changeDevice});
     }
   }, [changeDevice]);
 

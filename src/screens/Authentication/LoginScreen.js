@@ -19,6 +19,7 @@ import {Auth} from 'aws-amplify';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
 import Intercom from 'react-native-intercom';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -133,7 +134,7 @@ export default function LoginScreen() {
             fromLogin: true,
           });
         } else if (error.code === 'NotAuthorizedException') {
-          Alert.alert(AuthDict.IncorrectEmailOrPassword);
+          displayAlert({text: AuthDict.IncorrectEmailOrPassword});
         }
       })
       .finally(() => setLoading(false));

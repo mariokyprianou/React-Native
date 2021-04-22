@@ -7,8 +7,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import { Platform } from 'react-native';
+import React, {useState} from 'react';
+import { Platform, View } from 'react-native';
 import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import { useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -17,22 +17,40 @@ import Colors from '../../styles/Colors';
 import isRTL from '../../utils/isRTL';
 import ThemeContext from './ThemeContext';
 
+const DEFAULT_DIMENSIONS_CONTEXT_VALUE = {
+  width: Dimensions.get("window").width,
+  height: Dimensions.get("window").height,
+};
+
+
 export default function ThemeProvider({children}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-
   const insets = useSafeAreaInsets();
+
+  const [layout, setLayout] = useState(DEFAULT_DIMENSIONS_CONTEXT_VALUE);
+
+  const handleLayout = ({ nativeEvent }) => {
+    const { width, height } = nativeEvent.layout;
+    setLayout({ width, height });
+  };
+
 
   const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-  // Height is fetched from window instead of screen as it gives us different value 
-  // for Android when there is a system solf navigation present
-  const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+  // REPLACED THESE WITH LAYOUT STATE 
+  // for Android when there is a system soft navigation present
+   //const SCREEN_HEIGHT = Dimensions.get('window').height;
+  //const hasSoftNavigation = Dimensions.get('window').height !== Dimensions.get('screen').height;
+  //const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' && hasSoftNavigation ? insets.top : 0;
+
+
+    // Need this for both platforms
   const HEADER_HEIGHT = 64 + insets.top;
+  const SCREEN_HEIGHT = layout.height;
 
-  const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' ? insets.top : 0;
+  const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT; // + SYSTEM_SOFT_NAV_HEIGHT;
 
-  const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT + SYSTEM_SOFT_NAV_HEIGHT;
 
   const Constants = {
     SCREEN_WIDTH,
@@ -707,8 +725,10 @@ export default function ThemeProvider({children}) {
   );
 
   return (
+    <View onLayout={handleLayout} style={{ flex: 1 }}>
     <ThemeContext.Provider value={{...publicMethods}}>
       {children}
     </ThemeContext.Provider>
+    </View>
   );
 }

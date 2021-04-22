@@ -11,9 +11,6 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  Alert,
-  ScrollView,
-  Dimensions,
 } from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
@@ -31,6 +28,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -68,11 +66,17 @@ export default function ExerciseView(props) {
     variables: {exercise: exercise.id},
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      if (res.getExerciseWeight.length > 0) {
+      if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
         setWeightHistory(res.getExerciseWeight);
       }
+      else {
+        setWeightHistory([]);
+      }
     },
-    onError: (error) => console.log(error, '<---- error fetching weights'),
+    onError: (error) => {
+      setWeightHistory([]);
+      console.log(error, '<---- error fetching weights');
+    }
   });
 
 
@@ -125,7 +129,25 @@ export default function ExerciseView(props) {
   }, []);
 
 
+  // Finished weight submition, check if it was last set
+  useEffect(() => {
+    if (setComplete === false) {
+      checkShouldFinishExercise();
+    }
+  }, [setComplete]);
+
   
+  // Enable/disable scroll based on any set completion modal showing
+  useEffect(()=> {
+
+    if ((countDown && restTime > 0) || setComplete) {
+      setEnableScroll(false);
+    }
+    else {
+      setEnableScroll(true);
+    }
+  }, [countDown, restTime, setComplete]);
+
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -162,13 +184,11 @@ export default function ExerciseView(props) {
     // start rest timer
     if (restTime) {
       setCountDown(true);
-      setEnableScroll(false);
     }
 
     // show set completion modal with weights if applicable
     if (exercise.weight) {
       setSetComplete(true);
-      setEnableScroll(false);
     }
 
     // Handle no weight or rest time
@@ -181,13 +201,6 @@ export default function ExerciseView(props) {
       finishExercise();
     }
   };
-
-  // Finished weight submition, check if it was last set
-  useEffect(() => {
-    if (setComplete === false) {
-      checkShouldFinishExercise();
-    }
-  }, [setComplete]);
 
   async function checkShouldFinishExercise() {
     // On timer done, check if exercise is done
@@ -223,21 +236,23 @@ export default function ExerciseView(props) {
   };
 
   async function finishExercise() {
-    setEnableScroll(true);
     setExerciseCompleted(true);
   }
 
   const handleSelectWeights = () => {
-    if (weightHistory.length === 0) {
-      displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
-    } else {
+    if (!weightHistory || !exercise.name || !props.setType || !weightLabel) return;
 
-      navigation.navigate('WeightCapture', {
+    if (weightHistory.length > 0) {
+     navigation.navigate('WeightCapture', {
         exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
         setType: props.setType
       });
+    
+    }
+    else {
+      displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
     }
   };
 
@@ -284,9 +299,10 @@ export default function ExerciseView(props) {
           </TouchableOpacity>
         </View>
 
+
         <ScrollView>
           <Text style={styles.exerciseDescriptionStyle}>
-            {exercise.coachingTips}
+            {exercise.coachingTips}     
           </Text>
         </ScrollView>
 

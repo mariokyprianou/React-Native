@@ -27,6 +27,9 @@ import * as R from 'ramda';
 import useUserData from '../../hooks/data/useUserData';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 import useLoading from '../../hooks/loading/useLoading';
+import {useBackHandler} from '@react-native-community/hooks';
+import displayAlert from '../../utils/DisplayAlert';
+
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -69,6 +72,12 @@ export default function WorkoutCompleteScreen() {
 
     setIsWorkoutTimerRunning(false);
   }, []);
+
+
+  useBackHandler(() => {
+    checkGoBack()
+      return true;
+  });
 
   useEffect(() => {
     const duration = workoutTime ? Math.ceil(workoutTime / 1000 / 60) : 0;
@@ -204,18 +213,26 @@ export default function WorkoutCompleteScreen() {
       .finally(()=> setLoading(false));
   }
 
+
   function checkGoBack() {
-    Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
-      {
-        text: ProfileDict.Cancel,
-      },
-      {
-        text: ProfileDict.Ok,
-        onPress: async () => {
-          navigation.navigate('WorkoutHome');
+
+    displayAlert({
+      title: null,
+      text: WorkoutDict.WorkoutGoBackWarning,
+      buttons: [
+        {
+          text: ProfileDict.Cancel,
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: ProfileDict.Ok,
+          onPress: async () => {
+            setWeightsToUpload([]);
+            navigation.navigate('WorkoutHome');
+          },
+        },
+      ],
+    });
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

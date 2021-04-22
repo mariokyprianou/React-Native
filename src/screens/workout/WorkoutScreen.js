@@ -9,12 +9,15 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView, StatusBar, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import {useBackHandler} from '@react-native-community/hooks';
+
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
 import useData from '../../hooks/data/UseData';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -30,6 +33,7 @@ export default function WorkoutScreen() {
     setCurrentExerciseIndex,
     completedExercises,
     setCompletedExercises,
+    setWeightsToUpload
   } = useData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
@@ -62,19 +66,31 @@ export default function WorkoutScreen() {
     ),
   });
 
+  useBackHandler(() => {
+    checkGoBack()
+      return true;
+  });
+
+
   function checkGoBack() {
-    Alert.alert(WorkoutDict.WorkoutGoBackWarning, '', [
-      {
-        text: ProfileDict.Cancel,
-        style: 'cancel',
-      },
-      {
-        text: ProfileDict.Ok,
-        onPress: () => {
-          navigation.pop();
+
+    displayAlert({
+      title: null,
+      text: WorkoutDict.WorkoutGoBackWarning,
+      buttons: [
+        {
+          text: ProfileDict.Cancel,
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: ProfileDict.Ok,
+          onPress: () => {
+            setWeightsToUpload([]);
+            navigation.pop();
+          },
+        },
+      ],
+    });
   }
 
   // ** ** ** ** ** STYLES ** ** ** ** **

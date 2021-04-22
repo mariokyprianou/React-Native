@@ -282,12 +282,13 @@ const hiIN = {
     ChallengeTime: 'TIME',
     ChallengeZeroChart: 'Complete challenges to see your progress here!',
     FunctionNotAvailable:
-      "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
-    NoCamera:
-      "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
-    UploadFailed:
-      "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
-  },
+    "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
+  NoCamera:
+    "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
+  UploadFailed:
+    "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
+  TooLargeSizeImage: 'This image is too large to upload. Please try again with file size under 20MB.'
+},
 
   TabsTitleDict: {
     Profile: 'Profile',

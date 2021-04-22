@@ -152,25 +152,26 @@ export default function DataProvider(props) {
   }, [userImages, setBeforePic, setAfterPic]);
 
   const getImagesSync = useCallback(async () => {
-    return client
-      .query({
-        query: ProgressImages,
-        fetchPolicy: 'no-cache',
-      })
-      .then(async (res) => {
-        const today = new Date();
-        const formattedToday = format(today, 'dd/LL/yyyy');
-        const emptyListObject = {value: today, label: formattedToday};
-        if (res.data.progressImages.length === 0) {
-          setUserImages([emptyListObject]);
-        } else {
-          const formattedImages = formatProgressImages(res.data.progressImages);
-          setUserImages(formattedImages);
-          return await checkImages(formattedImages);
-        }
-      })
-      .catch((err) => console.log(err, 'getImageUrl error'));
-  }, []);
+
+    return client.query({
+      query: ProgressImages,
+      fetchPolicy: 'no-cache',
+    })
+    .then(async (res) => {
+      const today = new Date();
+      const formattedToday = format(today, 'dd/LL/yyyy');
+      const emptyListObject = {value: today, label: formattedToday};
+      if (res.data.progressImages.length === 0) {
+        setUserImages([emptyListObject]);
+      } else {
+        const formattedImages = formatProgressImages(res.data.progressImages);
+        setUserImages(formattedImages);
+        return await checkImages(formattedImages);
+      }
+
+    })
+    .catch((err) => console.log(err, 'getImageUrl error'));
+  },  []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 

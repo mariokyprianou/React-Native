@@ -287,8 +287,14 @@ export default function DataProvider(props) {
         storedDays,
       );
       setProgramme(data);
+      
     },
-    onError: (error) => console.log(error),
+    onError: (error) => {
+      console.log(error);
+      setCurrentWeek(null);
+      setNextWeek(null);
+      setProgramme(null);
+    }
   });
 
   useEffect(() => {
@@ -319,6 +325,11 @@ export default function DataProvider(props) {
 
   const [selectedWeight, setSelectedWeight] = useState(20);
 
+
+  useEffect(()=> {
+    console.log("selectedWeight useEffect", selectedWeight);
+  }, [selectedWeight]);
+  
   const [weightData, setWeightData] = useState([]);
 
   useEffect(() => {

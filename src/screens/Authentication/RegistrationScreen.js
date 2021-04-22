@@ -31,6 +31,7 @@ import displayAlert from '../../utils/DisplayAlert';
 import useLoading from '../../hooks/loading/useLoading';
 import Intercom from 'react-native-intercom';
 import useUserData from '../../hooks/data/useUserData';
+import {useBackHandler} from '@react-native-community/hooks';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -73,11 +74,16 @@ export default function RegisterScreen() {
     ),
   });
 
+  useBackHandler(() => {
+    navigation.pop(2);
+    return true;
+  });
+
   const gendersData = [
     GenderDict.Female,
     GenderDict.Male,
     GenderDict.Other,
-    GenderDict.PreferNotToSay
+    GenderDict.PreferNotToSay,
   ];
 
   useQuery(AllCountries, {
@@ -89,16 +95,40 @@ export default function RegisterScreen() {
         (country) => country.country === 'India',
       )[0].regions;
 
-      const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-        let {region, id} = obj;
-        return {...acc, [region]: id};
-      }, {});
-      setRegionLookup(indianRegionsLookup);
+      if (indianRegions) {
+        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+          let {region, id} = obj;
+          return {...acc, [region]: id};
+        }, {});
+        setRegionLookup(indianRegionsLookup);
 
-      const indianRegionsList = indianRegions.map((region) => region.region);
-      setRegionsList(
-        Platform.OS === 'ios' ? ['', ...indianRegionsList] : indianRegionsList,
-      );
+        const indianRegionsList = indianRegions.map((region) => region.region);
+        setRegionsList(
+          Platform.OS === 'ios'
+            ? ['', ...indianRegionsList]
+            : indianRegionsList,
+        );
+      } else {
+        setRegionLookup([]);
+        setRegionsList([]);
+      }
+      if (indianRegions) {
+        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
+          let {region, id} = obj;
+          return {...acc, [region]: id};
+        }, {});
+        setRegionLookup(indianRegionsLookup);
+
+        const indianRegionsList = indianRegions.map((region) => region.region);
+        setRegionsList(
+          Platform.OS === 'ios'
+            ? ['', ...indianRegionsList]
+            : indianRegionsList,
+        );
+      } else {
+        setRegionLookup([]);
+        setRegionsList([]);
+      }
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -215,8 +245,10 @@ export default function RegisterScreen() {
     }
     setLoading(true);
 
-    const correctGender = !gender || gender === GenderDict.PreferNotToSay ? null 
-    : gender.toLowerCase();
+    const correctGender =
+      !gender || gender === GenderDict.PreferNotToSay
+        ? null
+        : gender.toLowerCase();
 
     const data = {
       givenName: givenName,

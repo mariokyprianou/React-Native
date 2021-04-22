@@ -39,7 +39,7 @@ export default function LanguageSelectionScreen() {
   const dropdownData = [
     LanguageDict.English,
     LanguageDict.Hindi,
-    LanguageDict.Urdu,
+    //LanguageDict.Urdu,
   ];
   const navigation = useNavigation();
   const {getValues} = FormHook();

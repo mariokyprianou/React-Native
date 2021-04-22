@@ -79,6 +79,36 @@ export default function ChallengeEndScreen() {
     }
   }, [elapsed]);
 
+
+  // Update value without any symbols/letters/space
+  useEffect(()=> {
+    const value = getValueByName('result');
+    
+    if (value) {
+
+      if (type === 'STOPWATCH') {
+        const regex = /\d*:\d*:\d*/g;
+        const found = value.match(regex);
+
+        // Reset value
+        if (!found || value.length > 8) {
+          updateValue({name: 'result', value: elapsed});
+        }
+        else {
+          // Remove any symbols other than the regex we want
+          const updatedValue = value.replace(/[^\d{2}:\d{2}:\d{2}]/g, '');
+          updateValue({name: 'result', value: updatedValue});
+        }
+      }
+      else {
+        const updatedValue = value.replace(/[^0-9]/g, '');
+        updateValue({name: 'result', value: updatedValue});
+      }
+    }
+
+  }, [getValueByName('result'), updateValue]);
+
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
@@ -155,11 +185,22 @@ export default function ChallengeEndScreen() {
     setLoading(true);
     let challengeResult = '';
     if (type === 'STOPWATCH') {
-      challengeResult = elapsedMS.toString();
+
+      // Extract value from Input
+      const value = getValueByName('result');
+      const array = value.split(':');
+      if (array.length === 3) {
+        const hoursSecs = parseInt(array[0]) * 3600;
+        const minsSecs = parseInt(array[1]) * 60;
+        const secs = parseInt(array[2]) + minsSecs + hoursSecs;
+        const ms = secs * 1000;
+
+        challengeResult = ms.toString();
+      }      
     } else {
       challengeResult = getValueByName('result');
     }
-
+    
     await sendResult({
       variables: {
         input: {
@@ -212,7 +253,7 @@ export default function ChallengeEndScreen() {
       placeholder: '',
       ...cellFormStyles,
       multiline: true,
-      keyboardType: 'numeric',
+      keyboardType: 'number-pad',
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),
       borderBottomWidth: 1,

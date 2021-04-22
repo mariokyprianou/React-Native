@@ -22,8 +22,6 @@ import useUserData from '../../hooks/data/useUserData';
 import {useMutation} from '@apollo/client';
 import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
-import addRestDays from '../../utils/addRestDays';
-import addWorkoutDates from '../../utils/addWorkoutDates';
 import {differenceInDays, addDays, parseISO} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
@@ -215,6 +213,11 @@ export default function WorkoutHomeScreen() {
       }
 
       
+    }
+
+    if (programme === null) {
+      setLoading(false);
+      //displayAlert({text: 'Unable to load data. Try again later.'});
     }
   }, [weekNumber, programme]);
 

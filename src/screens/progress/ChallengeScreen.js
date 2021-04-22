@@ -48,7 +48,7 @@ export default function ChallengeScreen() {
   const {history, getHistory} = useProgressData();
 
   const [chartInfo, setChartInfo] = useState(null);
-  const [buttonPaused, setButtonPaused] = useState(false);
+  const [isTimerRunning, setTimerRunning] = useState(false);
 
   // Time based 
   const formattedSeconds = new Date(duration * 1000)
@@ -61,10 +61,13 @@ const stopwatchData = handleStopwatch();
     navigation.setOptions({
       header: () => <Header title={name} goBack />,
     });
+
+    getHistory();
   }, []);
 
   useEffect(() => {
     if (history) {
+
       async function getInfo() {
         const info = await generateChartInfo(
           history,
@@ -142,7 +145,7 @@ const stopwatchData = handleStopwatch();
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressStart() {
-    setButtonPaused(!buttonPaused);
+    setTimerRunning(!isTimerRunning);
     if (type === 'COUNTDOWN') timerData.toggle();
     if (type === 'STOPWATCH') stopwatchData.toggle();
   }
@@ -150,6 +153,16 @@ const stopwatchData = handleStopwatch();
   function handlePressDone() {
     const {elapsedMS} = stopwatchData;
     const elapsed = msToHMSFull(elapsedMS);
+
+    if (isTimerRunning) {
+      setTimerRunning(!isTimerRunning);
+    }
+
+    if (type === 'COUNTDOWN') {
+      timerData.reset();
+    } else if (type === 'STOPWATCH') {
+      stopwatchData.reset();
+    }
 
     navigation.navigate('ChallengeEnd', {
       name,
@@ -168,11 +181,7 @@ const stopwatchData = handleStopwatch();
       chartTicks: chartInfo ? chartInfo.ticks : 0,
     });
 
-    if (type === 'COUNTDOWN') {
-      timerData.reset();
-    } else if (type === 'STOPWATCH') {
-      stopwatchData.reset();
-    }
+    
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -214,8 +223,8 @@ const stopwatchData = handleStopwatch();
         {type !== 'OTHER' && (
           <>
             <DefaultButton
-              type={buttonPaused ? 'pause' : 'start'}
-              icon={buttonPaused ? 'pause' : 'play'}
+              type={isTimerRunning ? 'pause' : 'start'}
+              icon={isTimerRunning ? 'pause' : 'play'}
               variant="gradient"
               onPress={handlePressStart}
             />

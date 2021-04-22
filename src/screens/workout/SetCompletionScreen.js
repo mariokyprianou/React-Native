@@ -41,7 +41,7 @@ export default function SetCompletionScreen({
   const {selectedWeight, weightsToUpload, setWeightsToUpload, setSelectedWeight} = UseData();
 
   // Selected value passed to horizontal scroll to preselect
-  const [selected, setSelected] = useState(20);
+  const [preSelected, setPreSelected] = useState(20);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -93,18 +93,21 @@ export default function SetCompletionScreen({
     if (exerciseHistory.length > 0) {
       const lastWeight = exerciseHistory[exerciseHistory.length - 1].weight;
       console.log("Last weight",lastWeight);
-      setSelected(lastWeight);
+      setPreSelected(lastWeight);
     }
   }, [exerciseHistory]);
 
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
+    console.log("handleAddWeight", selectedWeight)
     let weightToAdd = Number(selectedWeight);
 
     if (weightPreference === 'lb') {
       weightToAdd = Math.round(weightToAdd / 2.20462262185);
     }
+
+    
 
     let weightDetails = {
       exerciseId: exercise,
@@ -112,6 +115,7 @@ export default function SetCompletionScreen({
       setNumber: currentSet.setNumber,
       setType: setType,
       quantity: currentSet.quantity,
+      completedAt: new Date()
     };
 
     setWeightsToUpload([...weightsToUpload, weightDetails]);
@@ -149,7 +153,7 @@ export default function SetCompletionScreen({
             <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
             
             <View style={styles.weightSelectionContainer}>
-              <HorizontalScrollPicker weightPreference={weightPreference} selected={selected}  />
+              <HorizontalScrollPicker weightPreference={weightPreference} selected={preSelected}  />
             </View> 
             
           </View>

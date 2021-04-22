@@ -18,8 +18,6 @@ import TermsAndConditionsScreen from '../screens/Authentication/TermsConditionsS
 import PrivacyPolicyScreen from '../screens/Authentication/PrivacyPolicyScreen';
 import ForgotPasswordScreen from '../screens/Authentication/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/Authentication/ResetPasswordScreen';
-import AnalyticsPermissionScreen from '../screens/Authentication/AnalyticsPermissionScreen';
-import NotificationsPermissionScreen from '../screens/Authentication/NotificationsPermissionScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 import HelpMeChooseScreen from '../screens/Authentication/HelpMeChooseScreen';
 import HelpMeChooseResultsScreen from '../screens/Authentication/HelpMeChooseResultsScreen';
@@ -69,16 +67,7 @@ export default function AuthContainer(props) {
         component={ForgotPasswordScreen}
       />
       <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-      <AuthStack.Screen
-        name="Analytics"
-        component={AnalyticsPermissionScreen}
-        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
-      />
-      <AuthStack.Screen
-        name="Notifications"
-        component={NotificationsPermissionScreen}
-        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
-      />
+      
       <AuthStack.Screen
         name="HelpMeChoose"
         component={HelpMeChooseScreen}

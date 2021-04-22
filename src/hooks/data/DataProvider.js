@@ -369,8 +369,6 @@ export default function DataProvider(props) {
     setCurrentWeek(null);
     setNextWeek(null);
 
-    AsyncStorage.removeItem('@ANALYTICS_ASKED');
-    AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
     AsyncStorage.removeItem('@CURRENT_WEEK');
     AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
   }, []);

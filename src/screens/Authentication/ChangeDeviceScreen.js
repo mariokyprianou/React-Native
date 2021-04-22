@@ -24,7 +24,7 @@ export default function ChangeDeviceScreen() {
   const {dictionary} = useDictionary();
   const {ChangeDeviceDict} = dictionary;
   const navigation = useNavigation();
-  const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {permissionsNeeded, firebaseLogEvent, analyticsEvents} = useUserData();
   const {setLoading} = useLoading();
 
   const [changeDevice] = useMutation(ChangeDevice);
@@ -42,7 +42,8 @@ export default function ChangeDeviceScreen() {
   }, []);
 
   // MARK: - Actions
-  const onPressButton = () => {
+  const onPressButton = async () => {
+    
     changeDevice({
       variables: {
         input: {
@@ -50,11 +51,21 @@ export default function ChangeDeviceScreen() {
         },
       },
     })
-      .then((res) => {
+      .then(async (res) => {
         const response = getResponse(res, 'changeDevice');
 
         if (response) {
-          navigation.goBack();
+
+          const permissionNeeded = await permissionsNeeded();
+
+          if (permissionNeeded) {
+            navigation.goBack();
+            navigation.navigate(permissionNeeded);
+          }
+          else {
+            navigation.goBack();
+          }
+
         } else {
           displayAlert({
             text: ChangeDeviceDict.ChangeDeviceFailedText,

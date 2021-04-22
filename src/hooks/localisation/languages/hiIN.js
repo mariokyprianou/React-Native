@@ -406,6 +406,30 @@ const hiIN = {
     Male: SharedDict.Male,
     Other: SharedDict.Other,
     PreferNotToSay: SharedDict.PreferNotToSay
+  },
+  OnboardingDict: {
+    fallbackData: [
+      {
+        title: 'Pick your Programme', 
+        description: 'Fat loss, fitness, strength or wellness. At home or at the gym. There\'s a routine for you!',
+        image: ''
+      },
+      {
+        title: 'Workout with the stars!', 
+        description: 'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
+        image: ''
+      },
+      {
+        title: 'Track your progress', 
+        description: 'Watch your body transform as you crush your goals and take your fitness to new levels.',
+        image: ''
+      },
+      {
+        title: '​Switch it up', 
+        description: '​Head to On Demand to build your own workouts and mix up your routine. You\'re in control.',
+        image: ''
+      }
+    ]
   }
 };
 

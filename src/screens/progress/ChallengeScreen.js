@@ -48,19 +48,21 @@ export default function ChallengeScreen() {
   const {history, getHistory} = useProgressData();
 
   const [chartInfo, setChartInfo] = useState(null);
-  const [buttonPaused, setButtonPaused] = useState(false);
+  const [isTimerRunning, setTimerRunning] = useState(false);
 
-  // Time based 
+  // Time based
   const formattedSeconds = new Date(duration * 1000)
-  .toISOString()
-  .substr(11, 8);
-const timerData = handleTimer(formattedSeconds);
-const stopwatchData = handleStopwatch();
+    .toISOString()
+    .substr(11, 8);
+  const timerData = handleTimer(formattedSeconds);
+  const stopwatchData = handleStopwatch();
 
   useEffect(() => {
     navigation.setOptions({
       header: () => <Header title={name} goBack />,
     });
+
+    getHistory();
   }, []);
 
   useEffect(() => {
@@ -79,8 +81,6 @@ const stopwatchData = handleStopwatch();
       getInfo();
     }
   }, [history]);
-
- 
 
   useEffect(() => {
     if (type === 'COUNTDOWN' && timerData.remainingMS === 0) {
@@ -142,7 +142,7 @@ const stopwatchData = handleStopwatch();
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePressStart() {
-    setButtonPaused(!buttonPaused);
+    setTimerRunning(!isTimerRunning);
     if (type === 'COUNTDOWN') timerData.toggle();
     if (type === 'STOPWATCH') stopwatchData.toggle();
   }
@@ -150,6 +150,16 @@ const stopwatchData = handleStopwatch();
   function handlePressDone() {
     const {elapsedMS} = stopwatchData;
     const elapsed = msToHMSFull(elapsedMS);
+
+    if (isTimerRunning) {
+      setTimerRunning(!isTimerRunning);
+    }
+
+    if (type === 'COUNTDOWN') {
+      timerData.reset();
+    } else if (type === 'STOPWATCH') {
+      stopwatchData.reset();
+    }
 
     navigation.navigate('ChallengeEnd', {
       name,
@@ -166,13 +176,8 @@ const stopwatchData = handleStopwatch();
       chartDataPoints: chartInfo ? chartInfo.dataPoints : [],
       chartInterval: chartInfo ? chartInfo.interval : 0,
       chartTicks: chartInfo ? chartInfo.ticks : 0,
+      duration,
     });
-
-    if (type === 'COUNTDOWN') {
-      timerData.reset();
-    } else if (type === 'STOPWATCH') {
-      stopwatchData.reset();
-    }
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -214,8 +219,8 @@ const stopwatchData = handleStopwatch();
         {type !== 'OTHER' && (
           <>
             <DefaultButton
-              type={buttonPaused ? 'pause' : 'start'}
-              icon={buttonPaused ? 'pause' : 'play'}
+              type={isTimerRunning ? 'pause' : 'start'}
+              icon={isTimerRunning ? 'pause' : 'play'}
               variant="gradient"
               onPress={handlePressStart}
             />

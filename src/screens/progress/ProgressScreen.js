@@ -37,7 +37,14 @@ export default function ProgressScreen() {
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getPreferences, preferences} = useUserData();
-  const {progress, getProgress, challenges, getChallenges, userImages, getImages} = useProgressData();
+  const {
+    progress,
+    getProgress,
+    challenges,
+    getChallenges,
+    userImages,
+    getImages,
+  } = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -50,7 +57,6 @@ export default function ProgressScreen() {
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
 
-  
   const [progressData, setProgressData] = useState();
   const [weightLabel, setWeightLabel] = useState();
 
@@ -58,11 +64,11 @@ export default function ProgressScreen() {
     navigation.setOptions({
       header: () => null,
     });
-  
+
     getPreferences();
     getProgress();
     getChallenges();
-    if ( userImages.length === 0) {
+    if (userImages.length === 0) {
       getImages();
     }
   }, []);
@@ -74,22 +80,21 @@ export default function ProgressScreen() {
     }
   }, [preferences]);
 
-
-
   useEffect(() => {
     if (progress) {
       const currentMonth = new Date().getMonth();
-      const thisMonth = progress.find((month) => {
-        return parseISO(month.startOfMonth).getMonth() === currentMonth;
 
+      let thisMonth = progress.find((month) => {
+        return parseISO(month.startOfMonth).getMonth() === currentMonth;
       });
 
-      const progressHistoryData = processProgressData(thisMonth.days);
+      if (thisMonth) {
+        const progressHistoryData = processProgressData(thisMonth.days);
 
-      setProgressData(progressHistoryData);
+        setProgressData(progressHistoryData);
+      }
     }
   }, [progress]);
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -229,7 +234,7 @@ export default function ProgressScreen() {
                     />
                   );
                 })}
-                <View style={{ width: '48%'}}/>
+                <View style={{width: '48%'}} />
               </>
             )}
           </View>

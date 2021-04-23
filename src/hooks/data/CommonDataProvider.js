@@ -20,9 +20,9 @@ export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const {dictionary} = useDictionary();
-  const {HelpMeChooseDict} = dictionary;
+  const {HelpMeChooseDict, OnboardingDict} = dictionary;
 
-  const [onboarding, setOnboarding] = useState([]);
+  const [onboarding, setOnboarding] = useState(isRTL() ? OnboardingDict.fallbackData.reverse() : OnboardingDict.fallbackData);
 
   const [trainers, setTrainers] = useState([]);
 
@@ -34,10 +34,13 @@ export default function DataProvider(props) {
 
   useEffect(() => {
     console.log("CommondataProvider: useEffect");
+    getOnboarding();
     getTrainers();
   }, []);
 
-  useQuery(Onboarding, {
+
+
+  const [getOnboarding] = useLazyQuery(Onboarding, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
       if (res) {
@@ -53,7 +56,9 @@ export default function DataProvider(props) {
         setOnboarding(data);
       }
     },
-    onError: (error) => console.log(error),
+    onError: (error) => {
+      console.log(error);
+    }
   });
 
   const [getTrainers] = useLazyQuery(Trainers, {
@@ -123,6 +128,7 @@ export default function DataProvider(props) {
   const values = useMemo(
     () => ({
       onboarding,
+      getOnboarding,
       trainers,
       getTrainers,
       legals,
@@ -132,6 +138,7 @@ export default function DataProvider(props) {
     }),
     [
       onboarding,
+      getOnboarding,
       trainers,
       getTrainers,
       legals,

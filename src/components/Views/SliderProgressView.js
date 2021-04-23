@@ -64,7 +64,7 @@ export default function SliderProgressView({
     },
     sliderContainer: {
       width: '100%',
-      height:  height || getHeight(4),
+      height: height || getHeight(4),
       alignItems: 'stretch',
       justifyContent: 'center',
       alignContent: 'center',
@@ -72,7 +72,8 @@ export default function SliderProgressView({
     thumbStyle: {
       backgroundColor: 'transparent',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      width: getWidth(40),
     },
   });
 

@@ -258,10 +258,10 @@ public class GIFManager extends ReactContextBaseJavaModule {
                 afterWidth = afterWidth - 1f;
             }
 
-            Bitmap croppedImage2 = Bitmap.createBitmap(backgroundAfterBitmap, (int)beforeWidth, 0, (int)afterWidth, targetHeight);
+            Bitmap croppedImage2 = Bitmap.createBitmap(backgroundAfterBitmap, (int)beforeWidth - 1, 0, (int)afterWidth + 1, targetHeight);
 
             canvas.drawBitmap(croppedImage1, 0f, 0f, null);
-            canvas.drawBitmap(croppedImage2, (float) beforeWidth, 0f, null);
+            canvas.drawBitmap(croppedImage2, (float) beforeWidth - 1, 0f, null);
 
             bitmapList.add(mergedBitmap);
 

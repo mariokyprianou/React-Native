@@ -56,13 +56,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Please allow access</string>
+	<string>Allow Power to take pictures so you can track your fitness progress.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Please allow access</string>
+	<string>Allow Power to access your photo library so you can track your fitness progress.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Please allow access</string>
+	<string>Allow Power to access your photo library so you can track your fitness progress.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome5_Pro_Brands.ttf</string>

@@ -24,7 +24,7 @@ import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
 import {SampleImageUrl} from '../../utils/SampleData';
 import useLoading from '../../hooks/loading/useLoading';
 import useShare from '../../hooks/share/useShare';
-
+import displayAlert from '../../utils/DisplayAlert';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -34,9 +34,20 @@ export default function ChallengeCompletionScreen() {
   const {colors, textStyles} = useTheme();
   const {history} = useProgressData();
   const {dictionary} = useDictionary();
-  const {WorkoutDict, ShareDict} = dictionary;
+  const {WorkoutDict, ShareDict, ProfileDict} = dictionary;
   const {
-    params: {name, type, result, trainer, id, weightPreference, unitType, ellapsedTime, description},
+    params: {
+      name,
+      type,
+      result,
+      trainer,
+      id,
+      weightPreference,
+      unitType,
+      ellapsedTime,
+      description,
+      duration,
+    },
   } = useRoute();
   const navigation = useNavigation();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
@@ -45,8 +56,7 @@ export default function ChallengeCompletionScreen() {
 
   const [chartInfo, setChartInfo] = useState(null);
 
-
-  useEffect(()=> {
+  useEffect(() => {
     navigation.setOptions({
       header: () => (
         <Header
@@ -57,7 +67,7 @@ export default function ChallengeCompletionScreen() {
       ),
     });
   }, []);
-  
+
   useEffect(() => {
     async function getInfo() {
       const info = await generateChartInfo(
@@ -134,44 +144,92 @@ export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   async function handleShare() {
-    setLoading(true)
-    
-    const { colour, url } = await getShareData(ShareMediaType.challengeComplete);
+    const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
-    // Achievement either int or string value on the banner
-    let isTimeBased = type === "STOPWATCH";
+    if (!isInstaAvailable) {
+      displayAlert({
+        title: null,
+        text: ShareDict.InstaPromptText,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: async () => {
+              PowerShareAssetsManager.promptIsntagramAppDownload();
+            },
+          },
+        ],
+      });
 
-    if (isTimeBased) {
+      return;
+    }
+
+    setLoading(true);
+
+    const {colour, url} = await getShareData(ShareMediaType.challengeComplete);
+
+    console.log('name: ', name);
+    console.log('result: ', result);
+    console.log('weightPreference: ', weightPreference);
+    console.log('unitType: ', unitType);
+    console.log('ellapsedTime: ', ellapsedTime);
+    console.log('type: ', type);
+    console.log('duration: ', duration);
+
+    if (type === 'STOPWATCH') {
+      const achievementValueString =
+        typeof ellapsedTime === 'string' ? result : result.toString();
       PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
         achievementValueString: ellapsedTime,
-        subtitle: description,
-        colour: colour
+        subtitle: name,
+        colour: colour,
       })
         .then((res) => {
-          shareEvent()
+          setLoading(false);
+          shareEvent();
         })
         .catch((err) => {
           console.log('SHARE ERR: ', err);
         })
-        .finally(()=> setLoading(false));
-    }
-    else {
+        .finally(() => setLoading(false));
+    } else if (type === 'COUNTDOWN') {
+      const achievedResult =
+        typeof result === 'number' ? result : parseInt(result, 10);
+      const durationTimeString =
+        typeof duration === 'string' ? duration : duration.toString();
+      const subtitle = name + '\n in ' + durationTimeString + ' seconds';
       PowerShareAssetsManager.shareIntAchievemnt({
         imageUrl: url,
-        achievedValue: result,
-        subtitle: description,
+        achievedValue: achievedResult,
+        subtitle: subtitle,
         colour: colour,
       })
         .then((res) => {
+          setLoading(false);
           shareEvent();
         })
-        .catch((err) => {
-
+        .catch((err) => {})
+        .finally(() => setLoading(false));
+    } else {
+      const achievedResult =
+        typeof result === 'number' ? result : parseInt(result, 10);
+      PowerShareAssetsManager.shareIntAchievemnt({
+        imageUrl: url,
+        achievedValue: achievedResult,
+        subtitle: name,
+        colour: colour,
+      })
+        .then((res) => {
+          setLoading(false);
+          shareEvent();
         })
-        .finally(()=> setLoading(false));
+        .catch((err) => {})
+        .finally(() => setLoading(false));
     }
-     
   }
 
   function shareEvent() {
@@ -181,7 +239,6 @@ export default function ChallengeCompletionScreen() {
   function handleDone() {
     firebaseLogEvent(analyticsEvents.completedChallenge, {});
     navigation.navigate('Progress');
-   
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

@@ -244,7 +244,10 @@ const enGB = {
     Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
 
-    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`
+    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
+ 
+    InstaPromptText: 'Share to Instagram by downloading the app!'
+ 
   },
 
   SettingsDict: {
@@ -290,6 +293,7 @@ const enGB = {
       "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
     UploadFailed:
       "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
+    TooLargeSizeImage: 'This image is too large to upload. Please try again with file size under 20MB.'
   },
 
   TabsTitleDict: {
@@ -404,6 +408,27 @@ const enGB = {
     Male: SharedDict.Male,
     Other: SharedDict.Other,
     PreferNotToSay: SharedDict.PreferNotToSay
+  },
+
+  OnboardingDict: {
+    fallbackData: [
+      {
+        title: 'Pick your Programme', 
+        description: 'Fat loss, fitness, strength or wellness. At home or at the gym. There\'s a routine for you!',
+      },
+      {
+        title: 'Workout with the stars!', 
+        description: 'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
+      },
+      {
+        title: 'Track your progress', 
+        description: 'Watch your body transform as you crush your goals and take your fitness to new levels.',
+      },
+      {
+        title: '​Switch it up', 
+        description: '​Head to On Demand to build your own workouts and mix up your routine. You\'re in control.',
+      }
+    ]
   }
 };
 

@@ -17,8 +17,14 @@ export default processChallengeHistory = (
     const newEvent = {...event};
 
     if (unitType === 'WEIGHT' && weightPreference === 'lb') {
-      const convertedWeight = Math.round(newEvent.value * 2.20462262185);
-      newEvent.value = convertedWeight;
+      if (newEvent.value) {
+        const convertedValue = Math.round(newEvent.value * 2.20462262185);
+        newEvent.value = convertedValue;
+      }
+      else if (newEvent.weight) {
+        const convertedWeight = Math.round(newEvent.weight * 2.20462262185);
+        newEvent.weight = convertedWeight;
+      }
     }
 
     if (unitType === 'DISTANCE' && weightPreference === 'lb') {
@@ -26,6 +32,7 @@ export default processChallengeHistory = (
       newEvent.value = convertedDistance;
     }
 
+    
     newEvent.date = format(new Date(event.createdAt), 'dd/LL');
 
     return newEvent;

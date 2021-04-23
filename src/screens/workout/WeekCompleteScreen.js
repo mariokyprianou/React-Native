@@ -23,6 +23,7 @@ import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
 import {SampleImageUrl} from '../../utils/SampleData';
 import useShare from '../../hooks/share/useShare';
 import useLoading from '../../hooks/loading/useLoading';
+import displayAlert from '../../utils/DisplayAlert';
 
 const fakeImage = require('../../../assets/fake2.png');
 
@@ -41,7 +42,7 @@ export default function WeekCompleteScreen() {
   const {getHeight} = ScaleHook();
   const {textStyles} = useTheme();
   const {dictionary} = useDictionary();
-  const {WorkoutDict, ShareDict} = dictionary;
+  const {WorkoutDict, ShareDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
   const {programme, programmeModalImage} = UseData();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
@@ -99,6 +100,31 @@ export default function WeekCompleteScreen() {
    
     // handle share
   async function handleShare() {
+
+    const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
+
+    if (!isInstaAvailable) {
+      displayAlert({
+        title: null,
+        text: ShareDict.InstaPromptText,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: async () => {
+              PowerShareAssetsManager.promptIsntagramAppDownload();
+            },
+          },
+        ],
+      });
+
+      return;
+    }
+
+
     setLoading(true)
     const { colour, url } = await getShareData(ShareMediaType.weekComplete);
     console.log("url", url)

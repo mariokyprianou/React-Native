@@ -22,8 +22,6 @@ import useUserData from '../../hooks/data/useUserData';
 import {useMutation} from '@apollo/client';
 import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
-import addRestDays from '../../utils/addRestDays';
-import addWorkoutDates from '../../utils/addWorkoutDates';
 import {differenceInDays, addDays, parseISO} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
@@ -79,8 +77,11 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
+    if (programme && !programme.currentWeek) {
+      showStayTuned();
+    }
 
-    if (programme && currentWeek) {
+    if (programme && programme.currentWeek && currentWeek) {
       
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
@@ -212,16 +213,19 @@ export default function WorkoutHomeScreen() {
       }
       if (weekNumber === 2 && nextWeek) {
         setWorkoutsToDisplay(nextWeek);
-      }
+      }      
+    }
 
-      
+    if (programme === null) {
+      setLoading(false);
+      //displayAlert({text: 'Unable to load data. Try again later.'});
     }
   }, [weekNumber, programme]);
 
   async function shouldShowWarning() {
     const today = new Date();
 
-    if (programme) {
+    if (programme && programme.currentWeek) {
       // Check last time warning was shown
       const date = await AsyncStorage.getItem('@LAST_WARNING_DATE');
       if (differenceInDays(new Date(), new Date(date)) === 0) {
@@ -352,13 +356,17 @@ export default function WorkoutHomeScreen() {
       (prog) => prog.environment === programme.environment,
     )[0].numberOfWeeks;
 
+    showStayTuned(nextWeekStartDate, programmeLength);
+  }
+
+  function showStayTuned(nextWeekStartDate = null, programmeLength = 0) {
     navigation.navigate('StayTuned', {
       name: programme?.trainer.name,
       venue: programme?.environment,
       image: programme?.programmeImage,
       date: nextWeekStartDate,
       type:
-        programme?.currentWeek.weekNumber === programmeLength
+        programme?.currentWeek === null || programme?.currentWeek?.weekNumber === programmeLength
           ? 'programmeComplete'
           : 'workoutsComplete',
     });
@@ -435,7 +443,7 @@ export default function WorkoutHomeScreen() {
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
           <Text style={styles.numberText}>{`${
-            programme
+            programme && programme.currentWeek
               ? weekNumber === 1
                 ? programme.currentWeek.weekNumber
                 : programme.currentWeek.weekNumber + 1

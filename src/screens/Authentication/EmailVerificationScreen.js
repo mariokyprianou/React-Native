@@ -68,7 +68,7 @@ export default function EmailVerificationScreen() {
       .then(() => {
         Alert.alert(AuthDict.VerificationLinkSent);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("resendEmail", err));
   }
 
   async function onPressBottomButton() {

@@ -7,7 +7,7 @@
 
 import React, {useState, useCallback, useEffect} from 'react';
 import {Platform} from 'react-native';
-import {Auth} from 'aws-amplify';
+import {Auth, Hub} from 'aws-amplify';
 import {getUniqueId} from 'react-native-device-info';
 
 
@@ -19,7 +19,6 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
-import CanChangeDevice from '../../apollo/queries/CanChangeDevice';
 import GetSubscription from '../../apollo/queries/GetSubscription';
 import * as R from 'ramda';
 import {format} from 'date-fns';
@@ -178,7 +177,7 @@ export default function UserDataProvider(props) {
       },
     })
       .catch((err) => {
-        console.log(err);
+        console.log("updateDefaultPreferences", err);
       });
   }, []);
 
@@ -211,6 +210,10 @@ export default function UserDataProvider(props) {
 
     // This is a new device
     if (deviceId !== existingId) {
+      console.log("ChangeDevice", {
+        canChangeDevice: canChangeDevice,
+        newDeviceId: deviceId
+      })
       setChangeDevice({
         canChangeDevice: canChangeDevice,
         newDeviceId: deviceId
@@ -233,7 +236,7 @@ export default function UserDataProvider(props) {
   });
 
 
-  useEffect(()=> {
+  useEffect(() => {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then((_res) => {
@@ -244,11 +247,23 @@ export default function UserDataProvider(props) {
           console.log("UserDataProvider - checkAuth", err);
         });
       }
-   
-    checkAuth();
-    
-  }, [Auth.currentAuthenticatedUser])  
 
+    Hub.listen("auth", (data) => {
+      const { payload } = data;
+      console.log("new event has happend ", data);
+      if (payload.event === "signIn") {
+        console.log("user has signed in");
+        checkAuth();
+      }
+      if (payload.event === "signOut") {
+        console.log("user has signed out");
+      }
+    });
+
+    checkAuth();
+  }, []);
+
+  
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({

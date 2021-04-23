@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity, Animated, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -33,13 +33,17 @@ export default function OnboardingScreen() {
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
 
-  const {onboarding} = useCommonData();
+  const {onboarding, getOnboarding} = useCommonData();
 
   const [scrollOffset, setScrollOfset] = useState(new Animated.Value(0));
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
   });
+
+  useEffect(()=> {
+    getOnboarding();
+  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

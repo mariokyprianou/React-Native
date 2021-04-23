@@ -15,6 +15,8 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import isRTL from '../../utils/isRTL';
 import FastImage from 'react-native-fast-image';
 
+const fallBackImage = require('../../../assets/images/onboardingImage.png') 
+
 export default function OnboardingSliderItem({
   image,
   header,
@@ -23,7 +25,8 @@ export default function OnboardingSliderItem({
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles, colors} = useTheme();
-  const url = {uri: image};
+  
+  const url = image ? {uri: image} : fallBackImage;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

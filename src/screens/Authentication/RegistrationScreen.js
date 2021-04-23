@@ -33,6 +33,8 @@ import useLoading from '../../hooks/loading/useLoading';
 import Intercom from 'react-native-intercom';
 import useUserData from '../../hooks/data/useUserData';
 import {useBackHandler} from '@react-native-community/hooks';
+import LinearGradient from 'react-native-linear-gradient';
+import Spacer from '../../components/Utility/Spacer';
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -51,7 +53,7 @@ export default function RegisterScreen() {
     params: {programmeId},
   } = useRoute();
   const {cleanErrors, getValues, updateError, updateValue} = FormHook();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const [countriesList, setCountriesList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
   const [country, setCountry] = useState();
@@ -64,13 +66,7 @@ export default function RegisterScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={AuthDict.RegistrationScreenTitle}
-        goBack
-        leftAction={() => navigation.pop(2)}
-      />
-    ),
+    header: () => null,
   });
 
   useBackHandler(() => {
@@ -127,22 +123,33 @@ export default function RegisterScreen() {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    render: {
-      container: {
-        flex: 1,
-        backgroundColor: colors.backgroundWhite100,
-      },
-      scrollViewContainer: {
-        height: '100%',
-        width: '100%',
-      },
+    container: {
+      flex: 1,
+      backgroundColor: colors.backgroundWhite100,
+    },
+    gradientContainer: {
+      height: getHeight(140),
+      width: '100%',
+    },
+    scrollContainer: {
+      flex: 1,
+      position: 'absolute',
+      top: getHeight(120),
+      backgroundColor: colors.backgroundWhite100,
+      borderTopLeftRadius: radius(12),
+      borderTopRightRadius: radius(12),
+    },
+    formTitle: {
+      marginTop: getHeight(92.5),
+      marginLeft: getWidth(18.5),
+      ...textStyles.regular15_white100,
+    },
+    formContainer: {
+      marginHorizontal: getWidth(25),
     },
     formFooter: {
-      container: {
-        marginTop: getHeight(30),
-        marginBottom: getHeight(40),
-        alignSelf: 'center',
-      },
+      marginTop: getHeight(30),
+      alignSelf: 'center',
     },
     termsContainerStyle: {
       flexDirection: 'row',
@@ -283,20 +290,6 @@ export default function RegisterScreen() {
 
   const cells = [
     {
-      name: 'registerTitle',
-      labelComponent: () => null,
-      inputComponent: () => (
-        <Text
-          style={{
-            ...textStyles.regular15_brownishGrey100,
-            marginTop: getHeight(20),
-            marginBottom: getHeight(10),
-          }}>
-          {AuthDict.FormTitle}
-        </Text>
-      ),
-    },
-    {
       name: 'givenName',
       type: 'text',
       label: AuthDict.FirstNameLabel,
@@ -424,17 +417,32 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.render.container}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.scroll}
-        enableOnAndroid={true}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <>
-          <View style={{marginHorizontal: getWidth(25)}}>
+    <View style={styles.container}>
+      <View style={styles.gradientContainer}>
+        <LinearGradient
+          style={{flex: 1}}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={[colors.tealish100, colors.tiffanyBlue100]}>
+          <Header
+            title={AuthDict.RegistrationScreenTitle}
+            goBack
+            leftAction={() => navigation.pop(2)}
+            transparent
+            white
+          />
+          <Text style={styles.formTitle}>{AuthDict.FormTitle}</Text>
+        </LinearGradient>
+      </View>
+      <View style={styles.scrollContainer}>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View style={styles.formContainer}>
             <Form cells={cells} config={{...cellFormConfig}} />
             <Form cells={cells2} config={config} />
           </View>
-          <View style={styles.formFooter.container}>
+          <View style={styles.formFooter}>
             <DefaultButton
               type="createAccount"
               variant="white"
@@ -442,8 +450,8 @@ export default function RegisterScreen() {
               onPress={handleRegister}
             />
           </View>
-        </>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 }

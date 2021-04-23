@@ -24,6 +24,7 @@ import {useRoute} from '@react-navigation/core';
 import format from 'date-fns/format';
 import { differenceInDays, parseISO } from 'date-fns';
 import {useBackHandler} from '@react-native-community/hooks';
+import { filter } from 'ramda';
 
 
 export default function WeightCaptureScreen() {
@@ -55,6 +56,17 @@ export default function WeightCaptureScreen() {
     return true;
   });
 
+  function groupBy(key) {
+    return function group(array) {
+      return array.reduce((acc, obj) => {
+        const property = obj[key];
+        acc[property] = acc[property] || [];
+        acc[property].push(obj);
+        return acc;
+      }, {});
+    };
+  }
+  const groupByDate = groupBy("date");
 
   useEffect(()=> {
     navigation.setOptions({
@@ -97,10 +109,19 @@ export default function WeightCaptureScreen() {
     }
   }, [historyData, dropDownSelect])
   
-  function setDate(index) {    
-    setSelectedDate(parseISO(filteredData[index].createdAt));
+  function setDate(index) {  
+    const chartData = getChartData(filteredData);
+    setSelectedDate(parseISO(chartData[index].createdAt));
   }
 
+
+  function getChartData(data) {
+    const chartData = Object.values(groupByDate(data)).map(it=> {
+      return it.find((a, b) =>  a.weight > b.weight ? b : a)
+    });
+
+    return chartData;
+  }
 
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -197,6 +218,9 @@ export default function WeightCaptureScreen() {
   let titletext = exerciseName.length > 20 ? `${exerciseName.substring(0, 17)}...` : exerciseName;
   titletext = `${titletext} -`;
   
+  const chartData = getChartData(filteredData);
+
+
   return (
     <View style={styles.card}>
       <View style={styles.container}>
@@ -209,7 +233,7 @@ export default function WeightCaptureScreen() {
         </View>
         <View style={styles.chartCard}>
           <WeightChart
-            data={filteredData}
+            data={chartData}
             weightPreference={weightPreference}
             setDate={setDate}
             selectable={true}

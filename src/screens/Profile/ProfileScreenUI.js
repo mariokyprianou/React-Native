@@ -81,8 +81,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict, AuthDict, GenderDict} = dictionary;
-  const {getValueByName, updateValue} = FormHook();
+  const {ProfileDict, GenderDict} = dictionary;
+  const {updateValue} = FormHook();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {
     loading: countryLoading,
@@ -91,9 +91,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   } = useQuery(AllCountries);
   const [updateProfile] = useMutation(UpdateProfile);
   const [countriesList, setCountriesList] = useState([]);
-  const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
-  const [regionLookup, setRegionLookup] = useState();
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState(notifications);
@@ -103,41 +101,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {setUserImages} = useProgressData();
   const {setLoading} = useLoading();
 
-  const formCountry = getValueByName('profile_country');
-  useEffect(() => {
-    if (formCountry !== 'India') {
-      cleanValueByName('profile_region');
-    }
-  }, [formCountry, cleanValueByName]);
-
   useEffect(() => {
     if (countryData) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
       setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
-
-      const indianRegions = countryData.allCountries.filter(
-        (country) => country.country === 'India',
-      )[0].regions;
-
-      if (indianRegions) {
-        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-          let {region, id} = obj;
-          return {...acc, [region]: id};
-        }, {});
-        setRegionLookup(indianRegionsLookup);
-
-        const indianRegionsList = indianRegions.map((region) => region.region);
-        setRegionsList(
-          Platform.OS === 'ios'
-            ? ['', ...indianRegionsList]
-            : indianRegionsList,
-        );
-      } else {
-        setRegionLookup([]);
-        setRegionsList([]);
-      }
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -255,7 +224,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       profile_gender,
       profile_dateOfBirth,
       profile_country,
-      profile_region,
     } = getValues();
 
     if (
@@ -263,8 +231,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       !profile_lastName &&
       !profile_gender &&
       !profile_dateOfBirth &&
-      !profile_country &&
-      !profile_region
+      !profile_country
     ) {
       return;
     }
@@ -275,16 +242,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
     const newCountry =
       countryLookup[profile_country] || countryLookup[userData.country];
-
-    let newRegion =
-      profile_country !== 'India' && userData.country !== 'India'
-        ? null
-        : regionLookup[profile_region] || regionLookup[userData.region];
-
-    // Let region be null as its optional
-    // if (profile_country === 'India' && !newRegion) {
-    //   newRegion = regionLookup[regionsList[0]];
-    // }
 
     const gender = gendersData.includes(profile_gender)
       ? profile_gender === GenderDict.PreferNotToSay
@@ -298,7 +255,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       gender: gender,
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
-      region: newRegion || userData.region,
       timeZone: userData.timeZone,
     };
 
@@ -564,29 +520,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       data: countriesList,
     },
   ];
-
-  if (
-    (formCountry === 'India' ||
-      (!formCountry && userData.country === 'India')) &&
-    regionsList.length > 0
-  ) {
-    cells.push({
-      name: 'profile_region',
-      type: 'dropdown',
-      label: ProfileDict.FormLabel7,
-      //editable: false,
-      ...cellFormStyles,
-      ...dropdownStyle,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-        marginTop: -getHeight(5),
-      },
-      rightAccessory: () => <DropDownIcon />,
-      data: regionsList,
-      placeholder: userData.region || regionsList[0],
-    });
-  }
 
   const config = {
     ...cellFormConfig,

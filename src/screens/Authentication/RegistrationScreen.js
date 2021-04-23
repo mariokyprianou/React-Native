@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-import {format, parse, parseISO} from 'date-fns';
+import {format, parse} from 'date-fns';
 import {useQuery, useMutation} from '@apollo/client';
 import TDIcon from 'the-core-ui-component-tdicon';
 import TimeZone from 'react-native-timezone';
@@ -24,6 +24,7 @@ import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import AllCountries from '../../apollo/queries/AllCountries';
+import LookupCountry from '../../apollo/queries/LookupCountry';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
@@ -52,13 +53,11 @@ export default function RegisterScreen() {
   const {cleanErrors, getValues, updateError, updateValue} = FormHook();
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const [countriesList, setCountriesList] = useState([]);
-  const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
-  const [regionLookup, setRegionLookup] = useState();
+  const [country, setCountry] = useState();
   const [deviceTimeZone, setDeviceTimeZone] = useState();
   const [deviceUid, setDeviceUid] = useState();
-  const {getValueByName, cleanValues} = FormHook();
-  const selectedCountry = getValueByName('country');
+  const {cleanValues} = FormHook();
   const [execute] = useMutation(RegisterUser);
   const {setLoading} = useLoading();
 
@@ -79,10 +78,9 @@ export default function RegisterScreen() {
     return true;
   });
 
-  const gendersData = [
+  const sexData = [
     GenderDict.Female,
     GenderDict.Male,
-    GenderDict.Other,
     GenderDict.PreferNotToSay,
   ];
 
@@ -91,50 +89,18 @@ export default function RegisterScreen() {
       const countries = data.allCountries.map((country) => country.country);
       setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
 
-      const indianRegions = data.allCountries.filter(
-        (country) => country.country === 'India',
-      )[0].regions;
-
-      if (indianRegions) {
-        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-          let {region, id} = obj;
-          return {...acc, [region]: id};
-        }, {});
-        setRegionLookup(indianRegionsLookup);
-
-        const indianRegionsList = indianRegions.map((region) => region.region);
-        setRegionsList(
-          Platform.OS === 'ios'
-            ? ['', ...indianRegionsList]
-            : indianRegionsList,
-        );
-      } else {
-        setRegionLookup([]);
-        setRegionsList([]);
-      }
-      if (indianRegions) {
-        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-          let {region, id} = obj;
-          return {...acc, [region]: id};
-        }, {});
-        setRegionLookup(indianRegionsLookup);
-
-        const indianRegionsList = indianRegions.map((region) => region.region);
-        setRegionsList(
-          Platform.OS === 'ios'
-            ? ['', ...indianRegionsList]
-            : indianRegionsList,
-        );
-      } else {
-        setRegionLookup([]);
-        setRegionsList([]);
-      }
-
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
         return {...acc, [country]: id};
       }, {});
       setCountryLookup(countryIdLookup);
+    },
+  });
+
+  useQuery(LookupCountry, {
+    onCompleted: (data) => {
+      const estimatedCountry = data.lookupCountry.name;
+      setCountry(estimatedCountry);
     },
   });
 
@@ -152,6 +118,12 @@ export default function RegisterScreen() {
   useEffect(() => {
     updateValue({name: 'gender', value: AuthDict.RegistrationGendersFemale});
   }, [updateValue]);
+
+  useEffect(() => {
+    if (country) {
+      updateValue({name: 'country', value: country});
+    }
+  }, [updateValue, country]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -200,14 +172,12 @@ export default function RegisterScreen() {
       familyName,
       email,
       password,
-      gender,
+      sex,
       dateOfBirth,
       country,
-      region,
     } = getValues();
 
     const countryID = countryLookup[country];
-
     if (!givenName) {
       updateError({
         name: 'givenName',
@@ -245,20 +215,17 @@ export default function RegisterScreen() {
     }
     setLoading(true);
 
-    const correctGender =
-      !gender || gender === GenderDict.PreferNotToSay
-        ? null
-        : gender.toLowerCase();
+    const correctSex =
+      !sex || sex === GenderDict.PreferNotToSay ? null : sex.toLowerCase();
 
     const data = {
       givenName: givenName,
       familyName: familyName,
       email: email,
       password: password,
-      gender: correctGender,
+      gender: correctSex,
       dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
       country: countryID || null,
-      region: selectedCountry === 'India' ? regionLookup[region] : null,
       deviceUDID: deviceUid,
       timeZone: deviceTimeZone,
       programme: programmeId,
@@ -378,10 +345,10 @@ export default function RegisterScreen() {
       },
     },
     {
-      name: 'gender',
+      name: 'sex',
       type: 'dropdown',
-      label: AuthDict.GenderLabel,
-      data: gendersData,
+      label: AuthDict.SexLabel,
+      data: sexData,
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
@@ -422,25 +389,6 @@ export default function RegisterScreen() {
       },
     },
   ];
-
-  if (selectedCountry === 'India') {
-    cells.push({
-      name: 'region',
-      type: 'dropdown',
-      placeholder: '',
-      editable: false,
-      label: AuthDict.RegionLabel,
-      ...cellFormStyles,
-      ...dropdownStyle,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-        marginTop: -getHeight(5),
-      },
-      rightAccessory: () => <DropDownIcon />,
-      data: regionsList,
-    });
-  }
 
   const cells2 = [
     {

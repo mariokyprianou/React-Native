@@ -31,7 +31,7 @@ export default function StayTuned() {
   const {
     params: {name, venue, image, date, type},
   } = useRoute();
-  const formattedDate = format(date, 'do LLLL');
+
   const navigation = useNavigation();
 
   const {programmeModalImage} = UseData();
@@ -107,7 +107,7 @@ export default function StayTuned() {
             <FadingBottomView color="black" />
             <View style={styles.infoTextContainer}>
               <Text style={styles.infoText}>
-                {WorkoutDict.StayTuned(name, formattedDate)}
+                {WorkoutDict.StayTuned(name,  format(date, 'do LLLL'))}
               </Text>
             </View>
             <View style={styles.buttonContainer}>

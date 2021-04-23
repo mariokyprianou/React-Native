@@ -21,6 +21,7 @@ export default gql`
       }
       environment
       programmeImage
+      isComplete
       currentWeek {
         startedAt
         weekNumber

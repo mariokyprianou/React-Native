@@ -88,7 +88,7 @@ export default function TakeARestScreen() {
           <FadingBottomView color="black" />
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}>
-              {WorkoutDict.TakeARest(programme.trainer.name)}
+              {WorkoutDict.TakeARest(programme?.trainer?.name)}
             </Text>
           </View>
           <View style={styles.buttonContainer}>

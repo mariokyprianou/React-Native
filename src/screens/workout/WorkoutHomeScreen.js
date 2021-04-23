@@ -71,7 +71,12 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
-    if (programme && currentWeek) {
+    if (programme && programme.isComplete) {
+      showStayTuned();
+    }
+
+
+    if (programme && programme.currentWeek && currentWeek) {
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,
@@ -116,6 +121,7 @@ export default function WorkoutHomeScreen() {
     setLoading(true);
     await completeWeekMutation()
       .then(async (res) => {
+        console.log(res)
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
@@ -128,7 +134,7 @@ export default function WorkoutHomeScreen() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log("completeWeekMutation", err);
         setLoading(false);
       });
   }
@@ -206,7 +212,7 @@ export default function WorkoutHomeScreen() {
   async function shouldShowWarning() {
     const today = new Date();
 
-    if (programme) {
+    if (programme && programme.currentWeek) {
       // Check last time warning was shown
       const date = await AsyncStorage.getItem('@LAST_WARNING_DATE');
       if (differenceInDays(new Date(), new Date(date)) === 0) {
@@ -337,13 +343,17 @@ export default function WorkoutHomeScreen() {
       (prog) => prog.environment === programme.environment,
     )[0].numberOfWeeks;
 
+    showStayTuned(nextWeekStartDate, programmeLength);
+  }
+
+  function showStayTuned(nextWeekStartDate = null, programmeLength = 0) {
     navigation.navigate('StayTuned', {
       name: programme?.trainer.name,
       venue: programme?.environment,
       image: programme?.programmeImage,
       date: nextWeekStartDate,
       type:
-        programme?.currentWeek.weekNumber === programmeLength
+       programme?.currentWeek === null || programme?.currentWeek?.weekNumber === programmeLength
           ? 'programmeComplete'
           : 'workoutsComplete',
     });
@@ -399,7 +409,7 @@ export default function WorkoutHomeScreen() {
     },
     rightIcon: {
       size: fontSize(16),
-      color: weekNumber === 2 ? colors.black40 : colors.black100,
+      color: programme?.nextWeek === null || weekNumber === 2 ? colors.black40 : colors.black100,
     },
     cardContainer: {
       width: '100%',
@@ -420,7 +430,7 @@ export default function WorkoutHomeScreen() {
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
           <Text style={styles.numberText}>{`${
-            programme
+            programme && programme.currentWeek
               ? weekNumber === 1
                 ? programme.currentWeek.weekNumber
                 : programme.currentWeek.weekNumber + 1
@@ -439,8 +449,8 @@ export default function WorkoutHomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.touch}
-            onPress={() => handlePress('right')}
-            disabled={weekNumber === 2 ? true : false}>
+            onPress={() => programme && programme.nextWeek && handlePress('right')}
+            disabled={programme?.nextWeek === null || weekNumber === 2 ? true : false}>
             <TDIcon
               input={isRTL() ? 'chevron-left' : 'chevron-right'}
               inputStyle={styles.rightIcon}

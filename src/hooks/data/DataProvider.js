@@ -223,13 +223,14 @@ export default function DataProvider(props) {
 
 
   useEffect(()=> {
-    if (currentWeek && programme) {
+    if (currentWeek && currentWeek.length > 0 && programme) {
       const lastDate = currentWeek.reduce((a, b) => a.exactDate > b.exactDate ? a : b).exactDate;
 
       const nextWeekStartDate = addDays(new Date(lastDate), 1);
 
       // Don't set next week if already correct
-      if (nextWeek) {
+      if (nextWeek && nextWeek.length > 0) {
+
         let isSameStartDay = 
         differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
         nextWeekStartDate.getDay() ===  nextWeek[0].exactDate.getDay()
@@ -254,6 +255,16 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
+      
+      console.log("NEW PROGRAMME", data);
+
+      // Check programme is completed
+      if (data.isComplete) {
+        setCurrentWeek([]);
+        setNextWeek([]);
+        setProgramme(data);
+        return;
+      }
 
       setProgrammeModalImage(data.programmeImage);
       const numberOfWorkouts = data.currentWeek.workouts.length;

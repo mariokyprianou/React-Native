@@ -91,8 +91,13 @@ export default function SetCompletionScreen({
   useEffect(()=> {
 
     if (exerciseHistory.length > 0) {
-      const lastWeight = exerciseHistory[exerciseHistory.length - 1].weight;
-      console.log("Last weight",lastWeight);
+      let lastWeight = exerciseHistory[exerciseHistory.length - 1].weight;
+      console.log("Last weight in KG ",lastWeight);
+
+      if (weightPreference === 'lb') {
+        lastWeight = Math.round(lastWeight * 2.20462262185);
+      }
+
       setPreSelected(lastWeight);
     }
   }, [exerciseHistory]);

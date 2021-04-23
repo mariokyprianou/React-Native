@@ -30,7 +30,6 @@ import {
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
-
 import {cacheWeekVideos} from './VideoCacheUtils';
 
 export default function DataProvider(props) {
@@ -170,10 +169,11 @@ export default function DataProvider(props) {
     let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
 
     // FUTURE
-    let futureWorkouts = workouts.filter((it) => !it.completedAt && !it.isRestDay);
+    let futureWorkouts = workouts.filter(
+      (it) => !it.completedAt && !it.isRestDay,
+    );
     const futureRestDays = getStoredFutureRestDays(storedDays);
 
-  
     let startDate = new Date();
 
     // Move to next day if today has a completed workout already
@@ -227,18 +227,19 @@ export default function DataProvider(props) {
     return week;
   }, []);
 
-
-  useEffect(()=> {
+  useEffect(() => {
     if (currentWeek && currentWeek.length > 0 && programme) {
-      const lastDate = currentWeek.reduce((a, b) => a.exactDate > b.exactDate ? a : b).exactDate;
+      const lastDate = currentWeek.reduce((a, b) =>
+        a.exactDate > b.exactDate ? a : b,
+      ).exactDate;
 
       const nextWeekStartDate = addDays(new Date(lastDate), 1);
 
       // Don't set next week if already correct
       if (nextWeek && nextWeek.length > 0) {
-        let isSameStartDay = 
-        differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
-        nextWeekStartDate.getDay() ===  nextWeek[0].exactDate.getDay()
+        let isSameStartDay =
+          differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
+          nextWeekStartDate.getDay() === nextWeek[0].exactDate.getDay();
 
         if (isSameStartDay) return;
       }
@@ -246,43 +247,46 @@ export default function DataProvider(props) {
       if (!programme.nextWeek) return;
 
       let weekWorkout = programme.nextWeek.workouts
-      .slice()
-      .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
+        .slice()
+        .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
 
       const week = addWorkoutDates(addRestDays(weekWorkout), nextWeekStartDate);
 
       setNextWeek(week);
     }
-
   }, [currentWeek, programme]);
-  
-  
-  const initCacheWeekVideos = useCallback(async (workouts) => {
-    if (isConnected) {
-      cacheWeekVideos(workouts);
-    }
-  }, [isConnected]);
+
+  const initCacheWeekVideos = useCallback(
+    async (workouts) => {
+      if (isConnected) {
+        cacheWeekVideos(workouts);
+      }
+    },
+    [isConnected],
+  );
 
   const [getProgramme] = useLazyQuery(Programme, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
-      console.log("NEW PROGRAMME", data);
 
-      // Check data available
-      if (data.currentWeek === null) {
+      console.log('NEW PROGRAMME', data);
+
+      // Check programme is completed
+      if (data.isComplete) {
         setCurrentWeek([]);
         setNextWeek([]);
         setProgramme(data);
         return;
       }
 
-      const completedWorkouts = data.currentWeek.workouts.filter(it => it.completedAt).length;
+      const completedWorkouts = data.currentWeek.workouts.filter(
+        (it) => it.completedAt,
+      ).length;
       if (completedWorkouts >= 3) {
         setCompletedFreeWorkouts(true);
       }
 
-      
       setProgrammeModalImage(data.programmeImage);
       initCacheWeekVideos(data.currentWeek.workouts);
 
@@ -296,14 +300,13 @@ export default function DataProvider(props) {
         storedDays,
       );
       setProgramme(data);
-      
     },
     onError: (error) => {
       console.log(error);
       setCurrentWeek(null);
       setNextWeek(null);
       setProgramme(null);
-    }
+    },
   });
 
   useEffect(() => {
@@ -334,11 +337,10 @@ export default function DataProvider(props) {
 
   const [selectedWeight, setSelectedWeight] = useState(20);
 
-
-  useEffect(()=> {
-    console.log("selectedWeight useEffect", selectedWeight);
+  useEffect(() => {
+    console.log('selectedWeight useEffect', selectedWeight);
   }, [selectedWeight]);
-  
+
   const [weightData, setWeightData] = useState([]);
 
   useEffect(() => {
@@ -363,8 +365,7 @@ export default function DataProvider(props) {
     return wasToday !== undefined ? true : false;
   }, []);
 
-
-  const reset = useCallback(()=> {
+  const reset = useCallback(() => {
     setProgramme(null);
     setCurrentWeek(null);
     setNextWeek(null);
@@ -387,7 +388,7 @@ export default function DataProvider(props) {
       getDownloadEnabled,
       isDownloadEnabled,
       currentExerciseIndex,
-      setCurrentExerciseIndex,      
+      setCurrentExerciseIndex,
       currentWeek,
       nextWeek,
       updateStoredDays,

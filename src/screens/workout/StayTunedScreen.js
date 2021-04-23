@@ -32,7 +32,6 @@ export default function StayTuned() {
     params: {name, venue, image, date, type},
   } = useRoute();
 
-
   const navigation = useNavigation();
 
   const {programmeModalImage} = UseData();
@@ -44,10 +43,9 @@ export default function StayTuned() {
     StatusBar.setBarStyle('light-content');
     return () => {
       StatusBar.setBarStyle('dark-content');
-    }
+    };
   }, []);
 
- 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     image: {
@@ -108,7 +106,7 @@ export default function StayTuned() {
             <FadingBottomView color="black" />
             <View style={styles.infoTextContainer}>
               <Text style={styles.infoText}>
-                {WorkoutDict.StayTuned(name,  format(date, 'do LLLL'))}
+                {WorkoutDict.StayTuned(name, format(date, 'do LLLL'))}
               </Text>
             </View>
             <View style={styles.buttonContainer}>

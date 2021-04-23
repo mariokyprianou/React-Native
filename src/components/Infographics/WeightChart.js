@@ -66,13 +66,13 @@ export default function WeightChart({
       <ScrollView
         horizontal={true}
         style={styles.scroll}
-        contentContainerStyle={{alignItems: 'flex-end'}}>
+        contentContainerStyle={{alignItems: 'flex-end'}}
+        >
         <View>
           <SlideBarChart
             data={dataPoints}
             barSpacing={dataPoints.length === 1 ? 58 : 60}
             selectionChangedCallback={(bar) => {
-              console.log(data[bar]);
               setDate && setDate(bar);
             }
             }
@@ -117,8 +117,8 @@ export default function WeightChart({
               },
             }}
           />
-        </View>
-      </ScrollView>
+   </View>
+   </ScrollView>
     </View>
   );
 }

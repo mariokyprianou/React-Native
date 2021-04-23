@@ -61,13 +61,12 @@ export default function WorkoutHomeScreen() {
     getConsecutiveWorkouts,
     clearConsecutiveDays,
     wasLastWorkoutToday,
-    completedFreeWorkouts
+    completedFreeWorkouts,
   } = useData();
 
-  const { suspendedAccount, isSubscriptionActive } = useUserData();
+  const {suspendedAccount, isSubscriptionActive} = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
-
 
   useEffect(() => {
     setLoading(true);
@@ -77,12 +76,11 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
-    if (programme && !programme.currentWeek) {
+    if (programme && programme.isComplete) {
       showStayTuned();
     }
 
     if (programme && programme.currentWeek && currentWeek) {
-      
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,
@@ -95,7 +93,7 @@ export default function WorkoutHomeScreen() {
         } else weekCompleted();
       }
 
-      console.log("WeekStartedAt:", programme.currentWeek.startedAt);
+      console.log('WeekStartedAt:', programme.currentWeek.startedAt);
       checkWeekComplete();
     }
   }, [programme, currentWeek]);
@@ -124,10 +122,10 @@ export default function WorkoutHomeScreen() {
   }
 
   async function callCompleteWeekMutation() {
-
     setLoading(true);
     await completeWeekMutation()
       .then(async (res) => {
+        console.log(res);
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
@@ -142,13 +140,12 @@ export default function WorkoutHomeScreen() {
           await clearAllFiles();
 
           getProgramme();
-
         } else {
           setLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log('completeWeekMutation', err);
         setLoading(false);
       });
   }
@@ -213,7 +210,7 @@ export default function WorkoutHomeScreen() {
       }
       if (weekNumber === 2 && nextWeek) {
         setWorkoutsToDisplay(nextWeek);
-      }      
+      }
     }
 
     if (programme === null) {
@@ -366,7 +363,8 @@ export default function WorkoutHomeScreen() {
       image: programme?.programmeImage,
       date: nextWeekStartDate,
       type:
-        programme?.currentWeek === null || programme?.currentWeek?.weekNumber === programmeLength
+        programme?.currentWeek === null ||
+        programme?.currentWeek?.weekNumber === programmeLength
           ? 'programmeComplete'
           : 'workoutsComplete',
     });
@@ -422,7 +420,10 @@ export default function WorkoutHomeScreen() {
     },
     rightIcon: {
       size: fontSize(16),
-      color: weekNumber === 2 ? colors.black40 : colors.black100,
+      color:
+        programme?.nextWeek === null || weekNumber === 2
+          ? colors.black40
+          : colors.black100,
     },
     cardContainer: {
       width: '100%',
@@ -462,8 +463,12 @@ export default function WorkoutHomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.touch}
-            onPress={() => handlePress('right')}
-            disabled={weekNumber === 2 ? true : false}>
+            onPress={() =>
+              programme && programme.nextWeek && handlePress('right')
+            }
+            disabled={
+              programme?.nextWeek === null || weekNumber === 2 ? true : false
+            }>
             <TDIcon
               input={isRTL() ? 'chevron-left' : 'chevron-right'}
               inputStyle={styles.rightIcon}
@@ -500,18 +505,17 @@ export default function WorkoutHomeScreen() {
                     : null
                 }
                 onPressCard={async (workout) => {
-                   if (suspendedAccount === true) {
+                  if (suspendedAccount === true) {
                     DisplayAlert({
-                      text: WorkoutDict.SuspendedAccount
-                    })
+                      text: WorkoutDict.SuspendedAccount,
+                    });
                     return;
-                   }
+                  }
 
-                   if (completedFreeWorkouts && !isSubscriptionActive) {
+                  if (completedFreeWorkouts && !isSubscriptionActive) {
                     navigation.navigate('PurchaseModal');
                     return;
-                   }
-
+                  }
 
                   if (weekNumber !== 1) {
                     if (stayTunedEnabled) {

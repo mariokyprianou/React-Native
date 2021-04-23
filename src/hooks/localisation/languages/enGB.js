@@ -225,7 +225,9 @@ const enGB = {
     FormLabel5: SharedDict.Dob,
     FormLabel6: SharedDict.Country,
     FormLabel7: SharedDict.Region,
-
+    FormLabel8: 'CHANGE PASSWORD',
+    Form8Placeholder: 'Change password',
+    NeedHelp: 'NEED HELP?',
     NotificationDelete: SharedDict.Delete,
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',

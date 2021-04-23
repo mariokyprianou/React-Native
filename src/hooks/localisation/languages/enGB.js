@@ -1,4 +1,3 @@
-
 const SharedDict = {
   Cancel: 'Cancel',
   Gym: 'Gym',
@@ -22,7 +21,7 @@ const SharedDict = {
   Sets: 'sets',
   Reps: 'reps',
   Secs: 'secs',
-  OldPassword: 'OLD PASSWORD',
+  OldPassword: 'CURRENT PASSWORD',
   NewPassword: 'NEW PASSWORD',
   Analytics: 'Analytics',
   ChangeEmail: 'Change Email',
@@ -86,7 +85,7 @@ const enGB = {
   },
 
   AuthDict: {
-    FormTitle: 'Create your account to start your free trial',
+    FormTitle: 'Create your account to start your free trial!',
     FirstNameLabel: SharedDict.FirstName,
     LastNameLabel: SharedDict.LastName,
     EmailLabel: SharedDict.Email,
@@ -131,11 +130,11 @@ const enGB = {
       'You are not yet logged in - please verify your email address',
     NotificationsPermissionsScreenTitle: SharedDict.Notifications,
     NotificationsPermissionsText:
-      'To send you workout updates, we need permission to send push notifications to your device.',
+      'Workout reminders are proven to increase your chances of staying on track with a fitness routine',
 
     AnalyticsPermissionsScreenTitle: SharedDict.Analytics,
     AnalyticsPermissionsText:
-      'To create the best workout programmes possible and keep improving the POWER experience, we need your permission to collect analytics from the app.',
+      'To create the best workout programmes and improve the POWER experience, we need your permission to collect analytics from the app.',
 
     LoginScreenTitle: SharedDict.Login,
 
@@ -160,7 +159,7 @@ const enGB = {
   ChangeDeviceDict: {
     Title: 'Change device',
     ActiveText:
-      'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
+      'Only one device can be used with POWER at a time. Would you like to make this your new POWER device? You can only change devices once every 30 days.',
     DisabledText:
       'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
     ChangeDeviceFailedText: 'Oops! Failed to change device, try again later.',
@@ -218,7 +217,7 @@ const enGB = {
     WorkoutsComplete: 'Workouts complete',
     NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: SharedDict.Notifications,
-    PersonalDetails: 'Personal details',
+    PersonalDetails: 'Account details',
     FormLabel1: SharedDict.FirstName,
     FormLabel2: SharedDict.LastName,
     FormLabel3: SharedDict.Email,
@@ -244,10 +243,10 @@ const enGB = {
     Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
 
-    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
- 
-    InstaPromptText: 'Share to Instagram by downloading the app!'
- 
+    WeekCompleteTitle: (weekNumber, name, programmeName) =>
+      `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
+
+    InstaPromptText: 'Share to Instagram by downloading the app!',
   },
 
   SettingsDict: {
@@ -293,20 +292,22 @@ const enGB = {
       "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
     UploadFailed:
       "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
-    TooLargeSizeImage: 'This image is too large to upload. Please try again with file size under 20MB.'
+    TooLargeSizeImage:
+      'This image is too large to upload. Please try again with file size under 20MB.',
   },
 
   TabsTitleDict: {
     Profile: 'Profile',
     Workouts: 'Workouts',
     Progress: SharedDict.Progress,
-    ScreenShotMessage: 'Screen record or taking screenshots whilst using the Power application, can lead to suspending your account. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
-    ScreenshotButton: SharedDict.Ok
+    ScreenShotMessage:
+      'Screen record or taking screenshots whilst using the Power application, can lead to suspending your account. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+    ScreenshotButton: SharedDict.Ok,
   },
 
   WorkoutDict: {
-
-    SuspendedAccount: 'Your account has been suspended due to taking screenshots/screen recordings of Power content, therefore you cannot complete any workouts for the time being. Please reach out to customer service for more information.',
+    SuspendedAccount:
+      'Your account has been suspended due to taking screenshots/screen recordings of Power content, therefore you cannot complete any workouts for the time being. Please reach out to customer service for more information.',
 
     WeekText: 'Week',
 
@@ -407,29 +408,33 @@ const enGB = {
     Female: SharedDict.Female,
     Male: SharedDict.Male,
     Other: SharedDict.Other,
-    PreferNotToSay: SharedDict.PreferNotToSay
+    PreferNotToSay: SharedDict.PreferNotToSay,
   },
 
   OnboardingDict: {
     fallbackData: [
       {
-        title: 'Pick your Programme', 
-        description: 'Fat loss, fitness, strength or wellness. At home or at the gym. There\'s a routine for you!',
+        title: 'Pick your Programme',
+        description:
+          "Fat loss, fitness, strength or wellness. At home or at the gym. There's a routine for you!",
       },
       {
-        title: 'Workout with the stars!', 
-        description: 'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
+        title: 'Workout with the stars!',
+        description:
+          'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
       },
       {
-        title: 'Track your progress', 
-        description: 'Watch your body transform as you crush your goals and take your fitness to new levels.',
+        title: 'Track your progress',
+        description:
+          'Watch your body transform as you crush your goals and take your fitness to new levels.',
       },
       {
-        title: '​Switch it up', 
-        description: '​Head to On Demand to build your own workouts and mix up your routine. You\'re in control.',
-      }
-    ]
-  }
+        title: '​Switch it up',
+        description:
+          "​Head to On Demand to build your own workouts and mix up your routine. You're in control.",
+      },
+    ],
+  },
 };
 
 export default enGB;

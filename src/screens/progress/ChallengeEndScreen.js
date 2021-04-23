@@ -36,10 +36,10 @@ export default function ChallengeEndScreen() {
   const {updateValue, getValueByName, cleanValues} = FormHook();
   const {setLoading} = useLoading();
   const navigation = useNavigation();
-  
+
   const {programme} = UseData();
   const {getHistory} = useProgressData();
-  
+
   const {
     params: {
       name,
@@ -56,13 +56,12 @@ export default function ChallengeEndScreen() {
       chartDataPoints,
       chartInterval,
       chartTicks,
+      duration,
     },
   } = useRoute();
 
- 
   const [formHeight, setFormHeight] = useState(150);
   let newStyle = {formHeight};
-
 
   const [sendResult] = useMutation(CompleteChallenge);
 
@@ -70,7 +69,6 @@ export default function ChallengeEndScreen() {
     navigation.setOptions({
       header: () => <Header title={name} goBack leftAction={handleGoBack} />,
     });
-
   }, []);
 
   useEffect(() => {
@@ -79,13 +77,11 @@ export default function ChallengeEndScreen() {
     }
   }, [elapsed]);
 
-
   // Update value without any symbols/letters/space
-  useEffect(()=> {
+  useEffect(() => {
     const value = getValueByName('result');
-    
-    if (value) {
 
+    if (value) {
       if (type === 'STOPWATCH') {
         const regex = /\d*:\d*:\d*/g;
         const found = value.match(regex);
@@ -93,21 +89,17 @@ export default function ChallengeEndScreen() {
         // Reset value
         if (!found || value.length > 8) {
           updateValue({name: 'result', value: elapsed});
-        }
-        else {
+        } else {
           // Remove any symbols other than the regex we want
           const updatedValue = value.replace(/[^\d{2}:\d{2}:\d{2}]/g, '');
           updateValue({name: 'result', value: updatedValue});
         }
-      }
-      else {
+      } else {
         const updatedValue = value.replace(/[^0-9]/g, '');
         updateValue({name: 'result', value: updatedValue});
       }
     }
-
   }, [getValueByName('result'), updateValue]);
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -185,7 +177,6 @@ export default function ChallengeEndScreen() {
     setLoading(true);
     let challengeResult = '';
     if (type === 'STOPWATCH') {
-
       // Extract value from Input
       const value = getValueByName('result');
       const array = value.split(':');
@@ -196,11 +187,11 @@ export default function ChallengeEndScreen() {
         const ms = secs * 1000;
 
         challengeResult = ms.toString();
-      }      
+      }
     } else {
       challengeResult = getValueByName('result');
     }
-    
+
     await sendResult({
       variables: {
         input: {
@@ -230,7 +221,8 @@ export default function ChallengeEndScreen() {
           result: challengeResult,
           trainer: programme.trainer.name,
           ellapsedTime: elapsedMS && getValueByName('result'),
-          description: description
+          description: description,
+          duration: duration,
         });
       })
       .catch((err) => {

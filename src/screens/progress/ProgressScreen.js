@@ -37,7 +37,14 @@ export default function ProgressScreen() {
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getPreferences, preferences} = useUserData();
-  const {progress, getProgress, challenges, getChallenges, userImages, getImages} = useProgressData();
+  const {
+    progress,
+    getProgress,
+    challenges,
+    getChallenges,
+    userImages,
+    getImages,
+  } = useProgressData();
   const {
     days,
     daysTextStyles,
@@ -50,7 +57,6 @@ export default function ProgressScreen() {
   const {ProgressDict} = dictionary;
   const navigation = useNavigation();
 
-  
   const [progressData, setProgressData] = useState();
   const [weightLabel, setWeightLabel] = useState();
 
@@ -58,11 +64,11 @@ export default function ProgressScreen() {
     navigation.setOptions({
       header: () => null,
     });
-  
+
     getPreferences();
     getProgress();
     getChallenges();
-    if ( userImages.length === 0) {
+    if (userImages.length === 0) {
       getImages();
     }
   }, []);
@@ -73,8 +79,6 @@ export default function ProgressScreen() {
       setWeightLabel(weightPreference);
     }
   }, [preferences]);
-
-
 
   useEffect(() => {
     if (progress) {
@@ -89,10 +93,8 @@ export default function ProgressScreen() {
 
         setProgressData(progressHistoryData);
       }
-       
     }
   }, [progress]);
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -232,7 +234,7 @@ export default function ProgressScreen() {
                     />
                   );
                 })}
-                <View style={{ width: '48%'}}/>
+                <View style={{width: '48%'}} />
               </>
             )}
           </View>

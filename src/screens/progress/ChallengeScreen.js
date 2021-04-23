@@ -50,12 +50,12 @@ export default function ChallengeScreen() {
   const [chartInfo, setChartInfo] = useState(null);
   const [isTimerRunning, setTimerRunning] = useState(false);
 
-  // Time based 
+  // Time based
   const formattedSeconds = new Date(duration * 1000)
-  .toISOString()
-  .substr(11, 8);
-const timerData = handleTimer(formattedSeconds);
-const stopwatchData = handleStopwatch();
+    .toISOString()
+    .substr(11, 8);
+  const timerData = handleTimer(formattedSeconds);
+  const stopwatchData = handleStopwatch();
 
   useEffect(() => {
     navigation.setOptions({
@@ -67,7 +67,6 @@ const stopwatchData = handleStopwatch();
 
   useEffect(() => {
     if (history) {
-
       async function getInfo() {
         const info = await generateChartInfo(
           history,
@@ -82,8 +81,6 @@ const stopwatchData = handleStopwatch();
       getInfo();
     }
   }, [history]);
-
- 
 
   useEffect(() => {
     if (type === 'COUNTDOWN' && timerData.remainingMS === 0) {
@@ -179,9 +176,8 @@ const stopwatchData = handleStopwatch();
       chartDataPoints: chartInfo ? chartInfo.dataPoints : [],
       chartInterval: chartInfo ? chartInfo.interval : 0,
       chartTicks: chartInfo ? chartInfo.ticks : 0,
+      duration,
     });
-
-    
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

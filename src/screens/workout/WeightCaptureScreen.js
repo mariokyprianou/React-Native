@@ -23,6 +23,7 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import {useRoute} from '@react-navigation/core';
 import format from 'date-fns/format';
 import { differenceInDays, parseISO } from 'date-fns';
+import {useBackHandler} from '@react-native-community/hooks';
 
 
 export default function WeightCaptureScreen() {
@@ -48,6 +49,11 @@ export default function WeightCaptureScreen() {
   const [filteredData, setFilteredData] = useState([]);
   const [dropdownData, setDropDownData] = useState([]);
   const [selectedDate, setSelectedDate] = useState();
+
+
+  useBackHandler(() => {
+    return true;
+  });
 
 
   useEffect(()=> {

@@ -42,6 +42,8 @@ export default function RegisterScreen() {
   const {dictionary} = useDictionary();
   const {AuthDict, GenderDict} = dictionary;
   const [termsAndConditions, setTerms] = useState('off');
+  const [marketingPreferences, setMarketingPreferences] = useState('off');
+
   const {
     cellFormStyles,
     dropdownStyle,
@@ -132,9 +134,9 @@ export default function RegisterScreen() {
       width: '100%',
     },
     scrollContainer: {
-      flex: 1,
+      height: getHeight(550),
       position: 'absolute',
-      top: getHeight(120),
+      top: getHeight(130),
       backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(12),
       borderTopRightRadius: radius(12),
@@ -167,6 +169,9 @@ export default function RegisterScreen() {
       ...textStyles.regular15_brownishGrey100,
       alignSelf: 'center',
       marginHorizontal: getWidth(15),
+    },
+    marketingStyle: {
+      ...textStyles.regular15_brownishGrey100,
     },
   };
 
@@ -275,6 +280,8 @@ export default function RegisterScreen() {
     const value = termsAndConditions === 'on' ? 'off' : 'on';
     setTerms(value);
   };
+
+  const handleMarketingPreferences = () => {};
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const linkText = [
@@ -410,6 +417,28 @@ export default function RegisterScreen() {
         </View>
       ),
     },
+    {
+      name: 'marketingPrefs',
+      labelComponent: () => null,
+      inputComponent: () => (
+        <View style={{marginTop: getHeight(20)}}>
+          <TouchableOpacity
+            style={styles.termsContainerStyle}
+            onPress={handleMarketingPreferences}>
+            <View style={styles.boxStyle}>
+              {marketingPreferences === 'on' && (
+                <TDIcon input={'check'} inputStyle={styles.iconStyle} />
+              )}
+            </View>
+            <View style={styles.termsStyle}>
+              <Text style={styles.marketingStyle}>
+                {AuthDict.MarketingText}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      ),
+    },
   ];
 
   const config = {
@@ -437,6 +466,7 @@ export default function RegisterScreen() {
       <View style={styles.scrollContainer}>
         <KeyboardAwareScrollView
           enableOnAndroid={true}
+          showsVerticalScrollIndicator={false}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.formContainer}>
             <Form cells={cells} config={{...cellFormConfig}} />
@@ -448,8 +478,10 @@ export default function RegisterScreen() {
               variant="white"
               icon="chevron"
               onPress={handleRegister}
+              disabled={termsAndConditions === 'on' ? false : true}
             />
           </View>
+          <Spacer height={50} />
         </KeyboardAwareScrollView>
       </View>
     </View>

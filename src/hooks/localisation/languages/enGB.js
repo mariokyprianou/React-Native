@@ -95,6 +95,8 @@ const enGB = {
     DobLabel: SharedDict.Dob,
     CountryLabel: SharedDict.Country,
     RegionLabel: SharedDict.Region,
+    MarketingText:
+      'I do not wish to hear from POWER by email about new trainers, challenges, competitions, giveaways and more',
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
     InvalidGivenName: 'Please enter your first name',

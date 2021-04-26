@@ -185,7 +185,7 @@ const enGB = {
 
   MeetYourIconsDict: {
     YourFirstWeek: 'Your first week with',
-    WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
+    WeeksOfTraining: 'WEEKS NOW LIVE',
     SelectYourProgramme: 'Select your programme',
 
     ZeroStateText:

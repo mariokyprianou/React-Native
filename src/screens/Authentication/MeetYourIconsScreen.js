@@ -61,8 +61,8 @@ export default function MeetYourIconsScreen() {
   } = useRoute();
   const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
   const {setProgrammeModalImage, programme, completedFreeWorkouts} = UseData();
-  const { isSubscriptionActive } = useUserData();
-   
+  const {isSubscriptionActive} = useUserData();
+
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const [selectedTrainer, setSelectedTrainer] = useState();
@@ -71,7 +71,6 @@ export default function MeetYourIconsScreen() {
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
- 
   useEffect(() => {
     setLoading(true);
     StatusBar.setBarStyle('light-content');
@@ -296,11 +295,7 @@ export default function MeetYourIconsScreen() {
     setSelectedProgram(newProgramme);
   }
 
-  
-
   function changedAssignedProgramme(type) {
-
-
     if (type === 'continue') {
       if (selectedProgram.userProgress.isActive) {
         navigation.navigate('TabContainer');
@@ -321,7 +316,7 @@ export default function MeetYourIconsScreen() {
       newTrainer: selectedTrainer.name,
       environment: selectedProgram.environment,
       programmeId: selectedProgram.id,
-      type: type
+      type: type,
     });
   }
 
@@ -365,12 +360,10 @@ export default function MeetYourIconsScreen() {
     }
   };
 
-  
   // ** ** ** ** ** RENDER ** ** ** ** **
 
-const programmeWithProgressView = (weekNumber) => (
-  
-  <View style={styles.buttonContainer}>
+  const programmeWithProgressView = (weekNumber) => (
+    <View style={styles.buttonContainer}>
       <DefaultButton
         type="restartProgramme"
         icon="chevron"
@@ -385,20 +378,19 @@ const programmeWithProgressView = (weekNumber) => (
         weekNo={weekNumber || 1}
         onPress={() => changedAssignedProgramme('continue')}
       />
-  </View>
-);
+    </View>
+  );
 
-
-const newProgrammeView = () => (
-  <View style={styles.buttonContainer}>
-    <DefaultButton
-      type="startNow"
-      icon="chevron"
-      variant="gradient"
-      onPress={() => changedAssignedProgramme('start')}
-    />
-  </View>
-)
+  const newProgrammeView = () => (
+    <View style={styles.buttonContainer}>
+      <DefaultButton
+        type="startNow"
+        icon="chevron"
+        variant="gradient"
+        onPress={() => changedAssignedProgramme('start')}
+      />
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -418,7 +410,7 @@ const newProgrammeView = () => (
             (selectedProgram &&
               trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
-
+          console.log(currentProgram.numberOfWeeks, '<----current programme');
           const {numberOfWeeks, description, firstWeek} = currentProgram;
           const extendedWeek = addWorkoutDates(
             addRestDays(firstWeek),
@@ -519,14 +511,17 @@ const newProgrammeView = () => (
       <View style={styles.fadeContainer} pointerEvents="none">
         <FadingBottomView color="blue" height={100} />
       </View>
-      
-      {switchProgramme === true ? 
-      // Check if selected programme already has user porgress
-        selectedProgram && selectedProgram.userProgress && selectedProgram.userProgress.latestWeek > 0
-        ? programmeWithProgressView(selectedProgram.userProgress.latestWeek) 
-        : newProgrammeView()
-    
-       : (
+
+      {switchProgramme === true ? (
+        // Check if selected programme already has user porgress
+        selectedProgram &&
+        selectedProgram.userProgress &&
+        selectedProgram.userProgress.latestWeek > 0 ? (
+          programmeWithProgressView(selectedProgram.userProgress.latestWeek)
+        ) : (
+          newProgrammeView()
+        )
+      ) : (
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="startNow"

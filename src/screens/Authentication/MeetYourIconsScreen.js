@@ -59,7 +59,7 @@ export default function MeetYourIconsScreen() {
   const {
     params: {switchProgramme},
   } = useRoute();
-  const {trainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
+  const {trainers, getTrainers, suggestedProgramme, setSuggestedProgramme} = useCommonData();
   const {setProgrammeModalImage, programme, completedFreeWorkouts} = UseData();
   const { isSubscriptionActive } = useUserData();
    
@@ -74,6 +74,7 @@ export default function MeetYourIconsScreen() {
  
   useEffect(() => {
     setLoading(true);
+    getTrainers();
     StatusBar.setBarStyle('light-content');
     return () => {
       StatusBar.setBarStyle('dark-content');
@@ -348,7 +349,9 @@ export default function MeetYourIconsScreen() {
             type="tryAgain"
             icon="chevron"
             variant="white"
-            onPress={() => console.log('try again')}
+            onPress={() => {
+              getTrainers();
+            }}
           />
           <Spacer height={30} />
         </View>

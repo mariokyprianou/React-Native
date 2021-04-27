@@ -12,7 +12,6 @@ const initializeRestDays = (numberOfWorkouts) => {
   const restDay = function rest(index) {
     return {
       id: 'restDay',
-      date: addDays(now, index),
       exactDate: addDays(now, index),
     };
   };
@@ -49,12 +48,10 @@ const getStoredPastRestDays = (storedDays) => {
   );
 
   pastRestDays = pastRestDays.map((it) => {
-    const formattedDate = format(it.exactDate, 'iiii, do LLL');
     return {
       ...it,
       name: 'REST DAY',
       isRestDay: true,
-      date: formattedDate,
       exactDate: it.exactDate,
     };
   });
@@ -67,13 +64,11 @@ const getStoredFutureRestDays = (storedDays) => {
   const futureRestDays = storedDays
     .filter((it) => differenceInDays(it.exactDate, now) >= 0)
     .map((it) => {
-      const formattedDate = format(it.exactDate, 'iiii, do LLL');
 
       return {
         ...it,
         name: 'REST DAY',
         isRestDay: true,
-        date: formattedDate,
         exactDate: it.exactDate,
       };
     });

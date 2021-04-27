@@ -28,6 +28,7 @@ import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
 import useLoading from '../../hooks/loading/useLoading';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
+import format from 'date-fns/format';
 
 const {clearAllFiles} = FileManager;
 
@@ -314,10 +315,12 @@ export default function WorkoutHomeScreen() {
   }
 
   async function updateOrder(newList) {
+
+    // Previous data in case orderChange fails
+    const prevList = currentWeek;
+
     const storedData = updateStoredData(newList);
-
     const updatedWeek = structureWeek(newList, storedData);
-
     setWorkoutsToDisplay(updatedWeek);
 
     // Construct new order of workouts
@@ -330,7 +333,7 @@ export default function WorkoutHomeScreen() {
         id: it.id,
       };
     });
-    console.log(newOrder);
+
     await updateOrderMutation({
       variables: {
         input: newOrder,
@@ -340,7 +343,14 @@ export default function WorkoutHomeScreen() {
         const success = R.path(['data', 'updateOrder'], res);
         console.log('UpdateOrderRes', success);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+
+        // Reset week order to what was before
+        const storedData = updateStoredData(prevList);
+        const updatedWeek = structureWeek(prevList, storedData);
+        setWorkoutsToDisplay(updatedWeek);
+      });
   }
 
   async function showStayTunedModal() {
@@ -493,7 +503,10 @@ export default function WorkoutHomeScreen() {
                 workout={item}
                 title={item.name}
                 day={item.day}
-                date={item.date}
+                date={format(
+                  (item.exactDate),
+                  'iiii, do LLL',
+                )}
                 duration={item.duration}
                 intensity={item.intensity}
                 image={item.overviewImage}

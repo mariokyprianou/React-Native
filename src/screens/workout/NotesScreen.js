@@ -21,6 +21,8 @@ import {useRoute} from '@react-navigation/core';
 import {useMutation} from '@apollo/client';
 import UpdateExerciseNote from '../../apollo/mutations/UpdateExerciseNote';
 import useData from '../../hooks/data/UseData';
+import {useBackHandler} from '@react-native-community/hooks';
+
 
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -42,6 +44,11 @@ export default function NotesScreen() {
   useEffect(() => {
     setSavedNotes(selectedWorkout.exercises[currentExerciseIndex].notes);
   }, [selectedWorkout, currentExerciseIndex]);
+
+  useBackHandler(() => {
+    navigation.goBack();
+    return true;
+  });
 
   navigation.setOptions({
     header: () => (

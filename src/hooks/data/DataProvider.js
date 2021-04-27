@@ -143,17 +143,12 @@ export default function DataProvider(props) {
     // PAST
     let pastWorkouts = workouts.filter((it) => it.completedAt);
     pastWorkouts = pastWorkouts.map((workout) => {
-      const formattedDate = format(
-        parseISO(workout.completedAt),
-        'iiii, do LLL',
-      );
 
       workoutIndex = workoutIndex + 1;
 
       return {
         ...workout,
         name: workout.name.toUpperCase(),
-        date: formattedDate,
         exactDate: new Date(workout.completedAt),
         day: workoutIndex,
       };
@@ -188,7 +183,6 @@ export default function DataProvider(props) {
         week.push(restDay);
       } else {
         let workout = futureWorkouts.shift();
-        const formattedDate = format(date, 'iiii, do LLL');
 
         if (workout) {
           workoutIndex = workoutIndex + 1;
@@ -196,7 +190,6 @@ export default function DataProvider(props) {
           workout = {
             ...workout,
             name: workout.name.toUpperCase(),
-            date: formattedDate,
             exactDate: date,
             day: workoutIndex,
           };
@@ -206,7 +199,6 @@ export default function DataProvider(props) {
             name: 'REST DAY',
             isRestDay: true,
             id: 'restDay',
-            date: formattedDate,
             exactDate: date,
           };
 
@@ -256,8 +248,6 @@ export default function DataProvider(props) {
     onCompleted: async (res) => {
       const data = res.getProgramme;
       
-      console.log("NEW PROGRAMME", data);
-
       // Check programme is completed
       if (data.isComplete) {
         setCurrentWeek([]);

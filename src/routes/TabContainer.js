@@ -18,19 +18,18 @@ import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
 import isIphoneX from '../utils/isIphoneX';
 import {useNavigation} from '@react-navigation/native';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import useUserData from '../hooks/data/useUserData';
 import * as ScreenCapture from 'expo-screen-capture';
 import displayAlert from '../utils/DisplayAlert';
 import ScreenshotTaken from '../apollo/mutations/ScreenshotTaken';
 import {useMutation} from '@apollo/client';
 
-
 const notificationCount = 2;
 
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  
+
   const navigation = useNavigation();
 
   const {fontSize, getHeight, getWidth} = ScaleHook();
@@ -39,9 +38,8 @@ export default function TabContainer() {
   const {TabsTitleDict} = dictionary;
 
   const {changeDevice, setSuspendedAccount} = useUserData();
-  
-  const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
+  const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
   useEffect(() => {
     if (changeDevice && changeDevice.newDeviceId) {
@@ -49,12 +47,13 @@ export default function TabContainer() {
     }
   }, [changeDevice]);
 
-  useEffect(() => {
+  useEffect(async () => {
     let screenshotListener;
 
     if (Platform.OS === 'ios') {
-      screenshotListener = ScreenCapture.addScreenshotListener(() => {
+      await ScreenCapture.preventScreenCaptureAsync();
 
+      screenshotListener = ScreenCapture.addScreenshotListener(() => {
         displayAlert({
           text: TabsTitleDict.ScreenShotMessage,
           buttons: [
@@ -63,24 +62,25 @@ export default function TabContainer() {
               onPress: () => {
                 increaseShotTaken()
                   .then((res) => {
-                    if (res && res.data.screenshotTaken && res.data.screenshotTaken.success) {
+                    if (
+                      res &&
+                      res.data.screenshotTaken &&
+                      res.data.screenshotTaken.success
+                    ) {
                       if (res.data.screenshotTaken.screenshotsTaken >= 7) {
-                          setSuspendedAccount(true);
+                        setSuspendedAccount(true);
                       }
                     }
-                    
                   })
                   .catch((err) => {
-                    console.log("increaseShotTaken - err", err)
+                    console.log('increaseShotTaken - err', err);
                   });
               },
             },
-          ]
+          ],
         });
-       
       });
     }
-  
 
     return () => {
       if (Platform.OS === 'ios') {
@@ -89,7 +89,6 @@ export default function TabContainer() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   const tabIcons = {
     workout: require('../../assets/icons/workout.png'),

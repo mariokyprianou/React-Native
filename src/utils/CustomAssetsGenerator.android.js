@@ -15,8 +15,7 @@ import {SampleBase64, SampleImageUrl, SampleImageUrl2} from './SampleData';
 
 const {AndroidAssetCreator, GIFManager} = NativeModules;
 
-const nativeAssetCreator =AndroidAssetCreator;
-
+const nativeAssetCreator = AndroidAssetCreator;
 
 const generateWeekCompleteAsset = async ({
   imageUrl,
@@ -24,11 +23,10 @@ const generateWeekCompleteAsset = async ({
   workoutsCompleted,
   totalTimeTrained,
   workoutsCompletedText = 'Workouts',
-  totalTimeText = "Total time",
+  totalTimeText = 'Total time',
   colour,
 }) => {
   try {
-
     // Download background image
     let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
       imageUrl,
@@ -42,11 +40,13 @@ const generateWeekCompleteAsset = async ({
       workoutsCompletedText,
       totalTimeText,
       colour,
-    }
-    
+    };
+
     // Modify background image
-    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForWorkoutComplete(data);
-    
+    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForWorkoutComplete(
+      data,
+    );
+
     // PAth of modified image
     const localSharePath = 'file:/' + modifiedImagePath;
 
@@ -55,7 +55,6 @@ const generateWeekCompleteAsset = async ({
     throw err;
   }
 };
-
 
 const generateIntAchievementAsset = async ({
   imageUrl,
@@ -73,9 +72,11 @@ const generateIntAchievementAsset = async ({
       achievedValue: `${achievedValue}`,
       subtitle: subtitle,
       colour,
-    }
+    };
 
-    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForIntAchievement(data);
+    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForIntAchievement(
+      data,
+    );
 
     const localSharePath = 'file:/' + modifiedImagePath;
     return localSharePath;
@@ -100,10 +101,12 @@ const generateStringAchievementAsset = async ({
       achievedValue: achievementValueString,
       subtitle: subtitle,
       colour,
-    }
+    };
 
-    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForStringAchievement(data);
-  
+    let modifiedImagePath = await nativeAssetCreator.createBase64ImageForStringAchievement(
+      data,
+    );
+
     const localSharePath = 'file:/' + modifiedImagePath;
     return localSharePath;
   } catch (err) {
@@ -111,24 +114,26 @@ const generateStringAchievementAsset = async ({
   }
 };
 
-const generateGifAsset = async (
-  {
-    backgroundImageUrl,
-    beforeImageUrl,
-    afterImageUrl,
-    colour,
-    beforeDate,
-    afterDate,
-  }) => {
+const generateGifAsset = async ({
+  backgroundImageUrl,
+  beforeImageUrl,
+  afterImageUrl,
+  colour,
+  beforeDate,
+  afterDate,
+}) => {
   try {
     let localPathToBackground = await ImagesCacheManager.cacheImageFromUrl(
-      backgroundImageUrl, 'back'
+      backgroundImageUrl,
+      'back',
     );
     let localPathToBeforeImage = await ImagesCacheManager.cacheImageFromUrl(
-      beforeImageUrl, 'before'
+      beforeImageUrl,
+      'before',
     );
     let localPathToAfterImage = await ImagesCacheManager.cacheImageFromUrl(
-      afterImageUrl, 'after'
+      afterImageUrl,
+      'after',
     );
 
     const data = {
@@ -138,7 +143,7 @@ const generateGifAsset = async (
       colour,
       beforeDate,
       afterDate,
-    }
+    };
 
     const localGifPath = await GIFManager.createVideoFile(data);
 
@@ -157,7 +162,7 @@ const generateSimpleShareableAsset = async (url) => {
   try {
     let pathFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(url);
     const {dirs} = RNFetchBlob.fs;
-    let completePath = `${dirs.DocumentDir}/${pathFromDocumentsDir}`;
+    let completePath = `${dirs.DocumentDir}${pathFromDocumentsDir}`;
 
     const localSharePath = 'file:/' + completePath;
 

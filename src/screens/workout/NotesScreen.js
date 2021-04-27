@@ -147,6 +147,7 @@ export default function NotesScreen() {
         height: [newStyle][formHeight],
         paddingBottom: getHeight(5),
       },
+      returnKeyType: 'default'
     },
   ];
 

@@ -8,13 +8,15 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import FastImage from 'react-native-fast-image';
 import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
+import FadingBottomView from './FadingBottomView';
 
 const fakeImage = require('../../../assets/images/fake.png');
 
 export default function ({
-  image = fakeImage,
+  image,
   duration = 40,
   intensity = 'medium',
   reps = '12',
@@ -44,7 +46,10 @@ export default function ({
 
   return (
     <View style={styles.container}>
-      <Image source={fakeImage} style={styles.imageStyle} />
+      <FastImage source={ image === undefined ? fakeImage : {uri: image}} style={styles.imageStyle} />
+      <View style={{position: 'absolute',  width: '100%'}}>
+        <FadingBottomView color={"black"} height={300}/>
+      </View>
       <View style={styles.contentStyle}>
         <IconTextView
           type={complete ? 'workoutComplete' : 'intensity'}

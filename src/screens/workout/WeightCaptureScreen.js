@@ -53,6 +53,7 @@ export default function WeightCaptureScreen() {
 
 
   useBackHandler(() => {
+    navigation.goBack();
     return true;
   });
 

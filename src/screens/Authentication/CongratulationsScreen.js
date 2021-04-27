@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -49,12 +49,13 @@ export default function CongratulationsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict, WorkoutDict, ShareDict, ProfileDict} = dictionary;
 
-
   // Switch programme parsms
-  const {  params: {switchProgramme, type, currentProgramme, newProgramme } } = useRoute();
+  const {
+    params: {switchProgramme, type, currentProgramme, newProgramme},
+  } = useRoute();
 
   const {
-    params: { trainerId, newTrainer, environment, programmeId},
+    params: {trainerId, newTrainer, environment, programmeId},
   } = useRoute();
 
   const navigation = useNavigation();
@@ -65,8 +66,14 @@ export default function CongratulationsScreen() {
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
-  const { getTrainers } = useCommonData();
-  const {programmeModalImage, setProgrammeModalImage, programme, getProgramme, updateStoredDays} = UseData();
+  const {getTrainers} = useCommonData();
+  const {
+    programmeModalImage,
+    setProgrammeModalImage,
+    programme,
+    getProgramme,
+    reset,
+  } = UseData();
   const {setLoading} = useLoading();
   const {ShareMediaType, getShareData} = useShare();
 
@@ -74,12 +81,11 @@ export default function CongratulationsScreen() {
     header: () => null,
   });
 
-
   useEffect(() => {
     StatusBar.setBarStyle('light-content');
     return () => {
       StatusBar.setBarStyle('dark-content');
-    }
+    };
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -128,7 +134,6 @@ export default function CongratulationsScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   async function handlePressShare() {
-
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -161,12 +166,14 @@ export default function CongratulationsScreen() {
       imageUrl: url,
     })
       .then((res) => {
+        setLoading(false);
         shareEvent();
       })
       .catch((err) => {
-        console.log("ERR", err);
+        setLoading(false);
+        console.log('ERR', err);
       })
-      .finally(()=> setLoading(false));
+      .finally(() => setLoading(false));
   }
 
   function shareEvent() {
@@ -178,7 +185,6 @@ export default function CongratulationsScreen() {
 
   function handlePressStart() {
     if (switchProgramme === true) {
-
       // Reset this when switching program otherwise modal won't show for new program
       AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
       navigation.reset({
@@ -193,21 +199,20 @@ export default function CongratulationsScreen() {
   }
 
   function handleNewProgramme() {
-    switch(type) {
-      case 'restart': 
+    switch (type) {
+      case 'restart':
         handleRestartProgramme();
         break;
-      case 'continue': 
+      case 'continue':
         handleContinueProgramme();
         break;
-      case 'start': 
+      case 'start':
         handleStartNewProgramme();
         break;
     }
   }
 
   async function handleRestartProgramme() {
-
     setLoading(true);
     restartProgramme({
       variables: {
@@ -217,9 +222,9 @@ export default function CongratulationsScreen() {
       },
     })
       .then((res) => {
-        console.log("restartProgramme", res);
+        console.log('restartProgramme', res);
         submitAnalyticsEvent(false);
-       
+
         changedAssignedProgramme();
       })
       .catch((err) => {
@@ -229,7 +234,6 @@ export default function CongratulationsScreen() {
   }
 
   async function handleContinueProgramme() {
-
     setLoading(true);
     continueProgramme({
       variables: {
@@ -239,7 +243,7 @@ export default function CongratulationsScreen() {
       },
     })
       .then((res) => {
-        console.log("continueProgramme", res);
+        console.log('continueProgramme', res);
 
         submitAnalyticsEvent(false);
         changedAssignedProgramme();
@@ -251,7 +255,6 @@ export default function CongratulationsScreen() {
   }
 
   async function handleStartNewProgramme() {
-
     setLoading(true);
     startProgramme({
       variables: {
@@ -259,12 +262,12 @@ export default function CongratulationsScreen() {
           programme: programmeId,
         },
       },
-    }).then((res) => {
-        console.log("startProgramme", res);
+    })
+      .then((res) => {
+        console.log('startProgramme', res);
 
         submitAnalyticsEvent(true);
         changedAssignedProgramme();
-        
       })
       .catch((err) => {
         console.log(err, '<---start new programme error');
@@ -273,16 +276,16 @@ export default function CongratulationsScreen() {
   }
 
   async function changedAssignedProgramme() {
-    await updateStoredDays([]);
+    await reset();
+
     await getProgramme();
     await getTrainers();
-  
+
     setProgrammeModalImage(newProgramme.programmeImage);
     navigation.navigate('TabContainer');
-    setLoading(false)
+    setLoading(false);
   }
 
-  
   function submitAnalyticsEvent(newTrainer = false) {
     if (programme && currentProgramme.trainer) {
       firebaseLogEvent(analyticsEvents.leftTrainer, {

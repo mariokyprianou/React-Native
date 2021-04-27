@@ -146,8 +146,11 @@ const generateGifAsset = async ({
 const generateSimpleShareableAsset = async (url) => {
   try {
     let pathFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(url);
+    const filename = pathFromDocumentsDir.substring(
+      pathFromDocumentsDir.lastIndexOf('/') + 1,
+    );
     const {dirs} = RNFetchBlob.fs;
-    let completePath = `${dirs.DocumentDir}/${pathFromDocumentsDir}`;
+    let completePath = `${dirs.DocumentDir}/imageCache/${filename}`;
     return completePath;
   } catch (err) {
     throw err;

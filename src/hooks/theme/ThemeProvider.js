@@ -553,6 +553,7 @@ export default function ThemeProvider({children}) {
     },
     marginEnd: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
     writingDirection: isRTL() ? 'rtl' : 'ltr',
+    returnKeyType: 'done'
   };
 
   const cellFormConfig = {

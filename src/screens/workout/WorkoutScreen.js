@@ -68,7 +68,7 @@ export default function WorkoutScreen() {
 
   useBackHandler(() => {
     checkGoBack()
-      return true;
+    return true;
   });
 
 

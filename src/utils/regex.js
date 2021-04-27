@@ -18,4 +18,4 @@ export const weblinkRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/
 // The string must contain at least 1 numeric character
 // The string must be eight characters or longer
 // The string must contain a special character
-export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;

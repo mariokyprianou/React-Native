@@ -44,8 +44,6 @@ export default function ({
     },
   };
 
-  console.log(image)
-
   return (
     <View style={styles.container}>
       <FastImage source={ image === undefined ? fakeImage : {uri: image}} style={styles.imageStyle} />

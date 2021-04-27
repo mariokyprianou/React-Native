@@ -30,7 +30,7 @@ const screenWidth = Dimensions.get('screen').width;
 
 export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius} = ScaleHook();
+  const {getHeight, getWidth, radius, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {history} = useProgressData();
   const {dictionary} = useDictionary();
@@ -114,8 +114,7 @@ export default function ChallengeCompletionScreen() {
       backgroundColor: colors.veryLightPinkTwo100,
       borderRadius: radius(15),
       borderTopLeftRadius: 0,
-      width: getWidth(170),
-      height: getHeight(110),
+      width: '45%',
       padding: getHeight(10),
       position: 'absolute',
       right: getWidth(20),
@@ -127,10 +126,12 @@ export default function ChallengeCompletionScreen() {
     },
     timeResult: {
       ...textStyles.bold30_black100,
+      fontSize: fontSize(28),
       textAlign: 'left',
     },
     resultText: {
       ...textStyles.bold34_black100,
+      fontSize: fontSize(32),
       textAlign: 'left',
     },
     line: {

@@ -150,7 +150,7 @@ export default function DataProvider(props) {
     pastWorkouts = pastWorkouts.map((workout) => {
 
       workoutIndex = workoutIndex + 1;
-
+      console.log(workoutIndex, workout.completedAt);
       return {
         ...workout,
         name: workout.name.toUpperCase(),
@@ -158,6 +158,8 @@ export default function DataProvider(props) {
         day: workoutIndex,
       };
     });
+
+   
 
     let pastRestDays = getStoredPastRestDays(storedDays);
 
@@ -355,7 +357,7 @@ export default function DataProvider(props) {
     return wasToday !== undefined ? true : false;
   }, []);
 
-  const reset = useCallback(() => {
+  const reset = useCallback(async () => {
     setProgramme(null);
     setCurrentWeek(null);
     setNextWeek(null);

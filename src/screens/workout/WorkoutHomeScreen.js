@@ -77,8 +77,10 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
+ 
     if (programme && programme.isComplete) {
       showStayTuned();
+      return;
     }
 
     if (programme && programme.currentWeek && currentWeek) {

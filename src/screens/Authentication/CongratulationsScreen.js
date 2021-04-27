@@ -66,7 +66,7 @@ export default function CongratulationsScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
   const { getTrainers } = useCommonData();
-  const {programmeModalImage, setProgrammeModalImage, programme, getProgramme, updateStoredDays} = UseData();
+  const {programmeModalImage, setProgrammeModalImage, programme, getProgramme, reset} = UseData();
   const {setLoading} = useLoading();
   const {ShareMediaType, getShareData} = useShare();
 
@@ -273,7 +273,8 @@ export default function CongratulationsScreen() {
   }
 
   async function changedAssignedProgramme() {
-    await updateStoredDays([]);
+    await reset();
+
     await getProgramme();
     await getTrainers();
   

@@ -6,20 +6,16 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 
 export default function GymHomeSelector({onPress, text, singleProgramme}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {dictionary} = useDictionary();
-  const {ButtonDict} = dictionary;
-  const [buttonText, setButtonText] = useState(ButtonDict.Gym);
   const buttonIcon = require('../../../assets/icons/reverse.png');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -38,7 +34,7 @@ export default function GymHomeSelector({onPress, text, singleProgramme}) {
       alignItems: 'center',
     },
     text: {
-      ...textStyles.bold15_brownishGrey100,
+      ...textStyles.semiBold13_brownishGrey100,
       marginRight: getWidth(5),
     },
     icon: {

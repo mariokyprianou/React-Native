@@ -249,6 +249,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(12),
       color: colors.brownishGrey100,
     },
+    medium12_black100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(20),
+      color: colors.black100,
+    },
     medium12_brownishGrey100: {
       fontFamily: fonts.medium,
       fontSize: fontSize(12),
@@ -363,6 +369,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(30),
       color: colors.brownishGrey100,
     },
+    regular16_brownishGreyTwo100: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(30),
+      color: colors.brownishGreyTwo100,
+    },
     semiBold10_brownGrey100: {
       fontFamily: fonts.semiBold,
       fontSize: fontSize(10),
@@ -380,6 +392,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(12),
       lineHeight: fontSize(20),
       color: colors.black100,
+    },
+    semiBold13_brownishGrey100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(13),
+      lineHeight: fontSize(20),
+      color: colors.brownishGrey100,
     },
     semiBold14_aquamarine100: {
       fontFamily: fonts.semiBold,
@@ -404,6 +422,24 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(14),
       lineHeight: fontSize(20),
       color: colors.white100,
+    },
+    semiBold15_brownishGrey100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.brownishGrey100,
+    },
+    semiBold15_aquamarine100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.aquamarine100,
+    },
+    semiBold16_black100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(20),
+      color: colors.black100,
     },
     semiBold16_brownishGrey100: {
       fontFamily: fonts.semiBold,

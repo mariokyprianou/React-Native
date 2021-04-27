@@ -8892,6 +8892,11 @@ react-native-chart-kit@^6.6.1:
     paths-js "^0.4.10"
     point-in-polygon "^1.0.1"
 
+react-native-circular-gradient-progress@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-circular-gradient-progress/-/react-native-circular-gradient-progress-1.0.6.tgz#aedd51abea4dc5c9337abee7fb1aa9b2e4c668fc"
+  integrity sha512-A/MoqkPi0hPVIAb6E+WF+xX6lSdTNybCAqvsbn4KtNG+tDUp9bBJ2qdfvPQxZEVBdo7i/RHIhUd8CeUFAJY8ew==
+
 react-native-design-to-component@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-design-to-component/-/react-native-design-to-component-1.0.0.tgz#1f948bda86a40e53b5ee429f10d8ce0a4664f345"
@@ -9072,6 +9077,11 @@ react-native-permissions@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
   integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
+
+react-native-progress-circle@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-progress-circle/-/react-native-progress-circle-2.1.0.tgz#62bdf31c76962d10c5c14446b61ff7d05cf0d0ec"
+  integrity sha512-VP0s92bgbTMQy4hQzPU4LlGyFj3z5u7i1HYFG8/yzXXfGkX1cxKS4xOlE+OTaObWC99w7Bodi3h8R7En2nQPYw==
 
 react-native-ratings@^7.3.0:
   version "7.3.0"

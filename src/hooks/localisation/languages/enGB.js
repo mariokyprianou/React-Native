@@ -197,7 +197,11 @@ const enGB = {
 
     FatLoss: 'FAT LOSS',
     Fitness: 'FITNESS',
-    BuildMuscle: 'BUILD MUSCLE',
+    Muscle: 'MUSCLE',
+    Wellness: 'WELLNESS',
+    Customise: 'Customise your schedule once you start',
+    ChangeProgrammes: 'Change programmes whenever you like',
+    WorkoutsPerWeek: 'WORKOUTS / WEEK',
   },
 
   ProfileDict: {

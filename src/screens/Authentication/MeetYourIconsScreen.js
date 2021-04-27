@@ -17,15 +17,13 @@ import {
   StatusBar,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useFocusEffect} from '@react-navigation/native';
-
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import Swiper from 'react-native-swiper';
 import TrainerCard from '../../components/Cards/TrainerCard';
-import WorkoutCard from '../../components/Cards/WorkoutCard';
+import CarouselWorkoutCard from '../../components/Cards/CarouselWorkoutCard';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import CantChooseButton from '../../components/Buttons/CantChooseButton';
@@ -42,7 +40,7 @@ import useLoading from '../../hooks/loading/useLoading';
 import useUserData from '../../hooks/data/useUserData';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
-const logo = require('../../../assets/images/logo.png');
+const logo = require('../../../assets/images/logoDark.png');
 
 export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -51,7 +49,7 @@ export default function MeetYourIconsScreen() {
     header: () => null,
   });
 
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
@@ -149,7 +147,6 @@ export default function MeetYourIconsScreen() {
           : 20,
       ),
       width: '100%',
-      backgroundColor: colors.powderBlue100,
     },
     headerContainer: {
       width: '100%',
@@ -169,7 +166,7 @@ export default function MeetYourIconsScreen() {
       height: '100%',
     },
     selectText: {
-      ...textStyles.semiBold16_white90,
+      ...textStyles.semiBold16_black100,
       marginLeft: getWidth(24),
     },
     cantChooseContainer: {
@@ -201,11 +198,11 @@ export default function MeetYourIconsScreen() {
     },
     icon: {
       size: fontSize(18),
-      color: colors.white100,
+      color: colors.black100,
     },
     sliderContainer: {
       flex: 1,
-      backgroundColor: colors.powderBlue100,
+      backgroundColor: colors.veryLightPinkTwo100,
     },
     cardContainer: {
       height: getHeight(410),
@@ -214,21 +211,38 @@ export default function MeetYourIconsScreen() {
     textContainer: {
       width: '90%',
       alignSelf: 'center',
+      backgroundColor: colors.white100,
+      borderRadius: radius(12),
+    },
+    descriptionContainer: {
+      width: '90%',
+      alignSelf: 'center',
+    },
+    upperText: {
+      ...textStyles.regular15_brownishGrey100,
+      marginLeft: '5%',
+      marginTop: getHeight(1),
+    },
+    upperTextBold: {
+      ...textStyles.semiBold15_brownishGrey100,
+      marginLeft: '5%',
+      marginTop: getHeight(10),
     },
     text: {
-      ...textStyles.medium15_white100,
+      ...textStyles.regular16_brownishGrey100,
       marginTop: getHeight(5),
       textAlign: 'left',
     },
     heading: {
-      ...textStyles.bold24_white100,
-      marginTop: getHeight(15),
+      ...textStyles.bold24_black100,
+      marginTop: getHeight(7),
+      marginLeft: '5%',
       textAlign: 'left',
     },
     weeksText: {
-      ...textStyles.bold14_white100,
-      textAlign: 'left',
-      marginBottom: getHeight(15),
+      ...textStyles.semiBold15_aquamarine100,
+      textAlign: 'center',
+      marginTop: getHeight(20),
     },
     workoutContainer: {
       width: '100%',
@@ -241,11 +255,11 @@ export default function MeetYourIconsScreen() {
       marginTop: getHeight(30),
       paddingBottom: getHeight(25),
       alignItems: 'center',
-      backgroundColor: colors.powderBlue100,
+      backgroundColor: colors.veryLightPinkTwo100,
     },
     singleButtonContainer: {
       width: '100%',
-      backgroundColor: colors.powderBlue100,
+      backgroundColor: colors.veryLightPinkTwo100,
       alignItems: 'center',
       position: 'absolute',
       bottom: getHeight(25),
@@ -271,6 +285,18 @@ export default function MeetYourIconsScreen() {
       bottom: 70,
       left: 0,
       right: 0,
+    },
+    line: {
+      height: getHeight(1),
+      width: '95%',
+      backgroundColor: colors.brownishGrey20,
+      marginLeft: '5%',
+    },
+    innerLine: {
+      height: getHeight(1),
+      width: '88%',
+      backgroundColor: colors.brownishGrey20,
+      marginLeft: '12%',
     },
   };
 
@@ -410,7 +436,6 @@ export default function MeetYourIconsScreen() {
             (selectedProgram &&
               trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
-          console.log(currentProgram.numberOfWeeks, '<----current programme');
           const {numberOfWeeks, description, firstWeek} = currentProgram;
           const extendedWeek = addWorkoutDates(
             addRestDays(firstWeek),
@@ -433,33 +458,48 @@ export default function MeetYourIconsScreen() {
                 />
               </View>
 
-              <Spacer height={90} />
-
-              <View style={styles.textContainer}>
+              <Spacer height={80} />
+              <View style={styles.descriptionContainer}>
                 <Text style={styles.text}>{description}</Text>
+              </View>
+              <Spacer height={27} />
+              <View style={styles.textContainer}>
+                <Text
+                  style={
+                    styles.upperTextBold
+                  }>{`${firstWeek.length} ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
+                <Text style={styles.upperText}>
+                  {MeetYourIconsDict.Customise}
+                </Text>
+
                 <Text
                   style={
                     styles.heading
                   }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
-                <Text
-                  style={
-                    styles.weeksText
-                  }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
-              </View>
-              <View style={styles.workoutContainer}>
-                {extendedWeek.map(({date, duration, intensity, name, day}) => {
+                <Spacer height={20} />
+                {extendedWeek.map(({duration, intensity, name, day}, index) => {
                   return (
-                    <WorkoutCard
-                      title={name}
-                      day={day}
-                      date={date}
-                      duration={duration}
-                      intensity={intensity}
-                      onPressCard={() => null}
-                    />
+                    <>
+                      <View
+                        style={index === 0 ? styles.line : styles.innerLine}
+                      />
+                      <CarouselWorkoutCard
+                        title={name}
+                        day={day}
+                        duration={duration}
+                        intensity={intensity}
+                      />
+                    </>
                   );
                 })}
               </View>
+              <Text
+                style={
+                  styles.weeksText
+                }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
+              <Text style={{...styles.upperText, textAlign: 'center'}}>
+                {MeetYourIconsDict.ChangeProgrammes}
+              </Text>
               <Spacer height={180} />
 
               <View style={styles.headerContainer}>
@@ -513,7 +553,7 @@ export default function MeetYourIconsScreen() {
       </View>
 
       {switchProgramme === true ? (
-        // Check if selected programme already has user porgress
+        // Check if selected programme already has user progress
         selectedProgram &&
         selectedProgram.userProgress &&
         selectedProgram.userProgress.latestWeek > 0 ? (
@@ -541,7 +581,7 @@ export default function MeetYourIconsScreen() {
           />
           <DefaultButton
             type="login"
-            variant="transparentWhiteText"
+            variant="transparentBlackBoldText"
             onPress={() => navigation.navigate('Login')}
           />
         </View>

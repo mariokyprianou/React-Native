@@ -78,6 +78,11 @@
 		1A18EDCC2628909C00FA444C /* AssetCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetCreator.h; sourceTree = "<group>"; };
 		1A18EDCD2628909C00FA444C /* SwiftAssetCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftAssetCreator.swift; sourceTree = "<group>"; };
 		1A53750626285C480076321B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1A7236BC263991A2002ECADB /* proximanova-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-light.otf"; path = "../assets/fonts/proximanova-light.otf"; sourceTree = "<group>"; };
+		1A7236BD263991A2002ECADB /* proximanova-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-regular.otf"; path = "../assets/fonts/proximanova-regular.otf"; sourceTree = "<group>"; };
+		1A7236BE263991A2002ECADB /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "../assets/fonts/proximanova-semibold.otf"; sourceTree = "<group>"; };
+		1A7236BF263991A2002ECADB /* proximanova-medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-medium.otf"; path = "../assets/fonts/proximanova-medium.otf"; sourceTree = "<group>"; };
+		1A7236C0263991A2002ECADB /* proximanova-bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-bold.otf"; path = "../assets/fonts/proximanova-bold.otf"; sourceTree = "<group>"; };
 		1B3E9A78BA4C483ABC0E0CBB /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2AFAF27344334CD1BFBE069B /* proximanova-semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "proximanova-semibold.otf"; path = "../assets/fonts/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* thecoreui-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "thecoreui-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,6 +242,11 @@
 				4AA4DFA224BF099000EA0A56 /* FontAwesome5_Pro_Light.ttf */,
 				4AA4DFA024BF099000EA0A56 /* FontAwesome5_Pro_Regular.ttf */,
 				4AA4DFA124BF099000EA0A56 /* FontAwesome5_Pro_Solid.ttf */,
+				1A7236C0263991A2002ECADB /* proximanova-bold.otf */,
+				1A7236BC263991A2002ECADB /* proximanova-light.otf */,
+				1A7236BF263991A2002ECADB /* proximanova-medium.otf */,
+				1A7236BD263991A2002ECADB /* proximanova-regular.otf */,
+				1A7236BE263991A2002ECADB /* proximanova-semibold.otf */,
 				13B07FAE1A68108700A75B9A /* thecoreui */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* thecoreuiTests */,

@@ -10,6 +10,7 @@
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 #import <Intercom/intercom.h>
 #import <Firebase.h>
+#import <AVFoundation/AVFoundation.h>
 
 
 #if DEBUG
@@ -66,6 +67,9 @@ static void InitializeFlipper(UIApplication *application) {
   [RNSplashScreen show];
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   [Intercom setApiKey:@"ios_sdk-fd29c067657e0cf6598493d7cd9f0b96d3cb910a" forAppId:@"h9qs9je1"];
+  
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+  
   return YES;
 }
 

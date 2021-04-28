@@ -96,7 +96,7 @@ export default function StartWorkoutScreen() {
 
   const ExerciseList = React.memo(({exercises}) => {
     return (
-      <View style={{paddingBottom: getHeight(150)}}>
+      <View style={{paddingBottom: getHeight(100)}}>
         {exercises.map((item, index) => (
           <ExerciseCell {...item} index={index + 1} total={exercises.length} />
         ))}

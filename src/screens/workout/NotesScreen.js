@@ -103,7 +103,19 @@ export default function NotesScreen() {
   }
 
   async function handleAddNote() {
+
+    navigation.goBack();
+
     const newNote = getValues('notes').notes;
+
+    let workout = {...selectedWorkout};
+    workout.exercises[currentExerciseIndex] = {
+      ...workout.exercises[currentExerciseIndex],
+      notes: newNote,
+    };
+
+    setSelectedWorkout(workout);
+    cleanValueByName('notes');
 
     await addNote({
       variables: {
@@ -114,21 +126,10 @@ export default function NotesScreen() {
       },
     })
       .then((res) => {
-        let workout = {...selectedWorkout};
-
-        workout.exercises[currentExerciseIndex] = {
-          ...workout.exercises[currentExerciseIndex],
-          notes: newNote,
-        };
-
-        setSelectedWorkout(workout);
-
-        cleanValueByName('notes');
-        navigation.goBack();
+        console.log("Notes updated", res);
       })
       .catch((err) => {
         console.log(err, '<---error on adding note');
-        navigation.goBack();
       });
   }
 

@@ -53,15 +53,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.render.container}>
-      <TermsPolicyContentView isHtml={true} content={legals.privacyPolicy} />
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="done"
-          variant="white"
-          icon="chevron"
-          onPress={() => navigation.goBack()}
-        />
-      </View>
+      <TermsPolicyContentView isHtml={true} content={legals.privacyPolicy} /> 
     </View>
   );
 }

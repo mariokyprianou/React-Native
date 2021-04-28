@@ -57,6 +57,7 @@ export default function Header({
       height: height - insets.top,
       justifyContent: 'center',
       width: '70%',
+      paddingTop: getHeight(2)
     },
     titleStyle: {
       ...textStyles.bold22_black100,

@@ -46,7 +46,7 @@ export default function ThemeProvider({children}) {
 
 
     // Need this for both platforms
-  const HEADER_HEIGHT = 64 + insets.top;
+  const HEADER_HEIGHT = 50 + insets.top;
   const SCREEN_HEIGHT = layout.height;
 
   const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT; // + SYSTEM_SOFT_NAV_HEIGHT;

@@ -159,9 +159,6 @@ export default function TransformationScreen() {
     } else {
       navigateAddPhoto();
     }
-    else {
-      navigateAddPhoto();
-    }
   }
 
   function navigateAddPhoto() {

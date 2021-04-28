@@ -84,7 +84,7 @@ export default function TransformationScreen() {
     container: {
       height: '100%',
       width: '100%',
-      // backgroundColor: colors.backgroundWhite100,
+      backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
       height: getHeight(10),
@@ -94,7 +94,7 @@ export default function TransformationScreen() {
     },
     image: {
       width: screenWidth,
-      height: getHeight(440),
+      height: getHeight(460),
     },
     spacerHeight: {
       height: getHeight(190),
@@ -150,7 +150,7 @@ export default function TransformationScreen() {
           navigation.navigate('AddPhoto');
         }
       })
-      .catch((err) => console.log("Error add photo: ", err));
+      .catch((err) => console.log('Error add photo: ', err));
   }
 
   function isSameDay(first, second) {
@@ -163,7 +163,6 @@ export default function TransformationScreen() {
   }
 
   const handleShare = useCallback(async () => {
-
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -186,8 +185,6 @@ export default function TransformationScreen() {
 
       return;
     }
-
-
 
     setLoading(true);
     const {colour, url} = await getShareData(ShareMediaType.progress);

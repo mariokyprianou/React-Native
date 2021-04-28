@@ -18,6 +18,8 @@ import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
@@ -56,6 +58,11 @@ export default function ChangeDeviceScreen() {
 
         if (response) {
 
+          await AsyncStorage.setItem(
+            '@DOWNLOAD_ENABLED',
+            JSON.stringify(true),
+          );
+          
           const permissionNeeded = await permissionsNeeded();
 
           if (permissionNeeded) {

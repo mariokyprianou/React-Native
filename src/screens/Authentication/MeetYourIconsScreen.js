@@ -536,6 +536,8 @@ const newProgrammeView = () => (
             icon="chevron"
             variant="gradient"
             onPress={() => {
+              if (!selectedProgram) return;
+              
               setProgrammeModalImage(selectedProgram.programmeImage);
               navigation.navigate('Congratulations', {
                 switchProgramme: false,

@@ -23,7 +23,11 @@ import GetSubscription from '../../apollo/queries/GetSubscription';
 import * as R from 'ramda';
 import {format} from 'date-fns';
 import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
+
 import Profile from '../../apollo/queries/Profile';
+
+
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -32,9 +36,9 @@ export default function UserDataProvider(props) {
   const [preferences, setPreferences] = useState({
     notifications: false,
     emails: false,
-    errorReports: false,
+    errorReports: true,
     analytics: false,
-    downloadQuality: "LOW",
+    downloadQuality: "HIGH",
     weightPreference: "KG",
   });
 
@@ -90,23 +94,23 @@ export default function UserDataProvider(props) {
   ]);
 
   const [analyticsEvents] = useState({
-    registration: 'REGISTRATION', // done
-    signIn: 'SIGN_IN', // done
-    selectedTrainer: 'SELECTED_TRAINER', // dne
-    leftTrainer: 'LEFT_TRAINER', // done
-    restartContinueTrainer: 'RESTART_CONTINUE_TRAINER', // done
-    completedWorkout: 'COMPLETED_WORKOUT', // done
-    startedWorkout: 'STARTED_WORKOUT', // done
-    completedExercise: 'COMPLETED_EXERCISE', // done
-    startedExercise: 'STARTED_EXERCISE', // done
+    registration: 'REGISTRATION', 
+    signIn: 'SIGN_IN', 
+    selectedTrainer: 'SELECTED_TRAINER', 
+    leftTrainer: 'LEFT_TRAINER', 
+    restartContinueTrainer: 'RESTART_CONTINUE_TRAINER',
+    completedWorkout: 'COMPLETED_WORKOUT',
+    startedWorkout: 'STARTED_WORKOUT', 
+    completedExercise: 'COMPLETED_EXERCISE',
+    startedExercise: 'STARTED_EXERCISE', 
     newSubscription: 'SUBSCRIPTION',
-    cancelSubscription: 'CANCEL_SUBSCRIPTION',
-    completedChallenge: 'COMPLETED_CHALLENGE', // done
-    accessedIntercom: 'ACCESSED_INTERCOM', // done
-    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER', // done
-    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT', // done
-    shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE', // done
-    shareTransformation: 'SHARE_TRANSFORMATION', // done
+    cancelSubscription: 'CANCEL_SUBSCRIPTION', // Not trackable
+    completedChallenge: 'COMPLETED_CHALLENGE', 
+    accessedIntercom: 'ACCESSED_INTERCOM', 
+    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER', 
+    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT', 
+    shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE',
+    shareTransformation: 'SHARE_TRANSFORMATION',
   });
 
   const [getPreferences] = useLazyQuery(Preferences, {
@@ -161,11 +165,11 @@ export default function UserDataProvider(props) {
 
   const updateDefaultPreferences = useCallback(async () => {
     const newPreferences = {
-      notifications: true,
-      emails: true,
+      notifications: Platform.OS === 'ios' ? false : true,
+      emails: Platform.OS === 'ios' ? false: true,
       errorReports: true,
-      analytics: true,
-      downloadQuality: "LOW",
+      analytics: Platform.OS === 'ios' ? false : true,
+      downloadQuality: "HIGH",
       weightPreference: "KG",
     };
 
@@ -175,6 +179,8 @@ export default function UserDataProvider(props) {
           ...newPreferences,
         },
       },
+    }).then(()=> {
+      setPreferences(newPreferences);
     })
       .catch((err) => {
         console.log("updateDefaultPreferences", err);
@@ -235,6 +241,17 @@ export default function UserDataProvider(props) {
     onError: (error) => console.log(error),
   });
 
+
+  useEffect(()=> {
+
+    if (preferences) {
+
+      // check analytics error reporting
+      analytics().setAnalyticsCollectionEnabled(preferences.analytics);
+      crashlytics().setCrashlyticsCollectionEnabled(preferences.errorReports);
+
+    }
+  }, [preferences])
 
   useEffect(() => {
     async function checkAuth() {

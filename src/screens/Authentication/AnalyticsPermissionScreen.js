@@ -15,6 +15,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import analytics from '@react-native-firebase/analytics';
+
 
 export default function AnalyticsPermissionScreen() {
   // MARK: - Hooks
@@ -39,7 +41,7 @@ export default function AnalyticsPermissionScreen() {
       emails: preferences.emails,
       downloadQuality: preferences.downloadQuality,
       notifications: preferences.notifications,
-      errorReports: enabled,
+      errorReports: preferences.errorReports,
       analytics: enabled,
       weightPreference: preferences.weightPreference,
     };
@@ -57,6 +59,8 @@ export default function AnalyticsPermissionScreen() {
       })
       .then((res) => {
         console.log('AnalyticsScreenUpdate', res);
+        analytics().setAnalyticsCollectionEnabled(enabled);
+
 
         navigateForward();
       })

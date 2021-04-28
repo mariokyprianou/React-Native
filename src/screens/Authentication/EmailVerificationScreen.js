@@ -16,6 +16,8 @@ import {Auth} from 'aws-amplify';
 import {useMutation} from '@apollo/client';
 import ResendVerificationEmail from '../../apollo/mutations/ResendVerificationEmail';
 import useUserData from '../../hooks/data/useUserData';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 export default function EmailVerificationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -34,11 +36,14 @@ export default function EmailVerificationScreen() {
       await Auth.signIn(email, password)
         .then(async () => {
           clearInterval(interval);
-          const permissionNeeded = await permissionsNeeded();
 
-          if (Platform.OS === 'android') {
-            updateDefaultPreferences();
-          }
+          await AsyncStorage.setItem(
+            '@DOWNLOAD_ENABLED',
+            JSON.stringify(true),
+          );
+
+          await updateDefaultPreferences();
+          const permissionNeeded = await permissionsNeeded();
 
           if (permissionNeeded) {
             navigation.navigate(permissionNeeded);

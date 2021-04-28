@@ -674,8 +674,6 @@ export default function ThemeProvider({children}) {
     repsContainerStyle: {
       flexDirection: 'row',
       flex: 1,
-      marginStart: getWidth(10),
-      justifyContent: 'space-evenly',
     },
     timerContainer: {
       width: '100%',

@@ -31,6 +31,7 @@ import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 import {differenceInDays} from 'date-fns';
 import displayAlert from '../../utils/DisplayAlert';
+import { isSameDay } from '../../utils/dateTimeUtils';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -133,6 +134,31 @@ export default function TransformationScreen() {
   }
 
   function handleNavigateAddPhoto() {
+
+    const today = new Date();
+    const alreadyExists = userImages.find(it => it.createdAt && isSameDay(today, parseISO(it.createdAt)));
+
+    if (alreadyExists) {
+      displayAlert({
+        title: null,
+        text: ProgressDict.UploadAgainWarning,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: async () => {
+              navigateAddPhoto();
+            },
+          },
+        ],
+      });
+    }
+  }
+
+  function navigateAddPhoto() {
     request(
       Platform.select({
         ios: PERMISSIONS.IOS.CAMERA,
@@ -153,14 +179,7 @@ export default function TransformationScreen() {
       .catch((err) => console.log("Error add photo: ", err));
   }
 
-  function isSameDay(first, second) {
-    return (
-      differenceInDays(
-        first.setHours(0, 0, 0, 0),
-        second.setHours(0, 0, 0, 0),
-      ) === 0 && first.getDay() === second.getDay()
-    );
-  }
+
 
   const handleShare = useCallback(async () => {
 

@@ -15,6 +15,7 @@ import {FlatList} from 'the-core-ui-module-tdlist';
 import FadingBottomView from '../Views/FadingBottomView';
 import parseISO from 'date-fns/parseISO';
 import { differenceInDays } from 'date-fns';
+import { isSameDay } from '../../utils/dateTimeUtils'; 
 
 export default function SetsTable({selectedDate, date, weightData, weightPreference, setType, dropDownSelect}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -65,11 +66,6 @@ export default function SetsTable({selectedDate, date, weightData, weightPrefere
 
   }, [weightData, selectedDate]);
 
-
-  function isSameDay(first, second) {
-    return differenceInDays(first.setHours(0, 0, 0, 0), second.setHours(0, 0, 0, 0)) === 0 &&
-        first.getDay() ===  second.getDay()
-  }
   // ** ** ** ** ** RENDER ** ** ** ** **
 
 

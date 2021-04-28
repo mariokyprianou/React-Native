@@ -26,7 +26,8 @@ import useData from '../../hooks/data/UseData';
 import AsyncStorage from '@react-native-community/async-storage';
 import displayAlert from '../../utils/DisplayAlert';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
-import {firebase} from '@react-native-firebase/analytics';
+import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import UseData from '../../hooks/data/UseData';
 
 const SettingsScreen = ({}) => {
@@ -76,14 +77,14 @@ const SettingsScreen = ({}) => {
     preferences.notifications || false,
   );
   const [prefErrorReports, setPrefErrorReports] = useState(
-    preferences.errorReports || false,
+    preferences.errorReports || true,
   );
   const [prefAnalytics, setPrefAnalytics] = useState(
     preferences.analytics || false,
   );
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
   const [downloadQuality, setDownloadQuality] = useState(
-    preferences.downloadQuality || 'LOW',
+    preferences.downloadQuality || 'HIGH',
   );
   const [weightPref, setWeightPref] = useState(
     preferences.weightPreference || 'KG',
@@ -91,7 +92,7 @@ const SettingsScreen = ({}) => {
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
-    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
     const enabled = JSON.parse(value);
     setDownloadWorkouts(enabled);
   };
@@ -104,9 +105,9 @@ const SettingsScreen = ({}) => {
   useEffect(() => {
     setMarketingPrefEmail(preferences.emails || false);
     setMarketingPrefNotifications(preferences.notifications || false);
-    setPrefErrorReports(preferences.errorReports || false);
+    setPrefErrorReports(preferences.errorReports || true);
     setPrefAnalytics(preferences.analytics || false);
-    setDownloadQuality(preferences.downloadQuality || 'LOW');
+    setDownloadQuality(preferences.downloadQuality || 'HIGH');
     setWeightPref(preferences.weightPreference || 'KG');
   }, [preferences]);
 
@@ -204,7 +205,9 @@ const SettingsScreen = ({}) => {
       weightPreference: newWeightPref,
     };
 
-    firebase.analytics().setAnalyticsCollectionEnabled(prefAnalytics);
+    analytics().setAnalyticsCollectionEnabled(prefAnalytics);
+    crashlytics().setCrashlyticsCollectionEnabled(prefErrorReports);
+   
     console.log(
       "newPreferences", newPreferences
     );

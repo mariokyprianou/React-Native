@@ -11,16 +11,41 @@ import {ScaleHook} from 'react-native-design-to-component';
 import WebView from 'react-native-webview';
 import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from './FadingBottomView';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export default function TermsPolicyContentView({isHtml, content}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {textStyles} = useTheme();
+  const {textStyles, colors} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
+
+  const baseUrl = RNFetchBlob.fs.dirs.MainBundleDir;
+  const fontFileName = 'ProximaNova-Medium';
+  const fontFamilyName = 'Proxima Nova';
+  const fileFormat = 'otf';
+  const fileUri = Platform.select({
+    ios: `${fontFileName}.${fileFormat}`,
+    android: `file:///android_asset/fonts/${fontFileName}.${fileFormat}`,
+  });
+
+  const css = `@font-face {
+      font-family: '${fontFileName}';
+      src: local('${fontFileName}'), url('${fileUri}'), format('opentype');
+  }`;
 
   const screenWidth = Dimensions.get('screen').width;
   const spacing =
     '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>br><br><br><br><br>';
-  const htmlWithWidth = `<html><head><meta name="viewport" content="width=${screenWidth}"></head>${content}${spacing}</html>`;
+  const style = `<style type="text/css">
+        ${css}
+        body, h1, h2, h3, p {
+            color: ${colors.brownishGrey100};
+            font-family: '${fontFileName}';
+        }
+    </style>`;
+  const htmlWithWidth =
+    `<html><head><meta name="viewport" content="width=${screenWidth}">` +
+    style +
+    `</head>${content}${spacing}</html>`;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -64,12 +89,20 @@ export default function TermsPolicyContentView({isHtml, content}) {
         <View style={styles.webViewContainer}>
           {isHtml ? (
             <WebView
+              useWebKit={true}
+              originWhitelist={['*']}
               style={styles.webView}
-              source={{html: htmlWithWidth}}
+              source={{
+                html: htmlWithWidth,
+                baseUrl,
+              }}
               scalesPageToFit={false}
               scrollEnabled={true}
               userAgent={'mobileapp'}
               showsVerticalScrollIndicator={false}
+              allowFileAccess={true}
+              allowFileAccessFromFileURLs={true}
+              allowUniversalAccessFromFileURLs={true}
             />
           ) : (
             <Text style={styles.text}>{content}</Text>

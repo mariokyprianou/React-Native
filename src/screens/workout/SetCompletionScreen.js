@@ -14,12 +14,9 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
-import {useMutation} from '@apollo/client';
 // import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import UseData from '../../hooks/data/UseData';
-import NumbersWheel from '../../components/Infographics/NumbersWheel';
 import HorizontalScrollPicker from '../../components/Infographics/HorizontalScrollPicker';
-import { type } from 'ramda';
 
 export default function SetCompletionScreen({
   restTime,

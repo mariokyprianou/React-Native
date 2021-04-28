@@ -17,7 +17,7 @@ import UseData from '../../hooks/data/UseData';
 export default function WorkoutHomeHeader() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, Constants} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const navigation = useNavigation();
@@ -25,6 +25,9 @@ export default function WorkoutHomeHeader() {
   const [trainerData, setTrainerData] = useState({});
 
   const {programme} = UseData();
+
+  const height = Constants.HEADER_HEIGHT;
+
 
   useEffect(() => {
     if (programme) {
@@ -39,7 +42,7 @@ export default function WorkoutHomeHeader() {
   const styles = StyleSheet.create({
     container: {
       width: '100%',
-      height: getHeight(80),
+      height: height,
       flexDirection: 'row',
       alignItems: 'flex-end',
       backgroundColor: colors.white100,

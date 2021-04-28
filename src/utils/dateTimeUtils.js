@@ -5,6 +5,8 @@
  * Copyright (c) 2020 The Distance
  */
 
+import { differenceInDays } from "date-fns";
+
 export function msToHMS(duration) {
   var milliseconds = parseInt((duration % 1000) / 100),
     seconds = parseInt((duration / 1000) % 60),
@@ -29,4 +31,14 @@ export function msToHMSFull(duration) {
   seconds = seconds < 10 ? '0' + seconds : seconds;
 
   return hours + ':' + minutes + ':' + seconds;
+}
+
+
+export function isSameDay(first, second) {
+  return (
+    differenceInDays(
+      first.setHours(0, 0, 0, 0),
+      second.setHours(0, 0, 0, 0),
+    ) === 0 && first.getDay() === second.getDay()
+  );
 }

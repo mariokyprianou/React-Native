@@ -31,6 +31,7 @@ import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 import {differenceInDays} from 'date-fns';
 import displayAlert from '../../utils/DisplayAlert';
+import {isSameDay} from '../../utils/dateTimeUtils';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -84,7 +85,7 @@ export default function TransformationScreen() {
     container: {
       height: '100%',
       width: '100%',
-      // backgroundColor: colors.backgroundWhite100,
+      backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
       height: getHeight(10),
@@ -94,7 +95,7 @@ export default function TransformationScreen() {
     },
     image: {
       width: screenWidth,
-      height: getHeight(440),
+      height: getHeight(460),
     },
     spacerHeight: {
       height: getHeight(190),
@@ -133,6 +134,37 @@ export default function TransformationScreen() {
   }
 
   function handleNavigateAddPhoto() {
+    const today = new Date();
+    const alreadyExists = userImages.find(
+      (it) => it.createdAt && isSameDay(today, parseISO(it.createdAt)),
+    );
+
+    if (alreadyExists) {
+      displayAlert({
+        title: null,
+        text: ProgressDict.UploadAgainWarning,
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Ok,
+            onPress: () => {
+              navigateAddPhoto();
+            },
+          },
+        ],
+      });
+    } else {
+      navigateAddPhoto();
+    }
+    else {
+      navigateAddPhoto();
+    }
+  }
+
+  function navigateAddPhoto() {
     request(
       Platform.select({
         ios: PERMISSIONS.IOS.CAMERA,
@@ -150,20 +182,10 @@ export default function TransformationScreen() {
           navigation.navigate('AddPhoto');
         }
       })
-      .catch((err) => console.log("Error add photo: ", err));
-  }
-
-  function isSameDay(first, second) {
-    return (
-      differenceInDays(
-        first.setHours(0, 0, 0, 0),
-        second.setHours(0, 0, 0, 0),
-      ) === 0 && first.getDay() === second.getDay()
-    );
+      .catch((err) => console.log('Error add photo: ', err));
   }
 
   const handleShare = useCallback(async () => {
-
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -186,8 +208,6 @@ export default function TransformationScreen() {
 
       return;
     }
-
-
 
     setLoading(true);
     const {colour, url} = await getShareData(ShareMediaType.progress);

@@ -364,6 +364,10 @@ export default function DataProvider(props) {
 
     AsyncStorage.removeItem('@CURRENT_WEEK');
     AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+
+    AsyncStorage.removeItem('@ANALYTICS_ASKED');
+    AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+
   }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **

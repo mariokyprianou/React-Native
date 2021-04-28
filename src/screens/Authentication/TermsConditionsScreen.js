@@ -59,14 +59,6 @@ export default function TermsConditionsScreen() {
         isHtml={true}
         content={legals.termsAndConditions}
       />
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="done"
-          variant="white"
-          icon="chevron"
-          onPress={() => navigation.goBack()}
-        />
-      </View>
     </View>
   );
 }

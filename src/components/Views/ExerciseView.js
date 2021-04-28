@@ -263,11 +263,13 @@ export default function ExerciseView(props) {
       <View style={styles.repsContainerStyle}>
         {sets.map((item, index) => {
           return (
+            <View style={{marginStart: getWidth(14)}}>
             <RepCell
               key={index}
               {...item}
               onPress={() => onSetCompleted(index)}
             />
+            </View>
           );
         })}
       </View>

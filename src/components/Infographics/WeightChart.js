@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
@@ -66,9 +66,9 @@ export default function WeightChart({
       <ScrollView
         horizontal={true}
         style={styles.scroll}
-        contentContainerStyle={{alignItems: 'flex-end'}}
-        >
-        <View>
+        contentContainerStyle={{alignItems: 'center'}}>
+        <View style={{paddingEnd: getWidth(20)}}>
+
           <SlideBarChart
             data={dataPoints}
             barSpacing={dataPoints.length === 1 ? 58 : 60}
@@ -89,24 +89,22 @@ export default function WeightChart({
                 ? dataPoints.length * 90
                 : dataPoints.length * 75
             }
-            axisWidth={getWidth(35)}
+            axisWidth={getWidth(42)}
             axisHeight={getHeight(35)}
-            height={getHeight(200)}
+            height={getHeight(180)}
             style={{
+              top: getHeight(20),
               backgroundColor: background
                 ? colors.white100
-                : colors.backgroundWhite100,
+                : colors.transparent,
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
               interval: interval,
-              horizontalLineColor: colors.white100,
-              verticalLineColor: colors.white100,
+              horizontalLineColor: colors.transparent,
+              verticalLineColor: colors.transparent,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: weightPreference,
-              axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
-              axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),
             }}
             xAxisProps={{
@@ -117,6 +115,7 @@ export default function WeightChart({
               },
             }}
           />
+          { weightPreference && (<Text style={{position: 'absolute', top: 0, left: 0, ...textStyles.semiBold10_brownGrey100, textAlign:'right', width: getWidth(40)}}>{weightPreference}</Text>)}
    </View>
    </ScrollView>
     </View>

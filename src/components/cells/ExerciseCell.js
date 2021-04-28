@@ -25,7 +25,8 @@ export default function (props) {
   const {name} = props.exercise;
   const sets = props.sets;
   const type = props.setType;
-  const reps = sets.reduce((n, {quantity}) => n + quantity, 0);
+  const reps = sets[0].quantity;
+  
   const exerciseNameTitle = isRTL()
     ? `${name} :${props.index}/${props.total}`
     : `${props.index}/${props.total}: ${name}`;

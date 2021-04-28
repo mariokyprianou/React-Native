@@ -44,7 +44,7 @@ export default function (props) {
       flexDirection: 'row',
       marginStart: getWidth(25),
       borderBottomColor: colors.dividerBrownishGrey80,
-      borderBottomWidth: getHeight(1.5),
+      borderBottomWidth: getHeight(1),
     },
     exerciseNameStyle: {
       ...textStyles.semiBold14_black100,

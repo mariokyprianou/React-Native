@@ -181,8 +181,8 @@ export default function ChallengeCompletionScreen() {
     console.log('duration: ', duration);
 
     if (type === 'STOPWATCH') {
-      const achievementValueString =
-        typeof ellapsedTime === 'string' ? result : result.toString();
+      const unit = unitType === 'WEIGHT' ? weightPreference : '';
+      const achievementValueString = ellapsedTime + ' ' + unit;
       PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
         achievementValueString: ellapsedTime,
@@ -198,14 +198,16 @@ export default function ChallengeCompletionScreen() {
         })
         .finally(() => setLoading(false));
     } else if (type === 'COUNTDOWN') {
+      const unit = unitType === 'WEIGHT' ? weightPreference : '';
       const achievedResult =
         typeof result === 'number' ? result : parseInt(result, 10);
       const durationTimeString =
         typeof duration === 'string' ? duration : duration.toString();
-      const subtitle = name + '\n in ' + durationTimeString + ' seconds';
-      PowerShareAssetsManager.shareIntAchievemnt({
+      const subtitle = name + '\nin ' + durationTimeString + ' seconds';
+      const achievedValueString = `${achievedResult} ${unit}`;
+      PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
-        achievedValue: achievedResult,
+        achievementValueString: achievedValueString,
         subtitle: subtitle,
         colour: colour,
       })
@@ -216,11 +218,13 @@ export default function ChallengeCompletionScreen() {
         .catch((err) => {})
         .finally(() => setLoading(false));
     } else {
+      const unit = unitType === 'WEIGHT' ? weightPreference : '';
       const achievedResult =
         typeof result === 'number' ? result : parseInt(result, 10);
-      PowerShareAssetsManager.shareIntAchievemnt({
+      const achievedValueString = `${achievedResult} ${unit}`;
+      PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
-        achievedValue: achievedResult,
+        achievementValueString: achievedValueString,
         subtitle: name,
         colour: colour,
       })

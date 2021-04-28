@@ -31,7 +31,7 @@ import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
 import {differenceInDays} from 'date-fns';
 import displayAlert from '../../utils/DisplayAlert';
-import { isSameDay } from '../../utils/dateTimeUtils';
+import {isSameDay} from '../../utils/dateTimeUtils';
 
 const sliderThumb = require('../../../assets/icons/photoSlider.png');
 const overlay = require('../../../assets/images/progressZero.png');
@@ -134,9 +134,10 @@ export default function TransformationScreen() {
   }
 
   function handleNavigateAddPhoto() {
-
     const today = new Date();
-    const alreadyExists = userImages.find(it => it.createdAt && isSameDay(today, parseISO(it.createdAt)));
+    const alreadyExists = userImages.find(
+      (it) => it.createdAt && isSameDay(today, parseISO(it.createdAt)),
+    );
 
     if (alreadyExists) {
       displayAlert({
@@ -155,6 +156,8 @@ export default function TransformationScreen() {
           },
         ],
       });
+    } else {
+      navigateAddPhoto();
     }
   }
 
@@ -176,13 +179,10 @@ export default function TransformationScreen() {
           navigation.navigate('AddPhoto');
         }
       })
-      .catch((err) => console.log("Error add photo: ", err));
+      .catch((err) => console.log('Error add photo: ', err));
   }
 
-
-
   const handleShare = useCallback(async () => {
-
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -205,8 +205,6 @@ export default function TransformationScreen() {
 
       return;
     }
-
-
 
     setLoading(true);
     const {colour, url} = await getShareData(ShareMediaType.progress);

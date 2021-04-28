@@ -75,16 +75,13 @@ export default function StartWorkoutScreen() {
       backgroundColor: colors.backgroundWhite100,
     },
     buttonContainer: {
-      position: 'absolute',
-      bottom: 0,
       width: '100%',
-      paddingBottom: getHeight(40),
       alignItems: 'center',
       backgroundColor: colors.white100,
     },
     fadeContainer: {
       position: 'absolute',
-      bottom: getHeight(70),
+      bottom: 0,
       left: 0,
       right: 0,
     },
@@ -96,7 +93,7 @@ export default function StartWorkoutScreen() {
 
   const ExerciseList = React.memo(({exercises}) => {
     return (
-      <View style={{paddingBottom: getHeight(150)}}>
+      <View style={{paddingBottom: getHeight(20)}}>
         {exercises.map((item, index) => (
           <ExerciseCell {...item} index={index + 1} total={exercises.length} />
         ))}
@@ -119,25 +116,36 @@ export default function StartWorkoutScreen() {
   }
 
   return (
-    <View>
+    <>
       <View style={styles.headerBorder} />
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        style={styles.scrollViewContainer}>
-        <WorkoutImageView {...topViewProps} />
-        <ExerciseList exercises={selectedWorkout.exercises} />
-      </ScrollView>
-      <View style={styles.fadeContainer} pointerEvents="none">
-        <FadingBottomView height={80} />
+      <View style={{flex: 1, backgroundColor: 'red'}}>
+
+          <View style={{flex: 0.85, backgroundColor: 'blue'}}>
+
+
+            <ScrollView
+            keyboardShouldPersistTaps="handled"
+            style={styles.scrollViewContainer}>
+            <WorkoutImageView {...topViewProps} />
+            <ExerciseList exercises={selectedWorkout.exercises} />
+            </ScrollView>
+            <View style={styles.fadeContainer} pointerEvents="none">
+            <FadingBottomView height={80} />
+            </View>
+              
+          </View>
+          <View style={{flex: 0.15, ...styles.buttonContainer}}>
+
+            <DefaultButton
+              type="startWorkout"
+              variant="gradient"
+              icon="chevron"
+              onPress={() => startWorkout()}
+            />
+          </View>
+          
       </View>
-      <View style={styles.buttonContainer}>
-        <DefaultButton
-          type="startWorkout"
-          variant="gradient"
-          icon="chevron"
-          onPress={() => startWorkout()}
-        />
-      </View>
-    </View>
+     
+    </>
   );
 }

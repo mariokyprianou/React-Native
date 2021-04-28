@@ -7,7 +7,7 @@
  */
 
 import React, { useRef, useState, useEffect} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import {SlideBarChart} from 'react-native-slide-charts';
@@ -68,8 +68,8 @@ export default function ProgressChart({
         onContentSizeChange={() => scrollToEnd && ref.current.scrollToEnd({animated: true}) }
         horizontal={true}
         style={styles.scroll}
-        contentContainerStyle={{alignItems: 'flex-end'}}>
-        <View style={{paddingStart: getWidth(10), paddingEnd: getWidth(20)}}>
+        contentContainerStyle={{alignItems: 'center'}}>
+        <View style={{paddingEnd: getWidth(20)}}>
           <SlideBarChart
             data={chartDataPoints}
             barSpacing={chartDataPoints.length === 1 ? 58 : 60}
@@ -89,22 +89,21 @@ export default function ProgressChart({
             }
             axisWidth={getWidth(42)}
             axisHeight={getHeight(35)}
-            height={getHeight(200)}
+            height={chartLabel.length > 0 ? getHeight(180) : getHeight(200)}
             style={{
+              top:chartLabel.length > 0 ? getHeight(20) : getHeight(0),
               backgroundColor: background
-                ? colors.white100
-                : colors.backgroundWhite100,
+              ? colors.white100
+              : colors.transparent,
+
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
               interval: interval,
-              horizontalLineColor: colors.white100,
-              verticalLineColor: colors.white100,
+              horizontalLineColor: colors.transparent,
+              verticalLineColor: colors.transparent,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
-              axisLabel: axis ? chartLabel : null,
-              axisLabelStyle: {...textStyles.semiBold10_brownGrey100},
-              axisLabelAlignment: 'middle',
               labelLeftOffset: getWidth(-4),
             }}
             xAxisProps={{
@@ -117,6 +116,7 @@ export default function ProgressChart({
               },
             }}
           />
+        { chartLabel.length > 0 && (<Text style={{position: 'absolute', top: 0, left: 0, ...textStyles.semiBold10_brownGrey100, textAlign:'right', width: getWidth(40)}}>{chartLabel}</Text>)}
         </View>
       </ScrollView>
     </View>

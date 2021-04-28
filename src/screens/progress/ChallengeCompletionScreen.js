@@ -258,7 +258,7 @@ export default function ChallengeCompletionScreen() {
         {chartInfo && (
           <ProgressChart
             data={chartInfo.processedHistory}
-            chartLabel={chartInfo.chartLabel}
+            chartLabel={''}
             chartDataPoints={chartInfo.dataPoints}
             interval={chartInfo.interval}
             ticks={chartInfo.ticks}

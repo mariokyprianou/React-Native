@@ -165,6 +165,7 @@ export default function HelpMeChooseScreen() {
         <Spacer height={20} />
         <View style={{height: '100%'}}>
           <FlatList
+            scrollEnabled={false}
             data={programmeQuestionnaire[currentQuestion - 1].answers}
             numColumns={2}
             columnWrapperStyle={styles.columnWrapperStyle}

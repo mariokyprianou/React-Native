@@ -30,7 +30,10 @@ import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import ShareProvider from './hooks/share/ShareProvider';
 import getTimeZoneOffset from './utils/getTimeZoneOffset';
 import {firebase} from '@react-native-firebase/analytics';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -81,10 +84,9 @@ const App = () => {
 
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
-    
+
     validateChecksum();
     languageSet();
-
   }, []);
 
   if (!validChecksum) {

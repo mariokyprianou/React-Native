@@ -25,6 +25,7 @@ import format from 'date-fns/format';
 import { differenceInDays, parseISO } from 'date-fns';
 import {useBackHandler} from '@react-native-community/hooks';
 import { filter } from 'ramda';
+import { isSameDay } from '../../utils/dateTimeUtils';
 
 
 export default function WeightCaptureScreen() {
@@ -106,7 +107,14 @@ export default function WeightCaptureScreen() {
       setFilteredData(data)
     }
     else {
-      setFilteredData(data.filter(it => it.quantity === Number(dropDownSelect)))
+      const filter = data.filter(it => it.quantity === Number(dropDownSelect));
+      setFilteredData(filter);
+
+      // If selectedDate dowsnt have any data in the current filtered array, set date to the latest available
+      const dateHasData = filter.find(it => isSameDay(parseISO(it.createdAt), selectedDate));
+      if (!dateHasData) {
+        setSelectedDate(parseISO(filter[filter.length -1].createdAt));
+      }
     }
   }, [historyData, dropDownSelect])
   
@@ -238,6 +246,7 @@ export default function WeightCaptureScreen() {
             weightPreference={weightPreference}
             setDate={setDate}
             selectable={true}
+            background={false}
           />
         </View>
         <Spacer height={30} />

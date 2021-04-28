@@ -25,7 +25,8 @@ export default function (props) {
   const {name} = props.exercise;
   const sets = props.sets;
   const type = props.setType;
-  const reps = sets.reduce((n, {quantity}) => n + quantity, 0);
+  const reps = sets[0].quantity;
+  
   const exerciseNameTitle = isRTL()
     ? `${name} :${props.index}/${props.total}`
     : `${props.index}/${props.total}: ${name}`;
@@ -44,7 +45,7 @@ export default function (props) {
       flexDirection: 'row',
       marginStart: getWidth(25),
       borderBottomColor: colors.dividerBrownishGrey80,
-      borderBottomWidth: getHeight(1.5),
+      borderBottomWidth: getHeight(1),
     },
     exerciseNameStyle: {
       ...textStyles.semiBold14_black100,

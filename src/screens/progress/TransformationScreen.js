@@ -85,7 +85,7 @@ export default function TransformationScreen() {
     container: {
       height: '100%',
       width: '100%',
-      // backgroundColor: colors.backgroundWhite100,
+      backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
       height: getHeight(10),
@@ -95,7 +95,7 @@ export default function TransformationScreen() {
     },
     image: {
       width: screenWidth,
-      height: getHeight(440),
+      height: getHeight(460),
     },
     spacerHeight: {
       height: getHeight(190),
@@ -150,13 +150,16 @@ export default function TransformationScreen() {
           },
           {
             text: ProfileDict.Ok,
-            onPress: async () => {
+            onPress: () => {
               navigateAddPhoto();
             },
           },
         ],
       });
     } else {
+      navigateAddPhoto();
+    }
+    else {
       navigateAddPhoto();
     }
   }

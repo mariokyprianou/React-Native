@@ -102,10 +102,11 @@ export default function ChallengeScreen() {
       width: getWidth(335),
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
-      shadowRadius: 6,
+      shadowRadius: 4,
       shadowOpacity: 1,
-      elevation: 6,
+      elevation: 4,
       marginBottom: getHeight(20),
+      marginTop: getHeight(1),
     },
     descriptionContainer: {
       width: '90%',
@@ -192,6 +193,7 @@ export default function ChallengeScreen() {
             chartDataPoints={chartInfo.dataPoints}
             interval={chartInfo.interval}
             ticks={chartInfo.ticks}
+            background={false}
           />
         ) : (
           chartInfo &&

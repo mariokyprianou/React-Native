@@ -56,6 +56,7 @@ export default function Header({
     titleContainer: {
       height: height - insets.top,
       justifyContent: 'center',
+      alignItems: 'center',
       width: '70%',
       paddingTop: getHeight(2)
     },
@@ -63,7 +64,7 @@ export default function Header({
       ...textStyles.bold22_black100,
       color: white ? colors.white100 : colors.black100,
       textAlign: 'center',
-      lineHeight: getHeight(23)
+      lineHeight: getHeight(23),
     },
     leftButtonContainer: {
       height,
@@ -175,7 +176,12 @@ export default function Header({
           {customTitle ? (
             customTitle()
           ) : (
-            <Text numberOfLines={2} ellipsizeMode='tail' style={styles.titleStyle}>{title}</Text>
+            <Text
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              style={styles.titleStyle}>
+              {title}
+            </Text>
           )}
         </View>
 

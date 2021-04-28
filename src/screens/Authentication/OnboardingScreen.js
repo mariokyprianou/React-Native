@@ -41,7 +41,7 @@ export default function OnboardingScreen() {
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     getOnboarding();
   }, []);
 
@@ -62,20 +62,6 @@ export default function OnboardingScreen() {
       ...textStyles.medium15_brownishGrey100,
       marginTop: getHeight(6),
       marginBottom: getHeight(10),
-    },
-    dot: {
-      backgroundColor: colors.paleBlue100,
-      height: getHeight(6),
-      width: getHeight(6),
-      borderRadius: radius(14),
-      marginHorizontal: getWidth(3),
-    },
-    activeDot: {
-      backgroundColor: colors.brownishGrey100,
-      height: getHeight(6),
-      width: getHeight(6),
-      borderRadius: radius(14),
-      marginHorizontal: getWidth(3),
     },
     loginContainer: {
       width: getWidth(100),

@@ -42,16 +42,20 @@ export default function ({currentExercise, totalExercises, rightAction}) {
     titleTextContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: getWidth(155),
+      alignItems: 'center',
+      width: getWidth(190),
       marginStart: getWidth(20),
     },
     titleTextStyle: {
       ...textStyles.bold22_black100,
+      marginLeft: getWidth(40),
     },
     timerTouchStyle: {
+      position: 'absolute',
+      right: 0,
       width: getWidth(44),
       height: getWidth(34),
-      padding: getWidth(12),
+      paddingLeft: getWidth(15),
       justifyContent: 'center',
     },
     iconStyle: {
@@ -74,7 +78,11 @@ export default function ({currentExercise, totalExercises, rightAction}) {
   );
 
   const headerTitle = () => (
-    <View style={{alignItems: 'center'}}>
+    <View
+      style={{
+        alignItems: 'flex-end',
+        width: getWidth(190),
+      }}>
       <View style={styles.titleTextContainer}>
         <Timer styles={styles} />
       </View>

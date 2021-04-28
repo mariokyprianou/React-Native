@@ -47,11 +47,11 @@ export default function TabContainer() {
     }
   }, [changeDevice]);
 
-  useEffect(async () => {
+  useEffect(() => {
     let screenshotListener;
 
     if (Platform.OS === 'ios') {
-      await ScreenCapture.preventScreenCaptureAsync();
+      ScreenCapture.preventScreenCaptureAsync();
 
       screenshotListener = ScreenCapture.addScreenshotListener(() => {
         displayAlert({

@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -29,7 +29,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     box: {
-      height: getHeight(162),
+      aspectRatio: 1,
       width: '48%',
       marginBottom: '4%',
     },

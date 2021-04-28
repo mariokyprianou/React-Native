@@ -59,7 +59,7 @@ export default function ({currentExercise, totalExercises, rightAction}) {
       justifyContent: 'center',
     },
     iconStyle: {
-      width: getWidth(15),
+      width: getWidth(12),
       height: getWidth(15),
       resizeMode: 'contain',
       marginLeft: getWidth(8),

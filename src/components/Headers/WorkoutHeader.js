@@ -31,7 +31,7 @@ export default function ({currentExercise, totalExercises, rightAction}) {
       height: getHeight(22),
       borderRadius: radius(18),
       overflow: 'hidden',
-      marginStart: getWidth(20),
+      marginStart: getWidth(35),
       alignItems: 'center',
     },
     leftTestStyle: {
@@ -110,7 +110,7 @@ function TimerView(props) {
   function toggle() {
     setIsWorkoutTimerRunning(!isWorkoutTimerRunning);
   }
-  
+
   return (
     <>
       <Text style={props.styles.titleTextStyle}>
@@ -121,14 +121,11 @@ function TimerView(props) {
         onPress={() => {
           toggle();
         }}>
-      <FastImage
-        style={props.styles.iconStyle}
-        source={!isWorkoutTimerRunning ? playIcon : pauseIcon}
-      />
-
-      
+        <FastImage
+          style={props.styles.iconStyle}
+          source={!isWorkoutTimerRunning ? playIcon : pauseIcon}
+        />
       </TouchableOpacity>
     </>
   );
 }
-

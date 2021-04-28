@@ -8,20 +8,19 @@
  */
 
 import React, {useState} from 'react';
-import { Platform, View } from 'react-native';
+import {Platform, View} from 'react-native';
 import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import { useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Colors from '../../styles/Colors';
 import isRTL from '../../utils/isRTL';
 import ThemeContext from './ThemeContext';
 
 const DEFAULT_DIMENSIONS_CONTEXT_VALUE = {
-  width: Dimensions.get("window").width,
-  height: Dimensions.get("window").height,
+  width: Dimensions.get('window').width,
+  height: Dimensions.get('window').height,
 };
-
 
 export default function ThemeProvider({children}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
@@ -29,36 +28,31 @@ export default function ThemeProvider({children}) {
 
   const [layout, setLayout] = useState(DEFAULT_DIMENSIONS_CONTEXT_VALUE);
 
-  const handleLayout = ({ nativeEvent }) => {
-    const { width, height } = nativeEvent.layout;
-    setLayout({ width, height });
+  const handleLayout = ({nativeEvent}) => {
+    const {width, height} = nativeEvent.layout;
+    setLayout({width, height});
   };
-
 
   const SCREEN_WIDTH = Dimensions.get('screen').width;
 
-
-  // REPLACED THESE WITH LAYOUT STATE 
+  // REPLACED THESE WITH LAYOUT STATE
   // for Android when there is a system soft navigation present
-   //const SCREEN_HEIGHT = Dimensions.get('window').height;
+  //const SCREEN_HEIGHT = Dimensions.get('window').height;
   //const hasSoftNavigation = Dimensions.get('window').height !== Dimensions.get('screen').height;
   //const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' && hasSoftNavigation ? insets.top : 0;
 
-
-    // Need this for both platforms
+  // Need this for both platforms
   const HEADER_HEIGHT = 64 + insets.top;
   const SCREEN_HEIGHT = layout.height;
 
   const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT; // + SYSTEM_SOFT_NAV_HEIGHT;
 
-
   const Constants = {
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
     HEADER_HEIGHT,
-    EXERCISE_VIEW_HEIGHT
+    EXERCISE_VIEW_HEIGHT,
   };
-
 
   const colors = {
     ...Colors,
@@ -553,7 +547,7 @@ export default function ThemeProvider({children}) {
     },
     marginEnd: Platform.OS === 'android' ? getHeight(-3) : getHeight(0),
     writingDirection: isRTL() ? 'rtl' : 'ltr',
-    returnKeyType: 'done'
+    returnKeyType: 'done',
   };
 
   const cellFormConfig = {
@@ -691,7 +685,7 @@ export default function ThemeProvider({children}) {
       width: '100%',
       height: '100%',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     timerTextStyle: {
       ...textStyles.bold76_black100,
@@ -710,7 +704,7 @@ export default function ThemeProvider({children}) {
       dropdownStyle,
       headerButtonConfig,
       exerciseViewStyle,
-      Constants
+      Constants,
     }),
     [
       colors,
@@ -721,15 +715,15 @@ export default function ThemeProvider({children}) {
       dropdownStyle,
       headerButtonConfig,
       exerciseViewStyle,
-      Constants
+      Constants,
     ],
   );
 
   return (
-    <View onLayout={handleLayout} style={{ flex: 1 }}>
-    <ThemeContext.Provider value={{...publicMethods}}>
-      {children}
-    </ThemeContext.Provider>
+    <View onLayout={handleLayout} style={{flex: 1}}>
+      <ThemeContext.Provider value={{...publicMethods}}>
+        {children}
+      </ThemeContext.Provider>
     </View>
   );
 }

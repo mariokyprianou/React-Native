@@ -238,6 +238,7 @@ export default function WeightCaptureScreen() {
             weightPreference={weightPreference}
             setDate={setDate}
             selectable={true}
+            background={false}
           />
         </View>
         <Spacer height={30} />

@@ -193,6 +193,7 @@ export default function ChallengeScreen() {
             chartDataPoints={chartInfo.dataPoints}
             interval={chartInfo.interval}
             ticks={chartInfo.ticks}
+            background={false}
           />
         ) : (
           chartInfo &&

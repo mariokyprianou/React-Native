@@ -101,8 +101,8 @@ export default function WeightChart({
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
               interval: interval,
-              horizontalLineColor: colors.white100,
-              verticalLineColor: colors.white100,
+              horizontalLineColor: colors.transparent,
+              verticalLineColor: colors.transparent,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
               markerChartOffset: getWidth(10),
               labelLeftOffset: getWidth(-4),

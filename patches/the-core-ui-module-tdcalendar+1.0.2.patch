@@ -12,7 +12,7 @@ index feb9794..a9ca8b2 100644
          pillWidth={pillWidth || defaultPillWidth}
          lookupStyleTable={lookupStyleTable || defaultLookupStyleTable}
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
-index 4187631..02ce06f 100644
+index 4187631..6072260 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
 +++ b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
 @@ -6,18 +6,36 @@
@@ -53,6 +53,15 @@ index 4187631..02ce06f 100644
  export default function CalendarGrid({
    firstDayOfWeek,
    showPrevNextDays = true,
+@@ -106,7 +124,7 @@ export default function CalendarGrid({
+   const styles = StyleSheet.create({
+     container: {
+       flex: 1,
+-      minHeight: getHeight(250),
++      // minHeight: getHeight(220),
+       alignItems: "center",
+     },
+     multipleContainer: {
 @@ -116,7 +134,7 @@ export default function CalendarGrid({
      },
      calendarContainer: {
@@ -92,7 +101,7 @@ index 4187631..02ce06f 100644
      return (
        <View style={styles.multipleContainer}>
 -        <ScrollView>
-+        <ScrollView ref={ref}>
++        <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
            {allMonthsArray?.map((month) => {
              const monthNumber = new Date(Object.keys(month[0])[0]).getMonth();
              const monthName = monthNames[monthNumber];
@@ -111,6 +120,17 @@ index 4187631..02ce06f 100644
                    <Text style={styles.titleText}>
                      {monthName} {year}
                    </Text>
+@@ -265,8 +302,9 @@ export default function CalendarGrid({
+           <View
+             style={{ width: pillWidth.width * (6 - lastDayOfSingleMonth) }}
+           />
+-        )}
++        ) }
+       </View>
++      <View style={ {height: getHeight(17)} }/>
+     </View>
+   );
+ }
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
 index 9c9dad3..48eb784 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js

@@ -106,7 +106,7 @@ export default function ChallengeCompletionScreen() {
     },
     card: {
       height: getHeight(220),
-      width: screenWidth * 0.95 - getWidth(175),
+      width: '55%',
       position: 'absolute',
       top: getHeight(120),
     },
@@ -114,11 +114,8 @@ export default function ChallengeCompletionScreen() {
       backgroundColor: colors.veryLightPinkTwo100,
       borderRadius: radius(15),
       borderTopLeftRadius: 0,
-      width: '45%',
       padding: getHeight(10),
-      position: 'absolute',
-      right: getWidth(20),
-      top: getHeight(120),
+      marginRight: getWidth(20),
     },
     resultTitle: {
       ...textStyles.medium14_brownishGrey100,
@@ -254,7 +251,9 @@ export default function ChallengeCompletionScreen() {
           {WorkoutDict.ChallengeComplete(name, trainer)}
         </Text>
       </View>
-      <View style={styles.card}>
+      <View style={{flexDirection: 'row', flex:1, height: getHeight(220), marginTop: getHeight(80),}}>
+
+        <View style={{flex:0.6}}>
         {chartInfo && (
           <ProgressChart
             data={chartInfo.processedHistory}
@@ -267,18 +266,24 @@ export default function ChallengeCompletionScreen() {
             scrollToEnd={true}
           />
         )}
+        </View>
+
+        <View style={{flex:0.4}}>
+          <View style={styles.resultContainer}>
+          <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
+          {chartInfo && (
+            <Text
+              style={
+                type === 'STOPWATCH' ? styles.timeResult : styles.resultText
+              }>
+              {`${result} ${chartInfo.chartLabel}`}
+            </Text>
+          )}
+        </View>
+        </View>
+
       </View>
-      <View style={styles.resultContainer}>
-        <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
-        {chartInfo && (
-          <Text
-            style={
-              type === 'STOPWATCH' ? styles.timeResult : styles.resultText
-            }>
-            {`${result} ${chartInfo.chartLabel}`}
-          </Text>
-        )}
-      </View>
+      
       <View style={styles.line} />
       <View style={styles.buttonContainer}>
         <DefaultButton

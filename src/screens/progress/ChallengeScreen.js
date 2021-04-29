@@ -15,7 +15,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import Spacer from '../../components/Utility/Spacer';
 import ProgressChart from '../../components/Infographics/ProgressChart';
 import Header from '../../components/Headers/Header';
-import {msToHMSFull} from '../../utils/dateTimeUtils';
+import {msToHMSOptional} from '../../utils/dateTimeUtils';
 import {useRoute} from '@react-navigation/core';
 import generateChartInfo from '../../utils/generateChartInfo';
 import handleTimer from '../../utils/handleTimer';
@@ -150,7 +150,7 @@ export default function ChallengeScreen() {
 
   function handlePressDone() {
     const {elapsedMS} = stopwatchData;
-    const elapsed = msToHMSFull(elapsedMS);
+    const elapsed = msToHMSOptional(elapsedMS);
 
     if (isTimerRunning) {
       setTimerRunning(!isTimerRunning);
@@ -213,8 +213,8 @@ export default function ChallengeScreen() {
       {type !== 'OTHER' && (
         <Text style={styles.timerText}>
           {type === 'COUNTDOWN'
-            ? msToHMSFull(timerData.remainingMS)
-            : msToHMSFull(stopwatchData.elapsedMS)}
+            ? msToHMSOptional(timerData.remainingMS)
+            : msToHMSOptional(stopwatchData.elapsedMS)}
         </Text>
       )}
       <View style={styles.buttonContainer}>

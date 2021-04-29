@@ -83,7 +83,7 @@ export default function ChallengeEndScreen() {
 
     if (value) {
       if (type === 'STOPWATCH') {
-        const regex = /\d*:\d*:\d*/g;
+        const regex = /\d*:\d*/g;
         const found = value.match(regex);
 
         // Reset value
@@ -91,7 +91,7 @@ export default function ChallengeEndScreen() {
           updateValue({name: 'result', value: elapsed});
         } else {
           // Remove any symbols other than the regex we want
-          const updatedValue = value.replace(/[^\d{2}:\d{2}:\d{2}]/g, '');
+          const updatedValue = value.replace(/[^\d{2}:\d{2}]/g, '');
           updateValue({name: 'result', value: updatedValue});
         }
       } else {
@@ -181,10 +181,9 @@ export default function ChallengeEndScreen() {
       // Extract value from Input
       const value = getValueByName('result');
       const array = value.split(':');
-      if (array.length === 3) {
-        const hoursSecs = parseInt(array[0]) * 3600;
-        const minsSecs = parseInt(array[1]) * 60;
-        const secs = parseInt(array[2]) + minsSecs + hoursSecs;
+      if (array.length === 2) {
+        const minsSecs = parseInt(array[0]) * 60;
+        const secs = parseInt(array[1]) + minsSecs;
         const ms = secs * 1000;
 
         challengeResult = ms.toString();

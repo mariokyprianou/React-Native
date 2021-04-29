@@ -16,8 +16,8 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useFocusEffect} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
+
 
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -71,15 +71,23 @@ export default function MeetYourIconsScreen() {
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
- 
+  const isFocused = useIsFocused();
+
+
   useEffect(() => {
     setLoading(true);
     getTrainers();
-    StatusBar.setBarStyle('light-content');
-    return () => {
+  }, [])
+  
+  useEffect(() => {
+
+    if (isFocused) {
+      StatusBar.setBarStyle('light-content');
+    }
+    else {
       StatusBar.setBarStyle('dark-content');
     };
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     if (activeIndex < 0) {

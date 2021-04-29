@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -35,6 +35,10 @@ export default function HelpMeChooseScreen() {
   const {HelpMeChooseDict} = dictionary;
   const navigation = useNavigation();
   const {setLoading} = useLoading();
+
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+  }, []);
 
   navigation.setOptions({
     header: () => (

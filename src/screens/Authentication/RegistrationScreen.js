@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import {View, Text, TouchableOpacity, Platform, StatusBar} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {format, parse, parseISO} from 'date-fns';
@@ -63,6 +63,11 @@ export default function RegisterScreen() {
   const {setLoading} = useLoading();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+
+
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+  }, []);
 
   navigation.setOptions({
     header: () => (

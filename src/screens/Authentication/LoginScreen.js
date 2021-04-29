@@ -5,8 +5,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {ScrollView, View, Text, TouchableOpacity, Alert} from 'react-native';
+import React, {useEffect} from 'react';
+import {ScrollView, View, Text, TouchableOpacity, Alert, StatusBar} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +30,10 @@ export default function LoginScreen() {
 
   const {permissionsNeeded, firebaseLogEvent, analyticsEvents} = useUserData();
   const {setLoading} = useLoading();
+
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+  }, []);
 
   navigation.setOptions({
     header: () => (

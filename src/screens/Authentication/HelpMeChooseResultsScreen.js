@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
-import {View, Text, Image, ImageBackground} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, Image, ImageBackground, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -36,6 +36,16 @@ export default function HelpMeChooseResultsScreen() {
   } = useRoute();
 
   const capitalizedName = recommendedTrainer.toUpperCase();
+
+
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+    return () => {
+      StatusBar.setBarStyle('light-content');
+    }
+  }, []);
+
+
 
   navigation.setOptions({
     header: () => (

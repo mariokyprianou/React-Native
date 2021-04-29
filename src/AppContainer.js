@@ -59,6 +59,9 @@ export default function AppContainer() {
         <AppStack.Screen
           name="ChangeDevice"
           component={ChangeDeviceScreen}
+          options={{
+            gestureEnabled: false,
+          }}
         />
 
         <AppStack.Screen
@@ -66,7 +69,6 @@ export default function AppContainer() {
           component={PurchaseModalScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-
 
         <AppStack.Screen
           name="Analytics"
@@ -79,59 +81,53 @@ export default function AppContainer() {
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
 
-        
-      
         <AppStack.Screen
           name="WeekComplete"
           component={WeekCompleteScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-       
+
         <AppStack.Screen
           name="Workout"
           component={WorkoutScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-       
+
         <AppStack.Screen
           name="Notes"
           component={NotesScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-       
+
         <AppStack.Screen
           name="WeightCapture"
           component={WeightCaptureScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-        
+
         <AppStack.Screen
           name="TakeARest"
           component={TakeARestScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-        
+
         <AppStack.Screen
           name="StayTuned"
           component={StayTunedScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-       
+
         <AppStack.Screen
           name="WorkoutComplete"
           component={WorkoutCompleteScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
 
-
-
-
         <AppStack.Screen
           name="ChallengeComplete"
           component={ChallengeCompletionScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
-       
       </AppStack.Navigator>
       {loading && LoadingView()}
     </>

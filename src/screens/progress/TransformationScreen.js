@@ -112,8 +112,17 @@ export default function TransformationScreen() {
   async function handleSelectDate(dateItem, imageToSelect) {
     if (!dateItem.id) return;
     setLoading(true);
+   
 
-    // Check if we already have tthe url for this image
+    // Change selected datte label
+    if (imageToSelect === 'before') {
+      setSelectedBeforeDate(dateItem.value);
+    }
+    else if (imageToSelect === 'after') {
+      setSelectedAfterDate(dateItem.value);
+    }
+
+    // Check if we already have the url for this image
     const existingImage = imageUrls.find((it) => it.id === dateItem.id);
 
     let url = null;
@@ -123,14 +132,12 @@ export default function TransformationScreen() {
       url = await getImageUrl(dateItem);
     }
 
+    // Change url loaded on image
     if (imageToSelect === 'before') {
-      setSelectedBeforeDate(dateItem.value);
       setBeforePic(url);
     } else if (imageToSelect === 'after') {
-      setSelectedAfterDate(dateItem.value);
       setAfterPic(url);
     }
-    setLoading(false);
   }
 
   function handleNavigateAddPhoto() {
@@ -246,6 +253,7 @@ export default function TransformationScreen() {
   return (
     <View style={styles.container}>
       <TDSlideshow
+        setLoading={setLoading}
         beforePic={beforePic ? {uri: beforePic} : overlay}
         afterPic={afterPic ? {uri: afterPic} : overlay}
         imageWidth={styles.image.width}
@@ -262,8 +270,8 @@ export default function TransformationScreen() {
                 <CustomDateSelectors
                   onPress={handleSelectDate}
                   storedImages={userImages}
-                  setSelectedBeforeDate={setSelectedBeforeDate}
-                  setSelectedAfterDate={setSelectedAfterDate}
+                  selectedBeforeDate={selectedBeforeDate}
+                  selectedAfterDate={selectedAfterDate}
                 />
               )
             : () => <></>

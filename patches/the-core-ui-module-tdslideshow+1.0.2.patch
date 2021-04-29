@@ -513,10 +513,10 @@ index 507924f..0000000
 -
 -export default Header;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 1bbdec1..17b89f2 100644
+index 1bbdec1..32d4e6e 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-@@ -6,70 +6,80 @@
+@@ -6,70 +6,82 @@
   * Copyright (c) 2020 The Distance
   */
  
@@ -536,10 +536,12 @@ index 1bbdec1..17b89f2 100644
  import { ScaleHook } from "react-native-design-to-component";
 +import { defaultProps } from "../defaultProps";
 +import { checkDimensions, checkStylesIncHeight, checkString } from "../utils";
++import FastImage from "react-native-fast-image";
  
  const ImageSlider = ({
 -  handleAddPhoto,
 -  handleSlideChange,
++  setLoading,
    beforePic,
    afterPic,
    imageWidth,
@@ -622,7 +624,7 @@ index 1bbdec1..17b89f2 100644
        marginLeft: -afterImageLeft,
      },
      button: {
-@@ -96,57 +106,51 @@ const ImageSlider = ({
+@@ -96,57 +108,59 @@ const ImageSlider = ({
    });
  
    // ******* FUNCTIONS *******
@@ -642,13 +644,21 @@ index 1bbdec1..17b89f2 100644
 -          {beforePic && (
 -            <Image source={{ uri: beforePic }} style={styles.beforeImage} />
 -          )}
-+          {beforePic && <Image source={beforePic} style={styles.beforeImage} onError={({ nativeEvent: {error} }) => console.log(error)} />}
++          {beforePic && <FastImage 
++          source={beforePic} 
++          style={styles.beforeImage} 
++          onLoadEnd={() => setLoading(false)}
++          onError={({ nativeEvent: {error} }) => console.log(error)} />}
          </View>
          <View style={styles.afterContainer}>
 -          {afterPic && (
 -            <Image source={{ uri: afterPic }} style={styles.afterImage} />
 -          )}
-+          {afterPic && <Image source={afterPic} style={styles.afterImage} onError={({ nativeEvent: {error} }) => console.log(error)} />}
++          {afterPic && <FastImage
++          source={afterPic} 
++          style={styles.afterImage} 
++          onLoadEnd={() => setLoading(false)}
++          onError={({ nativeEvent: {error} }) => console.log(error)} />}
          </View>
        </View>
 -      <View style={sliderSpacerHeight} />

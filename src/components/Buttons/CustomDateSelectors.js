@@ -16,7 +16,12 @@ import isRTL from '../../utils/isRTL';
 const arrowDown = require('../../../assets/icons/sortDown.png');
 const arrowUp = require('../../../assets/icons/sortUp.png');
 
-const CustomDateSelectors = ({onPress, storedImages}) => {
+const CustomDateSelectors = ({
+  onPress,
+  storedImages, 
+  selectedBeforeDate,
+  selectedAfterDate
+}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -78,7 +83,7 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
     <View style={styles.dropdown}>
       <DropDownPicker
         items={storedImages}
-        defaultValue={storedImages[0] && storedImages[0].value}
+        defaultValue={selectedBeforeDate}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}
@@ -91,7 +96,7 @@ const CustomDateSelectors = ({onPress, storedImages}) => {
       />
       <DropDownPicker
         items={storedImages}
-        defaultValue={storedImages[storedImages.length - 1] && storedImages[storedImages.length - 1].value}
+        defaultValue={selectedAfterDate}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}

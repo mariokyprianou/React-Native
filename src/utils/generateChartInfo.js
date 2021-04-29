@@ -68,6 +68,9 @@ export default generateChartInfo = (
     } else if (unitType === 'DISTANCE' && weightPreference === 'kg') {
       chartLabel = 'km';
     }
+    else if (unitType && unitType.length > 0) {
+      chartLabel = unitType;
+    }
   }
 
   return {

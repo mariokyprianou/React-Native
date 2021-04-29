@@ -158,10 +158,10 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..5e7c50b 100644
+index f41ddff..48009e5 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-@@ -6,29 +6,45 @@
+@@ -6,29 +6,49 @@
   * Copyright (c) 2020 The Distance
   */
  
@@ -180,6 +180,7 @@ index f41ddff..5e7c50b 100644
 +import * as mime from 'react-native-mime-types';
 +import * as Animatable from 'react-native-animatable';
 +import { Platform } from "react-native";
++
  
  const AddPhoto = ({
 -  handlePhotoClick,
@@ -199,6 +200,7 @@ index f41ddff..5e7c50b 100644
 +  countdown10,
 +  setTime,
 +  setLoading,
++  CountDownView
  }) => {
    // ******* SETUP *******
 +  overlayStyles && checkStylesIncHeight(overlayStyles);
@@ -211,12 +213,14 @@ index f41ddff..5e7c50b 100644
 -  const { getHeight, fontSize } = ScaleHook();
 +  const [showCountdownOptions, setShowCountdownOptions] = useState(false);
 +
++  const [showCountDown, setShowCountdown] = useState(false);
++
 +  const { getHeight, fontSize, getWidth } = ScaleHook();
 +  const screenWidth = Dimensions.get("screen").width;
  
    // ******* STYLES *******
    const styles = {
-@@ -36,7 +52,7 @@ const AddPhoto = ({
+@@ -36,7 +56,7 @@ const AddPhoto = ({
        height: "100%",
      },
      cameraContainer: {
@@ -225,7 +229,7 @@ index f41ddff..5e7c50b 100644
        width: "100%",
        overflow: "hidden",
      },
-@@ -55,73 +71,99 @@ const AddPhoto = ({
+@@ -55,101 +75,168 @@ const AddPhoto = ({
        backgroundColor: "transparent",
        zIndex: 1,
      },
@@ -288,6 +292,7 @@ index f41ddff..5e7c50b 100644
      },
    };
  
++
    // ******* FUNCTIONS *******
 -  function handleSelectPhoto() {
 -    request(
@@ -319,14 +324,16 @@ index f41ddff..5e7c50b 100644
 +
 +    const timeout = CountdownTime ? CountdownTime : 0;
 +
++    setShowCountdown(true);
 +    setTimeout(async () => {
++      setShowCountdown(false);
 +      const data = await cameraRef.takePictureAsync(options);
 +
 +      setLoading(true);
 +
 +      const contentType = mime.lookup(data.uri)
 +      setPhoto(data.uri, contentType);
-+    }, timeout)
++     }, timeout)
    }
  
    function handleSwitchView() {
@@ -355,22 +362,27 @@ index f41ddff..5e7c50b 100644
              setCameraRef(camera);
              if (overlayImage) {
                return (
++                <>
                  <View style={styles.overlay}>
 -                  <Image source={overlayImage} style={overlayStyles} />
 +                  <Image source={overlayImage} style={styles.overlayImage} />
                  </View>
++                {showCountDown && <CountDownView /> }
++                </>
                );
              } else {
-@@ -129,23 +171,55 @@ const AddPhoto = ({
+               return null;
              }
            }}
          </RNCamera>
 +        ) : (
 +          <View style={{...styles.camera, backgroundColor: 'grey'}}>
-+                  <Image source={overlayImage} style={{...styles.overlayImage, marginTop: getHeight(50)}} />
-+              
++              <Image source={overlayImage} style={{...styles.overlayImage, marginTop: getHeight(50)}} />
++              {showCountDown && <CountDownView /> }
 +          </View>
 +        )}
++        
++        
          <View style={styles.buttonContainer}>
            {CustomCountdown && (
 -            <View style={styles.sideButtons}>
@@ -431,6 +443,11 @@ index f41ddff..5e7c50b 100644
          </View>
        </View>
      </View>
+   );
+ };
+ 
++
+ export default AddPhoto;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
 deleted file mode 100644
 index 507924f..0000000

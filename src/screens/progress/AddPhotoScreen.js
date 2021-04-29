@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
-import {View, Platform} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {View, Platform, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -21,10 +21,10 @@ import {useMutation} from '@apollo/client';
 import UploadUrl from '../../apollo/mutations/UploadUrl';
 import UploadFailed from '../../apollo/mutations/UploadFailed';
 import RNFetchBlob from 'rn-fetch-blob';
-import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
 import displayAlert from '../../utils/DisplayAlert';
+import useInterval from '../../utils/useInterval';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
@@ -33,10 +33,12 @@ const countdown0 = require('../../../assets/images/countdown0s.png');
 const countdown5 = require('../../../assets/images/countdown5s.png');
 const countdown10 = require('../../../assets/images/countdown10s.png');
 
+
+
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight} = ScaleHook();
-  const {colors} = useTheme();
+  const {getHeight, fontSize} = ScaleHook();
+  const {colors, textStyles} = useTheme();
   const {loading, setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
@@ -57,7 +59,7 @@ export default function TransformationScreen() {
   const [requestUplaodUrl] = useMutation(UploadUrl);
   const [sendFailed] = useMutation(UploadFailed);
 
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(5000);
 
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -73,6 +75,11 @@ export default function TransformationScreen() {
       top: getHeight(-50),
       resizeMode: 'cover',
     },
+    countDownStyle: {
+      ...textStyles.bold30_white100,
+      fontSize: fontSize(44),
+      lineHeight: fontSize(50),
+    }
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -209,6 +216,7 @@ export default function TransformationScreen() {
       });
   }
 
+ 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -227,7 +235,27 @@ export default function TransformationScreen() {
         setTime={setTime}
         setLoading={setLoading}
         cameraEnabled={!loading}
-      />
+        countDownStyle={styles.countDownStyle}
+        CountDownView={() => <CountDownView time={ time > 0 ? time / 1000 : 0 } countDownStyle={styles.countDownStyle} /> }
+      />      
     </View>
   );
+}
+
+
+function CountDownView({time, countDownStyle}) {
+
+  const [seconds, setSeconds] = useState(time);
+
+  useInterval(() => {
+    if(seconds > 0) {
+      setSeconds(seconds - 1);
+    }
+  }, 1000);
+
+  return <>
+    {seconds > 0 && 
+   <View style={{ height: '100%', position: 'absolute',alignSelf: 'center', justifyContent: 'center' }}><Text style={countDownStyle}>{seconds}</Text></View>
+    }
+   </>
 }

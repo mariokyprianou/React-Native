@@ -27,6 +27,8 @@ const CustomCountdown = ({time}) => {
     container: {
       flexDirection: 'row',
       alignItems: 'center',
+      //backgroundColor: 'red',
+      padding: getWidth(20)
     },
     countdownStyle: {
       height: getHeight(25),

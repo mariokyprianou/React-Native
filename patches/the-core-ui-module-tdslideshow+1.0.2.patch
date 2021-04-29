@@ -158,7 +158,7 @@ index 82dabb6..0000000
 -
 -export default Slideshow;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
-index f41ddff..48009e5 100644
+index f41ddff..628e382 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
 @@ -6,29 +6,49 @@
@@ -253,7 +253,7 @@ index f41ddff..48009e5 100644
 -      color: "black",
 +    countdownButtonContainer: {
 +      position: "absolute",
-+      left: getWidth(75),
++      left: getWidth(35),
 +    },
 +    countdownOptionsContainer: {
 +      flexDirection: 'row',
@@ -269,7 +269,7 @@ index f41ddff..48009e5 100644
 +    },
 +    cameraButtonContainer: {
 +      position: "absolute",
-+      left: screenWidth / 2 - (cameraButtonImage ? 25 : 30),
++      left: screenWidth / 2 - (cameraButtonImage ? 45 : 30),
      },
      cameraButton: {
 -      size: fontSize(60),
@@ -284,7 +284,7 @@ index f41ddff..48009e5 100644
 +    },
 +    rotateButtonContainer: {
 +      position: "absolute",
-+      right: getWidth(80),
++      right: getWidth(50),
 +    },
 +    rotateButton: {
 +      size: fontSize(24),
@@ -408,7 +408,7 @@ index f41ddff..48009e5 100644
 +          { showCountdownOptions === false ?
 +            <>
 +              <View style={styles.cameraButtonContainer}>
-+                <TouchableOpacity onPress={cameraEnabled ? handlePhotoClick : null} >
++                <TouchableOpacity style={{padding: getWidth(20)}} onPress={cameraEnabled ? handlePhotoClick : null} >
 +                  <TDIcon
 +                    input={cameraEnabled === true ? cameraButtonImage : cameraFadedButton}
 +                    inputStyle={
@@ -420,20 +420,20 @@ index f41ddff..48009e5 100644
 +                </TouchableOpacity>
 +              </View>
 +              <View style={styles.rotateButtonContainer}>
-+                <TouchableOpacity onPress={handleSwitchView}>
++                <TouchableOpacity style={{padding: getWidth(20)}} onPress={handleSwitchView}>
 +                  <TDIcon input="sync" inputStyle={styles.rotateButton} />
 +                </TouchableOpacity>
 +              </View>
 +            </>
 +            :
 +            <Animatable.View style={ styles.countdownOptionsContainer } animation={'fadeInLeft'}>
-+              <TouchableOpacity onPress={() => handleChangeCountdown(0)}>
++              <TouchableOpacity style={{ padding: getHeight(12)}} onPress={() => handleChangeCountdown(0)}>
 +                <Image source={countdown0} style={styles.countdownOption}/>
 +              </TouchableOpacity>
-+              <TouchableOpacity onPress={() => handleChangeCountdown(5000)}>
++              <TouchableOpacity style={{ padding: getHeight(12)}} onPress={() => handleChangeCountdown(5000)}>
 +                <Image source={countdown5} style={styles.countdownOption}/>
 +              </TouchableOpacity>
-+              <TouchableOpacity onPress={() => handleChangeCountdown(10000)}>
++              <TouchableOpacity style={{ padding: getHeight(12)}} onPress={() => handleChangeCountdown(10000)}>
 +                <Image source={countdown10} style={styles.countdownOption}/>
 +              </TouchableOpacity>    
 +            </Animatable.View>

@@ -14,7 +14,7 @@ import FastImage from 'react-native-fast-image';
 
 const completedIcon = require('../../../assets/icons/completedSet.png');
 export default function (props) {
-  const {onPress = () => {}, quantity = '8', state = 'inactive'} = props;
+  const {onPress = () => {}, quantity = '8', state = 'inactive', setType = 'REPS'} = props;
 
   const {getWidth, fontSize, getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -42,7 +42,9 @@ export default function (props) {
     },
   };
 
-  const content = () => <Text style={styles.textStyle}>{quantity}</Text>;
+  const text = quantity + (setType === "REPS" ? '' : 's');
+
+  const content = () => <Text style={styles.textStyle}>{text}</Text>;
 
   if (state === 'inactive') {
     return <View style={styles.containerStyle}>{content()}</View>;

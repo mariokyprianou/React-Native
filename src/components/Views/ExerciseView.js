@@ -267,6 +267,7 @@ export default function ExerciseView(props) {
             <RepCell
               key={index}
               {...item}
+              setType={props.setType}
               onPress={() => onSetCompleted(index)}
             />
             </View>

@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useRef, useEffect} from 'react';
-import {View, TouchableOpacity, Animated} from 'react-native';
+import {View, TouchableOpacity, Animated, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import SliderProgressView from './SliderProgressView';
@@ -38,12 +38,13 @@ export default function ({video, videoEasy, videoEasiest, index}) {
 
   const videoRef = useRef();
 
+  const videoHeight = Dimensions.get('window').width;
+
   const styles = {
     container: {
       width: '100%',
     },
   };
-
 
   useEffect(() => {
     // Autoplay if its current exercise and there is remaining video
@@ -60,15 +61,14 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     }
   }, [currentExerciseIndex, index]);
 
-
-  // Video url has changed 
-  useEffect(()=> {
+  // Video url has changed
+  useEffect(() => {
     setEnded(false);
     setIsPaused(false);
   }, [currentVideo]);
 
   const videoProps = {
-    height: getHeight(385),
+    height: videoHeight,
     url: videos[currentVideo],
     filename: videos[currentVideo].split('/').pop().split('?').shift(),
     skipCache: !isDownloadEnabled,
@@ -87,8 +87,8 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     },
     onEnd: () => {
       setCurrentProgress(videoDuration);
-      setEnded(true)
-      setIsPaused(true)
+      setEnded(true);
+      setIsPaused(true);
       //videoRef.current.reset()
     },
 
@@ -99,7 +99,6 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   useEffect(() => {
-
     if (showControls) {
       Animated.timing(fadeAnimation, {
         toValue: 1,
@@ -123,7 +122,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       style={{
         opacity: fadeAnimation,
         alignSelf: 'center',
-         position: 'absolute',
+        position: 'absolute',
         height: showControls ? '100%' : 0,
         width: showControls ? '100%' : 0,
         backgroundColor: colors.black20,
@@ -131,13 +130,11 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
-
           if (ended) {
             setEnded(false);
             setIsPaused(false);
             videoRef.current.reset();
-          }
-          else videoRef.current.pause();
+          } else videoRef.current.pause();
         }}
         isPaused={isPaused}
         videos={videos}
@@ -147,14 +144,9 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     </Animated.View>
   );
 
-
-
-
-
-
   return (
     <View style={styles.container}>
-      <View style={{height: getHeight(385)}}>
+      <View style={{height: videoHeight}}>
         <VideoView {...videoProps} ref={videoRef} />
 
         {/* Controls not showing so render a touch view to allow showing them */}

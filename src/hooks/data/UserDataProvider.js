@@ -245,12 +245,19 @@ export default function UserDataProvider(props) {
   const [checkUserSubscription] = useLazyQuery(GetSubscription, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      const {isActive} = res.subscription || false;
-      setIsSubscriptionActive(isActive || false);
+      if (res.subscription) {
+      const {isActive} = res.subscription;
+        setIsSubscriptionActive(isActive);
+      }
+      else {
+        setIsSubscriptionActive(false);
+
+      }
       
     },
     onError: (error) => {
       console.log('subscription fetch error',error);
+      setIsSubscriptionActive(false);
     }
   });
 

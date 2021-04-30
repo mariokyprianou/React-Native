@@ -320,10 +320,7 @@ const PurchaseModalScreen = ({}) => {
 
   // MARK: - Render
 
-  const yearlyMonthPrice =
-    Platform.OS === 'ios'
-      ? Math.round((yearlySubscription.price / 12) * 100)
-      : yearlySubscription.price / 12;
+  const yearlyMonthPrice = yearlySubscription.price / 12;
   const yearlyDiscount = Math.round(
     (yearlyMonthPrice / monthlySubscription.price) * 100,
   );

@@ -77,8 +77,8 @@ export default function TransformationScreen() {
     },
     countDownStyle: {
       ...textStyles.bold30_white100,
-      fontSize: fontSize(44),
-      lineHeight: fontSize(50),
+      fontSize: fontSize(55),
+      lineHeight: fontSize(60),
     }
   };
 

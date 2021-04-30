@@ -244,7 +244,6 @@ export default function ChallengeEndScreen() {
       type: 'text',
       placeholder: '',
       ...cellFormStyles,
-      multiline: true,
       keyboardType: 'number-pad',
       onContentSizeChange: (e) =>
         setFormHeight(e.nativeEvent.contentSize.height),

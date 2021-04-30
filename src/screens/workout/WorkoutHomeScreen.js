@@ -62,10 +62,9 @@ export default function WorkoutHomeScreen() {
     getConsecutiveWorkouts,
     clearConsecutiveDays,
     wasLastWorkoutToday,
-    completedFreeWorkouts,
   } = useData();
 
-  const {suspendedAccount, isSubscriptionActive} = useUserData();
+  const {suspendedAccount, isSubscriptionActive, completedFreeWorkouts} = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -527,6 +526,16 @@ export default function WorkoutHomeScreen() {
                     return;
                   }
 
+                  const wasWorkoutToday = wasLastWorkoutToday(
+                    programme.currentWeek.workouts,
+                  );
+                  if (wasWorkoutToday === true) {
+                    DisplayAlert({
+                      text: WorkoutDict.WorkoutCompetedWarningText,
+                    });
+                    return;
+                  }
+
                   if (completedFreeWorkouts && !isSubscriptionActive) {
                     navigation.navigate('PurchaseModal');
                     return;
@@ -536,16 +545,6 @@ export default function WorkoutHomeScreen() {
                     if (stayTunedEnabled) {
                       showStayTunedModal();
                     }
-                    return;
-                  }
-
-                  const wasWorkoutToday = wasLastWorkoutToday(
-                    programme.currentWeek.workouts,
-                  );
-                  if (wasWorkoutToday === true) {
-                    DisplayAlert({
-                      text: WorkoutDict.WorkoutCompetedWarningText,
-                    });
                     return;
                   }
 

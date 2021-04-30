@@ -191,8 +191,21 @@ export default function UserDataProvider(props) {
   const [changeDevice, setChangeDevice] = useState(null);
   const [suspendedAccount, setSuspendedAccount] = useState(false);
   const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
+  
+  // 3 workouts are allowed without subscription
+  const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
 
 
+  // Update completedFreeWorkouts
+  useEffect(()=> {
+    if (userData && userData.completedWorkouts) {
+    const { completedWorkouts } = userData;
+    console.log("completedWorkouts", completedWorkouts);
+    setCompletedFreeWorkouts(completedWorkouts >= 3);
+    }
+  }, [userData])
+
+  
   const [getProfile] = useLazyQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
@@ -232,14 +245,18 @@ export default function UserDataProvider(props) {
   const [checkUserSubscription] = useLazyQuery(GetSubscription, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (res) => {
-      if (res && res.subscription) {
-        console.log('subscription',res.subscription);
-        const {isActive} = res.subscription;
-        setIsSubscriptionActive(isActive);
-      }
+      const {isActive} = res.subscription || false;
+      setIsSubscriptionActive(isActive || false);
+      
     },
-    onError: (error) => console.log(error),
+    onError: (error) => {
+      console.log('subscription fetch error',error);
+    }
   });
+
+  useEffect(() => {
+    console.log("isSubscriptionActive Changed", isSubscriptionActive);
+  }, [isSubscriptionActive])
 
 
   useEffect(()=> {
@@ -298,7 +315,10 @@ export default function UserDataProvider(props) {
       changeDevice,
       suspendedAccount,
       setSuspendedAccount,
-      isSubscriptionActive
+      checkUserSubscription,
+      isSubscriptionActive,
+      getProfile,
+      completedFreeWorkouts
     }),
     [
       userData,
@@ -315,7 +335,10 @@ export default function UserDataProvider(props) {
       changeDevice,
       suspendedAccount,
       setSuspendedAccount,
-      isSubscriptionActive
+      checkUserSubscription,
+      isSubscriptionActive,
+      getProfile,
+      completedFreeWorkouts
     ],
   );
 

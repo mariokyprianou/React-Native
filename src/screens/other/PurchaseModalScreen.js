@@ -57,7 +57,7 @@ const PurchaseModalScreen = ({}) => {
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
-  const {firebaseLogEvent, analyticsEvents, userData} = useUserData();
+  const {firebaseLogEvent, analyticsEvents, userData, checkUserSubscription} = useUserData();
   const {setLoading} = useLoading();
 
   // MARK: - Local
@@ -87,12 +87,16 @@ const PurchaseModalScreen = ({}) => {
   const [googleSubscribe] = useMutation(RegisterGooglePlaySubscription);
   const [appleSubscribe] = useMutation(RegisterAppStoreSubscription);
 
+  navigation.setOptions({
+    header: () => <></>,
+  });
+
+ 
+  
   // MARK: - Use Effect
   useEffect(() => {
     setLoading(true);
-    navigation.setOptions({
-      header: () => <Header showModalCross black transparent />,
-    });
+    
     StatusBar.setBarStyle('dark-content');
 
     initConnection();
@@ -161,7 +165,8 @@ const PurchaseModalScreen = ({}) => {
                   email: userData.email,
                 });
               })
-              .catch((err) => console.log(err));
+              .catch((err) => console.log(err))
+              .finally(() => checkUserSubscription());
           } else {
             const productId = R.path(['productId'], purchase);
             const purchaseToken = R.path(['purchaseToken'], purchase);
@@ -186,7 +191,8 @@ const PurchaseModalScreen = ({}) => {
                   email: userData.email,
                 });
               })
-              .catch((err) => console.log(err));
+              .catch((err) => console.log(err))
+              .finally(() => checkUserSubscription());
           }
         } catch (ackErr) {
           console.warn('ackErr', ackErr);
@@ -333,6 +339,7 @@ const PurchaseModalScreen = ({}) => {
   );
 
   return (
+    <>
     <ScrollView
       keyboardShouldPersistTaps="handled"
       style={styles.container}
@@ -397,6 +404,13 @@ const PurchaseModalScreen = ({}) => {
         </Text>
       </View>
     </ScrollView>
+     <Header
+         
+     showModalCross
+     black
+     transparent
+   />
+   </>
   );
 };
 

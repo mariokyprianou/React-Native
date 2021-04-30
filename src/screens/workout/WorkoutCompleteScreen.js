@@ -39,7 +39,7 @@ export default function WorkoutCompleteScreen() {
   const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
 
-  const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
     selectedWorkout,
     weightsToUpload,
@@ -193,7 +193,7 @@ export default function WorkoutCompleteScreen() {
         },
       },
     })
-      .then((res) => {
+      .then(async (res) => {
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
@@ -202,6 +202,7 @@ export default function WorkoutCompleteScreen() {
             workoutName: selectedWorkout.name,
           });
           setWeightsToUpload([]);
+          await getProfile();
 
           navigation.reset({
             index: 0,

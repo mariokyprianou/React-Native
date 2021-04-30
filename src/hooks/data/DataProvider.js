@@ -41,9 +41,6 @@ export default function DataProvider(props) {
   const [currentWeek, setCurrentWeek] = useState();
   const [nextWeek, setNextWeek] = useState();
 
-  // 3 workouts are allowed without subscription
-  const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
-
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
     let days = await AsyncStorage.getItem('@CURRENT_WEEK');
@@ -272,13 +269,6 @@ export default function DataProvider(props) {
         return;
       }
 
-      const completedWorkouts = data.currentWeek.workouts.filter(
-        (it) => it.completedAt,
-      ).length;
-      if (completedWorkouts >= 3) {
-        setCompletedFreeWorkouts(true);
-      }
-
       setProgrammeModalImage(data.programmeImage);
       initCacheWeekVideos(data.currentWeek.workouts);
 
@@ -376,7 +366,6 @@ export default function DataProvider(props) {
     () => ({
       programme,
       getProgramme,
-      completedFreeWorkouts,
       programmeModalImage,
       setProgrammeModalImage,
       selectedWorkout,
@@ -406,7 +395,6 @@ export default function DataProvider(props) {
     [
       programme,
       getProgramme,
-      completedFreeWorkouts,
       programmeModalImage,
       setProgrammeModalImage,
       selectedWorkout,

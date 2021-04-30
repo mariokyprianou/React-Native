@@ -18,13 +18,16 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
+import FastImage from 'react-native-fast-image';
 
-export default function TransformationChallenge({type, title, image, onPress}) {
+
+export default function TransformationChallenge({type, title, image, imageUrl, onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
+
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -79,6 +82,7 @@ export default function TransformationChallenge({type, title, image, onPress}) {
       backgroundColor: colors.black40,
     },
     challengeImage: {
+      position:'absolute',
       width: '90%',
       height: '50%',
       alignSelf: 'center',
@@ -96,35 +100,62 @@ export default function TransformationChallenge({type, title, image, onPress}) {
       size: fontSize(17),
     },
   };
-
+  const [urlLoaded, setUrlLoaded] = useState();
+console.log(urlLoaded)
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={{...styles.box, ...styles.challengeBox}}>
       <TouchableOpacity style={{flex: 1}} onPress={onPress}>
-        {type === 'progress' ? (
-          <ImageBackground source={image} style={styles.photoImage}>
-            <View style={styles.overlay} />
-            <View style={styles.iconContainer}>
-              <TDIcon input={'camera'} inputStyle={styles.icon} />
-            </View>
-            <View style={styles.textContainer}>
-              <Text style={styles.progressTitle}>{ButtonDict.Progress}</Text>
-              <Text style={styles.progressText}>{title}</Text>
-            </View>
-          </ImageBackground>
-        ) : (
-          <>
-            <Image source={image} style={styles.challengeImage} />
-            <View style={styles.textContainer}>
-              <Text style={styles.challengeTitle}>{ButtonDict.Challenge}</Text>
-              <Text style={styles.challengeText} numberOfLines={1}>
-                {title}
-              </Text>
-            </View>
-          </>
+
+        <SafeFastImage imageUrl={imageUrl} fallback={image} staticStyle={type === 'progress' ? styles.photoImage : styles.challengeImage}
+          dynamicStyle={styles.photoImage} overlay={type === 'progress' || urlLoaded} callbackSetLoaded={setUrlLoaded} />
+      
+        {type === 'progress' && (
+          <View style={styles.iconContainer}>
+          <TDIcon input={'camera'} inputStyle={styles.icon} />
+        </View>
         )}
+        <View style={styles.textContainer}>
+          <Text style={type === 'progress' || urlLoaded ? styles.progressTitle : styles.challengeTitle}>{type === 'progress' ?  ButtonDict.Progress : ButtonDict.Challenge}</Text>
+          <Text style={type === 'progress' || urlLoaded ? styles.progressText : styles.challengeText} numberOfLines={type === 'progress' ? 1 : 2}>{title}</Text>
+        </View>
+
       </TouchableOpacity>
     </View>
   );
+}
+
+
+function SafeFastImage({imageUrl, fallback, staticStyle, dynamicStyle, overlay = false, callbackSetLoaded }) {
+  const {colors} = useTheme();
+  const [urlLoaded, setUrlLoaded] = useState();
+
+  const overlayStyle = {
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      backgroundColor: colors.black40,
+  };
+
+  return (
+    <>
+    {!imageUrl ? <Image style={staticStyle} source={fallback}/> : 
+      <>
+      <Image style={staticStyle} source={fallback}/>
+      <FastImage style={dynamicStyle} source={{uri: imageUrl}} fallback={true}
+      onLoadEnd={() => {
+        callbackSetLoaded && callbackSetLoaded(true);
+        setUrlLoaded(true);
+      }} 
+      onError={() => {
+        callbackSetLoaded && callbackSetLoaded(false);
+        setUrlLoaded(false);
+        }}/>
+        </>}
+        
+     {overlay &&  <View style={overlayStyle} />}
+      </>
+  )
+
 }

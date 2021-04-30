@@ -211,6 +211,7 @@ export default function ProgressScreen() {
                     duration,
                     fieldTitle,
                     unitType,
+                    imageUrl
                   } = challenge;
 
                   return (
@@ -219,6 +220,7 @@ export default function ProgressScreen() {
                       type="challenge"
                       title={name}
                       image={fakeGraph}
+                      imageUrl={imageUrl}
                       onPress={() =>
                         navigation.navigate('Challenge', {
                           id: id,

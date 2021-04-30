@@ -45,7 +45,8 @@ const Colors = {
   offWhite100: 'rgba(244,244,244,1)',
 
   dividerBrownishGrey80: 'rgba(208, 208, 208, 1)',
-  transparent: 'rgba(0, 0, 0, 0)'
+  transparent: 'rgba(0, 0, 0, 0)',
+  completeSetGrey100: 'rgba(131, 151, 157, 0.5)'
 };
 
 export default Colors;

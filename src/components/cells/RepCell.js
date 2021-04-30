@@ -12,7 +12,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
 
-const completedIcon = require('../../../assets/icons/completedSet.png');
+const completedIcon = require('../../../assets/icons/check.png');
 export default function (props) {
   const {onPress = () => {}, quantity = '8', state = 'inactive', setType = 'REPS'} = props;
 
@@ -22,7 +22,7 @@ export default function (props) {
   const styles = {
     containerStyle: {
       width: getWidth(46),
-      height: getWidth(46),
+      aspectRatio: 1,
       borderRadius: getWidth(46 / 1),
       justifyContent: 'center',
       alignItems: 'center',
@@ -37,12 +37,13 @@ export default function (props) {
       color: state === 'inactive' ? colors.brownishGrey100 : colors.white100,
     },
     imageStyle: {
-      width: getWidth(46),
-      height: getWidth(46),
+      width: getWidth(45),
+      aspectRatio: 1
     },
   };
 
   const text = quantity + (setType === "REPS" ? '' : 's');
+
 
   const content = () => <Text style={styles.textStyle}>{text}</Text>;
 
@@ -50,11 +51,13 @@ export default function (props) {
     return <View style={styles.containerStyle}>{content()}</View>;
   } else if (state === 'completed') {
     return (
-      <FastImage
+      <View style={{...styles.containerStyle, backgroundColor: colors.completeSetGrey100, width: getWidth(45),}}>
+         <FastImage
         source={completedIcon}
-        resizeMode={FastImage.resizeMode.contain}
+        resizeMode={FastImage.resizeMode.center}
         style={styles.imageStyle}
       />
+      </View>
     );
   } else {
     return (

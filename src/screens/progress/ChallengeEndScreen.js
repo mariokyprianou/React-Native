@@ -61,7 +61,6 @@ export default function ChallengeEndScreen() {
   } = useRoute();
 
   const [formHeight, setFormHeight] = useState(150);
-  let newStyle = {formHeight};
 
   const [sendResult] = useMutation(CompleteChallenge);
 
@@ -253,10 +252,11 @@ export default function ChallengeEndScreen() {
       inputContainerStyle: {
         paddingHorizontal: 0,
         paddingTop: 10,
-        height: [newStyle][formHeight],
+        height: formHeight,
       },
       style: {
         ...textStyles.regular16_black100,
+        lineHeight: fontSize(25),
         width: '100%',
         paddingBottom: getHeight(13),
       },

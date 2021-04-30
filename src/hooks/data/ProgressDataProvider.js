@@ -30,7 +30,6 @@ import {Auth, Hub} from 'aws-amplify';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
-  const client = useApolloClient();
 
   // Get progress data
   const [progress, setProgress] = useState();
@@ -83,23 +82,6 @@ export default function DataProvider(props) {
     onError: (err) => console.log(err, '<---progress images err'),
   });
 
-  useEffect(() => {
-    async function checkAuth() {
-      await Auth.currentAuthenticatedUser()
-        .then((_res) => {
-          getProgress();
-          getHistory();
-          getImages();
-
-          getChallenges();
-        })
-        .catch((err) => {
-          console.log('UserDataProvider - checkAuth', err);
-        });
-    }
-
-    checkAuth();
-  }, [Auth.currentAuthenticatedUser]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -135,45 +117,21 @@ export default function DataProvider(props) {
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
 
-  const [imageUrls, setImageUrls] = useState([]);
-
-  const getImageUrl = useCallback(
-    async (image) => {
-      return client
-        .query({
-          query: ProgressImage,
-          fetchPolicy: 'no-cache',
-          variables: {
-            input: {
-              id: image.id,
-              createdAt: image.createdAt,
-            },
-          },
-        })
-        .then((res) => {
-          const {url, id} = res.data.progressImage;
-          setImageUrls([...imageUrls, {id: id, url: url}]);
-
-          return url;
-        })
-        .catch((err) => console.log(err, 'getImageUrl error'));
-    },
-    [imageUrls],
-  );
 
   async function checkImages(images) {
-    const url = await getImageUrl(images[0]);
-    setBeforePic(url);
-
-    if (images.length > 1) {
-      const url2 = await getImageUrl(images[images.length - 1]);
-      setAfterPic(url2);
+    console.log(images[0])
+    if (images.length === 1) {
+      setBeforePic(images[0]);
     }
-
+    else {
+      setAfterPic(images[0]);
+      setBeforePic(images[images.length - 1]);  
+    }
     return true;
   }
 
-  useEffect(() => {
+  useEffect(() => {   
+
     if (userImages) {
       const images = userImages.filter((it) => it.id);
       if (images && images.length > 0) {
@@ -182,27 +140,6 @@ export default function DataProvider(props) {
     }
   }, [userImages, setBeforePic, setAfterPic]);
 
-  const getImagesSync = useCallback(async () => {
-
-    return client.query({
-      query: ProgressImages,
-      fetchPolicy: 'no-cache',
-    })
-    .then(async (res) => {
-      const today = new Date();
-      const formattedToday = format(today, 'dd/LL/yyyy');
-      const emptyListObject = {value: today, label: formattedToday};
-      if (res.data.progressImages.length === 0) {
-        setUserImages([emptyListObject]);
-      } else {
-        const formattedImages = formatProgressImages(res.data.progressImages);
-        setUserImages(formattedImages);
-        return await checkImages(formattedImages);
-      }
-
-    })
-    .catch((err) => console.log(err, 'getImageUrl error'));
-  },  []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -221,9 +158,6 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
-      getImageUrl,
-      imageUrls,
-      getImagesSync,
     }),
     [
       progress,
@@ -239,9 +173,6 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
-      getImageUrl,
-      imageUrls,
-      getImagesSync,
     ],
   );
 

@@ -6,12 +6,13 @@
  * Copyright (c) 2021 The Distance
  */
 
-import {format} from 'date-fns';
+import {format, parse} from 'date-fns';
 
 export default function formatProgressImages(images) {
-  return images.map((image) => {
-    const label = format(new Date(image.createdAt), 'dd/LL/y');
-    const value = image.createdAt;
-    return {...image, label, value};
+  return images.sort((a,b) => new Date(Date.parse(a.takenOn)) < new Date(Date.parse(b.takenOn))).map((image) => {
+    const idealDate = new Date(Date.parse(image.takenOn));
+    const label = format(idealDate, 'dd/LL/y');
+    const value = idealDate;
+    return {...image, label, value: image.createdAt};
   });
 }

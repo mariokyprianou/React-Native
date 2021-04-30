@@ -39,18 +39,13 @@ const overlay = require('../../../assets/images/progressZero.png');
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
-  const client = useApolloClient();
   const {colors} = useTheme();
   const {
     userImages,
-    setUserImages,
-    getImages,
     beforePic,
     setBeforePic,
     afterPic,
     setAfterPic,
-    getImageUrl,
-    imageUrls,
   } = useProgressData();
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
@@ -61,13 +56,6 @@ export default function TransformationScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {ShareMediaType, getShareData} = useShare();
 
-  const [selectedBeforeDate, setSelectedBeforeDate] = useState(
-    userImages[0] && userImages[0].value,
-  );
-  const [selectedAfterDate, setSelectedAfterDate] = useState(
-    userImages[userImages.length - 1] &&
-      userImages[userImages.length - 1].value,
-  );
 
   navigation.setOptions({
     header: () => (
@@ -113,30 +101,13 @@ export default function TransformationScreen() {
     if (!dateItem.id) return;
     setLoading(true);
    
-
-    // Change selected datte label
+    const existingImage = userImages.find((it) => it.id === dateItem.id);
+    
+    // Change image
     if (imageToSelect === 'before') {
-      setSelectedBeforeDate(dateItem.value);
-    }
-    else if (imageToSelect === 'after') {
-      setSelectedAfterDate(dateItem.value);
-    }
-
-    // Check if we already have the url for this image
-    const existingImage = imageUrls.find((it) => it.id === dateItem.id);
-
-    let url = null;
-    if (existingImage) {
-      url = existingImage.url;
-    } else {
-      url = await getImageUrl(dateItem);
-    }
-
-    // Change url loaded on image
-    if (imageToSelect === 'before') {
-      setBeforePic(url);
+      setBeforePic(existingImage);
     } else if (imageToSelect === 'after') {
-      setAfterPic(url);
+      setAfterPic(existingImage);
     }
   }
 
@@ -190,6 +161,7 @@ export default function TransformationScreen() {
   }
 
   const handleShare = useCallback(async () => {
+    
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -214,23 +186,27 @@ export default function TransformationScreen() {
     }
 
     setLoading(true);
+
+    
+
     const {colour, url} = await getShareData(ShareMediaType.progress);
 
+
     try {
-      let beforeDate = parseISO(selectedBeforeDate);
+      let beforeDate = parseISO(beforePic.value);
       beforeDate = isSameDay(new Date(), beforeDate)
         ? 'TODAY'
         : format(beforeDate, 'dd/LL/yyyy');
 
-      let afterDate = parseISO(selectedAfterDate);
+      let afterDate = parseISO(afterPic.value);
       afterDate = isSameDay(new Date(), afterDate)
         ? 'TODAY'
         : format(afterDate, 'dd/LL/yyyy');
 
       let res = await PowerShareAssetsManager.shareProgress({
         backgroundImageUrl: url,
-        beforeImageUrl: beforePic,
-        afterImageUrl: afterPic,
+        beforeImageUrl: beforePic.url,
+        afterImageUrl: afterPic.url,
         colour: colour,
         beforeDate: beforeDate,
         afterDate: afterDate,
@@ -244,18 +220,17 @@ export default function TransformationScreen() {
   }, [
     beforePic,
     afterPic,
-    selectedBeforeDate,
-    selectedAfterDate,
     getShareData,
   ]);
+
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
       <TDSlideshow
         setLoading={setLoading}
-        beforePic={beforePic ? {uri: beforePic} : overlay}
-        afterPic={afterPic ? {uri: afterPic} : overlay}
+        beforePic={beforePic ? {uri: beforePic.url} : overlay}
+        afterPic={afterPic ? {uri: afterPic.url} : overlay}
         imageWidth={styles.image.width}
         imageHeight={styles.image.height}
         sliderSpacerHeight={styles.spacerHeight}
@@ -265,13 +240,13 @@ export default function TransformationScreen() {
         sliderSpacerHeight={styles.spacerHeight}
         sliderIcon={sliderThumb}
         DateSelectors={
-          userImages
+          userImages && beforePic && afterPic
             ? () => (
                 <CustomDateSelectors
                   onPress={handleSelectDate}
                   storedImages={userImages}
-                  selectedBeforeDate={selectedBeforeDate}
-                  selectedAfterDate={selectedAfterDate}
+                  selectedBeforeDate={beforePic.value}
+                  selectedAfterDate={afterPic.value}
                 />
               )
             : () => <></>

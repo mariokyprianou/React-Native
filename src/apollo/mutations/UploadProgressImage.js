@@ -9,9 +9,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  mutation UploadProgressImage {
-    uploadProgressImage {
-      id
+  mutation($input: UploadProgressImageInput!) {
+    uploadProgressImage(input: $input) {
       uploadUrl
     }
   }

@@ -18,13 +18,13 @@ import Header from '../../components/Headers/Header';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useMutation} from '@apollo/client';
-import UploadUrl from '../../apollo/mutations/UploadUrl';
-import UploadFailed from '../../apollo/mutations/UploadFailed';
+import UploadProgressImage from '../../apollo/mutations/UploadProgressImage';
 import RNFetchBlob from 'rn-fetch-blob';
 import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
 import displayAlert from '../../utils/DisplayAlert';
 import useInterval from '../../utils/useInterval';
+import format from 'date-fns/format';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
@@ -42,7 +42,7 @@ export default function TransformationScreen() {
   const {loading, setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-  const {getImagesSync} = useProgressData();
+  const {getImages} = useProgressData();
   const navigation = useNavigation();
 
   navigation.setOptions({
@@ -56,10 +56,9 @@ export default function TransformationScreen() {
     ),
   });
 
-  const [requestUplaodUrl] = useMutation(UploadUrl);
-  const [sendFailed] = useMutation(UploadFailed);
+  const [requestUplaodUrl] = useMutation(UploadProgressImage);
 
-  const [time, setTime] = useState(5000);
+  const [time, setTime] = useState(0);
 
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -82,6 +81,7 @@ export default function TransformationScreen() {
     }
   };
 
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
 
@@ -92,6 +92,7 @@ export default function TransformationScreen() {
     const newPath =
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
 
+    // Check file size
     const validSize = await RNFetchBlob.fs.stat(newPath)
       .then((stats) => {
         const { size } = stats;
@@ -115,20 +116,31 @@ export default function TransformationScreen() {
       return;
     }
 
-    const uploadUrlRes = await requestUplaodUrl().catch((err) => {
+
+    // Request upload url
+    const requestInput = {
+      "contentType": contentType,
+      "takenOn": format(new Date().setHours(0,0,0,0), 'yyyy-MM-dd')
+    }
+
+    const uploadUrlRes = await requestUplaodUrl({
+      variables: {
+        input: requestInput
+      },
+  }).catch((err) => {
       console.log(err, '<---requestUrl err');
       displayAlert({text:ProgressDict.UploadFailed });
       setLoading(false);
       return;
     });
 
-    if (!uploadUrlRes || !uploadUrlRes.data) return;
+    if (!uploadUrlRes || !uploadUrlRes.data || !uploadUrlRes.data.uploadProgressImage) return;
+    const {uploadUrl} = uploadUrlRes.data.uploadProgressImage;
 
-    const {url, id} = uploadUrlRes.data.uploadUrl;
-
+    // Initialize upload
     RNFetchBlob.fetch(
       'PUT',
-      url,
+      uploadUrl,
       {'Content-Type': contentType},
       RNFetchBlob.wrap(newPath),
     )
@@ -141,32 +153,27 @@ export default function TransformationScreen() {
         if (status === 200 || status === 204) {
           console.log('Upload done --- SUCCESS');
 
-          await getImagesSync();
+          await getImages();
           console.log(
-            'getImagesSync -- finished getting updated images and setting 1st and last',
+            'getImages -- finished getting updated images',
           );
 
           navigation.goBack();
           setLoading(false);
         } else {
           console.log('Upload failed', res);
-          handleAddPhotoError(id);
+          handleAddPhotoError();
         }
       })
       .catch((err) => {
         console.log(err, '<---fetch blob err');
-        handleAddPhotoError(id);
+        handleAddPhotoError();
       });
   }
 
-  async function handleAddPhotoError(id) {
-    await sendFailed({variables: {id: id}})
-      .then((res) => console.log(res, '<---upload failed res'))
-      .catch((err) => console.log(err, '<---upload failed err'))
-      .finally(() => {
-        displayAlert({text:ProgressDict.UploadFailed });
-        setLoading(false);
-      });
+  async function handleAddPhotoError() {
+    displayAlert({text:ProgressDict.UploadFailed });
+    setLoading(false);
   }
 
   function handleSelectPhoto() {

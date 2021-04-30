@@ -13,6 +13,8 @@ export default gql`
     progressImages {
       id
       createdAt
+      takenOn
+      url
     }
   }
 `;

@@ -6,59 +6,135 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {ThemeProvider} from 'react-native-elements';
-import {ApolloProvider} from 'react-apollo';
+import {View, StatusBar, Platform, I18nManager, Alert} from 'react-native';
+import ThemeProvider from './hooks/theme/ThemeProvider';
+import DictionaryProvider from './hooks/localisation/DictionaryProvider';
+import {ApolloProvider} from '@apollo/client';
 import {NavigationContainer} from '@react-navigation/native';
-
-import ApolloClient from './apollo/ApolloClient';
-import Theme from './styles/AppTheme';
+import {ScaleProvider} from 'react-native-design-to-component';
+import {FormProvider} from 'the-core-ui-module-tdforms';
+import DataProvider from './hooks/data/DataProvider';
+import QuickPicker from 'quick-picker';
+import {TDCountdown} from 'the-core-ui-module-tdcountdown';
 import isValidChecksum from './utils/checksumValidation';
-import {Navigator as AppNavigator, Screen} from './navigation/AppStack';
 import AppContainer from './AppContainer';
-import SplashScreen from 'react-native-splash-screen';
+import {useAsyncStorage} from '@react-native-community/async-storage';
+import Amplify from 'aws-amplify';
+import {TDGraphQLProvider} from './apollo/Client';
+import UserDataProvider from './hooks/data/UserDataProvider';
+import Secrets from './environment/Secrets';
+import LoadingProvider from './hooks/loading/LoadingProvider';
+import CommonDataProvider from './hooks/data/CommonDataProvider';
+import ProgressDataProvider from './hooks/data/ProgressDataProvider';
+import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
+import ShareProvider from './hooks/share/ShareProvider';
+import getTimeZoneOffset from './utils/getTimeZoneOffset';
+import {firebase} from '@react-native-firebase/analytics';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+
+const {awsRegion, userPoolId, clientId} = Secrets();
+
+const authConfig = {
+  Auth: {
+    region: awsRegion,
+    userPoolId: userPoolId,
+    userPoolWebClientId: clientId,
+  },
+};
+
+Amplify.configure(authConfig);
 
 const App = () => {
-  const [client, setClient] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [client, setClient] = useState();
   const [validChecksum, setValidChecksum] = useState(true);
+  const {getItem, setItem} = useAsyncStorage('@language');
 
-  const setupApollo = async () => {
-    const newClient = await ApolloClient();
-    setClient(newClient);
-    SplashScreen.hide();
-    setLoading(false);
-  };
+  useEffect(() => {
+    async function BuildClient() {
+      const gqlClient = await TDGraphQLProvider();
+      setClient(gqlClient);
+
+      await firebase.initializeApp();
+    }
+
+    BuildClient();
+  }, []);
 
   const validateChecksum = async () => {
     const valid = await isValidChecksum();
     setValidChecksum(valid);
   };
 
-  useEffect(() => {
-    if (!client) {
-      setupApollo();
+  const languageSet = async () => {
+    const language = await getItem();
+
+    if (language === 'ur-IN') {
+      if (!I18nManager.isRTL) {
+        I18nManager.forceRTL(true);
+      }
+    } else {
+      if (I18nManager.isRTL) {
+        I18nManager.forceRTL(false);
+      }
     }
+  };
+
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
 
     validateChecksum();
-  }, [client]);
+    languageSet();
+  }, []);
 
   if (!validChecksum) {
+    return <View style={{flex: 1, backgroundColor: 'pink'}} />;
+  }
+
+  if (!client) {
     return <View />;
   }
 
-  // if (loading) {
-  //   return <View />;
-  // }
-
   return (
-    <ThemeProvider theme={Theme}>
-      {/* <ApolloProvider client={client}> */}
-      <NavigationContainer>
-        <AppContainer />
-      </NavigationContainer>
-      {/* </ApolloProvider> */}
-    </ThemeProvider>
+    <>
+      {Platform.OS === 'android' && (
+        <StatusBar translucent backgroundColor="transparent" />
+      )}
+      <SafeAreaProvider>
+        <ApolloProvider client={client}>
+          <ScaleProvider config={{height: 667, width: 375}}>
+            <ThemeProvider>
+              <DictionaryProvider>
+                <DataProvider>
+                  <UserDataProvider>
+                    <CommonDataProvider>
+                      <ProgressDataProvider>
+                        <WorkoutTimerProvider>
+                          <ShareProvider>
+                            <LoadingProvider>
+                              <NavigationContainer>
+                                <TDCountdown>
+                                  <FormProvider>
+                                    <AppContainer />
+                                  </FormProvider>
+                                </TDCountdown>
+                              </NavigationContainer>
+                            </LoadingProvider>
+                          </ShareProvider>
+                        </WorkoutTimerProvider>
+                      </ProgressDataProvider>
+                    </CommonDataProvider>
+                  </UserDataProvider>
+                </DataProvider>
+              </DictionaryProvider>
+            </ThemeProvider>
+          </ScaleProvider>
+        </ApolloProvider>
+      </SafeAreaProvider>
+      <QuickPicker />
+    </>
   );
 };
 

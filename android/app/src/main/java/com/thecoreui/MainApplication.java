@@ -13,6 +13,11 @@ import java.util.List;
 import com.thecoreui.SecretsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.bundlechecksum.RNBundleChecksumPackage;
+import com.thecoreui.assetCreator.AssetCreatorPackage;
+
+import io.intercom.android.sdk.Intercom;
+import com.robinpowered.react.Intercom.IntercomPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -24,12 +29,14 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      @SuppressWarnings("UnnecessaryLocalVariable")
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here, for
       // example:
       // packages.add(new MyReactNativePackage());
+      packages.add(new IntercomPackage());
+      packages.add(new GIFPackage());
       packages.add(new SecretsPackage());
+      packages.add(new AssetCreatorPackage());
       return packages;
     }
 
@@ -47,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Intercom.initialize(this, "android_sdk-8146dbe8a23fc633d34a0e6628d20cfdca281876", "h9qs9je1");
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }

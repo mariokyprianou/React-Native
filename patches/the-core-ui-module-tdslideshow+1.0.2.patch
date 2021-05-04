@@ -1,0 +1,787 @@
+diff --git a/node_modules/the-core-ui-module-tdslideshow/index.js b/node_modules/the-core-ui-module-tdslideshow/index.js
+index 914bab1..a1d5124 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/index.js
+@@ -6,6 +6,8 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import Slideshow from "./src/Slideshow";
++import ImageSlider from "./src/components/ImageSlider";
++import AddPhoto from "./src/components/AddPhoto";
+ 
+-export default Slideshow;
++export { ImageSlider as TDSlideshow };
++export { AddPhoto as TDAddPhoto };
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js b/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
+deleted file mode 100644
+index 82dabb6..0000000
+--- a/node_modules/the-core-ui-module-tdslideshow/src/Slideshow.js
++++ /dev/null
+@@ -1,138 +0,0 @@
+-/*
+- * Jira Ticket:
+- * Created Date: Mon, 12th Oct 2020, 08:51:30 am
+- * Author: Jodi Dublon
+- * Email: jodi.dublon@thedistance.co.uk
+- * Copyright (c) 2020 The Distance
+- */
+-
+-import React, { useState } from "react";
+-import { Platform, Alert } from "react-native";
+-import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
+-import AddPhoto from "./components/AddPhoto";
+-import ImageSlider from "./components/ImageSlider";
+-import { defaultProps } from "./defaultProps";
+-import { checkDimensions, checkText, checkStylesIncHeight } from "./utils";
+-
+-const Slideshow = ({
+-  setPhoto,
+-  beforePic,
+-  afterPic,
+-  imageWidth,
+-  imageHeight,
+-  CustomButton,
+-  buttonText,
+-  sliderStyles,
+-  sliderSpacerHeight,
+-  sliderIcon,
+-  cameraHeaderText,
+-  overlayImage,
+-  overlayStyles,
+-  CustomCountdown,
+-  DateSelectors,
+-  cameraButtonImage,
+-}) => {
+-  // ******* SETUP *******
+-  const [activeViewIndex, setActiveViewIndex] = useState(0);
+-  const [afterImageWidth, setAfterImageWidth] = useState(imageWidth / 2);
+-  const [afterImageLeft, setAfterImageLeft] = useState(imageWidth / 2);
+-
+-  const {
+-    defaultImageWidth,
+-    defaultImageHeight,
+-    defaultButtonText,
+-    defaultSliderStyles,
+-    defaultSliderSpacerHeight,
+-    defaultCameraHeaderText,
+-    defaultOverlayStyles,
+-  } = defaultProps();
+-
+-  imageWidth && checkDimensions(imageWidth);
+-  imageHeight && checkDimensions(imageHeight);
+-  buttonText && checkText(buttonText);
+-  sliderStyles && checkStylesIncHeight(sliderStyles);
+-  sliderSpacerHeight && checkStylesIncHeight(sliderSpacerHeight);
+-  cameraHeaderText && checkText(cameraHeaderText);
+-  overlayStyles && checkStylesIncHeight(overlayStyles);
+-
+-  // ******* STYLES *******
+-
+-  // ******* FUNCTIONS *******
+-  function handleAddPhoto() {
+-    request(
+-      Platform.select({
+-        ios: PERMISSIONS.IOS.CAMERA,
+-        android: PERMISSIONS.ANDROID.CAMERA,
+-      })
+-    )
+-      .then((result) => {
+-        if (result === RESULTS.UNAVAILABLE) {
+-          Alert.alert("This function is not available on this device");
+-        }
+-        if (result === RESULTS.BLOCKED) {
+-          Alert.alert("Unable to access camera");
+-        }
+-        if (result === RESULTS.GRANTED) {
+-          setActiveViewIndex(1);
+-        }
+-      })
+-      .catch((err) => console.log(err));
+-  }
+-
+-  async function handlePhotoClick(camera) {
+-    const options = { quality: 0.5, base64: true };
+-    const data = await camera.takePictureAsync(options);
+-    setPhoto(data.uri);
+-    setActiveViewIndex(0);
+-  }
+-
+-  function handleSlideChange(value) {
+-    if (imageWidth) {
+-      const newWidth = imageWidth - value;
+-      setAfterImageWidth(newWidth);
+-    } else {
+-      const newWidth = defaultImageWidth - value;
+-      setAfterImageWidth(newWidth);
+-    }
+-    setAfterImageLeft(value);
+-  }
+-
+-  // ******* RENDER *******
+-  if (activeViewIndex === 0) {
+-    return (
+-      <ImageSlider
+-        handleAddPhoto={handleAddPhoto}
+-        handleSlideChange={handleSlideChange}
+-        beforePic={beforePic || null}
+-        afterPic={afterPic || null}
+-        imageWidth={imageWidth || defaultImageWidth}
+-        imageHeight={imageHeight || defaultImageHeight}
+-        afterImageWidth={afterImageWidth}
+-        afterImageLeft={afterImageLeft}
+-        buttonText={buttonText || defaultButtonText}
+-        CustomButton={CustomButton}
+-        sliderStyles={sliderStyles || defaultSliderStyles}
+-        sliderSpacerHeight={sliderSpacerHeight || defaultSliderSpacerHeight}
+-        sliderIcon={sliderIcon}
+-        DateSelectors={DateSelectors}
+-      />
+-    );
+-  }
+-
+-  if (activeViewIndex === 1) {
+-    return (
+-      <AddPhoto
+-        handlePhotoClick={handlePhotoClick}
+-        setActiveViewIndex={setActiveViewIndex}
+-        setPhoto={setPhoto}
+-        cameraHeaderText={cameraHeaderText || defaultCameraHeaderText}
+-        overlayImage={overlayImage || null}
+-        overlayStyles={overlayStyles || defaultOverlayStyles}
+-        CustomCountdown={CustomCountdown}
+-        cameraButtonImage={cameraButtonImage}
+-      />
+-    );
+-  }
+-};
+-
+-export default Slideshow;
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
+index f41ddff..628e382 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/components/AddPhoto.js
+@@ -6,29 +6,49 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import React, { useState } from "react";
+-import { View, Image, TouchableOpacity, Platform, Alert } from "react-native";
+-import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
+-import ImagePicker from "react-native-image-crop-picker";
++import React, { useEffect, useState } from "react";
++import { View, Image, TouchableOpacity, Dimensions } from "react-native";
+ import { RNCamera } from "react-native-camera";
+ import TDIcon from "the-core-ui-component-tdicon";
+-import Header from "./Header";
+ import { ScaleHook } from "react-native-design-to-component";
++import { defaultProps } from "../defaultProps";
++import { checkStylesIncHeight, checkString } from "../utils";
++import * as mime from 'react-native-mime-types';
++import * as Animatable from 'react-native-animatable';
++import { Platform } from "react-native";
++
+ 
+ const AddPhoto = ({
+-  handlePhotoClick,
+-  setActiveViewIndex,
++  cameraEnabled,
+   setPhoto,
+-  cameraHeaderText,
+   overlayImage,
+   overlayStyles,
+   CustomCountdown,
++  CountdownTime,
+   cameraButtonImage,
++  cameraFadedButton,
++  backgroundColor,
++  countdown0,
++  countdown5,
++  countdown10,
++  setTime,
++  setLoading,
++  CountDownView
+ }) => {
+   // ******* SETUP *******
++  overlayStyles && checkStylesIncHeight(overlayStyles);
++  backgroundColor && checkString(backgroundColor);
++
++  const { defaultOverlayStyles, defaultBackgroundColor } = defaultProps();
++
+   const [cameraRef, setCameraRef] = useState();
+   const [cameraType, setCameraType] = useState("back");
+-  const { getHeight, fontSize } = ScaleHook();
++  const [showCountdownOptions, setShowCountdownOptions] = useState(false);
++
++  const [showCountDown, setShowCountdown] = useState(false);
++
++  const { getHeight, fontSize, getWidth } = ScaleHook();
++  const screenWidth = Dimensions.get("screen").width;
+ 
+   // ******* STYLES *******
+   const styles = {
+@@ -36,7 +56,7 @@ const AddPhoto = ({
+       height: "100%",
+     },
+     cameraContainer: {
+-      height: getHeight(550),
++      height: '100%', 
+       width: "100%",
+       overflow: "hidden",
+     },
+@@ -55,101 +75,168 @@ const AddPhoto = ({
+       backgroundColor: "transparent",
+       zIndex: 1,
+     },
++    overlayImage: {
++      ...defaultOverlayStyles,
++      ...overlayStyles,
++    },
+     buttonContainer: {
+       flexDirection: "row",
+       alignItems: "center",
+-      justifyContent: "space-around",
++      height: getHeight(90), 
+       paddingVertical: getHeight(15),
+-      backgroundColor: "white",
++      backgroundColor: backgroundColor
++        ? backgroundColor
++        : defaultBackgroundColor,
+     },
+-    rotateButton: {
+-      size: fontSize(24),
+-      color: "black",
++    countdownButtonContainer: {
++      position: "absolute",
++      left: getWidth(35),
++    },
++    countdownOptionsContainer: {
++      flexDirection: 'row',
++      marginLeft: getWidth(150),
++      justifyContent: 'space-between',
++      alignItems: 'center',
++      width: getWidth(170),
++      height: getHeight(50),
++    },
++    countdownOption: {
++      height: getHeight(30),
++      width: getHeight(30),
++    },
++    cameraButtonContainer: {
++      position: "absolute",
++      left: screenWidth / 2 - (cameraButtonImage ? 45 : 30),
+     },
+     cameraButton: {
+-      size: fontSize(60),
++      size: getWidth(60),
+       color: "black",
+     },
+-    sideButtons: {
++    cameraButtonImage: {
+       width: getWidth(50),
++      height: getHeight(50),
++      resizeMode: "contain",
++    },
++    rotateButtonContainer: {
++      position: "absolute",
++      right: getWidth(50),
++    },
++    rotateButton: {
++      size: fontSize(24),
++      color: "black",
+     },
+   };
+ 
++
+   // ******* FUNCTIONS *******
+-  function handleSelectPhoto() {
+-    request(
+-      Platform.select({
+-        ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+-        android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+-      })
+-    )
+-      .then((result) => {
+-        if (result === RESULTS.UNAVAILABLE) {
+-          Alert.alert("This function is not available on this device");
+-        }
+-        if (result === RESULTS.BLOCKED) {
+-          Alert.alert("Unable to access camera");
+-        }
+-        if (result === RESULTS.GRANTED) {
+-          ImagePicker.openPicker({
+-            mediaType: "photo",
+-          }).then((cameraPhoto) => {
+-            setPhoto(cameraPhoto.sourceURL);
+-          });
+-        }
+-      })
+-      .catch((err) => console.log(err));
++  function handlePhotoClick() {
++    
++
++    const options = { quality: Platform.OS === 'android' ? 0.92 : 0.99, base64: false };
++
++    const timeout = CountdownTime ? CountdownTime : 0;
++
++    setShowCountdown(true);
++    setTimeout(async () => {
++      setShowCountdown(false);
++      const data = await cameraRef.takePictureAsync(options);
++
++      setLoading(true);
++
++      const contentType = mime.lookup(data.uri)
++      setPhoto(data.uri, contentType);
++     }, timeout)
+   }
+ 
+   function handleSwitchView() {
+     if (cameraType === "back") setCameraType("front");
+     if (cameraType === "front") setCameraType("back");
+   }
++
++  function handleChangeCountdown(newTime) {
++    setTime(newTime);
++    setShowCountdownOptions(false);
++  }
++
+   // ******* RENDER *******
+ 
+   return (
+     <View style={styles.pageContainer}>
+-      <Header
+-        setActiveViewIndex={setActiveViewIndex}
+-        handleSelectPhoto={handleSelectPhoto}
+-        cameraHeaderText={cameraHeaderText}
+-      />
+       <View style={styles.cameraContainer}>
++      {cameraEnabled ? (
+         <RNCamera style={styles.camera} captureAudio={false} type={cameraType}>
+           {({ camera }) => {
+             setCameraRef(camera);
+             if (overlayImage) {
+               return (
++                <>
+                 <View style={styles.overlay}>
+-                  <Image source={overlayImage} style={overlayStyles} />
++                  <Image source={overlayImage} style={styles.overlayImage} />
+                 </View>
++                {showCountDown && <CountDownView /> }
++                </>
+               );
+             } else {
+               return null;
+             }
+           }}
+         </RNCamera>
++        ) : (
++          <View style={{...styles.camera, backgroundColor: 'grey'}}>
++              <Image source={overlayImage} style={{...styles.overlayImage, marginTop: getHeight(50)}} />
++              {showCountDown && <CountDownView /> }
++          </View>
++        )}
++        
++        
+         <View style={styles.buttonContainer}>
+           {CustomCountdown && (
+-            <View style={styles.sideButtons}>
+-              <CustomCountdown />
++            <View style={ styles.countdownButtonContainer }>
++              <TouchableOpacity onPress={() => setShowCountdownOptions(!showCountdownOptions)} style={{flex: 1}}>
++                <CustomCountdown />
++              </TouchableOpacity>  
+             </View>
+-          )}
+-          <TouchableOpacity onPress={() => handlePhotoClick(cameraRef)}>
+-            <TDIcon
+-              input={cameraButtonImage ? cameraButtonImage : "dot-circle"}
+-              inputStyle={cameraButtonImage ? null : styles.cameraButton}
+-            />
+-          </TouchableOpacity>
+-          <View style={styles.sideButtons}>
+-            <TouchableOpacity onPress={handleSwitchView}>
+-              <TDIcon input="sync" inputStyle={styles.rotateButton} />
+-            </TouchableOpacity>
+-          </View>
++          ) }
++          { showCountdownOptions === false ?
++            <>
++              <View style={styles.cameraButtonContainer}>
++                <TouchableOpacity style={{padding: getWidth(20)}} onPress={cameraEnabled ? handlePhotoClick : null} >
++                  <TDIcon
++                    input={cameraEnabled === true ? cameraButtonImage : cameraFadedButton}
++                    inputStyle={
++                      cameraButtonImage
++                        ? styles.cameraButtonImage
++                        : styles.cameraButton
++                    }
++                  />
++                </TouchableOpacity>
++              </View>
++              <View style={styles.rotateButtonContainer}>
++                <TouchableOpacity style={{padding: getWidth(20)}} onPress={handleSwitchView}>
++                  <TDIcon input="sync" inputStyle={styles.rotateButton} />
++                </TouchableOpacity>
++              </View>
++            </>
++            :
++            <Animatable.View style={ styles.countdownOptionsContainer } animation={'fadeInLeft'}>
++              <TouchableOpacity style={{ padding: getHeight(12)}} onPress={() => handleChangeCountdown(0)}>
++                <Image source={countdown0} style={styles.countdownOption}/>
++              </TouchableOpacity>
++              <TouchableOpacity style={{ padding: getHeight(12)}} onPress={() => handleChangeCountdown(5000)}>
++                <Image source={countdown5} style={styles.countdownOption}/>
++              </TouchableOpacity>
++              <TouchableOpacity style={{ padding: getHeight(12)}} onPress={() => handleChangeCountdown(10000)}>
++                <Image source={countdown10} style={styles.countdownOption}/>
++              </TouchableOpacity>    
++            </Animatable.View>
++        }
++
++        {!cameraEnabled && <View style={{height: '100%', width: '100%', backgroundColor: 'white', opacity:0.5}}/> }
+         </View>
+       </View>
+     </View>
+   );
+ };
+ 
++
+ export default AddPhoto;
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js b/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
+deleted file mode 100644
+index 507924f..0000000
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/Header.js
++++ /dev/null
+@@ -1,75 +0,0 @@
+-/*
+- * Jira Ticket:
+- * Created Date: Thu, 22nd Oct 2020, 14:56:45 pm
+- * Author: Jodi Dublon
+- * Email: jodi.dublon@thedistance.co.uk
+- * Copyright (c) 2020 The Distance
+- */
+-
+-import React from "react";
+-import { View, TouchableOpacity, Text } from "react-native";
+-import TDIcon from "the-core-ui-component-tdicon";
+-import { ScaleHook } from "react-native-design-to-component";
+-
+-const Header = ({
+-  setActiveViewIndex,
+-  handleSelectPhoto,
+-  cameraHeaderText,
+-}) => {
+-  // ******* SETUP *******
+-  const { getHeight, getWidth, fontSize } = ScaleHook();
+-
+-  // ******* STYLES *******
+-  const styles = {
+-    container: {
+-      flexDirection: "row",
+-      alignItems: "center",
+-      height: getHeight(50),
+-      justifyContent: "space-between",
+-    },
+-    leftContainer: {
+-      flexDirection: "row",
+-      width: getWidth(40),
+-      alignItems: "center",
+-      justifyContent: "center",
+-    },
+-    iconStyle: {
+-      size: fontSize(20),
+-      color: "#3a3a3a",
+-    },
+-    titleTextStyle: {
+-      fontSize: fontSize(20),
+-      fontWeight: "bold",
+-      color: "#3a3a3a",
+-    },
+-    rightContainer: {
+-      justifyContent: "center",
+-      alignItems: "center",
+-      width: getWidth(40),
+-    },
+-  };
+-
+-  // ******* FUNCTIONS *******
+-  function handleGoBack() {
+-    setActiveViewIndex(0);
+-  }
+-
+-  // ******* RENDER *******
+-  return (
+-    <View style={styles.container}>
+-      <View style={styles.leftContainer}>
+-        <TouchableOpacity onPress={handleGoBack}>
+-          <TDIcon input="chevron-left" inputStyle={styles.iconStyle} />
+-        </TouchableOpacity>
+-      </View>
+-      <Text style={styles.titleTextStyle}>{cameraHeaderText}</Text>
+-      <View style={styles.rightContainer}>
+-        <TouchableOpacity onPress={handleSelectPhoto} activeOpacity={1}>
+-          <TDIcon input="images" inputStyle={styles.iconStyle} />
+-        </TouchableOpacity>
+-      </View>
+-    </View>
+-  );
+-};
+-
+-export default Header;
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
+index 1bbdec1..32d4e6e 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
+@@ -6,70 +6,82 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import React from "react";
+-import {
+-  View,
+-  Image,
+-  StyleSheet,
+-  TouchableOpacity,
+-  Text,
+-  Dimensions,
+-} from "react-native";
+-import TDIcon from "the-core-ui-component-tdicon";
++import React, { useState } from "react";
++import { View, Image, StyleSheet, Dimensions } from "react-native";
+ import Slider from "@react-native-community/slider";
+ import { ScaleHook } from "react-native-design-to-component";
++import { defaultProps } from "../defaultProps";
++import { checkDimensions, checkStylesIncHeight, checkString } from "../utils";
++import FastImage from "react-native-fast-image";
+ 
+ const ImageSlider = ({
+-  handleAddPhoto,
+-  handleSlideChange,
++  setLoading,
+   beforePic,
+   afterPic,
+   imageWidth,
+   imageHeight,
+-  afterImageWidth,
+-  afterImageLeft,
+-  buttonText,
+   sliderStyles,
++  minimumTrackTintColor,
++  maximumTrackTintColor,
+   sliderSpacerHeight,
+   sliderIcon,
+   DateSelectors,
+ }) => {
+   // ******* SETUP *******
++  imageWidth && checkDimensions(imageWidth);
++  imageHeight && checkDimensions(imageHeight);
++  sliderStyles && checkStylesIncHeight(sliderStyles);
++  minimumTrackTintColor && checkString(minimumTrackTintColor);
++  maximumTrackTintColor && checkString(maximumTrackTintColor);
++  sliderSpacerHeight && checkStylesIncHeight(sliderSpacerHeight);
++
++  const {
++    defaultImageWidth,
++    defaultImageHeight,
++    defaultSliderStyles,
++    defaultSliderSpacerHeight,
++  } = defaultProps();
++
++  const _imageWidth = imageWidth ? imageWidth : defaultImageWidth;
++  const _imageHeight = imageHeight ? imageHeight : defaultImageHeight;
++
++  const [afterImageWidth, setAfterImageWidth] = useState(_imageWidth / 2);
++  const [afterImageLeft, setAfterImageLeft] = useState(_imageWidth / 2);
+   const screenWidth = Dimensions.get("screen").width;
+-  const leftAlign = (screenWidth - imageWidth) / 2;
+-  const { getHeight, getWidth } = ScaleHook();
++  const leftAlign = (screenWidth - _imageWidth) / 2;
++  const { getHeight, getWidth, fontSize } = ScaleHook();
+ 
+   // ******* STYLES *******
+   const styles = StyleSheet.create({
+     imagesContainer: {
+       width: "100%",
+-      height: "50%",
++      height: _imageHeight,
+       left: leftAlign,
+     },
+     beforeContainer: {
+       position: "absolute",
+       left: 0,
+       top: 0,
+-      height: imageHeight,
+-      width: imageWidth,
++      height: _imageHeight,
++      width: _imageWidth,
+     },
+     beforeImage: {
+-      height: imageHeight,
+-      width: imageWidth,
++      height: _imageHeight,
++      width: _imageWidth,
+     },
+     afterContainer: {
+       flex: 1,
+       position: "absolute",
+       top: 0,
+       left: 0,
+-      height: imageHeight,
++      height: _imageHeight,
+       width: afterImageWidth,
+       overflow: "hidden",
+       left: afterImageLeft,
+     },
+     afterImage: {
+-      height: imageHeight,
+-      width: imageWidth,
++      height: _imageHeight,
++      width: _imageWidth,
+       marginLeft: -afterImageLeft,
+     },
+     button: {
+@@ -96,57 +108,59 @@ const ImageSlider = ({
+   });
+ 
+   // ******* FUNCTIONS *******
++  function handleSlideChange(value) {
++    const newWidth = _imageWidth - value;
++
++    setAfterImageWidth(newWidth);
++    setAfterImageLeft(value);
++  }
++
+   // ******* RENDER *******
+   return (
+     <View>
+       <View style={styles.imagesContainer}>
+         {DateSelectors && <DateSelectors />}
+         <View style={styles.beforeContainer}>
+-          {beforePic && (
+-            <Image source={{ uri: beforePic }} style={styles.beforeImage} />
+-          )}
++          {beforePic && <FastImage 
++          source={beforePic} 
++          style={styles.beforeImage} 
++          onLoadEnd={() => setLoading(false)}
++          onError={({ nativeEvent: {error} }) => console.log(error)} />}
+         </View>
+         <View style={styles.afterContainer}>
+-          {afterPic && (
+-            <Image source={{ uri: afterPic }} style={styles.afterImage} />
+-          )}
++          {afterPic && <FastImage
++          source={afterPic} 
++          style={styles.afterImage} 
++          onLoadEnd={() => setLoading(false)}
++          onError={({ nativeEvent: {error} }) => console.log(error)} />}
+         </View>
+       </View>
+-      <View style={sliderSpacerHeight} />
++     
+       <Slider
+         style={{
+-          width: sliderStyles.width,
+-          height: sliderStyles.height,
+           alignSelf: "center",
++          height: getHeight(42),
++          width: '100%',
++          position:'absolute',
++          bottom: - getHeight(22),   
+         }}
+-        minimumValue={0}
+-        maximumValue={imageWidth}
+-        step={imageWidth / 10}
+-        value={imageWidth / 2}
+-        minimumTrackTintColor={sliderStyles.minimumTrackTintColor}
+-        maximumTrackTintColor={sliderStyles.maximumTrackTintColor}
++        minimumValue={_imageWidth / 20}
++        maximumValue={(_imageWidth / 20) * 19}
++        step={_imageWidth / 100}
++        value={_imageWidth / 2}
++        minimumTrackTintColor={
++          minimumTrackTintColor
++            ? minimumTrackTintColor
++            : defaultSliderStyles.minimumTrackTintColor
++        }
++        maximumTrackTintColor={
++          maximumTrackTintColor
++            ? maximumTrackTintColor
++            : defaultSliderStyles.maximumTrackTintColor
++        }
+         onValueChange={(value) => handleSlideChange(value)}
+         thumbImage={sliderIcon || null}
+       />
+-      {CustomButton ? (
+-        <CustomButton onPress={handleAddPhoto} />
+-      ) : (
+-        <View style={styles.button}>
+-          <TouchableOpacity onPress={handleAddPhoto}>
+-            <Text style={styles.buttonText}>{buttonText}</Text>
+-          </TouchableOpacity>
+-          <View style={styles.iconContainer}>
+-            <TDIcon
+-              input="chevron-right"
+-              inputStyle={{
+-                size: styles.buttonText.fontSize,
+-                color: styles.buttonText.color,
+-                solid: true,
+-              }}
+-            />
+-          </View>
+-        </View>
+-      )}
+     </View>
+   );
+ };
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
+index 70e1755..f08e166 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/defaultProps/index.js
+@@ -9,26 +9,25 @@
+ import { ScaleHook } from "react-native-design-to-component";
+ 
+ export function defaultProps() {
+-  const { getHeight, getWidth, fontSize } = ScaleHook();
++  const { getHeight, getWidth } = ScaleHook();
+ 
+   return {
+     defaultImageWidth: getWidth(300),
+     defaultImageHeight: getHeight(250),
+-    defaultButtonText: "ADD PHOTO",
+     defaultSliderStyles: {
+       height: getHeight(30),
+-      width: getWidth(40),
++      width: getWidth(300),
+       minimumTrackTintColor: "transparent",
+       maximumTrackTintColor: "transparent",
+     },
+     defaultSliderSpacerHeight: {
+-      height: getHeight(30),
++      height: getHeight(78),
+     },
+-    defaultCameraHeaderText: "Upload",
+     defaultOverlayStyles: {
+       height: getHeight(400),
+       top: getHeight(-50),
+       resizeMode: "contain",
+     },
++    defaultBackgroundColor: "white",
+   };
+ }
+diff --git a/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js b/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
+index 5ecd5d0..4ee0aa4 100644
+--- a/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
++++ b/node_modules/the-core-ui-module-tdslideshow/src/utils/index.js
+@@ -11,8 +11,8 @@ export function checkDimensions(dimension) {
+     throw new Error("Image dimensions must be numbers");
+ }
+ 
+-export function checkText(text) {
+-  if (typeof text !== "string") throw new Error("Text should be a string");
++export function checkString(text) {
++  if (typeof text !== "string") throw new Error("Property should be a string");
+ }
+ 
+ export function checkStylesIncHeight(styles) {

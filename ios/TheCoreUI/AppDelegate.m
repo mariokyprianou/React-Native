@@ -3,9 +3,15 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import <React/RCTLinkingManager.h>
-
 #import "RNSplashScreen.h"
+#import <React/RCTLinkingManager.h>
+#import <UMCore/UMModuleRegistry.h>
+#import <UMReactNativeAdapter/UMNativeModulesProxy.h>
+#import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
+#import <Intercom/intercom.h>
+#import <Firebase.h>
+#import <AVFoundation/AVFoundation.h>
+
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
@@ -14,6 +20,7 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -26,6 +33,12 @@ static void InitializeFlipper(UIApplication *application) {
 }
 #endif
 
+@interface AppDelegate () <RCTBridgeDelegate>
+
+  @property (nonatomic, strong) UMModuleRegistryAdapter *moduleRegistryAdapter;
+
+@end
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -33,6 +46,8 @@ static void InitializeFlipper(UIApplication *application) {
 #if DEBUG
   InitializeFlipper(application);
 #endif
+  
+  self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegistryProvider:[[UMModuleRegistryProvider alloc] init]];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -47,9 +62,23 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
     
+  [FIRApp configure];
+  
   [RNSplashScreen show];
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
+  [Intercom setApiKey:@"ios_sdk-fd29c067657e0cf6598493d7cd9f0b96d3cb910a" forAppId:@"h9qs9je1"];
+  
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+  
   return YES;
 }
+
+- (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge
+  {
+      NSArray<id<RCTBridgeModule>> *extraModules = [_moduleRegistryAdapter extraModulesForBridge:bridge];
+      // If you'd like to export some custom RCTBridgeModules that are not Expo modules, add them here!
+      return extraModules;
+  }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
@@ -66,6 +95,11 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
   return [RCTLinkingManager application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // Intercom
+    [Intercom setDeviceToken:deviceToken];
 }
 
 @end

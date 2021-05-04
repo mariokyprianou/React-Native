@@ -1,4 +1,6 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 import com.android.build.OutputFile
 
@@ -121,6 +123,10 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
+    dexOptions {
+        javaMaxHeapSize "4G"
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -129,11 +135,17 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.thecoreui"
+        applicationId "com.powerdigitallimited.power"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+
+
+
+        missingDimensionStrategy 'react-native-camera', 'mlkit'   
+        multiDexEnabled true
 
         def envVars = rootProject.file("../env-vars.sh")
         if (envVars.exists()) {
@@ -187,6 +199,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('power-release.keystore')
+            storePassword 'K15oIEvqLclwTaNF9yus905i0S7TCWPpoaehpcLe7uJtlNI0F/9ZZe2A/YntwXTP'
+            keyAlias 'release'
+            keyPassword 'K15oIEvqLclwTaNF9yus905i0S7TCWPpoaehpcLe7uJtlNI0F/9ZZe2A/YntwXTP'
+        }
     }
     buildTypes {
         debug {
@@ -195,9 +213,10 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            // signingConfig signingConfigs.release
         }
     }
 
@@ -228,12 +247,33 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.android.support:multidex:1.0.3'
 
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-bundle-checksum')
 
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'io.intercom.android:intercom-sdk-base:7.2.0'
+
+    implementation 'org.jcodec:jcodec:0.2.3'
+    implementation 'org.jcodec:jcodec-android:0.2.3'
+
+
+    // To fix react-native-camera conflict
+//    implementation platform("com.google.firebase:firebase-bom:25.8.0")
+//    implementation "com.google.firebase:firebase-ml-vision"
+//    implementation 'com.google.android.gms:play-services-vision:20.1.1'
+//    implementation 'com.google.android.gms:play-services-vision-common:19.1.1'
+//    implementation 'com.google.firebase:firebase-ml-vision-image-label-model:20.0.2'
+//    implementation 'com.google.android.gms:play-services-vision-face-contour-internal:16.0.3'
+//    implementation 'com.google.android.gms:play-services-vision-image-labeling-internal:16.0.5'
+//    implementation 'com.google.android.gms:play-services-vision-image-label:18.0.5'
+//    implementation 'com.google.firebase:firebase-ml-vision-face-model:20.0.2'
+//    implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

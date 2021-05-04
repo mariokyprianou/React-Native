@@ -1,0 +1,349 @@
+diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
+index e9042f5..c6d4818 100644
+--- a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
++++ b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
+@@ -12,7 +12,7 @@ const appNamePath = DeviceInfo.getApplicationName();
+ 
+ const { config, fs } = RNFetchBlob;
+ 
+-const fileDirectory = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
++const fileDirectory = fs.dirs.DocumentDir;
+ 
+ const directoryPath = fileDirectory + '/' + appNamePath + '/';
+ 
+@@ -35,6 +35,8 @@ async function downloadFiles(files) {
+ 	}
+ }
+ 
++
++
+ async function filterNewFiles(newFiles) {
+ 	const allFiles = await getAllSavedFiles();
+ 
+@@ -56,27 +58,112 @@ async function filterNewFiles(newFiles) {
+ 	return toSaveFiles;
+ }
+ 
+-async function getAllSavedFiles() {
+-	return fs
+-		.ls(directoryPath)
+-		.then((files) => {
+-			return files;
++
++ 
++async function downloadFilesWithNames(files) {
++	if (files && files.length > 0) {
++		let results = [];
++		const filesToSave = await filterNewFilesWithNames(files);
++
++		console.log("Files to save:", filesToSave.length);
++		results = await Promise.all(
++			filesToSave.map(async (it) => {
++				const result = await downloadWithName(it);
++				return { success: result.success, file: it.filename };
++			})
++		);
++
++		if (filesToSave.length === 0) {
++			const allFiles = await getAllSavedFiles();
++			return { success: true, files: allFiles, message: 'already cached, returned existing files' };
++		}
++
++		console.log("Saved:", results);
++		if (results.length === filesToSave.length) {
++			return { success: true, files: results, message: 'cached all files' };
++		}
++		else if (results.length < filesToSave.length) {
++			return { success: false, files: results, message: 'unable to cache all files' };
++		}
++	}
++}
++
++async function filterNewFilesWithNames(newFiles) {
++	const allFiles = await getAllSavedFiles();
++	var toSaveFiles = [];
++
++	if (allFiles && allFiles.length > 0) {
++		allFiles.map((savedFile) => {
++			const result = newFiles.filter((it) => {
++				var name = it.filename;
++				if (!savedFile.includes(name)) return it;
++			});
++
++			toSaveFiles = toSaveFiles.concat(result);
++		});
++	} else {
++		toSaveFiles = newFiles;
++	}
++
++	return toSaveFiles;
++}
++
++async function downloadWithName({filename, url}) {
++
++	const options = {
++		fileCache: true, // this option that makes response data to be stored as a file
++		path: directoryPath + formatDate(new Date()) + '_' + filename,
++	};
++
++	return config(options)
++		.fetch('GET', url)
++		.then((res) => {
++			if (res.data) {
++				return { success: true, path: res.data };
++			} else {
++				return { success: false };
++			}
+ 		})
+-		.catch((error) => console.log(error));
++		.catch((error) => {
++			console.log(error);
++			return { success: false };
++		});
+ }
+ 
++
++async function getAllSavedFiles() {
++
++    const assetsDirExists =  await fs.isDir(directoryPath);
++    if (assetsDirExists) {
++        return fs
++            .ls(directoryPath)
++            .then((files) => {
++                return files;
++            })
++            .catch(async (error) => {
++                console.log("getAllSavedFiles_ls",error);
++                return [];
++            });
++    }
++    else {
++        return fs.mkdir(directoryPath)
++        .then(() => {
++            return [];
++        })
++        .catch(async (error) => {
++            console.log("getAllSavedFiles_mkdir",error);
++            return [];
++        });
++    }
++}
++
++
+ async function download(url) {
+ 	const filename = url.split('/').pop();
+ 
+ 	const options = {
+ 		fileCache: true, // this option that makes response data to be stored as a file
+ 		path: directoryPath + formatDate(new Date()) + '_' + filename,
+-		addAndroidDownloads: {
+-			useDownloadManager: true,
+-			notification: true,
+-			mediaScannable: true,
+-			path: directoryPath + formatDate(new Date()) + '_' + filename,
+-		},
+ 	};
+ 
+ 	return config(options)
+@@ -115,17 +202,17 @@ function fileExists(path) {
+ }
+ 
+ async function clearAllFiles() {
+-	let PictureDir = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
+ 	
+-	var path = PictureDir + '/' + appNamePath;
++	var path = fileDirectory + '/' + appNamePath;
+ 
+ 	return fs
+ 		.unlink(path)
+ 		.then((exist) => {
++			console.log("Cleared all files");
+ 			return { success: true };
+ 		})
+ 		.catch((error) => {
+-			console.log(error);
++			console.log("Failed to clear all files", error);
+ 			return { success: false, error: error };
+ 		});
+ }
+@@ -182,10 +269,26 @@ async function getLocalFile(url) {
+ 	}
+ }
+ 
++async function getLocalFileByName(filename) {
++	const allFiles = await getAllSavedFiles();
++
++	if (!allFiles || allFiles.length == 0) return { success: false };
++
++	const existingFile = allFiles.find((savedFile) => savedFile.includes(filename));
++
++	if (existingFile) {
++		return { success: true, path: directoryPath + existingFile };
++	} else {
++		return { success: false };
++	}
++}
++
+ export default {
+ 	downloadFiles,
+ 	clearAllFiles,
+ 	clearBeforeDate,
+ 	getAllSavedFiles,
+ 	getLocalFile,
++	downloadFilesWithNames,
++	getLocalFileByName,
+ };
+diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
+index c1656ea..ab4fa3e 100644
+--- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
++++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
+@@ -5,29 +5,40 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import React, { Component, useLayoutEffect, useEffect, useRef, useState } from 'react';
++import React, { Component, useLayoutEffect, useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
+ import { Text, StyleSheet, Image, View, Dimensions } from 'react-native';
+ import * as R from 'ramda';
+ import Video from 'react-native-video';
+ import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
+ import FileManager from '../utilities/FileManager';
+ 
+-export default function VideoView(props) {
+-	const { getLocalFile } = FileManager;
++export function CustomVideoView(props, ref) {
++	const { getLocalFile, getLocalFileByName } = FileManager;
+ 
+ 	const videoPlayer = useRef(null);
+ 
++	useImperativeHandle(ref, () => ({
++	pause: () => {
++			onPaused()
++	},
++	reset: () => {
++		setTimeout(() => onSeek(0), 100);
++	}
++  }));
++
++
+ 	const [containerHeight, setContainerHeight] = useState('31%');
+ 	const [currentTime, setCurrentTime] = useState(0);
+ 	const [duration, setDuration] = useState(0);
+ 	const [isFullScreen, setIsFullScreen] = useState(false);
+ 	const [isLoading, setIsLoading] = useState(true);
+-	const [paused, setPaused] = useState(false);
++	const [paused, setPaused] = useState(!props.autoplay);
+ 	const [playerState, setPlayerState] = useState(PLAYER_STATES.PLAYING);
+-	const [screenType, setScreenType] = useState('content');
++	const [screenType, setScreenType] = useState('cover');
+ 	const [url, setUrl] = useState(null);
+ 
+ 	useEffect(() => {
++		
+ 		if (props.startInFullScreen) {
+ 			onFullScreen();
+ 		}
+@@ -37,11 +48,18 @@ export default function VideoView(props) {
+ 		} else {
+ 			checkForLocalFile();
+ 		}
+-	}, []);
++	}, [props.url]);
+ 
+ 	async function checkForLocalFile() {
+-		const res = await getLocalFile(props.url);
++		let res;
++		if (props.filename) {
++		 res = await getLocalFileByName(props.filename);	
++		}
++		else {
++		 res = await getLocalFile(props.url);
++		}
+ 
++		console.log("Play Existing File",res)
+ 		if (res.success) {
+ 			setUrl(res.path);
+ 		} else {
+@@ -50,14 +68,14 @@ export default function VideoView(props) {
+ 	}
+ 
+ 	const onSeek = (seek) => {
+-		videoPlayer.seek(seek);
++		videoPlayer.current.seek(seek);
+ 	};
+ 
+ 	const onPaused = (newPlayerState) => {
+ 		setPaused(!paused);
+ 		setPlayerState(newPlayerState);
+ 
+-		props.onPaused && props.onPaused();
++		props.onPaused && props.onPaused(!paused);
+ 	};
+ 
+ 	const onReplay = () => {
+@@ -79,7 +97,7 @@ export default function VideoView(props) {
+ 		setDuration(data.duration);
+ 		setIsLoading(false);
+ 
+-		props.onLoadEnd && props.onLoadEnd();
++		props.onLoadEnd && props.onLoadEnd(data.duration);
+ 	};
+ 
+ 	const onLoadStart = (data) => {
+@@ -103,11 +121,9 @@ export default function VideoView(props) {
+ 	const onSeeking = (newCurrentTime) => setCurrentTime(newCurrentTime);
+ 
+ 	const onFullScreen = () => {
+-		if (screenType == 'content') {
+-			setScreenType('cover');
++		if (!isFullScreen) {
+ 			setContainerHeight('100%');
+ 		} else {
+-			setScreenType('content');
+ 			setContainerHeight('31%');
+ 		}
+ 		setIsFullScreen(!isFullScreen);
+@@ -120,7 +136,7 @@ export default function VideoView(props) {
+ 	const renderToolbar = () => <></>;
+ 
+ 	return (
+-		<View style={{ height: containerHeight }}>
++		<View style={{ height: props.height || containerHeight}}>
+ 			<Video
+ 				onEnd={onEnd}
+ 				onLoad={onLoad}
+@@ -135,9 +151,12 @@ export default function VideoView(props) {
+ 				}}
+ 				style={styles.mediaPlayer}
+ 				volume={props.volume || 13}
++				muted={props.muted || false}
++
+ 			/>
+ 
+-			<MediaControls
++			{props.customControls ? props.customControls : (
++				<MediaControls
+ 				isFullScreen={isFullScreen}
+ 				duration={duration}
+ 				isLoading={isLoading}
+@@ -153,6 +172,8 @@ export default function VideoView(props) {
+ 				fadeOutDelay={3000}
+ 				showOnStart={false}
+ 			/>
++			)}
++			
+ 		</View>
+ 	);
+ }
+@@ -175,5 +196,10 @@ const styles = StyleSheet.create({
+ 		bottom: 0,
+ 		right: 0,
+ 		backgroundColor: 'black',
++		
+ 	},
+ });
++
++CustomVideoView = forwardRef(CustomVideoView);
++
++export default CustomVideoView;
+\ No newline at end of file

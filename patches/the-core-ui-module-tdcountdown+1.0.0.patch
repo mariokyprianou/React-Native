@@ -1,0 +1,124 @@
+diff --git a/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js b/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js
+index 5161f5a..9fac292 100644
+--- a/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js
++++ b/node_modules/the-core-ui-module-tdcountdown/src/TDCountdown.js
+@@ -12,7 +12,7 @@ const GlobalTimeContext = React.createContext();
+ function GlobalTimer(props) {
+   const [date, setDate] = useState(Date.now());
+ 
+-  useInterval(() => setDate(Date.now()), 100);
++  useInterval(() => setDate(Date.now()), 500);
+ 
+   return (
+     <GlobalTimeContext.Provider value={date}>
+diff --git a/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js b/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js
+index 6387017..e99b22d 100644
+--- a/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js
++++ b/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js
+@@ -9,8 +9,8 @@ import { GlobalTimeContext } from "../TDCountdown";
+ import msToHMS from "../utils/msToHMS";
+ 
+ export default function useStopwatch() {
+-  // This is global clock
+-  const date = useContext(GlobalTimeContext);
++
++  const interval = null;
+ 
+   // This is the current state of the timer
+   const [start, setStart] = useState(false);
+@@ -20,7 +20,6 @@ export default function useStopwatch() {
+   // Toggle the stopwatch
+   const toggle = () => {
+     if (!start) {
+-      console.log("Start timer");
+       setStart(true);
+       if (elapsedTime > 0) {
+         setStartTime(Date.now() - elapsedTime);
+@@ -39,13 +38,25 @@ export default function useStopwatch() {
+   };
+ 
+   useEffect(() => {
+-    if (start) {
+-      setElapsedTime(date - startTime);
++
++    if (start && new Date() > startTime ) {
++    this.interval = setInterval(() => {
++      const value = (Math.ceil((new Date() - startTime) / 1000) * 1000)
++      if (value >= 0) {
++        setElapsedTime(new Date() - startTime); 
++      }
++      else {
++        setStart(false)
++      }
++    }, 1000);
++  }
++    else{
++      clearInterval(this.interval);
++      this.interval = null;
+     }
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [date]);
++  }, [start])
++
+   
+-  //   return date;
+   return {
+     elapsed: msToHMS(elapsedTime),
+     elapsedMS: elapsedTime,
+diff --git a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
+index 1b1c1fe..2b20273 100644
+--- a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
++++ b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
+@@ -10,9 +10,8 @@ import msToHMS from "../utils/msToHMS";
+ import HMStoMS from "../utils/HMStoMS";
+ 
+ export default function useTimer({ timer }) {
+-  // This is global clock
+-  const date = useContext(GlobalTimeContext);
+ 
++  const interval = null;
+   // This is the time remaining in milliseconds (timer is a HH:MM:SS string)
+   const [remaining, setRemaining] = useState(HMStoMS(timer));
+ 
+@@ -31,6 +30,25 @@ export default function useTimer({ timer }) {
+     }
+   };
+ 
++  useEffect(() => {
++
++    if (start && targetTime > new Date()) {
++    this.interval = setInterval(() => {
++      const value = (Math.ceil((targetTime - new Date()) / 1000) * 1000)
++      if (value >= 0) {
++        setRemaining(Math.abs(value));
++      }
++      else {
++        setStart(false)
++      }
++    }, 1000);
++  }
++    else{
++      clearInterval(this.interval);
++      this.interval = null;
++    }
++  }, [start])
++
+   // Reset the timer
+   const reset = () => {
+     setStart(false);
+@@ -38,15 +56,6 @@ export default function useTimer({ timer }) {
+     setRemaining(HMStoMS(timer));
+   };
+ 
+-  // react to the global clock up dates
+-  useEffect(() => {
+-    if (start && targetTime > date) {
+-      setRemaining(targetTime - date);
+-    }
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [date]);
+-
+-  //   return date;
+   return {
+     remaining: msToHMS(remaining),
+     remainingMS: remaining,

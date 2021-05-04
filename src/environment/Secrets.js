@@ -6,23 +6,24 @@
  */
 
 import {NativeModules, Platform} from 'react-native';
+import Environment from './Environment';
 
 const iOSSecretsManager = NativeModules.iOSSecretsManager;
 const AndroidSecretsManager = NativeModules.AndroidSecretsManager;
 
-export default function fetchSecrets(environment) {
+export default function fetchSecrets() {
+  // return true;
   if (Platform.OS === 'ios') {
     try {
-      const secrets = iOSSecretsManager.fetch(environment);
+      const secrets = iOSSecretsManager.fetch(Environment);
       return secrets;
     } catch (error) {
       console.error(error);
       return null;
     }
   } else if (Platform.OS === 'android') {
-    const secrets = AndroidSecretsManager.fetch(environment);
+    const secrets = AndroidSecretsManager.fetch(Environment);
     return secrets;
   }
-
   return null;
 }

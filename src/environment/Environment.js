@@ -8,13 +8,13 @@
 const selectEnv = () => {
   if (process.env.NODE_ENV === 'production') {
     return 'production';
-  } else if (process.env.NODE_ENV === 'development') {
+  } else if (process.env.NODE_ENV === 'staging') {
     return 'development';
   }
 
-  return 'staging';
+  return 'development';
 };
 
-const Environment = selectEnv();
-
+// const Environment = selectEnv();
+const Environment = 'development';
 export default Environment;

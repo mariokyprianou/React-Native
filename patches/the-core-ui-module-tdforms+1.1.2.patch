@@ -1,0 +1,118 @@
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/CalendarCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/CalendarCell.js
+index 4934d0f..b8210e7 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/CalendarCell.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/CalendarCell.js
+@@ -96,11 +96,13 @@ export default function(props) {
+       <DateTimePicker
+         {...Platform.select({
+           android: 
+-            {...cell}
++            { ...cell }
+           }
+-        )}
++        ) }
++        maximumDate={new Date()}
+         isVisible={picker}
+         datePickerModeAndroid="spinner"
++        display="spinner"
+         onConfirm={e => {
+           setPicker(prevPicker => !prevPicker);
+           onChange({name: cell.name, value: cell.dateFormat(e)});
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js
+index e72354b..775449a 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.android.js
+@@ -56,6 +56,7 @@ const AndroidWheelPicker = props => {
+   return (
+     <Modal
+       isVisible={picker}
++      useNativeDriver={true}
+       style={
+         props.modalContainer ? props.modalContainer : styles.modalContainer
+       }>
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
+index 439a0d3..621e6b3 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/Dropdown/Dropdown.ios.js
+@@ -10,22 +10,26 @@ import {Text} from 'react-native';
+ import QuickPicker from 'quick-picker';
+ 
+ export default function (props) {
+-  const {picker, onEndEditing} = props;
++  const {picker,setPicker, onEndEditing} = props;
+ 
+   React.useEffect(() => {
++    
+     if (picker) {
+       QuickPicker.open({
+-        items: ['', ...props.data],
++        items: [...props.data],
+         selectedValue: props.value,
+         onValueChange: props.onChange,
++      
+         onPressDone: (value) => {
+           props.onChange(value);
+           if (onEndEditing) {
+             onEndEditing();
+           }
++
+           QuickPicker.close();
+         },
+       });
++      setPicker(false);
+     }
+   }, [picker]);
+ 
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js
+index 415c726..54ef15b 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/DropdownCell.js
+@@ -109,6 +109,7 @@ export default React.memo(props => {
+         {...cell}
+         onEndEditing={onEndEditing}
+         picker={picker}
++        setPicker={setPicker}
+         data={cell.data}
+         close={handlePress}
+         onChange={handleChange}
+diff --git a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
+index 06cd661..fa6c8f3 100644
+--- a/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
++++ b/node_modules/the-core-ui-module-tdforms/src/Cells/TextCell.js
+@@ -13,12 +13,13 @@ import {ScaleHook} from 'react-native-design-to-component';
+ import FormHook from '../Form/FormHook';
+ import TextInput from './TextInput';
+ import DropdownCell from './DropdownCell';
++import TDIcon from 'the-core-ui-component-tdicon';
+ 
+ const eye = require('../Assets/eye.png');
+ const eyeClose = require('../Assets/eye-close.png');
+ 
+ export default function TextCell(props) {
+-  const {getHeight, getWidth} = ScaleHook();
++  const {getHeight, getWidth, fontSize} = ScaleHook();
+   const {getValueByName} = FormHook();
+ 
+   const {cell} = props;
+@@ -36,9 +37,20 @@ export default function TextCell(props) {
+     />
+   );
+ 
++
++  const powerCustomRightAccessory = () => (
++    <View style={cell.customPasswordStyle}>
++      <TDIcon     
++        input={visibility ?  'eye-slash' : 'eye'} 
++        inputStyle={
++          { icon: { size: fontSize(12) }, color: cell.iconTintColor}
++        } />
++    </View>
++  )
++
+   const PasswordEye = cell.rightAccessory
+     ? () => cell.rightAccessory(visibility)
+-    : () => rightAccessory();
++    : () => powerCustomRightAccessory();
+ 
+   const rightAccessoryOnPress = () => setVisibility(!visibility);
+ 

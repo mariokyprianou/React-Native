@@ -1,0 +1,218 @@
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js b/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js
+index feb9794..a9ca8b2 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/Calendar.js
+@@ -96,7 +96,7 @@ export default function Calendar({
+         titleTextStyles={monthTitleTextStyles || defaultMonthTitleTextStyles}
+         calendarType={calendarType || defaultCalendarType}
+         monthNames={calendarMonthNames || defaultCalendarMonthNames}
+-        datesSelectable={datesSelectable || defaultDatesSelectable}
++        datesSelectable={false}
+         dateCellStyles={dateCellStyles || defaultDateCellStyles}
+         pillWidth={pillWidth || defaultPillWidth}
+         lookupStyleTable={lookupStyleTable || defaultLookupStyleTable}
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
+index 4187631..6072260 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
+@@ -6,18 +6,36 @@
+  * Copyright (c) 2020 The Distance
+  */
+ 
+-import React, { useState, useEffect } from "react";
++import React, { useState, useEffect, useRef } from "react";
+ import {
+   StyleSheet,
+   View,
+   TouchableOpacity,
+   ScrollView,
+   Text,
++  I18nManager, Dimensions, Platform
+ } from "react-native";
+ import { getDay, subMonths, getDaysInMonth } from "date-fns";
+ import DateCell from "./DateCell";
+ import { ScaleHook } from "react-native-design-to-component";
+ 
++
++const isIPhoneXSize = (dim) => dim.height === 812 || dim.width === 812;
++
++const isIPhoneXrSize = (dim) => dim.height === 896 || dim.width === 896;
++
++function isIphoneX() {
++  const dim = Dimensions.get('window');
++
++  return (
++    // This has to be iOS
++    Platform.OS === 'ios' &&
++    // Check either, iPhone X or XR
++    (isIPhoneXSize(dim) || isIPhoneXrSize(dim))
++  );
++}
++
++
+ export default function CalendarGrid({
+   firstDayOfWeek,
+   showPrevNextDays = true,
+@@ -106,7 +124,7 @@ export default function CalendarGrid({
+   const styles = StyleSheet.create({
+     container: {
+       flex: 1,
+-      minHeight: getHeight(250),
++      // minHeight: getHeight(220),
+       alignItems: "center",
+     },
+     multipleContainer: {
+@@ -116,7 +134,7 @@ export default function CalendarGrid({
+     },
+     calendarContainer: {
+       flex: 1,
+-      flexDirection: "row",
++      flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
+       justifyContent: "center",
+       alignItems: "center",
+       flexWrap: "wrap",
+@@ -134,18 +152,31 @@ export default function CalendarGrid({
+     },
+     titleText: {
+       ...titleTextStyles,
++       textAlign: "left",
+     },
+     spacer: {
+-      height: getHeight(70),
++      height: Platform.OS === 'android' || isIphoneX() ? getHeight(310) : getHeight(280),
+     },
+   });
+ 
++
++  const ref = useRef(null);
++  const [scrollTo, setScrollTo] = useState(0);
++
++  useEffect(() => {
++    console.log(scrollTo);
++    if (allMonthsArray && allMonthsArray.length > 0 && ref.current) {
++      ref.current.scrollTo({x: 0, y: scrollTo, animated: true})
++    }
++  }, [scrollTo]);
++
++
+   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+   // ** ** ** ** ** RENDER ** ** ** ** **
+   if (calendarType === "multiple-month") {
+     return (
+       <View style={styles.multipleContainer}>
+-        <ScrollView>
++        <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
+           {allMonthsArray?.map((month) => {
+             const monthNumber = new Date(Object.keys(month[0])[0]).getMonth();
+             const monthName = monthNames[monthNumber];
+@@ -168,7 +199,13 @@ export default function CalendarGrid({
+             });
+             return (
+               <>
+-                <View style={styles.titleContainer}>
++                <View onLayout={e => {
++                  if (!scrollTo || e.nativeEvent.layout.y > scrollTo) {
++                    setScrollTo(e.nativeEvent.layout.y);
++                  }
++                 } 
++                }
++                 style={styles.titleContainer}>
+                   <Text style={styles.titleText}>
+                     {monthName} {year}
+                   </Text>
+@@ -265,8 +302,9 @@ export default function CalendarGrid({
+           <View
+             style={{ width: pillWidth.width * (6 - lastDayOfSingleMonth) }}
+           />
+-        )}
++        ) }
+       </View>
++      <View style={ {height: getHeight(17)} }/>
+     </View>
+   );
+ }
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
+index 9c9dad3..48eb784 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/components/DateCell.js
+@@ -10,6 +10,7 @@ import React from "react";
+ import { View, Text } from "react-native";
+ import TDIcon from "the-core-ui-component-tdicon";
+ import { ScaleHook } from "react-native-design-to-component";
++import LinearGradient from 'react-native-linear-gradient';
+ 
+ export default function DateCell({
+   date,
+@@ -41,6 +42,9 @@ export default function DateCell({
+       solid: true,
+       color: "#ffffff",
+     },
++    gradient: {
++      flex: 1,
++    }
+   };
+ 
+   const { pill, text } = lookupStyleTable[status];
+@@ -49,13 +53,21 @@ export default function DateCell({
+   // ** ** ** ** ** RENDER ** ** ** ** **
+   return (
+     <View style={{ ...sharedStyle, ...pill }}>
+-      {status === "newWeekNewProgramme" ? (
+-        <View style={styles.newProgramme}>
+-          <Text style={text}>{date}</Text>
+-          <View style={styles.iconContainer}>
+-            <TDIcon input="star" inputStyle={styles.icon} />
++      {status === "NEW_PROGRAMME" || status === "NEW_WEEK" ? (
++        <LinearGradient
++          style={{...styles.gradient, ...sharedStyle, ...pill}}
++          start={{x: 0, y: 0}}
++          end={{x: 1, y: 0}}
++          colors={['rgba(116, 235, 231, 1)', 'rgba(46, 193, 187, 1)']}>
++          <View style={styles.newProgramme}>
++            <Text style={ text }>{ date }</Text>
++            { status === "NEW_PROGRAMME" && 
++              <View style={styles.iconContainer}>
++                <TDIcon input="star" inputStyle={styles.icon} />
++              </View>
++            }
+           </View>
+-        </View>
++        </LinearGradient>
+       ) : (
+         <Text style={text}>{date}</Text>
+       )}
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/DayList.js b/node_modules/the-core-ui-module-tdcalendar/src/components/DayList.js
+index fcfd0ed..7459525 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/components/DayList.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/components/DayList.js
+@@ -7,7 +7,7 @@
+  */
+ 
+ import React from "react";
+-import { StyleSheet, View, Text } from "react-native";
++import { StyleSheet, View, Text, I18nManager } from "react-native";
+ import { ScaleHook } from "react-native-design-to-component";
+ 
+ export default function DayList({
+@@ -22,7 +22,7 @@ export default function DayList({
+   // ** ** ** ** ** STYLES ** ** ** ** **
+   const styles = StyleSheet.create({
+     container: {
+-      flexDirection: "row",
++      flexDirection: I18nManager.isRTL ? "row-reverse" : "row",
+       justifyContent: "center",
+       ...containerStyles,
+     },
+diff --git a/node_modules/the-core-ui-module-tdcalendar/src/defaultProps/index.js b/node_modules/the-core-ui-module-tdcalendar/src/defaultProps/index.js
+index ce79f6f..5ac29c8 100644
+--- a/node_modules/the-core-ui-module-tdcalendar/src/defaultProps/index.js
++++ b/node_modules/the-core-ui-module-tdcalendar/src/defaultProps/index.js
+@@ -82,7 +82,7 @@ export function defaultProps() {
+     defaultCalendarGridStyles: { marginBottom: getHeight(14) },
+     defaultMonthTitleContainerStyles: {
+       marginVertical: getHeight(20),
+-      marginLeft: getWidth(20),
++      marginHorizontal: getWidth(20),
+     },
+     defaultMonthTitleTextStyles: { fontWeight: "bold", fontSize: fontSize(14) },
+     defaultCalendarType: "single-month",

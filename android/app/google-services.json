@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "511448289531",
+    "firebase_url": "https://power-app-74af8.firebaseio.com",
+    "project_id": "power-app-74af8",
+    "storage_bucket": "power-app-74af8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511448289531:android:c3a25c1a9d88bbafa5605e",
+        "android_client_info": {
+          "package_name": "com.powerdigitallimited.power"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511448289531-i5o8juvrduef55bqi63jqkro6tidpfmk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf-SgWcnLj4uqlNSy4WnQjry2jasWKlIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511448289531-i5o8juvrduef55bqi63jqkro6tidpfmk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "511448289531-dgb4bsl3bln5h9qvprrlfroo5phtfe15.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.powerdigitallimited.power"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

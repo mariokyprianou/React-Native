@@ -11,17 +11,19 @@ import Environment from '../environment/Environment';
 import Secrets from '../environment/Secrets';
 
 export default isValidChecksum = async () => {
-	if (!__DEV__) {
-		try {
-			const checksum = await RNBundleChecksum.getChecksum();
-			const correctChecksum = Secrets(Environment).checksum;
-			const checksumTampered = checksum !== correctChecksum;
-			return !checksumTampered;
-		} catch (e) {
-			console.error(e);
-			return false;
-		}
-	}
+  return true;
 
-	return true;
+  if (!__DEV__) {
+    try {
+      const checksum = await RNBundleChecksum.getChecksum();
+      const correctChecksum = Secrets(Environment).checksum;
+      const checksumTampered = checksum !== correctChecksum;
+      return !checksumTampered;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  return true;
 };

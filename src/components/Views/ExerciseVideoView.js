@@ -74,6 +74,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     skipCache: !isDownloadEnabled,
     autoplay: false, //index === currentExerciseIndex,
     muted: true,
+    repeat: true,
 
     onLoadEnd: (duration) => {
       setVideoDuration(duration);
@@ -163,11 +164,6 @@ export default function ({video, videoEasy, videoEasiest, index}) {
             }}
           />
         )}
-        <SliderProgressView
-          max={videoDuration}
-          progress={currentProgress}
-          height={getHeight(5)}
-        />
         {showControls && controls()}
       </View>
     </View>

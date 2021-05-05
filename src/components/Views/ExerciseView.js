@@ -6,12 +6,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-} from 'react-native';
+import {View, TouchableOpacity, Text, Image} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -23,12 +18,13 @@ import {msToHMS} from '../../utils/dateTimeUtils';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
 import {useLazyQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
+import SliderProgressView from './SliderProgressView';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -56,8 +52,11 @@ export default function ExerciseView(props) {
   // Rest time of the active set
   const [restTime, setRestTime] = useState();
 
+  // Exercise time of the active set
+  const [exerciseTime, setExerciseTime] = useState(null);
+
   const [setComplete, setSetComplete] = useState(null);
-  
+
   const [weightHistory, setWeightHistory] = useState([]);
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
@@ -68,34 +67,29 @@ export default function ExerciseView(props) {
     onCompleted: (res) => {
       if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
         setWeightHistory(res.getExerciseWeight);
-      }
-      else {
+      } else {
         setWeightHistory([]);
       }
     },
     onError: (error) => {
       setWeightHistory([]);
       console.log(error, '<---- error fetching weights');
-    }
+    },
   });
 
-
   // To observe sets are behaving as expected
-  useEffect(()=> {
+  useEffect(() => {
     if (index === currentExerciseIndex) {
-      console.log(sets)
+      console.log(sets);
     }
   }, [sets]);
 
-
   // Initial render
   useEffect(() => {
-
     if (exercise.weight) {
       getWeightHistory();
     }
   }, []);
-
 
   // Mark current exercise as complete
   useEffect(() => {
@@ -104,16 +98,20 @@ export default function ExerciseView(props) {
     }
   }, [exerciseCompleted]);
 
-
   // Initialise sets, Sort and set states
   useEffect(() => {
-    let sets = props.sets.slice().sort((a,b) => a.setNumber > b.setNumber);
+    let sets = props.sets.slice().sort((a, b) => a.setNumber > b.setNumber);
 
     sets = sets.map((it, index) => {
       if (index === 0) {
         if (it.restTime && it.restTime > 0) {
           setRestTime(it.restTime * 1000);
         }
+
+        if (it.quantity && it.quantity > 0 && props.setType !== 'REPS') {
+          setExerciseTime(it.quantity * 1000);
+        }
+
         return {
           ...it,
           state: 'active',
@@ -128,7 +126,6 @@ export default function ExerciseView(props) {
     setSets(sets);
   }, []);
 
-
   // Finished weight submition, check if it was last set
   useEffect(() => {
     if (setComplete === false) {
@@ -136,18 +133,14 @@ export default function ExerciseView(props) {
     }
   }, [setComplete]);
 
-  
   // Enable/disable scroll based on any set completion modal showing
-  useEffect(()=> {
-
+  useEffect(() => {
     if ((countDown && restTime > 0) || setComplete) {
       setEnableScroll(false);
-    }
-    else {
+    } else {
       setEnableScroll(true);
     }
   }, [countDown, restTime, setComplete]);
-
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -167,10 +160,14 @@ export default function ExerciseView(props) {
           state: 'completed',
         };
       } else if (index === completedIndex + 1) {
-       
         if (it.restTime && it.restTime > 0) {
           setRestTime(it.restTime * 1000);
         }
+
+        if (it.quantity && it.quantity > 0 && props.setType !== 'REPS') {
+          setExerciseTime(it.quantity * 1000);
+        }
+
         return {
           ...it,
           state: 'active',
@@ -240,18 +237,17 @@ export default function ExerciseView(props) {
   }
 
   const handleSelectWeights = () => {
-    if (!weightHistory || !exercise.name || !props.setType || !weightLabel) return;
+    if (!weightHistory || !exercise.name || !props.setType || !weightLabel)
+      return;
 
     if (weightHistory.length > 0) {
-     navigation.navigate('WeightCapture', {
+      navigation.navigate('WeightCapture', {
         exerciseName: exercise.name,
         weightHistory: weightHistory,
         weightPreference: weightLabel,
-        setType: props.setType
+        setType: props.setType,
       });
-    
-    }
-    else {
+    } else {
       displayAlert({text: WorkoutDict.WorkoutNoWeightsWarning});
     }
   };
@@ -264,12 +260,12 @@ export default function ExerciseView(props) {
         {sets.map((item, index) => {
           return (
             <View style={{marginStart: getWidth(14)}}>
-            <RepCell
-              key={index}
-              {...item}
-              setType={props.setType}
-              onPress={() => onSetCompleted(index)}
-            />
+              <RepCell
+                key={index}
+                {...item}
+                setType={props.setType}
+                onPress={() => onSetCompleted(index)}
+              />
             </View>
           );
         })}
@@ -279,7 +275,7 @@ export default function ExerciseView(props) {
 
   return (
     <View style={{height: Constants.EXERCISE_VIEW_HEIGHT}}>
-      <ExerciseVideoView {...exercise} index={index} />
+      <ExerciseVideoView {...exercise} index={index} setType={props.setType} />
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
@@ -302,10 +298,9 @@ export default function ExerciseView(props) {
           </TouchableOpacity>
         </View>
 
-
         <ScrollView>
           <Text style={styles.exerciseDescriptionStyle}>
-            {exercise.coachingTips}     
+            {exercise.coachingTips}
           </Text>
         </ScrollView>
 
@@ -353,9 +348,11 @@ export default function ExerciseView(props) {
 
         {countDown && restTime > 0 && (
           <TimerView
-            duration={msToHMS(restTime)}
+            exerciseTime={exerciseTime}
+            restTime={restTime}
             onCancelTimer={onCancelTimer}
             onFinish={onFinishTimer}
+            setType={props.setType}
           />
         )}
       </View>
@@ -376,8 +373,14 @@ export default function ExerciseView(props) {
 }
 
 function TimerView(props) {
-  const {remainingMS, toggle, reset} = useTimer({
-    timer: props.duration,
+  let durationMS = props.exerciseTime ? props.exerciseTime : props.restTime;
+  let durationFormatted = msToHMS(durationMS);
+  const [shouldRestAfterExercise, setShouldRestAfterExercise] = useState(
+    props.exerciseTime !== null,
+  );
+
+  const {remainingMS, toggle, reset, restart} = useTimer({
+    timer: durationFormatted,
   });
 
   useEffect(() => {
@@ -387,15 +390,32 @@ function TimerView(props) {
 
   useEffect(() => {
     if (remainingMS === 0) {
-      props.onFinish && props.onFinish();
+      if (shouldRestAfterExercise) {
+        durationMS = props.restTime;
+        durationFormatted = msToHMS(durationMS);
+        setShouldRestAfterExercise(false);
+        restart(durationMS);
+      } else {
+        props.onFinish && props.onFinish();
+      }
     }
-  }, [remainingMS]);
+  }, [remainingMS, shouldRestAfterExercise]);
 
   const {exerciseViewStyle} = useTheme();
+  const {getHeight} = ScaleHook();
   const styles = exerciseViewStyle;
+  const progress = durationMS - remainingMS;
 
   return (
     <View style={styles.timerContainer}>
+      {props.setType !== 'REPS' && (
+        <SliderProgressView
+          max={durationMS}
+          progress={progress}
+          height={getHeight(5)}
+        />
+      )}
+
       <TouchableOpacity
         style={styles.timerTouchArea}
         onPress={props.onCancelTimer}>

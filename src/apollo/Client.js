@@ -3,10 +3,10 @@
  * Created: Wed, 6th January 212021
  * Copyright 2021 - The Distance
  */
-import {HttpLink, InMemoryCache, ApolloClient} from '@apollo/client';
-import {persistCache} from 'apollo3-cache-persist';
+import { HttpLink, InMemoryCache, ApolloClient } from '@apollo/client';
+import { persistCache, AsyncStorageWrapper } from 'apollo3-cache-persist';
 import AsyncStorage from '@react-native-community/async-storage';
-import TypeDefs from './TypeDefs';
+
 import Authoriser from './ApolloMiddleware/Authoriser';
 import {onError} from '@apollo/client/link/error';
 import Secrets from '../environment/Secrets';
@@ -27,7 +27,6 @@ const errorLink = onError(
 );
 
 export async function TDGraphQLProvider() {
-  const cache = new InMemoryCache();
 
   const authFetch = async (_, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
@@ -60,23 +59,17 @@ export async function TDGraphQLProvider() {
 
   const link = new HttpLink({fetch: authFetch});
 
-  const client = new ApolloClient({
-    link: errorLink.concat(link),
+  const cache =  new InMemoryCache({});
+
+  await persistCache({
     cache,
-    typeDefs: TypeDefs,
-    connectToDevTools: true,
+    storage: new AsyncStorageWrapper(AsyncStorage),
   });
 
-  try {
-    await persistCache({
-      cache,
-      storage: AsyncStorage,
-      debug: true,
-    });
-  } catch (error) {
-    console.error('Error restoring Apollo cache', error);
-    return null;
-  }
+  const client = new ApolloClient({
+    link: errorLink.concat(link),
+    cache: cache,
+  });
 
   return client;
 }

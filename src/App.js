@@ -28,12 +28,9 @@ import CommonDataProvider from './hooks/data/CommonDataProvider';
 import ProgressDataProvider from './hooks/data/ProgressDataProvider';
 import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import ShareProvider from './hooks/share/ShareProvider';
-import getTimeZoneOffset from './utils/getTimeZoneOffset';
+import QueryProvider from './hooks/customQuery/Provider';
 import {firebase} from '@react-native-firebase/analytics';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider,} from 'react-native-safe-area-context';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -107,27 +104,29 @@ const App = () => {
           <ScaleProvider config={{height: 667, width: 375}}>
             <ThemeProvider>
               <DictionaryProvider>
-                <DataProvider>
-                  <UserDataProvider>
-                    <CommonDataProvider>
-                      <ProgressDataProvider>
-                        <WorkoutTimerProvider>
-                          <ShareProvider>
-                            <LoadingProvider>
-                              <NavigationContainer>
-                                <TDCountdown>
-                                  <FormProvider>
-                                    <AppContainer />
-                                  </FormProvider>
-                                </TDCountdown>
-                              </NavigationContainer>
-                            </LoadingProvider>
-                          </ShareProvider>
-                        </WorkoutTimerProvider>
-                      </ProgressDataProvider>
-                    </CommonDataProvider>
-                  </UserDataProvider>
-                </DataProvider>
+                <QueryProvider>
+                  <DataProvider>
+                    <UserDataProvider>
+                      <CommonDataProvider>
+                        <ProgressDataProvider>
+                          <WorkoutTimerProvider>
+                            <ShareProvider>
+                              <LoadingProvider>
+                                <NavigationContainer>
+                                  <TDCountdown>
+                                    <FormProvider>
+                                      <AppContainer />
+                                    </FormProvider>
+                                  </TDCountdown>
+                                </NavigationContainer>
+                              </LoadingProvider>
+                            </ShareProvider>
+                          </WorkoutTimerProvider>
+                        </ProgressDataProvider>
+                      </CommonDataProvider>
+                    </UserDataProvider>
+                  </DataProvider>
+                </QueryProvider>
               </DictionaryProvider>
             </ThemeProvider>
           </ScaleProvider>

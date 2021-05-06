@@ -75,7 +75,10 @@ export default function MeetYourIconsScreen() {
 
 
   useEffect(() => {
-    setLoading(true);
+    if (isConnected) {
+      setLoading(true);
+    }
+    
     getTrainers();
   }, [])
   

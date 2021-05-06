@@ -8,7 +8,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 
-const {downloadFilesWithNames} = FileManager;
+const {downloadFilesWithNames, getLocalFileByName} = FileManager;
 
 async function cacheWeekVideos(workouts) {
   const shouldCache = await shouldCacheWeek();
@@ -82,4 +82,46 @@ async function shouldCacheWeek() {
   return cacheWeekEnabled && downloadEnabled;
 }
 
-export {cacheWeekVideos};
+
+
+
+
+async function cacheImages(images) {
+
+  // Separate names and urls
+  let files = images.map((url) => {
+    const filename = url.split('/').pop().split('?').shift();
+    return {
+      filename: filename,
+      url: url,
+    };
+  });
+
+  // Filter all image files by name so it only caches it once
+  const result = [];
+  const map = new Map();
+  for (const item of files) {
+    if (!map.has(item.filename)) {
+      map.set(item.filename, true);
+      result.push({
+        filename: item.filename,
+        url: item.url,
+      });
+    }
+  }
+
+  // Download and return files and success
+  const res = await downloadFilesWithNames(result);
+  console.log('Download result:', res.message);
+
+  // Week was cached, don't download again
+  if (res.success) {
+    
+  }
+}
+
+
+
+
+
+export {cacheWeekVideos, cacheImages};

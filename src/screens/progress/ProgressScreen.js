@@ -74,7 +74,7 @@ export default function ProgressScreen() {
   }, []);
 
   useEffect(() => {
-    if (preferences.weightPreference) {
+    if (preferences && preferences.weightPreference) {
       const weightPreference = preferences.weightPreference.toLowerCase();
       setWeightLabel(weightPreference);
     }

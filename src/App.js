@@ -54,11 +54,14 @@ const App = () => {
       const gqlClient = await TDGraphQLProvider();
       setClient(gqlClient);
 
+
       await firebase.initializeApp();
     }
 
     BuildClient();
   }, []);
+
+
 
   const validateChecksum = async () => {
     const valid = await isValidChecksum();
@@ -84,6 +87,7 @@ const App = () => {
 
     validateChecksum();
     languageSet();
+
   }, []);
 
   if (!validChecksum) {

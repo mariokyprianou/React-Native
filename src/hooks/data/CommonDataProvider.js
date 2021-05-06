@@ -16,6 +16,7 @@ import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire'
 import useDictionary from '../localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
 import useCustomQuery from '../customQuery/useCustomQuery';
+import FastImage from 'react-native-fast-image';
 
 export default function DataProvider(props) {
   const {runQuery} = useCustomQuery();
@@ -44,26 +45,38 @@ export default function DataProvider(props) {
 
 
   const getOnboarding = useCallback(async () => {
-    const res = await runQuery({
-      query: Onboarding,
-      key: 'onboardingScreens',
-      setValue: (res) => {
-        if (res) {
-          const data = [];
-          res.forEach((screen) => {
-            const isRightToLeft = isRTL();
-            if (isRightToLeft === true) {
-              data.unshift(screen);
-            } else {
-              data.push(screen);
-            }
-          });
-          setOnboarding(data);
-        }
-      },
-    });
+  
+    if (isConnected && isInternetReachable) {
+      const res = await runQuery({
+        query: Onboarding,
+        key: 'onboardingScreens',
+        setValue: async (res) => {
+          if (res) {
+            const data = [];
+            res.forEach((screen) => {
+              const isRightToLeft = isRTL();
+              if (isRightToLeft === true) {
+                data.unshift(screen);
+              } else {
+                data.push(screen);
+              }
+            });
 
-  }, [runQuery]);
+            if (isConnected && isInternetReachable) {
+                const images = data.map(it => {
+                  return {uri: it.image};
+                })
+                FastImage.preload(images);
+                console.log("FastImagePreload: onboarding", images.length);
+            }
+
+            setOnboarding(data);
+          }
+        },
+      });
+    }
+
+  }, [runQuery, isConnected, isInternetReachable, onboarding]);
 
 
 

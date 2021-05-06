@@ -37,7 +37,6 @@ export default function DataProvider(props) {
 
     }, [client, fetchPolicy, isConnected, isInternetReachable]);
 
-
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(

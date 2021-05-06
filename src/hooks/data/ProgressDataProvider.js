@@ -21,9 +21,14 @@ import {
 } from 'date-fns';
 
 import {Auth, Hub} from 'aws-amplify';
+import FastImage from 'react-native-fast-image';
+
+import { cacheImages } from './VideoCacheUtils';
+
 
 export default function DataProvider(props) {
 
+  const {isConnected, isInternetReachable} = useNetInfo();
   const {runQuery} = useCustomQuery();
 
 
@@ -91,18 +96,35 @@ export default function DataProvider(props) {
 
   const [challenges, setChallenges] = useState();
 
+  
+  const initCacheImages = useCallback(
+    async (list) => {
+      if (isConnected) {
+        cacheImages(list);
+        FastImage.preload(list.map(it =>{ return { uri: it }}));
+      }
+    },
+    [isConnected],
+  );
+
 
   const getChallenges = useCallback(async () => {
     const res = await runQuery({
       query: Challenges,
       key: 'challenges',
       setValue: async (data) => {
+
+          const images = data.map(it => {
+            return it.imageUrl
+           })
+          initCacheImages(images);
+
           setChallenges(data);
           return data;
       },
     });
 
-  }, [runQuery]);
+  }, [runQuery, isConnected, isInternetReachable]);
 
   
 

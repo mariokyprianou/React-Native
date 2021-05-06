@@ -28,9 +28,10 @@ import {
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
-import {cacheWeekVideos} from './VideoCacheUtils';
+import {cacheWeekVideos, cacheImages} from './VideoCacheUtils';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+import FastImage from 'react-native-fast-image';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -258,6 +259,16 @@ export default function DataProvider(props) {
     [isConnected],
   );
 
+  const initCacheImages = useCallback(
+    async (list) => {
+      if (isConnected) {
+        cacheImages(list);
+        FastImage.preload(list.map(it =>{ return { uri: it }}));
+      }
+    },
+    [isConnected],
+  );
+
 
   const getProgramme = useCallback(async () => {
 
@@ -276,6 +287,12 @@ export default function DataProvider(props) {
 
       setProgrammeModalImage(data.programmeImage);
       initCacheWeekVideos(data.currentWeek.workouts);
+      
+
+      const images = data.currentWeek.workouts.map(it => {
+        return it.overviewImage;
+       })
+      initCacheImages(images);
 
       const numberOfWorkouts = data.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
@@ -286,6 +303,7 @@ export default function DataProvider(props) {
           .sort((a, b) => a.orderIndex > b.orderIndex),
         storedDays,
       );
+
       setProgramme(data);
 
       },
@@ -297,7 +315,7 @@ export default function DataProvider(props) {
       setProgramme(null);
     }
 
-  }, [runQuery])
+  }, [runQuery, isConnected, isInternetReachable])
 
 
   useEffect(() => {

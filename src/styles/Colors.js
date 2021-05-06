@@ -18,6 +18,7 @@ const Colors = {
   black40: 'rgba(33, 33, 33, 0.4)',
   black60: 'rgba(33, 33, 33, 0.6)',
   black80: 'rgba(33, 33, 33, 0.8)',
+  black90: 'rgba(33, 33, 33, 0.9)',
   black100: 'rgba(33, 33, 33, 1)',
   blueGreen100: 'rgba(14, 119, 116, 1)',
   brownGrey100: 'rgba(154, 154, 154, 1)',
@@ -46,7 +47,7 @@ const Colors = {
 
   dividerBrownishGrey80: 'rgba(208, 208, 208, 1)',
   transparent: 'rgba(0, 0, 0, 0)',
-  completeSetGrey100: 'rgba(131, 151, 157, 0.5)'
+  completeSetGrey100: 'rgba(131, 151, 157, 0.5)',
 };
 
 export default Colors;

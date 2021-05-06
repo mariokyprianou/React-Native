@@ -11,6 +11,8 @@ import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
+import WorkoutTags from '../../apollo/queries/WorkoutTags';
+import OnDemandWorkouts from '../../apollo/queries/OnDemandWorkouts';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   differenceInDays,
@@ -145,7 +147,6 @@ export default function DataProvider(props) {
     // PAST
     let pastWorkouts = workouts.filter((it) => it.completedAt);
     pastWorkouts = pastWorkouts.map((workout) => {
-
       workoutIndex = workoutIndex + 1;
       console.log(workoutIndex, workout.completedAt);
       return {
@@ -155,8 +156,6 @@ export default function DataProvider(props) {
         day: workoutIndex,
       };
     });
-
-   
 
     let pastRestDays = getStoredPastRestDays(storedDays);
 
@@ -260,7 +259,7 @@ export default function DataProvider(props) {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: async (res) => {
       const data = res.getProgramme;
-      
+
       // Check programme is completed
       if (data.isComplete) {
         setCurrentWeek([]);
@@ -314,6 +313,9 @@ export default function DataProvider(props) {
 
   // Current Workout data
   const [selectedWorkout, setSelectedWorkout] = useState();
+  const [isSelectedWorkoutOnDemand, setIsSelectedWorkoutOnDemand] = useState(
+    false,
+  );
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [completedExercises, setCompletedExercises] = useState([]);
 
@@ -351,14 +353,43 @@ export default function DataProvider(props) {
     setProgramme(null);
     setCurrentWeek(null);
     setNextWeek(null);
+    setWorkoutTags(null);
 
     AsyncStorage.removeItem('@CURRENT_WEEK');
     AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
 
     AsyncStorage.removeItem('@ANALYTICS_ASKED');
     AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
-
   }, []);
+
+  // ** ** ** ** ** On Demand ** ** ** ** **
+
+  const [workoutTags, setWorkoutTags] = useState([]);
+  const [selectedWorkoutTags, setSelectedWorkoutTags] = useState([]);
+  const [onDemandWorkouts, setOnDemandWorkouts] = useState([]);
+
+  const [getWorkoutTags] = useLazyQuery(WorkoutTags, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: async (res) => {
+      setWorkoutTags(res.workoutTags);
+    },
+    onError: (error) => {
+      console.log(error);
+      setWorkoutTags(null);
+    },
+  });
+
+  const [getOnDemandWorkouts] = useLazyQuery(OnDemandWorkouts, {
+    variables: {tagIds: selectedWorkoutTags},
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: async (res) => {
+      setOnDemandWorkouts(res.onDemandWorkouts.nodes);
+    },
+    onError: (error) => {
+      console.log(error);
+      setOnDemandWorkouts(null);
+    },
+  });
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -391,6 +422,16 @@ export default function DataProvider(props) {
       setCompletedExercises,
       reset,
       initCacheWeekVideos,
+      workoutTags,
+      setWorkoutTags,
+      getWorkoutTags,
+      selectedWorkoutTags,
+      setSelectedWorkoutTags,
+      onDemandWorkouts,
+      setOnDemandWorkouts,
+      getOnDemandWorkouts,
+      setIsSelectedWorkoutOnDemand,
+      isSelectedWorkoutOnDemand,
     }),
     [
       programme,
@@ -420,6 +461,16 @@ export default function DataProvider(props) {
       setCompletedExercises,
       reset,
       initCacheWeekVideos,
+      workoutTags,
+      setWorkoutTags,
+      getWorkoutTags,
+      selectedWorkoutTags,
+      setSelectedWorkoutTags,
+      onDemandWorkouts,
+      setOnDemandWorkouts,
+      getOnDemandWorkouts,
+      setIsSelectedWorkoutOnDemand,
+      isSelectedWorkoutOnDemand,
     ],
   );
 

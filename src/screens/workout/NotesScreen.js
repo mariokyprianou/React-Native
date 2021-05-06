@@ -23,7 +23,6 @@ import UpdateExerciseNote from '../../apollo/mutations/UpdateExerciseNote';
 import useData from '../../hooks/data/UseData';
 import {useBackHandler} from '@react-native-community/hooks';
 
-
 export default function NotesScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
@@ -38,7 +37,12 @@ export default function NotesScreen() {
   const {
     params: {id, description},
   } = useRoute();
-  const {selectedWorkout, currentExerciseIndex, setSelectedWorkout} = useData();
+  const {
+    selectedWorkout,
+    currentExerciseIndex,
+    setSelectedWorkout,
+    setIsSelectedWorkoutOnDemand,
+  } = useData();
   const [savedNotes, setSavedNotes] = useState('');
 
   useEffect(() => {
@@ -103,7 +107,6 @@ export default function NotesScreen() {
   }
 
   async function handleAddNote() {
-
     navigation.goBack();
 
     const newNote = getValues('notes').notes;
@@ -115,6 +118,7 @@ export default function NotesScreen() {
     };
 
     setSelectedWorkout(workout);
+    setIsSelectedWorkoutOnDemand(false);
     cleanValueByName('notes');
 
     await addNote({
@@ -126,7 +130,7 @@ export default function NotesScreen() {
       },
     })
       .then((res) => {
-        console.log("Notes updated", res);
+        console.log('Notes updated', res);
       })
       .catch((err) => {
         console.log(err, '<---error on adding note');
@@ -148,7 +152,7 @@ export default function NotesScreen() {
         height: [newStyle][formHeight],
         paddingBottom: getHeight(5),
       },
-      returnKeyType: 'default'
+      returnKeyType: 'default',
     },
   ];
 

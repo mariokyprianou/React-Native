@@ -41,8 +41,7 @@ export default function ThemeProvider({children}) {
   //const hasSoftNavigation = Dimensions.get('window').height !== Dimensions.get('screen').height;
   //const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' && hasSoftNavigation ? insets.top : 0;
 
-
-    // Need this for both platforms
+  // Need this for both platforms
   const HEADER_HEIGHT = 50 + insets.top;
   const SCREEN_HEIGHT = layout.height;
 
@@ -351,6 +350,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(16),
       lineHeight: fontSize(30),
       color: colors.black100,
+    },
+    regular16_black90: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(30),
+      color: colors.black90,
     },
     regular16_brownishGrey100: {
       fontFamily: fonts.regular,

@@ -21,6 +21,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import Spacer from '../../components/Utility/Spacer';
 import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
+import CompleteOnDemandWorkout from '../../apollo/mutations/CompleteOnDemandWorkout';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
@@ -29,7 +30,6 @@ import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
 import displayAlert from '../../utils/DisplayAlert';
-
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -44,11 +44,14 @@ export default function WorkoutCompleteScreen() {
     selectedWorkout,
     weightsToUpload,
     setWeightsToUpload,
+    setIsSelectedWorkoutOnDemand,
+    isSelectedWorkoutOnDemand,
   } = UseData();
 
   const {setLoading} = useLoading();
-  const { setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
+  const {setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
 
+  const [completeOnDemandWorkout] = useMutation(CompleteOnDemandWorkout);
   const [completeWorkout] = useMutation(CompleteWorkout);
   const [addWeight] = useMutation(AddExerciseWeight);
 
@@ -57,9 +60,7 @@ export default function WorkoutCompleteScreen() {
 
   const [stats, setStats] = useState({});
 
-  
-
-  useEffect(()=> {
+  useEffect(() => {
     navigation.setOptions({
       header: () => (
         <Header
@@ -73,10 +74,9 @@ export default function WorkoutCompleteScreen() {
     setIsWorkoutTimerRunning(false);
   }, []);
 
-
   useBackHandler(() => {
-    checkGoBack()
-      return true;
+    checkGoBack();
+    return true;
   });
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function WorkoutCompleteScreen() {
             reps += set.quantity;
             break;
           }
-          case 'TIME', 'SECS': {
+          case ('TIME', 'SECS'): {
             seconds += set.quantity;
             break;
           }
@@ -181,42 +181,69 @@ export default function WorkoutCompleteScreen() {
       intensity: intensity,
       emoji: selectedEmoji,
       timeTaken: stats.duration,
-      weightsUsed: weightsToUpload
+      weightsUsed: weightsToUpload,
     };
 
-    console.log("workoutComplete", workoutComplete)
+    if (isSelectedWorkoutOnDemand) {
+      setIsSelectedWorkoutOnDemand(false);
 
-    completeWorkout({
-      variables: {
-        input: {
-          ...workoutComplete,
+      completeOnDemandWorkout({
+        variables: {
+          input: {
+            ...workoutComplete,
+          },
         },
-      },
-    })
-      .then(async (res) => {
-        const success = R.path(['data', 'completeWorkout'], res);
-
-        if (success) {
-          firebaseLogEvent(analyticsEvents.completedWorkout, {
-            workoutId: selectedWorkout.id,
-            workoutName: selectedWorkout.name,
-          });
-          setWeightsToUpload([]);
-          await getProfile();
-
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'TabContainer'}],
-          });
-        }
       })
-      .catch((err) => console.log(err, '<---workout complete error'))
-      .finally(()=> setLoading(false));
+        .then(async (res) => {
+          const success = R.path(['data', 'completeOnDemandWorkout'], res);
+
+          if (success) {
+            firebaseLogEvent(analyticsEvents.completedWorkout, {
+              workoutId: selectedWorkout.id,
+              workoutName: selectedWorkout.name,
+            });
+            setWeightsToUpload([]);
+            await getProfile();
+
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'TabContainer'}],
+            });
+          }
+        })
+        .catch((err) => console.log(err, '<---workout complete error'))
+        .finally(() => setLoading(false));
+    } else {
+      completeWorkout({
+        variables: {
+          input: {
+            ...workoutComplete,
+          },
+        },
+      })
+        .then(async (res) => {
+          const success = R.path(['data', 'completeWorkout'], res);
+
+          if (success) {
+            firebaseLogEvent(analyticsEvents.completedWorkout, {
+              workoutId: selectedWorkout.id,
+              workoutName: selectedWorkout.name,
+            });
+            setWeightsToUpload([]);
+            await getProfile();
+
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'TabContainer'}],
+            });
+          }
+        })
+        .catch((err) => console.log(err, '<---workout complete error'))
+        .finally(() => setLoading(false));
+    }
   }
 
-
   function checkGoBack() {
-
     displayAlert({
       title: null,
       text: WorkoutDict.WorkoutGoBackWarning,

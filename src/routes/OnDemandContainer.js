@@ -8,6 +8,7 @@
 import React from 'react';
 import {OnDemandStack} from '../navigation';
 import OnDemandScreen from '../screens/OnDemand/OnDemandScreen';
+import StartWorkoutScreen from '../screens/workout/StartWorkoutScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function OnDemandContainer(props) {
@@ -23,6 +24,10 @@ export default function OnDemandContainer(props) {
         name="OnDemand"
         component={OnDemandScreen}
         options={{headerShown: false}}
+      />
+      <OnDemandStack.Screen
+        name="StartWorkout"
+        component={StartWorkoutScreen}
       />
     </OnDemandStack.Navigator>
   );

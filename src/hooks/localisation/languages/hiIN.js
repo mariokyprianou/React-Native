@@ -393,6 +393,11 @@ const hiIN = {
       'Once you have added a weight you will be able to view your weight history for this exercise',
   },
 
+  OnDemandDict: {
+    title: 'On Demand',
+    subtitle: 'Workouts for you to train with anytime',
+  },
+
   HelpMeChooseDict: {
     HelpMeChoose: 'Help me choose',
     Of: 'OF',

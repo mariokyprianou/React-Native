@@ -62,9 +62,14 @@ export default function WorkoutHomeScreen() {
     getConsecutiveWorkouts,
     clearConsecutiveDays,
     wasLastWorkoutToday,
+    setIsSelectedWorkoutOnDemand,
   } = useData();
 
-  const {suspendedAccount, isSubscriptionActive, completedFreeWorkouts} = useUserData();
+  const {
+    suspendedAccount,
+    isSubscriptionActive,
+    completedFreeWorkouts,
+  } = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -76,7 +81,6 @@ export default function WorkoutHomeScreen() {
 
   // Check if week is completed
   useEffect(() => {
- 
     if (programme && programme.isComplete) {
       showStayTuned();
       return;
@@ -316,7 +320,6 @@ export default function WorkoutHomeScreen() {
   }
 
   async function updateOrder(newList) {
-
     // Previous data in case orderChange fails
     const prevList = currentWeek;
 
@@ -504,10 +507,7 @@ export default function WorkoutHomeScreen() {
                 workout={item}
                 title={item.name}
                 day={item.day}
-                date={format(
-                  (item.exactDate),
-                  'iiii, do LLL',
-                )}
+                date={format(item.exactDate, 'iiii, do LLL')}
                 duration={item.duration}
                 intensity={item.intensity}
                 image={item.overviewImage}
@@ -564,6 +564,7 @@ export default function WorkoutHomeScreen() {
                       `${new Date()}`,
                     );
                     setSelectedWorkout(newWorkout);
+                    setIsSelectedWorkoutOnDemand(false);
                     navigation.navigate('TakeARest', {
                       name: programme.trainer.name,
                     });
@@ -571,6 +572,7 @@ export default function WorkoutHomeScreen() {
                   }
 
                   setSelectedWorkout(newWorkout);
+                  setIsSelectedWorkoutOnDemand(false);
                   navigation.navigate('StartWorkout');
                 }}
               />

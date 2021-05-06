@@ -69,8 +69,8 @@ export default function ExerciseView(props) {
       variables: {exercise: exercise.id},
       setValue: (res) => {
         if (res) {
-          if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
-            setWeightHistory(res.getExerciseWeight);
+          if (res && res && res.length > 0) {
+            setWeightHistory(res);
           }
           else {
             setWeightHistory([]);

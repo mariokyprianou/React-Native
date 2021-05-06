@@ -33,10 +33,12 @@ const SharedDict = {
   Male: 'Male',
   Other: 'Other',
   PreferNotToSay: 'Prefer not to say',
+  
 };
 
 const enGB = {
   AppTitle: 'Power',
+  OfflineMessage: 'You are currently offline. Please reconnect and try again.',
 
   ButtonDict: {
     AddPhoto: 'ADD PHOTO',

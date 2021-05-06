@@ -37,6 +37,7 @@ const SharedDict = {
 
 const hiIN = {
   AppTitle: 'Power',
+  OfflineMessage: 'You are currently offline. Please reconnect and try again.',
 
   ButtonDict: {
     AddPhoto: 'ADD PHOTO',

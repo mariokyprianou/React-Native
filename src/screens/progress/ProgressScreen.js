@@ -27,6 +27,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import useUserData from '../../hooks/data/useUserData';
 import {parseISO} from 'date-fns';
 import useProgressData from '../../hooks/data/useProgressData';
+import displayAlert from '../../utils/DisplayAlert';
 
 const fakeImage = require('../../../assets/fake2.png');
 const fakeGraph = require('../../../assets/fakeGraph.png');
@@ -54,7 +55,7 @@ export default function ProgressScreen() {
     pillWidth,
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
-  const {ProgressDict} = dictionary;
+  const {ProgressDict, OfflineMessage} = dictionary;
   const navigation = useNavigation();
 
   const [progressData, setProgressData] = useState();
@@ -200,7 +201,13 @@ export default function ProgressScreen() {
                   type="progress"
                   title="Transformation"
                   image={fakeImage}
-                  onPress={() => navigation.navigate('Transformation')}
+                  onPress={() => {
+                    if (!isConnected) {
+                      displayAlert({text: OfflineMessage});
+                    return;
+                    }
+                    navigation.navigate('Transformation');
+                  }}
                 />
                 {challenges.map((challenge, index) => {
                   const {

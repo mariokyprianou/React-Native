@@ -117,7 +117,7 @@ export default function DataProvider(props) {
           const images = data.map(it => {
             return it.imageUrl
            })
-          initCacheImages(images);
+          //initCacheImages(images);
 
           setChallenges(data);
           return data;

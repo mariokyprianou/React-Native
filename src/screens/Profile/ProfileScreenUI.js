@@ -81,7 +81,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict, AuthDict, GenderDict} = dictionary;
+  const {ProfileDict, AuthDict, GenderDict, OfflineMessage} = dictionary;
   const {getValueByName, updateValue} = FormHook();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {
@@ -240,10 +240,21 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressChangePassword = () => {
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+    return;
+    }
+
     navigation.navigate('ChangePassword');
   };
 
   async function handleUpdate() {
+
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+    return;
+    }
+
     cleanErrors();
 
     const {
@@ -478,6 +489,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <TDIcon input="chevron-right" inputStyle={styles.icon} />
       ),
       rightAccessoryOnPress: () => {
+        if (!isConnected) {
+          displayAlert({text: OfflineMessage});
+        return;
+        }
+        
         navigation.navigate('ChangeEmail');
       },
       placeholder: userData.email,

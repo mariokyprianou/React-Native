@@ -21,14 +21,13 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
 import {msToHMS} from '../../utils/dateTimeUtils';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
-import {useLazyQuery} from '@apollo/client';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
-import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
 import { ScrollView } from 'react-native-gesture-handler';
+import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -38,7 +37,6 @@ const notesIcon = require('../../../assets/icons/notes.png');
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {exercise, index, setEnableScroll, weightLabel} = props;
-  const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
   const {exerciseViewStyle, Constants} = useTheme();
@@ -47,7 +45,9 @@ export default function ExerciseView(props) {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   const {selectedWorkout, setSelectedWeight, currentExerciseIndex} = UseData();
-  const {getPreferences, preferences} = useUserData();
+
+  const {runQuery} = useCustomQuery();
+
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
@@ -62,22 +62,24 @@ export default function ExerciseView(props) {
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
 
-  const [getWeightHistory] = useLazyQuery(GetExerciseWeight, {
-    variables: {exercise: exercise.id},
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
-        setWeightHistory(res.getExerciseWeight);
-      }
-      else {
-        setWeightHistory([]);
-      }
-    },
-    onError: (error) => {
-      setWeightHistory([]);
-      console.log(error, '<---- error fetching weights');
-    }
-  });
+  const getWeightHistory = useCallback(async () => {
+    const res = await runQuery({
+      query: GetExerciseWeight,
+      key: 'getExerciseWeight',
+      setValue: (res) => {
+        if (res) {
+          if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
+            setWeightHistory(res.getExerciseWeight);
+          }
+          else {
+            setWeightHistory([]);
+          }
+        }
+      },
+    });
+
+    console.log("getWeightHistory Processed Res:", res.success)
+  }, [runQuery]);
 
 
   // To observe sets are behaving as expected

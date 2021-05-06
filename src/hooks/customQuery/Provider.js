@@ -13,7 +13,7 @@ export default function DataProvider(props) {
     const client = useApolloClient();
 
 
-    const runQuery = useCallback(async ({
+    const runQuery =  useCallback(async ({
         query,
         setValue,
         key,
@@ -26,16 +26,18 @@ export default function DataProvider(props) {
             variables,
             })
             .then(res => {
-            const newValue = R.path(['data', key], res);
-            const result = setValue && setValue(newValue);
-            return {success: true, data: result};;
+                const newValue = R.path(['data', key], res);
+                setValue && setValue(newValue);
+                return {success: true};;
             })
             .catch(err => {
-            console.warn(key, '- Err: ', err);
-            return {success: false, error: err};
+                console.warn(key, '- Err: ', err);
+                return {success: false, error: err};
             });
 
-    }, []);
+    }, [client, fetchPolicy, isConnected, isInternetReachable]);
+
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(

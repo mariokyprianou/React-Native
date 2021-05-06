@@ -269,8 +269,6 @@ export default function RegisterScreen() {
       programme: programmeId,
     };
 
-    console.log(data);
-
     execute({
       variables: {
         input: {

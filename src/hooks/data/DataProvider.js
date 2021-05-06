@@ -6,8 +6,6 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
-import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
@@ -32,8 +30,12 @@ import addRestDays from '../../utils/addRestDays';
 
 import {cacheWeekVideos} from './VideoCacheUtils';
 
+import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
+
+  const {runQuery} = useCustomQuery();
 
   const [programme, setProgramme] = useState();
   const [programmeModalImage, setProgrammeModalImage] = useState();
@@ -256,12 +258,15 @@ export default function DataProvider(props) {
     [isConnected],
   );
 
-  const [getProgramme] = useLazyQuery(Programme, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: async (res) => {
-      const data = res.getProgramme;
-      
-      // Check programme is completed
+
+  const getProgramme = useCallback(async () => {
+
+    const res = await runQuery({
+      query: Programme,
+      key: 'getProgramme',
+      setValue: async (data) => {
+       
+        // Check programme is completed
       if (data.isComplete) {
         setCurrentWeek([]);
         setNextWeek([]);
@@ -282,14 +287,18 @@ export default function DataProvider(props) {
         storedDays,
       );
       setProgramme(data);
-    },
-    onError: (error) => {
-      console.log(error);
+
+      },
+    });
+
+    if (!res.success) {
       setCurrentWeek(null);
       setNextWeek(null);
       setProgramme(null);
-    },
-  });
+    }
+
+  }, [runQuery])
+
 
   useEffect(() => {
     async function checkUser() {

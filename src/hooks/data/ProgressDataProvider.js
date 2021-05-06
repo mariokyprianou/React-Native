@@ -6,82 +6,105 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect} from 'react';
-import {useLazyQuery, useApolloClient} from '@apollo/client';
-import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './ProgressDataContext';
 import Progress from '../../apollo/queries/Progress';
 import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
 import Challenges from '../../apollo/queries/Challenges';
 import ProgressImages from '../../apollo/queries/ProgressImages';
-import formatProgressImages from '../../utils/formatProgressImages';
-import AsyncStorage from '@react-native-community/async-storage';
-import ProgressImage from '../../apollo/queries/ProgressImage';
+import formatProgressImages from '../../utils/formatProgressImages'
+
+import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 
 import {
-  differenceInDays,
-  differenceInCalendarDays,
-  addDays,
   format,
-  parseISO,
 } from 'date-fns';
 
 import {Auth, Hub} from 'aws-amplify';
 
 export default function DataProvider(props) {
-  const {isConnected, isInternetReachable} = useNetInfo();
+
+  const {runQuery} = useCustomQuery();
+
 
   // Get progress data
   const [progress, setProgress] = useState();
 
-  const [getProgress] = useLazyQuery(Progress, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      setProgress(res.progress);
-    },
-    onError: (error) => console.log(error, '<---progress query error'),
-  });
+  const getProgress = useCallback(async () => {
+    const res = await runQuery({
+      query: Progress,
+      key: 'progress',
+      setValue: async (data) => {
+        setProgress(data);
+        return data;
+      },
+    });
+
+  }, [runQuery]);
+
+
 
   // Get challenge history data
   const [history, setHistory] = useState();
 
-  const [getHistory] = useLazyQuery(ChallengeHistory, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      setHistory(res.challengeHistory);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+
+  const getHistory = useCallback(async () => {
+    const res = await runQuery({
+      query: ChallengeHistory,
+      key: 'challengeHistory',
+      setValue: async (data) => {
+        setHistory(data);
+        return data;
+      },
+    });
+
+  }, [runQuery]);
+
 
   // Get progress images
   const [userImages, setUserImages] = useState([]);
 
-  const [getImages] = useLazyQuery(ProgressImages, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      const today = new Date();
-      const formattedToday = format(today, 'dd/LL/yyyy');
-      const emptyListObject = {value: today, label: formattedToday};
-      if (res.progressImages.length === 0) {
-        setUserImages([emptyListObject]);
-      } else {
-        const formattedImages = formatProgressImages(res.progressImages);
-        setUserImages(formattedImages);
-      }
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+
+
+  const getImages = useCallback(async () => {
+    const res = await runQuery({
+      query: ProgressImages,
+      key: 'progressImages',
+      setValue: async (res) => {
+        const today = new Date();
+        const formattedToday = format(today, 'dd/LL/yyyy');
+        const emptyListObject = {value: today, label: formattedToday};
+        if (res.length === 0) {
+          setUserImages([emptyListObject]);
+          return [];
+        } else {
+          const formattedImages = formatProgressImages(res);
+          setUserImages(formattedImages);
+          return formattedImages;
+        }
+      },
+    });
+
+  }, [runQuery]);
+
+
 
   const [challenges, setChallenges] = useState();
 
-  const [getChallenges] = useLazyQuery(Challenges, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      setChallenges(res.challenges);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
 
+  const getChallenges = useCallback(async () => {
+    const res = await runQuery({
+      query: Challenges,
+      key: 'challenges',
+      setValue: async (data) => {
+          setChallenges(data);
+          return data;
+      },
+    });
+
+  }, [runQuery]);
+
+  
 
   useEffect(() => {
     async function checkAuth() {

@@ -5,7 +5,7 @@
  * Copyright (c) 2021 JM APP DEVELOPMENT LTD
  */
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './CommonDataContext';
@@ -42,6 +42,7 @@ export default function DataProvider(props) {
   }, []);
 
 
+
   const getOnboarding = useCallback(async () => {
     const res = await runQuery({
       query: Onboarding,
@@ -58,14 +59,11 @@ export default function DataProvider(props) {
             }
           });
           setOnboarding(data);
-          return data;
         }
       },
     });
 
-    console.log("getOnboarding Processed Res:", res.success)
-
-  }, []);
+  }, [runQuery]);
 
 
 
@@ -77,15 +75,11 @@ export default function DataProvider(props) {
         if (res) {
           const data = res.slice().filter((it) => it.programmes.length > 0);
           setTrainers(data);
-        
-          return data;
         }
       },
     });
 
-    console.log("getTrainers Processed Res:", res.success)
-
-  }, []);
+  }, [runQuery]);
 
 
 

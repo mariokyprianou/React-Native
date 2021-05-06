@@ -127,7 +127,6 @@ export default function WorkoutHomeScreen() {
     setLoading(true);
     await completeWeekMutation()
       .then(async (res) => {
-        console.log(res);
         const success = R.path(['data', 'completeWorkoutWeek'], res);
 
         if (success) {
@@ -345,7 +344,7 @@ export default function WorkoutHomeScreen() {
         console.log('UpdateOrderRes', success);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("updateOrderMutation Error", err);
 
         // Reset week order to what was before
         const storedData = updateStoredData(prevList);

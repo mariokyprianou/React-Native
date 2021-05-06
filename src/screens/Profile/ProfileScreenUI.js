@@ -169,7 +169,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
-      console.log(userData.gender)
       if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
@@ -298,7 +297,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       timeZone: userData.timeZone,
     };
 
-    console.log(newVals)
     await updateProfile({
       variables: {
         input: {
@@ -308,7 +306,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
-        console.log('newData', newData);
         setUserData(newData);
       })
       .catch((err) => {

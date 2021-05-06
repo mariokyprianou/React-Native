@@ -101,10 +101,10 @@ const App = () => {
       )}
       <SafeAreaProvider>
         <ApolloProvider client={client}>
+        <QueryProvider>
           <ScaleProvider config={{height: 667, width: 375}}>
             <ThemeProvider>
               <DictionaryProvider>
-                <QueryProvider>
                   <DataProvider>
                     <UserDataProvider>
                       <CommonDataProvider>
@@ -126,10 +126,10 @@ const App = () => {
                       </CommonDataProvider>
                     </UserDataProvider>
                   </DataProvider>
-                </QueryProvider>
               </DictionaryProvider>
             </ThemeProvider>
           </ScaleProvider>
+          </QueryProvider>
         </ApolloProvider>
       </SafeAreaProvider>
       <QuickPicker />

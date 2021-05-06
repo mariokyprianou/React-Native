@@ -1,15 +1,11 @@
 
-import { useApolloClient, useLazyQuery } from '@apollo/client';
-import { useNetInfo } from '@react-native-community/netinfo';
+import { useApolloClient } from '@apollo/client';
 import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
 import ShareMedia from '../../apollo/queries/ShareMedia';
-import fetchPolicy from '../../utils/fetchPolicy';
 import DataContext from './Context';
 
 
 export default function DataProvider(props) {
-
-    const {isConnected, isInternetReachable} = useNetInfo();
 
     const client = useApolloClient();
 

@@ -242,9 +242,10 @@ const urIN = {
     Cancel: SharedDict.Cancel,
     Message: SharedDict.Share,
 
-    WeekCompleteTitle: (weekNumber, name, programmeName) => `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
- 
-    InstaPromptText: 'Share to Instagram by downloading the app!'
+    WeekCompleteTitle: (weekNumber, name, programmeName) =>
+      `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
+
+    InstaPromptText: 'Share to Instagram by downloading the app!',
   },
 
   SettingsDict: {
@@ -285,26 +286,30 @@ const urIN = {
     ChallengeTime: 'TIME',
     ChallengeZeroChart: 'Complete challenges to see your progress here!',
     FunctionNotAvailable:
-    "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
-  NoCamera:
-    "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
-  UploadFailed:
-    "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
-  TooLargeSizeImage: 'This image is too large to upload. Please try again with file size under 20MB.',
-  UploadAgainWarning: 'Taking another photo today will replace the existing one.'
-},
+      "Oops, looks like we're not able to access your gallery right now. Please ensure this permission is granted in your device settings.",
+    NoCamera:
+      "Oops, looks like we're not able to access your camera right now. Please ensure this permission is granted in your device settings.",
+    UploadFailed:
+      "Oops, looks like we're not able to upload the specific image. Please try a different one or try again later.",
+    TooLargeSizeImage:
+      'This image is too large to upload. Please try again with file size under 20MB.',
+    UploadAgainWarning:
+      'Taking another photo today will replace the existing one.',
+  },
 
   TabsTitleDict: {
     Profile: 'Profile',
     Workouts: 'Workouts',
+    OnDemand: 'On Demand',
     Progress: SharedDict.Progress,
-    ScreenShotMessage: 'Screen record or taking screenshots whilst using the Power application, can lead to suspending your account. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
-    ScreenshotButton: SharedDict.Ok
+    ScreenShotMessage:
+      'Screen record or taking screenshots whilst using the Power application, can lead to suspending your account. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+    ScreenshotButton: SharedDict.Ok,
   },
 
   WorkoutDict: {
-
-    SuspendedAccount: 'Your account has been suspended due to taking screenshots/screen recordings of Power content, therefore you cannot complete any workouts for the time being. Please reach out to customer service for more information.',
+    SuspendedAccount:
+      'Your account has been suspended due to taking screenshots/screen recordings of Power content, therefore you cannot complete any workouts for the time being. Please reach out to customer service for more information.',
 
     WeekText: 'Week',
 
@@ -405,33 +410,36 @@ const urIN = {
     Female: SharedDict.Female,
     Male: SharedDict.Male,
     Other: SharedDict.Other,
-    PreferNotToSay: SharedDict.PreferNotToSay
+    PreferNotToSay: SharedDict.PreferNotToSay,
   },
   OnboardingDict: {
     fallbackData: [
       {
-        title: 'Pick your Programme', 
-        description: 'Fat loss, fitness, strength or wellness. At home or at the gym. There\'s a routine for you!',
-        image: ''
+        title: 'Pick your Programme',
+        description:
+          "Fat loss, fitness, strength or wellness. At home or at the gym. There's a routine for you!",
+        image: '',
       },
       {
-        title: 'Workout with the stars!', 
-        description: 'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
-        image: ''
+        title: 'Workout with the stars!',
+        description:
+          'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
+        image: '',
       },
       {
-        title: 'Track your progress', 
-        description: 'Watch your body transform as you crush your goals and take your fitness to new levels.',
-        image: ''
+        title: 'Track your progress',
+        description:
+          'Watch your body transform as you crush your goals and take your fitness to new levels.',
+        image: '',
       },
       {
-        title: '​Switch it up', 
-        description: '​Head to On Demand to build your own workouts and mix up your routine. You\'re in control.',
-        image: ''
-      }
-    ]
-  }
+        title: '​Switch it up',
+        description:
+          "​Head to On Demand to build your own workouts and mix up your routine. You're in control.",
+        image: '',
+      },
+    ],
+  },
 };
-
 
 export default urIN;

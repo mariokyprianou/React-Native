@@ -16,6 +16,7 @@ import {BottomTab} from '../navigation';
 import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
+import OnDemandContainer from './OnDemandContainer';
 import isIphoneX from '../utils/isIphoneX';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
@@ -32,7 +33,6 @@ export default function TabContainer() {
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-
 
   const {fontSize, getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
@@ -100,6 +100,7 @@ export default function TabContainer() {
     workout: require('../../assets/icons/workout.png'),
     progress: require('../../assets/icons/progress.png'),
     profile: require('../../assets/icons/profile.png'),
+    onDemand: require('../../assets/icons/onDemand.png'),
   };
   const notificationDot = require('../../assets/icons/notificationDot.png');
 
@@ -203,6 +204,15 @@ export default function TabContainer() {
       />
       <BottomTab.Screen
         name="Tab2"
+        component={OnDemandContainer}
+        options={({route}) => ({
+          tabBarVisible: getTabBarVisibility(route),
+          tabBarIcon: ({color}) => <TabIcon name="onDemand" color={color} />,
+          tabBarLabel: TabsTitleDict.OnDemand,
+        })}
+      />
+      <BottomTab.Screen
+        name="Tab3"
         component={ProgressContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
@@ -211,7 +221,7 @@ export default function TabContainer() {
         })}
       />
       <BottomTab.Screen
-        name="Tab3"
+        name="Tab4"
         component={ProfileContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),

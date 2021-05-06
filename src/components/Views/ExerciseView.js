@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -66,6 +66,7 @@ export default function ExerciseView(props) {
     const res = await runQuery({
       query: GetExerciseWeight,
       key: 'getExerciseWeight',
+      variables: {exercise: exercise.id},
       setValue: (res) => {
         if (res) {
           if (res && res.getExerciseWeight && res.getExerciseWeight.length > 0) {
@@ -79,7 +80,7 @@ export default function ExerciseView(props) {
     });
 
     console.log("getWeightHistory Processed Res:", res.success)
-  }, [runQuery]);
+  }, [runQuery, exercise]);
 
 
   // To observe sets are behaving as expected

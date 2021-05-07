@@ -49,7 +49,14 @@ export default processProgressData = (data) => {
     .sort((a, b) => new Date(Object.keys(a)[0]) - new Date(Object.keys(b)[0]));
 
   const result = uniqueArray.map((dayObj) => {
-    const newDayObj = {...dayObj};
+    const originalDays = sortedData.filter(
+      (x) =>
+        Object.keys(dayObj)[0] ===
+          format(new Date(x.date), 'EEE MMM dd yyyy') &&
+        x.workoutType === 'ON_DEMAND',
+    );
+
+    const newDayObj = {...dayObj, showDot: originalDays.length > 0};
     delete newDayObj.day;
     return newDayObj;
   });

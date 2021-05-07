@@ -42,7 +42,7 @@ export default function OnDemandScreen() {
   const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
   const navigation = useNavigation();
   const {setLoading} = useLoading();
-  const {suspendedAccount} = useUserData();
+  const {suspendedAccount, isSubscriptionActive} = useUserData();
 
   navigation.setOptions({
     header: () => null,
@@ -58,6 +58,7 @@ export default function OnDemandScreen() {
     setOnDemandWorkouts,
     setSelectedWorkout,
     setIsSelectedWorkoutOnDemand,
+    completedFreeWorkouts,
   } = useData();
 
   useEffect(() => {
@@ -232,6 +233,11 @@ export default function OnDemandScreen() {
                       DisplayAlert({
                         text: WorkoutDict.SuspendedAccount,
                       });
+                      return;
+                    }
+
+                    if (completedFreeWorkouts && !isSubscriptionActive) {
+                      navigation.navigate('PurchaseModal');
                       return;
                     }
 

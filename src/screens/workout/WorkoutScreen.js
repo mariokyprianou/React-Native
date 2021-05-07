@@ -10,6 +10,7 @@ import {StyleSheet, View, ScrollView, StatusBar, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {useBackHandler} from '@react-native-community/hooks';
+import {useTimer} from 'the-core-ui-module-tdcountdown';
 
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
@@ -33,9 +34,16 @@ export default function WorkoutScreen() {
     setCurrentExerciseIndex,
     completedExercises,
     setCompletedExercises,
-    setWeightsToUpload
+    setWeightsToUpload,
+    isSelectedWorkoutOnDemand,
+    completedFreeWorkouts,
   } = useData();
-  const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {
+    firebaseLogEvent,
+    analyticsEvents,
+    suspendedAccount,
+    isSubscriptionActive,
+  } = useUserData();
 
   const {getPreferences, preferences} = useUserData();
 
@@ -43,9 +51,33 @@ export default function WorkoutScreen() {
 
   const [weightLabel, setWeightLabel] = useState('kg');
 
+  const {remainingMS, toggle, reset, restart} = useTimer({
+    timer: '03:00',
+  });
+
   useEffect(() => {
-    getPreferences()
+    getPreferences();
+    reset();
+    toggle();
   }, []);
+
+  useEffect(() => {
+    if (!isSelectedWorkoutOnDemand) {
+      reset();
+      return;
+    }
+
+    if (isSubscriptionActive) {
+      reset();
+      return;
+    }
+
+    if (remainingMS === 0) {
+      // TODO - Call Complete workout
+    }
+
+    console.log('remainingMS: ', remainingMS);
+  }, [remainingMS]);
 
   // Set weight preference
   useEffect(() => {
@@ -54,7 +86,6 @@ export default function WorkoutScreen() {
       setWeightLabel(weightPreference);
     }
   }, [preferences]);
-
 
   navigation.setOptions({
     header: () => (
@@ -67,13 +98,11 @@ export default function WorkoutScreen() {
   });
 
   useBackHandler(() => {
-    checkGoBack()
+    checkGoBack();
     return true;
   });
 
-
   function checkGoBack() {
-
     displayAlert({
       title: null,
       text: WorkoutDict.WorkoutGoBackWarning,
@@ -109,14 +138,11 @@ export default function WorkoutScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handleIndex(newOffset) {
-
     const newIndex = Math.round(newOffset / Constants.EXERCISE_VIEW_HEIGHT);
 
     if (newIndex > currentExerciseIndex) {
-
       const exerciseCompleted = selectedWorkout.exercises[currentExerciseIndex];
-      const exerciseStarted =
-        selectedWorkout.exercises[newIndex];
+      const exerciseStarted = selectedWorkout.exercises[newIndex];
 
       firebaseLogEvent(analyticsEvents.completedExercise, {
         workoutId: selectedWorkout.id,

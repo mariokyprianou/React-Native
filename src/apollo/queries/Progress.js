@@ -15,6 +15,7 @@ export default gql`
       days {
         date
         type
+        workoutType
       }
     }
   }

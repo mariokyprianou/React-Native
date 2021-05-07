@@ -12,7 +12,7 @@ import {
   Text,
   SafeAreaView,
   Platform,
-  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import {useQuery, useMutation} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
@@ -81,8 +81,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict, AuthDict, GenderDict} = dictionary;
-  const {getValueByName, updateValue} = FormHook();
+  const {ProfileDict, GenderDict} = dictionary;
+  const {updateValue} = FormHook();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {
     loading: countryLoading,
@@ -91,9 +91,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   } = useQuery(AllCountries);
   const [updateProfile] = useMutation(UpdateProfile);
   const [countriesList, setCountriesList] = useState([]);
-  const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
-  const [regionLookup, setRegionLookup] = useState();
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState(notifications);
@@ -103,40 +101,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {setUserImages} = useProgressData();
   const {setLoading} = useLoading();
 
-  const formCountry = getValueByName('profile_country');
-  useEffect(() => {
-    if (formCountry !== 'India') {
-      cleanValueByName('profile_region');
-    }
-  }, [formCountry, cleanValueByName]);
-
   useEffect(() => {
     if (countryData) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
       setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
-
-      const indianRegions = countryData.allCountries.filter(
-        (country) => country.country === 'India',
-      )[0].regions;
-
-      if (indianRegions) {
-        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-          let {region, id} = obj;
-          return {...acc, [region]: id};
-        }, {});
-        setRegionLookup(indianRegionsLookup);
-
-        const indianRegionsList = indianRegions.map((region) => region.region);
-        setRegionsList(
-          Platform.OS === 'ios' ? ['', ...indianRegionsList] : indianRegionsList,
-        );
-      }
-      else {
-        setRegionLookup([]);
-        setRegionsList([]);
-      }
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -169,7 +139,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
-      console.log(userData.gender)
+      console.log(userData.gender);
       if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
@@ -180,18 +150,18 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   }, [updateValue]);
 
   const gendersData = [
-   GenderDict.Female,
-   GenderDict.Male,
-   GenderDict.Other,
-   GenderDict.PreferNotToSay
+    GenderDict.Female,
+    GenderDict.Male,
+    GenderDict.Other,
+    GenderDict.PreferNotToSay,
   ];
 
   const gendersRef = {
     female: GenderDict.Female,
     male: GenderDict.Male,
     other: GenderDict.Other,
-    null: GenderDict.PreferNotToSay
-  }
+    null: GenderDict.PreferNotToSay,
+  };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -237,12 +207,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       size: fontSize(12.5),
       color: colors.black100,
     },
+    needHelp: {
+      ...textStyles.bold16_aquamarine100,
+      textDecorationLine: 'underline',
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  const onPressChangePassword = () => {
-    navigation.navigate('ChangePassword');
-  };
 
   async function handleUpdate() {
     cleanErrors();
@@ -253,7 +224,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       profile_gender,
       profile_dateOfBirth,
       profile_country,
-      profile_region,
     } = getValues();
 
     if (
@@ -261,8 +231,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       !profile_lastName &&
       !profile_gender &&
       !profile_dateOfBirth &&
-      !profile_country &&
-      !profile_region
+      !profile_country
     ) {
       return;
     }
@@ -274,19 +243,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     const newCountry =
       countryLookup[profile_country] || countryLookup[userData.country];
 
-    let newRegion =
-      profile_country !== 'India' && userData.country !== 'India'
+    const gender = gendersData.includes(profile_gender)
+      ? profile_gender === GenderDict.PreferNotToSay
         ? null
-        : regionLookup[profile_region] || regionLookup[userData.region];
-
-
-        // Let region be null as its optional
-    // if (profile_country === 'India' && !newRegion) {
-    //   newRegion = regionLookup[regionsList[0]];
-    // }
-
-    const gender = gendersData.includes(profile_gender) ? profile_gender === GenderDict.PreferNotToSay ? null 
-    : profile_gender?.toLowerCase() : userData.gender;
+        : profile_gender?.toLowerCase()
+      : userData.gender;
 
     const newVals = {
       givenName: profile_firstName || userData.givenName,
@@ -294,11 +255,10 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       gender: gender,
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
       country: newCountry || userData.country,
-      region: newRegion || userData.region,
       timeZone: userData.timeZone,
     };
 
-    console.log(newVals)
+    console.log(newVals);
     await updateProfile({
       variables: {
         input: {
@@ -338,9 +298,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 console.log(res, '<----sign out res');
                 setUserData({});
                 Intercom.logout();
-                setUserImages([])
+                setUserImages([]);
                 reset();
-                
+
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'AuthContainer'}],
@@ -374,6 +334,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     });
     setStoredNotifications(updatedNotifications);
   }
+
+  function handleNeedHelp() {}
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
@@ -486,6 +448,25 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       placeholder: userData.email,
     },
     {
+      name: 'profile_changePassword',
+      type: 'dropdown',
+      label: ProfileDict.FormLabel8,
+      ...cellFormStyles,
+      ...dropdownStyle,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
+      },
+      rightAccessory: () => (
+        <TDIcon input="chevron-right" inputStyle={styles.icon} />
+      ),
+      rightAccessoryOnPress: () => {
+        navigation.navigate('ChangePassword');
+      },
+      placeholder: ProfileDict.Form8Placeholder,
+    },
+    {
       name: 'profile_gender',
       type: 'dropdown',
       label: ProfileDict.FormLabel4,
@@ -540,28 +521,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     },
   ];
 
-  if (
-    (formCountry === 'India' ||
-    (!formCountry && userData.country === 'India')) && regionsList.length > 0
-  ) {
-    cells.push({
-      name: 'profile_region',
-      type: 'dropdown',
-      label: ProfileDict.FormLabel7,
-      //editable: false,
-      ...cellFormStyles,
-      ...dropdownStyle,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-        marginTop: -getHeight(5),
-      },
-      rightAccessory: () => <DropDownIcon />,
-      data: regionsList,
-      placeholder: userData.region || regionsList[0],
-    });
-  }
-
   const config = {
     ...cellFormConfig,
   };
@@ -582,26 +541,16 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       />
       <Spacer height={20} />
       <DefaultButton
-        type={'changePassword'}
-        variant="white"
-        onPress={onPressChangePassword}
-        icon={'chevron'}
-      />
-      <Spacer height={20} />
-      <DefaultButton
-        type={'needHelp'}
-        variant="gradient"
-        onPress={onPressNeedHelp}
-        icon={'chevron'}
-      />
-      <Spacer height={30} />
-      <Text style={styles.signOut}>{ProfileDict.NeedToSignOut}</Text>
-      <DefaultButton
         type={'logout'}
-        variant="transparentBlackBoldText"
+        variant="gradient"
         onPress={handleLogout}
+        icon={'chevron'}
       />
-      <Spacer height={20} />
+      <Spacer height={25} />
+      <TouchableOpacity onPress={handleNeedHelp}>
+        <Text style={styles.needHelp}>{ProfileDict.NeedHelp}</Text>
+      </TouchableOpacity>
+      <Spacer height={10} />
     </View>
   );
 

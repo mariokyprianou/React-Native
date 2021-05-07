@@ -47,16 +47,11 @@ export default function WorkoutCard({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
-      width: getWidth(335),
+      width: '100%',
       height: title === WorkoutDict.RestDay ? getHeight(66) : getHeight(100),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
-      shadowColor: colors.black10,
-      shadowOffset: {width: 0, height: 3},
-      shadowRadius: 6,
-      shadowOpacity: 1,
-      elevation: 6,
       marginBottom: getHeight(15),
     },
     touch: {
@@ -141,7 +136,6 @@ export default function WorkoutCard({
             <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
           </View>
         )}
-
         <View style={{padding: getWidth(20)}}>
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>

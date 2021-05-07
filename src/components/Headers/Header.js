@@ -154,6 +154,11 @@ export default function Header({
         />
       );
     }
+    if (icon === arrowBackIcon) {
+      return (
+        <TDIcon input={arrowBackIcon} inputStyle={{style: styles.iconStyle}} />
+      );
+    }
     return <TDIcon input={icon} inputStyle={styles.iconStyle} />;
   };
 

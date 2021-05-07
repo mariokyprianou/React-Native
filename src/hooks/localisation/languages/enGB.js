@@ -21,7 +21,8 @@ const SharedDict = {
   Sets: 'sets',
   Reps: 'reps',
   Secs: 'secs',
-  OldPassword: 'OLD PASSWORD',
+  Sex: 'SEX',
+  OldPassword: 'CURRENT PASSWORD',
   NewPassword: 'NEW PASSWORD',
   Analytics: 'Analytics',
   ChangeEmail: 'Change Email',
@@ -85,15 +86,17 @@ const enGB = {
   },
 
   AuthDict: {
-    FormTitle: 'Create your account to start your free trial',
+    FormTitle: 'Create your account to start your free trial!',
     FirstNameLabel: SharedDict.FirstName,
     LastNameLabel: SharedDict.LastName,
     EmailLabel: SharedDict.Email,
     PasswordLabel: SharedDict.Password,
-    GenderLabel: SharedDict.Gender,
+    SexLabel: SharedDict.Sex,
     DobLabel: SharedDict.Dob,
     CountryLabel: SharedDict.Country,
     RegionLabel: SharedDict.Region,
+    MarketingText:
+      'I do not wish to hear from POWER by email about new trainers, challenges, competitions, giveaways and more',
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
     InvalidGivenName: 'Please enter your first name',
@@ -130,11 +133,11 @@ const enGB = {
       'You are not yet logged in - please verify your email address',
     NotificationsPermissionsScreenTitle: SharedDict.Notifications,
     NotificationsPermissionsText:
-      'To send you workout updates, we need permission to send push notifications to your device.',
+      'Workout reminders are proven to increase your chances of staying on track with a fitness routine',
 
     AnalyticsPermissionsScreenTitle: SharedDict.Analytics,
     AnalyticsPermissionsText:
-      'To create the best workout programmes possible and keep improving the POWER experience, we need your permission to collect analytics from the app.',
+      'To create the best workout programmes and improve the POWER experience, we need your permission to collect analytics from the app.',
 
     LoginScreenTitle: SharedDict.Login,
 
@@ -159,7 +162,7 @@ const enGB = {
   ChangeDeviceDict: {
     Title: 'Change device',
     ActiveText:
-      'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
+      'Only one device can be used with POWER at a time. Would you like to make this your new POWER device? You can only change devices once every 30 days.',
     DisabledText:
       'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
     ChangeDeviceFailedText: 'Oops! Failed to change device, try again later.',
@@ -182,7 +185,7 @@ const enGB = {
 
   MeetYourIconsDict: {
     YourFirstWeek: 'Your first week with',
-    WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
+    WeeksOfTraining: 'WEEKS NOW LIVE',
     SelectYourProgramme: 'Select your programme',
 
     ZeroStateText:
@@ -194,7 +197,11 @@ const enGB = {
 
     FatLoss: 'FAT LOSS',
     Fitness: 'FITNESS',
-    BuildMuscle: 'BUILD MUSCLE',
+    Muscle: 'MUSCLE',
+    Wellness: 'WELLNESS',
+    Customise: 'Customise your schedule once you start',
+    ChangeProgrammes: 'Change programmes whenever you like',
+    WorkoutsPerWeek: 'WORKOUTS / WEEK',
   },
 
   ProfileDict: {
@@ -217,7 +224,7 @@ const enGB = {
     WorkoutsComplete: 'Workouts complete',
     NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: SharedDict.Notifications,
-    PersonalDetails: 'Personal details',
+    PersonalDetails: 'Account details',
     FormLabel1: SharedDict.FirstName,
     FormLabel2: SharedDict.LastName,
     FormLabel3: SharedDict.Email,
@@ -225,7 +232,9 @@ const enGB = {
     FormLabel5: SharedDict.Dob,
     FormLabel6: SharedDict.Country,
     FormLabel7: SharedDict.Region,
-
+    FormLabel8: 'CHANGE PASSWORD',
+    Form8Placeholder: 'Change password',
+    NeedHelp: 'NEED HELP?',
     NotificationDelete: SharedDict.Delete,
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',

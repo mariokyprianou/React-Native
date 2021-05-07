@@ -192,78 +192,78 @@ struct GraphicContextTextContent {
   // Video Creation
 
   @objc public func encodeVideo(allImages: [UIImage], videoSize: CGSize, completion: @escaping (String?) -> Void) {
-//      let videoFPS: Int32 = 10
-//      let videoOutputURL = documentsUrl.appendingPathComponent("videoTransformation.mov", isDirectory: false)
-//      let videoPath = videoOutputURL.relativePath
-//      // Create AVAssetWriter to write video
-//      guard let assetWriter = createAssetWriter(url: videoOutputURL, size: videoSize) else {
-//          print("Error converting images to video: AVAssetWriter not created")
-//          completion(nil)
-//          return
-//      }
-//
-//      // If here, AVAssetWriter exists so create AVAssetWriterInputPixelBufferAdaptor
-//      let writerInput = assetWriter.inputs.filter{ $0.mediaType == AVMediaType.video }.first!
-//      let sourceBufferAttributes: [String: Any] = [
-//          kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_32ARGB),
-//          kCVPixelBufferWidthKey as String : videoSize.width,
-//          kCVPixelBufferHeightKey as String : videoSize.height,
-//      ]
-//      let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: sourceBufferAttributes)
-//
-//      if FileManager.default.fileExists(atPath: videoPath) {
-//        try? FileManager.default.removeItem(atPath: videoPath)
-//      }
-//
-//      // Start writing session
-//      if assetWriter.startWriting() {
-//        assetWriter.startSession(atSourceTime: CMTime.zero)
-//        if (pixelBufferAdaptor.pixelBufferPool == nil) {
-//            print("Error converting images to video: pixelBufferPool nil after starting session")
-//            completion(nil)
-//            return
-//        }
-//
-//        // -- Create queue for <requestMediaDataWhenReadyOnQueue>
-//        let mediaQueue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
-//
-//        // -- Set video parameters
-//        let frameDuration = CMTimeMake(value: 1, timescale: videoFPS)
-//        var frameCount = 0
-//
-//        // -- Add images to video
-//        let numImages = allImages.count
-//        writerInput.requestMediaDataWhenReady(on: mediaQueue, using: { () -> Void in
-//            // Append unadded images to video but only while input ready
-//          while (writerInput.isReadyForMoreMediaData && frameCount < numImages) {
-//            let lastFrameTime = CMTimeMake(value: Int64(frameCount), timescale: videoFPS)
-//                let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
-//
-//            if !self.appendPixelBufferForImageAtURL(image: allImages[frameCount], pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: presentationTime) {
-//                    print("Error converting images to video: AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer")
-//                    completion(nil)
-//                    return
-//                }
-//
-//                frameCount += 1
-//            }
-//
-//            // No more images to add? End video.
-//            if (frameCount >= numImages) {
-//                writerInput.markAsFinished()
-//              assetWriter.finishWriting {
-//                    if (assetWriter.error != nil) {
-//                      completion(nil)
-//                      print("Error converting images to video: \(String(describing: assetWriter.error))")
-//                    } else {
-//                      self.saveVideoToLibrary(videoURL: URL(fileURLWithPath: videoPath))
-//                        print("Converted images to movie @ \(videoPath)")
-//                        completion(videoPath)
-//                    }
-//                }
-//            }
-//        })
-//      }
+      let videoFPS: Int32 = 10
+      let videoOutputURL = documentsUrl.appendingPathComponent("videoTransformation.mov", isDirectory: false)
+      let videoPath = videoOutputURL.relativePath
+      // Create AVAssetWriter to write video
+      guard let assetWriter = createAssetWriter(url: videoOutputURL, size: videoSize) else {
+          print("Error converting images to video: AVAssetWriter not created")
+          completion(nil)
+          return
+      }
+
+      // If here, AVAssetWriter exists so create AVAssetWriterInputPixelBufferAdaptor
+      let writerInput = assetWriter.inputs.filter{ $0.mediaType == AVMediaType.video }.first!
+      let sourceBufferAttributes: [String: Any] = [
+          kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_32ARGB),
+          kCVPixelBufferWidthKey as String : videoSize.width,
+          kCVPixelBufferHeightKey as String : videoSize.height,
+      ]
+      let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: sourceBufferAttributes)
+
+      if FileManager.default.fileExists(atPath: videoPath) {
+        try? FileManager.default.removeItem(atPath: videoPath)
+      }
+
+      // Start writing session
+      if assetWriter.startWriting() {
+        assetWriter.startSession(atSourceTime: CMTime.zero)
+        if (pixelBufferAdaptor.pixelBufferPool == nil) {
+            print("Error converting images to video: pixelBufferPool nil after starting session")
+            completion(nil)
+            return
+        }
+
+        // -- Create queue for <requestMediaDataWhenReadyOnQueue>
+        let mediaQueue = DispatchQueue(__label: "mediaInputQueue", attr: nil)
+
+        // -- Set video parameters
+        let frameDuration = CMTimeMake(value: 1, timescale: videoFPS)
+        var frameCount = 0
+
+        // -- Add images to video
+        let numImages = allImages.count
+        writerInput.requestMediaDataWhenReady(on: mediaQueue, using: { () -> Void in
+            // Append unadded images to video but only while input ready
+          while (writerInput.isReadyForMoreMediaData && frameCount < numImages) {
+            let lastFrameTime = CMTimeMake(value: Int64(frameCount), timescale: videoFPS)
+                let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
+
+            if !self.appendPixelBufferForImageAtURL(image: allImages[frameCount], pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: presentationTime) {
+                    print("Error converting images to video: AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer")
+                    completion(nil)
+                    return
+                }
+
+                frameCount += 1
+            }
+
+            // No more images to add? End video.
+            if (frameCount >= numImages) {
+                writerInput.markAsFinished()
+              assetWriter.finishWriting {
+                    if (assetWriter.error != nil) {
+                      completion(nil)
+                      print("Error converting images to video: \(String(describing: assetWriter.error))")
+                    } else {
+                      self.saveVideoToLibrary(videoURL: URL(fileURLWithPath: videoPath))
+                        print("Converted images to movie @ \(videoPath)")
+                        completion(videoPath)
+                    }
+                }
+            }
+        })
+      }
   }
 
 

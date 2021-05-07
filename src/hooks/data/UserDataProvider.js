@@ -27,10 +27,13 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import Profile from '../../apollo/queries/Profile';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+import OfflineUtils from './OfflineUtils';
 
 
 
 export default function UserDataProvider(props) {
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const {runQuery} = useCustomQuery();
 
   const [userData, setUserData] = useState({});
@@ -205,9 +208,12 @@ export default function UserDataProvider(props) {
   // Update completedFreeWorkouts
   useEffect(()=> {
     if (userData && userData.completedWorkouts) {
-    const { completedWorkouts } = userData;
-    console.log("completedWorkouts", completedWorkouts);
-    setCompletedFreeWorkouts(completedWorkouts >= 3);
+      const { completedWorkouts } = userData;
+      console.log("completedWorkouts", completedWorkouts);
+      setCompletedFreeWorkouts(completedWorkouts >= 3);
+    }
+    else {
+      setCompletedFreeWorkouts(false);
     }
   }, [userData])
 
@@ -218,9 +224,25 @@ export default function UserDataProvider(props) {
       key: 'profile',
       setValue: async (res) => {
         if (res) {
-          setUserData(res);
+
+
+          let data = {
+            ...res
+          }
+
+          // Add offline icnreament completed workouts
+          // if (!isConnected && !isInternetReachable) {
+            const increament = await OfflineUtils.getWorkoutsCompleteIncreament();
+
+            data = {
+              ...res,
+              completedWorkouts: res.completedWorkouts + increament
+            }
+          // }
+
+          setUserData(data);
   
-          const {canChangeDevice, deviceUDID, screenshotsTaken} = res;
+          const {canChangeDevice, deviceUDID, screenshotsTaken} = data;
   
           if (screenshotsTaken >= 7) {
             setSuspendedAccount(true);

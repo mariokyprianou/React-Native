@@ -49,7 +49,7 @@ export default function WorkoutScreen() {
 
   // Set weight preference
   useEffect(() => {
-    if (preferences.weightPreference) {
+    if (preferences && preferences.weightPreference) {
       const weightPreference = preferences.weightPreference.toLowerCase();
       setWeightLabel(weightPreference);
     }

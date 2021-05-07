@@ -30,6 +30,9 @@ import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
 import displayAlert from '../../utils/DisplayAlert';
 
+import {useNetInfo} from '@react-native-community/netinfo';
+import OfflineUtils from '../../hooks/data/OfflineUtils';
+
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -38,6 +41,8 @@ export default function WorkoutCompleteScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
+  const {isConnected, isInternetReachable} = useNetInfo();
+
 
   const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
@@ -184,7 +189,17 @@ export default function WorkoutCompleteScreen() {
       weightsUsed: weightsToUpload
     };
 
-    console.log("workoutComplete", workoutComplete)
+    const firebaseEventPayload = {
+        workoutId: selectedWorkout.id,
+        workoutName: selectedWorkout.name,
+    };
+    
+
+    if (!isConnected && !isInternetReachable) {
+      handleOffline(workoutComplete, firebaseEventPayload);
+      return;
+    }
+
 
     completeWorkout({
       variables: {
@@ -197,21 +212,29 @@ export default function WorkoutCompleteScreen() {
         const success = R.path(['data', 'completeWorkout'], res);
 
         if (success) {
-          firebaseLogEvent(analyticsEvents.completedWorkout, {
-            workoutId: selectedWorkout.id,
-            workoutName: selectedWorkout.name,
-          });
-          setWeightsToUpload([]);
-          await getProfile();
-
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'TabContainer'}],
-          });
+          firebaseLogEvent(analyticsEvents.completedWorkout, firebaseEventPayload);
+          completeWorkoutDone()
         }
       })
       .catch((err) => console.log(err, '<---workout complete error'))
       .finally(()=> setLoading(false));
+  }
+
+
+  async function handleOffline(workoutComplete, firebaseEventPayload) {
+    await OfflineUtils.completeWorkout(workoutComplete, firebaseEventPayload);
+    completeWorkoutDone(); 
+  }
+
+
+  async function completeWorkoutDone() {
+    setWeightsToUpload([]);
+    await getProfile();
+
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
   }
 
 

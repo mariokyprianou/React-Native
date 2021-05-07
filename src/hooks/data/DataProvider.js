@@ -32,6 +32,7 @@ import {cacheWeekVideos, cacheImages} from './VideoCacheUtils';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
+import OfflineUtils from './OfflineUtils';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -147,6 +148,7 @@ export default function DataProvider(props) {
 
     // PAST
     let pastWorkouts = workouts.filter((it) => it.completedAt);
+
     pastWorkouts = pastWorkouts.map((workout) => {
 
       workoutIndex = workoutIndex + 1;
@@ -263,7 +265,7 @@ export default function DataProvider(props) {
     async (list) => {
       if (isConnected) {
         cacheImages(list);
-        FastImage.preload(list.map(it =>{ return { uri: it }}));
+        //FastImage.preload(list.map(it =>{ return { uri: it }}).filter(it=> it.uri !== null));
       }
     },
     [isConnected],
@@ -276,8 +278,8 @@ export default function DataProvider(props) {
       query: Programme,
       key: 'getProgramme',
       setValue: async (data) => {
-       
-        // Check programme is completed
+
+      // Check programme is completed
       if (data.isComplete) {
         setCurrentWeek([]);
         setNextWeek([]);
@@ -285,26 +287,56 @@ export default function DataProvider(props) {
         return;
       }
 
-      setProgrammeModalImage(data.programmeImage);
-      initCacheWeekVideos(data.currentWeek.workouts);
+      let newData = data;
+
+
+      // Add offline completed workouts
+      //if (!isConnected && !isInternetReachable) {
+        const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
+
+        console.log("Offline completed to add", offlineCompleted.length)
+        const workouts = data.currentWeek.workouts.slice();
+
+        const updatedWorkouts = workouts.map(workout => {
+          let newWorkout = offlineCompleted.find(it => workout.id === it.id)
+
+          return {
+            ...workout,
+            completedAt: newWorkout ? newWorkout.date : workout.completedAt
+          }
+        });
+        
+        newData = {
+          ...data, 
+          currentWeek: {
+            ...data.currentWeek,
+            workouts: updatedWorkouts
+          }
+        }
+        //console.log("newData", newData);
+      //}
+
+
+      setProgrammeModalImage(newData.programmeImage);
+      initCacheWeekVideos(newData.currentWeek.workouts);
       
 
-      const images = data.currentWeek.workouts.map(it => {
+      const images = newData.currentWeek.workouts.map(it => {
         return it.overviewImage;
        })
-      initCacheImages(images);
+      //initCacheImages(images);
 
-      const numberOfWorkouts = data.currentWeek.workouts.length;
+      const numberOfWorkouts = newData.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);
 
       structureWeek(
-        data.currentWeek.workouts
+        newData.currentWeek.workouts
           .slice()
           .sort((a, b) => a.orderIndex > b.orderIndex),
         storedDays,
       );
 
-      setProgramme(data);
+      setProgramme(newData);
 
       },
     });

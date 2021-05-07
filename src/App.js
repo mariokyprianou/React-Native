@@ -30,7 +30,8 @@ import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import ShareProvider from './hooks/share/ShareProvider';
 import QueryProvider from './hooks/customQuery/Provider';
 import {firebase} from '@react-native-firebase/analytics';
-import { SafeAreaProvider,} from 'react-native-safe-area-context';
+import { SafeAreaProvider} from 'react-native-safe-area-context';
+import OfflineHandlerProvider from './hooks/offlineHandler/Provider';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -119,7 +120,9 @@ const App = () => {
                                 <NavigationContainer>
                                   <TDCountdown>
                                     <FormProvider>
-                                      <AppContainer />
+                                      <OfflineHandlerProvider>
+                                        <AppContainer />
+                                      </OfflineHandlerProvider>
                                     </FormProvider>
                                   </TDCountdown>
                                 </NavigationContainer>

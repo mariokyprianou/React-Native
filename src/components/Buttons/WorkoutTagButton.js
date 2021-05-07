@@ -19,15 +19,15 @@ export default function WorkoutTagButton({
   isSelected,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
       width: getWidth(72),
-      height: getHeight(72),
-      borderRadius: getHeight(72) / 2,
+      height: getWidth(72),
+      borderRadius: radius(36),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: isSelected ? colors.red100 : colors.white100,
@@ -56,8 +56,8 @@ export default function WorkoutTagButton({
       alignItems: 'center',
       justifyContent: 'center',
       width: getWidth(72),
-      height: getHeight(72),
-      borderRadius: getHeight(72) / 2,
+      height: getWidth(72),
+      borderRadius: radius(36),
     },
   };
 

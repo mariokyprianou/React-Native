@@ -153,7 +153,7 @@ export default function OnDemandScreen() {
     },
     tagsList: {
       width: '100%',
-      height: getWidth(76),
+      height: getWidth(80),
     },
     seperatorComponent: {
       height: '100%',

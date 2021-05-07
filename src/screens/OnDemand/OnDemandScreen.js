@@ -26,6 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import * as R from 'ramda';
 import {differenceInDays, format} from 'date-fns';
 import OnDemandWorkoutCard from '../../components/Cards/OnDemandWorkoutCard';
+import WorkoutTagButton from '../../components/Buttons/WorkoutTagButton';
 
 export default function OnDemandScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -38,6 +39,7 @@ export default function OnDemandScreen() {
   const [stayTunedEnabled, setStayTunedEnabled] = useState(true);
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
+  const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
   const navigation = useNavigation();
   const {setLoading} = useLoading();
   const {suspendedAccount} = useUserData();
@@ -68,8 +70,12 @@ export default function OnDemandScreen() {
   useEffect(() => {
     if (workoutTags && workoutTags.length > 0) {
       const tagIds = workoutTags.map((tag) => tag.id);
-      setSelectedWorkoutTags(tagIds);
-      getOnDemandWorkouts();
+
+      const newWorkoutTags = workoutTags.map((obj) => ({
+        ...obj,
+        isSelected: false,
+      }));
+      setWorkoutTagsToDisplay(newWorkoutTags);
     } else {
       // TODO - Handle Zero State
     }
@@ -83,6 +89,20 @@ export default function OnDemandScreen() {
       // TODO - Handle Zero State
     }
   }, [onDemandWorkouts]);
+
+  useEffect(() => {
+    const selectedWorkouts = workoutTagsToDisplay.filter(
+      (x) => x.isSelected == true,
+    );
+
+    const tagIds =
+      selectedWorkouts.length > 0
+        ? selectedWorkouts.map((x) => x.id)
+        : workoutTagsToDisplay.map((x) => x.id);
+
+    setSelectedWorkoutTags(tagIds);
+    getOnDemandWorkouts();
+  }, [workoutTagsToDisplay]);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -130,6 +150,14 @@ export default function OnDemandScreen() {
       width: '100%',
       height: '100%',
     },
+    tagsList: {
+      width: '100%',
+      height: getWidth(76),
+    },
+    seperatorComponent: {
+      height: '100%',
+      width: getWidth(16),
+    },
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -143,6 +171,42 @@ export default function OnDemandScreen() {
             <Text style={styles.subtitle}>{OnDemandDict.subtitle}</Text>
           </View>
         </View>
+
+        <FlatList
+          horizontal={true}
+          scrollEnabled={true}
+          data={workoutTagsToDisplay}
+          style={styles.tagsList}
+          keyExtractor={(item, index) => `${index}`}
+          ItemSeparatorComponent={() => (
+            <View style={styles.seperatorComponent} />
+          )}
+          ListHeaderComponent={() => <View style={styles.seperatorComponent} />}
+          ListFooterComponent={() => <View style={styles.seperatorComponent} />}
+          renderItem={({item, index}) => {
+            return (
+              <WorkoutTagButton
+                workoutTag={item}
+                isSelected={item.isSelected}
+                onPressCard={(workoutTag) => {
+                  let newTags = workoutTagsToDisplay.slice();
+                  const foundIndex = newTags.findIndex(
+                    (x) => x.id == workoutTag.id,
+                  );
+                  const existingTag = newTags[foundIndex];
+                  const newTag = {
+                    ...existingTag,
+                    isSelected: !existingTag.isSelected,
+                  };
+                  newTags.splice(foundIndex, 1);
+                  newTags.splice(foundIndex, 0, newTag);
+                  setLoading(true);
+                  setWorkoutTagsToDisplay(newTags);
+                }}
+              />
+            );
+          }}
+        />
 
         <FlatList
           style={styles.list}

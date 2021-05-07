@@ -84,11 +84,17 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
       )}
       <View style={styles.textContainer}>
         <View style={styles.dayContainer}>
-          <Text style={styles.title}>
-            {isRTL()
-              ? `:${WorkoutDict.Day} ${day} ${title}`
-              : `${WorkoutDict.Day} ${day}: ${title}`}
-          </Text>
+          {title === WorkoutDict.RestDay ? (
+            <Text style={styles.title}>
+              {isRTL() ? `${title}` : `${title}`}
+            </Text>
+          ) : (
+            <Text style={styles.title}>
+              {isRTL()
+                ? `:${WorkoutDict.Day} ${day} ${title}`
+                : `${WorkoutDict.Day} ${day}: ${title}`}
+            </Text>
+          )}
         </View>
         {title !== WorkoutDict.RestDay && (
           <IconTextView

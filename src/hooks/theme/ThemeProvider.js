@@ -85,6 +85,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.white100,
     },
+    bold12_newWorkoutBlue100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(20),
+      color: colors.newWorkoutBlue100,
+    },
     bold14_black20: {
       fontFamily: fonts.bold,
       fontSize: fontSize(14),

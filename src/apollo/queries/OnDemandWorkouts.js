@@ -12,6 +12,7 @@ export default gql`
     onDemandWorkouts(tagIds: $tagIds) {
       nodes {
         id
+        isNew
         name
         overviewImage
         intensity

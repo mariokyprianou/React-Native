@@ -48,6 +48,7 @@ const Colors = {
   dividerBrownishGrey80: 'rgba(208, 208, 208, 1)',
   transparent: 'rgba(0, 0, 0, 0)',
   completeSetGrey100: 'rgba(131, 151, 157, 0.5)',
+  newWorkoutBlue100: 'rgba(32, 217, 210, 1)',
 };
 
 export default Colors;

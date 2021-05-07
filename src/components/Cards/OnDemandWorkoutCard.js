@@ -17,6 +17,7 @@ import isRTL from '../../utils/isRTL';
 
 const homeIcon = require('../../../assets/icons/homeWorkout.png');
 const gymIcon = require('../../../assets/icons/gymIcon.png');
+const newStarIcon = require('../../../assets/icons/newStar.png');
 
 export default function OnDemandWorkoutCard({
   workout,
@@ -112,6 +113,22 @@ export default function OnDemandWorkoutCard({
       marginLeft: getWidth(8),
       marginRight: getWidth(8),
     },
+    newContainer: {
+      position: 'absolute',
+      width: '100%',
+      paddingTop: getHeight(12),
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+    },
+    newStar: {
+      marginLeft: 4,
+      marginRight: 12,
+    },
+    newStarText: {
+      ...textStyles.bold12_newWorkoutBlue100,
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -127,6 +144,16 @@ export default function OnDemandWorkoutCard({
           style={styles.image}
           resizeMode={'cover'}
         />
+
+        {workout.isNew && (
+          <View style={styles.newContainer}>
+            <Text style={styles.newStarText}>NEW</Text>
+            <TDIcon
+              input={newStarIcon}
+              inputStyle={{style: {...styles.newStar}}}
+            />
+          </View>
+        )}
 
         <View style={{padding: getWidth(20)}}>
           <View style={styles.textContainer}>

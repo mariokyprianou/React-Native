@@ -32,7 +32,7 @@ export default function OnDemandWorkoutCard({
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
 
-  const {WorkoutDict, ButtonDict} = dictionary;
+  const {OnDemandDict, ButtonDict, WorkoutDict} = dictionary;
   const trainerName = workout.programme.trainer.name.toUpperCase();
   const programmeEnvironment = workout.programme.environment;
   const environmentName =
@@ -147,7 +147,7 @@ export default function OnDemandWorkoutCard({
 
         {workout.isNew && (
           <View style={styles.newContainer}>
-            <Text style={styles.newStarText}>NEW</Text>
+            <Text style={styles.newStarText}>{OnDemandDict.newWorkout}</Text>
             <TDIcon
               input={newStarIcon}
               inputStyle={{style: {...styles.newStar}}}

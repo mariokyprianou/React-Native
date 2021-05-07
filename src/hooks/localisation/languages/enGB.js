@@ -397,6 +397,7 @@ const enGB = {
   OnDemandDict: {
     title: 'On Demand',
     subtitle: 'Workouts for you to train with anytime',
+    newWorkout: 'NEW',
   },
 
   HelpMeChooseDict: {

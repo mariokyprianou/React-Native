@@ -11,6 +11,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {useBackHandler} from '@react-native-community/hooks';
 import {useTimer} from 'the-core-ui-module-tdcountdown';
+import {useMutation} from '@apollo/client';
 
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
@@ -19,6 +20,7 @@ import useData from '../../hooks/data/UseData';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
+import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -55,6 +57,8 @@ export default function WorkoutScreen() {
     timer: '03:00',
   });
 
+  const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
+
   useEffect(() => {
     getPreferences();
     reset();
@@ -73,10 +77,20 @@ export default function WorkoutScreen() {
     }
 
     if (remainingMS === 0) {
-      // TODO - Call Complete workout
+      startOnDemandWorkout({
+        variables: {
+          input: {
+            workoutId: selectedWorkout.id,
+          },
+        },
+      })
+        .then(async (res) => {
+          console.log('RES', res);
+        })
+        .catch((err) => {
+          console.log(err, '<---change device permissions error');
+        });
     }
-
-    console.log('remainingMS: ', remainingMS);
   }, [remainingMS]);
 
   // Set weight preference

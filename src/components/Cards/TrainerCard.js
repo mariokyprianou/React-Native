@@ -56,19 +56,10 @@ export default function TrainerCard({
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      marginBottom: getHeight(5),
     },
     nameText: {
       ...textStyles.bold30_black100,
-    },
-    buttonContainer: {
-      width: getWidth(110),
-      height: getHeight(37),
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      right: getWidth(-14),
-      top: getHeight(3),
-      backgroundColor: 'transparent',
     },
   });
 
@@ -91,13 +82,11 @@ export default function TrainerCard({
       <View style={styles.overlay}>
         <View style={styles.titleContainer}>
           <Text style={styles.nameText}>{trainer.name}</Text>
-          <View style={styles.buttonContainer}>
-            <GymHomeSelector
-              onPress={onPressGymHome}
-              text={suggestedEnv ? suggestedEnv : currentProgram.environment}
-              singleProgramme={trainer.programmes.length === 1 ? true : false}
-            />
-          </View>
+          <GymHomeSelector
+            onPress={onPressGymHome}
+            text={suggestedEnv ? suggestedEnv : currentProgram.environment}
+            singleProgramme={trainer.programmes.length === 1 ? true : false}
+          />
         </View>
         <TrainerIconCard />
       </View>

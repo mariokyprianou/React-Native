@@ -17,7 +17,7 @@ import ChangeDeviceScreen from './screens/Authentication/ChangeDeviceScreen';
 import AnalyticsPermissionScreen from './screens/Authentication/AnalyticsPermissionScreen';
 import NotificationsPermissionScreen from './screens/Authentication/NotificationsPermissionScreen';
 
-import PurchaseModalScreen from './screens/other/PurchaseModalScreen';
+// import PurchaseModalScreen from './screens/other/PurchaseModalScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 import WeekCompleteScreen from './screens/workout/WeekCompleteScreen';
 import WorkoutScreen from './screens/workout/WorkoutScreen';
@@ -67,11 +67,11 @@ export default function AppContainer() {
 
         <AppStack.Screen name="ChangeDevice" component={ChangeDeviceScreen} />
 
-        <AppStack.Screen
+        {/* <AppStack.Screen
           name="PurchaseModal"
           component={PurchaseModalScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
-        />
+        /> */}
 
         <AppStack.Screen
           name="Analytics"

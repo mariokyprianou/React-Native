@@ -7,14 +7,13 @@
  */
 
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TrainerIcon from '../Infographics/TrainerIcon';
 import useDictionary from '../../hooks/localisation/useDictionary';
 
 const percentage = 75;
-const card = require('../../../assets/images/iconCard.png');
 
 export default function TrainerIconCard() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -32,14 +31,7 @@ export default function TrainerIconCard() {
       alignItems: 'center',
       justifyContent: 'space-around',
       borderRadius: radius(12),
-    },
-    card: {
-      position: 'absolute',
-      width: getWidth(335),
-      height: getHeight(107),
-      left: 0,
-      top: 0,
-      borderRadius: 12,
+      backgroundColor: colors.white80,
     },
   };
 
@@ -47,7 +39,6 @@ export default function TrainerIconCard() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <Image source={card} style={styles.card} />
       <TrainerIcon text={MeetYourIconsDict.FatLoss} percentage={percentage} />
       <TrainerIcon text={MeetYourIconsDict.Fitness} percentage={percentage} />
       <TrainerIcon text={MeetYourIconsDict.Muscle} percentage={percentage} />

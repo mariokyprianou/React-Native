@@ -67,7 +67,6 @@ export default function RegisterScreen() {
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
-
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
   }, []);
@@ -90,7 +89,7 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
+      setCountriesList(['', ...countries]);
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
@@ -384,6 +383,7 @@ export default function RegisterScreen() {
       type: 'dropdown',
       label: AuthDict.CountryLabel,
       data: countriesList,
+      defaultValue: countriesList[0],
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,

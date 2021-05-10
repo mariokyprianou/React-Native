@@ -11,23 +11,23 @@ import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import { Auth } from 'aws-amplify';
 import OfflineUtils from '../data/OfflineUtils';
 import useLoading from '../loading/useLoading';
+import CompleteWorkoutWithRes from '../../apollo/mutations/CompleteWorkoutWithRes';
 
 
 export default function DataProvider(props) {
 
     const {isConnected, isInternetReachable} = useNetInfo();
     const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
-    const {getProgramme} = UseData();
+    const {getProgramme, processProgramme} = UseData();
     const {setLoading} = useLoading();
   
-    const [completeWorkout] = useMutation(CompleteWorkout);
+    const [completeWorkout] = useMutation(CompleteWorkoutWithRes);
   
   
     const offlineQueueCheck = useCallback( async() => {
       const user = await Auth.currentAuthenticatedUser().catch((err) => {
         return null;
       });
-
       const completedWorkoutsPayload = await OfflineUtils.getWorkoutPayloads();
       console.log("OfflineUtils: completedWorkoutsPayload", completedWorkoutsPayload.length);
 
@@ -35,33 +35,41 @@ export default function DataProvider(props) {
        setLoading(true);
   
         // Do all completeWorkout mutations 
-       const res = completedWorkoutsPayload.map(it => {
-          return completeWorkout({
-            variables: {
-              input: it,   
-            },
-          })
+      let completed = 0;
+      const lastPayload = completedWorkoutsPayload.pop();
+
+
+      // Complete all workouts expect last one 
+      completedWorkoutsPayload.map(it => {
+        completeWorkout({
+          variables: {
+            input: it,   
+          },
+        }).then(async () => {
+          completed = completed + 1;
+
+          if (completed === completedWorkoutsPayload.length) {
+
+            // Complete last workout and return programme
+            // Need to do this otherwise so we only get programme after submitting the last workout
+            const res = await completeWorkout({
+              variables: {
+                input: lastPayload,   
+              },
+            });
+
+            // Submit firebase logs
+            const firebasePayload = await OfflineUtils.getFirebasePayloads()
+            firebasePayload.map((it) => {
+              firebaseLogEvent(analyticsEvents.completedWorkout, it);
+            })
+
+            processProgramme(res.data.completeWorkout.programme);
+            await OfflineUtils.clearOfflineQueue();
+            await getProfile();
+            setLoading(false);
+          }
         })
-  
-
-      Promise.all(res).then(async (result)=> {
-        console.log("OfflineUtils: Promise.all", result);
-
-        // Submit firebase logs
-        const firebasePayload = await OfflineUtils.getFirebasePayloads()
-        firebasePayload.map((it) => {
-          firebaseLogEvent(analyticsEvents.completedWorkout, it);
-        })
-
-  
-        // GetProgramme doens't return completed workouts straight away 
-        setTimeout(async () => {
-          await OfflineUtils.clearOfflineQueue();
-          await getProfile();
-          await getProgramme();
-          setLoading(false);
-        }, 5000);
-        
       })
         
       }

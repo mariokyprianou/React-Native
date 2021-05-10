@@ -278,66 +278,7 @@ export default function DataProvider(props) {
       query: Programme,
       key: 'getProgramme',
       setValue: async (data) => {
-
-      // Check programme is completed
-      if (data.isComplete) {
-        setCurrentWeek([]);
-        setNextWeek([]);
-        setProgramme(data);
-        return;
-      }
-
-      let newData = data;
-
-
-      // Add offline completed workouts
-      //if (!isConnected && !isInternetReachable) {
-        const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
-
-        console.log("Offline completed to add", offlineCompleted.length)
-        const workouts = data.currentWeek.workouts.slice();
-
-        const updatedWorkouts = workouts.map(workout => {
-          let newWorkout = offlineCompleted.find(it => workout.id === it.id)
-
-          return {
-            ...workout,
-            completedAt: newWorkout ? newWorkout.date : workout.completedAt
-          }
-        });
-        
-        newData = {
-          ...data, 
-          currentWeek: {
-            ...data.currentWeek,
-            workouts: updatedWorkouts
-          }
-        }
-        //console.log("newData", newData);
-      //}
-
-
-      setProgrammeModalImage(newData.programmeImage);
-      initCacheWeekVideos(newData.currentWeek.workouts);
-      
-
-      const images = newData.currentWeek.workouts.map(it => {
-        return it.overviewImage;
-       })
-      //initCacheImages(images);
-
-      const numberOfWorkouts = newData.currentWeek.workouts.length;
-      let storedDays = await getStoredDays(numberOfWorkouts);
-
-      structureWeek(
-        newData.currentWeek.workouts
-          .slice()
-          .sort((a, b) => a.orderIndex > b.orderIndex),
-        storedDays,
-      );
-
-      setProgramme(newData);
-
+        processProgramme(data);
       },
     });
 
@@ -350,6 +291,65 @@ export default function DataProvider(props) {
   }, [runQuery, isConnected, isInternetReachable])
 
 
+  const processProgramme = async (data) => {
+    // Check programme is completed
+    if (data.isComplete) {
+      setCurrentWeek([]);
+      setNextWeek([]);
+      setProgramme(data);
+      return;
+    }
+
+    let newData = data;
+
+    // Add offline completed workouts
+    if (!isConnected && !isInternetReachable) {
+      const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
+
+      console.log("Offline completed to add", offlineCompleted.length)
+      const workouts = data.currentWeek.workouts.slice();
+
+      const updatedWorkouts = workouts.map(workout => {
+        let newWorkout = offlineCompleted.find(it => workout.id === it.id)
+
+        return {
+          ...workout,
+          completedAt: newWorkout ? newWorkout.date : workout.completedAt
+        }
+      });
+      
+      newData = {
+        ...data, 
+        currentWeek: {
+          ...data.currentWeek,
+          workouts: updatedWorkouts
+        }
+      }
+    }
+
+    setProgrammeModalImage(newData.programmeImage);
+    initCacheWeekVideos(newData.currentWeek.workouts);
+
+
+    const images = newData.currentWeek.workouts.map(it => {
+      return it.overviewImage;
+    })
+    //initCacheImages(images);
+
+    const numberOfWorkouts = newData.currentWeek.workouts.length;
+    let storedDays = await getStoredDays(numberOfWorkouts);
+
+    structureWeek(
+      newData.currentWeek.workouts
+        .slice()
+        .sort((a, b) => a.orderIndex > b.orderIndex),
+      storedDays,
+    );
+
+    setProgramme(newData);
+  }
+
+  
   useEffect(() => {
     async function checkUser() {
       const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
@@ -450,6 +450,7 @@ export default function DataProvider(props) {
       setCompletedExercises,
       reset,
       initCacheWeekVideos,
+      processProgramme
     }),
     [
       programme,
@@ -479,6 +480,7 @@ export default function DataProvider(props) {
       setCompletedExercises,
       reset,
       initCacheWeekVideos,
+      processProgramme
     ],
   );
 

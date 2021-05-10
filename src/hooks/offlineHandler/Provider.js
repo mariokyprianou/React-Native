@@ -10,6 +10,7 @@ import UseData from '../data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import { Auth } from 'aws-amplify';
 import OfflineUtils from '../data/OfflineUtils';
+import useLoading from '../loading/useLoading';
 
 
 export default function DataProvider(props) {
@@ -17,6 +18,7 @@ export default function DataProvider(props) {
     const {isConnected, isInternetReachable} = useNetInfo();
     const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
     const {getProgramme} = UseData();
+    const {setLoading} = useLoading();
   
     const [completeWorkout] = useMutation(CompleteWorkout);
   
@@ -30,6 +32,7 @@ export default function DataProvider(props) {
       console.log("OfflineUtils: completedWorkoutsPayload", completedWorkoutsPayload.length);
 
       if (user && completedWorkoutsPayload.length > 0) {
+       setLoading(true);
   
         // Do all completeWorkout mutations 
        const res = completedWorkoutsPayload.map(it => {
@@ -40,24 +43,26 @@ export default function DataProvider(props) {
           })
         })
   
-        Promise.all(res).then(async (result)=> {
-          console.log("OfflineUtils: Promise.all", result);
 
-          // Submit firebase logs
-          const firebasePayload = await OfflineUtils.getFirebasePayloads()
-          firebasePayload.map((it) => {
-            firebaseLogEvent(analyticsEvents.completedWorkout, it);
-          })
+      Promise.all(res).then(async (result)=> {
+        console.log("OfflineUtils: Promise.all", result);
 
-    
-          // GetProgramme doens't return completed workouts straight away 
-          setTimeout(async () => {
-            await OfflineUtils.clearOfflineQueue();
-            await getProfile();
-            await getProgramme();
-          }, 5000);
-          
+        // Submit firebase logs
+        const firebasePayload = await OfflineUtils.getFirebasePayloads()
+        firebasePayload.map((it) => {
+          firebaseLogEvent(analyticsEvents.completedWorkout, it);
         })
+
+  
+        // GetProgramme doens't return completed workouts straight away 
+        setTimeout(async () => {
+          await OfflineUtils.clearOfflineQueue();
+          await getProfile();
+          await getProgramme();
+          setLoading(false);
+        }, 5000);
+        
+      })
         
       }
     }, [isConnected, isInternetReachable, getProgramme, getProfile]);

@@ -101,7 +101,7 @@ export default function TransformationChallenge({type, title, image, imageUrl, o
     },
   };
   const [urlLoaded, setUrlLoaded] = useState();
-console.log(urlLoaded)
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

@@ -59,18 +59,22 @@ export default function DataProvider(props) {
   const [getImages] = useLazyQuery(ProgressImages, {
     fetchPolicy: 'no-cache',
     onCompleted: (res) => {
+      console.log("RESS", res.progressImages)
+
       const today = new Date();
       const formattedToday = format(today, 'dd/LL/yyyy');
       const emptyListObject = {value: today, label: formattedToday};
       if (res.progressImages.length === 0) {
         setUserImages([emptyListObject]);
       } else {
+        console.log("res.progressImages", res.progressImages.map(it=> it.id))
         const formattedImages = formatProgressImages(res.progressImages);
         setUserImages(formattedImages);
       }
     },
     onError: (err) => console.log(err, '<---progress images err'),
   });
+
 
   const [challenges, setChallenges] = useState();
 
@@ -119,7 +123,8 @@ export default function DataProvider(props) {
 
 
   async function checkImages(images) {
-    console.log(images[0])
+
+    console.log("checkImages: ", images.map(it=>it.id))
     if (images.length === 1) {
       setBeforePic(images[0]);
     }
@@ -141,6 +146,15 @@ export default function DataProvider(props) {
   }, [userImages, setBeforePic, setAfterPic]);
 
 
+  const getProgressData = useCallback(async () => {
+
+    getProgress();
+    getHistory();
+    getImages();
+    getChallenges();
+
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -158,6 +172,7 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
+      getProgressData
     }),
     [
       progress,
@@ -173,7 +188,9 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
+      getProgressData
     ],
+
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

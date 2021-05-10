@@ -40,6 +40,7 @@ import {SampleImageUrl} from '../../utils/SampleData';
 import useShare from '../../hooks/share/useShare';
 import displayAlert from '../../utils/DisplayAlert';
 import FastImage from 'react-native-fast-image';
+import useProgressData from '../../hooks/data/useProgressData';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -66,6 +67,7 @@ export default function CongratulationsScreen() {
   const [startProgramme] = useMutation(StartProgramme);
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {getProgressData} = useProgressData();
 
   const {getTrainers} = useCommonData();
   const {
@@ -281,6 +283,7 @@ export default function CongratulationsScreen() {
 
     await getProgramme();
     await getTrainers();
+    await getProgressData();
 
     setProgrammeModalImage(newProgramme.programmeImage);
     navigation.navigate('TabContainer');

@@ -39,6 +39,7 @@ import {SampleImageUrl} from '../../utils/SampleData';
 
 import useShare from '../../hooks/share/useShare';
 import displayAlert from '../../utils/DisplayAlert';
+import FastImage from 'react-native-fast-image';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -283,7 +284,6 @@ export default function CongratulationsScreen() {
 
     setProgrammeModalImage(newProgramme.programmeImage);
     navigation.navigate('TabContainer');
-    setLoading(false);
   }
 
   function submitAnalyticsEvent(newTrainer = false) {
@@ -308,7 +308,7 @@ export default function CongratulationsScreen() {
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Image
+        <FastImage
           source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
           style={styles.image}
         />

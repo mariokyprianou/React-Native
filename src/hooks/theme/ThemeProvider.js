@@ -339,6 +339,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(30),
       color: colors.black80,
     },
+    regular12_brownishGrey100: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(18),
+      color: colors.brownishGrey100,
+    },
     regular14_black100: {
       fontFamily: fonts.regular,
       fontSize: fontSize(14),

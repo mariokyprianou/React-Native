@@ -224,7 +224,7 @@ const enGB = {
     WorkoutsComplete: 'Workouts complete',
     NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: SharedDict.Notifications,
-    PersonalDetails: 'Account details',
+    PersonalDetails: 'Account Details',
     FormLabel1: SharedDict.FirstName,
     FormLabel2: SharedDict.LastName,
     FormLabel3: SharedDict.Email,

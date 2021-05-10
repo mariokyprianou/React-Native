@@ -36,13 +36,15 @@ import {useBackHandler} from '@react-native-community/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import Spacer from '../../components/Utility/Spacer';
 
+const tickIcon = require('../../../assets/icons/tickIcon.png');
+
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict, GenderDict} = dictionary;
-  const [termsAndConditions, setTerms] = useState('off');
-  const [marketingPreferences, setMarketingPreferences] = useState('off');
+  const [termsAndConditions, setTerms] = useState(false);
+  const [marketingPreferences, setMarketingPreferences] = useState(false);
 
   const {
     cellFormStyles,
@@ -66,10 +68,6 @@ export default function RegisterScreen() {
   const {setLoading} = useLoading();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
-
-  useEffect(() => {
-    StatusBar.setBarStyle('dark-content');
-  }, []);
 
   navigation.setOptions({
     header: () => null,
@@ -160,6 +158,7 @@ export default function RegisterScreen() {
     termsContainerStyle: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     boxStyle: {
       width: getWidth(25),
@@ -167,15 +166,28 @@ export default function RegisterScreen() {
       borderWidth: 1,
       borderColor: colors.black30,
       borderRadius: 1,
+      backgroundColor: colors.paleGrey100,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    iconStyle: {solid: false, size: fontSize(22), color: colors.black30},
+    emptyBoxStyle: {
+      width: getWidth(25),
+      height: getWidth(25),
+      borderWidth: 1,
+      borderColor: colors.paleGrey100,
+      borderRadius: 1,
+    },
+    iconStyle: {
+      height: getHeight(16),
+      width: getWidth(16),
+      tintColor: colors.white100,
+    },
     termsStyle: {
-      ...textStyles.regular15_brownishGrey100,
       alignSelf: 'center',
       marginHorizontal: getWidth(15),
     },
     marketingStyle: {
-      ...textStyles.regular15_brownishGrey100,
+      ...textStyles.regular12_brownishGrey100,
     },
   };
 
@@ -285,7 +297,10 @@ export default function RegisterScreen() {
     setTerms(value);
   };
 
-  const handleMarketingPreferences = () => {};
+  const handleMarketingPreferences = () => {
+    const value = marketingPreferences === 'on' ? 'off' : 'on';
+    setMarketingPreferences(value);
+  };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   const linkText = [
@@ -404,17 +419,24 @@ export default function RegisterScreen() {
           <TouchableOpacity
             style={styles.termsContainerStyle}
             onPress={handleTermsAndConditionsButton}>
-            <View style={styles.boxStyle}>
-              {termsAndConditions === 'on' && (
-                <TDIcon input={'check'} inputStyle={styles.iconStyle} />
-              )}
-            </View>
+            {termsAndConditions === 'on' ? (
+              <View style={styles.boxStyle}>
+                <TDIcon
+                  input={tickIcon}
+                  inputStyle={{style: {...styles.iconStyle}}}
+                />
+              </View>
+            ) : (
+              <View style={styles.emptyBoxStyle} />
+            )}
             <View style={styles.termsStyle}>
               <StylisedText
                 {...{
                   input: linkText,
                   text: AuthDict.TermsAndConditionsText,
-                  // If you want to override the main text style
+                  textStyle: {
+                    ...textStyles.regular12_brownishGrey100,
+                  },
                 }}
               />
             </View>
@@ -430,11 +452,16 @@ export default function RegisterScreen() {
           <TouchableOpacity
             style={styles.termsContainerStyle}
             onPress={handleMarketingPreferences}>
-            <View style={styles.boxStyle}>
-              {marketingPreferences === 'on' && (
-                <TDIcon input={'check'} inputStyle={styles.iconStyle} />
-              )}
-            </View>
+            {marketingPreferences === 'on' ? (
+              <View style={styles.boxStyle}>
+                <TDIcon
+                  input={tickIcon}
+                  inputStyle={{style: {...styles.iconStyle}}}
+                />
+              </View>
+            ) : (
+              <View style={styles.emptyBoxStyle} />
+            )}
             <View style={styles.termsStyle}>
               <Text style={styles.marketingStyle}>
                 {AuthDict.MarketingText}

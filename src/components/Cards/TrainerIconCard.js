@@ -13,9 +13,12 @@ import useTheme from '../../hooks/theme/UseTheme';
 import TrainerIcon from '../Infographics/TrainerIcon';
 import useDictionary from '../../hooks/localisation/useDictionary';
 
-const percentage = 75;
-
-export default function TrainerIconCard() {
+export default function TrainerIconCard({
+  fatLossPercentage,
+  fitnessPercentage,
+  musclePercentage,
+  wellnessPercentage,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();
   const {colors} = useTheme();
@@ -39,10 +42,22 @@ export default function TrainerIconCard() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <TrainerIcon text={MeetYourIconsDict.FatLoss} percentage={percentage} />
-      <TrainerIcon text={MeetYourIconsDict.Fitness} percentage={percentage} />
-      <TrainerIcon text={MeetYourIconsDict.Muscle} percentage={percentage} />
-      <TrainerIcon text={MeetYourIconsDict.Wellness} percentage={percentage} />
+      <TrainerIcon
+        text={MeetYourIconsDict.FatLoss}
+        percentage={fatLossPercentage}
+      />
+      <TrainerIcon
+        text={MeetYourIconsDict.Fitness}
+        percentage={fitnessPercentage}
+      />
+      <TrainerIcon
+        text={MeetYourIconsDict.Muscle}
+        percentage={musclePercentage}
+      />
+      <TrainerIcon
+        text={MeetYourIconsDict.Wellness}
+        percentage={wellnessPercentage}
+      />
     </View>
   );
 }

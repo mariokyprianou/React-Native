@@ -91,6 +91,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.newWorkoutBlue100,
     },
+    bold12_paleGrey100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(12),
+      color: colors.paleGrey100,
+    },
     bold14_black20: {
       fontFamily: fonts.bold,
       fontSize: fontSize(14),
@@ -127,6 +133,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(15),
       lineHeight: fontSize(23),
       color: colors.brownishGrey100,
+    },
+    bold15_paleGrey100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.paleGrey100,
     },
     bold15_white100: {
       fontFamily: fonts.bold,
@@ -476,6 +488,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(16),
       lineHeight: fontSize(20),
       color: colors.brownishGrey100,
+    },
+    semiBold16_paleGrey100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(20),
+      color: colors.paleGrey100,
     },
     semiBold16_white90: {
       fontFamily: fonts.semiBold,

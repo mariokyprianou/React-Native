@@ -22,7 +22,7 @@ export default function TrainerCard({
   suggestedEnv,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const {textStyles, colors} = useTheme();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -76,7 +76,7 @@ export default function TrainerCard({
           color="custom"
           customStart={colors.veryLightPinkTwo0}
           customEnd={colors.veryLightPinkTwo100}
-          height={250}
+          height={100}
         />
       </View>
       <View style={styles.overlay}>
@@ -88,7 +88,12 @@ export default function TrainerCard({
             singleProgramme={trainer.programmes.length === 1 ? true : false}
           />
         </View>
-        <TrainerIconCard />
+        <TrainerIconCard
+          fatLossPercentage={currentProgram.fatLoss}
+          fitnessPercentage={currentProgram.fitness}
+          musclePercentage={currentProgram.muscle}
+          wellnessPercentage={currentProgram.wellness}
+        />
       </View>
     </View>
   );

@@ -82,13 +82,17 @@ export default function MeetYourIconsScreen() {
     getTrainers();
   }, []);
 
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     StatusBar.setBarStyle('light-content');
+  //   } else {
+  //     StatusBar.setBarStyle('dark-content');
+  //   }
+  // }, [isFocused]);
+
   useEffect(() => {
-    if (isFocused) {
-      StatusBar.setBarStyle('light-content');
-    } else {
-      StatusBar.setBarStyle('dark-content');
-    }
-  }, [isFocused]);
+    StatusBar.setBarStyle('dark-content');
+  }, []);
 
   useEffect(() => {
     if (activeIndex < 0) {
@@ -266,7 +270,6 @@ export default function MeetYourIconsScreen() {
       position: 'absolute',
       bottom: 0,
       marginTop: getHeight(30),
-      paddingBottom: getHeight(25),
       alignItems: 'center',
       backgroundColor: colors.veryLightPinkTwo100,
     },
@@ -564,7 +567,12 @@ export default function MeetYourIconsScreen() {
       </View>
 
       <View style={styles.fadeContainer} pointerEvents="none">
-        <FadingBottomView color="blue" height={100} />
+        <FadingBottomView
+          color="custom"
+          height={130}
+          customStart={colors.veryLightPinkTwo0}
+          customEnd={colors.veryLightPinkTwo100}
+        />
       </View>
 
       {switchProgramme === true ? (

@@ -45,13 +45,14 @@ export default function CantChooseButton({onPress}) {
     button: {
       width: getWidth(20),
       height: getWidth(20),
-      backgroundColor: colors.brownishGrey100,
+      backgroundColor: colors.paleGrey100,
       borderRadius: radius(14),
       justifyContent: 'center',
+      alignItems: 'center',
     },
     largerButton: {
       height: getHeight(28),
-      backgroundColor: colors.white80,
+      backgroundColor: colors.white100,
       borderRadius: radius(18),
       flexDirection: 'row',
       alignItems: 'center',
@@ -60,14 +61,23 @@ export default function CantChooseButton({onPress}) {
       paddingRight: getWidth(4.5),
     },
     largerText: {
-      ...textStyles.bold15_brownishGrey100,
+      ...textStyles.bold15_paleGrey100,
       marginRight: getWidth(10),
     },
     readyQuestionMark: {
-      color: colors.white80,
-      fontWeight: 'bold',
-      fontSize: fontSize(16),
+      ...textStyles.bold15_white100,
       textAlign: 'center',
+    },
+    notReadyContainer: {
+      height: getHeight(33),
+      width: getHeight(33),
+      backgroundColor: colors.white100,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: radius(100),
+    },
+    notReadyQuestionMark: {
+      ...textStyles.bold15_paleGrey100,
     },
   });
 
@@ -93,7 +103,9 @@ export default function CantChooseButton({onPress}) {
   return (
     <View>
       <TouchableOpacity style={styles.touch} onPress={onPress}>
-        <Image source={questionMark} style={styles.image} />
+        <View style={styles.notReadyContainer}>
+          <Text style={styles.notReadyQuestionMark}>?</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );

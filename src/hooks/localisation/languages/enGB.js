@@ -232,7 +232,7 @@ const enGB = {
     FormLabel5: SharedDict.Dob,
     FormLabel6: SharedDict.Country,
     FormLabel7: SharedDict.Region,
-    FormLabel8: 'CHANGE PASSWORD',
+    FormLabel8: 'PASSWORD',
     Form8Placeholder: 'Change password',
     NeedHelp: 'NEED HELP?',
     NotificationDelete: SharedDict.Delete,
@@ -343,6 +343,7 @@ const enGB = {
     WeightsRepsSecsText: SharedDict.Secs,
 
     RestDay: 'REST DAY',
+    RestDayLower: 'Rest day',
     Day: 'Day',
 
     YourNotes: 'YOUR NOTES',

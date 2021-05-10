@@ -51,6 +51,9 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
     title: {
       ...textStyles.semiBold16_black100,
     },
+    restTitle: {
+      ...textStyles.semiBold16_paleGrey100,
+    },
     dayContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -85,8 +88,10 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
       <View style={styles.textContainer}>
         <View style={styles.dayContainer}>
           {title === WorkoutDict.RestDay ? (
-            <Text style={styles.title}>
-              {isRTL() ? `${title}` : `${title}`}
+            <Text style={styles.restTitle}>
+              {isRTL()
+                ? `${WorkoutDict.RestDayLower}`
+                : `${WorkoutDict.RestDayLower}`}
             </Text>
           ) : (
             <Text style={styles.title}>

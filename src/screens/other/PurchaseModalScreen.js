@@ -166,7 +166,7 @@ const PurchaseModalScreen = ({}) => {
                 });
               })
               .catch((err) => console.log(err))
-              .finally(() => checkUserSubscription());
+              .finally(() => completedPurchase());
           } else {
             const productId = R.path(['productId'], purchase);
             const purchaseToken = R.path(['purchaseToken'], purchase);
@@ -192,7 +192,7 @@ const PurchaseModalScreen = ({}) => {
                 });
               })
               .catch((err) => console.log(err))
-              .finally(() => checkUserSubscription());
+              .finally(() => completedPurchase());
           }
         } catch (ackErr) {
           console.warn('ackErr', ackErr);
@@ -239,6 +239,12 @@ const PurchaseModalScreen = ({}) => {
       });
     }
   }, [availablePurchases, setCurrentSubscription]);
+
+
+  const completedPurchase = async () => {
+    await checkUserSubscription();
+    navigation.goBack();
+  }
 
   const purchase = (sub) => {
     console.log('Purchase: ', sub);

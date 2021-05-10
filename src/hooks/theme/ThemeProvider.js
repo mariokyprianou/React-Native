@@ -255,6 +255,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(12),
       color: colors.brownishGrey100,
     },
+    medium11_paleGrey100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(11),
+      lineHeight: fontSize(14),
+      color: colors.paleGrey100,
+    },
     medium12_black100: {
       fontFamily: fonts.medium,
       fontSize: fontSize(12),
@@ -580,7 +586,7 @@ export default function ThemeProvider({children}) {
       marginTop: getHeight(18),
     },
     labelTextStyle: {
-      ...textStyles.medium14_brownishGrey100,
+      ...textStyles.medium11_paleGrey100,
       textAlign: 'left',
     },
     iconTintColor: colors.black100,

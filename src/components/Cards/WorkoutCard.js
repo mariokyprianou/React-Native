@@ -53,6 +53,11 @@ export default function WorkoutCard({
       alignItems: 'center',
       backgroundColor: colors.white100,
       marginBottom: getHeight(15),
+      shadowColor: colors.black10,
+      shadowOffset: {width: 0, height: 3},
+      shadowRadius: 6,
+      shadowOpacity: 1,
+      elevation: 6,
     },
     touch: {
       flex: 1,

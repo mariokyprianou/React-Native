@@ -491,6 +491,7 @@ export default function WorkoutHomeScreen() {
         </View>
       </View>
 
+      <View style={{flex: 1, width: '100%'}}>
       <DraggableFlatList
         data={workoutsToDisplay}
         keyExtractor={(item, index) => `${index}`}
@@ -576,10 +577,12 @@ export default function WorkoutHomeScreen() {
                   navigation.navigate('StartWorkout');
                 }}
               />
+
             </View>
           );
         }}
       />
+      </View>
     </View>
   );
 }

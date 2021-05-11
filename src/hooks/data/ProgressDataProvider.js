@@ -59,8 +59,6 @@ export default function DataProvider(props) {
   const [getImages] = useLazyQuery(ProgressImages, {
     fetchPolicy: 'no-cache',
     onCompleted: (res) => {
-      console.log("RESS", res.progressImages)
-
       const today = new Date();
       const formattedToday = format(today, 'dd/LL/yyyy');
       const emptyListObject = {value: today, label: formattedToday};

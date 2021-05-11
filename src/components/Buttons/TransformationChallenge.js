@@ -142,7 +142,7 @@ function SafeFastImage({imageUrl, fallback, staticStyle, dynamicStyle, overlay =
     <>
     {!imageUrl ? <Image style={staticStyle} source={fallback}/> : 
       <>
-      <Image style={staticStyle} source={fallback}/>
+      {!urlLoaded && <Image style={staticStyle} source={fallback}/>}
       <FastImage style={dynamicStyle} source={{uri: imageUrl}} fallback={true}
       onLoadEnd={() => {
         callbackSetLoaded && callbackSetLoaded(true);

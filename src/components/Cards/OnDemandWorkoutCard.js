@@ -139,11 +139,15 @@ export default function OnDemandWorkoutCard({
         activeOpacity={1}
         style={styles.touch}
         onPress={() => onPressCard(workout)}>
-        <Image
-          source={{uri: image}}
-          style={styles.image}
-          resizeMode={'cover'}
-        />
+        {image ? (
+          <Image
+            source={{uri: image}}
+            style={styles.image}
+            resizeMode={'cover'}
+          />
+        ) : (
+          <View style={styles.image} />
+        )}
 
         {workout.isNew && (
           <View style={styles.newContainer}>

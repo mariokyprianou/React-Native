@@ -66,12 +66,12 @@ const PurchaseModalScreen = ({}) => {
   const [yearlySubscription, setYearlySubscription] = useState({
     productId: 'app.power.subscription.yearly',
     localizedPrice: '£24.00',
-    price: 24,
+    price: 24.00,
   });
   const [monthlySubscription, setMonthlySubscription] = useState({
     productId: 'app.power.subscription.monthly',
     localizedPrice: '£4.00',
-    price: 4,
+    price: 4.00,
   });
 
   const {
@@ -325,8 +325,9 @@ const PurchaseModalScreen = ({}) => {
   });
 
   // MARK: - Render
+  let yearlyMonthPrice = (yearlySubscription.price / 12.0).toFixed(2);
+  yearlyMonthPrice = String(yearlyMonthPrice).substring(0, String(yearlyMonthPrice).indexOf('.') + 3);
 
-  const yearlyMonthPrice = yearlySubscription.price / 12;
   const yearlyDiscount = Math.round(
     (yearlyMonthPrice / monthlySubscription.price) * 100,
   );

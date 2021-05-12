@@ -61,6 +61,8 @@ export default function ExerciseView(props) {
 
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
 
+  const [showUpNextLabel, setShowUpNextLabel] = useState(false);
+
   const getWeightHistory = useCallback(async () => {
     const res = await runQuery({
       query: GetExerciseWeight,
@@ -231,6 +233,7 @@ export default function ExerciseView(props) {
 
   const onFinishTimer = () => {
     setCountDown(false);
+    setShowUpNextLabel(false);
     checkShouldFinishExercise();
   };
 
@@ -293,7 +296,15 @@ export default function ExerciseView(props) {
 
   return (
     <View style={{height: Constants.EXERCISE_VIEW_HEIGHT}}>
-      <ExerciseVideoView {...exercise} index={index} setType={props.setType} />
+      <ExerciseVideoView
+        {...exercise}
+        index={index}
+        setType={props.setType}
+        isContinuous={props.isContinuous}
+      />
+      {showUpNextLabel && (
+        <Text style={styles.timerUpNextTextStyle}>{WorkoutDict.UpNext}</Text>
+      )}
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
@@ -370,7 +381,14 @@ export default function ExerciseView(props) {
             restTime={restTime}
             onCancelTimer={onCancelTimer}
             onFinish={onFinishTimer}
+            onStartRest={() => {
+              console.log('starting rest');
+              if (props.isContinuous) {
+                setShowUpNextLabel(true);
+              }
+            }}
             setType={props.setType}
+            isContinuous={props.isContinuous}
           />
         )}
       </View>
@@ -391,6 +409,9 @@ export default function ExerciseView(props) {
 }
 
 function TimerView(props) {
+  const {dictionary} = useDictionary();
+  const {WorkoutDict} = dictionary;
+
   let durationMS = props.exerciseTime ? props.exerciseTime : props.restTime;
   let durationFormatted = msToHMS(durationMS);
   const [shouldRestAfterExercise, setShouldRestAfterExercise] = useState(
@@ -413,6 +434,7 @@ function TimerView(props) {
         durationFormatted = msToHMS(durationMS);
         restart(durationMS);
         setShouldRestAfterExercise(false);
+        props.onStartRest && props.onStartRest();
       } else {
         props.onFinish && props.onFinish();
       }
@@ -436,9 +458,16 @@ function TimerView(props) {
 
       <TouchableOpacity
         style={styles.timerTouchArea}
-        onPress={props.onCancelTimer}>
+        onPress={() => {
+          if (!props.isContinuous) {
+            props.onCancelTimer();
+          }
+        }}>
         <View style={styles.timerTextContainer}>
           <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+          {props.isContinuous && !shouldRestAfterExercise && (
+            <Text style={styles.timerRestTextStyle}>{WorkoutDict.Rest}</Text>
+          )}
         </View>
       </TouchableOpacity>
     </View>

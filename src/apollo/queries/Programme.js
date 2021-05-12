@@ -31,6 +31,7 @@ export default gql`
           name
           overviewImage
           intensity
+          isContinuous
           duration
           completedAt
           exercises {
@@ -63,6 +64,7 @@ export default gql`
           name
           overviewImage
           intensity
+          isContinuous
           duration
           completedAt
           exercises {

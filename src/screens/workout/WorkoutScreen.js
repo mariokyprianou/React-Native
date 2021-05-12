@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, ScrollView, StatusBar, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -56,6 +56,8 @@ export default function WorkoutScreen() {
   const {remainingMS, toggle, reset, restart} = useTimer({
     timer: '03:00',
   });
+
+  const scrollRef = useRef();
 
   const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
 
@@ -188,12 +190,19 @@ export default function WorkoutScreen() {
   }, [completedExercises]);
 
   function exerciseFinished() {
+    console.log('WorkoutScreen - exerciseFinished');
     // check if specific exercise was already completed
     let index = completedExercises.indexOf(currentExerciseIndex);
 
     // if not add it
     if (index === -1) {
       setCompletedExercises((prev) => [...prev, currentExerciseIndex]);
+    }
+
+    if (selectedWorkout.isContinuous) {
+      const newOffset =
+        (currentExerciseIndex + 1) * Constants.EXERCISE_VIEW_HEIGHT;
+      scrollRef.current?.scrollTo({y: newOffset, animated: true});
     }
   }
 
@@ -203,6 +212,7 @@ export default function WorkoutScreen() {
       <View style={styles.headerBorder} />
       <ScrollView
         scrollEnabled={enableScroll}
+        ref={scrollRef}
         keyboardShouldPersistTaps="handled"
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={20} //how often we update the position of the indicator bar
@@ -220,6 +230,7 @@ export default function WorkoutScreen() {
             exerciseFinished={exerciseFinished}
             setEnableScroll={setEnableScroll}
             weightLabel={weightLabel}
+            isContinuous={selectedWorkout.isContinuous}
           />
         ))}
       </ScrollView>

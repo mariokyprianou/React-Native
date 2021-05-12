@@ -23,7 +23,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
@@ -44,7 +44,6 @@ export default function ExerciseView(props) {
   const {selectedWorkout, setSelectedWeight, currentExerciseIndex} = UseData();
 
   const {runQuery} = useCustomQuery();
-
 
   const [countDown, setCountDown] = useState(false);
   const [sets, setSets] = useState([]);
@@ -71,15 +70,14 @@ export default function ExerciseView(props) {
         if (res) {
           if (res && res && res.length > 0) {
             setWeightHistory(res);
-          }
-          else {
+          } else {
             setWeightHistory([]);
           }
         }
       },
     });
 
-    console.log("getWeightHistory Processed Res:", res.success)
+    console.log('getWeightHistory Processed Res:', res.success);
   }, [runQuery, exercise]);
 
   // To observe sets are behaving as expected
@@ -128,8 +126,18 @@ export default function ExerciseView(props) {
       };
     });
 
+    if (props.isContinuous && index === currentExerciseIndex) {
+      setCountDown(true);
+    }
+
     setSets(sets);
   }, []);
+
+  useEffect(() => {
+    if (props.isContinuous && index === currentExerciseIndex) {
+      setCountDown(true);
+    }
+  }, [currentExerciseIndex]);
 
   // Finished weight submition, check if it was last set
   useEffect(() => {
@@ -140,7 +148,7 @@ export default function ExerciseView(props) {
 
   // Enable/disable scroll based on any set completion modal showing
   useEffect(() => {
-    if ((countDown && restTime > 0) || setComplete) {
+    if ((countDown && restTime > 0) || setComplete || props.isContinuous) {
       setEnableScroll(false);
     } else {
       setEnableScroll(true);
@@ -206,6 +214,11 @@ export default function ExerciseView(props) {
 
   async function checkShouldFinishExercise() {
     // On timer done, check if exercise is done
+    if (props.isContinuous) {
+      finishExercise();
+      return;
+    }
+
     if (currentSet === sets.length) {
       finishExercise();
     }
@@ -395,11 +408,11 @@ function TimerView(props) {
 
   useEffect(() => {
     if (remainingMS === 0) {
-      if (shouldRestAfterExercise) {
+      if (shouldRestAfterExercise === true) {
         durationMS = props.restTime;
         durationFormatted = msToHMS(durationMS);
-        setShouldRestAfterExercise(false);
         restart(durationMS);
+        setShouldRestAfterExercise(false);
       } else {
         props.onFinish && props.onFinish();
       }

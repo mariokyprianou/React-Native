@@ -210,7 +210,7 @@ export default function WorkoutCompleteScreen() {
 
     const completeMutation = isSelectedWorkoutOnDemand ? completeOnDemandWorkout : completeWorkout;
 
-    completeWorkout({
+    completeMutation({
       variables: {
         input: {
           ...workoutComplete,

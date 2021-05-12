@@ -82,7 +82,8 @@ export default function MeetYourIconsScreen() {
       setLoading(true);
     }
     
-    getTrainers();
+    // Already got data, not needing this
+    //getTrainers();
   }, []);
 
   // useEffect(() => {
@@ -167,6 +168,7 @@ export default function MeetYourIconsScreen() {
           : 20,
       ),
       width: '100%',
+      // backgroundColor: colors.white100,
     },
     headerContainer: {
       width: '100%',

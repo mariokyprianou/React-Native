@@ -176,8 +176,13 @@ const hiIN = {
     MonthlyButtonSubTitle: 'billed monthly',
     RestorePurchaseButton: 'Restore purchases',
     SubscriptionTermsTitle: 'Subscription terms',
-    SubscriptionTermsText:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    SubscriptionTermsFirstPoint: '• Payment will be charged to your Apple Account at confirmation of purchase and will automatically renew (at the duration/price selected) unless auto-renew is turned off at least 24 hrs before the end of the current period',
+    SubscriptionTermsSecondPoint: '• The designated account will be charged for renewal within 24-hours prior to the end of the current period',
+    SubscriptionTermsThirdPoint: '• Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your Apple Account Settings after purchase',
+    SubscriptionPrivacyLink: '• The Privacy Policy can be accessed here',
+    SubscriptionTermsLink: '• The Terms of Use can be accessed here',
+    TermsPattern: /here/,
+    PolicyPattern: /here/,
   },
 
   MeetYourIconsDict: {

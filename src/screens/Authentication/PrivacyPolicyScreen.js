@@ -26,7 +26,7 @@ export default function RegisterScreen() {
   const {getHeight} = ScaleHook();
 
   navigation.setOptions({
-    header: () => <Header title={AuthDict.PrivacyPolicyScreenTitle} goBack />,
+    header: () => <Header title={AuthDict.PrivacyPolicyScreenTitle} showModalCross />,
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **

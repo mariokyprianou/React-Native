@@ -14,6 +14,8 @@ import {
   ScrollView,
   StatusBar,
   Alert,
+  Platform,
+  TouchableOpacity
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -38,9 +40,8 @@ import {
 } from 'react-native-iap';
 import RegisterGooglePlaySubscription from '../../apollo/mutations/RegisterGooglePlaySubscription';
 import RegisterAppStoreSubscription from '../../apollo/mutations/RegisterAppStoreSubscription';
-import {Platform} from 'react-native';
 import {useMutation} from '@apollo/client';
-import {TouchableOpacity} from 'react-native';
+import StylisedText from '../../components/text/StylisedText';
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
 const purchaseModalVideo = require('../../../assets/videos/purchaseModalVideo.m4v');
@@ -52,7 +53,7 @@ const productIds = [
 
 const PurchaseModalScreen = ({}) => {
   // MARK: - Hooks
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
@@ -304,7 +305,7 @@ const PurchaseModalScreen = ({}) => {
     termsText: {
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
-      marginBottom: getHeight(30),
+      marginBottom: getHeight(8)
     },
     needHelpTouchable: {
       width: '50%',
@@ -322,6 +323,12 @@ const PurchaseModalScreen = ({}) => {
       textDecorationLine: 'underline',
       textAlign: 'center',
     },
+    highlightedStyle: {
+      ...textStyles.semiBold16_brownishGrey100,
+      fontSize: fontSize(15),
+      color: colors.tealish100,
+      textDecorationLine: 'underline',
+    }
   });
 
   // MARK: - Render
@@ -341,6 +348,22 @@ const PurchaseModalScreen = ({}) => {
       </View>
     </TouchableOpacity>
   );
+
+  const policyLinkText = [
+    {
+      pattern: PurchaseDict.PolicyPattern,
+      onPress: () => navigation.navigate('PrivacyPolicy'),
+    },
+  ];
+
+  const termsLinkText = [
+    {
+      pattern: PurchaseDict.TermsPattern,
+      onPress: () => navigation.navigate('TermsAndConditions'),
+    },
+  ];
+
+
 
   return (
     <>
@@ -403,9 +426,38 @@ const PurchaseModalScreen = ({}) => {
         <Text style={styles.termsTitle}>
           {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
         </Text>
-        <Text style={styles.termsText}>
-          {PurchaseDict.SubscriptionTermsText}
-        </Text>
+        <Text style={styles.termsText}>{PurchaseDict.SubscriptionTermsFirstPoint}</Text>
+        <Text style={styles.termsText}>{PurchaseDict.SubscriptionTermsSecondPoint}</Text>
+        <Text style={styles.termsText}>{PurchaseDict.SubscriptionTermsThirdPoint}</Text>
+        
+        <StylisedText
+          {...{
+            active: false,
+            input: policyLinkText,
+            text: PurchaseDict.SubscriptionPrivacyLink,
+            textStyle: {
+              ...styles.termsText
+            },
+            highlightedStyle: {
+              ...styles.highlightedStyle
+            }
+          }}
+        />
+        <StylisedText
+          {...{
+            active: false,
+            input: termsLinkText,
+            text: PurchaseDict.SubscriptionTermsLink,
+            textStyle: {
+              ...styles.termsText
+            },
+            highlightedStyle: {
+              ...styles.highlightedStyle
+            }
+          }}
+        />
+      
+        <Spacer height={30} />
       </View>
     </ScrollView>
      <Header

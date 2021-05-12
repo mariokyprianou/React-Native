@@ -27,6 +27,8 @@ import TakeARestScreen from './screens/workout/TakeARestScreen';
 import StayTunedScreen from './screens/workout/StayTunedScreen';
 import WorkoutCompleteScreen from './screens/workout/WorkoutCompleteScreen';
 import ChallengeCompletionScreen from './screens/progress/ChallengeCompletionScreen';
+import TermsConditionsScreen from './screens/Authentication/TermsConditionsScreen';
+import PrivacyPolicyScreen from './screens/Authentication/PrivacyPolicyScreen';
 
 export default function AppContainer() {
   const {loading} = useLoading();
@@ -126,6 +128,17 @@ export default function AppContainer() {
         <AppStack.Screen
           name="ChallengeComplete"
           component={ChallengeCompletionScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+
+        <AppStack.Screen
+          name="TermsAndConditions"
+          component={TermsConditionsScreen}
+          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+        />
+        <AppStack.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicyScreen}
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
       </AppStack.Navigator>

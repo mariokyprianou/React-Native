@@ -13,6 +13,8 @@ import SliderProgressView from './SliderProgressView';
 import {VideoView} from 'the-core-ui-module-tdmediamanager';
 import ControlsView from './ControlsView';
 import UseData from '../../hooks/data/UseData';
+import crashlytics from '@react-native-firebase/crashlytics';
+
 
 export default function ({video, videoEasy, videoEasiest, index}) {
   const videos = {
@@ -93,7 +95,10 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       //videoRef.current.reset()
     },
 
-    onError: (error) => console.log('Error loading video:', error),
+    onError: (error) => {
+      console.log('Error loading video:', error);
+      crashlytics().recordError(error);
+    },
 
     customControls: <></>,
     renderToolbar: () => <></>,
@@ -144,6 +149,9 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       />
     </Animated.View>
   );
+
+
+
 
   return (
     <View style={styles.container}>

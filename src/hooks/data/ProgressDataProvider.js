@@ -45,8 +45,7 @@ export default function DataProvider(props) {
       },
     });
 
-  }, [runQuery]);
-
+  }, [runQuery, isConnected, isInternetReachable]);
 
 
   // Get challenge history data
@@ -63,8 +62,7 @@ export default function DataProvider(props) {
       },
     });
 
-  }, [runQuery]);
-
+  }, [runQuery, isConnected, isInternetReachable]);
 
   // Get progress images
   const [userImages, setUserImages] = useState([]);
@@ -83,6 +81,7 @@ export default function DataProvider(props) {
           setUserImages([emptyListObject]);
           return [];
         } else {
+          console.log("res.progressImages", res.map(it=> it.id))
           const formattedImages = formatProgressImages(res);
           setUserImages(formattedImages);
           return formattedImages;
@@ -90,7 +89,7 @@ export default function DataProvider(props) {
       },
     });
 
-  }, [runQuery]);
+  }, [runQuery, isConnected, isInternetReachable]);
 
 
 
@@ -164,7 +163,8 @@ export default function DataProvider(props) {
 
 
   async function checkImages(images) {
-    console.log(images[0])
+
+    console.log("checkImages: ", images.map(it=>it.id))
     if (images.length === 1) {
       setBeforePic(images[0]);
     }
@@ -186,6 +186,15 @@ export default function DataProvider(props) {
   }, [userImages, setBeforePic, setAfterPic]);
 
 
+  const getProgressData = useCallback(async () => {
+
+    getProgress();
+    getHistory();
+    getImages();
+    getChallenges();
+
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -203,6 +212,7 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
+      getProgressData
     }),
     [
       progress,
@@ -218,7 +228,9 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
+      getProgressData
     ],
+
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

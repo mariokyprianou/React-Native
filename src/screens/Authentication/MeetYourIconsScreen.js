@@ -352,6 +352,7 @@ export default function MeetYourIconsScreen() {
       navigation.navigate('PurchaseModal');
       return;
     }
+    setProgrammeModalImage(selectedProgram.programmeImage);
 
     navigation.navigate('Congratulations', {
       switchProgramme: true,

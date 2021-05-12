@@ -194,7 +194,7 @@ index e9042f5..7263ac0 100644
 +	getLocalFileByName,
  };
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..2c70b7c 100644
+index c1656ea..a35777d 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 @@ -5,29 +5,40 @@
@@ -290,6 +290,15 @@ index c1656ea..2c70b7c 100644
  	};
  
  	const onLoadStart = (data) => {
+@@ -95,7 +113,7 @@ export default function VideoView(props) {
+ 		props.onEnd && props.onEnd();
+ 	};
+ 
+-	const onError = () => {
++	const onError = (error) => {
+ 		console.log(error);
+ 		props.onError && props.onError(error);
+ 	};
 @@ -103,11 +121,9 @@ export default function VideoView(props) {
  	const onSeeking = (newCurrentTime) => setCurrentTime(newCurrentTime);
  
@@ -312,12 +321,13 @@ index c1656ea..2c70b7c 100644
  			<Video
  				onEnd={onEnd}
  				onLoad={onLoad}
-@@ -135,9 +151,12 @@ export default function VideoView(props) {
+@@ -135,9 +151,13 @@ export default function VideoView(props) {
  				}}
  				style={styles.mediaPlayer}
  				volume={props.volume || 13}
 +				muted={props.muted || false}
 +				repeat={props.repeat || false}
++				onError={onError}
  			/>
  
 -			<MediaControls
@@ -326,7 +336,7 @@ index c1656ea..2c70b7c 100644
  				isFullScreen={isFullScreen}
  				duration={duration}
  				isLoading={isLoading}
-@@ -153,6 +172,8 @@ export default function VideoView(props) {
+@@ -153,6 +173,8 @@ export default function VideoView(props) {
  				fadeOutDelay={3000}
  				showOnStart={false}
  			/>
@@ -335,7 +345,7 @@ index c1656ea..2c70b7c 100644
  		</View>
  	);
  }
-@@ -175,5 +196,10 @@ const styles = StyleSheet.create({
+@@ -175,5 +197,10 @@ const styles = StyleSheet.create({
  		bottom: 0,
  		right: 0,
  		backgroundColor: 'black',

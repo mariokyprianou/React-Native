@@ -82,8 +82,7 @@ export default function MeetYourIconsScreen() {
       setLoading(true);
     }
     
-    // Already got data, not needing this
-    //getTrainers();
+    getTrainers();
   }, []);
 
   // useEffect(() => {

@@ -265,7 +265,7 @@ export default function DataProvider(props) {
     async (list) => {
       if (isConnected) {
         cacheImages(list);
-        //FastImage.preload(list.map(it =>{ return { uri: it }}).filter(it=> it.uri !== null));
+        FastImage.preload(list.map(it =>{ return { uri: it }}).filter(it=> it.uri !== null));
       }
     },
     [isConnected],
@@ -331,10 +331,10 @@ export default function DataProvider(props) {
     initCacheWeekVideos(newData.currentWeek.workouts);
 
 
-    const images = newData.currentWeek.workouts.map(it => {
-      return it.overviewImage;
-    })
-    //initCacheImages(images);
+    // const images = newData.currentWeek.workouts.map(it => {
+    //   return it.overviewImage;
+    // })
+    // initCacheImages(images);
 
     const numberOfWorkouts = newData.currentWeek.workouts.length;
     let storedDays = await getStoredDays(numberOfWorkouts);

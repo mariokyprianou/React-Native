@@ -114,10 +114,10 @@ export default function DataProvider(props) {
       key: 'challenges',
       setValue: async (data) => {
 
-          const images = data.map(it => {
-            return it.imageUrl
-           })
-          //initCacheImages(images);
+          // const images = data.map(it => {
+          //   return it.imageUrl
+          //  })
+          // initCacheImages(images);
 
           setChallenges(data);
           return data;

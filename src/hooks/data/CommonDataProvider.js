@@ -62,13 +62,13 @@ export default function DataProvider(props) {
               }
             });
 
-            if (isConnected && isInternetReachable) {
-                const images = data.map(it => {
-                  return {uri: it.image};
-                })
-                FastImage.preload(images);
-                console.log("FastImagePreload: onboarding", images.length);
-            }
+            // if (isConnected && isInternetReachable) {
+            //     const images = data.map(it => {
+            //       return {uri: it.image};
+            //     })
+            //     FastImage.preload(images);
+            //     console.log("FastImagePreload: onboarding", images.length);
+            // }
 
             setOnboarding(data);
           }

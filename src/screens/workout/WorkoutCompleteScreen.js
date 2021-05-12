@@ -31,6 +31,10 @@ import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
 import displayAlert from '../../utils/DisplayAlert';
 
+import {useNetInfo} from '@react-native-community/netinfo';
+import OfflineUtils from '../../hooks/data/OfflineUtils';
+
+
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
@@ -38,6 +42,8 @@ export default function WorkoutCompleteScreen() {
   const {dictionary} = useDictionary();
   const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
+  const {isConnected, isInternetReachable} = useNetInfo();
+
 
   const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
@@ -184,64 +190,67 @@ export default function WorkoutCompleteScreen() {
       weightsUsed: weightsToUpload,
     };
 
+    let firebaseEventPayload = {
+      workoutId: selectedWorkout.id,
+      workoutName: selectedWorkout.name,
+    };
+
     if (isSelectedWorkoutOnDemand) {
-      setIsSelectedWorkoutOnDemand(false);
-
-      completeOnDemandWorkout({
-        variables: {
-          input: {
-            ...workoutComplete,
-          },
-        },
-      })
-        .then(async (res) => {
-          const success = R.path(['data', 'completeOnDemandWorkout'], res);
-
-          if (success) {
-            firebaseLogEvent(analyticsEvents.completedWorkout, {
-              workoutId: selectedWorkout.id,
-              workoutName: selectedWorkout.name,
-            });
-            setWeightsToUpload([]);
-            await getProfile();
-
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'TabContainer'}],
-            });
-          }
-        })
-        .catch((err) => console.log(err, '<---workout complete error'))
-        .finally(() => setLoading(false));
-    } else {
-      completeWorkout({
-        variables: {
-          input: {
-            ...workoutComplete,
-          },
-        },
-      })
-        .then(async (res) => {
-          const success = R.path(['data', 'completeWorkout'], res);
-
-          if (success) {
-            firebaseLogEvent(analyticsEvents.completedWorkout, {
-              workoutId: selectedWorkout.id,
-              workoutName: selectedWorkout.name,
-            });
-            setWeightsToUpload([]);
-            await getProfile();
-
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'TabContainer'}],
-            });
-          }
-        })
-        .catch((err) => console.log(err, '<---workout complete error'))
-        .finally(() => setLoading(false));
+      firebaseEventPayload = {
+        ...firebaseEventPayload,
+        onDemand: true
+      }
     }
+    
+    // Handle offline programme workout
+    if (!isConnected && !isInternetReachable && !isSelectedWorkoutOnDemand) {
+      handleOffline(workoutComplete, firebaseEventPayload);
+      return;
+    }
+
+    const completeMutation = isSelectedWorkoutOnDemand ? completeOnDemandWorkout : completeWorkout;
+
+    completeWorkout({
+      variables: {
+        input: {
+          ...workoutComplete,
+        },
+      },
+    }).then(async (res) => {
+        const success = R.path(['data', isSelectedWorkoutOnDemand ? 'completeOnDemandWorkout' : 'completeWorkout'], res);
+
+        if (success) {
+          firebaseLogEvent(analyticsEvents.completedWorkout, firebaseEventPayload);
+
+          if (isSelectedWorkoutOnDemand) {
+            setIsSelectedWorkoutOnDemand(false);
+          }
+
+          completeWorkoutDone();
+        }
+      })
+      .catch((err) => {
+        console.log(err, '<---workout complete error');
+      })
+      .finally(() => setLoading(false));
+  } 
+
+  async function handleOffline(workoutComplete, firebaseEventPayload) {
+    await OfflineUtils.completeWorkout(workoutComplete, firebaseEventPayload);
+    completeWorkoutDone(); 
   }
+
+
+  async function completeWorkoutDone() {
+    setWeightsToUpload([]);
+    await getProfile();
+
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
+  }
+
 
   function checkGoBack() {
     displayAlert({

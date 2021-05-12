@@ -78,7 +78,10 @@ export default function MeetYourIconsScreen() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    setLoading(true);
+    if (isConnected) {
+      setLoading(true);
+    }
+    
     getTrainers();
   }, []);
 

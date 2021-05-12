@@ -11,12 +11,18 @@ import ProfileScreenUI from './ProfileScreenUI';
 import {useNavigation} from '@react-navigation/native';
 import Intercom from 'react-native-intercom';
 import useUserData from '../../hooks/data/useUserData';
+import displayAlert from '../../utils/DisplayAlert';
+import {useNetInfo} from '@react-native-community/netinfo';
+import useDictionary from '../../hooks/localisation/useDictionary';
 
 export default function ProfileScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
   const navigation = useNavigation();
   const {getValues} = FormHook();
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {dictionary} = useDictionary();
+  const {OfflineMessage} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -28,6 +34,11 @@ export default function ProfileScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const onPressNeedHelp = () => {
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+    return;
+    }
+
     firebaseLogEvent(analyticsEvents.accessedIntercom, {});
     Intercom.displayMessenger();
   };

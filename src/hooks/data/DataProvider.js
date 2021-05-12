@@ -6,8 +6,6 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
-import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
@@ -32,10 +30,16 @@ import {
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
-import {cacheWeekVideos} from './VideoCacheUtils';
+import {cacheWeekVideos, cacheImages} from './VideoCacheUtils';
+
+import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+import FastImage from 'react-native-fast-image';
+import OfflineUtils from './OfflineUtils';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
+
+  const {runQuery} = useCustomQuery();
 
   const [programme, setProgramme] = useState();
   const [programmeModalImage, setProgrammeModalImage] = useState();
@@ -146,6 +150,7 @@ export default function DataProvider(props) {
 
     // PAST
     let pastWorkouts = workouts.filter((it) => it.completedAt);
+
     pastWorkouts = pastWorkouts.map((workout) => {
       workoutIndex = workoutIndex + 1;
       console.log(workoutIndex, workout.completedAt);
@@ -255,41 +260,94 @@ export default function DataProvider(props) {
     [isConnected],
   );
 
-  const [getProgramme] = useLazyQuery(Programme, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: async (res) => {
-      const data = res.getProgramme;
-
-      // Check programme is completed
-      if (data.isComplete) {
-        setCurrentWeek([]);
-        setNextWeek([]);
-        setProgramme(data);
-        return;
+  const initCacheImages = useCallback(
+    async (list) => {
+      if (isConnected) {
+        cacheImages(list);
+        FastImage.preload(list.map(it =>{ return { uri: it }}).filter(it=> it.uri !== null));
       }
-
-      setProgrammeModalImage(data.programmeImage);
-      initCacheWeekVideos(data.currentWeek.workouts);
-
-      const numberOfWorkouts = data.currentWeek.workouts.length;
-      let storedDays = await getStoredDays(numberOfWorkouts);
-
-      structureWeek(
-        data.currentWeek.workouts
-          .slice()
-          .sort((a, b) => a.orderIndex > b.orderIndex),
-        storedDays,
-      );
-      setProgramme(data);
     },
-    onError: (error) => {
-      console.log(error);
+    [isConnected],
+  );
+
+  const getProgramme = useCallback(async () => {
+
+    const res = await runQuery({
+      query: Programme,
+      key: 'getProgramme',
+      setValue: async (data) => {
+        processProgramme(data);
+      },
+    });
+
+    if (!res.success) {
       setCurrentWeek(null);
       setNextWeek(null);
       setProgramme(null);
-    },
-  });
+    }
 
+  }, [runQuery, isConnected, isInternetReachable]);
+
+
+  const processProgramme = async (data) => {
+    // Check programme is completed
+    if (data.isComplete) {
+      setCurrentWeek([]);
+      setNextWeek([]);
+      setProgramme(data);
+      return;
+    }
+
+    let newData = data;
+
+    // Add offline completed workouts
+    if (!isConnected && !isInternetReachable) {
+      const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
+
+      console.log("Offline completed to add", offlineCompleted.length)
+      const workouts = data.currentWeek.workouts.slice();
+
+      const updatedWorkouts = workouts.map(workout => {
+        let newWorkout = offlineCompleted.find(it => workout.id === it.id)
+
+        return {
+          ...workout,
+          completedAt: newWorkout ? newWorkout.date : workout.completedAt
+        }
+      });
+      
+      newData = {
+        ...data, 
+        currentWeek: {
+          ...data.currentWeek,
+          workouts: updatedWorkouts
+        }
+      }
+    }
+
+    setProgrammeModalImage(newData.programmeImage);
+    initCacheWeekVideos(newData.currentWeek.workouts);
+
+
+    // const images = newData.currentWeek.workouts.map(it => {
+    //   return it.overviewImage;
+    // })
+    // initCacheImages(images);
+
+    const numberOfWorkouts = newData.currentWeek.workouts.length;
+    let storedDays = await getStoredDays(numberOfWorkouts);
+
+    structureWeek(
+      newData.currentWeek.workouts
+        .slice()
+        .sort((a, b) => a.orderIndex > b.orderIndex),
+      storedDays,
+    );
+
+    setProgramme(newData);
+  }
+
+  
   useEffect(() => {
     async function checkUser() {
       const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
@@ -368,28 +426,41 @@ export default function DataProvider(props) {
   const [selectedWorkoutTags, setSelectedWorkoutTags] = useState([]);
   const [onDemandWorkouts, setOnDemandWorkouts] = useState([]);
 
-  const [getWorkoutTags] = useLazyQuery(WorkoutTags, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: async (res) => {
-      setWorkoutTags(res.workoutTags);
-    },
-    onError: (error) => {
-      console.log(error);
-      setWorkoutTags(null);
-    },
-  });
 
-  const [getOnDemandWorkouts] = useLazyQuery(OnDemandWorkouts, {
-    variables: {tagIds: selectedWorkoutTags},
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: async (res) => {
-      setOnDemandWorkouts(res.onDemandWorkouts.nodes);
-    },
-    onError: (error) => {
-      console.log(error);
+  const getWorkoutTags = useCallback(async () => {
+
+    const res = await runQuery({
+      query: WorkoutTags,
+      key: 'workoutTags',
+      setValue: async (data) => {
+        setWorkoutTags(data);
+      },
+    });
+
+    if (!res.success) {
+      setWorkoutTags(null);
+    }
+
+  }, [runQuery, isConnected, isInternetReachable])
+
+
+  const getOnDemandWorkouts = useCallback(async (tags) => {
+
+    const res = await runQuery({
+      query: OnDemandWorkouts,
+      key: 'onDemandWorkouts',
+      variables: {tagIds: tags},
+      setValue: async (data) => {
+        setOnDemandWorkouts(data.nodes);
+      },
+    });
+
+    if (!res.success) {
       setOnDemandWorkouts(null);
-    },
-  });
+    }
+
+  }, [runQuery, isConnected, isInternetReachable]);
+
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -432,6 +503,7 @@ export default function DataProvider(props) {
       getOnDemandWorkouts,
       setIsSelectedWorkoutOnDemand,
       isSelectedWorkoutOnDemand,
+      processProgramme
     }),
     [
       programme,
@@ -471,6 +543,7 @@ export default function DataProvider(props) {
       getOnDemandWorkouts,
       setIsSelectedWorkoutOnDemand,
       isSelectedWorkoutOnDemand,
+      processProgramme
     ],
   );
 

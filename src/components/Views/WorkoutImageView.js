@@ -5,13 +5,17 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import FastImage from 'react-native-fast-image';
 import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
 import FadingBottomView from './FadingBottomView';
+
+import {FileManager} from 'the-core-ui-module-tdmediamanager';
+
+const {getLocalFileByName} = FileManager;
 
 const fakeImage = require('../../../assets/images/fake.png');
 
@@ -43,6 +47,19 @@ export default function ({
       marginBottom: getHeight(15),
     },
   };
+
+  useEffect(()=> {
+    if (image) {
+
+      const imageName = image.split('/').pop().split('?').shift();
+      getLocalFileByName(imageName).then((it)=> {
+        console.log("localUri", it);
+      })
+
+    }
+    
+  }, [image])
+
 
   return (
     <View style={styles.container}>

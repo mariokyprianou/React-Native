@@ -102,7 +102,7 @@ export default function OnDemandScreen() {
         : workoutTagsToDisplay.map((x) => x.id);
 
     setSelectedWorkoutTags(tagIds);
-    getOnDemandWorkouts();
+    getOnDemandWorkouts(tagIds);
   }, [workoutTagsToDisplay]);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **

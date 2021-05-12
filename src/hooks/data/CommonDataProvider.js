@@ -4,8 +4,8 @@
  * Email: christos.demetiou@thedistance.co.uk
  * Copyright (c) 2021 JM APP DEVELOPMENT LTD
  */
-import React, {useState, useMemo, useEffect} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
+import React, {useState, useMemo, useEffect, useCallback} from 'react';
+import {useQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './CommonDataContext';
@@ -15,8 +15,12 @@ import Legals from '../../apollo/queries/Legals';
 import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
 import useDictionary from '../localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
+import useCustomQuery from '../customQuery/useCustomQuery';
+import FastImage from 'react-native-fast-image';
 
 export default function DataProvider(props) {
+  const {runQuery} = useCustomQuery();
+
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const {dictionary} = useDictionary();
@@ -40,39 +44,57 @@ export default function DataProvider(props) {
 
 
 
-  const [getOnboarding] = useLazyQuery(Onboarding, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const data = [];
-        res.onboardingScreens.forEach((screen) => {
-          const isRightToLeft = isRTL();
-          if (isRightToLeft === true) {
-            data.unshift(screen);
-          } else {
-            data.push(screen);
-          }
-        });
-        setOnboarding(data);
-      }
-    },
-    onError: (error) => {
-      console.log(error);
-    }
-  });
+  const getOnboarding = useCallback(async () => {
+  
+    if (isConnected && isInternetReachable) {
+      const res = await runQuery({
+        query: Onboarding,
+        key: 'onboardingScreens',
+        setValue: async (res) => {
+          if (res) {
+            const data = [];
+            res.forEach((screen) => {
+              const isRightToLeft = isRTL();
+              if (isRightToLeft === true) {
+                data.unshift(screen);
+              } else {
+                data.push(screen);
+              }
+            });
 
-  const [getTrainers] = useLazyQuery(Trainers, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const data = res.getTrainers
-          .slice()
-          .filter((it) => it.programmes.length > 0);
-        setTrainers(data);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
+            // if (isConnected && isInternetReachable) {
+            //     const images = data.map(it => {
+            //       return {uri: it.image};
+            //     })
+            //     FastImage.preload(images);
+            //     console.log("FastImagePreload: onboarding", images.length);
+            // }
+
+            setOnboarding(data);
+          }
+        },
+      });
+    }
+
+  }, [runQuery, isConnected, isInternetReachable, onboarding]);
+
+
+
+  const getTrainers = useCallback(async () => {
+    const res = await runQuery({
+      query: Trainers,
+      key: 'getTrainers',
+      setValue: (res) => {
+        if (res) {
+          const data = res.slice().filter((it) => it.programmes.length > 0);
+          setTrainers(data);
+        }
+      },
+    });
+
+  }, [runQuery]);
+
+
 
   useQuery(Legals, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),

@@ -81,8 +81,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {ProfileDict, GenderDict} = dictionary;
-  const {updateValue} = FormHook();
+  const {ProfileDict, AuthDict, GenderDict, OfflineMessage} = dictionary;
+  const {getValueByName, updateValue} = FormHook();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {
     loading: countryLoading,
@@ -139,7 +139,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   useEffect(() => {
     if (userData) {
-      console.log(userData.gender);
       if (userData.gender === null) {
         updateValue({
           name: 'profile_gender',
@@ -214,8 +213,22 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+  const onPressChangePassword = () => {
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+    return;
+    }
+
+    navigation.navigate('ChangePassword');
+  };
 
   async function handleUpdate() {
+
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+    return;
+    }
+
     cleanErrors();
 
     const {
@@ -258,7 +271,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       timeZone: userData.timeZone,
     };
 
-    console.log(newVals);
     await updateProfile({
       variables: {
         input: {
@@ -268,7 +280,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
-        console.log('newData', newData);
         setUserData(newData);
       })
       .catch((err) => {
@@ -443,6 +454,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <TDIcon input="chevron-right" inputStyle={styles.icon} />
       ),
       rightAccessoryOnPress: () => {
+        if (!isConnected) {
+          displayAlert({text: OfflineMessage});
+        return;
+        }
+        
         navigation.navigate('ChangeEmail');
       },
       placeholder: userData.email,

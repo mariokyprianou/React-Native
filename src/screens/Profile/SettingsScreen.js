@@ -29,13 +29,16 @@ import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import UseData from '../../hooks/data/UseData';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getValues} = FormHook();
   const {dictionary, getLanguage, setLanguage} = useDictionary();
-  const {SettingsDict, LanguageDict, ProfileDict} = dictionary;
+  const {SettingsDict, LanguageDict, ProfileDict, OfflineMessage} = dictionary;
   const {getHeight, getWidth} = ScaleHook();
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const {
     colors,
     cellFormConfig,
@@ -161,6 +164,12 @@ const SettingsScreen = ({}) => {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const updateSettingsAndNavigate = async () => {
     navigation.goBack();
+
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+      return;
+    }
+
 
     await AsyncStorage.setItem(
       '@DOWNLOAD_ENABLED',

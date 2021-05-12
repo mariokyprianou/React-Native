@@ -23,6 +23,8 @@ import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useProgressData from '../../hooks/data/useProgressData';
+import {useNetInfo} from '@react-native-community/netinfo';
+import displayAlert from '../../utils/DisplayAlert';
 
 const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
@@ -30,9 +32,10 @@ export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+  const {isConnected, isInternetReachable} = useNetInfo();
 
   const {dictionary} = useDictionary();
-  const {ProgressDict} = dictionary;
+  const {ProgressDict, OfflineMessage} = dictionary;
   const {updateValue, getValueByName, cleanValues} = FormHook();
   const {setLoading} = useLoading();
   const navigation = useNavigation();
@@ -174,6 +177,12 @@ export default function ChallengeEndScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddResult() {
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+    return;
+    }
+
+
     setLoading(true);
     let challengeResult = '';
     if (type === 'STOPWATCH') {

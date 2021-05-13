@@ -260,12 +260,10 @@ export default function UserDataProvider(props) {
   const checkDeviceId = useCallback(async (canChangeDevice, existingId) => {
     const deviceId = getUniqueId();
 
-    // This is a new device
-    if (deviceId !== existingId) {
-      console.log("ChangeDevice", {
-        canChangeDevice: canChangeDevice,
-        newDeviceId: deviceId
-      })
+    if (deviceId === existingId) {
+      setChangeDevice(null);
+    }
+    else {
       setChangeDevice({
         canChangeDevice: canChangeDevice,
         newDeviceId: deviceId
@@ -357,6 +355,7 @@ export default function UserDataProvider(props) {
       firebaseLogEvent,
       analyticsEvents,
       changeDevice,
+      setChangeDevice,
       suspendedAccount,
       setSuspendedAccount,
       checkUserSubscription,
@@ -377,6 +376,7 @@ export default function UserDataProvider(props) {
       firebaseLogEvent,
       analyticsEvents,
       changeDevice,
+      setChangeDevice,
       suspendedAccount,
       setSuspendedAccount,
       checkUserSubscription,

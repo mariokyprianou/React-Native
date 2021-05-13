@@ -118,9 +118,9 @@ export default function StartWorkoutScreen() {
   return (
     <>
       <View style={styles.headerBorder} />
-      <View style={{flex: 1, backgroundColor: 'red'}}>
+      <View style={{flex: 1}}>
 
-          <View style={{flex: 0.85, backgroundColor: 'blue'}}>
+          <View style={{flex: 0.85}}>
 
 
             <ScrollView

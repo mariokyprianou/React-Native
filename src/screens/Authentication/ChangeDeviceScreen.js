@@ -26,7 +26,8 @@ export default function ChangeDeviceScreen() {
   const {dictionary} = useDictionary();
   const {ChangeDeviceDict} = dictionary;
   const navigation = useNavigation();
-  const {permissionsNeeded, firebaseLogEvent, analyticsEvents} = useUserData();
+  const {permissionsNeeded, firebaseLogEvent, analyticsEvents, setChangeDevice} = useUserData();
+
   const {setLoading} = useLoading();
 
   const [changeDevice] = useMutation(ChangeDevice);
@@ -46,6 +47,7 @@ export default function ChangeDeviceScreen() {
   // MARK: - Actions
   const onPressButton = async () => {
     
+    setLoading(true);
     changeDevice({
       variables: {
         input: {
@@ -55,8 +57,12 @@ export default function ChangeDeviceScreen() {
     })
       .then(async (res) => {
         const response = getResponse(res, 'changeDevice');
+        console.log("changeDeviceRes", response);
 
         if (response) {
+
+          // Reset change devoce data
+          setChangeDevice(null);
 
           await AsyncStorage.setItem(
             '@DOWNLOAD_ENABLED',
@@ -84,7 +90,7 @@ export default function ChangeDeviceScreen() {
         displayAlert({
           text: ChangeDeviceDict.ChangeDeviceFailedText,
         });
-      });
+      }).finally(()=> setLoading(false));
   };
   const onPressBottomButton = () => {
     firebaseLogEvent(analyticsEvents.accessedIntercom, {});

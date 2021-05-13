@@ -708,6 +708,7 @@ export default function ThemeProvider({children}) {
     exerciseTitleStyle: {
       ...textStyles.bold21_black100,
       textAlign: 'left',
+      flex: 1,
     },
     exerciseDescriptionStyle: {
       marginTop: getHeight(5),

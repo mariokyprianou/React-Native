@@ -18,7 +18,7 @@ import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
 import OnDemandContainer from './OnDemandContainer';
 import isIphoneX from '../utils/isIphoneX';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import useUserData from '../hooks/data/useUserData';
 import * as ScreenCapture from 'expo-screen-capture';
@@ -32,14 +32,13 @@ export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
 
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
 
   const {fontSize, getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  const {changeDevice, setSuspendedAccount, getProfile} = useUserData();
+  const {changeDevice, setSuspendedAccount} = useUserData();
 
   const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
@@ -49,9 +48,6 @@ export default function TabContainer() {
     }
   }, [changeDevice]);
 
-  useEffect(() => {
-    getProfile();
-  }, []);
 
   useEffect(() => {
     let screenshotListener;

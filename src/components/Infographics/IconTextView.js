@@ -32,7 +32,7 @@ export default function IconTextView({
   const {WorkoutDict} = dictionary;
 
   const timeIcon = require('../../../assets/icons/reminder.png');
-  const lightningIcon = require('../../../assets/icons/lightning.png');
+  const lightningIcon = require('../../../assets/icons/lightningOriginal.png');
   const repsIcon = require('../../../assets/icons/weight.png');
 
   const intensityRef = {
@@ -68,10 +68,9 @@ export default function IconTextView({
     icon: {
       tintColor:
         color === 'grey'
-          ? {tintColor: colors.brownishGreyTwo100}
-          : {
-              tintColor: colors.white100,
-            },
+          ? colors.brownishGreyTwo100
+          : colors.white100,
+            
       resizeMode: 'contain',
       height: getHeight(15),
       width: getWidth(15),
@@ -114,13 +113,14 @@ export default function IconTextView({
           <Text
             style={
               color === 'grey' ? styles.greyText : styles.whiteText
-            }>{` ${WorkoutDict.Mins}`}</Text>
+            }
+            >{` ${WorkoutDict.Mins}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
             <TDIcon
               input={lightningIcon}
-              inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
+               inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
             />
           </View>
           <Text

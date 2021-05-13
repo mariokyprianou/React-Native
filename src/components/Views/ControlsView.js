@@ -57,11 +57,9 @@ export default function ({
   const styles = {
     controlsContainerStyle: {
       alignItems: 'center',
-      //flex: 1,
-      top: getHeight(180),
+      flex: 1,
       flexDirection: 'row',
       alignSelf: 'center',
-      position: 'absolute',
     },
     controlTextStyle: {
       ...textStyles.bold16_white100,

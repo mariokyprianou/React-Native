@@ -15,8 +15,13 @@ import ControlsView from './ControlsView';
 import UseData from '../../hooks/data/UseData';
 import crashlytics from '@react-native-firebase/crashlytics';
 
-
-export default function ({video, videoEasy, videoEasiest, index}) {
+export default function ({
+  video,
+  videoEasy,
+  videoEasiest,
+  index,
+  isContinuous,
+}) {
   const videos = {
     video,
     videoEasy,
@@ -33,7 +38,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const [isPaused, setIsPaused] = useState(true);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
-  const [showControls, setShowControls] = useState(true);
+  const [showControls, setShowControls] = useState(!isContinuous);
 
   const [currentVideo, setCurrentVideo] = useState('video');
   const [ended, setEnded] = useState(false);
@@ -150,9 +155,6 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     </Animated.View>
   );
 
-
-
-
   return (
     <View style={styles.container}>
       <View style={{height: videoHeight}}>
@@ -168,7 +170,9 @@ export default function ({video, videoEasy, videoEasiest, index}) {
             }}
             activeOpacity={1}
             onPress={() => {
-              setShowControls(!showControls);
+              if (!isContinuous) {
+                setShowControls(!showControls);
+              }
             }}
           />
         )}

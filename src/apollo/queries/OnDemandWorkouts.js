@@ -16,6 +16,7 @@ export default gql`
         name
         overviewImage
         intensity
+        isContinuous
         duration
         exercises {
           orderIndex

@@ -780,6 +780,17 @@ export default function ThemeProvider({children}) {
       lineHeight: getHeight(100),
       textAlign: 'center',
     },
+    timerRestTextStyle: {
+      ...textStyles.bold22_black100,
+      textAlign: 'center',
+    },
+    timerUpNextTextStyle: {
+      ...textStyles.bold22_white100,
+      textAlign: 'center',
+      position: 'absolute',
+      width: '100%',
+      marginTop: SCREEN_WIDTH - 50,
+    },
   };
 
   const publicMethods = React.useMemo(

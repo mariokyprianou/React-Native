@@ -397,6 +397,8 @@ const hiIN = {
     WorkoutGoBackWarning: 'If you go back you will lose your workout progress',
     WorkoutNoWeightsWarning:
       'Once you have added a weight you will be able to view your weight history for this exercise',
+    Rest: 'REST',
+    UpNext: 'UP NEXT',
   },
 
   OnDemandDict: {

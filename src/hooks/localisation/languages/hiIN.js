@@ -301,6 +301,8 @@ const hiIN = {
       'This image is too large to upload. Please try again with file size under 20MB.',
     UploadAgainWarning:
       'Taking another photo today will replace the existing one.',
+    ShareNotAvailableWarning: 'Sharing your transformation requires a before and an after progress photo.'
+
   },
 
   TabsTitleDict: {

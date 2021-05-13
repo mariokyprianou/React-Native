@@ -158,6 +158,11 @@ export default function TransformationScreen() {
   }
 
   const handleShare = useCallback(async () => {
+
+    if (!beforePic || !afterPic) {
+      displayAlert({text: ProgressDict.ShareNotAvailableWarning})
+      return;
+    }
     
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 

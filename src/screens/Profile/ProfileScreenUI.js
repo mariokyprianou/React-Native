@@ -106,7 +106,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );
-      setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
+      setCountriesList(['', ...countries]);
 
       const countryIdLookup = countryData.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;

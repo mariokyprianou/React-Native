@@ -9,7 +9,7 @@
 import {format, parse} from 'date-fns';
 
 export default function formatProgressImages(images) {
-  return images.sort((a,b) => new Date(Date.parse(a.takenOn)) < new Date(Date.parse(b.takenOn))).map((image) => {
+  return images.map((image) => {
     const idealDate = new Date(Date.parse(image.takenOn));
     const label = format(idealDate, 'dd/LL/y');
     const value = idealDate;

@@ -2,7 +2,7 @@
  * Created Date: Thu, 14th Jan 2021, 16:39:16 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState, useCallback, useEffect} from 'react';
@@ -213,7 +213,6 @@ export default function UserDataProvider(props) {
       query: Profile,
       key: 'profile',
       setValue: async (res) => {
-        console.log('PROFILE', res);
         if (res) {
           let data = {
             ...res,

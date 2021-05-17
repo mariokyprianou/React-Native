@@ -81,7 +81,7 @@ export default function MeetYourIconsScreen() {
     if (isConnected) {
       setLoading(true);
     }
-    
+
     getTrainers();
   }, []);
 
@@ -460,6 +460,7 @@ export default function MeetYourIconsScreen() {
               trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
           const {numberOfWeeks, description, firstWeek} = currentProgram;
+
           const extendedWeek = addWorkoutDates(
             addRestDays(firstWeek),
             new Date(),
@@ -500,21 +501,24 @@ export default function MeetYourIconsScreen() {
                     styles.heading
                   }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
                 <Spacer height={20} />
-                {extendedWeek.map(({duration, intensity, name, day}, index) => {
-                  return (
-                    <>
-                      <View
-                        style={index === 0 ? styles.line : styles.innerLine}
-                      />
-                      <CarouselWorkoutCard
-                        title={name}
-                        day={day}
-                        duration={duration}
-                        intensity={intensity}
-                      />
-                    </>
-                  );
-                })}
+                {extendedWeek &&
+                  extendedWeek.map(
+                    ({duration, intensity, name, day}, index) => {
+                      return (
+                        <>
+                          <View
+                            style={index === 0 ? styles.line : styles.innerLine}
+                          />
+                          <CarouselWorkoutCard
+                            title={name}
+                            day={day}
+                            duration={duration}
+                            intensity={intensity}
+                          />
+                        </>
+                      );
+                    },
+                  )}
               </View>
               <Text
                 style={

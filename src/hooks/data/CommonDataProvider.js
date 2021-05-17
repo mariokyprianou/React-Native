@@ -2,7 +2,7 @@
  * Created Date: Sun, 31st Jan 2021, 01:19:11 am
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import {useQuery} from '@apollo/client';
@@ -26,7 +26,11 @@ export default function DataProvider(props) {
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict, OnboardingDict} = dictionary;
 
-  const [onboarding, setOnboarding] = useState(isRTL() ? OnboardingDict.fallbackData.reverse() : OnboardingDict.fallbackData);
+  const [onboarding, setOnboarding] = useState(
+    isRTL()
+      ? OnboardingDict.fallbackData.reverse()
+      : OnboardingDict.fallbackData,
+  );
 
   const [trainers, setTrainers] = useState([]);
 
@@ -37,15 +41,12 @@ export default function DataProvider(props) {
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
   useEffect(() => {
-    console.log("CommondataProvider: useEffect");
+    console.log('CommondataProvider: useEffect');
     getOnboarding();
     getTrainers();
   }, []);
 
-
-
   const getOnboarding = useCallback(async () => {
-  
     if (isConnected && isInternetReachable) {
       const res = await runQuery({
         query: Onboarding,
@@ -75,10 +76,7 @@ export default function DataProvider(props) {
         },
       });
     }
-
   }, [runQuery, isConnected, isInternetReachable, onboarding]);
-
-
 
   const getTrainers = useCallback(async () => {
     const res = await runQuery({
@@ -91,10 +89,7 @@ export default function DataProvider(props) {
         }
       },
     });
-
   }, [runQuery]);
-
-
 
   useQuery(Legals, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),

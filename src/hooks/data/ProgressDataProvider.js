@@ -16,9 +16,7 @@ import formatProgressImages from '../../utils/formatProgressImages'
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 
-import {
-  format,
-} from 'date-fns';
+import {format} from 'date-fns';
 
 import {Auth, Hub} from 'aws-amplify';
 import FastImage from 'react-native-fast-image';
@@ -93,7 +91,7 @@ export default function DataProvider(props) {
 
 
 
-  const [challenges, setChallenges] = useState();
+  const [challenges, setChallenges] = useState([]);
 
   
   const initCacheImages = useCallback(
@@ -117,11 +115,12 @@ export default function DataProvider(props) {
           //   return it.imageUrl
           //  })
           // initCacheImages(images);
-
-          setChallenges(data);
+          
+          setChallenges(data);         
           return data;
       },
     });
+
 
   }, [runQuery, isConnected, isInternetReachable]);
 
@@ -131,11 +130,7 @@ export default function DataProvider(props) {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then((_res) => {
-          getProgress();
-          getHistory();
-          getImages();
-
-          getChallenges();
+          getProgressData();
         })
         .catch((err) => {
           console.log('UserDataProvider - checkAuth', err);
@@ -193,6 +188,15 @@ export default function DataProvider(props) {
 
   }, []);
 
+  const resetProgressData = useCallback(async () => {
+
+    setProgress(null);
+    setHistory(null);
+    setUserImages([]);
+    setChallenges([]);
+
+  }, []);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -210,7 +214,8 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
-      getProgressData
+      getProgressData,
+      resetProgressData
     }),
     [
       progress,
@@ -226,7 +231,8 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
-      getProgressData
+      getProgressData,
+      resetProgressData
     ],
 
   );

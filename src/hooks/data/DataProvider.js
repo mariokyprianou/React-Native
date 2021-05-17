@@ -408,7 +408,7 @@ export default function DataProvider(props) {
   }, []);
 
   const reset = useCallback(async () => {
-    //setProgramme(null);
+    setProgramme(null);
     setCurrentWeek(null);
     setNextWeek(null);
     setWorkoutTags(null);

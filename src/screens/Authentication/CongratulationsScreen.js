@@ -67,7 +67,7 @@ export default function CongratulationsScreen() {
   const [startProgramme] = useMutation(StartProgramme);
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
-  const {getProgressData} = useProgressData();
+  const {getProgressData, resetProgressData} = useProgressData();
 
   const {getTrainers} = useCommonData();
   const {
@@ -280,6 +280,7 @@ export default function CongratulationsScreen() {
 
   async function changedAssignedProgramme() {
     await reset();
+    await resetProgressData();
 
     await getProgramme();
     await getTrainers();

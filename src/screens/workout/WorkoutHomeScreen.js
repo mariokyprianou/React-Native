@@ -85,8 +85,7 @@ export default function WorkoutHomeScreen() {
       showStayTuned();
       return;
     }
-
-    if (programme && programme.currentWeek && currentWeek) {
+    else if (programme && programme.currentWeek && currentWeek) {
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,

@@ -465,7 +465,7 @@ function TimerView(props) {
         }}>
         <View style={styles.timerTextContainer}>
           <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
-          {props.isContinuous && !shouldRestAfterExercise && (
+          {!shouldRestAfterExercise && (
             <Text style={styles.timerRestTextStyle}>{WorkoutDict.Rest}</Text>
           )}
         </View>

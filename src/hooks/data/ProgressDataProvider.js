@@ -12,7 +12,7 @@ import Progress from '../../apollo/queries/Progress';
 import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
 import Challenges from '../../apollo/queries/Challenges';
 import ProgressImages from '../../apollo/queries/ProgressImages';
-import formatProgressImages from '../../utils/formatProgressImages'
+import formatProgressImages from '../../utils/formatProgressImages';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 
@@ -21,14 +21,11 @@ import {format} from 'date-fns';
 import {Auth, Hub} from 'aws-amplify';
 import FastImage from 'react-native-fast-image';
 
-import { cacheImages } from './VideoCacheUtils';
-
+import {cacheImages} from './VideoCacheUtils';
 
 export default function DataProvider(props) {
-
   const {isConnected, isInternetReachable} = useNetInfo();
   const {runQuery} = useCustomQuery();
-
 
   // Get progress data
   const [progress, setProgress] = useState();
@@ -42,13 +39,10 @@ export default function DataProvider(props) {
         return data;
       },
     });
-
-  }, [runQuery, isConnected, isInternetReachable]);
-
+  }, [runQuery]);
 
   // Get challenge history data
   const [history, setHistory] = useState();
-
 
   const getHistory = useCallback(async () => {
     const res = await runQuery({
@@ -59,13 +53,10 @@ export default function DataProvider(props) {
         return data;
       },
     });
-
-  }, [runQuery, isConnected, isInternetReachable]);
+  }, [runQuery]);
 
   // Get progress images
   const [userImages, setUserImages] = useState([]);
-
-
 
   const getImages = useCallback(async () => {
     const res = await runQuery({
@@ -86,45 +77,39 @@ export default function DataProvider(props) {
         }
       },
     });
-
-  }, [runQuery, isConnected, isInternetReachable]);
-
-
+  }, [runQuery]);
 
   const [challenges, setChallenges] = useState([]);
 
-  
   const initCacheImages = useCallback(
     async (list) => {
       if (isConnected) {
         cacheImages(list);
-        FastImage.preload(list.map(it =>{ return { uri: it }}));
+        FastImage.preload(
+          list.map((it) => {
+            return {uri: it};
+          }),
+        );
       }
     },
     [isConnected],
   );
-
 
   const getChallenges = useCallback(async () => {
     const res = await runQuery({
       query: Challenges,
       key: 'challenges',
       setValue: async (data) => {
+        // const images = data.map(it => {
+        //   return it.imageUrl
+        //  })
+        // initCacheImages(images);
 
-          // const images = data.map(it => {
-          //   return it.imageUrl
-          //  })
-          // initCacheImages(images);
-          
-          setChallenges(data);         
-          return data;
+        setChallenges(data);
+        return data;
       },
     });
-
-
-  }, [runQuery, isConnected, isInternetReachable]);
-
-  
+  }, [runQuery]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -137,39 +122,35 @@ export default function DataProvider(props) {
         });
     }
 
-    Hub.listen("auth", (data) => {
-      const { payload } = data;
-      console.log("new event has happend ", data);
-      if (payload.event === "signIn") {
-        console.log("user has signed in");
+    Hub.listen('auth', (data) => {
+      const {payload} = data;
+      console.log('new event has happend ', data);
+      if (payload.event === 'signIn') {
+        console.log('user has signed in');
         checkAuth();
       }
-      if (payload.event === "signOut") {
-        console.log("user has signed out");
+      if (payload.event === 'signOut') {
+        console.log('user has signed out');
       }
     });
 
     checkAuth();
   }, []);
 
-
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
-
 
   async function checkImages(images) {
     if (images.length === 1) {
       setBeforePic(images[0]);
-    }
-    else {
+    } else {
       setAfterPic(images[0]);
-      setBeforePic(images[images.length - 1]);  
+      setBeforePic(images[images.length - 1]);
     }
     return true;
   }
 
-  useEffect(() => {   
-
+  useEffect(() => {
     if (userImages) {
       const images = userImages.filter((it) => it.id);
       if (images && images.length > 0) {
@@ -178,23 +159,18 @@ export default function DataProvider(props) {
     }
   }, [userImages, setBeforePic, setAfterPic]);
 
-
   const getProgressData = useCallback(async () => {
-
     getProgress();
     getHistory();
     getImages();
     getChallenges();
-
   }, []);
 
   const resetProgressData = useCallback(async () => {
-
     setProgress(null);
     setHistory(null);
     setUserImages([]);
     setChallenges([]);
-
   }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
@@ -215,7 +191,7 @@ export default function DataProvider(props) {
       afterPic,
       setAfterPic,
       getProgressData,
-      resetProgressData
+      resetProgressData,
     }),
     [
       progress,
@@ -232,9 +208,8 @@ export default function DataProvider(props) {
       afterPic,
       setAfterPic,
       getProgressData,
-      resetProgressData
+      resetProgressData,
     ],
-
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

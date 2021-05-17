@@ -30,7 +30,6 @@ export default function NotificationPermissionScreen() {
   const {preferences, getPreferences, setPreferences} = useUserData();
   const {setLoading} = useLoading();
 
-
   const [updatePreferences] = useMutation(UpdatePreference);
 
   // MARK: - Logic
@@ -52,7 +51,6 @@ export default function NotificationPermissionScreen() {
       notifications: enabled,
       weightPreference: preferences.weightPreference,
     };
-
 
     setPreferences(newPreferences);
 

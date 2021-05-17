@@ -383,7 +383,7 @@ export default function ExerciseView(props) {
             onFinish={onFinishTimer}
             onStartRest={() => {
               console.log('starting rest');
-              if (props.isContinuous) {
+              if (props.isContinuous && !props.isLastExercise) {
                 setShowUpNextLabel(true);
               }
             }}

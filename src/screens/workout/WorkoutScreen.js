@@ -6,7 +6,14 @@
  */
 
 import React, {useEffect, useState, useRef} from 'react';
-import {StyleSheet, View, ScrollView, StatusBar, Alert} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  StatusBar,
+  Alert,
+  Platform,
+} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {useBackHandler} from '@react-native-community/hooks';
@@ -203,6 +210,10 @@ export default function WorkoutScreen() {
       const newOffset =
         (currentExerciseIndex + 1) * Constants.EXERCISE_VIEW_HEIGHT;
       scrollRef.current?.scrollTo({y: newOffset, animated: true});
+
+      if (Platform.OS === 'android') {
+        handleIndex(newOffset);
+      }
     }
   }
 
@@ -220,9 +231,9 @@ export default function WorkoutScreen() {
         bounces={false}
         overScrollMode={'never'}
         style={styles.scrollViewContainer}
-        onMomentumScrollEnd={(event) =>
-          handleIndex(event.nativeEvent.contentOffset.y)
-        }>
+        onMomentumScrollEnd={(event) => {
+          handleIndex(event.nativeEvent.contentOffset.y);
+        }}>
         {selectedWorkout.exercises.map((screen, index) => (
           <ExerciseView
             {...screen}
@@ -231,6 +242,7 @@ export default function WorkoutScreen() {
             setEnableScroll={setEnableScroll}
             weightLabel={weightLabel}
             isContinuous={selectedWorkout.isContinuous}
+            isLastExercise={index === selectedWorkout.exercises.length - 1}
           />
         ))}
       </ScrollView>

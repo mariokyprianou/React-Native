@@ -53,7 +53,6 @@ export default function TransformationScreen() {
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {ShareMediaType, getShareData} = useShare();
 
-
   navigation.setOptions({
     header: () => (
       <Header
@@ -97,9 +96,9 @@ export default function TransformationScreen() {
   async function handleSelectDate(dateItem, imageToSelect) {
     if (!dateItem.id) return;
     setLoading(true);
-   
+
     const existingImage = userImages.find((it) => it.id === dateItem.id);
-    
+
     // Change image
     if (imageToSelect === 'before') {
       setBeforePic(existingImage);
@@ -158,12 +157,11 @@ export default function TransformationScreen() {
   }
 
   const handleShare = useCallback(async () => {
-
     if (!beforePic || !afterPic) {
-      displayAlert({text: ProgressDict.ShareNotAvailableWarning})
+      displayAlert({text: ProgressDict.ShareNotAvailableWarning});
       return;
     }
-    
+
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -189,10 +187,12 @@ export default function TransformationScreen() {
 
     setLoading(true);
 
-    
-
     const {colour, url} = await getShareData(ShareMediaType.progress);
 
+    if (!colour || !url) {
+      setLoading(false);
+      return;
+    }
 
     try {
       let beforeDate = parseISO(beforePic.value);
@@ -205,7 +205,7 @@ export default function TransformationScreen() {
         ? 'TODAY'
         : format(afterDate, 'dd/LL/yyyy');
 
-      let res = await PowerShareAssetsManager.shareProgress({
+      await PowerShareAssetsManager.shareProgress({
         backgroundImageUrl: url,
         beforeImageUrl: beforePic.url,
         afterImageUrl: afterPic.url,
@@ -219,12 +219,7 @@ export default function TransformationScreen() {
     }
 
     setLoading(false);
-  }, [
-    beforePic,
-    afterPic,
-    getShareData,
-  ]);
-
+  }, [beforePic, afterPic, getShareData]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

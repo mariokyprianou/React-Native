@@ -2,7 +2,7 @@
  * Created Date: Wed, 10th Feb 2021, 15:35:08 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -13,7 +13,7 @@ const {downloadFilesWithNames, getLocalFileByName} = FileManager;
 async function cacheWeekVideos(workouts) {
   const shouldCache = await shouldCacheWeek();
 
-  console.log("shouldCacheWeekVideos", shouldCache);
+  console.log('shouldCacheWeekVideos', shouldCache);
   if (shouldCache !== true) {
     return;
   }
@@ -82,12 +82,7 @@ async function shouldCacheWeek() {
   return cacheWeekEnabled && downloadEnabled;
 }
 
-
-
-
-
 async function cacheImages(images) {
-
   // Separate names and urls
   let files = images.map((url) => {
     const filename = url.split('/').pop().split('?').shift();
@@ -116,12 +111,7 @@ async function cacheImages(images) {
 
   // Week was cached, don't download again
   if (res.success) {
-    
   }
 }
-
-
-
-
 
 export {cacheWeekVideos, cacheImages};

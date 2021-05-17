@@ -81,7 +81,7 @@ export default function MeetYourIconsScreen() {
     if (isConnected) {
       setLoading(true);
     }
-    
+
     getTrainers();
   }, []);
 
@@ -274,6 +274,7 @@ export default function MeetYourIconsScreen() {
       position: 'absolute',
       bottom: 0,
       marginTop: getHeight(30),
+      paddingBottom: getHeight(40),
       alignItems: 'center',
       backgroundColor: colors.veryLightPinkTwo100,
     },
@@ -302,7 +303,7 @@ export default function MeetYourIconsScreen() {
     },
     fadeContainer: {
       position: 'absolute',
-      bottom: 70,
+      bottom: getHeight(90),
       left: 0,
       right: 0,
     },
@@ -460,6 +461,7 @@ export default function MeetYourIconsScreen() {
               trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
             trainer.programmes[0];
           const {numberOfWeeks, description, firstWeek} = currentProgram;
+
           const extendedWeek = addWorkoutDates(
             addRestDays(firstWeek),
             new Date(),
@@ -500,21 +502,24 @@ export default function MeetYourIconsScreen() {
                     styles.heading
                   }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
                 <Spacer height={20} />
-                {extendedWeek.map(({duration, intensity, name, day}, index) => {
-                  return (
-                    <>
-                      <View
-                        style={index === 0 ? styles.line : styles.innerLine}
-                      />
-                      <CarouselWorkoutCard
-                        title={name}
-                        day={day}
-                        duration={duration}
-                        intensity={intensity}
-                      />
-                    </>
-                  );
-                })}
+                {extendedWeek &&
+                  extendedWeek.map(
+                    ({duration, intensity, name, day}, index) => {
+                      return (
+                        <>
+                          <View
+                            style={index === 0 ? styles.line : styles.innerLine}
+                          />
+                          <CarouselWorkoutCard
+                            title={name}
+                            day={day}
+                            duration={duration}
+                            intensity={intensity}
+                          />
+                        </>
+                      );
+                    },
+                  )}
               </View>
               <Text
                 style={
@@ -574,7 +579,7 @@ export default function MeetYourIconsScreen() {
       <View style={styles.fadeContainer} pointerEvents="none">
         <FadingBottomView
           color="custom"
-          height={130}
+          height={180}
           customStart={colors.veryLightPinkTwo0}
           customEnd={colors.veryLightPinkTwo100}
         />

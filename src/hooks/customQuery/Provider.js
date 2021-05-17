@@ -1,51 +1,51 @@
-
-import { useApolloClient } from '@apollo/client';
-import { useNetInfo } from '@react-native-community/netinfo';
-import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
-import fetchPolicy from '../../utils/fetchPolicy';
+import {useApolloClient} from '@apollo/client';
+import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
+import React, {useMemo, useCallback} from 'react';
 import DataContext from './Context';
 import * as R from 'ramda';
 
-
 export default function DataProvider(props) {
+  const {isConnected, isInternetReachable} = useNetInfo();
 
-    const {isConnected, isInternetReachable} = useNetInfo();
-    const client = useApolloClient();
+  const client = useApolloClient();
 
+  async function isNetworkAvailable() {
+    const response = await NetInfo.fetch();
+    return response.isConnected && response.isInternetReachable;
+  }
 
-    const runQuery =  useCallback(async ({
-        query,
-        setValue,
-        key,
-        variables = {},
-        }) => {
+  const runQuery = useCallback(
+    async ({query, setValue, key, variables = {}}) => {
+      const res = await isNetworkAvailable();
 
-        return client.query({
-            query,
-            fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-            variables,
-            })
-            .then(res => {
-                const newValue = R.path(['data', key], res);
-                setValue && setValue(newValue);
-                return {success: true};;
-            })
-            .catch(err => {
-                console.warn(key, '- Err: ', err);
-                return {success: false, error: err};
-            });
-
-    }, [client, fetchPolicy, isConnected, isInternetReachable]);
+      console.log(`Query for: ${key}`, res ? 'network-only' : 'cache-only');
+      return client
+        .query({
+          query,
+          fetchPolicy: res ? 'network-only' : 'cache-only',
+          variables,
+        })
+        .then((res) => {
+          const newValue = R.path(['data', key], res);
+          setValue && setValue(newValue);
+          return {success: true};
+        })
+        .catch((err) => {
+          console.warn(key, '- Err: ', err);
+          return {success: false, error: err};
+        });
+    },
+    [client],
+  );
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
     () => ({
-        runQuery
+      runQuery,
     }),
-    [
-        runQuery
-    ],
+    [runQuery],
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

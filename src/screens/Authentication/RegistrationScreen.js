@@ -161,21 +161,21 @@ export default function RegisterScreen() {
       alignItems: 'center',
     },
     boxStyle: {
-      width: getWidth(25),
-      height: getWidth(25),
-      borderWidth: 1,
-      borderColor: colors.black30,
-      borderRadius: 1,
+      width: getWidth(22),
+      height: getWidth(22),
+      borderWidth: 0,
+      borderColor: colors.paleGrey100,
+      borderRadius: radius(1),
       backgroundColor: colors.paleGrey100,
       alignItems: 'center',
       justifyContent: 'center',
     },
     emptyBoxStyle: {
-      width: getWidth(25),
-      height: getWidth(25),
-      borderWidth: 1,
+      width: getWidth(22),
+      height: getWidth(22),
+      borderWidth: getWidth(1),
       borderColor: colors.paleGrey100,
-      borderRadius: 1,
+      borderRadius: radius(1),
     },
     iconStyle: {
       height: getHeight(16),
@@ -419,10 +419,7 @@ export default function RegisterScreen() {
             onPress={handleTermsAndConditionsButton}>
             {termsAndConditions === 'on' ? (
               <View style={styles.boxStyle}>
-                <TDIcon
-                  input={tickIcon}
-                  inputStyle={{style: {...styles.iconStyle}}}
-                />
+                <TDIcon input={tickIcon} />
               </View>
             ) : (
               <View style={styles.emptyBoxStyle} />
@@ -452,10 +449,7 @@ export default function RegisterScreen() {
             onPress={handleMarketingPreferences}>
             {marketingPreferences === 'on' ? (
               <View style={styles.boxStyle}>
-                <TDIcon
-                  input={tickIcon}
-                  inputStyle={{style: {...styles.iconStyle}}}
-                />
+                <TDIcon input={tickIcon} />
               </View>
             ) : (
               <View style={styles.emptyBoxStyle} />

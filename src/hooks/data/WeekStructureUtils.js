@@ -2,7 +2,7 @@
  * Created Date: Wed, 27th Jan 2021, 14:05:23 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 import {differenceInDays, addDays, format, parse, parseISO} from 'date-fns';
 
@@ -35,16 +35,14 @@ const initializeRestDays = (numberOfWorkouts) => {
   return storedDays;
 };
 
-const dateBeforeDate = (first, second) => 
-  first.setHours(0, 0, 0, 0) < second.setHours(0, 0, 0, 0)
-
-
+const dateBeforeDate = (first, second) =>
+  first.setHours(0, 0, 0, 0) < second.setHours(0, 0, 0, 0);
 
 const getStoredPastRestDays = (storedDays) => {
   const now = new Date();
 
-  let pastRestDays = storedDays.filter(
-    (it) => dateBeforeDate(it.exactDate, now),
+  let pastRestDays = storedDays.filter((it) =>
+    dateBeforeDate(it.exactDate, now),
   );
 
   pastRestDays = pastRestDays.map((it) => {
@@ -64,7 +62,6 @@ const getStoredFutureRestDays = (storedDays) => {
   const futureRestDays = storedDays
     .filter((it) => differenceInDays(it.exactDate, now) >= 0)
     .map((it) => {
-
       return {
         ...it,
         name: 'REST DAY',

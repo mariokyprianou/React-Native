@@ -66,6 +66,7 @@ export default function CantChooseButton({onPress}) {
     },
     readyQuestionMark: {
       ...textStyles.bold15_white100,
+      fontSize: fontSize(12),
       textAlign: 'center',
     },
     notReadyContainer: {

@@ -5,7 +5,7 @@
  * Email: jodi.dublon@thedistance.co.uk
  * Copyright (c) 2020 The Distance
  */
-import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
+import React, {useState, useMemo, useCallback, useEffect} from 'react';
 import {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
@@ -16,7 +16,6 @@ import {
   differenceInDays,
   differenceInCalendarDays,
   addDays,
-  format,
   parseISO,
 } from 'date-fns';
 import {Auth} from 'aws-amplify';
@@ -263,7 +262,6 @@ export default function DataProvider(props) {
   const initCacheImages = useCallback(
     async (list) => {
       if (isConnected) {
-        //cacheImages(list);
         FastImage.preload(
           list
             .map((it) => {
@@ -291,7 +289,7 @@ export default function DataProvider(props) {
       setNextWeek(null);
       setProgramme(null);
     }
-  }, [runQuery, isConnected, isInternetReachable]);
+  }, [runQuery]);
 
   const processProgramme = async (data) => {
     // Check programme is completed
@@ -360,6 +358,7 @@ export default function DataProvider(props) {
       });
       if (cognitoUser) {
         getProgramme();
+        getWorkoutTags();
       }
     }
 
@@ -413,7 +412,7 @@ export default function DataProvider(props) {
   }, []);
 
   const reset = useCallback(async () => {
-    //setProgramme(null);
+    setProgramme(null);
     setCurrentWeek(null);
     setNextWeek(null);
     setWorkoutTags(null);
@@ -443,7 +442,7 @@ export default function DataProvider(props) {
     if (!res.success) {
       setWorkoutTags(null);
     }
-  }, [runQuery, isConnected, isInternetReachable]);
+  }, [runQuery]);
 
   const getOnDemandWorkouts = useCallback(
     async (tags) => {
@@ -460,7 +459,7 @@ export default function DataProvider(props) {
         setOnDemandWorkouts(null);
       }
     },
-    [runQuery, isConnected, isInternetReachable],
+    [runQuery],
   );
 
   // ** ** ** ** ** Memoize ** ** ** ** **

@@ -263,15 +263,21 @@ export default function DataProvider(props) {
   const initCacheImages = useCallback(
     async (list) => {
       if (isConnected) {
-        cacheImages(list);
-        FastImage.preload(list.map(it =>{ return { uri: it }}).filter(it=> it.uri !== null));
+        //cacheImages(list);
+        FastImage.preload(
+          list
+            .map((it) => {
+              console.log('Caching Image: ', it);
+              return {uri: it};
+            })
+            .filter((it) => it.uri !== null),
+        );
       }
     },
     [isConnected],
   );
 
   const getProgramme = useCallback(async () => {
-
     const res = await runQuery({
       query: Programme,
       key: 'getProgramme',
@@ -285,9 +291,7 @@ export default function DataProvider(props) {
       setNextWeek(null);
       setProgramme(null);
     }
-
   }, [runQuery, isConnected, isInternetReachable]);
-
 
   const processProgramme = async (data) => {
     // Check programme is completed
@@ -304,35 +308,37 @@ export default function DataProvider(props) {
     if (!isConnected && !isInternetReachable) {
       const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
 
-      console.log("Offline completed to add", offlineCompleted.length)
+      console.log('Offline completed to add', offlineCompleted.length);
       const workouts = data.currentWeek.workouts.slice();
 
-      const updatedWorkouts = workouts.map(workout => {
-        let newWorkout = offlineCompleted.find(it => workout.id === it.id)
+      const updatedWorkouts = workouts.map((workout) => {
+        let newWorkout = offlineCompleted.find((it) => workout.id === it.id);
 
         return {
           ...workout,
-          completedAt: newWorkout ? newWorkout.date : workout.completedAt
-        }
+          completedAt: newWorkout ? newWorkout.date : workout.completedAt,
+        };
       });
-      
+
       newData = {
-        ...data, 
+        ...data,
         currentWeek: {
           ...data.currentWeek,
-          workouts: updatedWorkouts
-        }
-      }
+          workouts: updatedWorkouts,
+        },
+      };
     }
 
     setProgrammeModalImage(newData.programmeImage);
     initCacheWeekVideos(newData.currentWeek.workouts);
 
-
-    // const images = newData.currentWeek.workouts.map(it => {
-    //   return it.overviewImage;
-    // })
-    // initCacheImages(images);
+    const images = newData.currentWeek.workouts.map((it) => {
+      return it.overviewImage;
+    });
+    if (newData.programmeImage) {
+      images.push(newData.programmeImage);
+    }
+    initCacheImages(images);
 
     const numberOfWorkouts = newData.currentWeek.workouts.length;
     let storedDays = await getStoredDays(numberOfWorkouts);
@@ -345,9 +351,8 @@ export default function DataProvider(props) {
     );
 
     setProgramme(newData);
-  }
+  };
 
-  
   useEffect(() => {
     async function checkUser() {
       const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
@@ -426,9 +431,7 @@ export default function DataProvider(props) {
   const [selectedWorkoutTags, setSelectedWorkoutTags] = useState([]);
   const [onDemandWorkouts, setOnDemandWorkouts] = useState([]);
 
-
   const getWorkoutTags = useCallback(async () => {
-
     const res = await runQuery({
       query: WorkoutTags,
       key: 'workoutTags',
@@ -440,27 +443,25 @@ export default function DataProvider(props) {
     if (!res.success) {
       setWorkoutTags(null);
     }
-
-  }, [runQuery, isConnected, isInternetReachable])
-
-
-  const getOnDemandWorkouts = useCallback(async (tags) => {
-
-    const res = await runQuery({
-      query: OnDemandWorkouts,
-      key: 'onDemandWorkouts',
-      variables: {tagIds: tags},
-      setValue: async (data) => {
-        setOnDemandWorkouts(data.nodes);
-      },
-    });
-
-    if (!res.success) {
-      setOnDemandWorkouts(null);
-    }
-
   }, [runQuery, isConnected, isInternetReachable]);
 
+  const getOnDemandWorkouts = useCallback(
+    async (tags) => {
+      const res = await runQuery({
+        query: OnDemandWorkouts,
+        key: 'onDemandWorkouts',
+        variables: {tagIds: tags},
+        setValue: async (data) => {
+          setOnDemandWorkouts(data.nodes);
+        },
+      });
+
+      if (!res.success) {
+        setOnDemandWorkouts(null);
+      }
+    },
+    [runQuery, isConnected, isInternetReachable],
+  );
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -503,7 +504,7 @@ export default function DataProvider(props) {
       getOnDemandWorkouts,
       setIsSelectedWorkoutOnDemand,
       isSelectedWorkoutOnDemand,
-      processProgramme
+      processProgramme,
     }),
     [
       programme,
@@ -543,7 +544,7 @@ export default function DataProvider(props) {
       getOnDemandWorkouts,
       setIsSelectedWorkoutOnDemand,
       isSelectedWorkoutOnDemand,
-      processProgramme
+      processProgramme,
     ],
   );
 

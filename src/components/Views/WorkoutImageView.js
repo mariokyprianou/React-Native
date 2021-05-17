@@ -5,17 +5,13 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import FastImage from 'react-native-fast-image';
 import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
 import FadingBottomView from './FadingBottomView';
-
-import {FileManager} from 'the-core-ui-module-tdmediamanager';
-
-const {getLocalFileByName} = FileManager;
 
 const fakeImage = require('../../../assets/images/fake.png');
 
@@ -48,24 +44,14 @@ export default function ({
     },
   };
 
-  useEffect(()=> {
-    if (image) {
-
-      const imageName = image.split('/').pop().split('?').shift();
-      getLocalFileByName(imageName).then((it)=> {
-        console.log("localUri", it);
-      })
-
-    }
-    
-  }, [image])
-
-
   return (
     <View style={styles.container}>
-      <FastImage source={ image === undefined ? fakeImage : {uri: image}} style={styles.imageStyle} />
-      <View style={{position: 'absolute',  width: '100%'}}>
-        <FadingBottomView color={"black"} height={300}/>
+      <FastImage
+        source={image === undefined ? fakeImage : {uri: image}}
+        style={styles.imageStyle}
+      />
+      <View style={{position: 'absolute', width: '100%'}}>
+        <FadingBottomView color={'black'} height={300} />
       </View>
       <View style={styles.contentStyle}>
         <IconTextView

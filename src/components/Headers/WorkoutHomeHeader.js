@@ -9,6 +9,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import FastImage from 'react-native-fast-image';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
@@ -27,7 +28,6 @@ export default function WorkoutHomeHeader() {
   const {programme} = UseData();
 
   const height = Constants.HEADER_HEIGHT;
-
 
   useEffect(() => {
     if (programme) {
@@ -87,7 +87,10 @@ export default function WorkoutHomeHeader() {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.leftContainer}>
-          <Image source={{uri: trainerData.image}} style={styles.headshot} />
+          <FastImage
+            source={{uri: trainerData.image}}
+            style={styles.headshot}
+          />
           <Text style={styles.name}>{trainerData.name}</Text>
         </View>
         <TouchableOpacity onPress={handlePress}>

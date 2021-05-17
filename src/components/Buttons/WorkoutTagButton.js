@@ -30,7 +30,7 @@ export default function WorkoutTagButton({
       borderRadius: radius(36),
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: isSelected ? colors.red100 : colors.white100,
+      backgroundColor: isSelected ? colors.transparent : colors.white100,
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 6,

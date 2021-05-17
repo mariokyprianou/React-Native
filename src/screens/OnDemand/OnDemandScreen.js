@@ -153,7 +153,7 @@ export default function OnDemandScreen() {
     },
     tagsList: {
       width: '100%',
-      height: getWidth(80),
+      height: getWidth(90),
     },
     seperatorComponent: {
       height: '100%',
@@ -220,7 +220,7 @@ export default function OnDemandScreen() {
                 style={{
                   width: '100%',
                   paddingHorizontal: getWidth(20),
-                  paddingTop: index === 0 ? getHeight(20) : 0,
+                  paddingTop: index === 0 ? getHeight(4) : 0,
                 }}>
                 <OnDemandWorkoutCard
                   workout={item}

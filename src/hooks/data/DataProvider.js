@@ -355,6 +355,7 @@ export default function DataProvider(props) {
       });
       if (cognitoUser) {
         getProgramme();
+        getWorkoutTags();
       }
     }
 

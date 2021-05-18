@@ -216,17 +216,16 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const onPressChangePassword = () => {
     if (!isConnected) {
       displayAlert({text: OfflineMessage});
-    return;
+      return;
     }
 
     navigation.navigate('ChangePassword');
   };
 
   async function handleUpdate() {
-
     if (!isConnected) {
       displayAlert({text: OfflineMessage});
-    return;
+      return;
     }
 
     cleanErrors();
@@ -346,8 +345,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     setStoredNotifications(updatedNotifications);
   }
 
-  function handleNeedHelp() {}
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   const userCard = () => {
     return (
@@ -456,9 +453,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       rightAccessoryOnPress: () => {
         if (!isConnected) {
           displayAlert({text: OfflineMessage});
-        return;
+          return;
         }
-        
+
         navigation.navigate('ChangeEmail');
       },
       placeholder: userData.email,
@@ -563,7 +560,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         icon={'chevron'}
       />
       <Spacer height={25} />
-      <TouchableOpacity onPress={handleNeedHelp}>
+      <TouchableOpacity onPress={onPressNeedHelp}>
         <Text style={styles.needHelp}>{ProfileDict.NeedHelp}</Text>
       </TouchableOpacity>
       <Spacer height={10} />

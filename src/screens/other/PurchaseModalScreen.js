@@ -15,7 +15,7 @@ import {
   StatusBar,
   Alert,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -58,7 +58,12 @@ const PurchaseModalScreen = ({}) => {
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
-  const {firebaseLogEvent, analyticsEvents, userData, checkUserSubscription} = useUserData();
+  const {
+    firebaseLogEvent,
+    analyticsEvents,
+    userData,
+    checkUserSubscription,
+  } = useUserData();
   const {setLoading} = useLoading();
 
   // MARK: - Local
@@ -67,12 +72,12 @@ const PurchaseModalScreen = ({}) => {
   const [yearlySubscription, setYearlySubscription] = useState({
     productId: 'app.power.subscription.yearly',
     localizedPrice: '£24.00',
-    price: 24.00,
+    price: 24.0,
   });
   const [monthlySubscription, setMonthlySubscription] = useState({
     productId: 'app.power.subscription.monthly',
     localizedPrice: '£4.00',
-    price: 4.00,
+    price: 4.0,
   });
 
   const {
@@ -92,12 +97,10 @@ const PurchaseModalScreen = ({}) => {
     header: () => <></>,
   });
 
- 
-  
   // MARK: - Use Effect
   useEffect(() => {
     setLoading(true);
-    
+
     StatusBar.setBarStyle('dark-content');
 
     initConnection();
@@ -241,11 +244,10 @@ const PurchaseModalScreen = ({}) => {
     }
   }, [availablePurchases, setCurrentSubscription]);
 
-
   const completedPurchase = async () => {
     await checkUserSubscription();
     navigation.goBack();
-  }
+  };
 
   const purchase = (sub) => {
     console.log('Purchase: ', sub);
@@ -305,7 +307,7 @@ const PurchaseModalScreen = ({}) => {
     termsText: {
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
-      marginBottom: getHeight(8)
+      marginBottom: getHeight(8),
     },
     needHelpTouchable: {
       width: '50%',
@@ -328,12 +330,15 @@ const PurchaseModalScreen = ({}) => {
       fontSize: fontSize(15),
       color: colors.tealish100,
       textDecorationLine: 'underline',
-    }
+    },
   });
 
   // MARK: - Render
   let yearlyMonthPrice = (yearlySubscription.price / 12.0).toFixed(2);
-  yearlyMonthPrice = String(yearlyMonthPrice).substring(0, String(yearlyMonthPrice).indexOf('.') + 3);
+  yearlyMonthPrice = String(yearlyMonthPrice).substring(
+    0,
+    String(yearlyMonthPrice).indexOf('.') + 3,
+  );
 
   const yearlyDiscount = Math.round(
     (yearlyMonthPrice / monthlySubscription.price) * 100,
@@ -344,7 +349,7 @@ const PurchaseModalScreen = ({}) => {
       style={styles.needHelpTouchable}
       onPress={displayMessenger}>
       <View style={styles.needHelpViewStyle}>
-        <Text style={styles.needHelpTextStyle}>Need Help?</Text>
+        <Text style={styles.needHelpTextStyle}>{PurchaseDict.NeedHelp}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -363,110 +368,109 @@ const PurchaseModalScreen = ({}) => {
     },
   ];
 
-
-
   return (
     <>
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}>
-      <Video
-        source={purchaseModalVideo}
-        resizeMode="cover"
-        style={styles.videoViewStyle}
-        repeat={true}
-        muted={true}
-        paused={false}
-        controls={null}
-        playWhenInactive
-      />
-
-      <View style={styles.textContainer}>
-        <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
-
-        <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
-      </View>
-      <DefaultButton
-        type={'customText'}
-        variant="gradient"
-        icon="chevron"
-        onPress={onPressYearlySubscription}
-        capitalise={false}
-        customText={PurchaseDict.YearlyButtonTitle(
-          yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
-        )}
-        customSubtext={PurchaseDict.YearlyButtonSubTitle(
-          yearlySubscription.localizedPrice,
-        )}
-        promptText={PurchaseDict.SavePrompt(yearlyDiscount)}
-      />
-      <Spacer height={20} />
-      <DefaultButton
-        type={'customText'}
-        variant="white"
-        icon="chevron"
-        capitalise={false}
-        onPress={onPressMonthlySubscription}
-        customText={PurchaseDict.MonthlyButtonTitle(
-          monthlySubscription.localizedPrice,
-        )}
-        customSubtext={PurchaseDict.MonthlyButtonSubTitle}
-      />
-      <Spacer height={15} />
-      <DefaultButton
-        type={'customText'}
-        variant="transparentGreyText"
-        onPress={onPressRestoreSubscription}
-        capitalise={false}
-        customText={PurchaseDict.RestorePurchaseButton}
-      />
-      {renderNeedHelp()}
-      <View style={styles.textContainer}>
-        <Text style={styles.termsTitle}>
-          {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
-        </Text>
-        <Text style={styles.termsText}>{PurchaseDict.SubscriptionTermsFirstPoint}</Text>
-        <Text style={styles.termsText}>{PurchaseDict.SubscriptionTermsSecondPoint}</Text>
-        <Text style={styles.termsText}>{PurchaseDict.SubscriptionTermsThirdPoint}</Text>
-        
-        <StylisedText
-          {...{
-            active: false,
-            input: policyLinkText,
-            text: PurchaseDict.SubscriptionPrivacyLink,
-            textStyle: {
-              ...styles.termsText
-            },
-            highlightedStyle: {
-              ...styles.highlightedStyle
-            }
-          }}
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        <Video
+          source={purchaseModalVideo}
+          resizeMode="cover"
+          style={styles.videoViewStyle}
+          repeat={true}
+          muted={true}
+          paused={false}
+          controls={null}
+          playWhenInactive
         />
-        <StylisedText
-          {...{
-            active: false,
-            input: termsLinkText,
-            text: PurchaseDict.SubscriptionTermsLink,
-            textStyle: {
-              ...styles.termsText
-            },
-            highlightedStyle: {
-              ...styles.highlightedStyle
-            }
-          }}
+
+        <View style={styles.textContainer}>
+          <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
+
+          <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
+        </View>
+        <DefaultButton
+          type={'customText'}
+          variant="gradient"
+          icon="chevron"
+          onPress={onPressYearlySubscription}
+          capitalise={false}
+          customText={PurchaseDict.YearlyButtonTitle(
+            yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
+          )}
+          customSubtext={PurchaseDict.YearlyButtonSubTitle(
+            yearlySubscription.localizedPrice,
+          )}
+          promptText={PurchaseDict.SavePrompt(yearlyDiscount)}
         />
-      
-        <Spacer height={30} />
-      </View>
-    </ScrollView>
-     <Header
-         
-     showModalCross
-     black
-     transparent
-   />
-   </>
+        <Spacer height={20} />
+        <DefaultButton
+          type={'customText'}
+          variant="white"
+          icon="chevron"
+          capitalise={false}
+          onPress={onPressMonthlySubscription}
+          customText={PurchaseDict.MonthlyButtonTitle(
+            monthlySubscription.localizedPrice,
+          )}
+          customSubtext={PurchaseDict.MonthlyButtonSubTitle}
+        />
+        <Spacer height={15} />
+        <DefaultButton
+          type={'customText'}
+          variant="transparentGreyText"
+          onPress={onPressRestoreSubscription}
+          capitalise={false}
+          customText={PurchaseDict.RestorePurchaseButton}
+        />
+        {renderNeedHelp()}
+        <View style={styles.textContainer}>
+          <Text style={styles.termsTitle}>
+            {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
+          </Text>
+          <Text style={styles.termsText}>
+            {PurchaseDict.SubscriptionTermsFirstPoint}
+          </Text>
+          <Text style={styles.termsText}>
+            {PurchaseDict.SubscriptionTermsSecondPoint}
+          </Text>
+          <Text style={styles.termsText}>
+            {PurchaseDict.SubscriptionTermsThirdPoint}
+          </Text>
+
+          <StylisedText
+            {...{
+              active: false,
+              input: policyLinkText,
+              text: PurchaseDict.SubscriptionPrivacyLink,
+              textStyle: {
+                ...styles.termsText,
+              },
+              highlightedStyle: {
+                ...styles.highlightedStyle,
+              },
+            }}
+          />
+          <StylisedText
+            {...{
+              active: false,
+              input: termsLinkText,
+              text: PurchaseDict.SubscriptionTermsLink,
+              textStyle: {
+                ...styles.termsText,
+              },
+              highlightedStyle: {
+                ...styles.highlightedStyle,
+              },
+            }}
+          />
+
+          <Spacer height={30} />
+        </View>
+      </ScrollView>
+      <Header showModalCross black transparent />
+    </>
   );
 };
 

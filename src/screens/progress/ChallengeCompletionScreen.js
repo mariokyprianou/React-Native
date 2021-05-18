@@ -167,7 +167,18 @@ export default function ChallengeCompletionScreen() {
 
     setLoading(true);
 
-    const {colour, url} = await getShareData(ShareMediaType.challengeComplete);
+    const data = await getShareData(ShareMediaType.challengeComplete);
+
+    if (data === null) {
+      displayAlert({
+        title: null,
+        text: ShareDict.UnableToShare,
+      });
+      setLoading(false);
+      return;
+    }
+
+    const {colour, url} = data;
 
     console.log('name: ', name);
     console.log('result: ', result);
@@ -251,39 +262,43 @@ export default function ChallengeCompletionScreen() {
           {WorkoutDict.ChallengeComplete(name, trainer)}
         </Text>
       </View>
-      <View style={{flexDirection: 'row', flex:1, height: getHeight(220), marginTop: getHeight(80),}}>
-
-        <View style={{flex:0.6}}>
-        {chartInfo && (
-          <ProgressChart
-            data={chartInfo.processedHistory}
-            chartLabel={''}
-            chartDataPoints={chartInfo.dataPoints}
-            interval={chartInfo.interval}
-            ticks={chartInfo.ticks}
-            axis={false}
-            background={false}
-            scrollToEnd={true}
-          />
-        )}
-        </View>
-
-        <View style={{flex:0.4}}>
-          <View style={styles.resultContainer}>
-          <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          height: getHeight(220),
+          marginTop: getHeight(80),
+        }}>
+        <View style={{flex: 0.6}}>
           {chartInfo && (
-            <Text
-              style={
-                type === 'STOPWATCH' ? styles.timeResult : styles.resultText
-              }>
-              {`${result} ${chartInfo.chartLabel}`}
-            </Text>
+            <ProgressChart
+              data={chartInfo.processedHistory}
+              chartLabel={''}
+              chartDataPoints={chartInfo.dataPoints}
+              interval={chartInfo.interval}
+              ticks={chartInfo.ticks}
+              axis={false}
+              background={false}
+              scrollToEnd={true}
+            />
           )}
         </View>
-        </View>
 
+        <View style={{flex: 0.4}}>
+          <View style={styles.resultContainer}>
+            <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
+            {chartInfo && (
+              <Text
+                style={
+                  type === 'STOPWATCH' ? styles.timeResult : styles.resultText
+                }>
+                {`${result} ${chartInfo.chartLabel}`}
+              </Text>
+            )}
+          </View>
+        </View>
       </View>
-      
+
       <View style={styles.line} />
       <View style={styles.buttonContainer}>
         <DefaultButton

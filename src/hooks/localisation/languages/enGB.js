@@ -266,6 +266,7 @@ const enGB = {
       `Week ${weekNumber} complete with\n${name}'s ${programmeName.toLowerCase()}\nprogramme!`,
 
     InstaPromptText: 'Share to Instagram by downloading the app!',
+    UnableToShare: 'Unable to share challenge at this time.',
   },
 
   SettingsDict: {

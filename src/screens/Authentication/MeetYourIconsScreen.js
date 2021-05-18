@@ -16,7 +16,7 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -75,77 +75,64 @@ export default function MeetYourIconsScreen() {
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
-  const isFocused = useIsFocused();
-
   useEffect(() => {
     if (isConnected) {
       setLoading(true);
     }
-
     getTrainers();
   }, []);
-
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     StatusBar.setBarStyle('light-content');
-  //   } else {
-  //     StatusBar.setBarStyle('dark-content');
-  //   }
-  // }, [isFocused]);
 
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
   }, []);
 
+  // Newelly suggestedProgramme handle
+  useEffect(() => {
+    if (!trainers || trainers.length === 0) {
+      return;
+    }
+
+    if (suggestedProgramme) {
+      const index = trainers.findIndex(
+        (it) => suggestedProgramme.trainer.id === it.id,
+      );
+      console.log('suggestedTrainerIndex', index);
+
+      if (index === -1) {
+        return;
+      }
+
+      // Swipe UI and set state to trigger selectedProgramme change
+      iconsSwiper.current.scrollTo(index, true);
+      setActiveIndex(index);
+    }
+  }, [trainers, iconsSwiper, suggestedProgramme]);
+
+  // Index change handle
   useEffect(() => {
     if (activeIndex < 0) {
       setActiveIndex(0);
       return;
     }
-
     if (!trainers || trainers.length === 0) {
       return;
     }
+
+    const selected = suggestedProgramme
+      ? trainers[activeIndex].programmes.find(
+          (it) => it.environment === suggestedProgramme.environment,
+        )
+      : trainers[activeIndex].programmes[0];
+
+    console.log('Index, selected', activeIndex, selected.environment);
+    setSelectedTrainer(trainers[activeIndex]);
+    setSelectedProgram(selected);
+
+    // reset suggested programme to prevent conflict between suggested && selected programme
+    if (suggestedProgramme) setSuggestedProgramme(null);
+
     setLoading(false);
-
-    const trainer = trainers[activeIndex];
-    let programme = trainer.programmes[0];
-
-    if (suggestedProgramme) {
-      programme = trainer.programmes.find(
-        (it) => it.environment === suggestedProgramme.environment,
-      );
-    }
-    setSelectedTrainer(trainer);
-    setSelectedProgram(programme);
-  }, [trainers, activeIndex, suggestedProgramme, setLoading]);
-
-  useEffect(() => {
-    if (!suggestedProgramme || !trainers || trainers.length === 0) {
-      return;
-    }
-
-    const trainer = trainers.find(
-      (it) => it.name === suggestedProgramme.trainer.name,
-    );
-
-    if (
-      trainer &&
-      trainer.programmes.find(
-        (it) => it.environment === suggestedProgramme.environment,
-      )
-    ) {
-      let index = trainers.indexOf(trainer);
-      if (index < 0) {
-        index = 0;
-      } else if (index >= trainers.length) {
-        index = trainers.length - 1;
-      }
-
-      setActiveIndex(index);
-      iconsSwiper.current.scrollTo(index, true);
-    }
-  }, [trainers, suggestedProgramme]);
+  }, [trainers, activeIndex]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -167,7 +154,7 @@ export default function MeetYourIconsScreen() {
           : 20,
       ),
       width: '100%',
-      // backgroundColor: colors.white100,
+      //backgroundColor: colors.white100,
     },
     headerContainer: {
       width: '100%',
@@ -331,10 +318,12 @@ export default function MeetYourIconsScreen() {
     }
   }
 
+  // Same trainer, switch between programmes
   function switchProgram() {
     if (selectedTrainer.programmes.length === 1) {
       return;
     }
+
     const newProgramme = selectedTrainer.programmes.find(
       (it) => it.id !== selectedProgram.id,
     );
@@ -451,8 +440,7 @@ export default function MeetYourIconsScreen() {
         loop={false}
         showsPagination={false}
         onIndexChanged={(index) => {
-          // reset suggested programme to prevent conflict between suggested && selected programme
-          setSuggestedProgramme(null);
+          // Handle selected programme change
           setActiveIndex(index);
         }}>
         {trainers.map((trainer) => {

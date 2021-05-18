@@ -21,6 +21,7 @@ export default function SliderProgressView({
   height,
   rounded = false,
   setProgress,
+  containerStyle,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
@@ -64,23 +65,24 @@ export default function SliderProgressView({
     },
     sliderContainer: {
       width: '100%',
-      height: height || getHeight(4),
       alignItems: 'stretch',
       justifyContent: 'center',
       alignContent: 'center',
+      height: containerStyle ? containerStyle.height : height || getHeight(4),
     },
     thumbStyle: {
       backgroundColor: 'transparent',
       alignItems: 'center',
       justifyContent: 'center',
       width: getWidth(40),
+      height: getHeight(42),
     },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View>
+    <View style={containerStyle}>
       <View style={styles.barContainer}>
         <LinearGradient
           style={styles.activeBar}

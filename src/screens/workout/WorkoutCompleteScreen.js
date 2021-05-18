@@ -34,7 +34,6 @@ import displayAlert from '../../utils/DisplayAlert';
 import {useNetInfo} from '@react-native-community/netinfo';
 import OfflineUtils from '../../hooks/data/OfflineUtils';
 
-
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
@@ -43,7 +42,6 @@ export default function WorkoutCompleteScreen() {
   const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
   const {isConnected, isInternetReachable} = useNetInfo();
-
 
   const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
@@ -161,8 +159,8 @@ export default function WorkoutCompleteScreen() {
       textAlign: 'left',
     },
     sliderContainer: {
-      marginTop: getHeight(20),
-      marginBottom: getHeight(28),
+      marginTop: getHeight(4),
+      marginBottom: getHeight(18),
     },
     buttonContainer: {
       width: '100%',
@@ -198,17 +196,19 @@ export default function WorkoutCompleteScreen() {
     if (isSelectedWorkoutOnDemand) {
       firebaseEventPayload = {
         ...firebaseEventPayload,
-        onDemand: true
-      }
+        onDemand: true,
+      };
     }
-    
+
     // Handle offline programme workout
     if (!isConnected && !isInternetReachable && !isSelectedWorkoutOnDemand) {
       handleOffline(workoutComplete, firebaseEventPayload);
       return;
     }
 
-    const completeMutation = isSelectedWorkoutOnDemand ? completeOnDemandWorkout : completeWorkout;
+    const completeMutation = isSelectedWorkoutOnDemand
+      ? completeOnDemandWorkout
+      : completeWorkout;
 
     completeMutation({
       variables: {
@@ -216,11 +216,23 @@ export default function WorkoutCompleteScreen() {
           ...workoutComplete,
         },
       },
-    }).then(async (res) => {
-        const success = R.path(['data', isSelectedWorkoutOnDemand ? 'completeOnDemandWorkout' : 'completeWorkout'], res);
+    })
+      .then(async (res) => {
+        const success = R.path(
+          [
+            'data',
+            isSelectedWorkoutOnDemand
+              ? 'completeOnDemandWorkout'
+              : 'completeWorkout',
+          ],
+          res,
+        );
 
         if (success) {
-          firebaseLogEvent(analyticsEvents.completedWorkout, firebaseEventPayload);
+          firebaseLogEvent(
+            analyticsEvents.completedWorkout,
+            firebaseEventPayload,
+          );
 
           if (isSelectedWorkoutOnDemand) {
             setIsSelectedWorkoutOnDemand(false);
@@ -233,13 +245,12 @@ export default function WorkoutCompleteScreen() {
         console.log(err, '<---workout complete error');
       })
       .finally(() => setLoading(false));
-  } 
+  }
 
   async function handleOffline(workoutComplete, firebaseEventPayload) {
     await OfflineUtils.completeWorkout(workoutComplete, firebaseEventPayload);
-    completeWorkoutDone(); 
+    completeWorkoutDone();
   }
-
 
   async function completeWorkoutDone() {
     setWeightsToUpload([]);
@@ -250,7 +261,6 @@ export default function WorkoutCompleteScreen() {
       routes: [{name: 'TabContainer'}],
     });
   }
-
 
   function checkGoBack() {
     displayAlert({
@@ -301,7 +311,10 @@ export default function WorkoutCompleteScreen() {
         </View>
         <View style={styles.contentContainer}>
           <Text style={styles.question}>{WorkoutDict.HowIntense}</Text>
-          <View style={styles.sliderContainer}>
+          <View
+            style={{
+              ...styles.sliderContainer,
+            }}>
             <SliderProgressView
               slider={true}
               min={0}
@@ -309,6 +322,12 @@ export default function WorkoutCompleteScreen() {
               progress={selectedIntensity}
               setProgress={setSelectedIntensity}
               height={getHeight(4)}
+              containerStyle={{
+                height: getHeight(42),
+                alignContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
               rounded={true}
             />
           </View>

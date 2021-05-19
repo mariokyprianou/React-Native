@@ -12,7 +12,7 @@ const SharedDict = {
   LastName: 'LAST NAME',
   Email: 'EMAIL',
   Password: 'PASSWORD',
-  Gender: 'GENDER',
+  Gender: 'SEX',
   Dob: 'DATE OF BIRTH',
   Country: 'COUNTRY',
   Region: 'REGION',
@@ -21,7 +21,7 @@ const SharedDict = {
   Sets: 'sets',
   Reps: 'reps',
   Secs: 'secs',
-  OldPassword: 'OLD PASSWORD',
+  OldPassword: 'CURRENT PASSWORD',
   NewPassword: 'NEW PASSWORD',
   Analytics: 'Analytics',
   ChangeEmail: 'Change Email',
@@ -86,15 +86,17 @@ const hiIN = {
   },
 
   AuthDict: {
-    FormTitle: 'Create your account to start your free trial',
+    FormTitle: 'Create your account to start your free trial!',
     FirstNameLabel: SharedDict.FirstName,
     LastNameLabel: SharedDict.LastName,
     EmailLabel: SharedDict.Email,
     PasswordLabel: SharedDict.Password,
-    GenderLabel: SharedDict.Gender,
+    SexLabel: SharedDict.Gender,
     DobLabel: SharedDict.Dob,
     CountryLabel: SharedDict.Country,
     RegionLabel: SharedDict.Region,
+    MarketingText:
+      'I do not wish to hear from POWER by email about new trainers, challenges, competitions, giveaways and more',
     TermsAndConditionsText:
       'I accept Power’s Terms & Conditions and Privacy Policy',
     InvalidGivenName: 'Please enter your first name',
@@ -131,11 +133,11 @@ const hiIN = {
       'You are not yet logged in - please verify your email address',
     NotificationsPermissionsScreenTitle: SharedDict.Notifications,
     NotificationsPermissionsText:
-      'To send you workout updates, we need permission to send push notifications to your device.',
+      'Workout reminders are proven to increase your chances of staying on track with a fitness routine',
 
     AnalyticsPermissionsScreenTitle: SharedDict.Analytics,
     AnalyticsPermissionsText:
-      'To create the best workout programmes possible and keep improving the POWER experience, we need your permission to collect analytics from the app.',
+      'To create the best workout programmes and improve the POWER experience, we need your permission to collect analytics from the app.',
 
     LoginScreenTitle: SharedDict.Login,
 
@@ -160,18 +162,19 @@ const hiIN = {
   ChangeDeviceDict: {
     Title: 'Change device',
     ActiveText:
-      'Only one device can be used with POWER at a time. Would you like to make this your POWER device? You can only change devices once every 30 days.',
+      'Only one device can be used with POWER at a time. Would you like to make this your new POWER device? You can only change devices once every 30 days.',
     DisabledText:
       'You’ve already changed device once in the past thirty days. Your Power premium only gives you access to use one device at a time.',
     ChangeDeviceFailedText: 'Oops! Failed to change device, try again later.',
   },
 
   PurchaseDict: {
+    InfoTitle: 'Join POWER.',
     Info:
       'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
-    YearlyButtonTitle: (price) => `YEARLY \u2022 £${price} / month`,
-    YearlyButtonSubTitle: (price) => `£${price} / year billed annually`,
-    MonthlyButtonTitle: (price) => `MONTHLY \u2022 £${price} / month`,
+    YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / month`,
+    YearlyButtonSubTitle: (price) => `${price} / year billed annually`,
+    MonthlyButtonTitle: (price) => `MONTHLY \u2022 ${price} / month`,
     SavePrompt: (percentage) => `Save ${percentage}%`,
     MonthlyButtonSubTitle: 'billed monthly',
     RestorePurchaseButton: 'Restore purchases',
@@ -191,7 +194,7 @@ const hiIN = {
 
   MeetYourIconsDict: {
     YourFirstWeek: 'Your first week with',
-    WeeksOfTraining: 'WEEKS OF TRAINING NOW LIVE',
+    WeeksOfTraining: 'WEEKS NOW LIVE',
     SelectYourProgramme: 'Select your programme',
 
     ZeroStateText:
@@ -203,7 +206,11 @@ const hiIN = {
 
     FatLoss: 'FAT LOSS',
     Fitness: 'FITNESS',
-    BuildMuscle: 'BUILD MUSCLE',
+    Muscle: 'MUSCLE',
+    Wellness: 'WELLNESS',
+    Customise: 'Customise your schedule once you start',
+    ChangeProgrammes: 'Change programmes whenever you like',
+    WorkoutsPerWeek: 'WORKOUTS / WEEK',
   },
 
   ProfileDict: {
@@ -226,7 +233,7 @@ const hiIN = {
     WorkoutsComplete: 'Workouts complete',
     NeedToSignOut: 'Need to sign out?',
     NotificationsTitle: SharedDict.Notifications,
-    PersonalDetails: 'Personal details',
+    PersonalDetails: 'Account Details',
     FormLabel1: SharedDict.FirstName,
     FormLabel2: SharedDict.LastName,
     FormLabel3: SharedDict.Email,
@@ -234,7 +241,9 @@ const hiIN = {
     FormLabel5: SharedDict.Dob,
     FormLabel6: SharedDict.Country,
     FormLabel7: SharedDict.Region,
-
+    FormLabel8: 'PASSWORD',
+    Form8Placeholder: 'Change password',
+    NeedHelp: 'NEED HELP?',
     NotificationDelete: SharedDict.Delete,
 
     LogoutModalText: 'Are you sure you wish to log out of your account?',
@@ -346,6 +355,7 @@ const hiIN = {
     WeightsRepsSecsText: SharedDict.Secs,
 
     RestDay: 'REST DAY',
+    RestDayLower: 'Rest day',
     Day: 'Day',
 
     YourNotes: 'YOUR NOTES',
@@ -433,31 +443,28 @@ const hiIN = {
     Other: SharedDict.Other,
     PreferNotToSay: SharedDict.PreferNotToSay,
   },
+
   OnboardingDict: {
     fallbackData: [
       {
         title: 'Pick your Programme',
         description:
           "Fat loss, fitness, strength or wellness. At home or at the gym. There's a routine for you!",
-        image: '',
       },
       {
         title: 'Workout with the stars!',
         description:
           'Every single exercise. Every single rep. Your new workout buddies are sweating alongside you.',
-        image: '',
       },
       {
         title: 'Track your progress',
         description:
           'Watch your body transform as you crush your goals and take your fitness to new levels.',
-        image: '',
       },
       {
         title: '​Switch it up',
         description:
           "​Head to On Demand to build your own workouts and mix up your routine. You're in control.",
-        image: '',
       },
     ],
   },

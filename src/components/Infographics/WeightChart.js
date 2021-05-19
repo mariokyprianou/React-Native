@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -14,7 +13,7 @@ export default function WeightChart({
   selectable = false,
   data,
   weightPreference = 'kg',
-  setDate
+  setDate,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -28,7 +27,7 @@ export default function WeightChart({
 
   const highestValue = Math.max(...dataPoints.map((point) => point.y));
 
-  const { ticks, interval } = getGraphTicksInterval(highestValue);
+  const {ticks, interval} = getGraphTicksInterval(highestValue);
 
   const xLabels = data.map((event) => {
     return event.date;
@@ -68,14 +67,12 @@ export default function WeightChart({
         style={styles.scroll}
         contentContainerStyle={{alignItems: 'center'}}>
         <View style={{paddingEnd: getWidth(20)}}>
-
           <SlideBarChart
             data={dataPoints}
             barSpacing={dataPoints.length === 1 ? 58 : 60}
             selectionChangedCallback={(bar) => {
               setDate && setDate(bar);
-            }
-            }
+            }}
             renderFillGradient={(props) =>
               selectable
                 ? defaultBarChartFillGradient(props)
@@ -115,9 +112,21 @@ export default function WeightChart({
               },
             }}
           />
-          { weightPreference && (<Text style={{position: 'absolute', top: 0, left: 0, ...textStyles.semiBold10_brownGrey100, textAlign:'right', width: getWidth(40)}}>{weightPreference}</Text>)}
-   </View>
-   </ScrollView>
+          {weightPreference && (
+            <Text
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                ...textStyles.semiBold10_brownGrey100,
+                textAlign: 'right',
+                width: getWidth(40),
+              }}>
+              {weightPreference}
+            </Text>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 }

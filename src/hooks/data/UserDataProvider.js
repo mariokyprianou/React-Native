@@ -219,14 +219,12 @@ export default function UserDataProvider(props) {
           };
 
           // Add offline icnreament completed workouts
-          // if (!isConnected && !isInternetReachable) {
           const increament = await OfflineUtils.getWorkoutsCompleteIncreament();
 
           data = {
             ...res,
             completedWorkouts: res.completedWorkouts + increament,
           };
-          // }
 
           setUserData(data);
 

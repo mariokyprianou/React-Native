@@ -303,29 +303,27 @@ export default function DataProvider(props) {
     let newData = data;
 
     // Add offline completed workouts
-    if (!isConnected && !isInternetReachable) {
-      const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
+    const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
 
-      console.log('Offline completed to add', offlineCompleted.length);
-      const workouts = data.currentWeek.workouts.slice();
+    console.log('Offline completed to add', offlineCompleted.length);
+    const workouts = data.currentWeek.workouts.slice();
 
-      const updatedWorkouts = workouts.map((workout) => {
-        let newWorkout = offlineCompleted.find((it) => workout.id === it.id);
+    const updatedWorkouts = workouts.map((workout) => {
+      let newWorkout = offlineCompleted.find((it) => workout.id === it.id);
 
-        return {
-          ...workout,
-          completedAt: newWorkout ? newWorkout.date : workout.completedAt,
-        };
-      });
-
-      newData = {
-        ...data,
-        currentWeek: {
-          ...data.currentWeek,
-          workouts: updatedWorkouts,
-        },
+      return {
+        ...workout,
+        completedAt: newWorkout ? newWorkout.date : workout.completedAt,
       };
-    }
+    });
+
+    newData = {
+      ...data,
+      currentWeek: {
+        ...data.currentWeek,
+        workouts: updatedWorkouts,
+      },
+    };
 
     setProgrammeModalImage(newData.programmeImage);
     initCacheWeekVideos(newData.currentWeek.workouts);

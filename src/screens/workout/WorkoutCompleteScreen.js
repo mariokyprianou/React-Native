@@ -239,10 +239,14 @@ export default function WorkoutCompleteScreen() {
           }
 
           completeWorkoutDone();
+        } else {
+          console.log(res, '<---workout complete error');
+          handleOffline(workoutComplete, firebaseEventPayload);
         }
       })
       .catch((err) => {
         console.log(err, '<---workout complete error');
+        handleOffline(workoutComplete, firebaseEventPayload);
       })
       .finally(() => setLoading(false));
   }

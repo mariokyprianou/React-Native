@@ -25,6 +25,7 @@ import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
 import {ScrollView} from 'react-native-gesture-handler';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+import FadingBottomView from './FadingBottomView';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -301,10 +302,25 @@ export default function ExerciseView(props) {
         index={index}
         setType={props.setType}
         isContinuous={props.isContinuous}
+        showUpNext={
+          showUpNextLabel && (
+            <>
+              <View
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  bottom: 0,
+                }}>
+                <FadingBottomView color="black" height={100} />
+              </View>
+              <Text style={styles.timerUpNextTextStyle}>
+                {WorkoutDict.UpNext}
+              </Text>
+            </>
+          )
+        }
       />
-      {showUpNextLabel && (
-        <Text style={styles.timerUpNextTextStyle}>{WorkoutDict.UpNext}</Text>
-      )}
+
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>

@@ -21,6 +21,7 @@ export default function ({
   videoEasiest,
   index,
   isContinuous,
+  showUpNext,
 }) {
   const videos = {
     video,
@@ -177,6 +178,7 @@ export default function ({
           />
         )}
         {showControls && controls()}
+        {showUpNext}
       </View>
     </View>
   );

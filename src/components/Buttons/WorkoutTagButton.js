@@ -26,16 +26,16 @@ export default function WorkoutTagButton({
   const styles = {
     card: {
       width: getWidth(72),
-      height: getWidth(72),
+      aspectRatio: 1,
       borderRadius: radius(36),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: isSelected ? colors.transparent : colors.white100,
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
-      shadowRadius: 6,
+      shadowRadius: 4,
       shadowOpacity: 1,
-      elevation: 6,
+      elevation: 4,
       marginBottom: getHeight(2),
       marginTop: getHeight(2),
     },
@@ -56,7 +56,7 @@ export default function WorkoutTagButton({
       alignItems: 'center',
       justifyContent: 'center',
       width: getWidth(72),
-      height: getWidth(72),
+      aspectRatio: 1,
       borderRadius: radius(36),
     },
   };

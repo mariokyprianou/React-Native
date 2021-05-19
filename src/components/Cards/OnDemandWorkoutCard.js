@@ -41,8 +41,8 @@ export default function OnDemandWorkoutCard({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
-      width: getWidth(335),
-      height: getHeight(100),
+      width: '100%',
+      height: getHeight(85),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -60,16 +60,18 @@ export default function OnDemandWorkoutCard({
     },
     image: {
       width: getWidth(119),
-      height: getHeight(100),
+      height: getHeight(85),
       resizeMode: 'cover',
     },
     iconContainer: {
-      marginRight: getWidth(10),
+      marginRight: getWidth(6),
     },
     icon: {
+      resizeMode: 'contain',
+      tintColor: colors.brownishGrey100,
+      width: getWidth(12),
       solid: true,
-      color: colors.black100,
-      size: fontSize(12),
+      size: fontSize(22),
     },
     completeIconContainer: {
       marginRight: getWidth(7),
@@ -94,6 +96,7 @@ export default function OnDemandWorkoutCard({
     },
     workoutName: {
       ...textStyles.semiBold14_black100,
+      fontSize: fontSize(15),
       textAlign: 'left',
     },
     detailContainer: {
@@ -128,6 +131,9 @@ export default function OnDemandWorkoutCard({
     },
     newStarText: {
       ...textStyles.bold12_newWorkoutBlue100,
+    },
+    greyText: {
+      ...textStyles.medium10_brownishGrey100,
     },
   };
 
@@ -174,8 +180,12 @@ export default function OnDemandWorkoutCard({
                 }}>
                 <View style={styles.iconContainer}>
                   <TDIcon
-                    input={homeIcon}
-                    inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
+                    input={environmentName === 'HOME' ? homeIcon : gymIcon}
+                    inputStyle={{
+                      style: {
+                        ...styles.icon,
+                      },
+                    }}
                   />
                 </View>
                 <Text style={styles.greyText}>{environmentName}</Text>

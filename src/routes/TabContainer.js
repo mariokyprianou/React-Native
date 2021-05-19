@@ -48,7 +48,6 @@ export default function TabContainer() {
     }
   }, [changeDevice]);
 
-
   useEffect(() => {
     let screenshotListener;
 
@@ -124,8 +123,6 @@ export default function TabContainer() {
           input={tabIcons[name]}
           inputStyle={{
             style: {
-              height: getHeight(18),
-              width: getWidth(18),
               resizeMode: 'contain',
               tintColor: color,
             },
@@ -136,8 +133,12 @@ export default function TabContainer() {
             source={notificationDot}
             style={{
               position: 'absolute',
-              top: 0,
-              right: -6,
+              top: -5,
+              right: -4,
+              tintColor: 'red',
+              resizeMode: 'contain',
+              width: getWidth(6),
+              aspectRatio: 1,
             }}
           />
         )}

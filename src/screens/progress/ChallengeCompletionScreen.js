@@ -58,13 +58,7 @@ export default function ChallengeCompletionScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      header: () => (
-        <Header
-          title={WorkoutDict.ChallengeCompleteTitle}
-          right="crossIcon"
-          rightAction={() => navigation.navigate('Progress')}
-        />
-      ),
+      header: () => <Header title={WorkoutDict.ChallengeCompleteTitle} />,
     });
   }, []);
 

@@ -111,6 +111,11 @@ export default function NotesScreen() {
 
     const newNote = getValues('notes').notes;
 
+    // Escape if notes weren't edited
+    if (!newNote) {
+      return;
+    }
+
     let workout = {...selectedWorkout};
     workout.exercises[currentExerciseIndex] = {
       ...workout.exercises[currentExerciseIndex],

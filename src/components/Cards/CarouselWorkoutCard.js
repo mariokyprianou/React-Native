@@ -107,6 +107,7 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
             duration={duration}
             intensity={intensity}
             alignLeft
+            customColor={colors.weekPreviewGrey100}
           />
         )}
       </View>

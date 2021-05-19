@@ -51,11 +51,12 @@ export default function TrainerCard({
       alignItems: 'center',
     },
     titleContainer: {
-      width: getWidth(335),
+      width: '100%',
       alignSelf: 'center',
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      paddingHorizontal: getWidth(20),
       marginBottom: getHeight(5),
     },
     nameText: {
@@ -76,7 +77,7 @@ export default function TrainerCard({
           color="custom"
           customStart={colors.veryLightPinkTwo0}
           customEnd={colors.veryLightPinkTwo100}
-          height={100}
+          height={80}
         />
       </View>
       <View style={styles.overlay}>

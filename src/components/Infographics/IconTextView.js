@@ -23,6 +23,7 @@ export default function IconTextView({
   sets,
   color = 'grey',
   alignLeft,
+  customColor,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -68,16 +69,16 @@ export default function IconTextView({
     icon: {
       tintColor:
         color === 'grey'
-          ? colors.brownishGreyTwo100
+          ? customColor || colors.brownishGreyTwo100
           : colors.white100,
-            
+
       resizeMode: 'contain',
       height: getHeight(15),
       width: getWidth(15),
     },
     iconColor:
       color === 'grey'
-        ? {tintColor: colors.brownishGreyTwo100}
+        ? {tintColor: customColor || colors.brownishGreyTwo100}
         : {
             tintColor: colors.white100,
           },
@@ -87,6 +88,7 @@ export default function IconTextView({
     },
     greyText: {
       ...textStyles.medium15_brownishGreyTwo100,
+      color: customColor || colors.brownishGreyTwo100,
     },
     whiteText: {
       ...textStyles.medium15_white100,
@@ -113,14 +115,13 @@ export default function IconTextView({
           <Text
             style={
               color === 'grey' ? styles.greyText : styles.whiteText
-            }
-            >{` ${WorkoutDict.Mins}`}</Text>
+            }>{` ${WorkoutDict.Mins}`}</Text>
         </View>
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
             <TDIcon
               input={lightningIcon}
-               inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
+              inputStyle={{style: {...styles.icon, ...styles.iconColor}}}
             />
           </View>
           <Text

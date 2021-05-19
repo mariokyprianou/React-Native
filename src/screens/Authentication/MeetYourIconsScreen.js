@@ -39,6 +39,7 @@ import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useUserData from '../../hooks/data/useUserData';
+import {getArgumentValues} from 'graphql/execution/values';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logoDark.png');
@@ -156,15 +157,12 @@ export default function MeetYourIconsScreen() {
       width: '100%',
       //backgroundColor: colors.white100,
     },
-    headerContainer: {
-      width: '100%',
-      height: getHeight(85),
+
+    logoContainer: {
       position: 'absolute',
       top: getHeight(40),
+      left: 0,
       zIndex: 9,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
     },
     image: {
       marginLeft: getWidth(18),
@@ -178,6 +176,16 @@ export default function MeetYourIconsScreen() {
       marginLeft: getWidth(24),
     },
     cantChooseContainer: {
+      position: 'absolute',
+      top: getHeight(40),
+      height: getHeight(28),
+      width: '100%',
+      zIndex: 9,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+    },
+    cantChooseStyle: {
       alignSelf: 'flex-start',
       position: 'absolute',
       right: getWidth(15),
@@ -213,7 +221,7 @@ export default function MeetYourIconsScreen() {
       backgroundColor: colors.veryLightPinkTwo100,
     },
     cardContainer: {
-      height: getHeight(410),
+      height: getHeight(450),
       width: '100%',
     },
     textContainer: {
@@ -238,6 +246,8 @@ export default function MeetYourIconsScreen() {
     },
     text: {
       ...textStyles.regular16_brownishGrey100,
+      color: colors.brownishGreyTwo100,
+      lineHeight: 21,
       marginTop: getHeight(5),
       textAlign: 'left',
     },
@@ -285,6 +295,7 @@ export default function MeetYourIconsScreen() {
     },
     zeroInfoText: {
       ...textStyles.regular15_white100,
+      color: 'black',
       marginBottom: getHeight(80),
       textAlign: 'center',
     },
@@ -361,13 +372,11 @@ export default function MeetYourIconsScreen() {
   if (!isConnected && !isInternetReachable) {
     return (
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View>
-            <Image source={logo} style={styles.image} />
-            <Text style={styles.selectText}>
-              {MeetYourIconsDict.SelectYourProgramme}
-            </Text>
-          </View>
+        <View style={styles.logoContainer}>
+          <Image source={logo} style={styles.image} />
+          <Text style={styles.selectText}>
+            {MeetYourIconsDict.SelectYourProgramme}
+          </Text>
         </View>
         <Image source={zeroState} style={styles.zeroImage} />
         <View style={styles.zeroButtonContainer}>
@@ -409,7 +418,7 @@ export default function MeetYourIconsScreen() {
         variant="gradient"
         onPress={() => changedAssignedProgramme('restart')}
       />
-      <Spacer height={20} />
+      <Spacer height={15} />
       <DefaultButton
         type="continueFromWeek"
         icon="chevron"
@@ -471,7 +480,7 @@ export default function MeetYourIconsScreen() {
                 />
               </View>
 
-              <Spacer height={80} />
+              <Spacer height={90} />
               <View style={styles.descriptionContainer}>
                 <Text style={styles.text}>{description}</Text>
               </View>
@@ -516,23 +525,21 @@ export default function MeetYourIconsScreen() {
               <Text style={{...styles.upperText, textAlign: 'center'}}>
                 {MeetYourIconsDict.ChangeProgrammes}
               </Text>
-              <Spacer height={180} />
+              <Spacer height={170} />
 
-              <View style={styles.headerContainer}>
-                <View>
-                  <Image source={logo} style={styles.image} />
-                  <Text style={styles.selectText}>
-                    {MeetYourIconsDict.SelectYourProgramme}
-                  </Text>
-                </View>
+              <View style={styles.logoContainer}>
+                <Image source={logo} style={styles.image} />
+                <Text style={styles.selectText}>
+                  {MeetYourIconsDict.SelectYourProgramme}
+                </Text>
               </View>
             </ScrollView>
           );
         })}
       </Swiper>
 
-      <View style={styles.headerContainer}>
-        <View style={styles.cantChooseContainer}>
+      <View style={styles.cantChooseContainer}>
+        <View style={styles.cantChooseStyle}>
           <CantChooseButton
             onPress={() => navigation.navigate('HelpMeChoose')}
             navigation={navigation}
@@ -583,7 +590,16 @@ export default function MeetYourIconsScreen() {
           newProgrammeView()
         )
       ) : (
-        <View style={styles.buttonContainer}>
+        <View
+          style={{
+            width: '100%',
+            position: 'absolute',
+            bottom: 0,
+            marginTop: getHeight(30),
+            paddingBottom: getHeight(20),
+            alignItems: 'center',
+            backgroundColor: colors.veryLightPinkTwo100,
+          }}>
           <DefaultButton
             type="startNow"
             icon="chevron"
@@ -602,11 +618,13 @@ export default function MeetYourIconsScreen() {
               });
             }}
           />
-          <DefaultButton
-            type="login"
-            variant="transparentBlackBoldText"
-            onPress={() => navigation.navigate('Login')}
-          />
+          <View style={{marginTop: getHeight(10)}}>
+            <DefaultButton
+              type="login"
+              variant="transparentBlackBoldText"
+              onPress={() => navigation.navigate('Login')}
+            />
+          </View>
         </View>
       )}
     </View>

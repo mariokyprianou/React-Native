@@ -66,20 +66,13 @@ export default function WorkoutCompleteScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      header: () => (
-        <Header
-          title={WorkoutDict.WorkoutComplete}
-          showModalCross
-          rightAction={checkGoBack}
-        />
-      ),
+      header: () => <Header title={WorkoutDict.WorkoutComplete} />,
     });
 
     setIsWorkoutTimerRunning(false);
   }, []);
 
   useBackHandler(() => {
-    checkGoBack();
     return true;
   });
 

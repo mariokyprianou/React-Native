@@ -33,6 +33,7 @@ import displayAlert from '../../utils/DisplayAlert';
 
 import {useNetInfo} from '@react-native-community/netinfo';
 import OfflineUtils from '../../hooks/data/OfflineUtils';
+import FastImage from 'react-native-fast-image';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -284,12 +285,13 @@ export default function WorkoutCompleteScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scroll}>
         <View style={styles.imageContainer}>
-          <Image
+          <FastImage
             source={
-              stats.overviewImage
-                ? {uri: stats.overviewImage}
-                : require('../../../assets/fakeWorkout.png')
+              stats.overviewImage === undefined
+                ? require('../../../assets/fakeWorkout.png')
+                : {uri: stats.overviewImage}
             }
+            fallback={true}
             style={styles.image}
           />
           <View style={styles.fadeContainer}>

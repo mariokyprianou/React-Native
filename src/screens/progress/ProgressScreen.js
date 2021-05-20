@@ -17,7 +17,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
@@ -65,14 +65,22 @@ export default function ProgressScreen() {
     navigation.setOptions({
       header: () => null,
     });
-
-    getPreferences();
-    getProgress();
-    getChallenges();
-    if (userImages.length === 0) {
-      getImages();
-    }
   }, []);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused && !progress) {
+      console.log('Focused Tab3: need refetch');
+
+      getPreferences();
+      getProgress();
+      getChallenges();
+      if (userImages.length === 0) {
+        getImages();
+      }
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (preferences && preferences.weightPreference) {
@@ -204,7 +212,7 @@ export default function ProgressScreen() {
                   onPress={() => {
                     if (!isConnected) {
                       displayAlert({text: OfflineMessage});
-                    return;
+                      return;
                     }
                     navigation.navigate('Transformation');
                   }}
@@ -218,7 +226,7 @@ export default function ProgressScreen() {
                     duration,
                     fieldTitle,
                     unitType,
-                    imageUrl
+                    imageUrl,
                   } = challenge;
 
                   return (

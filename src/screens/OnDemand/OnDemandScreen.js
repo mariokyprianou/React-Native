@@ -22,7 +22,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useLoading from '../../hooks/loading/useLoading';
 import useData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import * as R from 'ramda';
 import {differenceInDays, format} from 'date-fns';
 import OnDemandWorkoutCard from '../../components/Cards/OnDemandWorkoutCard';
@@ -61,11 +61,15 @@ export default function OnDemandScreen() {
     completedFreeWorkouts,
   } = useData();
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    setLoading(true);
-    getWorkoutTags();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (isFocused && (!workoutTags || workoutTags.length === 0)) {
+      console.log('Focused Tab2: need refetch');
+      setLoading(true);
+      getWorkoutTags();
+    }
+  }, [isFocused]);
 
   // Check if week is completed
   useEffect(() => {

@@ -11,7 +11,7 @@ import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import TDIcon from 'the-core-ui-component-tdicon';
 import WorkoutHomeHeader from '../../components/Headers/WorkoutHomeHeader';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
@@ -73,19 +73,22 @@ export default function WorkoutHomeScreen() {
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    setLoading(true);
-    getProgramme();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (isFocused && !programme) {
+      console.log('Focused Tab1: need refetch');
+      setLoading(true);
+      getProgramme();
+    }
+  }, [isFocused]);
 
   // Check if week is completed
   useEffect(() => {
     if (programme && programme.isComplete) {
       showStayTuned();
       return;
-    }
-    else if (programme && programme.currentWeek && currentWeek) {
+    } else if (programme && programme.currentWeek && currentWeek) {
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
           (it) => !it.isRestDay && !it.completedAt,
@@ -346,7 +349,7 @@ export default function WorkoutHomeScreen() {
         console.log('UpdateOrderRes', success);
       })
       .catch((err) => {
-        console.log("updateOrderMutation Error", err);
+        console.log('updateOrderMutation Error', err);
 
         // Reset week order to what was before
         const storedData = updateStoredData(prevList);
@@ -490,96 +493,95 @@ export default function WorkoutHomeScreen() {
       </View>
 
       <View style={{flex: 1, width: '100%'}}>
-      <DraggableFlatList
-        data={workoutsToDisplay}
-        keyExtractor={(item, index) => `${index}`}
-        onDragEnd={({data}) => updateOrder(data)}
-        renderItem={({item, index, drag, isActive}) => {
-          return (
-            <View
-              style={{
-                width: '100%',
-                paddingHorizontal: getWidth(20),
-                paddingTop: index === 0 ? getHeight(20) : 0,
-              }}>
-              <WorkoutCard
-                workout={item}
-                title={item.name}
-                day={item.day}
-                date={format(item.exactDate, 'iiii, do LLL')}
-                duration={item.duration}
-                intensity={item.intensity}
-                image={item.overviewImage}
-                drag={weekNumber === 1 && drag}
-                status={
-                  item.completedAt ||
-                  differenceInDays(item.exactDate, new Date()) < 0
-                    ? 'complete'
-                    : null
-                }
-                onPressCard={async (workout) => {
-                  if (suspendedAccount === true) {
-                    DisplayAlert({
-                      text: WorkoutDict.SuspendedAccount,
-                    });
-                    return;
+        <DraggableFlatList
+          data={workoutsToDisplay}
+          keyExtractor={(item, index) => `${index}`}
+          onDragEnd={({data}) => updateOrder(data)}
+          renderItem={({item, index, drag, isActive}) => {
+            return (
+              <View
+                style={{
+                  width: '100%',
+                  paddingHorizontal: getWidth(20),
+                  paddingTop: index === 0 ? getHeight(20) : 0,
+                }}>
+                <WorkoutCard
+                  workout={item}
+                  title={item.name}
+                  day={item.day}
+                  date={format(item.exactDate, 'iiii, do LLL')}
+                  duration={item.duration}
+                  intensity={item.intensity}
+                  image={item.overviewImage}
+                  drag={weekNumber === 1 && drag}
+                  status={
+                    item.completedAt ||
+                    differenceInDays(item.exactDate, new Date()) < 0
+                      ? 'complete'
+                      : null
                   }
-
-                  const wasWorkoutToday = wasLastWorkoutToday(
-                    programme.currentWeek.workouts,
-                  );
-                  if (wasWorkoutToday === true) {
-                    DisplayAlert({
-                      text: WorkoutDict.WorkoutCompetedWarningText,
-                    });
-                    return;
-                  }
-
-                  if (completedFreeWorkouts && !isSubscriptionActive) {
-                    navigation.navigate('PurchaseModal');
-                    return;
-                  }
-
-                  if (weekNumber !== 1) {
-                    if (stayTunedEnabled) {
-                      showStayTunedModal();
+                  onPressCard={async (workout) => {
+                    if (suspendedAccount === true) {
+                      DisplayAlert({
+                        text: WorkoutDict.SuspendedAccount,
+                      });
+                      return;
                     }
-                    return;
-                  }
 
-                  // Sort exercises
-                  const newWorkout = {
-                    ...workout,
-                    exercises: workout.exercises
-                      .slice()
-                      .sort((a, b) => a.orderIndex - b.orderIndex),
-                  };
-
-                  const warning = await shouldShowWarning();
-
-                  if (warning === true) {
-                    await AsyncStorage.setItem(
-                      '@LAST_WARNING_DATE',
-                      `${new Date()}`,
+                    const wasWorkoutToday = wasLastWorkoutToday(
+                      programme.currentWeek.workouts,
                     );
+                    if (wasWorkoutToday === true) {
+                      DisplayAlert({
+                        text: WorkoutDict.WorkoutCompetedWarningText,
+                      });
+                      return;
+                    }
+
+                    if (completedFreeWorkouts && !isSubscriptionActive) {
+                      navigation.navigate('PurchaseModal');
+                      return;
+                    }
+
+                    if (weekNumber !== 1) {
+                      if (stayTunedEnabled) {
+                        showStayTunedModal();
+                      }
+                      return;
+                    }
+
+                    // Sort exercises
+                    const newWorkout = {
+                      ...workout,
+                      exercises: workout.exercises
+                        .slice()
+                        .sort((a, b) => a.orderIndex - b.orderIndex),
+                    };
+
+                    const warning = await shouldShowWarning();
+
+                    if (warning === true) {
+                      await AsyncStorage.setItem(
+                        '@LAST_WARNING_DATE',
+                        `${new Date()}`,
+                      );
+                      setSelectedWorkout(newWorkout);
+                      setIsSelectedWorkoutOnDemand(false);
+                      navigation.navigate('TakeARest', {
+                        name: programme.trainer.name,
+                      });
+                      return;
+                    }
+
                     setSelectedWorkout(newWorkout);
                     setIsSelectedWorkoutOnDemand(false);
-                    navigation.navigate('TakeARest', {
-                      name: programme.trainer.name,
-                    });
-                    return;
-                  }
-
-                  setSelectedWorkout(newWorkout);
-                  setIsSelectedWorkoutOnDemand(false);
-                  navigation.navigate('StartWorkout');
-                }}
-              />
-
-            </View>
-          );
-        }}
-      />
+                    navigation.navigate('StartWorkout');
+                  }}
+                />
+              </View>
+            );
+          }}
+        />
       </View>
     </View>
   );

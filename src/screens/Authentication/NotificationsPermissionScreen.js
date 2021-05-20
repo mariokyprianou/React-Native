@@ -44,7 +44,7 @@ export default function NotificationPermissionScreen() {
     // updateNotificationsPreferencesTo(true);
 
     const newPreferences = {
-      emails: enabled,
+      emails: preferences.emails,
       errorReports: preferences.errorReports,
       analytics: preferences.analytics,
       downloadQuality: preferences.downloadQuality,

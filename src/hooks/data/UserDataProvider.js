@@ -166,9 +166,14 @@ export default function UserDataProvider(props) {
   const [updatePreferences] = useMutation(UpdatePreference);
 
   const updateDefaultPreferences = useCallback(async () => {
+    const optOutMarketing =
+      (await AsyncStorage.getItem('@REGISTRATION_MARKETING_OPTION')) || 'off';
+
+    console.log('updateDefaultPreferences: optOutMarketing:', optOutMarketing);
+
     const newPreferences = {
       notifications: Platform.OS === 'ios' ? false : true,
-      emails: Platform.OS === 'ios' ? false : true,
+      emails: optOutMarketing === 'on' ? false : true,
       errorReports: true,
       analytics: Platform.OS === 'ios' ? false : true,
       downloadQuality: 'HIGH',

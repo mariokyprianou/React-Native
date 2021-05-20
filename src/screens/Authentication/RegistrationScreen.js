@@ -35,6 +35,7 @@ import useUserData from '../../hooks/data/useUserData';
 import {useBackHandler} from '@react-native-community/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import Spacer from '../../components/Utility/Spacer';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const tickIcon = require('../../../assets/icons/tickIcon.png');
 
@@ -44,7 +45,7 @@ export default function RegisterScreen() {
   const {dictionary} = useDictionary();
   const {AuthDict, GenderDict} = dictionary;
   const [termsAndConditions, setTerms] = useState(false);
-  const [marketingPreferences, setMarketingPreferences] = useState(false);
+  const [marketingPreferences, setMarketingPreferences] = useState('off');
 
   const {
     cellFormStyles,
@@ -242,6 +243,11 @@ export default function RegisterScreen() {
       return;
     }
     setLoading(true);
+
+    await AsyncStorage.setItem(
+      '@REGISTRATION_MARKETING_OPTION',
+      marketingPreferences,
+    );
 
     const correctSex =
       !sex || sex === GenderDict.PreferNotToSay ? null : sex.toLowerCase();

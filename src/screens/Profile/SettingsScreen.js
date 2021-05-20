@@ -74,24 +74,21 @@ const SettingsScreen = ({}) => {
   const [updateProfile] = useMutation(UpdateProfile);
 
   const [marketingPrefEmail, setMarketingPrefEmail] = useState(
-    preferences.emails || false,
+    preferences.emails,
   );
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
-    preferences.notifications || false,
+    preferences.notifications,
   );
+
   const [prefErrorReports, setPrefErrorReports] = useState(
-    preferences.errorReports || true,
+    preferences.errorReports,
   );
-  const [prefAnalytics, setPrefAnalytics] = useState(
-    preferences.analytics || false,
-  );
+  const [prefAnalytics, setPrefAnalytics] = useState(preferences.analytics);
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
   const [downloadQuality, setDownloadQuality] = useState(
-    preferences.downloadQuality || 'HIGH',
+    preferences.downloadQuality,
   );
-  const [weightPref, setWeightPref] = useState(
-    preferences.weightPreference || 'KG',
-  );
+  const [weightPref, setWeightPref] = useState(preferences.weightPreference);
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
@@ -106,12 +103,14 @@ const SettingsScreen = ({}) => {
   }, []);
 
   useEffect(() => {
-    setMarketingPrefEmail(preferences.emails || false);
-    setMarketingPrefNotifications(preferences.notifications || false);
-    setPrefErrorReports(preferences.errorReports || true);
-    setPrefAnalytics(preferences.analytics || false);
-    setDownloadQuality(preferences.downloadQuality || 'HIGH');
-    setWeightPref(preferences.weightPreference || 'KG');
+    if (preferences) {
+      setMarketingPrefEmail(preferences.emails);
+      setMarketingPrefNotifications(preferences.notifications);
+      setPrefErrorReports(preferences.errorReports);
+      setPrefAnalytics(preferences.analytics);
+      setDownloadQuality(preferences.downloadQuality);
+      setWeightPref(preferences.weightPreference);
+    }
   }, [preferences]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -170,7 +169,6 @@ const SettingsScreen = ({}) => {
       return;
     }
 
-
     await AsyncStorage.setItem(
       '@DOWNLOAD_ENABLED',
       JSON.stringify(downloadWorkouts),
@@ -182,7 +180,7 @@ const SettingsScreen = ({}) => {
         JSON.stringify(true),
       );
 
-      initCacheWeekVideos(programme.currentWeek.workouts);
+      //initCacheWeekVideos(programme.currentWeek.workouts);
     }
 
     const {
@@ -216,10 +214,8 @@ const SettingsScreen = ({}) => {
 
     analytics().setAnalyticsCollectionEnabled(prefAnalytics);
     crashlytics().setCrashlyticsCollectionEnabled(prefErrorReports);
-   
-    console.log(
-      "newPreferences", newPreferences
-    );
+
+    console.log('newPreferences', newPreferences);
 
     const newUserData = {
       familyName: userData.familyName,
@@ -433,6 +429,7 @@ const SettingsScreen = ({}) => {
       data: timeZones,
     },
   ];
+
   const cells5 = [
     {
       customComponent: () => (
@@ -510,9 +507,10 @@ const SettingsScreen = ({}) => {
       keyboardShouldPersistTaps="handled"
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
-      <TDSettings cells={cells}
-       config={settingsConfig}
-       scrollProps={{scrollEnabled: false}}
+      <TDSettings
+        cells={cells}
+        config={settingsConfig}
+        scrollProps={{scrollEnabled: false}}
       />
       <Spacer height={20} />
       {/* Weight */}

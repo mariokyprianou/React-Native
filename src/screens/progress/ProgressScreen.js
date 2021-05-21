@@ -153,12 +153,13 @@ export default function ProgressScreen() {
       backgroundColor: colors.white100,
       marginBottom: '4%',
       alignSelf: 'center',
+      paddingBottom: getHeight(5),
     },
     calendarTitle: {
       ...textStyles.bold20_black100,
       textAlign: 'left',
       marginTop: getHeight(17),
-      marginBottom: getHeight(7),
+      marginBottom: getHeight(4),
       marginHorizontal: getWidth(24),
     },
     boxWrapper: {

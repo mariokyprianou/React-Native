@@ -543,11 +543,14 @@ export default function ThemeProvider({children}) {
   const singleCalendarStyles = {
     days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
     daysContainerStyles: {
-      marginBottom: getHeight(14),
+      marginBottom: getHeight(0),
       width: '100%',
       alignSelf: 'center',
     },
-    daysTextStyles: {...textStyles.bold10_brownGrey100},
+    daysTextStyles: {
+      ...textStyles.bold10_brownGrey100,
+      lineHeight: fontSize(22),
+    },
     dateCellStyles: {
       width: getWidth(30),
       height: getWidth(30),
@@ -555,6 +558,8 @@ export default function ThemeProvider({children}) {
     },
     pillWidth: {
       width: getWidth(45),
+      marginBottom: getHeight(0),
+      marginTop: getHeight(8),
     },
     lookupStyleTable: {
       NEW_WEEK: {

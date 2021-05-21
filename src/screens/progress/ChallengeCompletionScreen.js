@@ -161,18 +161,14 @@ export default function ChallengeCompletionScreen() {
 
     setLoading(true);
 
-    const data = await getShareData(ShareMediaType.challengeComplete);
-
-    if (data === null) {
-      displayAlert({
-        title: null,
-        text: ShareDict.UnableToShare,
-      });
+    const {colour, url} = await getShareData(
+      ShareMediaType.challengeComplete,
+    ).catch((err) => {
+      console.log(err, '<---getShareData err');
+      displayAlert({text: ShareDict.UnableToShare});
       setLoading(false);
       return;
-    }
-
-    const {colour, url} = data;
+    });
 
     console.log('name: ', name);
     console.log('result: ', result);
@@ -185,6 +181,7 @@ export default function ChallengeCompletionScreen() {
     if (type === 'STOPWATCH') {
       const unit = unitType === 'WEIGHT' ? weightPreference : '';
       const achievementValueString = ellapsedTime + ' ' + unit;
+
       PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
         achievementValueString: ellapsedTime,
@@ -207,6 +204,7 @@ export default function ChallengeCompletionScreen() {
         typeof duration === 'string' ? duration : duration.toString();
       const subtitle = name + '\nin ' + durationTimeString + ' seconds';
       const achievedValueString = `${achievedResult} ${unit}`;
+
       PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
         achievementValueString: achievedValueString,
@@ -224,6 +222,7 @@ export default function ChallengeCompletionScreen() {
       const achievedResult =
         typeof result === 'number' ? result : parseInt(result, 10);
       const achievedValueString = `${achievedResult} ${unit}`;
+
       PowerShareAssetsManager.shareStringAchievement({
         imageUrl: url,
         achievementValueString: achievedValueString,

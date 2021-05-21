@@ -187,12 +187,14 @@ export default function TransformationScreen() {
 
     setLoading(true);
 
-    const {colour, url} = await getShareData(ShareMediaType.progress);
-
-    if (!colour || !url) {
-      setLoading(false);
-      return;
-    }
+    const {colour, url} = await getShareData(ShareMediaType.progress).catch(
+      (err) => {
+        console.log(err, '<---getShareData err');
+        displayAlert({text: ShareDict.UnableToShareProgress});
+        setLoading(false);
+        return;
+      },
+    );
 
     try {
       let beforeDate = parseISO(beforePic.value);

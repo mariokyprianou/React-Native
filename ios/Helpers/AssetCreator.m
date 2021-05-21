@@ -15,10 +15,10 @@
 
 RCT_EXPORT_MODULE(iOSAssetCreator);
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(createBase64ImageForWorkoutComplete:(NSString *)imageUrl title:(NSString *)title completedWorkouts:(NSInteger *)completedWorkouts totalTime:(NSString *)totalTime)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(createBase64ImageForWorkoutComplete:(NSString *)imageUrl title:(NSString *)title completedWorkouts:(NSInteger *)completedWorkouts totalTime:(NSString *)totalTime colour:(NSString *)colour)
 {
   SwiftAssetCreator *creator = [SwiftAssetCreator new];
-  NSString *image = [creator encodedWorkoutCompleteImageWith:title from:imageUrl completedWorkoutsNumber:completedWorkouts totalTime:totalTime];
+  NSString *image = [creator encodedWorkoutCompleteImageWith:title from:imageUrl completedWorkoutsNumber:completedWorkouts totalTime:totalTime color:colour];
   return image;
 };
 

@@ -22,6 +22,7 @@ const generateWeekCompleteAsset = async ({
   title,
   workoutsCompleted,
   totalTimeTrained,
+  colour,
 }) => {
   try {
     let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
@@ -32,6 +33,7 @@ const generateWeekCompleteAsset = async ({
       title,
       workoutsCompleted,
       totalTimeTrained,
+      colour,
     );
     await ImagesCacheManager.unlinkFileFromRelevantPath(
       pathToBgImageFromDocumentsDir,

@@ -103,7 +103,15 @@ export default function ({
 
     onError: (error) => {
       console.log('Error loading video:', error);
-      crashlytics().recordError(error);
+      crashlytics().recordError(
+        new Error(
+          `Error loading video: ${videos[currentVideo]
+            .split('/')
+            .pop()
+            .split('?')
+            .shift()}, ${error}`,
+        ),
+      );
     },
 
     customControls: <></>,

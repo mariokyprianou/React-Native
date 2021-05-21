@@ -3,12 +3,20 @@
  * Created: Wed, 6th January 212021
  * Copyright 2021 - The Distance
  */
-import { HttpLink, InMemoryCache, ApolloClient } from '@apollo/client';
-import { persistCache, AsyncStorageWrapper } from 'apollo3-cache-persist';
+import {
+  HttpLink,
+  InMemoryCache,
+  ApolloClient,
+  from,
+  concat,
+} from '@apollo/client';
+import {persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Authoriser from './ApolloMiddleware/Authoriser';
 import {onError} from '@apollo/client/link/error';
+import {RetryLink} from '@apollo/client/link/retry';
+
 import Secrets from '../environment/Secrets';
 
 const errorLink = onError(
@@ -27,7 +35,6 @@ const errorLink = onError(
 );
 
 export async function TDGraphQLProvider() {
-
   const authFetch = async (_, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
 
@@ -59,7 +66,19 @@ export async function TDGraphQLProvider() {
 
   const link = new HttpLink({fetch: authFetch});
 
-  const cache =  new InMemoryCache({});
+  const retryLink = new RetryLink({
+    delay: {
+      initial: 300,
+      max: Infinity,
+      jitter: true,
+    },
+    attempts: {
+      max: 3,
+      retryIf: (error, _operation) => !!error,
+    },
+  });
+
+  const cache = new InMemoryCache({});
 
   await persistCache({
     cache,
@@ -67,7 +86,7 @@ export async function TDGraphQLProvider() {
   });
 
   const client = new ApolloClient({
-    link: errorLink.concat(link),
+    link: errorLink.concat(concat(link, retryLink)),
     cache: cache,
   });
 

@@ -317,6 +317,8 @@ const hiIN = {
       'Taking another photo today will replace the existing one.',
     ShareNotAvailableWarning:
       'Sharing your transformation requires a before and an after progress photo.',
+    CompleteChallengeFailedMessage:
+      'Oops! Unable to complete this challenge at this time.',
   },
 
   TabsTitleDict: {

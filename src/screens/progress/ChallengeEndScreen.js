@@ -25,6 +25,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useProgressData from '../../hooks/data/useProgressData';
 import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
@@ -179,9 +180,8 @@ export default function ChallengeEndScreen() {
   async function handleAddResult() {
     if (!isConnected) {
       displayAlert({text: OfflineMessage});
-    return;
+      return;
     }
-
 
     setLoading(true);
     let challengeResult = '';
@@ -232,12 +232,22 @@ export default function ChallengeEndScreen() {
           description: description,
           duration: duration,
         });
+
+        cleanValues();
       })
       .catch((err) => {
-        console.log(err, '<---sendResult err');
+        console.log(
+          `Error on CompleteChallenge: ${name} of trainer ${programme.trainer.name}, ${err}`,
+          '<---sendResult err',
+        );
+        crashlytics().log(
+          `Error on CompleteChallenge: ${name} of trainer ${programme.trainer.name}, ${err}`,
+        );
         setLoading(false);
-      })
-      .finally(() => cleanValues());
+        displayAlert({
+          text: ProgressDict.CompleteChallengeFailedMessage,
+        });
+      });
   }
 
   function handleGoBack() {

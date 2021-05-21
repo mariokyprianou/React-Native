@@ -42,7 +42,11 @@ export default function OnDemandScreen() {
   const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
   const navigation = useNavigation();
   const {setLoading} = useLoading();
-  const {suspendedAccount, isSubscriptionActive} = useUserData();
+  const {
+    suspendedAccount,
+    isSubscriptionActive,
+    completedFreeWorkouts,
+  } = useUserData();
 
   navigation.setOptions({
     header: () => null,
@@ -58,7 +62,6 @@ export default function OnDemandScreen() {
     setOnDemandWorkouts,
     setSelectedWorkout,
     setIsSelectedWorkoutOnDemand,
-    completedFreeWorkouts,
   } = useData();
 
   const isFocused = useIsFocused();

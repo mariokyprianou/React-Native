@@ -158,11 +158,14 @@ export default function WorkoutHomeScreen() {
   }
 
   async function constructWeekCompleteModal() {
-    const {weekNumber} = programme.currentWeek;
+    const {environment} = programme;
+    const {weekNumber, workouts} = programme.currentWeek;
+
     let duration = 0;
     let reps = 0;
     let sets = 0;
     let seconds = 0;
+
     programme.currentWeek.workouts.map((workout) => {
       duration += workout.duration || 0;
       workout.exercises.map((exercise) => {
@@ -189,6 +192,8 @@ export default function WorkoutHomeScreen() {
       totalReps: reps,
       totalSets: sets,
       totalSeconds: seconds,
+      totalWorkouts: workouts.length,
+      environment: environment,
     };
 
     // Set currentWeek id to prevent showing modal again for the same week

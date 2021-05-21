@@ -266,6 +266,7 @@ const enGB = {
 
     InstaPromptText: 'Share to Instagram by downloading the app!',
     UnableToShare: 'Unable to share challenge at this time.',
+    UnableToShareWeekComplete: 'Unable to share week complete at this time.',
   },
 
   SettingsDict: {

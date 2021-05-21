@@ -36,11 +36,14 @@ import {useBackHandler} from '@react-native-community/hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import Spacer from '../../components/Utility/Spacer';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
 const tickIcon = require('../../../assets/icons/tickIcon.png');
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict, GenderDict} = dictionary;
@@ -86,6 +89,7 @@ export default function RegisterScreen() {
   ];
 
   useQuery(AllCountries, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
       setCountriesList(['', ...countries]);
@@ -99,6 +103,7 @@ export default function RegisterScreen() {
   });
 
   useQuery(LookupCountry, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (data) => {
       const estimatedCountry = data.lookupCountry.name;
       setCountry(estimatedCountry);
@@ -264,6 +269,8 @@ export default function RegisterScreen() {
       timeZone: deviceTimeZone,
       programme: programmeId,
     };
+
+    console.log('Register', data);
 
     execute({
       variables: {

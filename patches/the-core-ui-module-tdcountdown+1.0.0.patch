@@ -66,7 +66,7 @@ index 6387017..d92f189 100644
      elapsed: msToHMS(elapsedTime),
      elapsedMS: elapsedTime,
 diff --git a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
-index 1b1c1fe..4de1bff 100644
+index 1b1c1fe..eac0a32 100644
 --- a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
 +++ b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
 @@ -10,9 +10,8 @@ import msToHMS from "../utils/msToHMS";
@@ -80,7 +80,7 @@ index 1b1c1fe..4de1bff 100644
    // This is the time remaining in milliseconds (timer is a HH:MM:SS string)
    const [remaining, setRemaining] = useState(HMStoMS(timer));
  
-@@ -31,6 +30,43 @@ export default function useTimer({ timer }) {
+@@ -31,6 +30,49 @@ export default function useTimer({ timer }) {
      }
    };
  
@@ -119,12 +119,18 @@ index 1b1c1fe..4de1bff 100644
 +        }
 +      }, 1000);
 +    }
++    else if (this.interval) {
++     
++        clearInterval(this.interval);
++        this.interval = null;
++      
++    }
 +  }, [start])
 +
    // Reset the timer
    const reset = () => {
      setStart(false);
-@@ -38,20 +74,12 @@ export default function useTimer({ timer }) {
+@@ -38,20 +80,12 @@ export default function useTimer({ timer }) {
      setRemaining(HMStoMS(timer));
    };
  

@@ -326,6 +326,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				D8843634D44CA06C7699BB4F /* [CP] Copy Pods Resources */,
+				61B3A39D13F7005E02B3B8B9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -351,6 +352,7 @@
 				B9B328D6ACECF5A5460B874C /* [CP] Copy Pods Resources */,
 				4C1EE00BF38B42525E908251 /* [CP-User] [RNFB] Core Configuration */,
 				A823FF9BDCABBFB707F6E447 /* [CP-User] [RNFB] Crashlytics Configuration */,
+				8F00A810479B0BC6F90BD365 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -576,6 +578,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		61B3A39D13F7005E02B3B8B9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-thecoreui-thecoreuiTests/Pods-thecoreui-thecoreuiTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-thecoreui-thecoreuiTests/Pods-thecoreui-thecoreuiTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7CE2211624AB66C8001D8ECD /* Generate Secrets */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -594,6 +614,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nBUNDLE_FILE=\"$DEST/main.jsbundle\"\n\nif [ -f \"$BUNDLE_FILE\" ]; then\necho \"main.jsbundle present\"\nSHASUM=\"$(/usr/bin/shasum -a 256 \"${BUNDLE_FILE}\")\"\nSHASUMARRAY=($SHASUM)\nelse \necho \"main.jsbundle not found. This script will only be ran in release mode.\"\nSHASUMARRAY=\"checksum\"\nfi\n\n#check if env-vars.sh exists\nif [ -f ../env-vars.sh ]\nthen\nsource ../env-vars.sh\nfi\n#no `else` case needed if the CI works as expected\n${PODS_ROOT}/Sourcery/bin/sourcery --templates ./Helpers/ --output ./Helpers/ --sources ./ --args  staging_graphql_url=\\\"$AWS_GRAPHQL_URL_STAGING\\\",staging_user_pool_id=\\\"$AWS_USER_POOL_ID_STAGING\\\",staging_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_STAGING\\\",staging_aws_region=\\\"$AWS_REGION_STAGING\\\",production_graphql_url=\\\"$AWS_GRAPHQL_URL_PRODUCTION\\\",production_user_pool_id=\\\"$AWS_USER_POOL_ID_PRODUCTION\\\",production_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_PRODUCTION\\\",production_aws_region=\\\"$AWS_REGION_PRODUCTION\\\",development_graphql_url=\\\"$AWS_GRAPHQL_URL_DEVELOPMENT\\\",development_user_pool_id=\\\"$AWS_USER_POOL_ID_DEVELOPMENT\\\",development_user_pool_client_id=\\\"$AWS_USER_POOL_CLIENT_ID_DEVELOPMENT\\\",development_aws_region=\\\"$AWS_REGION_DEVELOPMENT\\\",checksum=\\\"${SHASUMARRAY[0]}\\\"\n";
+		};
+		8F00A810479B0BC6F90BD365 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-thecoreui/Pods-thecoreui-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-thecoreui/Pods-thecoreui-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		916F5771E0D5AB189A5B4F7B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

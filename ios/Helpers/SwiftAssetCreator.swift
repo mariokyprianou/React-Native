@@ -69,7 +69,7 @@ struct GraphicContextTextContent {
     return UIImage()
   }
 
-  @objc public func encodedWorkoutCompleteImage(with upperTitle: String, from imageUrl: String, completedWorkoutsNumber: Int, totalTime: String) -> String? {
+  @objc public func encodedWorkoutCompleteImage(with upperTitle: String, from imageUrl: String, completedWorkoutsNumber: Int, totalTime: String, color: String = "WHITE") -> String? {
         let fifthHeight = self.assetHeight / 5
 
         let topLabelFrame = CGRect(x: padding, y: fifthHeight * 0.92, width: contentWidth, height: fifthHeight * 2)
@@ -77,11 +77,11 @@ struct GraphicContextTextContent {
             NSAttributedString(string: upperTitle, attributes: fontAttributes(fontType: .medium))
 
         let bottomLabelFrame = CGRect(x: padding, y: fifthHeight * 3.55, width: contentWidth, height: fifthHeight * 1.5)
-        let workoutsNumber = NSAttributedString(string: "\(completedWorkoutsNumber)", attributes: fontAttributes(fontType: .large))
-        let workoutsText = NSAttributedString(string: "\nWorkouts", attributes: fontAttributes(fontType: .small))
-        let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(fontType: .medium))
-        let totalTimeValue = NSAttributedString(string: "\n\(totalTime)", attributes: fontAttributes(fontType: .large))
-        let totalTimeText = NSAttributedString(string: "\nTotal time", attributes: fontAttributes(fontType: .small))
+        let workoutsNumber = NSAttributedString(string: "\(completedWorkoutsNumber)", attributes: fontAttributes(fontType: .large, color: color))
+        let workoutsText = NSAttributedString(string: "\nWorkouts", attributes: fontAttributes(fontType: .small, color: color))
+        let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(fontType: .medium, color: color))
+        let totalTimeValue = NSAttributedString(string: "\n\(totalTime)", attributes: fontAttributes(fontType: .large, color: color))
+        let totalTimeText = NSAttributedString(string: "\nTotal time", attributes: fontAttributes(fontType: .small, color: color))
         let bottomLabel = join([workoutsNumber, workoutsText, spacing, totalTimeValue, totalTimeText])
 
         let contents = [

@@ -83,6 +83,7 @@ export default function ({
     autoplay: false, //index === currentExerciseIndex,
     muted: true,
     repeat: true,
+    playWhenInactive: true,
 
     onLoadEnd: (duration) => {
       setVideoDuration(duration);

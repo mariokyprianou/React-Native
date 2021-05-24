@@ -359,6 +359,9 @@ const hiIN = {
     WeightsRepsText: SharedDict.Reps,
     WeightsRepsSecsText: SharedDict.Secs,
 
+    WeightsRepsSelector: 'Reps',
+    WeightsSecsSelector: 'Secs',
+
     RestDay: 'REST DAY',
     RestDayLower: 'Rest day',
     Day: 'Day',

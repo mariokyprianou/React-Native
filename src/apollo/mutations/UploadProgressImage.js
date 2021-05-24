@@ -11,6 +11,7 @@ import gql from 'graphql-tag';
 export default gql`
   mutation($input: UploadProgressImageInput!) {
     uploadProgressImage(input: $input) {
+      token
       uploadUrl
     }
   }

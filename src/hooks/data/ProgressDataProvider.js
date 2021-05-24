@@ -79,6 +79,26 @@ export default function DataProvider(props) {
     });
   }, [runQuery]);
 
+  const addProgressImage = useCallback(
+    async (progressImage, alreadyExists) => {
+      let images = userImages.filter((it) => it.id);
+
+      // Add to existing images
+      const formattedImages = formatProgressImages([progressImage]);
+
+      // We already have an image for today, need to replace
+      if (alreadyExists) {
+        images.shift();
+      }
+
+      images = [].concat(formattedImages, images);
+
+      console.log('NEWIMAGES', images.length);
+      setUserImages(images);
+    },
+    [userImages],
+  );
+
   const [challenges, setChallenges] = useState([]);
 
   const initCacheImages = useCallback(
@@ -192,6 +212,7 @@ export default function DataProvider(props) {
       setAfterPic,
       getProgressData,
       resetProgressData,
+      addProgressImage,
     }),
     [
       progress,
@@ -209,6 +230,7 @@ export default function DataProvider(props) {
       setAfterPic,
       getProgressData,
       resetProgressData,
+      addProgressImage,
     ],
   );
 

@@ -125,7 +125,7 @@ export default function TransformationScreen() {
           {
             text: ProfileDict.Ok,
             onPress: () => {
-              navigateAddPhoto();
+              navigateAddPhoto(alreadyExists);
             },
           },
         ],
@@ -135,7 +135,7 @@ export default function TransformationScreen() {
     }
   }
 
-  function navigateAddPhoto() {
+  function navigateAddPhoto(alreadyExists = false) {
     request(
       Platform.select({
         ios: PERMISSIONS.IOS.CAMERA,
@@ -150,7 +150,7 @@ export default function TransformationScreen() {
           Alert.alert(ProgressDict.NoCamera);
         }
         if (result === RESULTS.GRANTED) {
-          navigation.navigate('AddPhoto');
+          navigation.navigate('AddPhoto', {alreadyExists: alreadyExists});
         }
       })
       .catch((err) => console.log('Error add photo: ', err));

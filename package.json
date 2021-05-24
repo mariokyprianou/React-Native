@@ -48,7 +48,7 @@
     "react-native-circular-gradient-progress": "^1.0.6",
     "react-native-design-to-component": "^1.0.0",
     "react-native-device-info": "^7.3.1",
-    "react-native-draggable-flatlist": "^2.5.0",
+    "react-native-draggable-flatlist": "^2.6.2",
     "react-native-dropdown-picker": "^3.7.1",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-emoji": "^1.8.0",

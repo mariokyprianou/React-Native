@@ -46,6 +46,7 @@ export default function WorkoutCompleteScreen() {
 
   const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
+    getProgramme,
     selectedWorkout,
     weightsToUpload,
     setWeightsToUpload,
@@ -252,6 +253,7 @@ export default function WorkoutCompleteScreen() {
 
   async function completeWorkoutDone() {
     setWeightsToUpload([]);
+    await getProgramme();
     await getProfile();
 
     navigation.reset({

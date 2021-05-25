@@ -14,6 +14,7 @@ import {VideoView} from 'the-core-ui-module-tdmediamanager';
 import ControlsView from './ControlsView';
 import UseData from '../../hooks/data/UseData';
 import crashlytics from '@react-native-firebase/crashlytics';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function ({
   video,
@@ -44,6 +45,8 @@ export default function ({
   const [currentVideo, setCurrentVideo] = useState('video');
   const [ended, setEnded] = useState(false);
 
+  const {isWorkoutTimerRunning} = useWorkoutTimer();
+
   const videoRef = useRef();
 
   const videoHeight = Dimensions.get('window').width;
@@ -68,6 +71,21 @@ export default function ({
       videoRef.current.pause();
     }
   }, [currentExerciseIndex, index]);
+
+  // When timer is paused by user.
+  useEffect(() => {
+    if (isContinuous) {
+      if (isWorkoutTimerRunning === false) {
+        videoRef.current.pause();
+        setIsPaused(true);
+        setEnded(false);
+      } else if (isWorkoutTimerRunning === true && isPaused === true) {
+        videoRef.current.pause();
+        setIsPaused(false);
+        setEnded(false);
+      }
+    }
+  }, [isWorkoutTimerRunning]);
 
   // Video url has changed
   useEffect(() => {

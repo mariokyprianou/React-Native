@@ -26,6 +26,7 @@ import displayAlert from '../../utils/DisplayAlert';
 import {ScrollView} from 'react-native-gesture-handler';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import FadingBottomView from './FadingBottomView';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -434,14 +435,25 @@ function TimerView(props) {
     props.exerciseTime !== null,
   );
 
-  const {remainingMS, toggle, reset, restart} = useTimer({
+  const {remainingMS, toggle, reset, restart, active} = useTimer({
     timer: durationFormatted,
   });
+
+  const {isWorkoutTimerRunning} = useWorkoutTimer();
 
   useEffect(() => {
     reset();
     toggle();
   }, []);
+
+  // When timer is paused by user.
+  useEffect(() => {
+    if (props.isContinuous) {
+      console.log('isWorkoutTimerRunning: ', isWorkoutTimerRunning);
+      console.log('Active: ', active);
+      toggle();
+    }
+  }, [isWorkoutTimerRunning]);
 
   useEffect(() => {
     if (remainingMS === 0) {

@@ -194,6 +194,7 @@ export default function ChallengeCompletionScreen() {
         })
         .catch((err) => {
           console.log('SHARE ERR: ', err);
+          setLoading(false);
         })
         .finally(() => setLoading(false));
     } else if (type === 'COUNTDOWN') {
@@ -215,7 +216,9 @@ export default function ChallengeCompletionScreen() {
           setLoading(false);
           shareEvent();
         })
-        .catch((err) => {})
+        .catch((err) => {
+          setLoading(false);
+        })
         .finally(() => setLoading(false));
     } else {
       const unit = unitType === 'WEIGHT' ? weightPreference : '';
@@ -233,7 +236,9 @@ export default function ChallengeCompletionScreen() {
           setLoading(false);
           shareEvent();
         })
-        .catch((err) => {})
+        .catch((err) => {
+          setLoading(false);
+        })
         .finally(() => setLoading(false));
     }
   }

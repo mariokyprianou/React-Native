@@ -160,8 +160,10 @@ export default function WeekCompleteScreen() {
         trainerId: programme.trainer.id,
         programmeId: programme.id,
       });
+      setLoading(false);
     } catch (err) {
       console.log('SHARE ERR: ', err);
+      setLoading(false);
     }
 
     setLoading(false);

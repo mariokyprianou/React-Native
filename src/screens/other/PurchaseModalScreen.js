@@ -27,6 +27,7 @@ import Spacer from '../../components/Utility/Spacer';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import displayAlert from '../../utils/DisplayAlert';
 import Video from 'react-native-video';
 import * as R from 'ramda';
 
@@ -68,6 +69,7 @@ const PurchaseModalScreen = ({}) => {
 
   // MARK: - Local
   const [currentSubscription, setCurrentSubscription] = useState();
+  const [restorePressed, setRestorePressed] = useState(false);
 
   const [yearlySubscription, setYearlySubscription] = useState({
     productId: 'app.power.subscription.yearly',
@@ -241,6 +243,32 @@ const PurchaseModalScreen = ({}) => {
             break;
         }
       });
+
+      if (restorePressed === true) {
+        setRestorePressed(false);
+        displayAlert({
+          title: null,
+          text: PurchaseDict.PurchaseRestored,
+          buttons: [
+            {
+              text: PurchaseDict.OkayButton,
+            },
+          ],
+        });
+      }
+    } else {
+      if (restorePressed === true) {
+        setRestorePressed(false);
+        displayAlert({
+          title: null,
+          text: PurchaseDict.NoPurchasesToRestore,
+          buttons: [
+            {
+              text: PurchaseDict.OkayButton,
+            },
+          ],
+        });
+      }
     }
   }, [availablePurchases, setCurrentSubscription]);
 
@@ -262,6 +290,7 @@ const PurchaseModalScreen = ({}) => {
     purchase(monthlySubscription);
   };
   const onPressRestoreSubscription = () => {
+    setRestorePressed(true);
     getAvailablePurchases();
   };
 

@@ -32,6 +32,7 @@ const SharedDict = {
   Male: 'Male',
   Other: 'Other',
   PreferNotToSay: 'Prefer not to say',
+  Okay: 'Okay',
 };
 
 const hiIN = {
@@ -178,6 +179,9 @@ const hiIN = {
     SavePrompt: (percentage) => `Save ${percentage}%`,
     MonthlyButtonSubTitle: 'billed monthly',
     RestorePurchaseButton: 'Restore purchases',
+    PurchaseRestored: 'Your Purchases have been Restored.',
+    OkayButton: SharedDict.Ok,
+    NoPurchasesToRestore: 'No Purchases available to restore.',
     SubscriptionTermsTitle: 'Subscription terms',
     SubscriptionTermsFirstPoint:
       '• Payment will be charged to your Apple Account at confirmation of purchase and will automatically renew (at the duration/price selected) unless auto-renew is turned off at least 24 hrs before the end of the current period',

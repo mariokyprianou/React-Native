@@ -167,18 +167,23 @@ export default function WorkoutScreen() {
       const exerciseCompleted = selectedWorkout.exercises[currentExerciseIndex];
       const exerciseStarted = selectedWorkout.exercises[newIndex];
 
-      firebaseLogEvent(analyticsEvents.completedExercise, {
-        workoutId: selectedWorkout.id,
-        workoutName: selectedWorkout.name,
-        exerciseId: exerciseCompleted.id,
-        exerciseName: exerciseCompleted.name,
-      });
-      firebaseLogEvent(analyticsEvents.startedExercise, {
-        workoutId: selectedWorkout.id,
-        workoutName: selectedWorkout.name,
-        exerciseId: exerciseStarted.id,
-        exerciseName: exerciseStarted.name,
-      });
+      if (selectedWorkout && exerciseCompleted) {
+        firebaseLogEvent(analyticsEvents.completedExercise, {
+          workoutId: selectedWorkout.id,
+          workoutName: selectedWorkout.name,
+          exerciseId: exerciseCompleted.id,
+          exerciseName: exerciseCompleted.name,
+        });
+      }
+
+      if (selectedWorkout && exerciseStarted) {
+        firebaseLogEvent(analyticsEvents.startedExercise, {
+          workoutId: selectedWorkout.id,
+          workoutName: selectedWorkout.name,
+          exerciseId: exerciseStarted.id,
+          exerciseName: exerciseStarted.name,
+        });
+      }
     }
 
     setCurrentExerciseIndex(newIndex);

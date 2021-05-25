@@ -19,8 +19,8 @@ struct GraphicContextTextContent {
 
   // MARK: - Initializers
 
-  var assetWidth: CGFloat = 1080
-  var assetHeight: CGFloat = 1920
+  var assetWidth: CGFloat = 1125
+  var assetHeight: CGFloat = 2001
   let fontColor: UIColor = .black
   var padding: CGFloat {
     return assetWidth / 23
@@ -93,17 +93,17 @@ struct GraphicContextTextContent {
 
   // MARK: -  Private Generating Methods
 
-  @objc public func encodedAchievementImageIntBased(for achievedValue: Int, with subtext: String, from imageUrl: String) -> String? {
-    let valueText = NSAttributedString(string: "\(achievedValue)", attributes: fontAttributes(rightAlign: false, fontType: .superGrand))
-    let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(rightAlign: false, fontType: .small, moveUp: true))
-    let descriptionText = NSAttributedString(string: "\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium))
+  @objc public func encodedAchievementImageIntBased(for achievedValue: Int, with subtext: String, from imageUrl: String, color: String = "WHITE") -> String? {
+    let valueText = NSAttributedString(string: "\(achievedValue)", attributes: fontAttributes(rightAlign: false, fontType: .superGrand, color: color))
+    let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(rightAlign: false, fontType: .small, moveUp: true, color: color))
+    let descriptionText = NSAttributedString(string: "\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium, color: color))
     let title = join([valueText, spacing, descriptionText])
     return encodedImage(with: title, from: imageUrl)
   }
 
-  @objc public func encodedAchievementImageStringBased(for string: String, with subtext: String, from imageUrl: String) -> String? {
-    let valueText = NSAttributedString(string: string, attributes: fontAttributes(rightAlign: false, fontType: .grand))
-    let descriptionText = NSAttributedString(string: "\n\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium))
+  @objc public func encodedAchievementImageStringBased(for string: String, with subtext: String, from imageUrl: String, color: String = "WHITE") -> String? {
+    let valueText = NSAttributedString(string: string, attributes: fontAttributes(rightAlign: false, fontType: .grand, color: color))
+    let descriptionText = NSAttributedString(string: "\n\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium, color: color))
     let title = join([valueText, descriptionText])
     return encodedImage(with: title, from: imageUrl, spacingFromTopMultiplier: 1.2)
   }
@@ -125,6 +125,7 @@ struct GraphicContextTextContent {
     let assetFrame = CGRect(x: 0, y: 0, width: assetWidth, height: assetHeight)
     let bgImageView = UIImageView(frame: assetFrame)
     bgImageView.image = backgroundImage
+    bgImageView.contentMode = .scaleAspectFill
 
     UIGraphicsBeginImageContext(assetFrame.size)
     if let currentContext = UIGraphicsGetCurrentContext() {

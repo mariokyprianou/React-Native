@@ -52,6 +52,7 @@ const generateIntAchievementAsset = async ({
   imageUrl,
   achievedValue,
   subtitle,
+  colour,
 }) => {
   try {
     let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
@@ -61,6 +62,7 @@ const generateIntAchievementAsset = async ({
       pathToBgImageFromDocumentsDir,
       achievedValue,
       subtitle,
+      colour,
     );
     await ImagesCacheManager.unlinkFileFromRelevantPath(
       pathToBgImageFromDocumentsDir,
@@ -80,6 +82,7 @@ const generateStringAchievementAsset = async ({
   imageUrl,
   achievementValueString,
   subtitle,
+  colour,
 }) => {
   try {
     let pathToBgImageFromDocumentsDir = await ImagesCacheManager.cacheImageFromUrl(
@@ -89,6 +92,7 @@ const generateStringAchievementAsset = async ({
       pathToBgImageFromDocumentsDir,
       achievementValueString,
       subtitle,
+      colour,
     );
     await ImagesCacheManager.unlinkFileFromRelevantPath(
       pathToBgImageFromDocumentsDir,

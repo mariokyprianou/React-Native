@@ -73,8 +73,7 @@ struct GraphicContextTextContent {
         let fifthHeight = self.assetHeight / 5
 
         let topLabelFrame = CGRect(x: padding, y: fifthHeight * 0.92, width: contentWidth, height: fifthHeight * 2)
-        let topLabel =
-            NSAttributedString(string: upperTitle, attributes: fontAttributes(fontType: .medium))
+        let topLabel = NSAttributedString(string: upperTitle, attributes: fontAttributes(fontType: .medium, color: color))
 
         let bottomLabelFrame = CGRect(x: padding, y: fifthHeight * 3.55, width: contentWidth, height: fifthHeight * 1.5)
         let workoutsNumber = NSAttributedString(string: "\(completedWorkoutsNumber)", attributes: fontAttributes(fontType: .large, color: color))

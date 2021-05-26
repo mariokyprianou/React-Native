@@ -202,6 +202,11 @@ const enGB = {
     TermsPattern: /here/,
     PolicyPattern: /here/,
     NeedHelp: 'Need help?',
+
+    PaymentFailedAlreadyExists:
+      'Oops! Looks like you already have a paid subscription for a different Power account',
+    PaymentFailedGeneric:
+      'Oops! Looks like there is an issue subscribing at the moment, please try again later',
   },
 
   MeetYourIconsDict: {

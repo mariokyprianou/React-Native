@@ -38,6 +38,7 @@ import {
   requestSubscription,
   initConnection,
   getSubscriptions,
+  IAPErrorCode,
 } from 'react-native-iap';
 import RegisterGooglePlaySubscription from '../../apollo/mutations/RegisterGooglePlaySubscription';
 import RegisterAppStoreSubscription from '../../apollo/mutations/RegisterAppStoreSubscription';
@@ -211,11 +212,14 @@ const PurchaseModalScreen = ({}) => {
 
   // Current purchase error
   useEffect(() => {
-    if (currentPurchaseError)
-      Alert.alert(
-        'purchase error',
-        JSON.stringify(currentPurchaseError?.message),
-      );
+    if (currentPurchaseError) {
+      displayAlert({
+        text:
+          currentPurchaseError?.code === IAPErrorCode.E_ALREADY_OWNED
+            ? PurchaseDict.PaymentFailedAlreadyExists
+            : PurchaseDict.PaymentFailedGeneric,
+      });
+    }
   }, [currentPurchaseError, currentPurchaseError?.message]);
 
   // Restore

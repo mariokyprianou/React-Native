@@ -10,6 +10,7 @@ import LoadingContext from './LoadingContext';
 
 export default function DataProvider(props) {
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(

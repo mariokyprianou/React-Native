@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect} from 'react';
-import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
 import WorkoutTags from '../../apollo/queries/WorkoutTags';
@@ -29,11 +29,14 @@ import {
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
-import {cacheWeekVideos, cacheImages} from './VideoCacheUtils';
+import {cacheWeekVideos, cacheImages, shouldCacheWeek} from './VideoCacheUtils';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
 import OfflineUtils from './OfflineUtils';
+import {FileManager} from 'the-core-ui-module-tdmediamanager';
+
+const {clearAllFiles} = FileManager;
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -45,6 +48,8 @@ export default function DataProvider(props) {
 
   const [currentWeek, setCurrentWeek] = useState();
   const [nextWeek, setNextWeek] = useState();
+
+  //const {setDownloading} = useLoading();
 
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
@@ -250,22 +255,29 @@ export default function DataProvider(props) {
     }
   }, [currentWeek, programme]);
 
-  const initCacheWeekVideos = useCallback(
-    async (workouts) => {
-      if (isConnected) {
-        cacheWeekVideos(workouts);
+  const initCacheWeekVideos = useCallback(async (workouts) => {
+    const response = await NetInfo.fetch();
+
+    console.log('initCacheWeekVideos isConnected', response.isConnected);
+    if (response.isConnected) {
+      const shouldCache = await shouldCacheWeek();
+
+      console.log('shouldCacheWeekVideos', shouldCache);
+      if (shouldCache !== true) {
+        return;
       }
-    },
-    [isConnected],
-  );
+
+      cacheWeekVideos(workouts);
+    }
+  }, []);
 
   const initCacheImages = useCallback(
     async (list) => {
       if (isConnected) {
+        console.log('Caching Images FastImage.preload ', list.length);
         FastImage.preload(
           list
             .map((it) => {
-              console.log('Caching Image: ', it);
               return {uri: it};
             })
             .filter((it) => it.uri !== null),
@@ -292,6 +304,7 @@ export default function DataProvider(props) {
   }, [runQuery]);
 
   const processProgramme = async (data) => {
+    console.log('Got programme');
     // Check programme is completed
     if (data.isComplete) {
       setCurrentWeek([]);
@@ -355,7 +368,8 @@ export default function DataProvider(props) {
         return null;
       });
       if (cognitoUser) {
-        getProgramme();
+        // We dont have to get programme from here, it will be fetched on screen focus
+        //getProgramme();
         getWorkoutTags();
       }
     }
@@ -420,6 +434,9 @@ export default function DataProvider(props) {
 
     AsyncStorage.removeItem('@ANALYTICS_ASKED');
     AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+
+    await AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(true));
+    await clearAllFiles();
   }, []);
 
   // ** ** ** ** ** On Demand ** ** ** ** **

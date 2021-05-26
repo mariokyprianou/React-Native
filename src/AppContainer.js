@@ -30,6 +30,30 @@ import ChallengeCompletionScreen from './screens/progress/ChallengeCompletionScr
 import TermsConditionsScreen from './screens/Authentication/TermsConditionsScreen';
 import PrivacyPolicyScreen from './screens/Authentication/PrivacyPolicyScreen';
 
+import {View, Text, ActivityIndicator} from 'react-native';
+
+const DownloadingView = () => {
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        opacity: 0.5,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        alignSelf: 'center',
+      }}>
+      <ActivityIndicator size={'large'} />
+      <Text style={{color: 'white', padding: 20, fontSize: 14}}>
+        Downloading Content..
+      </Text>
+    </View>
+  );
+};
+
 export default function AppContainer() {
   const {loading} = useLoading();
 

@@ -1,6 +1,5 @@
 import {useApolloClient} from '@apollo/client';
-import {useNetInfo} from '@react-native-community/netinfo';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import React, {useMemo, useCallback} from 'react';
 import DataContext from './Context';
 import * as R from 'ramda';

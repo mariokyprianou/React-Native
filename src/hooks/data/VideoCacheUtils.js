@@ -11,13 +11,6 @@ import {FileManager} from 'the-core-ui-module-tdmediamanager';
 const {downloadFilesWithNames, getLocalFileByName} = FileManager;
 
 async function cacheWeekVideos(workouts) {
-  const shouldCache = await shouldCacheWeek();
-
-  console.log('shouldCacheWeekVideos', shouldCache);
-  if (shouldCache !== true) {
-    return;
-  }
-
   // Take out all video urls
   let allVideos = [];
   workouts.map(({exercises}) =>
@@ -58,6 +51,8 @@ async function cacheWeekVideos(workouts) {
     }
   }
 
+  console.log('allVideosToDownload', result.length);
+
   // Download and return files and success
   const res = await downloadFilesWithNames(result);
   console.log('Download result:', res.message);
@@ -66,6 +61,8 @@ async function cacheWeekVideos(workouts) {
   if (res.success) {
     AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(false));
   }
+
+  return res;
 }
 
 async function shouldCacheWeek() {
@@ -75,7 +72,7 @@ async function shouldCacheWeek() {
   console.log('cacheWeekEnabled', cacheWeekEnabled);
 
   const DOWNLOAD_ENABLED =
-    (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+    (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
   const downloadEnabled = JSON.parse(DOWNLOAD_ENABLED);
   console.log('downloadEnabled', downloadEnabled);
 
@@ -114,4 +111,4 @@ async function cacheImages(images) {
   }
 }
 
-export {cacheWeekVideos, cacheImages};
+export {cacheWeekVideos, cacheImages, shouldCacheWeek};

@@ -12,13 +12,12 @@ export default function DataProvider(props) {
 
   async function isNetworkAvailable() {
     const response = await NetInfo.fetch();
-    return response.isConnected && response.isInternetReachable;
+    return response.isConnected; //&& response.isInternetReachable;
   }
 
   const runQuery = useCallback(
     async ({query, setValue, key, variables = {}}) => {
       const res = await isNetworkAvailable();
-
       console.log(`Query for: ${key}`, res ? 'network-only' : 'cache-only');
       return client
         .query({

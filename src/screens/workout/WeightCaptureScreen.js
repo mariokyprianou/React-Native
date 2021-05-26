@@ -137,7 +137,7 @@ export default function WeightCaptureScreen() {
 
   function getChartData(data) {
     const chartData = Object.values(groupByDate(data)).map((it) => {
-      return it.sort((i) => i.weight).reverse()[0];
+      return it.sort((a, b) => a.weight < b.weight)[0];
     });
     return chartData;
   }

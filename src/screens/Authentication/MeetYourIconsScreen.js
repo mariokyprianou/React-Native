@@ -519,17 +519,71 @@ export default function MeetYourIconsScreen() {
             {MeetYourIconsDict.ChangeProgrammes}
           </Text>
           <Spacer height={170} />
-
-          <View style={styles.logoContainer}>
-            <Image source={logo} style={styles.image} />
-            <Text style={styles.selectText}>
-              {MeetYourIconsDict.SelectYourProgramme}
-            </Text>
-          </View>
         </ScrollView>
       </View>
     );
   };
+
+  const renderHeaderItems = () => (
+    <>
+      <View style={styles.logoContainer}>
+        <Image source={logo} style={styles.image} />
+        <Text style={styles.selectText}>
+          {MeetYourIconsDict.SelectYourProgramme}
+        </Text>
+      </View>
+
+      <View style={styles.cantChooseContainer}>
+        <View style={styles.cantChooseStyle}>
+          <CantChooseButton
+            onPress={() => navigation.navigate('HelpMeChoose')}
+            navigation={navigation}
+          />
+        </View>
+      </View>
+    </>
+  );
+
+  const renderArrows = () => (
+    <>
+      <View style={styles.leftIconContainer}>
+        <TouchableOpacity
+          style={styles.arrowsTouchableStyle}
+          onPress={() => handlePress('left')}
+          disabled={activeIndex === 0 ? true : false}>
+          <TDIcon
+            input={isRTL() ? 'chevron-right' : 'chevron-left'}
+            inputStyle={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.rightIconContainer}>
+        <TouchableOpacity
+          style={styles.arrowsTouchableStyle}
+          onPress={() => handlePress('right')}
+          disabled={activeIndex === trainers.length - 1 ? true : false}>
+          <TDIcon
+            input={isRTL() ? 'chevron-left' : 'chevron-right'}
+            inputStyle={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+
+  const renderFadeView = () => (
+    <>
+      <View style={styles.fadeContainer} pointerEvents="none">
+        <FadingBottomView
+          color="custom"
+          height={180}
+          customStart={colors.veryLightPinkTwo0}
+          customEnd={colors.veryLightPinkTwo100}
+        />
+      </View>
+    </>
+  );
 
   return (
     <View style={styles.container}>
@@ -568,47 +622,9 @@ export default function MeetYourIconsScreen() {
         />
       </View> */}
 
-      <View style={styles.cantChooseContainer}>
-        <View style={styles.cantChooseStyle}>
-          <CantChooseButton
-            onPress={() => navigation.navigate('HelpMeChoose')}
-            navigation={navigation}
-          />
-        </View>
-      </View>
-
-      <View style={styles.leftIconContainer}>
-        <TouchableOpacity
-          style={styles.arrowsTouchableStyle}
-          onPress={() => handlePress('left')}
-          disabled={activeIndex === 0 ? true : false}>
-          <TDIcon
-            input={isRTL() ? 'chevron-right' : 'chevron-left'}
-            inputStyle={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.rightIconContainer}>
-        <TouchableOpacity
-          style={styles.arrowsTouchableStyle}
-          onPress={() => handlePress('right')}
-          disabled={activeIndex === trainers.length - 1 ? true : false}>
-          <TDIcon
-            input={isRTL() ? 'chevron-left' : 'chevron-right'}
-            inputStyle={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.fadeContainer} pointerEvents="none">
-        <FadingBottomView
-          color="custom"
-          height={180}
-          customStart={colors.veryLightPinkTwo0}
-          customEnd={colors.veryLightPinkTwo100}
-        />
-      </View>
+      {renderHeaderItems()}
+      {renderArrows()}
+      {renderFadeView()}
 
       {switchProgramme === true ? (
         // Check if selected programme already has user progress

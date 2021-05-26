@@ -30,7 +30,7 @@ import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import ShareProvider from './hooks/share/ShareProvider';
 import QueryProvider from './hooks/customQuery/Provider';
 import {firebase} from '@react-native-firebase/analytics';
-import { SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import OfflineHandlerProvider from './hooks/offlineHandler/Provider';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
@@ -55,14 +55,13 @@ const App = () => {
       const gqlClient = await TDGraphQLProvider();
       setClient(gqlClient);
 
-
-      await firebase.initializeApp();
+      if (!firebase.apps.length) {
+        await firebase.initializeApp();
+      }
     }
 
     BuildClient();
   }, []);
-
-
 
   const validateChecksum = async () => {
     const valid = await isValidChecksum();
@@ -88,7 +87,6 @@ const App = () => {
 
     validateChecksum();
     languageSet();
-
   }, []);
 
   if (!validChecksum) {
@@ -106,10 +104,10 @@ const App = () => {
       )}
       <SafeAreaProvider>
         <ApolloProvider client={client}>
-        <QueryProvider>
-          <ScaleProvider config={{height: 667, width: 375}}>
-            <ThemeProvider>
-              <DictionaryProvider>
+          <QueryProvider>
+            <ScaleProvider config={{height: 667, width: 375}}>
+              <ThemeProvider>
+                <DictionaryProvider>
                   <DataProvider>
                     <UserDataProvider>
                       <CommonDataProvider>
@@ -133,9 +131,9 @@ const App = () => {
                       </CommonDataProvider>
                     </UserDataProvider>
                   </DataProvider>
-              </DictionaryProvider>
-            </ThemeProvider>
-          </ScaleProvider>
+                </DictionaryProvider>
+              </ThemeProvider>
+            </ScaleProvider>
           </QueryProvider>
         </ApolloProvider>
       </SafeAreaProvider>

@@ -189,6 +189,14 @@ const enGB = {
       '• The designated account will be charged for renewal within 24-hours prior to the end of the current period',
     SubscriptionTermsThirdPoint:
       '• Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your Apple Account Settings after purchase',
+
+    SubscriptionTermsFirstPointAndroid:
+      '• Payment will be charged to your Google Play Account at confirmation of purchase and will automatically renew (at the duration/price selected) unless auto-renew is turned off at least 24 hrs before the end of the current period',
+    SubscriptionTermsSecondPointAndroid:
+      '• The designated account will be charged for renewal within 24-hours prior to the end of the current period',
+    SubscriptionTermsThirdPointAndroid:
+      '• Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your Google Play Account Settings after purchase',
+
     SubscriptionPrivacyLink: '• The Privacy Policy can be accessed here',
     SubscriptionTermsLink: '• The Terms of Use can be accessed here',
     TermsPattern: /here/,
@@ -362,6 +370,9 @@ const enGB = {
     WeightsSetText: 'Set',
     WeightsRepsText: SharedDict.Reps,
     WeightsRepsSecsText: SharedDict.Secs,
+
+    WeightsRepsSelector: 'Reps',
+    WeightsSecsSelector: 'Secs',
 
     RestDay: 'REST DAY',
     RestDayLower: 'Rest day',

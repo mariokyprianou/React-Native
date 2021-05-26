@@ -325,23 +325,25 @@ export default function ExerciseView(props) {
       <View style={styles.contentStyle}>
         <View style={styles.titleContainerStyle}>
           <Text style={styles.exerciseTitleStyle}>{exercise.name}</Text>
-          <TouchableOpacity
-            activeOpacity={exerciseCompleted ? 1.0 : 0.1}
-            onPress={
-              exerciseCompleted || countDown ? null : onExerciseCompleted
-            }>
-            <Image
-              source={completeIcon}
-              style={{opacity: exerciseCompleted ? 0.4 : 1.0}}
-            />
-            <Image
-              style={{
-                ...styles.checkIconStyle,
-                opacity: exerciseCompleted ? 0.4 : 1.0,
-              }}
-              source={checkIcon}
-            />
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity
+              activeOpacity={exerciseCompleted ? 1.0 : 0.1}
+              onPress={
+                exerciseCompleted || countDown ? null : onExerciseCompleted
+              }>
+              <Image
+                source={completeIcon}
+                style={{opacity: exerciseCompleted ? 0.4 : 1.0}}
+              />
+              <Image
+                style={{
+                  ...styles.checkIconStyle,
+                  opacity: exerciseCompleted ? 0.4 : 1.0,
+                }}
+                source={checkIcon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <ScrollView>

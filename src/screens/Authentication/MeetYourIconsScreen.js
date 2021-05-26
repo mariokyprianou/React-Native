@@ -39,7 +39,8 @@ import useCommonData from '../../hooks/data/useCommonData';
 import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useUserData from '../../hooks/data/useUserData';
-import {getArgumentValues} from 'graphql/execution/values';
+import {Dimensions} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logoDark.png');
@@ -104,7 +105,7 @@ export default function MeetYourIconsScreen() {
       }
 
       // Swipe UI and set state to trigger selectedProgramme change
-      iconsSwiper.current.scrollTo(index, true);
+      scrollTo(index);
       setActiveIndex(index);
     }
   }, [trainers, iconsSwiper, suggestedProgramme]);
@@ -322,11 +323,16 @@ export default function MeetYourIconsScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   function handlePress(direction) {
     if (direction === 'left' && activeIndex !== 0) {
-      iconsSwiper.current.scrollTo(activeIndex - 1, true);
+      scrollTo(activeIndex - 1);
     }
     if (direction === 'right' && activeIndex !== trainers.length - 1) {
-      iconsSwiper.current.scrollTo(activeIndex + 1, true);
+      scrollTo(activeIndex + 1);
     }
+  }
+
+  function scrollTo(index) {
+    iconsSwiper.current.scrollTo(index, true);
+    // iconsSwiper.current.snapToItem(index, true);
   }
 
   // Same trainer, switch between programmes
@@ -440,6 +446,91 @@ export default function MeetYourIconsScreen() {
     </View>
   );
 
+  const renderTrainer = (trainer) => {
+    let currentProgram =
+      (selectedProgram &&
+        trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
+      trainer.programmes[0];
+    const {numberOfWeeks, description, firstWeek} = currentProgram;
+
+    const extendedWeek = addWorkoutDates(addRestDays(firstWeek), new Date());
+
+    return (
+      <View
+        style={{
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height,
+          alignSelf: 'center',
+        }}>
+        <ScrollView
+          style={styles.sliderContainer}
+          onScroll={onScroll}
+          scrollEventThrottle={10}
+          showsVerticalScrollIndicator={false}
+          bounces={false}>
+          <View style={styles.cardContainer}>
+            <TrainerCard
+              trainer={trainer}
+              onPressGymHome={switchProgram}
+              currentProgram={currentProgram}
+              suggestedEnv={currentProgram?.environment || null}
+            />
+          </View>
+
+          <Spacer height={90} />
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.text}>{description}</Text>
+          </View>
+          <Spacer height={27} />
+          <View style={styles.textContainer}>
+            <Text
+              style={
+                styles.upperTextBold
+              }>{`${firstWeek.length} ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
+            <Text style={styles.upperText}>{MeetYourIconsDict.Customise}</Text>
+
+            <Text
+              style={
+                styles.heading
+              }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
+            <Spacer height={20} />
+            {extendedWeek &&
+              extendedWeek.map(({duration, intensity, name, day}, index) => {
+                return (
+                  <>
+                    <View
+                      style={index === 0 ? styles.line : styles.innerLine}
+                    />
+                    <CarouselWorkoutCard
+                      title={name}
+                      day={day}
+                      duration={duration}
+                      intensity={intensity}
+                    />
+                  </>
+                );
+              })}
+          </View>
+          <Text
+            style={
+              styles.weeksText
+            }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
+          <Text style={{...styles.upperText, textAlign: 'center'}}>
+            {MeetYourIconsDict.ChangeProgrammes}
+          </Text>
+          <Spacer height={170} />
+
+          <View style={styles.logoContainer}>
+            <Image source={logo} style={styles.image} />
+            <Text style={styles.selectText}>
+              {MeetYourIconsDict.SelectYourProgramme}
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       {safeArea && <View style={styles.safeArea} />}
@@ -452,91 +543,30 @@ export default function MeetYourIconsScreen() {
           // Handle selected programme change
           setActiveIndex(index);
         }}>
-        {trainers.map((trainer) => {
-          let currentProgram =
-            (selectedProgram &&
-              trainer.programmes.find((it) => it.id === selectedProgram.id)) ||
-            trainer.programmes[0];
-          const {numberOfWeeks, description, firstWeek} = currentProgram;
-
-          const extendedWeek = addWorkoutDates(
-            addRestDays(firstWeek),
-            new Date(),
-          );
-
-          return (
-            <ScrollView
-              style={styles.sliderContainer}
-              onScroll={onScroll}
-              scrollEventThrottle={10}
-              showsVerticalScrollIndicator={false}
-              bounces={false}>
-              <View style={styles.cardContainer}>
-                <TrainerCard
-                  trainer={trainer}
-                  onPressGymHome={switchProgram}
-                  currentProgram={currentProgram}
-                  suggestedEnv={currentProgram?.environment || null}
-                />
-              </View>
-
-              <Spacer height={90} />
-              <View style={styles.descriptionContainer}>
-                <Text style={styles.text}>{description}</Text>
-              </View>
-              <Spacer height={27} />
-              <View style={styles.textContainer}>
-                <Text
-                  style={
-                    styles.upperTextBold
-                  }>{`${firstWeek.length} ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
-                <Text style={styles.upperText}>
-                  {MeetYourIconsDict.Customise}
-                </Text>
-
-                <Text
-                  style={
-                    styles.heading
-                  }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
-                <Spacer height={20} />
-                {extendedWeek &&
-                  extendedWeek.map(
-                    ({duration, intensity, name, day}, index) => {
-                      return (
-                        <>
-                          <View
-                            style={index === 0 ? styles.line : styles.innerLine}
-                          />
-                          <CarouselWorkoutCard
-                            title={name}
-                            day={day}
-                            duration={duration}
-                            intensity={intensity}
-                          />
-                        </>
-                      );
-                    },
-                  )}
-              </View>
-              <Text
-                style={
-                  styles.weeksText
-                }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
-              <Text style={{...styles.upperText, textAlign: 'center'}}>
-                {MeetYourIconsDict.ChangeProgrammes}
-              </Text>
-              <Spacer height={170} />
-
-              <View style={styles.logoContainer}>
-                <Image source={logo} style={styles.image} />
-                <Text style={styles.selectText}>
-                  {MeetYourIconsDict.SelectYourProgramme}
-                </Text>
-              </View>
-            </ScrollView>
-          );
-        })}
+        {trainers.map((trainer) => renderTrainer(trainer))}
       </Swiper>
+
+      {/* <View style={{flex: 1}}>
+        <Carousel
+          ref={iconsSwiper}
+          data={trainers}
+          renderItem={({item}) => renderTrainer(item)}
+          inactiveSlideOpacity={1}
+          inactiveSlideScale={1}
+          sliderWidth={Dimensions.get('window').width}
+          itemWidth={Dimensions.get('window').width}
+          slideStyle={{width: Dimensions.get('window').width}}
+          hasParallaxImages={false}
+          onSnapToItem={(index) => {
+            setActiveIndex(index);
+          }}
+          bounces={false}
+          loop={true}
+          enableMomentum={true}
+          callbackOffsetMargin={100}
+          decelerationRate={'fast'}
+        />
+      </View> */}
 
       <View style={styles.cantChooseContainer}>
         <View style={styles.cantChooseStyle}>

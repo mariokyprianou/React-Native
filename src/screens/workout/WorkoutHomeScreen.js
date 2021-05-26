@@ -501,7 +501,23 @@ export default function WorkoutHomeScreen() {
         <DraggableFlatList
           data={workoutsToDisplay}
           keyExtractor={(item, index) => `${index}`}
-          onDragEnd={({data}) => updateOrder(data)}
+          onDragEnd={({data, from, to}) => {
+            const lastValidIndex = workoutsToDisplay.indexOf(
+              workoutsToDisplay
+                .slice()
+                .filter(
+                  (it) =>
+                    it.completedAt ||
+                    differenceInDays(it.exactDate, new Date()) < 0,
+                )
+                .pop(),
+            );
+
+            // Only do order cange if its a valid position
+            if (from !== to && (lastValidIndex === -1 || to > lastValidIndex)) {
+              updateOrder(data);
+            }
+          }}
           renderItem={({item, index, drag, isActive}) => {
             return (
               <View

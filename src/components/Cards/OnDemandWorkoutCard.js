@@ -28,7 +28,7 @@ export default function OnDemandWorkoutCard({
   onPressCard,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
 
@@ -80,24 +80,26 @@ export default function OnDemandWorkoutCard({
       color: colors.brownGrey100,
     },
     textContainer: {
+      padding: getWidth(15),
+      flex: 1,
       flexDirection: 'column',
-      width: getWidth(190),
+      justifyContent: 'space-between',
     },
     trainerName: {
       ...textStyles.semiBold10_brownGrey100,
+      color: colors.paleGrey100,
       letterSpacing: 1.0,
-      height: getHeight(14),
-      lineHeight: getHeight(14),
+      lineHeight: getHeight(10),
       textAlign: 'left',
     },
-    nameContainer: {
-      flexDirection: 'row',
-      marginBottom: getHeight(17),
-    },
+    nameContainer: {},
     workoutName: {
       ...textStyles.semiBold14_black100,
       fontSize: fontSize(15),
+      lineHeight: getHeight(14),
+      letterSpacing: -0.22,
       textAlign: 'left',
+      marginTop: 3,
     },
     detailContainer: {
       flexDirection: 'row',
@@ -110,8 +112,9 @@ export default function OnDemandWorkoutCard({
     },
     dotContainer: {
       backgroundColor: colors.brownGrey100,
-      height: 3,
-      width: 3,
+      height: getWidth(2),
+      width: getWidth(2),
+      borderRadius: radius(1),
       alignItems: 'center',
       marginLeft: getWidth(8),
       marginRight: getWidth(8),
@@ -165,10 +168,10 @@ export default function OnDemandWorkoutCard({
           </View>
         )}
 
-        <View style={{padding: getWidth(20)}}>
+        <View style={{}}>
           <View style={styles.textContainer}>
-            <Text style={styles.trainerName}>{trainerName}</Text>
             <View style={styles.nameContainer}>
+              <Text style={styles.trainerName}>{trainerName}</Text>
               <Text style={styles.workoutName}>{title}</Text>
             </View>
 

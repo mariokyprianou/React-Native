@@ -459,13 +459,19 @@ const PurchaseModalScreen = ({}) => {
             {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
           </Text>
           <Text style={styles.termsText}>
-            {PurchaseDict.SubscriptionTermsFirstPoint}
+            {Platform.OS === 'ios'
+              ? PurchaseDict.SubscriptionTermsFirstPoint
+              : PurchaseDict.SubscriptionTermsFirstPointAndroid}
           </Text>
           <Text style={styles.termsText}>
-            {PurchaseDict.SubscriptionTermsSecondPoint}
+            {Platform.OS === 'ios'
+              ? PurchaseDict.SubscriptionTermsSecondPoint
+              : PurchaseDict.SubscriptionTermsSecondPointAndroid}
           </Text>
           <Text style={styles.termsText}>
-            {PurchaseDict.SubscriptionTermsThirdPoint}
+            {Platform.OS === 'ios'
+              ? PurchaseDict.SubscriptionTermsThirdPoint
+              : PurchaseDict.SubscriptionTermsThirdPointAndroid}
           </Text>
 
           <StylisedText

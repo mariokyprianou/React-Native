@@ -713,10 +713,11 @@ export default function ThemeProvider({children}) {
     exerciseTitleStyle: {
       ...textStyles.bold21_black100,
       textAlign: 'left',
-      flex: 1,
+      lineHeight: getHeight(22),
+      flex: 0.9,
     },
     exerciseDescriptionStyle: {
-      marginTop: getHeight(5),
+      marginTop: getHeight(8),
       marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',

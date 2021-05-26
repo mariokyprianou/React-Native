@@ -172,24 +172,27 @@ export default function ExerciseView(props) {
     // Update Sets states
     const newSets = sets.map((it, index) => {
       if (index <= completedIndex) {
+        if (index === completedIndex) {
+          if (it.restTime && it.restTime > 0) {
+            setRestTime(it.restTime * 1000);
+          }
+
+          if (it.quantity && it.quantity > 0 && props.setType !== 'REPS') {
+            setExerciseTime(it.quantity * 1000);
+          }
+        }
+
         return {
           ...it,
           state: 'completed',
         };
       } else if (index === completedIndex + 1) {
-        if (it.restTime && it.restTime > 0) {
-          setRestTime(it.restTime * 1000);
-        }
-
-        if (it.quantity && it.quantity > 0 && props.setType !== 'REPS') {
-          setExerciseTime(it.quantity * 1000);
-        }
-
         return {
           ...it,
           state: 'active',
         };
       }
+
       return it;
     });
 
@@ -198,10 +201,7 @@ export default function ExerciseView(props) {
     // start rest timer
     if (restTime) {
       setCountDown(true);
-    }
-
-    // show set completion modal with weights if applicable
-    if (exercise.weight) {
+    } else if (exercise.weight) {
       setSetComplete(true);
     }
 
@@ -404,6 +404,9 @@ export default function ExerciseView(props) {
               console.log('starting rest');
               if (props.isContinuous && !props.isLastExercise) {
                 setShowUpNextLabel(true);
+              } else if (!props.isContinuous && exercise.weight) {
+                setCountDown(false);
+                setSetComplete(true);
               }
             }}
             setType={props.setType}
@@ -451,8 +454,6 @@ function TimerView(props) {
   // When timer is paused by user.
   useEffect(() => {
     if (props.isContinuous) {
-      console.log('isWorkoutTimerRunning: ', isWorkoutTimerRunning);
-      console.log('Active: ', active);
       toggle();
     }
   }, [isWorkoutTimerRunning]);

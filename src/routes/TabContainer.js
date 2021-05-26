@@ -48,48 +48,48 @@ export default function TabContainer() {
     }
   }, [changeDevice]);
 
-  useEffect(() => {
-    let screenshotListener;
+  // useEffect(() => {
+  //   let screenshotListener;
 
-    if (Platform.OS === 'ios') {
-      ScreenCapture.preventScreenCaptureAsync();
+  //   if (Platform.OS === 'ios') {
+  //     ScreenCapture.preventScreenCaptureAsync();
 
-      screenshotListener = ScreenCapture.addScreenshotListener(() => {
-        displayAlert({
-          text: TabsTitleDict.ScreenShotMessage,
-          buttons: [
-            {
-              text: TabsTitleDict.ScreenShotButton,
-              onPress: () => {
-                increaseShotTaken()
-                  .then((res) => {
-                    if (
-                      res &&
-                      res.data.screenshotTaken &&
-                      res.data.screenshotTaken.success
-                    ) {
-                      if (res.data.screenshotTaken.screenshotsTaken >= 7) {
-                        setSuspendedAccount(true);
-                      }
-                    }
-                  })
-                  .catch((err) => {
-                    console.log('increaseShotTaken - err', err);
-                  });
-              },
-            },
-          ],
-        });
-      });
-    }
+  //     screenshotListener = ScreenCapture.addScreenshotListener(() => {
+  //       displayAlert({
+  //         text: TabsTitleDict.ScreenShotMessage,
+  //         buttons: [
+  //           {
+  //             text: TabsTitleDict.ScreenShotButton,
+  //             onPress: () => {
+  //               increaseShotTaken()
+  //                 .then((res) => {
+  //                   if (
+  //                     res &&
+  //                     res.data.screenshotTaken &&
+  //                     res.data.screenshotTaken.success
+  //                   ) {
+  //                     if (res.data.screenshotTaken.screenshotsTaken >= 7) {
+  //                       setSuspendedAccount(true);
+  //                     }
+  //                   }
+  //                 })
+  //                 .catch((err) => {
+  //                   console.log('increaseShotTaken - err', err);
+  //                 });
+  //             },
+  //           },
+  //         ],
+  //       });
+  //     });
+  //   }
 
-    return () => {
-      if (Platform.OS === 'ios') {
-        screenshotListener.remove();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   return () => {
+  //     if (Platform.OS === 'ios') {
+  //       screenshotListener.remove();
+  //     }
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const tabIcons = {
     workout: require('../../assets/icons/workout.png'),

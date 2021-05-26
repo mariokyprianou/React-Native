@@ -64,11 +64,13 @@ export default function OnboardingScreen() {
       marginBottom: getHeight(10),
     },
     loginContainer: {
-      width: getWidth(100),
+      width: getWidth(120),
+      flex: 1,
     },
     loginText: {
       ...textStyles.bold15_black100,
       textAlign: 'left',
+      marginLeft: getWidth(10),
     },
     buttonWrapper: {
       backgroundColor: 'transparent',
@@ -91,7 +93,9 @@ export default function OnboardingScreen() {
   const Login = () => {
     return (
       <View style={styles.loginContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity
+          style={{flex: 1, justifyContent: 'center'}}
+          onPress={() => navigation.navigate('Login')}>
           <Text style={styles.loginText}>{ButtonDict.Login}</Text>
         </TouchableOpacity>
       </View>

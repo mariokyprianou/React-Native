@@ -67,8 +67,6 @@ export default function ({
       videoRef.current.pause();
 
       // Only call if any other than current is playing
-    } else if (!isPaused) {
-      videoRef.current.pause();
     }
   }, [currentExerciseIndex, index]);
 

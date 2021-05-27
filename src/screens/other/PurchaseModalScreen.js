@@ -213,6 +213,10 @@ const PurchaseModalScreen = ({}) => {
   // Current purchase error
   useEffect(() => {
     if (currentPurchaseError) {
+      if (currentPurchaseError?.code === IAPErrorCode.E_USER_CANCELLED) {
+        return;
+      }
+
       displayAlert({
         text:
           currentPurchaseError?.code === IAPErrorCode.E_ALREADY_OWNED

@@ -339,19 +339,19 @@ const SettingsScreen = ({}) => {
         />
       ),
     },
-    {
-      customComponent: () => (
-        <SettingsCell
-          title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
-          titleTextStyle={styles.switchTitleStyle}
-          titleSwitchContainerStyle={styles.switchTitleContainerStyle}
-          showSwitch
-          switchValue={marketingPrefNotifications}
-          switchStyle={styles.switchStyle}
-          onSwitchChange={onToggleMarketingPrefNotifications}
-        />
-      ),
-    },
+    // {
+    //   customComponent: () => (
+    //     <SettingsCell
+    //       title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
+    //       titleTextStyle={styles.switchTitleStyle}
+    //       titleSwitchContainerStyle={styles.switchTitleContainerStyle}
+    //       showSwitch
+    //       switchValue={marketingPrefNotifications}
+    //       switchStyle={styles.switchStyle}
+    //       onSwitchChange={onToggleMarketingPrefNotifications}
+    //     />
+    //   ),
+    // },
     {
       customComponent: () => (
         <View style={{marginTop: getHeight(8)}}>

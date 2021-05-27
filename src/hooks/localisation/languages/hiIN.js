@@ -84,6 +84,7 @@ const hiIN = {
     SaveChanges: 'Save changes',
     NeedToSignOut: 'Need to sign out?',
     Logout: SharedDict.Logout,
+    Close: 'CLOSE',
   },
 
   AuthDict: {

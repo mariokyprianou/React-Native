@@ -134,9 +134,9 @@ export default function UserDataProvider(props) {
       '@NOTIFICATIONS_ASKED',
     );
 
-    if (R.isNil(notificationsEnabled)) {
-      return 'Notifications';
-    }
+    // if (R.isNil(notificationsEnabled)) {
+    //   return 'Notifications';
+    // }
     if (R.isNil(analyticsEnabled)) {
       return 'Analytics';
     }

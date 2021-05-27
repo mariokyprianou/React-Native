@@ -35,7 +35,10 @@ export default function EmailVerificationScreen() {
         .then(async () => {
           clearInterval(interval);
 
+          // New user needs to set these agains
           await AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(true));
+          await AsyncStorage.removeItem('@ANALYTICS_ASKED');
+          await AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 
           await updateDefaultPreferences();
           const permissionNeeded = await permissionsNeeded();

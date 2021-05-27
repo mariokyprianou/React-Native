@@ -157,6 +157,7 @@ export default function DefaultButton({
     saveChanges: ButtonDict.SaveChanges,
     needToSignOut: ButtonDict.NeedToSignOut,
     logout: ButtonDict.Logout,
+    close: ButtonDict.Close,
   };
 
   const iconType = {

@@ -26,7 +26,7 @@ import displayAlert from '../utils/DisplayAlert';
 import ScreenshotTaken from '../apollo/mutations/ScreenshotTaken';
 import {useMutation} from '@apollo/client';
 
-const notificationCount = 2;
+const notificationCount = 0;
 
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **

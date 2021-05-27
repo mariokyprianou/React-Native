@@ -53,20 +53,6 @@ const notifications = [
     sentAt: new Date(),
     readAt: null,
   },
-  {
-    id: 78789789789,
-    subject: 'VERY VERY VERY LOOOOOOOOOOOOOOOOOOOOOOOOOONG SUBJECT',
-    message: 'Message Full Of Infoooooooooooooooooooooooooooooooooooooooooo',
-    sentAt: new Date(),
-    readAt: null,
-  },
-  {
-    id: 789789788,
-    subject: 'SUBJECT',
-    message: 'Message',
-    sentAt: new Date(),
-    readAt: new Date(),
-  },
 ];
 
 export default function ProfileScreenUI({onPressNeedHelp}) {
@@ -94,7 +80,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const [countryLookup, setCountryLookup] = useState();
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
-  const [storedNotifications, setStoredNotifications] = useState(notifications);
+  const [storedNotifications, setStoredNotifications] = useState();
 
   const {userData, setUserData} = useUserData();
   const {reset} = useData();
@@ -190,7 +176,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     },
     formContainer: {
       width: '90%',
-      marginTop: getHeight(30),
+      marginTop: getHeight(10),
     },
     buttonsBottomContainer: {
       flex: 1,
@@ -574,7 +560,9 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
         {userCard()}
-        {notificationsUI()}
+        {storedNotifications &&
+          storedNotifications.length > 0 &&
+          notificationsUI()}
         {form()}
         {buttons()}
       </ScrollView>

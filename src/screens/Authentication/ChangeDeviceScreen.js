@@ -78,7 +78,6 @@ export default function ChangeDeviceScreen() {
           setChangeDevice(null);
 
           // Reset new device settings
-          await AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(true));
           await AsyncStorage.removeItem('@ANALYTICS_ASKED');
           await AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 

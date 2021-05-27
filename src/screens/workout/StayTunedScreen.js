@@ -93,6 +93,17 @@ export default function StayTuned() {
     );
   }
 
+  const renderButton = () => (
+    <View style={styles.buttonContainer}>
+      <DefaultButton
+        type="close"
+        //icon="reminder"
+        variant="white"
+        onPress={() => navigation.goBack()} // handlePressRemindMe}
+      />
+    </View>
+  );
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   if (type === 'workoutsComplete') {
     return (
@@ -109,14 +120,7 @@ export default function StayTuned() {
                 {WorkoutDict.StayTuned(name, format(date, 'do LLLL'))}
               </Text>
             </View>
-            <View style={styles.buttonContainer}>
-              <DefaultButton
-                type="remindMe"
-                icon="reminder"
-                variant="white"
-                onPress={handlePressRemindMe}
-              />
-            </View>
+            {renderButton()}
           </ImageBackground>
         </View>
         <Header
@@ -140,14 +144,7 @@ export default function StayTuned() {
                 {WorkoutDict.ProgrammeComplete(name, venue)}
               </Text>
             </View>
-            <View style={styles.buttonContainer}>
-              <DefaultButton
-                type="remindMe"
-                icon="reminder"
-                variant="white"
-                onPress={handlePressRemindMe}
-              />
-            </View>
+            {renderButton()}
           </ImageBackground>
         </View>
         <Header

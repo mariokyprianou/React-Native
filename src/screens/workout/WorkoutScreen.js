@@ -52,6 +52,7 @@ export default function WorkoutScreen() {
     analyticsEvents,
     suspendedAccount,
     isSubscriptionActive,
+    getProfile,
   } = useUserData();
 
   const {getPreferences, preferences} = useUserData();
@@ -94,7 +95,8 @@ export default function WorkoutScreen() {
         },
       })
         .then(async (res) => {
-          console.log('RES', res);
+          console.log('startOnDemandWorkout: ', res);
+          await getProfile();
         })
         .catch((err) => {
           console.log(err, '<---change device permissions error');

@@ -181,7 +181,6 @@ export default function RegisterScreen() {
       height: getWidth(22),
       borderWidth: getWidth(1),
       borderColor: colors.paleGrey100,
-      borderRadius: radius(1),
     },
     iconStyle: {
       height: getHeight(16),

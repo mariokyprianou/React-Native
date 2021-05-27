@@ -162,8 +162,12 @@ export default function DataProvider(props) {
 
   async function checkImages(images) {
     if (images.length === 1) {
+      console.log('SET before image only ', images[0].takenOn);
       setBeforePic(images[0]);
     } else {
+      console.log('SET before image ', images[0].takenOn);
+      console.log('SET after image  ', images[images.length - 1].takenOn);
+
       setAfterPic(images[0]);
       setBeforePic(images[images.length - 1]);
     }

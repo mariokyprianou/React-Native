@@ -237,7 +237,12 @@ export default function ProgressScreen() {
                       title={name}
                       image={fakeGraph}
                       imageUrl={imageUrl}
-                      onPress={() =>
+                      onPress={() => {
+                        if (!isConnected) {
+                          displayAlert({text: OfflineMessage});
+                          return;
+                        }
+
                         navigation.navigate('Challenge', {
                           id: id,
                           name: name,
@@ -247,8 +252,8 @@ export default function ProgressScreen() {
                           duration: duration,
                           unitType: type === 'STOPWATCH' ? 'seconds' : unitType,
                           weightPreference: weightLabel,
-                        })
-                      }
+                        });
+                      }}
                     />
                   );
                 })}

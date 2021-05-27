@@ -131,6 +131,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           value: GenderDict.Female,
         });
       }
+
+      if (userData.country !== null) {
+        updateValue({
+          name: 'profile_country',
+          value: userData.country,
+        });
+      }
     }
   }, [updateValue]);
 
@@ -515,7 +522,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         paddingRight: getWidth(6),
         marginTop: -getHeight(5),
       },
-      placeholder: userData.country || null,
+      placeholder: countriesList[0],
       data: countriesList,
     },
   ];

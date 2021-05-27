@@ -242,8 +242,7 @@ export default function WorkoutCompleteScreen() {
       .catch((err) => {
         console.log(err, '<---workout complete error');
         handleOffline(workoutComplete, firebaseEventPayload);
-      })
-      .finally(() => setLoading(false));
+      });
   }
 
   async function handleOffline(workoutComplete, firebaseEventPayload) {
@@ -256,6 +255,7 @@ export default function WorkoutCompleteScreen() {
     await getProgramme();
     await getProfile();
 
+    setLoading(false);
     navigation.reset({
       index: 0,
       routes: [{name: 'TabContainer'}],

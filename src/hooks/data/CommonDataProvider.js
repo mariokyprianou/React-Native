@@ -71,7 +71,9 @@ export default function DataProvider(props) {
             //     console.log("FastImagePreload: onboarding", images.length);
             // }
 
-            setOnboarding(data);
+            if (data && data.length > 0) {
+              setOnboarding(data);
+            }
           }
         },
       });

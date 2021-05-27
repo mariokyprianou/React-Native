@@ -49,7 +49,7 @@ export default function WeightCaptureScreen() {
   const [historyData, setHistoryData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [dropdownData, setDropDownData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useBackHandler(() => {
     navigation.goBack();
@@ -83,19 +83,18 @@ export default function WeightCaptureScreen() {
         a.setNumber > b.setNumber,
     );
 
-    setHistoryData(data);
-    setFilteredData(data);
-
     const dropdown = data
       .map((event) => `${event.quantity}`)
       .filter((value, index, self) => self.indexOf(value) === index);
-
-    setDropDownData(dropdown);
 
     // Initial date is last available3 date from historic date
     if (data.length > 0) {
       setSelectedDate(parseISO(data.pop().createdAt));
     }
+
+    setHistoryData(data);
+    setFilteredData(data);
+    setDropDownData(dropdown);
   }, []);
 
   const dropDownSelect = getValues('repsHistory').repsHistory;
@@ -121,11 +120,15 @@ export default function WeightCaptureScreen() {
       setFilteredData(filter);
 
       // If selectedDate dowsnt have any data in the current filtered array, set date to the latest available
-      const dateHasData = filter.find((it) =>
-        isSameDay(parseISO(it.createdAt), selectedDate),
-      );
-      if (!dateHasData) {
+      if (!selectedDate) {
         setSelectedDate(parseISO(filter[filter.length - 1].createdAt));
+      } else {
+        const dateHasData = filter.find((it) =>
+          isSameDay(parseISO(it.createdAt), selectedDate),
+        );
+        if (!dateHasData) {
+          setSelectedDate(parseISO(filter[filter.length - 1].createdAt));
+        }
       }
     }
   }, [historyData, dropDownSelect]);

@@ -77,7 +77,10 @@ export default function ChangeDeviceScreen() {
           // Reset change devoce data
           setChangeDevice(null);
 
+          // Reset new device settings
           await AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(true));
+          await AsyncStorage.removeItem('@ANALYTICS_ASKED');
+          await AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 
           const permissionNeeded = await permissionsNeeded();
 

@@ -49,8 +49,6 @@ export default function DataProvider(props) {
   const [currentWeek, setCurrentWeek] = useState();
   const [nextWeek, setNextWeek] = useState();
 
-  //const {setDownloading} = useLoading();
-
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(async (numberOfWorkouts) => {
     let days = await AsyncStorage.getItem('@CURRENT_WEEK');
@@ -362,21 +360,6 @@ export default function DataProvider(props) {
     setProgramme(newData);
   };
 
-  useEffect(() => {
-    async function checkUser() {
-      const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
-        return null;
-      });
-      if (cognitoUser) {
-        // We dont have to get programme from here, it will be fetched on screen focus
-        //getProgramme();
-        getWorkoutTags();
-      }
-    }
-
-    checkUser();
-  }, []);
-
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 
   const getDownloadEnabled = useCallback(async () => {
@@ -385,7 +368,8 @@ export default function DataProvider(props) {
     setDownloadEnabled(enabled);
   }, []);
 
-  // Current Workout data
+  // ** ** ** ** **Current workout data ** ** ** ** **
+
   const [selectedWorkout, setSelectedWorkout] = useState();
   const [isSelectedWorkoutOnDemand, setIsSelectedWorkoutOnDemand] = useState(
     false,
@@ -421,23 +405,6 @@ export default function DataProvider(props) {
     });
 
     return wasToday !== undefined ? true : false;
-  }, []);
-
-  const reset = useCallback(async () => {
-    setProgramme(null);
-    setCurrentWeek(null);
-    setNextWeek(null);
-    setWorkoutTags(null);
-
-    AsyncStorage.removeItem('@CURRENT_WEEK');
-    AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
-
-    // We don't remove them so they dont get shown on login again
-    //AsyncStorage.removeItem('@ANALYTICS_ASKED');
-    //AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
-
-    await AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(true));
-    await clearAllFiles();
   }, []);
 
   // ** ** ** ** ** On Demand ** ** ** ** **
@@ -477,6 +444,48 @@ export default function DataProvider(props) {
     },
     [runQuery],
   );
+
+  const reset = useCallback(async () => {
+    setProgramme(null);
+    setCurrentWeek(null);
+    setNextWeek(null);
+    setWorkoutTags(null);
+
+    AsyncStorage.removeItem('@CURRENT_WEEK');
+    AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+
+    // We don't remove them so they dont get shown on login again
+    //AsyncStorage.removeItem('@ANALYTICS_ASKED');
+    //AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+
+    await AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(true));
+    await clearAllFiles();
+  }, []);
+
+  const refetchData = useCallback(async () => {
+    const cognitoUser = await Auth.currentAuthenticatedUser().catch(
+      (err) => null,
+    );
+    if (cognitoUser) {
+      getProgramme();
+      getWorkoutTags();
+    }
+  }, []);
+
+  useEffect(() => {
+    async function checkUser() {
+      const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
+        return null;
+      });
+      if (cognitoUser) {
+        // We dont have to get programme from here, it will be fetched on screen focus
+        //getProgramme();
+        getWorkoutTags();
+      }
+    }
+
+    checkUser();
+  }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -520,6 +529,7 @@ export default function DataProvider(props) {
       setIsSelectedWorkoutOnDemand,
       isSelectedWorkoutOnDemand,
       processProgramme,
+      refetchData,
     }),
     [
       programme,
@@ -560,6 +570,7 @@ export default function DataProvider(props) {
       setIsSelectedWorkoutOnDemand,
       isSelectedWorkoutOnDemand,
       processProgramme,
+      refetchData,
     ],
   );
 

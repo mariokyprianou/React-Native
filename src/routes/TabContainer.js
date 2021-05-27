@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
-import {StyleSheet, Platform, View, Image, Alert} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {StyleSheet, Platform, View, Image, Alert, AppState} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import useTheme from '../hooks/theme/UseTheme';
@@ -25,6 +25,8 @@ import * as ScreenCapture from 'expo-screen-capture';
 import displayAlert from '../utils/DisplayAlert';
 import ScreenshotTaken from '../apollo/mutations/ScreenshotTaken';
 import {useMutation} from '@apollo/client';
+import UseData from '../hooks/data/UseData';
+import useLoading from '../hooks/loading/useLoading';
 
 const notificationCount = 0;
 
@@ -38,15 +40,39 @@ export default function TabContainer() {
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  const {changeDevice, setSuspendedAccount} = useUserData();
+  // APPSTATE REFTCH DATA
+  const appState = useRef(AppState.currentState);
+  const {refetchData} = UseData();
+  const {loading, setLoading} = useLoading();
 
-  const [increaseShotTaken] = useMutation(ScreenshotTaken);
+  const handleAppStateChange = (nextAppState) => {
+    if (appState.current.match(/background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground! refetchData');
+      setLoading(true);
+      refetchData();
+    }
+    appState.current = nextAppState;
+    console.log('appState.current', appState.current);
+  };
+
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
+
+  // CHANGE DEVICE
+  const {changeDevice, setSuspendedAccount} = useUserData();
 
   useEffect(() => {
     if (changeDevice && changeDevice.newDeviceId) {
       navigation.navigate('ChangeDevice', {...changeDevice});
     }
   }, [changeDevice]);
+
+  // SCREENSHOT BLOCKING
+  const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
   // useEffect(() => {
   //   let screenshotListener;

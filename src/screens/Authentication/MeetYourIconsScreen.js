@@ -478,10 +478,16 @@ export default function MeetYourIconsScreen() {
           </View>
 
           <Spacer height={90} />
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.text}>{description}</Text>
-          </View>
-          <Spacer height={27} />
+
+          {description && (
+            <>
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.text}>{description}</Text>
+              </View>
+              <Spacer height={27} />
+            </>
+          )}
+
           <View style={styles.textContainer}>
             <Text
               style={

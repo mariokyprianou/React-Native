@@ -228,7 +228,7 @@ export default function ChallengeEndScreen() {
           weightPreference,
           result: challengeResult,
           trainer: programme.trainer.name,
-          ellapsedTime: elapsedMS && getValueByName('result'),
+          ellapsedTime: getValueByName('result'),
           description: description,
           duration: duration,
         });

@@ -347,9 +347,11 @@ export default function ExerciseView(props) {
         </View>
 
         <ScrollView>
-          <Text style={styles.exerciseDescriptionStyle}>
-            {exercise.coachingTips}
-          </Text>
+          {exercise.coachingTips && (
+            <Text style={styles.exerciseDescriptionStyle}>
+              {exercise.coachingTips}
+            </Text>
+          )}
         </ScrollView>
 
         <View style={styles.extraContainerStyle}>

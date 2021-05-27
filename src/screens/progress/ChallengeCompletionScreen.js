@@ -161,85 +161,86 @@ export default function ChallengeCompletionScreen() {
 
     setLoading(true);
 
-    const {colour, url} = await getShareData(
-      ShareMediaType.challengeComplete,
-    ).catch((err) => {
+    try {
+      const {colour, url} = await getShareData(
+        ShareMediaType.challengeComplete,
+      ).catch((err) => {
+        console.log(err, '<---getShareData err');
+        displayAlert({text: ShareDict.UnableToShare});
+        setLoading(false);
+        return;
+      });
+
+      console.log('name: ', name);
+      console.log('result: ', result);
+      console.log('weightPreference: ', weightPreference);
+      console.log('unitType: ', unitType);
+      console.log('ellapsedTime: ', ellapsedTime);
+      console.log('type: ', type);
+      console.log('duration: ', duration);
+
+      if (type === 'STOPWATCH') {
+        PowerShareAssetsManager.shareStringAchievement({
+          imageUrl: url,
+          achievementValueString: `${ellapsedTime}`,
+          subtitle: name,
+          colour: colour,
+        })
+          .then((res) => {
+            setLoading(false);
+            shareEvent();
+          })
+          .catch((err) => {
+            console.log('SHARE ERR: ', err);
+            setLoading(false);
+          })
+          .finally(() => setLoading(false));
+      } else if (type === 'COUNTDOWN') {
+        const unit = unitType === 'WEIGHT' ? weightPreference : '';
+        const achievedResult =
+          typeof result === 'number' ? result : parseInt(result, 10);
+        const durationTimeString =
+          typeof duration === 'string' ? duration : duration.toString();
+        const subtitle = name + '\nin ' + durationTimeString + ' seconds';
+
+        PowerShareAssetsManager.shareStringAchievement({
+          imageUrl: url,
+          achievementValueString: `${achievedResult} ${unit}`,
+          subtitle: subtitle,
+          colour: colour,
+        })
+          .then((res) => {
+            setLoading(false);
+            shareEvent();
+          })
+          .catch((err) => {
+            setLoading(false);
+          })
+          .finally(() => setLoading(false));
+      } else {
+        const unit = unitType === 'WEIGHT' ? weightPreference : '';
+        const achievedResult =
+          typeof result === 'number' ? result : parseInt(result, 10);
+
+        PowerShareAssetsManager.shareStringAchievement({
+          imageUrl: url,
+          achievementValueString: `${achievedResult} ${unit}`,
+          subtitle: name,
+          colour: colour,
+        })
+          .then((res) => {
+            setLoading(false);
+            shareEvent();
+          })
+          .catch((err) => {
+            setLoading(false);
+          })
+          .finally(() => setLoading(false));
+      }
+    } catch (ee) {
       console.log(err, '<---getShareData err');
       displayAlert({text: ShareDict.UnableToShare});
       setLoading(false);
-      return;
-    });
-
-    console.log('name: ', name);
-    console.log('result: ', result);
-    console.log('weightPreference: ', weightPreference);
-    console.log('unitType: ', unitType);
-    console.log('ellapsedTime: ', ellapsedTime);
-    console.log('type: ', type);
-    console.log('duration: ', duration);
-
-    if (type === 'STOPWATCH') {
-      const unit = unitType === 'WEIGHT' ? weightPreference : '';
-      const achievementValueString = ellapsedTime + ' ' + unit;
-
-      PowerShareAssetsManager.shareStringAchievement({
-        imageUrl: url,
-        achievementValueString: ellapsedTime,
-        subtitle: name,
-        colour: colour,
-      })
-        .then((res) => {
-          setLoading(false);
-          shareEvent();
-        })
-        .catch((err) => {
-          console.log('SHARE ERR: ', err);
-          setLoading(false);
-        })
-        .finally(() => setLoading(false));
-    } else if (type === 'COUNTDOWN') {
-      const unit = unitType === 'WEIGHT' ? weightPreference : '';
-      const achievedResult =
-        typeof result === 'number' ? result : parseInt(result, 10);
-      const durationTimeString =
-        typeof duration === 'string' ? duration : duration.toString();
-      const subtitle = name + '\nin ' + durationTimeString + ' seconds';
-      const achievedValueString = `${achievedResult} ${unit}`;
-
-      PowerShareAssetsManager.shareStringAchievement({
-        imageUrl: url,
-        achievementValueString: achievedValueString,
-        subtitle: subtitle,
-        colour: colour,
-      })
-        .then((res) => {
-          setLoading(false);
-          shareEvent();
-        })
-        .catch((err) => {
-          setLoading(false);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      const unit = unitType === 'WEIGHT' ? weightPreference : '';
-      const achievedResult =
-        typeof result === 'number' ? result : parseInt(result, 10);
-      const achievedValueString = `${achievedResult} ${unit}`;
-
-      PowerShareAssetsManager.shareStringAchievement({
-        imageUrl: url,
-        achievementValueString: achievedValueString,
-        subtitle: name,
-        colour: colour,
-      })
-        .then((res) => {
-          setLoading(false);
-          shareEvent();
-        })
-        .catch((err) => {
-          setLoading(false);
-        })
-        .finally(() => setLoading(false));
     }
   }
 

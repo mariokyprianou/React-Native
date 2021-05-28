@@ -269,21 +269,19 @@ export default function DataProvider(props) {
     }
   }, []);
 
-  const initCacheImages = useCallback(
-    async (list) => {
-      if (isConnected) {
-        console.log('Caching Images FastImage.preload ', list.length);
-        FastImage.preload(
-          list
-            .map((it) => {
-              return {uri: it};
-            })
-            .filter((it) => it.uri !== null),
-        );
-      }
-    },
-    [isConnected],
-  );
+  const initCacheImages = useCallback(async (list) => {
+    const response = await NetInfo.fetch();
+    if (response.isConnected) {
+      console.log('Caching Images FastImage.preload ', list.length);
+      FastImage.preload(
+        list
+          .map((it) => {
+            return {uri: it};
+          })
+          .filter((it) => it.uri !== null),
+      );
+    }
+  }, []);
 
   const getProgramme = useCallback(async () => {
     const res = await runQuery({

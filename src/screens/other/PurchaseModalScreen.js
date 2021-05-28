@@ -229,17 +229,92 @@ const PurchaseModalScreen = ({}) => {
   // Restore
   useEffect(() => {
     // We already have subscription and is valid
-    if (
-      currentSubscription &&
-      products.includes(currentSubscription.productId)
-    ) {
-      // todo - do backend restore
+    if (restorePressed && currentSubscription) {
+      setRestorePressed(false);
+
+      const receipt = currentSubscription.transactionReceipt;
+      try {
+        if (Platform.OS === 'ios') {
+          appleSubscribe({
+            variables: {
+              input: {
+                receiptData: receipt,
+              },
+            },
+          })
+            .then(async (res) => {
+              const success = R.path(
+                ['data', 'registerAppStoreSubscription', 'success'],
+                res,
+              );
+              console.log('Subscribed Success:', success);
+
+              const title = success
+                ? PurchaseDict.PurchaseRestored
+                : PurchaseDict.NoPurchasesToRestore;
+              displayAlert({
+                title: null,
+                text: title,
+                buttons: [
+                  {
+                    text: PurchaseDict.OkayButton,
+                  },
+                ],
+              });
+
+              firebaseLogEvent(analyticsEvents.newSubscription, {
+                email: userData.email,
+              });
+            })
+            .catch((err) => console.log(err))
+            .finally(() => completedPurchase());
+        } else {
+          const productId = R.path(['productId'], purchase);
+          const purchaseToken = R.path(['purchaseToken'], purchase);
+          googleSubscribe({
+            variables: {
+              input: {
+                productId: productId,
+                purchaseToken: purchaseToken,
+              },
+            },
+          })
+            .then(async (res) => {
+              const success = R.path(
+                ['data', 'registerGooglePlaySubscription', 'success'],
+                res,
+              );
+              console.log('Subscribed Success:', success);
+
+              const title = success
+                ? PurchaseDict.PurchaseRestored
+                : PurchaseDict.NoPurchasesToRestore;
+              displayAlert({
+                title: null,
+                text: title,
+                buttons: [
+                  {
+                    text: PurchaseDict.OkayButton,
+                  },
+                ],
+              });
+
+              firebaseLogEvent(analyticsEvents.newSubscription, {
+                email: userData.email,
+              });
+            })
+            .catch((err) => console.log(err))
+            .finally(() => completedPurchase());
+        }
+      } catch (ackErr) {
+        console.warn('ackErr', ackErr);
+      }
     }
   }, [currentSubscription]);
 
   // Set current subscription state
   useEffect(() => {
-    console.log('availablePurchases', availablePurchases);
+    console.log('availablePurchases count: ', availablePurchases.length);
     if (availablePurchases && availablePurchases.length > 0) {
       availablePurchases.forEach((it) => {
         switch (it.productId) {
@@ -251,22 +326,9 @@ const PurchaseModalScreen = ({}) => {
             break;
         }
       });
-
-      if (restorePressed === true) {
-        setRestorePressed(false);
-        displayAlert({
-          title: null,
-          text: PurchaseDict.PurchaseRestored,
-          buttons: [
-            {
-              text: PurchaseDict.OkayButton,
-            },
-          ],
-        });
-      }
     } else {
+      setRestorePressed(false);
       if (restorePressed === true) {
-        setRestorePressed(false);
         displayAlert({
           title: null,
           text: PurchaseDict.NoPurchasesToRestore,

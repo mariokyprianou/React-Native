@@ -61,7 +61,14 @@ export default function RegisterScreen() {
     params: {programmeId},
   } = useRoute();
   const {cleanErrors, getValues, updateError, updateValue} = FormHook();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    fontSize,
+    radius,
+  } = ScaleHook();
   const [countriesList, setCountriesList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
   const [country, setCountry] = useState();
@@ -138,27 +145,27 @@ export default function RegisterScreen() {
       backgroundColor: colors.backgroundWhite100,
     },
     gradientContainer: {
-      height: getHeight(140),
+      height: getScaledHeight(140),
       width: '100%',
     },
     scrollContainer: {
-      height: getHeight(550),
+      height: getScaledHeight(550),
       position: 'absolute',
-      top: getHeight(130),
+      top: getScaledHeight(130),
       backgroundColor: colors.backgroundWhite100,
       borderTopLeftRadius: radius(12),
       borderTopRightRadius: radius(12),
     },
     formTitle: {
-      marginTop: getHeight(92.5),
-      marginLeft: getWidth(18.5),
+      marginTop: getScaledHeight(92.5),
+      marginLeft: getScaledWidth(18.5),
       ...textStyles.regular15_white100,
     },
     formContainer: {
-      marginHorizontal: getWidth(25),
+      marginHorizontal: getScaledWidth(25),
     },
     formFooter: {
-      marginTop: getHeight(30),
+      marginTop: getScaledHeight(30),
       alignSelf: 'center',
     },
     termsContainerStyle: {
@@ -189,7 +196,6 @@ export default function RegisterScreen() {
     },
     termsStyle: {
       alignSelf: 'center',
-      marginHorizontal: getWidth(15),
     },
     marketingStyle: {
       ...textStyles.regular12_brownishGrey100,

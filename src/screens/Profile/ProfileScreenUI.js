@@ -132,14 +132,12 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         });
       }
 
-      if (userData.country !== null) {
-        updateValue({
-          name: 'profile_country',
-          value: userData.country,
-        });
-      }
+      updateValue({
+        name: 'profile_country',
+        value: userData.country,
+      });
     }
-  }, [updateValue]);
+  }, [userData, updateValue]);
 
   const gendersData = [
     GenderDict.Female,
@@ -231,22 +229,22 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       profile_country,
     } = getValues();
 
-    if (
-      !profile_firstName &&
-      !profile_lastName &&
-      !profile_gender &&
-      !profile_dateOfBirth &&
-      !profile_country
-    ) {
-      return;
-    }
+    // if (
+    //   !profile_firstName &&
+    //   !profile_lastName &&
+    //   !profile_gender &&
+    //   !profile_dateOfBirth &&
+    //   !profile_country
+    // ) {
+    //   return;
+    // }
 
     setLoading(true);
 
     const dob = parseISO(newDateOfBirth || userData.dateOfBirth);
 
-    const newCountry =
-      countryLookup[profile_country] || countryLookup[userData.country];
+    console.log(newCountry);
+    const newCountry = countryLookup[profile_country];
 
     const gender = gendersData.includes(profile_gender)
       ? profile_gender === GenderDict.PreferNotToSay
@@ -259,9 +257,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       familyName: profile_lastName || userData.familyName,
       gender: gender,
       dateOfBirth: !newDateOfBirth && !userData.dateOfBirth ? null : dob,
-      country: newCountry || userData.country,
+      country: newCountry || null,
       timeZone: userData.timeZone,
     };
+
+    console.log('newVals', newVals);
 
     await updateProfile({
       variables: {
@@ -272,6 +272,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     })
       .then((res) => {
         const newData = {...userData, ...res.data.updateProfile};
+        console.log('UpdateRes', newData);
         setUserData(newData);
       })
       .catch((err) => {
@@ -282,7 +283,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       })
       .finally(() => setLoading(false));
 
-    cleanValues();
+    //cleanValues();
   }
 
   function handleLogout() {
@@ -523,6 +524,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         marginTop: -getHeight(5),
       },
       placeholder: countriesList[0],
+      defaultValue: userData.country || countriesList[0],
       data: countriesList,
     },
   ];

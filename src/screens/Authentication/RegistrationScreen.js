@@ -295,10 +295,11 @@ export default function RegisterScreen() {
           displayAlert({
             text: AuthDict.EmailAlreadyRegistered,
           });
+        } else {
+          displayAlert({
+            text: AuthDict.NetworkRequestFailed,
+          });
         }
-        displayAlert({
-          text: AuthDict.NetworkRequestFailed,
-        });
       })
       .finally(() => setLoading(false));
   }

@@ -40,7 +40,6 @@ import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useUserData from '../../hooks/data/useUserData';
 import {Dimensions} from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logoDark.png');
@@ -274,11 +273,9 @@ export default function MeetYourIconsScreen() {
       marginTop: getHeight(30),
       paddingBottom: getHeight(40),
       alignItems: 'center',
-      backgroundColor: colors.veryLightPinkTwo100,
     },
     singleButtonContainer: {
       width: '100%',
-      backgroundColor: colors.veryLightPinkTwo100,
       alignItems: 'center',
       position: 'absolute',
       bottom: getHeight(25),
@@ -302,7 +299,7 @@ export default function MeetYourIconsScreen() {
     },
     fadeContainer: {
       position: 'absolute',
-      bottom: getHeight(90),
+      bottom: 0,
       left: 0,
       right: 0,
     },
@@ -582,10 +579,13 @@ export default function MeetYourIconsScreen() {
     <>
       <View style={styles.fadeContainer} pointerEvents="none">
         <FadingBottomView
-          color="custom"
-          height={180}
-          customStart={colors.veryLightPinkTwo0}
-          customEnd={colors.veryLightPinkTwo100}
+          color="customArray"
+          height={200}
+          customArray={[
+            colors.white0,
+            colors.white95,
+            colors.veryLightPinkTwo100,
+          ]}
         />
       </View>
     </>
@@ -605,28 +605,6 @@ export default function MeetYourIconsScreen() {
         }}>
         {trainers.map((trainer) => renderTrainer(trainer))}
       </Swiper>
-
-      {/* <View style={{flex: 1}}>
-        <Carousel
-          ref={iconsSwiper}
-          data={trainers}
-          renderItem={({item}) => renderTrainer(item)}
-          inactiveSlideOpacity={1}
-          inactiveSlideScale={1}
-          sliderWidth={Dimensions.get('window').width}
-          itemWidth={Dimensions.get('window').width}
-          slideStyle={{width: Dimensions.get('window').width}}
-          hasParallaxImages={false}
-          onSnapToItem={(index) => {
-            setActiveIndex(index);
-          }}
-          bounces={false}
-          loop={true}
-          enableMomentum={true}
-          callbackOffsetMargin={100}
-          decelerationRate={'fast'}
-        />
-      </View> */}
 
       {renderHeaderItems()}
       {renderArrows()}
@@ -648,9 +626,8 @@ export default function MeetYourIconsScreen() {
             position: 'absolute',
             bottom: 0,
             marginTop: getHeight(30),
-            paddingBottom: getHeight(20),
+            marginBottom: getHeight(20),
             alignItems: 'center',
-            backgroundColor: colors.veryLightPinkTwo100,
           }}>
           <DefaultButton
             type="startNow"

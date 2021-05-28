@@ -20,7 +20,13 @@ export default function TrainerIconCard({
   wellnessPercentage,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    radius,
+  } = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
@@ -28,7 +34,7 @@ export default function TrainerIconCard({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
-      width: getWidth(335),
+      width: getScaledWidth(335),
       height: getHeight(107),
       flexDirection: 'row',
       alignItems: 'center',

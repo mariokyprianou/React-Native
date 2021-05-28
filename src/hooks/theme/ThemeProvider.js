@@ -23,7 +23,15 @@ const DEFAULT_DIMENSIONS_CONTEXT_VALUE = {
 };
 
 export default function ThemeProvider({children}) {
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {
+    getHeight,
+    getScaledHeight,
+    getWidth,
+    getScaledWidth,
+    fontSize,
+    radius,
+    scaledRadius,
+  } = ScaleHook();
   const insets = useSafeAreaInsets();
 
   const [layout, setLayout] = useState(DEFAULT_DIMENSIONS_CONTEXT_VALUE);
@@ -552,14 +560,14 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(22),
     },
     dateCellStyles: {
-      width: getWidth(30),
-      height: getWidth(30),
-      borderRadius: radius(15),
+      width: getScaledWidth(30),
+      height: getScaledWidth(30),
+      borderRadius: scaledRadius(15),
     },
     pillWidth: {
-      width: getWidth(45),
-      marginBottom: getHeight(0),
-      marginTop: getHeight(8),
+      width: getScaledWidth(45),
+      marginBottom: getScaledHeight(0),
+      marginTop: getScaledHeight(8),
     },
     lookupStyleTable: {
       NEW_WEEK: {
@@ -738,8 +746,8 @@ export default function ThemeProvider({children}) {
       margin: getWidth(4),
     },
     setsContainerStyle: {
-      marginHorizontal: getWidth(20),
-      marginBottom: getHeight(20),
+      marginHorizontal: getScaledWidth(20),
+      marginBottom: getScaledHeight(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',

@@ -14,13 +14,9 @@ import LinearGradient from 'react-native-linear-gradient';
 
 // possible type - selected or null
 
-export default function HelpMeChooseButton({
-  letter,
-  text,
-  onPress,
-}) {
+export default function HelpMeChooseButton({letter, text, onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, getScaledHeight, getScaledWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   const [selected, setSelected] = useState(false);
@@ -28,14 +24,14 @@ export default function HelpMeChooseButton({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     container: {
-      width: getWidth(163),
-      height: getWidth(163),
-      marginBottom: getHeight(10),
+      width: getScaledWidth(163),
+      height: getScaledWidth(163),
+      marginBottom: getScaledHeight(10),
     },
     box: {
       justifyContent: 'flex-end',
-      paddingHorizontal: getWidth(10),
-      paddingBottom: getHeight(30),
+      paddingHorizontal: getScaledWidth(10),
+      paddingBottom: getScaledHeight(30),
     },
     touch: {
       flex: 1,
@@ -78,7 +74,11 @@ export default function HelpMeChooseButton({
   if (selected) {
     return (
       <View style={styles.container}>
-        <TouchableOpacity activeOpacity={1} onPress={onPress} onPressOut={()=> setSelected(false)} style={styles.touch}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={onPress}
+          onPressOut={() => setSelected(false)}
+          style={styles.touch}>
           <LinearGradient
             style={{...styles.linearGradientStyle, ...styles.box}}
             start={{x: 0, y: 0}}
@@ -96,11 +96,11 @@ export default function HelpMeChooseButton({
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={1}
-        onPressIn={()=> setSelected(true)}
+        onPressIn={() => setSelected(true)}
         style={{
           ...styles.touch,
-          paddingHorizontal: getWidth(10),
-          paddingBottom: getHeight(30),
+          paddingHorizontal: getScaledWidth(10),
+          paddingBottom: getScaledHeight(30),
         }}>
         <Text style={styles.unselectedLetterText}>{letter}</Text>
         <Text style={styles.unselectedBodyText}>{text}</Text>

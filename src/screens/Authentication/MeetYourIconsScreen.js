@@ -51,7 +51,15 @@ export default function MeetYourIconsScreen() {
     header: () => null,
   });
 
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    fontSize,
+    radius,
+    scaledRadius,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
@@ -160,12 +168,12 @@ export default function MeetYourIconsScreen() {
 
     logoContainer: {
       position: 'absolute',
-      top: getHeight(40),
+      top: getScaledHeight(40),
       left: 0,
       zIndex: 9,
     },
     image: {
-      marginLeft: getWidth(18),
+      marginLeft: getScaledWidth(18),
     },
     zeroImage: {
       width: '100%',
@@ -177,8 +185,8 @@ export default function MeetYourIconsScreen() {
     },
     cantChooseContainer: {
       position: 'absolute',
-      top: getHeight(40),
-      height: getHeight(28),
+      top: getScaledHeight(40),
+      height: getScaledHeight(28),
       width: '100%',
       zIndex: 9,
       flexDirection: 'row',
@@ -188,8 +196,8 @@ export default function MeetYourIconsScreen() {
     cantChooseStyle: {
       alignSelf: 'flex-start',
       position: 'absolute',
-      right: getWidth(15),
-      height: getHeight(28),
+      right: getScaledWidth(15),
+      height: getScaledHeight(28),
       alignItems: 'center',
     },
     leftIconContainer: {
@@ -221,14 +229,14 @@ export default function MeetYourIconsScreen() {
       backgroundColor: colors.veryLightPinkTwo100,
     },
     cardContainer: {
-      height: getHeight(450),
+      height: getScaledHeight(450),
       width: '100%',
     },
     textContainer: {
       width: '90%',
       alignSelf: 'center',
       backgroundColor: colors.white100,
-      borderRadius: radius(12),
+      borderRadius: scaledRadius(12),
     },
     descriptionContainer: {
       width: '90%',

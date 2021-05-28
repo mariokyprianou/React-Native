@@ -8,6 +8,5 @@
 
 import enGB from './enGB';
 import hiIN from './hiIN';
-import urIN from './urIN';
 
-export {enGB, hiIN, urIN};
+export {enGB, hiIN};

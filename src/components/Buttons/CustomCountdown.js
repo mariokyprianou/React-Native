@@ -7,11 +7,12 @@
  */
 
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {ScaleHook} from 'react-native-design-to-component';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useTheme from '../../hooks/theme/UseTheme';
+import FastImage from 'react-native-fast-image';
 
 const reminder = require('../../../assets/images/countdownTimer.png');
 
@@ -27,12 +28,11 @@ const CustomCountdown = ({time}) => {
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      //backgroundColor: 'red',
-      padding: getWidth(20)
+      padding: getWidth(20),
     },
     countdownStyle: {
       height: getHeight(25),
-      width: getHeight(25),
+      aspectRatio: 1,
     },
     iconContainer: {
       marginRight: getWidth(7),
@@ -46,7 +46,11 @@ const CustomCountdown = ({time}) => {
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <TDIcon input={reminder} inputStyle={{style: styles.countdownStyle}} />
+        <FastImage
+          source={reminder}
+          style={styles.countdownStyle}
+          resizeMode={'contain'}
+        />
       </View>
       <Text style={styles.text}>{ButtonDict.Secs(countdownText)}</Text>
     </View>

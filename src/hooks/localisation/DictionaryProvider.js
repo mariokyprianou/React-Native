@@ -10,7 +10,7 @@ import React, {useCallback, useState, useEffect} from 'react';
 import {useAsyncStorage} from '@react-native-community/async-storage';
 
 import DictionaryContext from './DictionaryContext';
-import {enGB, hiIN, urIN} from './languages';
+import {enGB, hiIN} from './languages';
 
 const DictionaryProvider = ({children}) => {
   const [dictionaryLoading, setDictionaryLoading] = useState(true);
@@ -52,7 +52,7 @@ const DictionaryProvider = ({children}) => {
     const languageMap = {
       English: 'en-GB',
       Hindi: 'hi-IN',
-      Urdu: 'ur-IN',
+      // Urdu: 'ur-IN',
     };
     const value = languageMap[language];
     console.log('Dictionary - setLanguage - value: ', value);
@@ -66,7 +66,7 @@ const DictionaryProvider = ({children}) => {
     const languageMap = {
       'en-GB': 'English',
       'hi-IN': 'Hindi',
-      'ur-IN': 'Urdu',
+      //'ur-IN': 'Urdu',
     };
 
     const value = languageMap[locale];
@@ -77,7 +77,7 @@ const DictionaryProvider = ({children}) => {
   const translateMap = {
     'en-GB': enGB,
     'hi-IN': hiIN,
-    'ur-IN': urIN,
+    //'ur-IN': urIN,
   };
 
   const dictionary = translateMap[locale];

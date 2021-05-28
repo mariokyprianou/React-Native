@@ -410,6 +410,9 @@ const enGB = {
       `You’ve started ${name}’s ${venue} programme!`,
     PickAWeight: 'Tap on a day to view all sets completed',
     ProgrammeComplete: (name, venue) =>
+      `Congratulations! You’ve completed ${name}’s ${venue} programme on POWER!`,
+
+    ProgrammeCompleteReminder: (name, venue) =>
       `Congratulations! You’ve completed ${name}’s ${venue} programme on POWER! To be the first to know if we add more workouts with ${name}, just hit the button below!`,
     SwitchedByMistake: 'Switched by mistake?',
 

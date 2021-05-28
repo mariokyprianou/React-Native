@@ -30,7 +30,14 @@ const screenWidth = Dimensions.get('screen').width;
 
 export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getScaledHeight,
+    getWidth,
+    getScaledWidth,
+    radius,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {history} = useProgressData();
   const {dictionary} = useDictionary();
@@ -99,10 +106,10 @@ export default function ChallengeCompletionScreen() {
       bottom: getHeight(40),
     },
     card: {
-      height: getHeight(220),
+      height: getScaledHeight(220),
       width: '55%',
       position: 'absolute',
-      top: getHeight(120),
+      top: getScaledHeight(120),
     },
     resultContainer: {
       backgroundColor: colors.veryLightPinkTwo100,
@@ -265,8 +272,8 @@ export default function ChallengeCompletionScreen() {
         style={{
           flexDirection: 'row',
           flex: 1,
-          height: getHeight(220),
-          marginTop: getHeight(80),
+          height: getScaledHeight(220),
+          marginTop: getScaledHeight(80),
         }}>
         <View style={{flex: 0.6}}>
           {chartInfo && (

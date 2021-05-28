@@ -31,7 +31,13 @@ const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getScaledHeight,
+    getWidth,
+    getScaledWidth,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
 
@@ -118,15 +124,15 @@ export default function ChallengeEndScreen() {
     },
     card: {
       backgroundColor: colors.white100,
-      height: getHeight(200),
-      width: getWidth(335),
+      height: getScaledHeight(200),
+      width: getScaledWidth(335),
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 4,
       shadowOpacity: 1,
       elevation: 4,
-      marginBottom: getHeight(20),
-      marginTop: getHeight(1),
+      marginBottom: getScaledHeight(20),
+      marginTop: getScaledHeight(1),
     },
     descriptionContainer: {
       width: '90%',
@@ -165,13 +171,13 @@ export default function ChallengeEndScreen() {
     zeroChart: {
       ...textStyles.semiBold10_brownGrey100,
       lineHeight: fontSize(12),
-      marginTop: getHeight(18),
-      marginLeft: getWidth(15),
-      marginBottom: getHeight(20),
+      marginTop: getScaledHeight(18),
+      marginLeft: getScaledWidth(15),
+      marginBottom: getScaledHeight(20),
     },
     image: {
-      height: getHeight(120),
-      width: getWidth(250),
+      height: getScaledHeight(120),
+      width: getScaledWidth(250),
       alignSelf: 'center',
     },
   });

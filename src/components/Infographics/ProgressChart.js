@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, { useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -22,10 +22,10 @@ export default function ProgressChart({
   chartDataPoints,
   interval,
   ticks,
-  scrollToEnd = false
+  scrollToEnd = false,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, getScaledHeight, getScaledWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   const xLabels = data.map((event) => {
@@ -35,7 +35,7 @@ export default function ProgressChart({
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     scroll: {
-      height: getHeight(200),
+      height: getScaledHeight(200),
     },
   });
 
@@ -65,11 +65,13 @@ export default function ProgressChart({
     <View>
       <ScrollView
         ref={ref}
-        onContentSizeChange={() => scrollToEnd && ref.current.scrollToEnd({animated: true}) }
+        onContentSizeChange={() =>
+          scrollToEnd && ref.current.scrollToEnd({animated: true})
+        }
         horizontal={true}
         style={styles.scroll}
         contentContainerStyle={{alignItems: 'center'}}>
-        <View style={{paddingEnd: getWidth(20)}}>
+        <View style={{paddingEnd: getScaledWidth(20)}}>
           <SlideBarChart
             data={chartDataPoints}
             barSpacing={chartDataPoints.length === 1 ? 58 : 60}
@@ -82,20 +84,26 @@ export default function ProgressChart({
             renderSelectedFillGradient={(props) =>
               defaultSelectedBarFillGradient(props)
             }
-            width={ 
+            width={
               chartDataPoints.length === 1
                 ? chartDataPoints.length * 90
                 : chartDataPoints.length * 75
             }
-            axisWidth={getWidth(42)}
-            axisHeight={getHeight(35)}
-            height={chartLabel.length > 0 ? getHeight(180) : getHeight(200)}
+            axisWidth={getScaledWidth(42)}
+            axisHeight={getScaledHeight(35)}
+            height={
+              chartLabel.length > 0
+                ? getScaledHeight(180)
+                : getScaledHeight(200)
+            }
             style={{
-              top:chartLabel.length > 0 ? getHeight(20) : getHeight(0),
+              top:
+                chartLabel.length > 0
+                  ? getScaledHeight(20)
+                  : getScaledHeight(0),
               backgroundColor: background
-              ? colors.white100
-              : colors.transparent,
-
+                ? colors.white100
+                : colors.transparent,
             }}
             yAxisProps={{
               numberOfTicks: axis ? ticks : 0,
@@ -103,20 +111,31 @@ export default function ProgressChart({
               horizontalLineColor: colors.transparent,
               verticalLineColor: colors.transparent,
               axisMarkerStyle: {...textStyles.semiBold10_brownGrey100},
-              markerChartOffset: getWidth(10),
-              labelLeftOffset: getWidth(-4),
+              markerChartOffset: getScaledWidth(10),
+              labelLeftOffset: getScaledWidth(-4),
             }}
             xAxisProps={{
               axisMarkerLabels: xLabels,
-              markerTopPadding: getHeight(10),
-              
+              markerTopPadding: getScaledHeight(10),
+
               axisLabelStyle: {
                 ...textStyles.semiBold10_brownGrey100,
-                
               },
             }}
           />
-        { chartLabel.length > 0 && (<Text style={{position: 'absolute', top: 0, left: 0, ...textStyles.semiBold10_brownGrey100, textAlign:'right', width: getWidth(40)}}>{chartLabel}</Text>)}
+          {chartLabel.length > 0 && (
+            <Text
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                ...textStyles.semiBold10_brownGrey100,
+                textAlign: 'right',
+                width: getScaledWidth(40),
+              }}>
+              {chartLabel}
+            </Text>
+          )}
         </View>
       </ScrollView>
     </View>

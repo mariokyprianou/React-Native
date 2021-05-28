@@ -31,7 +31,7 @@ const PermissionScreenUI = ({
   closeModal = false,
 }) => {
   // MARK: - Hooks
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getScaledHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
 
@@ -58,9 +58,9 @@ const PermissionScreenUI = ({
       textAlign: 'center',
     },
     imageView: {
-      height: getHeight(270),
+      height: getScaledHeight(270),
       width: '100%',
-      marginTop: getHeight(20),
+      marginTop: getScaledHeight(20),
     },
     bottomContainer: {
       marginBottom: getHeight(35),

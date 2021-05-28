@@ -55,7 +55,13 @@ const productIds = [
 
 const PurchaseModalScreen = ({}) => {
   // MARK: - Hooks
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
@@ -390,8 +396,8 @@ const PurchaseModalScreen = ({}) => {
     },
     videoViewStyle: {
       width: '100%',
-      height: getHeight(317),
-      marginBottom: getHeight(24),
+      height: getScaledHeight(317),
+      marginBottom: getScaledHeight(24),
     },
     termsTitle: {
       ...textStyles.medium14_brownishGrey100,

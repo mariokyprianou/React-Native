@@ -494,10 +494,9 @@ export default function MeetYourIconsScreen() {
           )}
 
           <View style={styles.textContainer}>
-            <Text
-              style={
-                styles.upperTextBold
-              }>{`${firstWeek.length} ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
+            <Text style={styles.upperTextBold}>{`${
+              firstWeek ? firstWeek.length : 0
+            } ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
             <Text style={styles.upperText}>{MeetYourIconsDict.Customise}</Text>
 
             <Text

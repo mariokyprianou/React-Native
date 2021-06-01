@@ -155,7 +155,7 @@ export default function MeetYourIconsScreen() {
     }
 
     setLoading(false);
-  }, [trainers, activeIndex]);
+  }
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

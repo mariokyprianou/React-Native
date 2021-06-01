@@ -128,12 +128,12 @@ export default function TabContainer() {
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     tabBarStyle: {
-      height: getHeight(70),
+      height: getHeight(74),
     },
     tabBarItemStyle: {
       justifyContent: 'center',
-      marginBottom: isIphoneX() ? getHeight(0) : getHeight(20),
-      marginTop: isIphoneX() ? getHeight(10) : getHeight(15),
+      marginBottom: isIphoneX() ? getHeight(0) : getHeight(15),
+      marginTop: isIphoneX() ? getHeight(0) : getHeight(15),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',

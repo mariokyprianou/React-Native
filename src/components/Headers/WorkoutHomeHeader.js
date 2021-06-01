@@ -14,6 +14,9 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import UseData from '../../hooks/data/UseData';
+import PersistedImage from '../Utility/PersistedImage';
+
+const fallback = require('../../../assets/images/fake.png');
 
 export default function WorkoutHomeHeader() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -87,10 +90,19 @@ export default function WorkoutHomeHeader() {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.leftContainer}>
-          <FastImage
-            source={{uri: trainerData.image}}
-            style={styles.headshot}
-          />
+          {trainerData.image && (
+            <PersistedImage
+              imageUrl={trainerData.image}
+              style={styles.headshot}
+              fallback={fallback}
+              showLoading={true}
+              //placeholder={true}
+              //overlayStyle={overlayStyle}
+              //customOverlay={() => <></>}
+              //callbackSetLoaded={() => {}}
+            />
+          )}
+
           <Text style={styles.name}>{trainerData.name}</Text>
         </View>
         <TouchableOpacity onPress={handlePress}>

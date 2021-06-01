@@ -12,8 +12,8 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
-import FastImage from 'react-native-fast-image';
 import TrainerIconCard from '../Cards/TrainerIconCard';
+import PersistentImage from '../Utility/PersistedImage';
 
 export default function TrainerCard({
   trainer,
@@ -69,9 +69,13 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <FastImage
-          source={{uri: currentProgram.programmeImage}}
+        <PersistentImage
+          imageUrl={currentProgram.programmeImage}
           style={styles.image}
+          fallback={null}
+          showLoading={true}
+          placeholder={false}
+          overlayStyle={null}
         />
         <FadingBottomView
           color="custom"

@@ -7,6 +7,14 @@
  */
 
 const addRestDays = (workoutsData = []) => {
+  if (workoutsData === undefined || workoutsData === null || !workoutsData) {
+    return [];
+  }
+
+  if (workoutsData.length === 0) {
+    return [];
+  }
+
   const data = workoutsData.map((currentDay, index) => {
     return {
       ...currentDay,

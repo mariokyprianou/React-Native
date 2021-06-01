@@ -225,7 +225,7 @@ export default function WorkoutHomeScreen() {
       }
     }
 
-    if (programme === null) {
+    if (programme === null || programme === undefined || !programme) {
       setLoading(false);
       //displayAlert({text: 'Unable to load data. Try again later.'});
     }

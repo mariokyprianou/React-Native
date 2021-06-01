@@ -43,30 +43,35 @@ export default function DataProvider(props) {
           variables: {
             input: it,
           },
-        }).then(async () => {
-          completed = completed + 1;
+        })
+          .then(async () => {
+            completed = completed + 1;
 
-          if (completed === completedWorkoutsPayload.length) {
-            // Complete last workout and return programme
-            // Need to do this otherwise so we only get programme after submitting the last workout
-            const res = await completeWorkout({
-              variables: {
-                input: lastPayload,
-              },
-            });
+            if (completed === completedWorkoutsPayload.length) {
+              // Complete last workout and return programme
+              // Need to do this otherwise so we only get programme after submitting the last workout
+              const res = await completeWorkout({
+                variables: {
+                  input: lastPayload,
+                },
+              });
 
-            // Submit firebase logs
-            const firebasePayload = await OfflineUtils.getFirebasePayloads();
-            firebasePayload.map((it) => {
-              firebaseLogEvent(analyticsEvents.completedWorkout, it);
-            });
+              // Submit firebase logs
+              const firebasePayload = await OfflineUtils.getFirebasePayloads();
+              firebasePayload.map((it) => {
+                firebaseLogEvent(analyticsEvents.completedWorkout, it);
+              });
 
-            processProgramme(res.data.completeWorkout.programme);
-            await OfflineUtils.clearOfflineQueue();
-            await getProfile();
+              processProgramme(res.data.completeWorkout.programme);
+              await OfflineUtils.clearOfflineQueue();
+              await getProfile();
+              setLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log('Error: ', error);
             setLoading(false);
-          }
-        });
+          });
       });
     }
   }, [isConnected, isInternetReachable, getProgramme, getProfile]);

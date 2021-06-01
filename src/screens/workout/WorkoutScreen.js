@@ -46,6 +46,7 @@ export default function WorkoutScreen() {
     setWeightsToUpload,
     isSelectedWorkoutOnDemand,
     completedFreeWorkouts,
+    setShouldIncrementOnDemandWorkoutCount,
   } = useData();
   const {
     firebaseLogEvent,
@@ -96,6 +97,7 @@ export default function WorkoutScreen() {
       })
         .then(async (res) => {
           console.log('startOnDemandWorkout: ', res);
+          setShouldIncrementOnDemandWorkoutCount(false);
           await getProfile();
         })
         .catch((err) => {

@@ -22,6 +22,7 @@ import Spacer from '../../components/Utility/Spacer';
 import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import CompleteOnDemandWorkout from '../../apollo/mutations/CompleteOnDemandWorkout';
+import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
@@ -52,6 +53,8 @@ export default function WorkoutCompleteScreen() {
     setWeightsToUpload,
     setIsSelectedWorkoutOnDemand,
     isSelectedWorkoutOnDemand,
+    shouldIncrementOnDemandWorkoutCount,
+    setShouldIncrementOnDemandWorkoutCount,
   } = UseData();
 
   const {setLoading} = useLoading();
@@ -59,6 +62,7 @@ export default function WorkoutCompleteScreen() {
 
   const [completeOnDemandWorkout] = useMutation(CompleteOnDemandWorkout);
   const [completeWorkout] = useMutation(CompleteWorkout);
+  const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
   const [addWeight] = useMutation(AddExerciseWeight);
 
   const [selectedIntensity, setSelectedIntensity] = useState(10);
@@ -199,6 +203,24 @@ export default function WorkoutCompleteScreen() {
     if (!isConnected && !isInternetReachable && !isSelectedWorkoutOnDemand) {
       handleOffline(workoutComplete, firebaseEventPayload);
       return;
+    }
+
+    if (isSelectedWorkoutOnDemand && shouldIncrementOnDemandWorkoutCount) {
+      startOnDemandWorkout({
+        variables: {
+          input: {
+            workoutId: selectedWorkout.id,
+          },
+        },
+      })
+        .then(async (res) => {
+          console.log('startOnDemandWorkout: ', res);
+        })
+        .catch((err) => {
+          console.log(err, '<---start on demand workout error');
+        });
+    } else {
+      setShouldIncrementOnDemandWorkoutCount(true);
     }
 
     const completeMutation = isSelectedWorkoutOnDemand

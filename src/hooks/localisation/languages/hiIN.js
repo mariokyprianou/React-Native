@@ -344,7 +344,7 @@ const hiIN = {
 
   TabsTitleDict: {
     Profile: 'Profile',
-    Workouts: 'Workouts',
+    Workouts: 'Programme',
     OnDemand: 'On Demand',
     Progress: SharedDict.Progress,
     ScreenShotMessage:

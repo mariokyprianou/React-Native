@@ -112,8 +112,13 @@ export default function MeetYourIconsScreen() {
       }
 
       // Swipe UI and set state to trigger selectedProgramme change
-      scrollTo(index);
-      setActiveIndex(index);
+      if (index !== activeIndex) {
+        // Scroll to triggers active index change
+        scrollTo(index);
+      } else {
+        // If index is already to suggested trainer index go directly to set selected programme
+        setSelected();
+      }
     }
   }, [trainers, iconsSwiper, suggestedProgramme]);
 
@@ -123,6 +128,12 @@ export default function MeetYourIconsScreen() {
       setActiveIndex(0);
       return;
     }
+    setSelected();
+
+    setLoading(false);
+  }, [trainers, activeIndex]);
+
+  function setSelected() {
     if (!trainers || trainers.length === 0) {
       return;
     }

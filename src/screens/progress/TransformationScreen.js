@@ -35,7 +35,7 @@ const overlay = require('../../../assets/images/progressZero.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight} = ScaleHook();
+  const {getHeight, getScaledHeight} = ScaleHook();
   const {colors} = useTheme();
   const {
     userImages,
@@ -73,17 +73,17 @@ export default function TransformationScreen() {
       backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
-      height: getHeight(10),
+      height: getScaledHeight(10),
       width: '92%',
       minimumTrackTintColor: 'transparent',
       maximumTrackTintColor: 'transparent',
     },
     image: {
       width: screenWidth,
-      height: getHeight(460),
+      height: getScaledHeight(460),
     },
     spacerHeight: {
-      height: getHeight(190),
+      height: getScaledHeight(190),
     },
     buttonContainer: {
       width: '100%',

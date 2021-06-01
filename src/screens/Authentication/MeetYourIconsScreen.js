@@ -101,7 +101,7 @@ export default function MeetYourIconsScreen() {
       return;
     }
 
-    if (suggestedProgramme) {
+    if (suggestedProgramme && suggestedProgramme.trainer) {
       const index = trainers.findIndex(
         (it) => suggestedProgramme.trainer.id === it.id,
       );
@@ -138,7 +138,10 @@ export default function MeetYourIconsScreen() {
     setSelectedProgram(selected);
 
     // reset suggested programme to prevent conflict between suggested && selected programme
-    if (suggestedProgramme) setSuggestedProgramme(null);
+    if (suggestedProgramme) {
+      setSuggestedProgramme(null);
+      console.log('Resetting Suggested Programme');
+    }
 
     setLoading(false);
   }, [trainers, activeIndex]);
@@ -336,8 +339,9 @@ export default function MeetYourIconsScreen() {
   }
 
   function scrollTo(index) {
-    iconsSwiper.current.scrollTo(index, true);
-    // iconsSwiper.current.snapToItem(index, true);
+    if (iconsSwiper && iconsSwiper.current) {
+      iconsSwiper.current.scrollTo(index, true);
+    }
   }
 
   // Same trainer, switch between programmes

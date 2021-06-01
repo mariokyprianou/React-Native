@@ -44,6 +44,7 @@ import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
 import useData from '../../hooks/data/UseData';
 import useProgressData from '../../hooks/data/useProgressData';
+import useCommonData from '../../hooks/data/useCommonData';
 
 const notifications = [
   {
@@ -85,6 +86,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {userData, setUserData} = useUserData();
   const {reset} = useData();
   const {setUserImages} = useProgressData();
+  const {setSuggestedProgramme} = useCommonData();
   const {setLoading} = useLoading();
 
   useEffect(() => {
@@ -304,6 +306,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                 Intercom.logout();
                 setUserImages([]);
                 reset();
+                setSuggestedProgramme(null);
 
                 navigation.reset({
                   index: 0,

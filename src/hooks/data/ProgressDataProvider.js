@@ -92,8 +92,6 @@ export default function DataProvider(props) {
       }
 
       images = [].concat(formattedImages, images);
-
-      console.log('NEWIMAGES', images.length);
       setUserImages(images);
     },
     [userImages],

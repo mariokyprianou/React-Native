@@ -51,6 +51,8 @@ export default function WeightCaptureScreen() {
   const [dropdownData, setDropDownData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [graphIsSelectable, setGraphIsSelectable] = useState(false);
+
   useBackHandler(() => {
     navigation.goBack();
     return true;
@@ -134,6 +136,10 @@ export default function WeightCaptureScreen() {
   }, [historyData, dropDownSelect]);
 
   function setDate(index) {
+    if (!graphIsSelectable) {
+      setGraphIsSelectable(true);
+    }
+
     const chartData = getChartData(filteredData);
     setSelectedDate(parseISO(chartData[index].createdAt));
   }
@@ -259,7 +265,7 @@ export default function WeightCaptureScreen() {
             data={chartData}
             weightPreference={weightPreference}
             setDate={setDate}
-            selectable={true}
+            selectable={graphIsSelectable}
             background={false}
           />
         </View>

@@ -14,6 +14,7 @@ import FadingBottomView from '../Views/FadingBottomView';
 import TDIcon from 'the-core-ui-component-tdicon';
 import isRTL from '../../utils/isRTL';
 import FastImage from 'react-native-fast-image';
+import SafeFastImage from '../Utility/SafeFastImage';
 
 const fallBackImage = require('../../../assets/images/onboardingImage.png');
 
@@ -65,7 +66,7 @@ export default function OnboardingSliderItem({image, header, text}) {
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <FastImage
+        <SafeFastImage
           resizeMode={FastImage.resizeMode.contain}
           source={url}
           style={styles.image}

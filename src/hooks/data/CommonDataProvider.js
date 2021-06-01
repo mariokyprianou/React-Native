@@ -7,7 +7,7 @@
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import {useQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './CommonDataContext';
 import Onboarding from '../../apollo/queries/Onboarding';
 import Trainers from '../../apollo/queries/Trainers';
@@ -17,6 +17,7 @@ import useDictionary from '../localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
 import useCustomQuery from '../customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
+import SplashScreen from 'react-native-splash-screen';
 
 export default function DataProvider(props) {
   const {runQuery} = useCustomQuery();
@@ -26,11 +27,7 @@ export default function DataProvider(props) {
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict, OnboardingDict} = dictionary;
 
-  const [onboarding, setOnboarding] = useState(
-    isRTL()
-      ? OnboardingDict.fallbackData.reverse()
-      : OnboardingDict.fallbackData,
-  );
+  const [onboarding, setOnboarding] = useState();
 
   const [trainers, setTrainers] = useState([]);
 
@@ -46,8 +43,20 @@ export default function DataProvider(props) {
     getTrainers();
   }, []);
 
+  async function isNetworkAvailable() {
+    const response = await NetInfo.fetch();
+    return response.isConnected; //&& response.isInternetReachable;
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+  }, [onboarding]);
+
   const getOnboarding = useCallback(async () => {
-    if (isConnected && isInternetReachable) {
+    const available = await isNetworkAvailable();
+    if (available) {
       const res = await runQuery({
         query: Onboarding,
         key: 'onboardingScreens',
@@ -63,20 +72,24 @@ export default function DataProvider(props) {
               }
             });
 
-            // if (isConnected && isInternetReachable) {
-            //     const images = data.map(it => {
-            //       return {uri: it.image};
-            //     })
-            //     FastImage.preload(images);
-            //     console.log("FastImagePreload: onboarding", images.length);
-            // }
-
             if (data && data.length > 0) {
+              // Preload all onboarding images
+              const images = data.map((it) => {
+                return {uri: it.image};
+              });
+              FastImage.preload(images);
+
               setOnboarding(data);
             }
           }
         },
       });
+    } else {
+      setOnboarding(
+        isRTL()
+          ? OnboardingDict.fallbackData.reverse()
+          : OnboardingDict.fallbackData,
+      );
     }
   }, [runQuery, isConnected, isInternetReachable, onboarding]);
 
@@ -87,6 +100,17 @@ export default function DataProvider(props) {
       setValue: (res) => {
         if (res) {
           const data = res.slice().filter((it) => it.programmes.length > 0);
+
+          // Preload all programmeImages
+          const images = [];
+          data.map((trainer) => {
+            trainer.programmes.map((it) => {
+              images.push({uri: it.programmeImage});
+            });
+          });
+
+          FastImage.preload(images);
+
           setTrainers(data);
         }
       },

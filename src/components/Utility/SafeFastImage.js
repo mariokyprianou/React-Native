@@ -40,6 +40,7 @@ class SafeFastImage extends Component {
         onError={() => {
           this.props.onError && this.props.onError();
         }}
+        {...this.props}
       />
     );
   }

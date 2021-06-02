@@ -23,7 +23,7 @@ const splashVideo = require('../../../assets/videos/splashScreen.mp4');
 
 export default function LanguageSelectionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getScaledHeight, fontSize} = ScaleHook();
+  const {getHeight, getScaledWidth, getScaledHeight, fontSize} = ScaleHook();
   const {
     cellFormStyles,
     cellFormConfig,
@@ -103,6 +103,11 @@ export default function LanguageSelectionScreen() {
     editedColor: colors.brownishGrey100,
     inactiveColor: colors.brownishGrey100,
     activeColor: colors.brownishGrey100,
+    formContainerStyle: {
+      width: getScaledWidth(325),
+      flex: 1,
+      alignItems: 'center',
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **

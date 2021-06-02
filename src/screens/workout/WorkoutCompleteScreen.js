@@ -254,12 +254,21 @@ export default function WorkoutCompleteScreen() {
           completeWorkoutDone();
         } else {
           console.log(res, '<---workout complete error');
-          handleOffline(workoutComplete, firebaseEventPayload);
+
+          if (isSelectedWorkoutOnDemand) {
+            completeWorkoutDone();
+          } else {
+            handleOffline(workoutComplete, firebaseEventPayload);
+          }
         }
       })
       .catch((err) => {
         console.log(err, '<---workout complete error');
-        handleOffline(workoutComplete, firebaseEventPayload);
+        if (isSelectedWorkoutOnDemand) {
+          completeWorkoutDone();
+        } else {
+          handleOffline(workoutComplete, firebaseEventPayload);
+        }
       });
   }
 

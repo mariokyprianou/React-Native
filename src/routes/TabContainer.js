@@ -33,34 +33,12 @@ const notificationCount = 0;
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
 
-  const navigation = useNavigation();
-
   const {fontSize, getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  // APPSTATE REFTCH DATA
-  const appState = useRef(AppState.currentState);
-  const {refetchData} = UseData();
   const {loading, setLoading} = useLoading();
-
-  const handleAppStateChange = (nextAppState) => {
-    if (appState.current.match(/background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground! refetchData');
-      setLoading(true);
-      refetchData();
-    }
-    appState.current = nextAppState;
-    console.log('appState.current', appState.current);
-  };
-
-  useEffect(() => {
-    AppState.addEventListener('change', handleAppStateChange);
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
-  }, []);
 
   // CHANGE DEVICE
   const {changeDevice, setSuspendedAccount} = useUserData();

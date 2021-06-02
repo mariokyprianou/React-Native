@@ -32,6 +32,7 @@ import QueryProvider from './hooks/customQuery/Provider';
 import {firebase} from '@react-native-firebase/analytics';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import OfflineHandlerProvider from './hooks/offlineHandler/Provider';
+import RefetchProvider from './hooks/refetch/Provider';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -115,15 +116,17 @@ const App = () => {
                           <WorkoutTimerProvider>
                             <ShareProvider>
                               <LoadingProvider>
-                                <NavigationContainer>
-                                  <TDCountdown>
-                                    <FormProvider>
-                                      <OfflineHandlerProvider>
-                                        <AppContainer />
-                                      </OfflineHandlerProvider>
-                                    </FormProvider>
-                                  </TDCountdown>
-                                </NavigationContainer>
+                                <RefetchProvider>
+                                  <NavigationContainer>
+                                    <TDCountdown>
+                                      <FormProvider>
+                                        <OfflineHandlerProvider>
+                                          <AppContainer />
+                                        </OfflineHandlerProvider>
+                                      </FormProvider>
+                                    </TDCountdown>
+                                  </NavigationContainer>
+                                </RefetchProvider>
                               </LoadingProvider>
                             </ShareProvider>
                           </WorkoutTimerProvider>

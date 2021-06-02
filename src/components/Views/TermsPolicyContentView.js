@@ -56,7 +56,7 @@ export default function TermsPolicyContentView({isHtml, content}) {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    scrollViewContainer: {
+    container: {
       height: '100%',
       width: '100%',
     },
@@ -89,10 +89,7 @@ export default function TermsPolicyContentView({isHtml, content}) {
 
   return (
     <>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        scrollEnabled={false}
-        style={styles.scrollViewContainer}>
+      <View style={styles.container}>
         <View style={styles.webViewContainer}>
           {isHtml ? (
             <WebView
@@ -115,7 +112,7 @@ export default function TermsPolicyContentView({isHtml, content}) {
             <Text style={styles.text}>{content}</Text>
           )}
         </View>
-      </ScrollView>
+      </View>
       <View style={styles.bottomView} pointerEvents="none">
         <FadingBottomView height={280} />
       </View>

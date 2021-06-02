@@ -18,7 +18,7 @@ import SafeFastImage from '../Utility/SafeFastImage';
 
 const fallBackImage = require('../../../assets/images/onboardingImage.png');
 
-export default function OnboardingSliderItem({image, header, text}) {
+export default function OnboardingSliderItem({image, header, text, local}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {
     getHeight,
@@ -29,7 +29,7 @@ export default function OnboardingSliderItem({image, header, text}) {
   } = ScaleHook();
   const {textStyles, colors} = useTheme();
 
-  const url = image ? {uri: image} : fallBackImage;
+  const url = local && image ? image : image ? {uri: image} : fallBackImage;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

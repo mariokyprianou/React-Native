@@ -29,6 +29,29 @@ export default function DataProvider(props) {
 
   const [onboarding, setOnboarding] = useState();
 
+  const fallbackData = [
+    {
+      ...OnboardingDict.fallbackData[0],
+      image: require('../../../assets/onboarding/onboarding1.png'),
+      local: true,
+    },
+    {
+      ...OnboardingDict.fallbackData[1],
+      image: require('../../../assets/onboarding/onboarding2.png'),
+      local: true,
+    },
+    {
+      ...OnboardingDict.fallbackData[2],
+      image: require('../../../assets/onboarding/onboarding3.png'),
+      local: true,
+    },
+    {
+      ...OnboardingDict.fallbackData[3],
+      image: require('../../../assets/onboarding/onboarding4.png'),
+      local: true,
+    },
+  ];
+
   const [trainers, setTrainers] = useState([]);
 
   const [legals, setLegals] = useState({});
@@ -85,11 +108,7 @@ export default function DataProvider(props) {
         },
       });
     } else {
-      setOnboarding(
-        isRTL()
-          ? OnboardingDict.fallbackData.reverse()
-          : OnboardingDict.fallbackData,
-      );
+      setOnboarding(isRTL() ? fallbackData.reverse() : fallbackData);
     }
   }, [runQuery, isConnected, isInternetReachable, onboarding]);
 

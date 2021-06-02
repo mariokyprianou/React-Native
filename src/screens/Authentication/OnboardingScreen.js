@@ -134,9 +134,10 @@ export default function OnboardingScreen() {
           setActiveIndex(index);
         }}
         showsPagination={false}>
-        {onboarding.map(({title, description, image}) => (
+        {onboarding.map(({title, description, image, local}) => (
           <OnboardingSliderItem
             image={image}
+            local={local}
             header={title}
             text={description}
           />

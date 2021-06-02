@@ -17,6 +17,10 @@ export default function LandingScreen(props) {
             index: 0,
             routes: [{name: 'TabContainer'}],
           });
+
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 1000);
         })
         .catch((_err) => {
           Intercom.registerUnidentifiedUser();
@@ -24,10 +28,11 @@ export default function LandingScreen(props) {
             index: 0,
             routes: [{name: 'AuthContainer'}],
           });
-        }).finally(() => {
-          setTimeout(()=> {
-            SplashScreen.hide();
-          }, 500);
+        })
+        .finally(() => {
+          // setTimeout(() => {
+          //   SplashScreen.hide();
+          // }, 1000);
         });
     }
     if (reset) {

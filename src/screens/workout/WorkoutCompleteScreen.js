@@ -11,7 +11,7 @@ import {StyleSheet, View, Text, Image, ScrollView, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import EmojiSelection from '../../components/Infographics/EmojiSelection';
 import DefaultButton from '../../components/Buttons/DefaultButton';
@@ -251,19 +251,24 @@ export default function WorkoutCompleteScreen() {
             firebaseEventPayload,
           );
 
-          if (isSelectedWorkoutOnDemand) {
-            setIsSelectedWorkoutOnDemand(false);
-          }
-
           completeWorkoutDone();
         } else {
           console.log(res, '<---workout complete error');
-          handleOffline(workoutComplete, firebaseEventPayload);
+
+          if (isSelectedWorkoutOnDemand) {
+            completeWorkoutDone();
+          } else {
+            handleOffline(workoutComplete, firebaseEventPayload);
+          }
         }
       })
       .catch((err) => {
         console.log(err, '<---workout complete error');
-        handleOffline(workoutComplete, firebaseEventPayload);
+        if (isSelectedWorkoutOnDemand) {
+          completeWorkoutDone();
+        } else {
+          handleOffline(workoutComplete, firebaseEventPayload);
+        }
       });
   }
 
@@ -278,10 +283,19 @@ export default function WorkoutCompleteScreen() {
     await getProfile();
 
     setLoading(false);
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'TabContainer'}],
-    });
+
+    if (isSelectedWorkoutOnDemand) {
+      setIsSelectedWorkoutOnDemand(false);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabContainer', params: {screen: 'Tab2'}}],
+      });
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabContainer'}],
+      });
+    }
   }
 
   function checkGoBack() {

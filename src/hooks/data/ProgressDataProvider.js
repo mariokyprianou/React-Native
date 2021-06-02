@@ -142,7 +142,6 @@ export default function DataProvider(props) {
 
     Hub.listen('auth', (data) => {
       const {payload} = data;
-      console.log('new event has happend ', data);
       if (payload.event === 'signIn') {
         console.log('user has signed in');
         checkAuth();

@@ -196,6 +196,7 @@ export default function RegisterScreen() {
     },
     termsStyle: {
       alignSelf: 'center',
+      width: '90%',
     },
     marketingStyle: {
       ...textStyles.regular12_brownishGrey100,

@@ -12,6 +12,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import TrainerIcon from '../Infographics/TrainerIcon';
 import useDictionary from '../../hooks/localisation/useDictionary';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function TrainerIconCard({
   fatLossPercentage,
@@ -40,14 +41,17 @@ export default function TrainerIconCard({
       alignItems: 'center',
       justifyContent: 'space-around',
       borderRadius: radius(12),
-      backgroundColor: colors.white80,
     },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      style={styles.container}
+      start={{x: 0, y: 0}}
+      end={{x: 0, y: 1}}
+      colors={[colors.white100, colors.white80]}>
       <TrainerIcon
         text={MeetYourIconsDict.FatLoss}
         percentage={fatLossPercentage}
@@ -64,6 +68,6 @@ export default function TrainerIconCard({
         text={MeetYourIconsDict.Wellness}
         percentage={wellnessPercentage}
       />
-    </View>
+    </LinearGradient>
   );
 }

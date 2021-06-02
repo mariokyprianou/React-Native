@@ -16,7 +16,7 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -60,7 +60,7 @@ export default function MeetYourIconsScreen() {
     radius,
     scaledRadius,
   } = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, Constants} = useTheme();
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
@@ -84,12 +84,15 @@ export default function MeetYourIconsScreen() {
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    if (isConnected) {
-      setLoading(true);
+    if (isFocused) {
+      if (!trainers || trainers.length === 0) setLoading(true);
+      console.log('Focused Trainers Screen: need refetch');
+      getTrainers();
     }
-    getTrainers();
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
@@ -243,7 +246,7 @@ export default function MeetYourIconsScreen() {
       backgroundColor: colors.veryLightPinkTwo100,
     },
     cardContainer: {
-      height: getScaledHeight(450),
+      height: Constants.SCREEN_HEIGHT - getHeight(130), // Screen minus height of 2 buttons + paddingBottom
       width: '100%',
     },
     textContainer: {
@@ -395,7 +398,7 @@ export default function MeetYourIconsScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (!isConnected && !isInternetReachable) {
+  if (!isConnected) {
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>
@@ -497,53 +500,56 @@ export default function MeetYourIconsScreen() {
             />
           </View>
 
-          <Spacer height={90} />
+          {/* <Spacer height={90} /> */}
+          <View style={{transform: [{translateY: -getHeight(20)}]}}>
+            {description && (
+              <>
+                <View style={styles.descriptionContainer}>
+                  <Text style={styles.text}>{description}</Text>
+                </View>
+                <Spacer height={27} />
+              </>
+            )}
 
-          {description && (
-            <>
-              <View style={styles.descriptionContainer}>
-                <Text style={styles.text}>{description}</Text>
-              </View>
-              <Spacer height={27} />
-            </>
-          )}
+            <View style={styles.textContainer}>
+              <Text style={styles.upperTextBold}>{`${
+                firstWeek ? firstWeek.length : 0
+              } ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
+              <Text style={styles.upperText}>
+                {MeetYourIconsDict.Customise}
+              </Text>
 
-          <View style={styles.textContainer}>
-            <Text style={styles.upperTextBold}>{`${
-              firstWeek ? firstWeek.length : 0
-            } ${MeetYourIconsDict.WorkoutsPerWeek}`}</Text>
-            <Text style={styles.upperText}>{MeetYourIconsDict.Customise}</Text>
-
+              <Text
+                style={
+                  styles.heading
+                }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
+              <Spacer height={20} />
+              {extendedWeek &&
+                extendedWeek.map(({duration, intensity, name, day}, index) => {
+                  return (
+                    <>
+                      <View
+                        style={index === 0 ? styles.line : styles.innerLine}
+                      />
+                      <CarouselWorkoutCard
+                        title={name}
+                        day={day}
+                        duration={duration}
+                        intensity={intensity}
+                      />
+                    </>
+                  );
+                })}
+            </View>
             <Text
               style={
-                styles.heading
-              }>{`${MeetYourIconsDict.YourFirstWeek} ${trainer.name}`}</Text>
-            <Spacer height={20} />
-            {extendedWeek &&
-              extendedWeek.map(({duration, intensity, name, day}, index) => {
-                return (
-                  <>
-                    <View
-                      style={index === 0 ? styles.line : styles.innerLine}
-                    />
-                    <CarouselWorkoutCard
-                      title={name}
-                      day={day}
-                      duration={duration}
-                      intensity={intensity}
-                    />
-                  </>
-                );
-              })}
+                styles.weeksText
+              }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
+            <Text style={{...styles.upperText, textAlign: 'center'}}>
+              {MeetYourIconsDict.ChangeProgrammes}
+            </Text>
+            <Spacer height={170} />
           </View>
-          <Text
-            style={
-              styles.weeksText
-            }>{`${numberOfWeeks} ${MeetYourIconsDict.WeeksOfTraining}`}</Text>
-          <Text style={{...styles.upperText, textAlign: 'center'}}>
-            {MeetYourIconsDict.ChangeProgrammes}
-          </Text>
-          <Spacer height={170} />
         </ScrollView>
       </View>
     );

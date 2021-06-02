@@ -46,7 +46,7 @@ const enGB = {
     AllowAnalytics: 'ALLOW ANALYTICS',
     AllowNotifications: 'ALLOW NOTIFICATIONS',
     Cancel: SharedDict.Cancel.toUpperCase(),
-    CantChoose: "CAN'T CHOOSE?",
+    CantChoose: "CAN'T CHOOSE",
     Challenge: 'CHALLENGE',
     ChangeDevice: 'CHANGE DEVICE',
     ChangeEmail: SharedDict.ChangeEmail.toUpperCase(),

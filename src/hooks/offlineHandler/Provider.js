@@ -69,7 +69,7 @@ export default function DataProvider(props) {
             }
           })
           .catch((error) => {
-            console.log('Error: ', error);
+            console.log('OfflineUtils: completeWorkout Error: ', error);
             setLoading(false);
           });
       });

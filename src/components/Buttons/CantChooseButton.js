@@ -45,40 +45,34 @@ export default function CantChooseButton({onPress}) {
     button: {
       width: getWidth(20),
       height: getWidth(20),
-      backgroundColor: colors.paleGrey100,
       borderRadius: radius(14),
       justifyContent: 'center',
       alignItems: 'center',
     },
     largerButton: {
-      height: getHeight(28),
+      height: getHeight(33),
       backgroundColor: colors.white100,
-      borderRadius: radius(18),
+      borderRadius: radius(17),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingLeft: getWidth(12),
-      paddingRight: getWidth(4.5),
+      paddingRight: getWidth(12),
     },
-    largerText: {
+    textStyle: {
       ...textStyles.bold15_paleGrey100,
-      marginRight: getWidth(10),
-    },
-    readyQuestionMark: {
-      ...textStyles.bold15_white100,
       fontSize: fontSize(12),
-      textAlign: 'center',
+      color: colors.cantChooseGrey100,
     },
+
     notReadyContainer: {
       height: getHeight(33),
       width: getHeight(33),
       backgroundColor: colors.white100,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: radius(100),
-    },
-    notReadyQuestionMark: {
-      ...textStyles.bold15_paleGrey100,
+      borderRadius: radius(17),
+      flexDirection: 'row',
     },
   });
 
@@ -90,12 +84,9 @@ export default function CantChooseButton({onPress}) {
         style={styles.largerButton}
         animation={isRTL() ? 'slideInLeft' : 'slideInRight'}>
         <TouchableOpacity style={styles.touch} onPress={onPress}>
-          <Text style={styles.largerText}>{ButtonDict.CantChoose}</Text>
-          <View style={styles.button}>
-            <Text style={styles.readyQuestionMark}>
-              {ButtonDict.QuestionMark}
-            </Text>
-          </View>
+          <Text style={styles.textStyle}>
+            {ButtonDict.CantChoose + `  ` + ButtonDict.QuestionMark}
+          </Text>
         </TouchableOpacity>
       </Animatable.View>
     );
@@ -105,7 +96,7 @@ export default function CantChooseButton({onPress}) {
     <View>
       <TouchableOpacity style={styles.touch} onPress={onPress}>
         <View style={styles.notReadyContainer}>
-          <Text style={styles.notReadyQuestionMark}>?</Text>
+          <Text style={styles.textStyle}>{ButtonDict.QuestionMark}</Text>
         </View>
       </TouchableOpacity>
     </View>

@@ -43,7 +43,6 @@ export default function ({
   const [showControls, setShowControls] = useState(!isContinuous);
 
   const [currentVideo, setCurrentVideo] = useState('video');
-  const [ended, setEnded] = useState(false);
 
   const {isWorkoutTimerRunning} = useWorkoutTimer();
 
@@ -78,27 +77,19 @@ export default function ({
       if (isWorkoutTimerRunning === false) {
         videoRef.current.pause();
         setIsPaused(true);
-        setEnded(false);
       } else if (isWorkoutTimerRunning === true && isPaused === true) {
         videoRef.current.pause();
         setIsPaused(false);
-        setEnded(false);
       }
     }
   }, [isWorkoutTimerRunning]);
-
-  // Video url has changed
-  useEffect(() => {
-    setEnded(false);
-    setIsPaused(false);
-  }, [currentVideo]);
 
   const videoProps = {
     height: videoHeight,
     url: videos[currentVideo],
     filename: videos[currentVideo].split('/').pop().split('?').shift(),
     skipCache: !isDownloadEnabled,
-    autoplay: false, //index === currentExerciseIndex,
+    autoplay: false,
     muted: true,
     repeat: true,
     playWhenInactive: true,
@@ -110,14 +101,13 @@ export default function ({
     onProgress: (currentTime) => {
       setCurrentProgress(currentTime);
     },
+
     onPaused: (paused) => {
       setIsPaused(paused);
     },
+
     onEnd: () => {
       setCurrentProgress(videoDuration);
-      setEnded(true);
-      setIsPaused(true);
-      //videoRef.current.reset()
     },
 
     onError: (error) => {
@@ -167,11 +157,7 @@ export default function ({
       useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
-          if (ended) {
-            setEnded(false);
-            setIsPaused(false);
-            videoRef.current.reset();
-          } else videoRef.current.pause();
+          videoRef.current.pause();
         }}
         isPaused={isPaused}
         videos={videos}

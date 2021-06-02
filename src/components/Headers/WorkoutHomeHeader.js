@@ -33,12 +33,10 @@ export default function WorkoutHomeHeader() {
   const height = Constants.HEADER_HEIGHT;
 
   useEffect(() => {
-    if (programme) {
-      setTrainerData({
-        name: programme.trainer.name,
-        image: programme.programmeImage,
-      });
-    }
+    setTrainerData({
+      name: programme?.trainer?.name,
+      image: programme?.programmeImage,
+    });
   }, [programme]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -94,8 +92,8 @@ export default function WorkoutHomeHeader() {
             <PersistedImage
               imageUrl={trainerData.image}
               style={styles.headshot}
-              fallback={fallback}
               showLoading={true}
+              //fallback={fallback}
               //placeholder={true}
               //overlayStyle={overlayStyle}
               //customOverlay={() => <></>}

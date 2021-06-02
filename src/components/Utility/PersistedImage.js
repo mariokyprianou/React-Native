@@ -48,7 +48,7 @@ const PersistentImage = ({
 
       {/* Main url image load */}
       <SafeFastImage
-        source={{uri: imageUrl}}
+        source={{uri: imageUrl, priority: FastImage.priority.high}}
         style={style}
         onLoadEnd={() => {
           callbackSetLoaded && callbackSetLoaded(true);

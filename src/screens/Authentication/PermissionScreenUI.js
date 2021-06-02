@@ -60,12 +60,15 @@ const PermissionScreenUI = ({
     imageView: {
       height: getScaledHeight(270),
       width: '100%',
-      marginTop: getScaledHeight(20),
+    },
+    imageViewContainer: {
+      flex: 1,
+      width: '100%',
+      justifyContent: 'center',
     },
     bottomContainer: {
       marginBottom: getHeight(35),
       marginTop: getHeight(46),
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'flex-end',
     },
@@ -74,7 +77,9 @@ const PermissionScreenUI = ({
   // MARK: - Render
   return (
     <View style={styles.container}>
-      <Image style={styles.imageView} source={image} resizeMode={'contain'} />
+      <View style={styles.imageViewContainer}>
+        <Image style={styles.imageView} source={image} resizeMode={'contain'} />
+      </View>
       <View style={styles.bottomContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.text}>{text}</Text>

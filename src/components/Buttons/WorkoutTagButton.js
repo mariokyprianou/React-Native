@@ -28,8 +28,6 @@ export default function WorkoutTagButton({
       width: getWidth(72),
       aspectRatio: 1,
       borderRadius: radius(36),
-      flexDirection: 'row',
-      alignItems: 'center',
       backgroundColor: isSelected ? colors.transparent : colors.white100,
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
@@ -38,13 +36,18 @@ export default function WorkoutTagButton({
       elevation: 4,
       marginBottom: getHeight(2),
       marginTop: getHeight(2),
-    },
-    touch: {
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
     },
+    touch: {
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
     name: {
       ...textStyles.medium12_brownishGrey100,
       color: isSelected ? colors.white100 : colors.brownishGrey100,

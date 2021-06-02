@@ -33,6 +33,8 @@ const notificationCount = 0;
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
 
+  const navigation = useNavigation();
+
   const {fontSize, getHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();

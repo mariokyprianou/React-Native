@@ -361,10 +361,14 @@ export default function DataProvider(props) {
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 
   const getDownloadEnabled = useCallback(async () => {
-    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
     const enabled = JSON.parse(value);
     setDownloadEnabled(enabled);
   }, []);
+
+  useEffect(() => {
+    console.log('isDownloadEnabled', isDownloadEnabled);
+  }, [isDownloadEnabled]);
 
   // ** ** ** ** **Current workout data ** ** ** ** **
 

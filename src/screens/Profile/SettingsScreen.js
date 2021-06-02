@@ -9,6 +9,8 @@ import React, {useEffect, useState} from 'react';
 import {Text, ScrollView, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import {useBackHandler} from '@react-native-community/hooks';
+
 import TDSettings from 'the-core-ui-module-tdsettings';
 import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
@@ -68,6 +70,11 @@ const SettingsScreen = ({}) => {
         leftAction={() => updateSettingsAndNavigate()}
       />
     ),
+  });
+
+  useBackHandler(() => {
+    updateSettingsAndNavigate();
+    return true;
   });
 
   const [updatePreferences] = useMutation(UpdatePreference);
@@ -168,6 +175,7 @@ const SettingsScreen = ({}) => {
       displayAlert({text: OfflineMessage});
       return;
     }
+    console.log('DOWNLOAD_ENABLED', downloadWorkouts);
 
     await AsyncStorage.setItem(
       '@DOWNLOAD_ENABLED',

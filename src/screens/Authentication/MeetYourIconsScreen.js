@@ -395,7 +395,7 @@ export default function MeetYourIconsScreen() {
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  if (!isConnected && !isInternetReachable) {
+  if (!isConnected) {
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>

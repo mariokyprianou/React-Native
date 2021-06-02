@@ -116,19 +116,23 @@ export default function DataProvider(props) {
     const res = await runQuery({
       query: Trainers,
       key: 'getTrainers',
-      setValue: (res) => {
+      setValue: async (res) => {
         if (res) {
           const data = res.slice().filter((it) => it.programmes.length > 0);
 
           // Preload all programmeImages
-          const images = [];
-          data.map((trainer) => {
-            trainer.programmes.map((it) => {
-              images.push({uri: it.programmeImage});
-            });
-          });
 
-          FastImage.preload(images);
+          const available = await isNetworkAvailable();
+          if (available) {
+            const images = [];
+            data.map((trainer) => {
+              trainer.programmes.map((it) => {
+                images.push({uri: it.programmeImage});
+              });
+            });
+
+            FastImage.preload(images);
+          }
 
           setTrainers(data);
         }

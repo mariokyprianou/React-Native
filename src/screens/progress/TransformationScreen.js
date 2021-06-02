@@ -48,7 +48,6 @@ export default function TransformationScreen() {
   const {dictionary} = useDictionary();
   const {ProgressDict, ShareDict, ProfileDict} = dictionary;
   const {loading, setLoading} = useLoading();
-  const {isSharing, setIsSharing} = useState(false);
   const navigation = useNavigation();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
@@ -58,7 +57,7 @@ export default function TransformationScreen() {
     header: () => (
       <Header
         title={ProgressDict.TransformationScreenTitle}
-        goBack={!isSharing}
+        goBack
         right="shareIcon"
         rightAction={handleShare}
       />
@@ -187,14 +186,12 @@ export default function TransformationScreen() {
     }
 
     setLoading(true);
-    setIsSharing(true);
 
     const {colour, url} = await getShareData(ShareMediaType.progress).catch(
       (err) => {
         console.log(err, '<---getShareData err');
         displayAlert({text: ShareDict.UnableToShareProgress});
         setLoading(false);
-        setIsSharing(false);
         return;
       },
     );
@@ -224,7 +221,6 @@ export default function TransformationScreen() {
     }
 
     setLoading(false);
-    setIsSharing(false);
   }, [beforePic, afterPic, getShareData]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **

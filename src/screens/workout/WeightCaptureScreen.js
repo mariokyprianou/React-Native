@@ -29,7 +29,7 @@ import {isSameDay} from '../../utils/dateTimeUtils';
 
 export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getScaledHeight, getWidth, fontSize} = ScaleHook();
   const {
     colors,
     textStyles,
@@ -197,7 +197,7 @@ export default function WeightCaptureScreen() {
       width: '100%',
       alignItems: 'center',
       position: 'absolute',
-      top: getHeight(490),
+      top: getScaledHeight(490),
       elevation: 9,
     },
     iconStyle: {

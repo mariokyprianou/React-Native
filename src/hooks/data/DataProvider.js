@@ -372,6 +372,10 @@ export default function DataProvider(props) {
   const [isSelectedWorkoutOnDemand, setIsSelectedWorkoutOnDemand] = useState(
     false,
   );
+  const [
+    shouldIncrementOnDemandWorkoutCount,
+    setShouldIncrementOnDemandWorkoutCount,
+  ] = useState(true);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [completedExercises, setCompletedExercises] = useState([]);
 
@@ -528,6 +532,8 @@ export default function DataProvider(props) {
       isSelectedWorkoutOnDemand,
       processProgramme,
       refetchData,
+      setShouldIncrementOnDemandWorkoutCount,
+      shouldIncrementOnDemandWorkoutCount,
     }),
     [
       programme,
@@ -569,6 +575,8 @@ export default function DataProvider(props) {
       isSelectedWorkoutOnDemand,
       processProgramme,
       refetchData,
+      setShouldIncrementOnDemandWorkoutCount,
+      shouldIncrementOnDemandWorkoutCount,
     ],
   );
 

@@ -50,7 +50,7 @@ export default function ThemeProvider({children}) {
   //const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' && hasSoftNavigation ? insets.top : 0;
 
   // Need this for both platforms
-  const HEADER_HEIGHT = 64 + insets.top;
+  const HEADER_HEIGHT = 49 + insets.top;
   const SCREEN_HEIGHT = layout.height;
 
   const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT; // + SYSTEM_SOFT_NAV_HEIGHT;

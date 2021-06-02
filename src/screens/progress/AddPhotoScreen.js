@@ -89,9 +89,7 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
-    if (!loading) {
-      setLoading(true);
-    }
+    setLoading(true);
 
     const newPath =
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
@@ -142,8 +140,10 @@ export default function TransformationScreen() {
       !uploadUrlRes ||
       !uploadUrlRes.data ||
       !uploadUrlRes.data.uploadProgressImage
-    )
+    ) {
       return;
+    }
+
     const {uploadUrl, token} = uploadUrlRes.data.uploadProgressImage;
 
     // Initialize upload

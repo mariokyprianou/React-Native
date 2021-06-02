@@ -35,7 +35,9 @@ const Colors = {
 
   red100: 'rgba(252, 0, 0, 1)',
   tealish100: 'rgba(46, 193, 187, 1)',
+  tealish20: 'rgba(46, 193, 187, 0.2)',
   tiffanyBlue100: 'rgba(116, 235, 231, 1)',
+  tiffanyBlue20: 'rgba(116, 235, 231, 0.2)',
   paleBlue100: 'rgba(223, 232, 238, 1)',
   paleGrey100: 'rgba(188, 188, 188, 1)',
   paleTurquoise0: 'rgba(191, 226, 224, 0)',

@@ -314,12 +314,17 @@ export default function DefaultButton({
       <View style={styles.container}>
         <TouchableOpacity
           onPress={pressed ? null : handlePress}
-          style={styles.touch}>
+          style={styles.touch}
+          disabled={disabled}>
           <LinearGradient
             style={styles.gradient}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            colors={[colors.tealish100, colors.tiffanyBlue100]}>
+            colors={
+              disabled
+                ? [colors.tealish20, colors.tiffanyBlue20]
+                : [colors.tealish100, colors.tiffanyBlue100]
+            }>
             {renderButtonText()}
             {icon && (
               <View style={styles.iconContainer}>

@@ -43,6 +43,8 @@ export default function SetCompletionScreen({
 
   // Selected value passed to horizontal scroll to preselect
   const [preSelected, setPreSelected] = useState(20);
+  const [timerFinished, setTimerFinished] = useState(false);
+  const [weightAdded, setWeightAdded] = useState(false);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -135,8 +137,14 @@ export default function SetCompletionScreen({
     };
 
     setWeightHistory([...exerciseHistory, weightDetails]);
-    setSetComplete(false);
+
+    setWeightAdded(true);
+    if (!restTime || timerFinished === true) {
+      setSetComplete(false);
+    }
   }
+
+  console.log('WEIGHT ADDED: ', weightAdded);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
@@ -154,6 +162,12 @@ export default function SetCompletionScreen({
                 title={WorkoutDict.GreatJob}
                 restTime={restTime}
                 setSetComplete={setSetComplete}
+                onFinish={() => {
+                  setTimerFinished(true);
+                  if (weightAdded === true) {
+                    setSetComplete(false);
+                  }
+                }}
               />
             ) : (
               <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
@@ -173,6 +187,7 @@ export default function SetCompletionScreen({
             type="addWeight"
             variant="gradient"
             icon="chevron"
+            disabled={weightAdded}
             onPress={handleAddWeight}
           />
         </View>
@@ -210,7 +225,7 @@ function TimerView(props) {
   useEffect(() => {
     if (remainingMS === 0) {
       setTimeout(() => {
-        props.setSetComplete(false);
+        props.onFinish && props.onFinish();
       }, 1000);
     }
   }, [remainingMS]);

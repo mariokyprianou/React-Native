@@ -230,6 +230,12 @@ export default function ExerciseView(props) {
 
   const onCancelTimer = () => {
     setCountDown(false);
+
+    if (exercise.weight) {
+      setSetComplete(true);
+      return;
+    }
+
     checkShouldFinishExercise();
   };
 
@@ -396,7 +402,7 @@ export default function ExerciseView(props) {
           <RepsList sets={sets} />
         </View>
 
-        {countDown && restTime > 0 && (
+        {countDown && (restTime > 0 || exerciseTime > 0) && (
           <TimerView
             exerciseTime={exerciseTime}
             restTime={restTime}
@@ -462,7 +468,11 @@ function TimerView(props) {
 
   useEffect(() => {
     if (remainingMS === 0) {
-      if (shouldRestAfterExercise === true) {
+      if (
+        shouldRestAfterExercise === true &&
+        props.restTime &&
+        props.restTime > 0
+      ) {
         durationMS = props.restTime;
         durationFormatted = msToHMS(durationMS);
         restart(durationMS);

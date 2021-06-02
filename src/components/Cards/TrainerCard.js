@@ -46,8 +46,8 @@ export default function TrainerCard({
     },
     overlay: {
       width: '100%',
-      bottom: getHeight(140),
-      paddingTop: getHeight(60),
+      position: 'absolute',
+      bottom: getHeight(40),
       alignItems: 'center',
     },
     titleContainer: {
@@ -81,7 +81,7 @@ export default function TrainerCard({
           color="custom"
           customStart={colors.veryLightPinkTwo0}
           customEnd={colors.veryLightPinkTwo100}
-          height={80}
+          height={220}
         />
       </View>
       <View style={styles.overlay}>

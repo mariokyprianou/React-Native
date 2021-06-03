@@ -417,7 +417,18 @@ export default function DataProvider(props) {
 
   const [workoutTags, setWorkoutTags] = useState([]);
   const [selectedWorkoutTags, setSelectedWorkoutTags] = useState([]);
-  const [onDemandWorkouts, setOnDemandWorkouts] = useState([]);
+  const [onDemandWorkouts, setOnDemandWorkouts] = useState();
+
+  useEffect(() => {
+    if (
+      workoutTags &&
+      workoutTags.length > 0 &&
+      onDemandWorkouts === undefined
+    ) {
+      console.log('get all OnDemand workouts on initial load');
+      getOnDemandWorkouts(workoutTags.map((it) => it.id));
+    }
+  }, [workoutTags]);
 
   const getWorkoutTags = useCallback(async () => {
     const res = await runQuery({

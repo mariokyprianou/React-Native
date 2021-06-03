@@ -11,7 +11,7 @@ import {StyleSheet, View, Text, Image, ScrollView, Alert} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
-import {CommonActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import EmojiSelection from '../../components/Infographics/EmojiSelection';
 import DefaultButton from '../../components/Buttons/DefaultButton';
@@ -35,9 +35,12 @@ import displayAlert from '../../utils/DisplayAlert';
 import {useNetInfo} from '@react-native-community/netinfo';
 import OfflineUtils from '../../hooks/data/OfflineUtils';
 import FastImage from 'react-native-fast-image';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const insets = useSafeAreaInsets();
+
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
@@ -163,8 +166,11 @@ export default function WorkoutCompleteScreen() {
     },
     buttonContainer: {
       width: '100%',
-      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
       marginTop: getHeight(30),
+      marginBottom: getHeight(20 + insets.bottom),
+      alignItems: 'center',
     },
   });
 
@@ -373,17 +379,16 @@ export default function WorkoutCompleteScreen() {
             setSelectedEmoji={setSelectedEmoji}
           />
         </View>
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="done"
-            variant="white"
-            icon="chevron"
-            onPress={submitWorkout}
-            disabled={selectedEmoji ? false : true}
-          />
-        </View>
-        <Spacer height={50} />
       </ScrollView>
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="done"
+          variant="white"
+          icon="chevron"
+          onPress={submitWorkout}
+          disabled={selectedEmoji ? false : true}
+        />
+      </View>
     </View>
   );
 }

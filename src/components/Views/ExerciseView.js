@@ -444,6 +444,7 @@ function TimerView(props) {
 
   let durationMS = props.exerciseTime ? props.exerciseTime : props.restTime;
   let durationFormatted = msToHMS(durationMS);
+  const [restDurationMS, setRestDurationMS] = useState(null);
   const [shouldRestAfterExercise, setShouldRestAfterExercise] = useState(
     props.exerciseTime !== null,
   );
@@ -474,6 +475,7 @@ function TimerView(props) {
         props.restTime > 0
       ) {
         durationMS = props.restTime;
+        setRestDurationMS(props.restTime);
         durationFormatted = msToHMS(durationMS);
         restart(durationMS);
         setShouldRestAfterExercise(false);
@@ -487,13 +489,14 @@ function TimerView(props) {
   const {exerciseViewStyle} = useTheme();
   const {getHeight} = ScaleHook();
   const styles = exerciseViewStyle;
-  const progress = durationMS - remainingMS;
+  const duration = restDurationMS ?? durationMS;
+  const progress = duration - remainingMS;
 
   return (
     <View style={styles.timerContainer}>
       {props.setType !== 'REPS' && (
         <SliderProgressView
-          max={durationMS}
+          max={duration}
           progress={progress}
           height={getHeight(5)}
         />

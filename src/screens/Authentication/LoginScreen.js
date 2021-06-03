@@ -6,7 +6,14 @@
  */
 
 import React, {useEffect} from 'react';
-import {ScrollView, View, Text, TouchableOpacity, Alert, StatusBar} from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  StatusBar,
+} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -33,18 +40,17 @@ export default function LoginScreen() {
 
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
+    navigation.setOptions({
+      header: () => (
+        <Header
+          title={AuthDict.LoginScreenTitle}
+          noSearch
+          showBurger={false}
+          goBack
+        />
+      ),
+    });
   }, []);
-
-  navigation.setOptions({
-    header: () => (
-      <Header
-        title={AuthDict.LoginScreenTitle}
-        noSearch
-        showBurger={false}
-        goBack
-      />
-    ),
-  });
 
   const {cellFormStyles, cellFormConfig, textStyles} = useTheme();
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
@@ -173,8 +179,6 @@ export default function LoginScreen() {
         ...cellFormStyles.inputContainerStyle,
         paddingRight: getWidth(6),
       },
-     
-     
     },
     {
       name: 'password',

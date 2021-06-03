@@ -17,7 +17,6 @@ export default function DataProvider(props) {
   const handleAppStateChange = (nextAppState) => {
     if (appState.current.match(/background/) && nextAppState === 'active') {
       console.log('App has come to the foreground! refetchData');
-      setLoading(true);
       refetchData();
 
       initInterval();

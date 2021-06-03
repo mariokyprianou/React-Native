@@ -40,6 +40,7 @@ import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useUserData from '../../hooks/data/useUserData';
 import {Dimensions} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logoDark.png');
@@ -47,6 +48,8 @@ const logo = require('../../../assets/images/logoDark.png');
 export default function MeetYourIconsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+
   navigation.setOptions({
     header: () => null,
   });
@@ -180,17 +183,12 @@ export default function MeetYourIconsScreen() {
           : 20,
       ),
       width: '100%',
-      //backgroundColor: colors.white100,
     },
-
     logoContainer: {
       position: 'absolute',
       top: getScaledHeight(40),
-      left: 0,
+      left: getScaledWidth(12),
       zIndex: 9,
-    },
-    image: {
-      marginLeft: getScaledWidth(18),
     },
     zeroImage: {
       width: '100%',
@@ -198,7 +196,9 @@ export default function MeetYourIconsScreen() {
     },
     selectText: {
       ...textStyles.semiBold16_black100,
-      marginLeft: getWidth(24),
+      marginLeft: getWidth(9),
+      overflow: 'visible',
+      transform: [{translateY: -getHeight(8)}],
     },
     cantChooseContainer: {
       position: 'absolute',
@@ -213,7 +213,7 @@ export default function MeetYourIconsScreen() {
     cantChooseStyle: {
       alignSelf: 'flex-start',
       position: 'absolute',
-      right: getScaledWidth(15),
+      right: getScaledWidth(18),
       height: getScaledHeight(28),
       alignItems: 'center',
     },
@@ -248,7 +248,7 @@ export default function MeetYourIconsScreen() {
       backgroundColor: colors.veryLightPinkTwo100,
     },
     cardContainer: {
-      height: Constants.SCREEN_HEIGHT - getHeight(130), // Screen minus height of 2 buttons + paddingBottom
+      height: Constants.SCREEN_HEIGHT,
       width: '100%',
     },
     textContainer: {
@@ -291,23 +291,14 @@ export default function MeetYourIconsScreen() {
       textAlign: 'center',
       marginTop: getHeight(20),
     },
-    workoutContainer: {
-      width: '100%',
-      alignItems: 'center',
-    },
+
     buttonContainer: {
       width: '100%',
       position: 'absolute',
       bottom: 0,
       marginTop: getHeight(30),
-      paddingBottom: getHeight(40),
+      paddingBottom: getHeight(30),
       alignItems: 'center',
-    },
-    singleButtonContainer: {
-      width: '100%',
-      alignItems: 'center',
-      position: 'absolute',
-      bottom: getHeight(25),
     },
     zeroButtonContainer: {
       backgroundColor: 'transparent',
@@ -406,7 +397,7 @@ export default function MeetYourIconsScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image source={logo} style={styles.image} />
+          <Image source={logo} />
           <Text style={styles.selectText}>
             {MeetYourIconsDict.SelectYourProgramme}
           </Text>
@@ -444,7 +435,7 @@ export default function MeetYourIconsScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const programmeWithProgressView = (weekNumber) => (
-    <View style={styles.buttonContainer}>
+    <View style={{paddingBottom: getHeight(15 + insets.bottom / 2)}}>
       <DefaultButton
         type="restartProgramme"
         icon="chevron"
@@ -504,8 +495,10 @@ export default function MeetYourIconsScreen() {
             />
           </View>
 
-          {/* <Spacer height={90} /> */}
-          <View style={{transform: [{translateY: -getHeight(20)}]}}>
+          <View
+            style={{
+              transform: [{translateY: -getHeight(120 + insets.bottom / 2)}],
+            }}>
             {description && (
               <>
                 <View style={styles.descriptionContainer}>
@@ -552,7 +545,7 @@ export default function MeetYourIconsScreen() {
             <Text style={{...styles.upperText, textAlign: 'center'}}>
               {MeetYourIconsDict.ChangeProgrammes}
             </Text>
-            <Spacer height={170} />
+            <Spacer height={80} />
           </View>
         </ScrollView>
       </View>
@@ -642,52 +635,53 @@ export default function MeetYourIconsScreen() {
       {renderArrows()}
       {renderFadeView()}
 
-      {switchProgramme === true ? (
-        // Check if selected programme already has user progress
-        selectedProgram &&
-        selectedProgram.userProgress &&
-        selectedProgram.userProgress.latestWeek > 0 ? (
-          programmeWithProgressView(selectedProgram.userProgress.latestWeek)
+      <View
+        style={{
+          width: '100%',
+          position: 'absolute',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          bottom: 0,
+        }}>
+        {switchProgramme === true ? (
+          // Check if selected programme already has user progress
+          selectedProgram &&
+          selectedProgram.userProgress &&
+          selectedProgram.userProgress.latestWeek > 0 ? (
+            programmeWithProgressView(selectedProgram.userProgress.latestWeek)
+          ) : (
+            newProgrammeView()
+          )
         ) : (
-          newProgrammeView()
-        )
-      ) : (
-        <View
-          style={{
-            width: '100%',
-            position: 'absolute',
-            bottom: 0,
-            marginTop: getHeight(30),
-            marginBottom: getHeight(20),
-            alignItems: 'center',
-          }}>
-          <DefaultButton
-            type="startNow"
-            icon="chevron"
-            variant="gradient"
-            onPress={() => {
-              if (!selectedProgram) return;
-
-              setProgrammeModalImage(selectedProgram.programmeImage);
-              navigation.navigate('Congratulations', {
-                switchProgramme: false,
-                newProgramme: selectedProgram,
-                trainerId: selectedTrainer.id,
-                newTrainer: selectedTrainer.name,
-                environment: selectedProgram.environment,
-                programmeId: selectedProgram.id,
-              });
-            }}
-          />
-          <View style={{marginTop: getHeight(10)}}>
+          <View style={{paddingBottom: getHeight(5 + insets.bottom / 2)}}>
             <DefaultButton
-              type="login"
-              variant="transparentBlackBoldText"
-              onPress={() => navigation.navigate('Login')}
+              type="startNow"
+              icon="chevron"
+              variant="gradient"
+              onPress={() => {
+                if (!selectedProgram) return;
+
+                setProgrammeModalImage(selectedProgram.programmeImage);
+                navigation.navigate('Congratulations', {
+                  switchProgramme: false,
+                  newProgramme: selectedProgram,
+                  trainerId: selectedTrainer.id,
+                  newTrainer: selectedTrainer.name,
+                  environment: selectedProgram.environment,
+                  programmeId: selectedProgram.id,
+                });
+              }}
             />
+            <View style={{marginTop: getHeight(5), alignItems: 'center'}}>
+              <DefaultButton
+                type="login"
+                variant="transparentBlackBoldText"
+                onPress={() => navigation.navigate('Login')}
+              />
+            </View>
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 }

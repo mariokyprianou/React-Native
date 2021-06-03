@@ -52,6 +52,7 @@ export default function WorkoutTagButton({
       ...textStyles.medium12_brownishGrey100,
       color: isSelected ? colors.white100 : colors.brownishGrey100,
       textAlign: 'center',
+      padding: getWidth(5),
     },
     linearGradientStyle: {
       flex: 1,
@@ -65,6 +66,10 @@ export default function WorkoutTagButton({
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
+
+  const renderText = () => (
+    <Text style={styles.name}>{workoutTag.name.toUpperCase()}</Text>
+  );
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
@@ -78,10 +83,10 @@ export default function WorkoutTagButton({
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             colors={[colors.tealish100, colors.tiffanyBlue100]}>
-            <Text style={styles.name}>{workoutTag.name.toUpperCase()}</Text>
+            {renderText()}
           </LinearGradient>
         ) : (
-          <Text style={styles.name}>{workoutTag.name.toUpperCase()}</Text>
+          renderText()
         )}
       </TouchableOpacity>
     </View>

@@ -29,8 +29,8 @@ import {parseISO} from 'date-fns';
 import useProgressData from '../../hooks/data/useProgressData';
 import displayAlert from '../../utils/DisplayAlert';
 
-const fakeImage = require('../../../assets/fake2.png');
-const fakeGraph = require('../../../assets/fakeGraph.png');
+const transformationTileImage = require('../../../assets/transformationTileImage.png');
+const challengePlaceholderGraph = require('../../../assets/fakeGraph.png');
 
 export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -209,7 +209,7 @@ export default function ProgressScreen() {
                 <TransformationChallenge
                   type="progress"
                   title="Transformation"
-                  image={fakeImage}
+                  image={transformationTileImage}
                   onPress={() => {
                     if (!isConnected) {
                       displayAlert({text: OfflineMessage});
@@ -235,7 +235,7 @@ export default function ProgressScreen() {
                       key={index}
                       type="challenge"
                       title={name}
-                      image={fakeGraph}
+                      image={challengePlaceholderGraph}
                       imageUrl={imageUrl}
                       onPress={() => {
                         if (!isConnected) {

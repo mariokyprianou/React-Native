@@ -13,7 +13,8 @@ import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
 import TrainerIconCard from '../Cards/TrainerIconCard';
-import PersistentImage from '../Utility/PersistedImage';
+import PersistedImage from '../Utility/PersistedImage';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function TrainerCard({
   trainer,
@@ -23,7 +24,9 @@ export default function TrainerCard({
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
-  const {textStyles, colors} = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const {textStyles, colors, Constants} = useTheme();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -40,14 +43,12 @@ export default function TrainerCard({
       width: '100%',
       height: '100%',
       position: 'absolute',
-      top: 0,
-      left: 0,
       resizeMode: 'cover',
     },
     overlay: {
       width: '100%',
       position: 'absolute',
-      bottom: getHeight(40),
+      bottom: getHeight(140 + insets.bottom / 2),
       alignItems: 'center',
     },
     titleContainer: {
@@ -69,7 +70,7 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <PersistentImage
+        <PersistedImage
           imageUrl={currentProgram.programmeImage}
           style={styles.image}
           fallback={null}
@@ -77,11 +78,20 @@ export default function TrainerCard({
           placeholder={false}
           overlayStyle={null}
         />
+
         <FadingBottomView
-          color="custom"
-          customStart={colors.veryLightPinkTwo0}
-          customEnd={colors.veryLightPinkTwo100}
-          height={220}
+          color="customArray"
+          customArray={[
+            colors.veryLightPinkTwo0,
+            colors.veryLightPinkTwo90,
+            colors.veryLightPinkTwo95,
+            colors.veryLightPinkTwo95,
+            colors.veryLightPinkTwo100,
+            colors.veryLightPinkTwo100,
+            colors.veryLightPinkTwo100,
+            colors.veryLightPinkTwo100,
+          ]}
+          height={Constants.SCREEN_HEIGHT / 4}
         />
       </View>
       <View style={styles.overlay}>

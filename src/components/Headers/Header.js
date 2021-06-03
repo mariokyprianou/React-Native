@@ -58,7 +58,7 @@ export default function Header({
       justifyContent: 'center',
       alignItems: 'center',
       width: '70%',
-      paddingTop: getHeight(2)
+      paddingTop: getHeight(2),
     },
     titleStyle: {
       ...textStyles.bold22_black100,

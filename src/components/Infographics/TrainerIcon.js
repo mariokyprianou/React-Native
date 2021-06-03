@@ -63,9 +63,9 @@ export default function TrainerIcon({text, percentage}) {
         <GradientCircularProgress
           size={46}
           progress={percentage}
-          startColor={colors.tealish100}
+          startColor={colors.brightBlue100}
           middleColor={colors.aquamarine100}
-          endColor={colors.brightBlue100}
+          endColor={colors.tealish100}
           strokeWidth={3}
         />
         <View style={styles.iconContainer}>

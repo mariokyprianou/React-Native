@@ -48,10 +48,6 @@ export default function OnDemandScreen() {
     completedFreeWorkouts,
   } = useUserData();
 
-  navigation.setOptions({
-    header: () => null,
-  });
-
   const {
     workoutTags,
     getWorkoutTags,
@@ -65,6 +61,12 @@ export default function OnDemandScreen() {
   } = useData();
 
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => null,
+    });
+  }, []);
 
   useEffect(() => {
     if (isFocused && (!workoutTags || workoutTags.length === 0)) {

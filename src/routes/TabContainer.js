@@ -186,22 +186,30 @@ export default function TabContainer() {
     return true;
   }
 
+  function icon(name, color) {
+    return <TabIcon name={name} color={color} />;
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <BottomTab.Navigator
+      lazy={false}
       tabBarOptions={{
         tabStyle: styles.tabBarItemStyle,
         style: styles.tabBarStyle,
         labelStyle: styles.labelStyle,
         activeTintColor: colors.black100,
         inactiveTintColor: colors.black30,
+        allowFontScaling: false,
       }}>
       <BottomTab.Screen
         name="Tab1"
         component={WorkoutContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="workout" color={color} />,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('workout', color), [color]),
+
           tabBarLabel: TabsTitleDict.Workouts,
         })}
       />
@@ -210,7 +218,8 @@ export default function TabContainer() {
         component={OnDemandContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="onDemand" color={color} />,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('onDemand', color), [color]),
           tabBarLabel: TabsTitleDict.OnDemand,
         })}
       />
@@ -219,7 +228,8 @@ export default function TabContainer() {
         component={ProgressContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="progress" color={color} />,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('progress', color), [color]),
           tabBarLabel: TabsTitleDict.Progress,
         })}
       />
@@ -228,7 +238,8 @@ export default function TabContainer() {
         component={ProfileContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="profile" color={color} />,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('profile', color), [color]),
           tabBarLabel: TabsTitleDict.Profile,
         })}
       />

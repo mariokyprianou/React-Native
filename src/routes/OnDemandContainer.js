@@ -12,6 +12,22 @@ import StartWorkoutScreen from '../screens/workout/StartWorkoutScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 
 export default function OnDemandContainer(props) {
+  // Potencial solution for jumping issue on tab switch
+  // const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // React.useEffect(() => {
+  //   Animated.spring(fadeAnim, {
+  //     toValue: 1,
+  //     duration: 100,
+  //     useNativeDriver: true,
+  //   }).start();
+  // }, [fadeAnim]);
+
+  // return (
+  //   <Animated.View style={{opacity: fadeAnim, flex: 1}}>
+  //      </Animated.View>
+  // )
+
   return (
     <OnDemandStack.Navigator
       headerMode="screen"

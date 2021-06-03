@@ -116,7 +116,10 @@ export default function AppContainer() {
         <AppStack.Screen
           name="Workout"
           component={WorkoutScreen}
-          options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+          options={{
+            ...TransitionPresets.ModalSlideFromBottomIOS,
+            gestureEnabled: false,
+          }}
         />
 
         <AppStack.Screen

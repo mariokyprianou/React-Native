@@ -103,6 +103,8 @@ export default function DataProvider(props) {
               FastImage.preload(images);
 
               setOnboarding(data);
+            } else {
+              setOnboarding(isRTL() ? fallbackData.reverse() : fallbackData);
             }
           }
         },

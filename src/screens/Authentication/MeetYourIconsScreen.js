@@ -186,11 +186,11 @@ export default function MeetYourIconsScreen() {
     logoContainer: {
       position: 'absolute',
       top: getScaledHeight(40),
-      left: 0,
+      left: getScaledWidth(12),
       zIndex: 9,
     },
     image: {
-      marginLeft: getScaledWidth(18),
+      //backgroundColor: 'red',
     },
     zeroImage: {
       width: '100%',
@@ -198,7 +198,9 @@ export default function MeetYourIconsScreen() {
     },
     selectText: {
       ...textStyles.semiBold16_black100,
-      marginLeft: getWidth(24),
+      marginLeft: getWidth(9),
+      overflow: 'visible',
+      transform: [{translateY: -getHeight(8)}],
     },
     cantChooseContainer: {
       position: 'absolute',
@@ -213,7 +215,7 @@ export default function MeetYourIconsScreen() {
     cantChooseStyle: {
       alignSelf: 'flex-start',
       position: 'absolute',
-      right: getScaledWidth(15),
+      right: getScaledWidth(18),
       height: getScaledHeight(28),
       alignItems: 'center',
     },

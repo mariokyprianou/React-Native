@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
 import TrainerIconCard from '../Cards/TrainerIconCard';
-import PersistentImage from '../Utility/PersistedImage';
+import PersistedImage from '../Utility/PersistedImage';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function TrainerCard({
@@ -70,7 +70,7 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <PersistentImage
+        <PersistedImage
           imageUrl={currentProgram.programmeImage}
           style={styles.image}
           fallback={null}
@@ -78,6 +78,7 @@ export default function TrainerCard({
           placeholder={false}
           overlayStyle={null}
         />
+
         <FadingBottomView
           color="customArray"
           customArray={[

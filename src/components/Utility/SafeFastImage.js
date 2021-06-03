@@ -11,7 +11,6 @@ class SafeFastImage extends Component {
 
     this.state = {
       imageName: imageName,
-      loaded: null,
     };
   }
 
@@ -21,7 +20,6 @@ class SafeFastImage extends Component {
       : null;
 
     const shouldUpdate = nextState.imageName !== newImageName;
-
     if (shouldUpdate) {
       this.setState({imageName: newImageName});
     }

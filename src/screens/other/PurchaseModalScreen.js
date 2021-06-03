@@ -397,7 +397,7 @@ const PurchaseModalScreen = ({}) => {
     videoViewStyle: {
       width: '100%',
       height: getScaledHeight(317),
-      marginBottom: getScaledHeight(24),
+      marginBottom: getHeight(20),
     },
     termsTitle: {
       ...textStyles.medium14_brownishGrey100,
@@ -495,6 +495,7 @@ const PurchaseModalScreen = ({}) => {
 
           <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
         </View>
+        <Spacer height={20} />
         <DefaultButton
           type={'customText'}
           variant="gradient"

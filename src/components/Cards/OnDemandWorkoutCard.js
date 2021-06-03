@@ -14,6 +14,7 @@ import TDIcon from 'the-core-ui-component-tdicon';
 import {format} from 'date-fns';
 import IconTextView from '../Infographics/IconTextView';
 import isRTL from '../../utils/isRTL';
+import PersistentImage from '../Utility/PersistedImage';
 
 const homeIcon = require('../../../assets/icons/homeWorkout.png');
 const gymIcon = require('../../../assets/icons/gymIcon.png');
@@ -148,10 +149,15 @@ export default function OnDemandWorkoutCard({
         style={styles.touch}
         onPress={() => onPressCard(workout)}>
         {image ? (
-          <Image
-            source={{uri: image}}
+          <PersistentImage
+            imageUrl={image}
             style={styles.image}
-            resizeMode={'cover'}
+            //showLoading={true}
+            //fallback={fallback}
+            //placeholder={true}
+            //overlayStyle={overlayStyle}
+            //customOverlay={() => <></>}
+            //callbackSetLoaded={() => {}}
           />
         ) : (
           <View style={styles.image} />

@@ -35,7 +35,7 @@ export default function TabContainer() {
 
   const navigation = useNavigation();
 
-  const {fontSize, getHeight, getWidth} = ScaleHook();
+  const {fontSize, getHeight, getScaledHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
@@ -112,8 +112,8 @@ export default function TabContainer() {
     },
     tabBarItemStyle: {
       justifyContent: 'center',
-      marginBottom: isIphoneX() ? getHeight(0) : getHeight(15),
-      marginTop: isIphoneX() ? getHeight(0) : getHeight(15),
+      marginBottom: isIphoneX() ? getScaledHeight(0) : getScaledHeight(15),
+      marginTop: isIphoneX() ? getScaledHeight(2) : getScaledHeight(15),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',

@@ -29,7 +29,7 @@ export default function OnDemandWorkoutCard({
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, fonts, textStyles} = useTheme();
   const {dictionary} = useDictionary();
 
   const {OnDemandDict, ButtonDict, WorkoutDict} = dictionary;
@@ -94,12 +94,11 @@ export default function OnDemandWorkoutCard({
     },
     nameContainer: {},
     workoutName: {
-      ...textStyles.semiBold14_black100,
+      fontFamily: fonts.semiBold,
+      color: colors.black100,
       fontSize: fontSize(15),
-      lineHeight: getHeight(14),
       letterSpacing: -0.22,
       textAlign: 'left',
-      marginTop: 3,
     },
     detailContainer: {
       flexDirection: 'row',

@@ -183,6 +183,7 @@ export default function OnDemandScreen() {
         <FlatList
           horizontal={true}
           scrollEnabled={true}
+          showsHorizontalScrollIndicator={false}
           data={workoutTagsToDisplay}
           style={styles.tagsList}
           keyExtractor={(item, index) => `${index}`}
@@ -227,7 +228,7 @@ export default function OnDemandScreen() {
                 style={{
                   width: '100%',
                   paddingHorizontal: getWidth(20),
-                  paddingTop: index === 0 ? getHeight(4) : 0,
+                  paddingTop: index === 0 ? getHeight(10) : 0,
                 }}>
                 <OnDemandWorkoutCard
                   workout={item}

@@ -811,6 +811,7 @@ export default function ThemeProvider({children}) {
   const publicMethods = React.useMemo(
     () => ({
       colors,
+      fonts,
       textStyles,
       singleCalendarStyles,
       cellFormStyles,
@@ -822,6 +823,7 @@ export default function ThemeProvider({children}) {
     }),
     [
       colors,
+      fonts,
       textStyles,
       singleCalendarStyles,
       cellFormStyles,

@@ -503,10 +503,10 @@ const PurchaseModalScreen = ({}) => {
           onPress={onPressYearlySubscription}
           capitalise={false}
           customText={PurchaseDict.YearlyButtonTitle(
-            yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
+            yearlySubscription.localizedPrice,
           )}
           customSubtext={PurchaseDict.YearlyButtonSubTitle(
-            yearlySubscription.localizedPrice,
+            yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
           )}
           promptText={PurchaseDict.SavePrompt(yearlyDiscount)}
         />

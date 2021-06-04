@@ -174,8 +174,8 @@ const enGB = {
     InfoTitle: 'Join POWER.',
     Info:
       'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
-    YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / month`,
-    YearlyButtonSubTitle: (price) => `${price} / year billed annually`,
+    YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / year`,
+    YearlyButtonSubTitle: (price) => `${price} / month billed annually`,
     MonthlyButtonTitle: (price) => `MONTHLY \u2022 ${price} / month`,
     SavePrompt: (percentage) => `Save ${percentage}%`,
     MonthlyButtonSubTitle: 'billed monthly',

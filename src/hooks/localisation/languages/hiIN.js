@@ -175,8 +175,8 @@ const hiIN = {
     InfoTitle: 'POWER जॉइन करें',
     Info:
       'POWER पर सभी प्रोग्रामों तक असीमित पहुँच पाएँ, अपनी प्रगति को ट्रैक और अपने परिणामों को शेयर करें!',
-    YearlyButtonTitle: (price) => `वार्षिक \u2022 ${price} / माह`,
-    YearlyButtonSubTitle: (price) => `${price} / वर्ष वार्षिक बिलिंग  `,
+    YearlyButtonTitle: (price) => `वार्षिक \u2022 ${price} / वर्ष`,
+    YearlyButtonSubTitle: (price) => `${price} / माह वार्षिक बिलिंग  `,
     MonthlyButtonTitle: (price) => `मासिक रूप से \u2022 ${price} / माह`,
     SavePrompt: (percentage) => `सेव करें ${percentage}%`,
     MonthlyButtonSubTitle: 'मासिक बिल',

@@ -51,7 +51,7 @@ export default function TrainerIconCard({
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 0, y: 1}}
-      colors={[colors.white100, colors.white80]}>
+      colors={[colors.white80, colors.white30]}>
       <TrainerIcon
         text={MeetYourIconsDict.FatLoss}
         percentage={fatLossPercentage}

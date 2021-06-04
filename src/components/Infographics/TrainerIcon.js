@@ -10,6 +10,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import {GradientCircularProgress} from 'react-native-circular-gradient-progress';
 import TDIcon from 'the-core-ui-component-tdicon';
 
@@ -17,6 +18,8 @@ export default function TrainerIcon({text, percentage}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const {dictionary} = useDictionary();
+  const {MeetYourIconsDict} = dictionary;
 
   const fatIcon = require('../../../assets/icons/lightning.png');
   const fitnessIcon = require('../../../assets/icons/heartRate.png');
@@ -24,10 +27,10 @@ export default function TrainerIcon({text, percentage}) {
   const wellnessIcon = require('../../../assets/icons/wellness.png');
 
   const iconSelector = {
-    'FAT LOSS': fatIcon,
-    FITNESS: fitnessIcon,
-    MUSCLE: muscleIcon,
-    WELLNESS: wellnessIcon,
+    [MeetYourIconsDict.FatLoss]: fatIcon,
+    [MeetYourIconsDict.Fitness]: fitnessIcon,
+    [MeetYourIconsDict.Muscle]: muscleIcon,
+    [MeetYourIconsDict.Wellness]: wellnessIcon,
   };
 
   // ** ** ** ** ** STYLES ** ** ** ** **

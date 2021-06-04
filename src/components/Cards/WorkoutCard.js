@@ -44,11 +44,13 @@ export default function WorkoutCard({
   const dateSuperscript = date.slice(-6, -4);
   const datePart2 = date.slice(-4);
 
+  const isRestDay = title === WorkoutDict.RestDay || title === 'REST DAY';
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
       width: '100%',
-      height: title === WorkoutDict.RestDay ? getHeight(66) : getHeight(100),
+      height: isRestDay ? getHeight(66) : getHeight(100),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -67,7 +69,7 @@ export default function WorkoutCard({
     completeOverlay: {
       backgroundColor: colors.white75,
       width: getWidth(335),
-      height: title === WorkoutDict.RestDay ? getHeight(66) : getHeight(100),
+      height: isRestDay ? getHeight(66) : getHeight(100),
       position: 'absolute',
       top: 0,
       left: 0,
@@ -102,7 +104,7 @@ export default function WorkoutCard({
     dayContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: title === 'REST DAY' ? getHeight(0) : getHeight(17),
+      marginBottom: isRestDay ? getHeight(0) : getHeight(17),
     },
     workoutDay: {
       ...textStyles.medium14_aquamarine100,
@@ -153,7 +155,7 @@ export default function WorkoutCard({
                   />
                 </View>
               )}
-              {title !== WorkoutDict.RestDay && (
+              {!isRestDay && (
                 <Text style={styles.workoutDay}>
                   {isRTL()
                     ? `:${WorkoutDict.Day} ${day} `
@@ -166,7 +168,7 @@ export default function WorkoutCard({
                 <Text style={styles.date}>{datePart2}</Text>
               </View>
             </View>
-            {title !== WorkoutDict.RestDay && (
+            {!isRestDay && (
               <IconTextView
                 type="intensity"
                 duration={duration}

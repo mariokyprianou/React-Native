@@ -208,7 +208,7 @@ export default function ProgressScreen() {
               <>
                 <TransformationChallenge
                   type="progress"
-                  title="Transformation"
+                  title={ProgressDict.TransformationScreenTitle}
                   image={transformationTileImage}
                   onPress={() => {
                     if (!isConnected) {

@@ -324,6 +324,7 @@ const enGB = {
     Progress: SharedDict.Progress.toLowerCase(),
     Upload: 'Upload',
     TransformationScreenTitle: 'Your transformation',
+    TransformationCardTitle: 'Transformation',
     ChallengeTime: 'TIME',
     ChallengeZeroChart: 'Complete challenges to see your progress here!',
     FunctionNotAvailable:

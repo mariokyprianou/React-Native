@@ -17,7 +17,6 @@ import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
 import analytics from '@react-native-firebase/analytics';
 
-
 export default function AnalyticsPermissionScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
@@ -61,7 +60,6 @@ export default function AnalyticsPermissionScreen() {
         console.log('AnalyticsScreenUpdate', res);
         analytics().setAnalyticsCollectionEnabled(enabled);
 
-
         navigateForward();
       })
       .catch((err) => {
@@ -79,7 +77,10 @@ export default function AnalyticsPermissionScreen() {
   };
 
   const navigateForward = () => {
-    navigation.navigate('TabContainer');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'TabContainer'}],
+    });
   };
 
   // MARK: - Render

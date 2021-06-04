@@ -28,12 +28,11 @@ import CommonDataProvider from './hooks/data/CommonDataProvider';
 import ProgressDataProvider from './hooks/data/ProgressDataProvider';
 import WorkoutTimerProvider from './hooks/timer/WorkoutTimerProvider';
 import ShareProvider from './hooks/share/ShareProvider';
-import getTimeZoneOffset from './utils/getTimeZoneOffset';
+import QueryProvider from './hooks/customQuery/Provider';
 import {firebase} from '@react-native-firebase/analytics';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import OfflineHandlerProvider from './hooks/offlineHandler/Provider';
+import RefetchProvider from './hooks/refetch/Provider';
 
 const {awsRegion, userPoolId, clientId} = Secrets();
 
@@ -57,7 +56,9 @@ const App = () => {
       const gqlClient = await TDGraphQLProvider();
       setClient(gqlClient);
 
-      await firebase.initializeApp();
+      if (!firebase.apps.length) {
+        await firebase.initializeApp();
+      }
     }
 
     BuildClient();
@@ -104,33 +105,39 @@ const App = () => {
       )}
       <SafeAreaProvider>
         <ApolloProvider client={client}>
-          <ScaleProvider config={{height: 667, width: 375}}>
-            <ThemeProvider>
-              <DictionaryProvider>
-                <DataProvider>
-                  <UserDataProvider>
-                    <CommonDataProvider>
-                      <ProgressDataProvider>
-                        <WorkoutTimerProvider>
-                          <ShareProvider>
-                            <LoadingProvider>
-                              <NavigationContainer>
-                                <TDCountdown>
-                                  <FormProvider>
-                                    <AppContainer />
-                                  </FormProvider>
-                                </TDCountdown>
-                              </NavigationContainer>
-                            </LoadingProvider>
-                          </ShareProvider>
-                        </WorkoutTimerProvider>
-                      </ProgressDataProvider>
-                    </CommonDataProvider>
-                  </UserDataProvider>
-                </DataProvider>
-              </DictionaryProvider>
-            </ThemeProvider>
-          </ScaleProvider>
+          <QueryProvider>
+            <ScaleProvider config={{height: 667, width: 375}}>
+              <ThemeProvider>
+                <DictionaryProvider>
+                  <DataProvider>
+                    <UserDataProvider>
+                      <CommonDataProvider>
+                        <ProgressDataProvider>
+                          <WorkoutTimerProvider>
+                            <ShareProvider>
+                              <LoadingProvider>
+                                <RefetchProvider>
+                                  <NavigationContainer>
+                                    <TDCountdown>
+                                      <FormProvider>
+                                        <OfflineHandlerProvider>
+                                          <AppContainer />
+                                        </OfflineHandlerProvider>
+                                      </FormProvider>
+                                    </TDCountdown>
+                                  </NavigationContainer>
+                                </RefetchProvider>
+                              </LoadingProvider>
+                            </ShareProvider>
+                          </WorkoutTimerProvider>
+                        </ProgressDataProvider>
+                      </CommonDataProvider>
+                    </UserDataProvider>
+                  </DataProvider>
+                </DictionaryProvider>
+              </ThemeProvider>
+            </ScaleProvider>
+          </QueryProvider>
         </ApolloProvider>
       </SafeAreaProvider>
       <QuickPicker />

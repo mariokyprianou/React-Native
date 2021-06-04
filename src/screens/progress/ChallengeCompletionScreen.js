@@ -30,7 +30,14 @@ const screenWidth = Dimensions.get('screen').width;
 
 export default function ChallengeCompletionScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getScaledHeight,
+    getWidth,
+    getScaledWidth,
+    radius,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {history} = useProgressData();
   const {dictionary} = useDictionary();
@@ -58,13 +65,7 @@ export default function ChallengeCompletionScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      header: () => (
-        <Header
-          title={WorkoutDict.ChallengeCompleteTitle}
-          right="crossIcon"
-          rightAction={() => navigation.navigate('Progress')}
-        />
-      ),
+      header: () => <Header title={WorkoutDict.ChallengeCompleteTitle} />,
     });
   }, []);
 
@@ -105,10 +106,10 @@ export default function ChallengeCompletionScreen() {
       bottom: getHeight(40),
     },
     card: {
-      height: getHeight(220),
+      height: getScaledHeight(220),
       width: '55%',
       position: 'absolute',
-      top: getHeight(120),
+      top: getScaledHeight(120),
     },
     resultContainer: {
       backgroundColor: colors.veryLightPinkTwo100,
@@ -167,70 +168,86 @@ export default function ChallengeCompletionScreen() {
 
     setLoading(true);
 
-    const {colour, url} = await getShareData(ShareMediaType.challengeComplete);
+    try {
+      const {colour, url} = await getShareData(
+        ShareMediaType.challengeComplete,
+      ).catch((err) => {
+        console.log(err, '<---getShareData err');
+        displayAlert({text: ShareDict.UnableToShare});
+        setLoading(false);
+        return;
+      });
 
-    console.log('name: ', name);
-    console.log('result: ', result);
-    console.log('weightPreference: ', weightPreference);
-    console.log('unitType: ', unitType);
-    console.log('ellapsedTime: ', ellapsedTime);
-    console.log('type: ', type);
-    console.log('duration: ', duration);
+      console.log('name: ', name);
+      console.log('result: ', result);
+      console.log('weightPreference: ', weightPreference);
+      console.log('unitType: ', unitType);
+      console.log('ellapsedTime: ', ellapsedTime);
+      console.log('type: ', type);
+      console.log('duration: ', duration);
 
-    if (type === 'STOPWATCH') {
-      const unit = unitType === 'WEIGHT' ? weightPreference : '';
-      const achievementValueString = ellapsedTime + ' ' + unit;
-      PowerShareAssetsManager.shareStringAchievement({
-        imageUrl: url,
-        achievementValueString: ellapsedTime,
-        subtitle: name,
-        colour: colour,
-      })
-        .then((res) => {
-          setLoading(false);
-          shareEvent();
+      if (type === 'STOPWATCH') {
+        PowerShareAssetsManager.shareStringAchievement({
+          imageUrl: url,
+          achievementValueString: `${ellapsedTime}`,
+          subtitle: name,
+          colour: colour,
         })
-        .catch((err) => {
-          console.log('SHARE ERR: ', err);
+          .then((res) => {
+            setLoading(false);
+            shareEvent();
+          })
+          .catch((err) => {
+            console.log('SHARE ERR: ', err);
+            setLoading(false);
+          })
+          .finally(() => setLoading(false));
+      } else if (type === 'COUNTDOWN') {
+        const unit = unitType === 'WEIGHT' ? weightPreference : '';
+        const achievedResult =
+          typeof result === 'number' ? result : parseInt(result, 10);
+        const durationTimeString =
+          typeof duration === 'string' ? duration : duration.toString();
+        const subtitle = name + '\nin ' + durationTimeString + ' seconds';
+
+        PowerShareAssetsManager.shareStringAchievement({
+          imageUrl: url,
+          achievementValueString: `${achievedResult} ${unit}`,
+          subtitle: subtitle,
+          colour: colour,
         })
-        .finally(() => setLoading(false));
-    } else if (type === 'COUNTDOWN') {
-      const unit = unitType === 'WEIGHT' ? weightPreference : '';
-      const achievedResult =
-        typeof result === 'number' ? result : parseInt(result, 10);
-      const durationTimeString =
-        typeof duration === 'string' ? duration : duration.toString();
-      const subtitle = name + '\nin ' + durationTimeString + ' seconds';
-      const achievedValueString = `${achievedResult} ${unit}`;
-      PowerShareAssetsManager.shareStringAchievement({
-        imageUrl: url,
-        achievementValueString: achievedValueString,
-        subtitle: subtitle,
-        colour: colour,
-      })
-        .then((res) => {
-          setLoading(false);
-          shareEvent();
+          .then((res) => {
+            setLoading(false);
+            shareEvent();
+          })
+          .catch((err) => {
+            setLoading(false);
+          })
+          .finally(() => setLoading(false));
+      } else {
+        const unit = unitType === 'WEIGHT' ? weightPreference : '';
+        const achievedResult =
+          typeof result === 'number' ? result : parseInt(result, 10);
+
+        PowerShareAssetsManager.shareStringAchievement({
+          imageUrl: url,
+          achievementValueString: `${achievedResult} ${unit}`,
+          subtitle: name,
+          colour: colour,
         })
-        .catch((err) => {})
-        .finally(() => setLoading(false));
-    } else {
-      const unit = unitType === 'WEIGHT' ? weightPreference : '';
-      const achievedResult =
-        typeof result === 'number' ? result : parseInt(result, 10);
-      const achievedValueString = `${achievedResult} ${unit}`;
-      PowerShareAssetsManager.shareStringAchievement({
-        imageUrl: url,
-        achievementValueString: achievedValueString,
-        subtitle: name,
-        colour: colour,
-      })
-        .then((res) => {
-          setLoading(false);
-          shareEvent();
-        })
-        .catch((err) => {})
-        .finally(() => setLoading(false));
+          .then((res) => {
+            setLoading(false);
+            shareEvent();
+          })
+          .catch((err) => {
+            setLoading(false);
+          })
+          .finally(() => setLoading(false));
+      }
+    } catch (ee) {
+      console.log(err, '<---getShareData err');
+      displayAlert({text: ShareDict.UnableToShare});
+      setLoading(false);
     }
   }
 
@@ -251,39 +268,43 @@ export default function ChallengeCompletionScreen() {
           {WorkoutDict.ChallengeComplete(name, trainer)}
         </Text>
       </View>
-      <View style={{flexDirection: 'row', flex:1, height: getHeight(220), marginTop: getHeight(80),}}>
-
-        <View style={{flex:0.6}}>
-        {chartInfo && (
-          <ProgressChart
-            data={chartInfo.processedHistory}
-            chartLabel={''}
-            chartDataPoints={chartInfo.dataPoints}
-            interval={chartInfo.interval}
-            ticks={chartInfo.ticks}
-            axis={false}
-            background={false}
-            scrollToEnd={true}
-          />
-        )}
-        </View>
-
-        <View style={{flex:0.4}}>
-          <View style={styles.resultContainer}>
-          <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          height: getScaledHeight(220),
+          marginTop: getScaledHeight(80),
+        }}>
+        <View style={{flex: 0.6}}>
           {chartInfo && (
-            <Text
-              style={
-                type === 'STOPWATCH' ? styles.timeResult : styles.resultText
-              }>
-              {`${result} ${chartInfo.chartLabel}`}
-            </Text>
+            <ProgressChart
+              data={chartInfo.processedHistory}
+              chartLabel={''}
+              chartDataPoints={chartInfo.dataPoints}
+              interval={chartInfo.interval}
+              ticks={chartInfo.ticks}
+              axis={false}
+              background={false}
+              scrollToEnd={true}
+            />
           )}
         </View>
-        </View>
 
+        <View style={{flex: 0.4}}>
+          <View style={styles.resultContainer}>
+            <Text style={styles.resultTitle}>{WorkoutDict.Today}</Text>
+            {chartInfo && (
+              <Text
+                style={
+                  type === 'STOPWATCH' ? styles.timeResult : styles.resultText
+                }>
+                {`${result} ${chartInfo.chartLabel}`}
+              </Text>
+            )}
+          </View>
+        </View>
       </View>
-      
+
       <View style={styles.line} />
       <View style={styles.buttonContainer}>
         <DefaultButton

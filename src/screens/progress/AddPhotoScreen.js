@@ -10,6 +10,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, Platform, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/core';
 import useTheme from '../../hooks/theme/UseTheme';
 import {TDAddPhoto} from 'the-core-ui-module-tdslideshow';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -19,12 +20,15 @@ import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useMutation} from '@apollo/client';
 import UploadProgressImage from '../../apollo/mutations/UploadProgressImage';
+import ConfirmUploadProgressImage from '../../apollo/mutations/ConfirmUploadProgressImage';
+
 import RNFetchBlob from 'rn-fetch-blob';
 import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
 import displayAlert from '../../utils/DisplayAlert';
 import useInterval from '../../utils/useInterval';
 import format from 'date-fns/format';
+import * as R from 'ramda';
 
 const cameraButton = require('../../../assets/icons/cameraButton.png');
 const cameraFadedButton = require('../../../assets/images/cameraFadedButton.png');
@@ -33,8 +37,6 @@ const countdown0 = require('../../../assets/images/countdown0s.png');
 const countdown5 = require('../../../assets/images/countdown5s.png');
 const countdown10 = require('../../../assets/images/countdown10s.png');
 
-
-
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, fontSize} = ScaleHook();
@@ -42,8 +44,12 @@ export default function TransformationScreen() {
   const {loading, setLoading} = useLoading();
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
-  const {getImages} = useProgressData();
+  const {getImages, addProgressImage} = useProgressData();
   const navigation = useNavigation();
+
+  const {
+    params: {alreadyExists = false},
+  } = useRoute();
 
   navigation.setOptions({
     header: () => (
@@ -51,15 +57,15 @@ export default function TransformationScreen() {
         title={ProgressDict.Upload}
         goBack
         right="photoSelectIcon"
-        rightAction={loading ? ()=> {} : handleSelectPhoto}
+        rightAction={loading ? () => {} : handleSelectPhoto}
       />
     ),
   });
 
-  const [requestUplaodUrl] = useMutation(UploadProgressImage);
+  const [requestUploadUrl] = useMutation(UploadProgressImage);
+  const [confirmUpload] = useMutation(ConfirmUploadProgressImage);
 
   const [time, setTime] = useState(0);
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -78,64 +84,67 @@ export default function TransformationScreen() {
       ...textStyles.bold30_white100,
       fontSize: fontSize(55),
       lineHeight: fontSize(60),
-    }
+    },
   };
-
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handlePhoto(path, contentType) {
-
-    if (!loading) {
-      setLoading(true);
-    }
+    setLoading(true);
 
     const newPath =
       Platform.OS === 'android' ? path : path.replace('file://', 'private');
 
     // Check file size
-    const validSize = await RNFetchBlob.fs.stat(newPath)
+    const validSize = await RNFetchBlob.fs
+      .stat(newPath)
       .then((stats) => {
-        const { size } = stats;
+        const {size} = stats;
         if (size) {
-          console.log("Image size in MB: ", size / 1000000);
-          const limit = 1000000 * 20; // 20MB in bytes 
+          console.log('Image size in MB: ', size / 1000000);
+          const limit = 1000000 * 20; // 20MB in bytes
           return size <= limit;
         }
       })
       .catch((err) => {
         console.log(err, '<---requestUrl err');
-        displayAlert({text:ProgressDict.UploadFailed });
+        displayAlert({text: ProgressDict.UploadFailed});
         setLoading(false);
         return false;
-      })
+      });
 
     if (!validSize) {
-      console.log("Image size exceeds limit");
+      console.log('Image size exceeds limit');
       displayAlert({text: ProgressDict.TooLargeSizeImage});
       setLoading(false);
       return;
     }
 
-
     // Request upload url
     const requestInput = {
-      "contentType": contentType,
-      "takenOn": format(new Date().setHours(0,0,0,0), 'yyyy-MM-dd')
-    }
+      contentType: contentType,
+      takenOn: format(new Date().setHours(0, 0, 0, 0), 'yyyy-MM-dd'),
+    };
 
-    const uploadUrlRes = await requestUplaodUrl({
+    const uploadUrlRes = await requestUploadUrl({
       variables: {
-        input: requestInput
+        input: requestInput,
       },
-  }).catch((err) => {
+    }).catch((err) => {
       console.log(err, '<---requestUrl err');
-      displayAlert({text:ProgressDict.UploadFailed });
+      displayAlert({text: ProgressDict.UploadFailed});
       setLoading(false);
       return;
     });
 
-    if (!uploadUrlRes || !uploadUrlRes.data || !uploadUrlRes.data.uploadProgressImage) return;
-    const {uploadUrl} = uploadUrlRes.data.uploadProgressImage;
+    if (
+      !uploadUrlRes ||
+      !uploadUrlRes.data ||
+      !uploadUrlRes.data.uploadProgressImage
+    ) {
+      return;
+    }
+
+    const {uploadUrl, token} = uploadUrlRes.data.uploadProgressImage;
 
     // Initialize upload
     RNFetchBlob.fetch(
@@ -153,13 +162,31 @@ export default function TransformationScreen() {
         if (status === 200 || status === 204) {
           console.log('Upload done --- SUCCESS');
 
-          await getImages();
-          console.log(
-            'getImages -- finished getting updated images',
-          );
+          confirmUpload({
+            variables: {
+              input: {
+                token: token,
+              },
+            },
+          })
+            .then(async (confirmRes) => {
+              console.log('confirmUpload', confirmRes);
+              const {success, progressImage} = R.path(
+                ['data', 'confirmUploadProgressImage'],
+                confirmRes,
+              );
 
-          navigation.goBack();
-          setLoading(false);
+              if (success) {
+                await addProgressImage(progressImage, alreadyExists);
+                navigation.goBack();
+                setLoading(false);
+              } else {
+                handleAddPhotoError();
+              }
+            })
+            .catch((err) => {
+              handleAddPhotoError();
+            });
         } else {
           console.log('Upload failed', res);
           handleAddPhotoError();
@@ -172,12 +199,11 @@ export default function TransformationScreen() {
   }
 
   async function handleAddPhotoError() {
-    displayAlert({text:ProgressDict.UploadFailed });
+    displayAlert({text: ProgressDict.UploadFailed});
     setLoading(false);
   }
 
   function handleSelectPhoto() {
-
     setLoading(true);
 
     request(
@@ -192,13 +218,12 @@ export default function TransformationScreen() {
         }
 
         if (result === RESULTS.UNAVAILABLE) {
-          displayAlert({text:ProgressDict.FunctionNotAvailable });      
+          displayAlert({text: ProgressDict.FunctionNotAvailable});
         }
         if (result === RESULTS.BLOCKED) {
-          displayAlert({text:ProgressDict.NoCamera });    
+          displayAlert({text: ProgressDict.NoCamera});
         }
         if (result === RESULTS.GRANTED) {
-
           // compression rates tested:
           // Android 0.92 compressed 12.6MB --> 8.8MB  about 70%
           // IOS 0.99 compressed 7.7MB -> 3.6MB about 46%
@@ -206,15 +231,17 @@ export default function TransformationScreen() {
           ImagePicker.openPicker({
             mediaType: 'photo',
             compressImageQuality: Platform.OS === 'android' ? 0.92 : 0.99,
-            forceJpg: true
-          }).then((cameraPhoto) => {
-            const {path, mime} = cameraPhoto;
+            forceJpg: true,
+          })
+            .then((cameraPhoto) => {
+              const {path, mime} = cameraPhoto;
 
-            handlePhoto(path, mime);
-          }).catch(()=> {
-            displayAlert({text:ProgressDict.UploadFailed });
-            setLoading(false);
-          });
+              handlePhoto(path, mime);
+            })
+            .catch(() => {
+              displayAlert({text: ProgressDict.UploadFailed});
+              setLoading(false);
+            });
         }
       })
       .catch((err) => {
@@ -223,7 +250,6 @@ export default function TransformationScreen() {
       });
   }
 
- 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
@@ -243,26 +269,39 @@ export default function TransformationScreen() {
         setLoading={setLoading}
         cameraEnabled={!loading}
         countDownStyle={styles.countDownStyle}
-        CountDownView={() => <CountDownView time={ time > 0 ? time / 1000 : 0 } countDownStyle={styles.countDownStyle} /> }
-      />      
+        CountDownView={() => (
+          <CountDownView
+            time={time > 0 ? time / 1000 : 0}
+            countDownStyle={styles.countDownStyle}
+          />
+        )}
+      />
     </View>
   );
 }
 
-
 function CountDownView({time, countDownStyle}) {
-
   const [seconds, setSeconds] = useState(time);
 
   useInterval(() => {
-    if(seconds > 0) {
+    if (seconds > 0) {
       setSeconds(seconds - 1);
     }
   }, 1000);
 
-  return <>
-    {seconds > 0 && 
-   <View style={{ height: '100%', position: 'absolute',alignSelf: 'center', justifyContent: 'center' }}><Text style={countDownStyle}>{seconds}</Text></View>
-    }
-   </>
+  return (
+    <>
+      {seconds > 0 && (
+        <View
+          style={{
+            height: '100%',
+            position: 'absolute',
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text style={countDownStyle}>{seconds}</Text>
+        </View>
+      )}
+    </>
+  );
 }

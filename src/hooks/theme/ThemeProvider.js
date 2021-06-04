@@ -23,7 +23,15 @@ const DEFAULT_DIMENSIONS_CONTEXT_VALUE = {
 };
 
 export default function ThemeProvider({children}) {
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {
+    getHeight,
+    getScaledHeight,
+    getWidth,
+    getScaledWidth,
+    fontSize,
+    radius,
+    scaledRadius,
+  } = ScaleHook();
   const insets = useSafeAreaInsets();
 
   const [layout, setLayout] = useState(DEFAULT_DIMENSIONS_CONTEXT_VALUE);
@@ -41,9 +49,8 @@ export default function ThemeProvider({children}) {
   //const hasSoftNavigation = Dimensions.get('window').height !== Dimensions.get('screen').height;
   //const SYSTEM_SOFT_NAV_HEIGHT = Platform.OS === 'android' && hasSoftNavigation ? insets.top : 0;
 
-
-    // Need this for both platforms
-  const HEADER_HEIGHT = 50 + insets.top;
+  // Need this for both platforms
+  const HEADER_HEIGHT = 49 + insets.top;
   const SCREEN_HEIGHT = layout.height;
 
   const EXERCISE_VIEW_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT; // + SYSTEM_SOFT_NAV_HEIGHT;
@@ -86,6 +93,18 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.white100,
     },
+    bold12_newWorkoutBlue100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(20),
+      color: colors.newWorkoutBlue100,
+    },
+    bold12_paleGrey100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(12),
+      color: colors.paleGrey100,
+    },
     bold14_black20: {
       fontFamily: fonts.bold,
       fontSize: fontSize(14),
@@ -123,12 +142,24 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(23),
       color: colors.brownishGrey100,
     },
+    bold15_paleGrey100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.paleGrey100,
+    },
     bold15_white100: {
       fontFamily: fonts.bold,
       fontSize: fontSize(15),
       lineHeight: fontSize(20),
       letterSpacing: 0.75,
       color: colors.white100,
+    },
+    bold16_aquamarine100: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(24),
+      color: colors.aquamarine100,
     },
     bold16_brownishGrey100: {
       fontFamily: fonts.bold,
@@ -244,9 +275,27 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(12),
       color: colors.brownishGrey100,
     },
+    medium11_paleGrey100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(11),
+      lineHeight: fontSize(14),
+      color: colors.paleGrey100,
+    },
+    medium12_black100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(20),
+      color: colors.black100,
+    },
     medium12_brownishGrey100: {
       fontFamily: fonts.medium,
       fontSize: fontSize(12),
+      lineHeight: fontSize(20),
+      color: colors.brownishGrey100,
+    },
+    medium13_brownishGrey100: {
+      fontFamily: fonts.medium,
+      fontSize: fontSize(13),
       lineHeight: fontSize(20),
       color: colors.brownishGrey100,
     },
@@ -310,6 +359,12 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(30),
       color: colors.black80,
     },
+    regular12_brownishGrey100: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(12),
+      lineHeight: fontSize(18),
+      color: colors.brownishGrey100,
+    },
     regular14_black100: {
       fontFamily: fonts.regular,
       fontSize: fontSize(14),
@@ -352,11 +407,23 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(30),
       color: colors.black100,
     },
+    regular16_black90: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(30),
+      color: colors.black90,
+    },
     regular16_brownishGrey100: {
       fontFamily: fonts.regular,
       fontSize: fontSize(16),
       lineHeight: fontSize(30),
       color: colors.brownishGrey100,
+    },
+    regular16_brownishGreyTwo100: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(30),
+      color: colors.brownishGreyTwo100,
     },
     semiBold10_brownGrey100: {
       fontFamily: fonts.semiBold,
@@ -375,6 +442,12 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(12),
       lineHeight: fontSize(20),
       color: colors.black100,
+    },
+    semiBold13_brownishGrey100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(13),
+      lineHeight: fontSize(20),
+      color: colors.brownishGrey100,
     },
     semiBold14_aquamarine100: {
       fontFamily: fonts.semiBold,
@@ -400,11 +473,35 @@ export default function ThemeProvider({children}) {
       lineHeight: fontSize(20),
       color: colors.white100,
     },
+    semiBold15_brownishGrey100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.brownishGrey100,
+    },
+    semiBold15_aquamarine100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(15),
+      lineHeight: fontSize(23),
+      color: colors.aquamarine100,
+    },
+    semiBold16_black100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(20),
+      color: colors.black100,
+    },
     semiBold16_brownishGrey100: {
       fontFamily: fonts.semiBold,
       fontSize: fontSize(16),
       lineHeight: fontSize(20),
       color: colors.brownishGrey100,
+    },
+    semiBold16_paleGrey100: {
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(16),
+      lineHeight: fontSize(20),
+      color: colors.paleGrey100,
     },
     semiBold16_white90: {
       fontFamily: fonts.semiBold,
@@ -454,18 +551,23 @@ export default function ThemeProvider({children}) {
   const singleCalendarStyles = {
     days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
     daysContainerStyles: {
-      marginBottom: getHeight(14),
+      marginBottom: getHeight(0),
       width: '100%',
       alignSelf: 'center',
     },
-    daysTextStyles: {...textStyles.bold10_brownGrey100},
+    daysTextStyles: {
+      ...textStyles.bold10_brownGrey100,
+      lineHeight: fontSize(22),
+    },
     dateCellStyles: {
-      width: getWidth(30),
-      height: getWidth(30),
-      borderRadius: radius(15),
+      width: getScaledWidth(30),
+      height: getScaledWidth(30),
+      borderRadius: scaledRadius(15),
     },
     pillWidth: {
-      width: getWidth(45),
+      width: getScaledWidth(45),
+      marginBottom: getScaledHeight(0),
+      marginTop: getScaledHeight(8),
     },
     lookupStyleTable: {
       NEW_WEEK: {
@@ -521,7 +623,7 @@ export default function ThemeProvider({children}) {
       marginTop: getHeight(18),
     },
     labelTextStyle: {
-      ...textStyles.medium14_brownishGrey100,
+      ...textStyles.medium11_paleGrey100,
       textAlign: 'left',
     },
     iconTintColor: colors.black100,
@@ -619,9 +721,11 @@ export default function ThemeProvider({children}) {
     exerciseTitleStyle: {
       ...textStyles.bold21_black100,
       textAlign: 'left',
+      lineHeight: getHeight(22),
+      flex: 0.9,
     },
     exerciseDescriptionStyle: {
-      marginTop: getHeight(5),
+      marginTop: getHeight(8),
       marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
@@ -642,8 +746,8 @@ export default function ThemeProvider({children}) {
       margin: getWidth(4),
     },
     setsContainerStyle: {
-      marginHorizontal: getWidth(20),
-      marginBottom: getHeight(20),
+      marginHorizontal: getScaledWidth(20),
+      marginBottom: getScaledHeight(20),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -691,11 +795,23 @@ export default function ThemeProvider({children}) {
       lineHeight: getHeight(100),
       textAlign: 'center',
     },
+    timerRestTextStyle: {
+      ...textStyles.bold22_black100,
+      textAlign: 'center',
+    },
+    timerUpNextTextStyle: {
+      ...textStyles.bold22_white100,
+      textAlign: 'center',
+      position: 'absolute',
+      width: '100%',
+      marginTop: SCREEN_WIDTH - 50,
+    },
   };
 
   const publicMethods = React.useMemo(
     () => ({
       colors,
+      fonts,
       textStyles,
       singleCalendarStyles,
       cellFormStyles,
@@ -707,6 +823,7 @@ export default function ThemeProvider({children}) {
     }),
     [
       colors,
+      fonts,
       textStyles,
       singleCalendarStyles,
       cellFormStyles,

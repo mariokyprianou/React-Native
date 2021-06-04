@@ -9,6 +9,8 @@ import React, {useEffect, useState} from 'react';
 import {Text, ScrollView, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import {useBackHandler} from '@react-native-community/hooks';
+
 import TDSettings from 'the-core-ui-module-tdsettings';
 import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
@@ -29,13 +31,16 @@ import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import UseData from '../../hooks/data/UseData';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getValues} = FormHook();
   const {dictionary, getLanguage, setLanguage} = useDictionary();
-  const {SettingsDict, LanguageDict, ProfileDict} = dictionary;
+  const {SettingsDict, LanguageDict, ProfileDict, OfflineMessage} = dictionary;
   const {getHeight, getWidth} = ScaleHook();
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const {
     colors,
     cellFormConfig,
@@ -67,28 +72,30 @@ const SettingsScreen = ({}) => {
     ),
   });
 
+  useBackHandler(() => {
+    updateSettingsAndNavigate();
+    return true;
+  });
+
   const [updatePreferences] = useMutation(UpdatePreference);
   const [updateProfile] = useMutation(UpdateProfile);
 
   const [marketingPrefEmail, setMarketingPrefEmail] = useState(
-    preferences.emails || false,
+    preferences.emails,
   );
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
-    preferences.notifications || false,
+    preferences.notifications,
   );
+
   const [prefErrorReports, setPrefErrorReports] = useState(
-    preferences.errorReports || true,
+    preferences.errorReports,
   );
-  const [prefAnalytics, setPrefAnalytics] = useState(
-    preferences.analytics || false,
-  );
+  const [prefAnalytics, setPrefAnalytics] = useState(preferences.analytics);
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
   const [downloadQuality, setDownloadQuality] = useState(
-    preferences.downloadQuality || 'HIGH',
+    preferences.downloadQuality,
   );
-  const [weightPref, setWeightPref] = useState(
-    preferences.weightPreference || 'KG',
-  );
+  const [weightPref, setWeightPref] = useState(preferences.weightPreference);
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
@@ -103,12 +110,14 @@ const SettingsScreen = ({}) => {
   }, []);
 
   useEffect(() => {
-    setMarketingPrefEmail(preferences.emails || false);
-    setMarketingPrefNotifications(preferences.notifications || false);
-    setPrefErrorReports(preferences.errorReports || true);
-    setPrefAnalytics(preferences.analytics || false);
-    setDownloadQuality(preferences.downloadQuality || 'HIGH');
-    setWeightPref(preferences.weightPreference || 'KG');
+    if (preferences) {
+      setMarketingPrefEmail(preferences.emails);
+      setMarketingPrefNotifications(preferences.notifications);
+      setPrefErrorReports(preferences.errorReports);
+      setPrefAnalytics(preferences.analytics);
+      setDownloadQuality(preferences.downloadQuality);
+      setWeightPref(preferences.weightPreference);
+    }
   }, [preferences]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -162,6 +171,12 @@ const SettingsScreen = ({}) => {
   const updateSettingsAndNavigate = async () => {
     navigation.goBack();
 
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+      return;
+    }
+    console.log('DOWNLOAD_ENABLED', downloadWorkouts);
+
     await AsyncStorage.setItem(
       '@DOWNLOAD_ENABLED',
       JSON.stringify(downloadWorkouts),
@@ -173,7 +188,7 @@ const SettingsScreen = ({}) => {
         JSON.stringify(true),
       );
 
-      initCacheWeekVideos(programme.currentWeek.workouts);
+      //initCacheWeekVideos(programme.currentWeek.workouts);
     }
 
     const {
@@ -207,10 +222,8 @@ const SettingsScreen = ({}) => {
 
     analytics().setAnalyticsCollectionEnabled(prefAnalytics);
     crashlytics().setCrashlyticsCollectionEnabled(prefErrorReports);
-   
-    console.log(
-      "newPreferences", newPreferences
-    );
+
+    console.log('newPreferences', newPreferences);
 
     const newUserData = {
       familyName: userData.familyName,
@@ -334,19 +347,19 @@ const SettingsScreen = ({}) => {
         />
       ),
     },
-    {
-      customComponent: () => (
-        <SettingsCell
-          title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
-          titleTextStyle={styles.switchTitleStyle}
-          titleSwitchContainerStyle={styles.switchTitleContainerStyle}
-          showSwitch
-          switchValue={marketingPrefNotifications}
-          switchStyle={styles.switchStyle}
-          onSwitchChange={onToggleMarketingPrefNotifications}
-        />
-      ),
-    },
+    // {
+    //   customComponent: () => (
+    //     <SettingsCell
+    //       title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
+    //       titleTextStyle={styles.switchTitleStyle}
+    //       titleSwitchContainerStyle={styles.switchTitleContainerStyle}
+    //       showSwitch
+    //       switchValue={marketingPrefNotifications}
+    //       switchStyle={styles.switchStyle}
+    //       onSwitchChange={onToggleMarketingPrefNotifications}
+    //     />
+    //   ),
+    // },
     {
       customComponent: () => (
         <View style={{marginTop: getHeight(8)}}>
@@ -424,6 +437,7 @@ const SettingsScreen = ({}) => {
       data: timeZones,
     },
   ];
+
   const cells5 = [
     {
       customComponent: () => (
@@ -501,9 +515,10 @@ const SettingsScreen = ({}) => {
       keyboardShouldPersistTaps="handled"
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
-      <TDSettings cells={cells}
-       config={settingsConfig}
-       scrollProps={{scrollEnabled: false}}
+      <TDSettings
+        cells={cells}
+        config={settingsConfig}
+        scrollProps={{scrollEnabled: false}}
       />
       <Spacer height={20} />
       {/* Weight */}

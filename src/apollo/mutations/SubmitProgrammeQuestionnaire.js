@@ -15,6 +15,7 @@ export default gql`
     submitProgrammeQuestionnaire(input: $input) {
       programme {
         trainer {
+          id
           name
         }
         environment

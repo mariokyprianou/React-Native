@@ -19,15 +19,20 @@ import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TDIcon from 'the-core-ui-component-tdicon';
 import FastImage from 'react-native-fast-image';
+import SafeFastImage from '../Utility/SafeFastImage';
 
-
-export default function TransformationChallenge({type, title, image, imageUrl, onPress}) {
+export default function TransformationChallenge({
+  type,
+  title,
+  image,
+  imageUrl,
+  onPress,
+}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {ButtonDict} = dictionary;
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -82,7 +87,7 @@ export default function TransformationChallenge({type, title, image, imageUrl, o
       backgroundColor: colors.black40,
     },
     challengeImage: {
-      position:'absolute',
+      position: 'absolute',
       width: '90%',
       height: '50%',
       alignSelf: 'center',
@@ -101,61 +106,93 @@ export default function TransformationChallenge({type, title, image, imageUrl, o
     },
   };
   const [urlLoaded, setUrlLoaded] = useState();
-console.log(urlLoaded)
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={{...styles.box, ...styles.challengeBox}}>
       <TouchableOpacity style={{flex: 1}} onPress={onPress}>
+        <CustomFastImage
+          imageUrl={imageUrl}
+          fallback={image}
+          staticStyle={
+            type === 'progress' ? styles.photoImage : styles.challengeImage
+          }
+          dynamicStyle={styles.photoImage}
+          overlay={type === 'progress' || urlLoaded}
+          callbackSetLoaded={setUrlLoaded}
+        />
 
-        <SafeFastImage imageUrl={imageUrl} fallback={image} staticStyle={type === 'progress' ? styles.photoImage : styles.challengeImage}
-          dynamicStyle={styles.photoImage} overlay={type === 'progress' || urlLoaded} callbackSetLoaded={setUrlLoaded} />
-      
         {type === 'progress' && (
           <View style={styles.iconContainer}>
-          <TDIcon input={'camera'} inputStyle={styles.icon} />
-        </View>
+            <TDIcon input={'camera'} inputStyle={styles.icon} />
+          </View>
         )}
         <View style={styles.textContainer}>
-          <Text style={type === 'progress' || urlLoaded ? styles.progressTitle : styles.challengeTitle}>{type === 'progress' ?  ButtonDict.Progress : ButtonDict.Challenge}</Text>
-          <Text style={type === 'progress' || urlLoaded ? styles.progressText : styles.challengeText} numberOfLines={type === 'progress' ? 1 : 2}>{title}</Text>
+          <Text
+            style={
+              type === 'progress' || urlLoaded
+                ? styles.progressTitle
+                : styles.challengeTitle
+            }>
+            {type === 'progress' ? ButtonDict.Progress : ButtonDict.Challenge}
+          </Text>
+          <Text
+            style={
+              type === 'progress' || urlLoaded
+                ? styles.progressText
+                : styles.challengeText
+            }
+            numberOfLines={type === 'progress' ? 1 : 2}>
+            {title}
+          </Text>
         </View>
-
       </TouchableOpacity>
     </View>
   );
 }
 
-
-function SafeFastImage({imageUrl, fallback, staticStyle, dynamicStyle, overlay = false, callbackSetLoaded }) {
+function CustomFastImage({
+  imageUrl,
+  fallback,
+  staticStyle,
+  dynamicStyle,
+  overlay = false,
+  callbackSetLoaded,
+}) {
   const {colors} = useTheme();
   const [urlLoaded, setUrlLoaded] = useState();
 
   const overlayStyle = {
-      position: 'absolute',
-      height: '100%',
-      width: '100%',
-      backgroundColor: colors.black40,
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    backgroundColor: colors.black40,
   };
 
   return (
     <>
-    {!imageUrl ? <Image style={staticStyle} source={fallback}/> : 
-      <>
-      <Image style={staticStyle} source={fallback}/>
-      <FastImage style={dynamicStyle} source={{uri: imageUrl}} fallback={true}
-      onLoadEnd={() => {
-        callbackSetLoaded && callbackSetLoaded(true);
-        setUrlLoaded(true);
-      }} 
-      onError={() => {
-        callbackSetLoaded && callbackSetLoaded(false);
-        setUrlLoaded(false);
-        }}/>
-        </>}
-        
-     {overlay &&  <View style={overlayStyle} />}
-      </>
-  )
+      {!imageUrl ? (
+        <Image style={staticStyle} source={fallback} />
+      ) : (
+        <>
+          {!urlLoaded && <Image style={staticStyle} source={fallback} />}
+          <SafeFastImage
+            style={dynamicStyle}
+            source={{uri: imageUrl}}
+            onLoadEnd={() => {
+              callbackSetLoaded && callbackSetLoaded(true);
+              setUrlLoaded(true);
+            }}
+            onError={() => {
+              callbackSetLoaded && callbackSetLoaded(false);
+              setUrlLoaded(false);
+            }}
+          />
+        </>
+      )}
 
+      {overlay && <View style={overlayStyle} />}
+    </>
+  );
 }

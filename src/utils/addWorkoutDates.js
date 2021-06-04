@@ -10,11 +10,11 @@ import {addDays, format} from 'date-fns';
 
 const addWorkoutDates = (data, startDate) => {
   const newData = data.map((workout, index) => {
-    
-    const date =  addDays(startDate, index);
+    const date = addDays(startDate, index);
     const formattedDate = format(date, 'iiii, do LLL');
 
     if (workout.workout) {
+      // Data from getTrainers
       return {
         name: workout.workout.name.toUpperCase(),
         intensity: workout.workout.intensity,
@@ -24,6 +24,7 @@ const addWorkoutDates = (data, startDate) => {
         day: workout.day,
       };
     } else {
+      // Data from getProgramme
       return {
         ...workout,
         name: workout.name.toUpperCase(),

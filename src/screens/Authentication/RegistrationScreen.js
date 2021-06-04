@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Platform, StatusBar} from 'react-native';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import {ScaleHook} from 'react-native-design-to-component';
-import {format, parse, parseISO} from 'date-fns';
+import {format, parse} from 'date-fns';
 import {useQuery, useMutation} from '@apollo/client';
 import TDIcon from 'the-core-ui-component-tdicon';
 import TimeZone from 'react-native-timezone';
@@ -24,6 +24,7 @@ import StylisedText from '../../components/text/StylisedText';
 import CalendarIcon from '../../components/cells/CalendarIcon';
 import DropDownIcon from '../../components/cells/DropDownIcon';
 import AllCountries from '../../apollo/queries/AllCountries';
+import LookupCountry from '../../apollo/queries/LookupCountry';
 import RegisterUser from '../../apollo/mutations/RegisterUser';
 import {getUniqueId} from 'react-native-device-info';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
@@ -32,13 +33,23 @@ import useLoading from '../../hooks/loading/useLoading';
 import Intercom from 'react-native-intercom';
 import useUserData from '../../hooks/data/useUserData';
 import {useBackHandler} from '@react-native-community/hooks';
+import LinearGradient from 'react-native-linear-gradient';
+import Spacer from '../../components/Utility/Spacer';
+import AsyncStorage from '@react-native-community/async-storage';
+import fetchPolicy from '../../utils/fetchPolicy';
+import {useNetInfo} from '@react-native-community/netinfo';
+const tickIcon = require('../../../assets/icons/tickIcon.png');
 
 export default function RegisterScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {AuthDict, GenderDict} = dictionary;
-  const [termsAndConditions, setTerms] = useState('off');
+  const [termsAndConditions, setTerms] = useState(false);
+  const [marketingPreferences, setMarketingPreferences] = useState('off');
+
   const {
     cellFormStyles,
     dropdownStyle,
@@ -50,33 +61,27 @@ export default function RegisterScreen() {
     params: {programmeId},
   } = useRoute();
   const {cleanErrors, getValues, updateError, updateValue} = FormHook();
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    fontSize,
+    radius,
+  } = ScaleHook();
   const [countriesList, setCountriesList] = useState([]);
-  const [regionsList, setRegionsList] = useState([]);
   const [countryLookup, setCountryLookup] = useState();
-  const [regionLookup, setRegionLookup] = useState();
+  const [country, setCountry] = useState();
   const [deviceTimeZone, setDeviceTimeZone] = useState();
   const [deviceUid, setDeviceUid] = useState();
-  const {getValueByName, cleanValues} = FormHook();
-  const selectedCountry = getValueByName('country');
+  const {cleanValues} = FormHook();
   const [execute] = useMutation(RegisterUser);
   const {setLoading} = useLoading();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
 
-
-  useEffect(() => {
-    StatusBar.setBarStyle('dark-content');
-  }, []);
-
   navigation.setOptions({
-    header: () => (
-      <Header
-        title={AuthDict.RegistrationScreenTitle}
-        goBack
-        leftAction={() => navigation.pop(2)}
-      />
-    ),
+    header: () => null,
   });
 
   useBackHandler(() => {
@@ -84,62 +89,31 @@ export default function RegisterScreen() {
     return true;
   });
 
-  const gendersData = [
+  const sexData = [
     GenderDict.Female,
     GenderDict.Male,
-    GenderDict.Other,
     GenderDict.PreferNotToSay,
   ];
 
   useQuery(AllCountries, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (data) => {
       const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(Platform.OS === 'ios' ? ['', ...countries] : countries);
-
-      const indianRegions = data.allCountries.filter(
-        (country) => country.country === 'India',
-      )[0].regions;
-
-      if (indianRegions) {
-        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-          let {region, id} = obj;
-          return {...acc, [region]: id};
-        }, {});
-        setRegionLookup(indianRegionsLookup);
-
-        const indianRegionsList = indianRegions.map((region) => region.region);
-        setRegionsList(
-          Platform.OS === 'ios'
-            ? ['', ...indianRegionsList]
-            : indianRegionsList,
-        );
-      } else {
-        setRegionLookup([]);
-        setRegionsList([]);
-      }
-      if (indianRegions) {
-        const indianRegionsLookup = indianRegions.reduce((acc, obj) => {
-          let {region, id} = obj;
-          return {...acc, [region]: id};
-        }, {});
-        setRegionLookup(indianRegionsLookup);
-
-        const indianRegionsList = indianRegions.map((region) => region.region);
-        setRegionsList(
-          Platform.OS === 'ios'
-            ? ['', ...indianRegionsList]
-            : indianRegionsList,
-        );
-      } else {
-        setRegionLookup([]);
-        setRegionsList([]);
-      }
+      setCountriesList(['', ...countries]);
 
       const countryIdLookup = data.allCountries.reduce((acc, obj) => {
         let {country, id} = obj;
         return {...acc, [country]: id};
       }, {});
       setCountryLookup(countryIdLookup);
+    },
+  });
+
+  useQuery(LookupCountry, {
+    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
+    onCompleted: (data) => {
+      const estimatedCountry = data.lookupCountry.name;
+      setCountry(estimatedCountry);
     },
   });
 
@@ -158,41 +132,74 @@ export default function RegisterScreen() {
     updateValue({name: 'gender', value: AuthDict.RegistrationGendersFemale});
   }, [updateValue]);
 
+  useEffect(() => {
+    if (country) {
+      updateValue({name: 'country', value: country});
+    }
+  }, [updateValue, country]);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    render: {
-      container: {
-        flex: 1,
-        backgroundColor: colors.backgroundWhite100,
-      },
-      scrollViewContainer: {
-        height: '100%',
-        width: '100%',
-      },
+    container: {
+      flex: 1,
+      backgroundColor: colors.backgroundWhite100,
+    },
+    gradientContainer: {
+      height: getScaledHeight(140),
+      width: '100%',
+    },
+    scrollContainer: {
+      height: getScaledHeight(550),
+      position: 'absolute',
+      top: getScaledHeight(130),
+      backgroundColor: colors.backgroundWhite100,
+      borderTopLeftRadius: radius(12),
+      borderTopRightRadius: radius(12),
+    },
+    formTitle: {
+      marginTop: getScaledHeight(92.5),
+      marginLeft: getScaledWidth(18.5),
+      ...textStyles.regular15_white100,
+    },
+    formContainer: {
+      marginHorizontal: getScaledWidth(25),
     },
     formFooter: {
-      container: {
-        marginTop: getHeight(30),
-        marginBottom: getHeight(40),
-        alignSelf: 'center',
-      },
+      marginTop: getScaledHeight(30),
+      alignSelf: 'center',
     },
     termsContainerStyle: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     boxStyle: {
-      width: getWidth(25),
-      height: getWidth(25),
-      borderWidth: 1,
-      borderColor: colors.black30,
-      borderRadius: 1,
+      width: getWidth(22),
+      height: getWidth(22),
+      borderWidth: 0,
+      borderColor: colors.paleGrey100,
+      borderRadius: radius(1),
+      backgroundColor: colors.paleGrey100,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    iconStyle: {solid: false, size: fontSize(22), color: colors.black30},
+    emptyBoxStyle: {
+      width: getWidth(22),
+      height: getWidth(22),
+      borderWidth: getWidth(1),
+      borderColor: colors.paleGrey100,
+    },
+    iconStyle: {
+      height: getHeight(16),
+      width: getWidth(16),
+      tintColor: colors.white100,
+    },
     termsStyle: {
-      ...textStyles.regular15_brownishGrey100,
       alignSelf: 'center',
-      marginHorizontal: getWidth(15),
+      width: '90%',
+    },
+    marketingStyle: {
+      ...textStyles.regular12_brownishGrey100,
     },
   };
 
@@ -205,14 +212,12 @@ export default function RegisterScreen() {
       familyName,
       email,
       password,
-      gender,
+      sex,
       dateOfBirth,
       country,
-      region,
     } = getValues();
 
     const countryID = countryLookup[country];
-
     if (!givenName) {
       updateError({
         name: 'givenName',
@@ -250,26 +255,28 @@ export default function RegisterScreen() {
     }
     setLoading(true);
 
-    const correctGender =
-      !gender || gender === GenderDict.PreferNotToSay
-        ? null
-        : gender.toLowerCase();
+    await AsyncStorage.setItem(
+      '@REGISTRATION_MARKETING_OPTION',
+      marketingPreferences,
+    );
+
+    const correctSex =
+      !sex || sex === GenderDict.PreferNotToSay ? null : sex.toLowerCase();
 
     const data = {
       givenName: givenName,
       familyName: familyName,
       email: email,
       password: password,
-      gender: correctGender,
+      gender: correctSex,
       dateOfBirth: parse(dateOfBirth, 'dd/MM/yyyy', new Date()),
       country: countryID || null,
-      region: selectedCountry === 'India' ? regionLookup[region] : null,
       deviceUDID: deviceUid,
       timeZone: deviceTimeZone,
       programme: programmeId,
     };
 
-    console.log(data);
+    console.log('Register', data);
 
     execute({
       variables: {
@@ -294,10 +301,11 @@ export default function RegisterScreen() {
           displayAlert({
             text: AuthDict.EmailAlreadyRegistered,
           });
+        } else {
+          displayAlert({
+            text: AuthDict.NetworkRequestFailed,
+          });
         }
-        displayAlert({
-          text: AuthDict.NetworkRequestFailed,
-        });
       })
       .finally(() => setLoading(false));
   }
@@ -305,6 +313,11 @@ export default function RegisterScreen() {
   const handleTermsAndConditionsButton = () => {
     const value = termsAndConditions === 'on' ? 'off' : 'on';
     setTerms(value);
+  };
+
+  const handleMarketingPreferences = () => {
+    const value = marketingPreferences === 'on' ? 'off' : 'on';
+    setMarketingPreferences(value);
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -320,20 +333,6 @@ export default function RegisterScreen() {
   ];
 
   const cells = [
-    {
-      name: 'registerTitle',
-      labelComponent: () => null,
-      inputComponent: () => (
-        <Text
-          style={{
-            ...textStyles.regular15_brownishGrey100,
-            marginTop: getHeight(20),
-            marginBottom: getHeight(10),
-          }}>
-          {AuthDict.FormTitle}
-        </Text>
-      ),
-    },
     {
       name: 'givenName',
       type: 'text',
@@ -383,10 +382,10 @@ export default function RegisterScreen() {
       },
     },
     {
-      name: 'gender',
+      name: 'sex',
       type: 'dropdown',
-      label: AuthDict.GenderLabel,
-      data: gendersData,
+      label: AuthDict.SexLabel,
+      data: sexData,
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
@@ -417,6 +416,7 @@ export default function RegisterScreen() {
       type: 'dropdown',
       label: AuthDict.CountryLabel,
       data: countriesList,
+      defaultValue: countriesList[0],
       rightAccessory: () => <DropDownIcon />,
       ...cellFormStyles,
       ...dropdownStyle,
@@ -428,25 +428,6 @@ export default function RegisterScreen() {
     },
   ];
 
-  if (selectedCountry === 'India') {
-    cells.push({
-      name: 'region',
-      type: 'dropdown',
-      placeholder: '',
-      editable: false,
-      label: AuthDict.RegionLabel,
-      ...cellFormStyles,
-      ...dropdownStyle,
-      inputContainerStyle: {
-        paddingHorizontal: 0,
-        paddingRight: getWidth(6),
-        marginTop: -getHeight(5),
-      },
-      rightAccessory: () => <DropDownIcon />,
-      data: regionsList,
-    });
-  }
-
   const cells2 = [
     {
       name: 'termsAndConditions',
@@ -456,19 +437,47 @@ export default function RegisterScreen() {
           <TouchableOpacity
             style={styles.termsContainerStyle}
             onPress={handleTermsAndConditionsButton}>
-            <View style={styles.boxStyle}>
-              {termsAndConditions === 'on' && (
-                <TDIcon input={'check'} inputStyle={styles.iconStyle} />
-              )}
-            </View>
+            {termsAndConditions === 'on' ? (
+              <View style={styles.boxStyle}>
+                <TDIcon input={tickIcon} />
+              </View>
+            ) : (
+              <View style={styles.emptyBoxStyle} />
+            )}
             <View style={styles.termsStyle}>
               <StylisedText
                 {...{
                   input: linkText,
                   text: AuthDict.TermsAndConditionsText,
-                  // If you want to override the main text style
+                  textStyle: {
+                    ...textStyles.regular12_brownishGrey100,
+                  },
                 }}
               />
+            </View>
+          </TouchableOpacity>
+        </View>
+      ),
+    },
+    {
+      name: 'marketingPrefs',
+      labelComponent: () => null,
+      inputComponent: () => (
+        <View style={{marginTop: getHeight(20)}}>
+          <TouchableOpacity
+            style={styles.termsContainerStyle}
+            onPress={handleMarketingPreferences}>
+            {marketingPreferences === 'on' ? (
+              <View style={styles.boxStyle}>
+                <TDIcon input={tickIcon} />
+              </View>
+            ) : (
+              <View style={styles.emptyBoxStyle} />
+            )}
+            <View style={styles.termsStyle}>
+              <Text style={styles.marketingStyle}>
+                {AuthDict.MarketingText}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -481,26 +490,44 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.render.container}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.scroll}
-        enableOnAndroid={true}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <>
-          <View style={{marginHorizontal: getWidth(25)}}>
+    <View style={styles.container}>
+      <View style={styles.gradientContainer}>
+        <LinearGradient
+          style={{flex: 1}}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={[colors.tealish100, colors.tiffanyBlue100]}>
+          <Header
+            title={AuthDict.RegistrationScreenTitle}
+            goBack
+            leftAction={() => navigation.pop(2)}
+            transparent
+            white
+          />
+          <Text style={styles.formTitle}>{AuthDict.FormTitle}</Text>
+        </LinearGradient>
+      </View>
+      <View style={styles.scrollContainer}>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          showsVerticalScrollIndicator={false}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View style={styles.formContainer}>
             <Form cells={cells} config={{...cellFormConfig}} />
             <Form cells={cells2} config={config} />
           </View>
-          <View style={styles.formFooter.container}>
+          <View style={styles.formFooter}>
             <DefaultButton
               type="createAccount"
               variant="white"
               icon="chevron"
               onPress={handleRegister}
+              disabled={termsAndConditions === 'on' ? false : true}
             />
           </View>
-        </>
-      </KeyboardAwareScrollView>
+          <Spacer height={50} />
+        </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 }

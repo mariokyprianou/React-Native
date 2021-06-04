@@ -27,7 +27,7 @@ export default function TermsConditionsScreen() {
 
   navigation.setOptions({
     header: () => (
-      <Header title={AuthDict.TermsAndConditionsScreenTitle} goBack />
+      <Header title={AuthDict.TermsAndConditionsScreenTitle} showModalCross />
     ),
   });
 

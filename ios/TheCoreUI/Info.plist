@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>instagram-stories</string>
@@ -90,6 +90,10 @@
 		<string>proximanova-medium.otf</string>
 		<string>proximanova-regular.otf</string>
 		<string>proximanova-semibold.otf</string>
+		<string>ProximaNova-Medium.eot</string>
+		<string>ProximaNova-Medium.ttf</string>
+		<string>ProximaNova-Medium.woff</string>
+		<string>ProximaNova-Medium.woff2</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

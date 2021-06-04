@@ -14,6 +14,8 @@ import {
   ScrollView,
   StatusBar,
   Alert,
+  Platform,
+  TouchableOpacity,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -25,6 +27,7 @@ import Spacer from '../../components/Utility/Spacer';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
+import displayAlert from '../../utils/DisplayAlert';
 import Video from 'react-native-video';
 import * as R from 'ramda';
 
@@ -35,12 +38,12 @@ import {
   requestSubscription,
   initConnection,
   getSubscriptions,
+  IAPErrorCode,
 } from 'react-native-iap';
 import RegisterGooglePlaySubscription from '../../apollo/mutations/RegisterGooglePlaySubscription';
 import RegisterAppStoreSubscription from '../../apollo/mutations/RegisterAppStoreSubscription';
-import {Platform} from 'react-native';
 import {useMutation} from '@apollo/client';
-import {TouchableOpacity} from 'react-native';
+import StylisedText from '../../components/text/StylisedText';
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
 const purchaseModalVideo = require('../../../assets/videos/purchaseModalVideo.m4v');
@@ -52,26 +55,38 @@ const productIds = [
 
 const PurchaseModalScreen = ({}) => {
   // MARK: - Hooks
-  const {getHeight, getWidth} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
-  const {firebaseLogEvent, analyticsEvents, userData, checkUserSubscription} = useUserData();
+  const {
+    firebaseLogEvent,
+    analyticsEvents,
+    userData,
+    checkUserSubscription,
+  } = useUserData();
   const {setLoading} = useLoading();
 
   // MARK: - Local
   const [currentSubscription, setCurrentSubscription] = useState();
+  const [restorePressed, setRestorePressed] = useState(false);
 
   const [yearlySubscription, setYearlySubscription] = useState({
     productId: 'app.power.subscription.yearly',
     localizedPrice: '£24.00',
-    price: 24,
+    price: 24.0,
   });
   const [monthlySubscription, setMonthlySubscription] = useState({
     productId: 'app.power.subscription.monthly',
     localizedPrice: '£4.00',
-    price: 4,
+    price: 4.0,
   });
 
   const {
@@ -91,12 +106,10 @@ const PurchaseModalScreen = ({}) => {
     header: () => <></>,
   });
 
- 
-  
   // MARK: - Use Effect
   useEffect(() => {
     setLoading(true);
-    
+
     StatusBar.setBarStyle('dark-content');
 
     initConnection();
@@ -166,7 +179,7 @@ const PurchaseModalScreen = ({}) => {
                 });
               })
               .catch((err) => console.log(err))
-              .finally(() => checkUserSubscription());
+              .finally(() => completedPurchase());
           } else {
             const productId = R.path(['productId'], purchase);
             const purchaseToken = R.path(['purchaseToken'], purchase);
@@ -192,7 +205,7 @@ const PurchaseModalScreen = ({}) => {
                 });
               })
               .catch((err) => console.log(err))
-              .finally(() => checkUserSubscription());
+              .finally(() => completedPurchase());
           }
         } catch (ackErr) {
           console.warn('ackErr', ackErr);
@@ -205,27 +218,109 @@ const PurchaseModalScreen = ({}) => {
 
   // Current purchase error
   useEffect(() => {
-    if (currentPurchaseError)
-      Alert.alert(
-        'purchase error',
-        JSON.stringify(currentPurchaseError?.message),
-      );
+    if (currentPurchaseError) {
+      if (currentPurchaseError?.code === IAPErrorCode.E_USER_CANCELLED) {
+        return;
+      }
+
+      displayAlert({
+        text:
+          currentPurchaseError?.code === IAPErrorCode.E_ALREADY_OWNED
+            ? PurchaseDict.PaymentFailedAlreadyExists
+            : PurchaseDict.PaymentFailedGeneric,
+      });
+    }
   }, [currentPurchaseError, currentPurchaseError?.message]);
 
   // Restore
   useEffect(() => {
     // We already have subscription and is valid
-    if (
-      currentSubscription &&
-      products.includes(currentSubscription.productId)
-    ) {
-      // todo - do backend restore
+    if (restorePressed && currentSubscription) {
+      setRestorePressed(false);
+
+      const receipt = currentSubscription.transactionReceipt;
+      try {
+        if (Platform.OS === 'ios') {
+          appleSubscribe({
+            variables: {
+              input: {
+                receiptData: receipt,
+              },
+            },
+          })
+            .then(async (res) => {
+              const success = R.path(
+                ['data', 'registerAppStoreSubscription', 'success'],
+                res,
+              );
+              console.log('Subscribed Success:', success);
+
+              const title = success
+                ? PurchaseDict.PurchaseRestored
+                : PurchaseDict.NoPurchasesToRestore;
+              displayAlert({
+                title: null,
+                text: title,
+                buttons: [
+                  {
+                    text: PurchaseDict.OkayButton,
+                  },
+                ],
+              });
+
+              firebaseLogEvent(analyticsEvents.newSubscription, {
+                email: userData.email,
+              });
+            })
+            .catch((err) => console.log(err))
+            .finally(() => completedPurchase());
+        } else {
+          const productId = R.path(['productId'], purchase);
+          const purchaseToken = R.path(['purchaseToken'], purchase);
+          googleSubscribe({
+            variables: {
+              input: {
+                productId: productId,
+                purchaseToken: purchaseToken,
+              },
+            },
+          })
+            .then(async (res) => {
+              const success = R.path(
+                ['data', 'registerGooglePlaySubscription', 'success'],
+                res,
+              );
+              console.log('Subscribed Success:', success);
+
+              const title = success
+                ? PurchaseDict.PurchaseRestored
+                : PurchaseDict.NoPurchasesToRestore;
+              displayAlert({
+                title: null,
+                text: title,
+                buttons: [
+                  {
+                    text: PurchaseDict.OkayButton,
+                  },
+                ],
+              });
+
+              firebaseLogEvent(analyticsEvents.newSubscription, {
+                email: userData.email,
+              });
+            })
+            .catch((err) => console.log(err))
+            .finally(() => completedPurchase());
+        }
+      } catch (ackErr) {
+        console.warn('ackErr', ackErr);
+      }
     }
   }, [currentSubscription]);
 
   // Set current subscription state
   useEffect(() => {
-    console.log('availablePurchases', availablePurchases);
+    console.log('availablePurchases count: ', availablePurchases.length);
     if (availablePurchases && availablePurchases.length > 0) {
       availablePurchases.forEach((it) => {
         switch (it.productId) {
@@ -237,8 +332,26 @@ const PurchaseModalScreen = ({}) => {
             break;
         }
       });
+    } else {
+      setRestorePressed(false);
+      if (restorePressed === true) {
+        displayAlert({
+          title: null,
+          text: PurchaseDict.NoPurchasesToRestore,
+          buttons: [
+            {
+              text: PurchaseDict.OkayButton,
+            },
+          ],
+        });
+      }
     }
   }, [availablePurchases, setCurrentSubscription]);
+
+  const completedPurchase = async () => {
+    await checkUserSubscription();
+    navigation.goBack();
+  };
 
   const purchase = (sub) => {
     console.log('Purchase: ', sub);
@@ -253,6 +366,7 @@ const PurchaseModalScreen = ({}) => {
     purchase(monthlySubscription);
   };
   const onPressRestoreSubscription = () => {
+    setRestorePressed(true);
     getAvailablePurchases();
   };
 
@@ -282,8 +396,8 @@ const PurchaseModalScreen = ({}) => {
     },
     videoViewStyle: {
       width: '100%',
-      height: getHeight(317),
-      marginBottom: getHeight(24),
+      height: getScaledHeight(317),
+      marginBottom: getHeight(20),
     },
     termsTitle: {
       ...textStyles.medium14_brownishGrey100,
@@ -298,7 +412,7 @@ const PurchaseModalScreen = ({}) => {
     termsText: {
       ...textStyles.regular15_brownishGrey100,
       textAlign: 'left',
-      marginBottom: getHeight(30),
+      marginBottom: getHeight(8),
     },
     needHelpTouchable: {
       width: '50%',
@@ -316,11 +430,21 @@ const PurchaseModalScreen = ({}) => {
       textDecorationLine: 'underline',
       textAlign: 'center',
     },
+    highlightedStyle: {
+      ...textStyles.semiBold16_brownishGrey100,
+      fontSize: fontSize(15),
+      color: colors.tealish100,
+      textDecorationLine: 'underline',
+    },
   });
 
   // MARK: - Render
+  let yearlyMonthPrice = (yearlySubscription.price / 12.0).toFixed(2);
+  yearlyMonthPrice = String(yearlyMonthPrice).substring(
+    0,
+    String(yearlyMonthPrice).indexOf('.') + 3,
+  );
 
-  const yearlyMonthPrice = yearlySubscription.price / 12;
   const yearlyDiscount = Math.round(
     (yearlyMonthPrice / monthlySubscription.price) * 100,
   );
@@ -330,84 +454,135 @@ const PurchaseModalScreen = ({}) => {
       style={styles.needHelpTouchable}
       onPress={displayMessenger}>
       <View style={styles.needHelpViewStyle}>
-        <Text style={styles.needHelpTextStyle}>Need Help?</Text>
+        <Text style={styles.needHelpTextStyle}>{PurchaseDict.NeedHelp}</Text>
       </View>
     </TouchableOpacity>
   );
 
+  const policyLinkText = [
+    {
+      pattern: PurchaseDict.PolicyPattern,
+      onPress: () => navigation.navigate('PrivacyPolicy'),
+    },
+  ];
+
+  const termsLinkText = [
+    {
+      pattern: PurchaseDict.TermsPattern,
+      onPress: () => navigation.navigate('TermsAndConditions'),
+    },
+  ];
+
   return (
     <>
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}>
-      <Video
-        source={purchaseModalVideo}
-        resizeMode="cover"
-        style={styles.videoViewStyle}
-        repeat={true}
-        muted={true}
-        paused={false}
-        controls={null}
-        playWhenInactive
-      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        <Video
+          source={purchaseModalVideo}
+          resizeMode="cover"
+          style={styles.videoViewStyle}
+          repeat={true}
+          muted={true}
+          paused={false}
+          controls={null}
+          playWhenInactive
+        />
 
-      <View style={styles.textContainer}>
-        <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
 
-        <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
-      </View>
-      <DefaultButton
-        type={'customText'}
-        variant="gradient"
-        icon="chevron"
-        onPress={onPressYearlySubscription}
-        capitalise={false}
-        customText={PurchaseDict.YearlyButtonTitle(
-          yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
-        )}
-        customSubtext={PurchaseDict.YearlyButtonSubTitle(
-          yearlySubscription.localizedPrice,
-        )}
-        promptText={PurchaseDict.SavePrompt(yearlyDiscount)}
-      />
-      <Spacer height={20} />
-      <DefaultButton
-        type={'customText'}
-        variant="white"
-        icon="chevron"
-        capitalise={false}
-        onPress={onPressMonthlySubscription}
-        customText={PurchaseDict.MonthlyButtonTitle(
-          monthlySubscription.localizedPrice,
-        )}
-        customSubtext={PurchaseDict.MonthlyButtonSubTitle}
-      />
-      <Spacer height={15} />
-      <DefaultButton
-        type={'customText'}
-        variant="transparentGreyText"
-        onPress={onPressRestoreSubscription}
-        capitalise={false}
-        customText={PurchaseDict.RestorePurchaseButton}
-      />
-      {renderNeedHelp()}
-      <View style={styles.textContainer}>
-        <Text style={styles.termsTitle}>
-          {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
-        </Text>
-        <Text style={styles.termsText}>
-          {PurchaseDict.SubscriptionTermsText}
-        </Text>
-      </View>
-    </ScrollView>
-     <Header
-         
-     showModalCross
-     black
-     transparent
-   />
-   </>
+          <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
+        </View>
+        <Spacer height={20} />
+        <DefaultButton
+          type={'customText'}
+          variant="gradient"
+          icon="chevron"
+          onPress={onPressYearlySubscription}
+          capitalise={false}
+          customText={PurchaseDict.YearlyButtonTitle(
+            yearlySubscription.localizedPrice.charAt(0) + yearlyMonthPrice,
+          )}
+          customSubtext={PurchaseDict.YearlyButtonSubTitle(
+            yearlySubscription.localizedPrice,
+          )}
+          promptText={PurchaseDict.SavePrompt(yearlyDiscount)}
+        />
+        <Spacer height={20} />
+        <DefaultButton
+          type={'customText'}
+          variant="white"
+          icon="chevron"
+          capitalise={false}
+          onPress={onPressMonthlySubscription}
+          customText={PurchaseDict.MonthlyButtonTitle(
+            monthlySubscription.localizedPrice,
+          )}
+          customSubtext={PurchaseDict.MonthlyButtonSubTitle}
+        />
+        <Spacer height={15} />
+        <DefaultButton
+          type={'customText'}
+          variant="transparentGreyText"
+          onPress={onPressRestoreSubscription}
+          capitalise={false}
+          customText={PurchaseDict.RestorePurchaseButton}
+        />
+        {renderNeedHelp()}
+        <View style={styles.textContainer}>
+          <Text style={styles.termsTitle}>
+            {PurchaseDict.SubscriptionTermsTitle.toUpperCase()}
+          </Text>
+          <Text style={styles.termsText}>
+            {Platform.OS === 'ios'
+              ? PurchaseDict.SubscriptionTermsFirstPoint
+              : PurchaseDict.SubscriptionTermsFirstPointAndroid}
+          </Text>
+          <Text style={styles.termsText}>
+            {Platform.OS === 'ios'
+              ? PurchaseDict.SubscriptionTermsSecondPoint
+              : PurchaseDict.SubscriptionTermsSecondPointAndroid}
+          </Text>
+          <Text style={styles.termsText}>
+            {Platform.OS === 'ios'
+              ? PurchaseDict.SubscriptionTermsThirdPoint
+              : PurchaseDict.SubscriptionTermsThirdPointAndroid}
+          </Text>
+
+          <StylisedText
+            {...{
+              active: false,
+              input: policyLinkText,
+              text: PurchaseDict.SubscriptionPrivacyLink,
+              textStyle: {
+                ...styles.termsText,
+              },
+              highlightedStyle: {
+                ...styles.highlightedStyle,
+              },
+            }}
+          />
+          <StylisedText
+            {...{
+              active: false,
+              input: termsLinkText,
+              text: PurchaseDict.SubscriptionTermsLink,
+              textStyle: {
+                ...styles.termsText,
+              },
+              highlightedStyle: {
+                ...styles.highlightedStyle,
+              },
+            }}
+          />
+
+          <Spacer height={30} />
+        </View>
+      </ScrollView>
+      <Header showModalCross black transparent />
+    </>
   );
 };
 

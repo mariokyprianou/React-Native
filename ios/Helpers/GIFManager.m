@@ -43,8 +43,11 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
     UIImage *afterCroppedImage = [self cropImage:afterImage toRect:afterRect];
     
     UIImage *stitchedImage = [self stitchImages:beforeCroppedImage :afterCroppedImage];
-    [array addObject:stitchedImage];
-    [secondArray insertObject:stitchedImage atIndex:0];
+    
+    if (stitchedImage) {
+      [array addObject:stitchedImage];
+      [secondArray insertObject:stitchedImage atIndex:0];
+    }
   }
   
   NSMutableArray *newArray = [[NSMutableArray alloc] init];

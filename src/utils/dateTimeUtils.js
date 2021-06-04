@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import { differenceInDays } from "date-fns";
+import {differenceInDays} from 'date-fns';
 
 export function msToHMS(duration) {
   var milliseconds = parseInt((duration % 1000) / 100),
@@ -26,7 +26,7 @@ export function msToHMSFull(duration) {
     minutes = parseInt((duration / (1000 * 60)) % 60),
     hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-    hours = hours < 10 ? '0' + hours : hours;
+  hours = hours < 10 ? '0' + hours : hours;
   minutes = minutes < 10 ? '0' + minutes : minutes;
   seconds = seconds < 10 ? '0' + seconds : seconds;
 
@@ -43,11 +43,11 @@ export function msToHMSOptional(duration) {
   minutes = minutes < 10 ? '0' + minutes : minutes;
   seconds = seconds < 10 ? '0' + seconds : seconds;
 
-  return parseInt(hours) > 0 ? (hours + ':') : '' + minutes + ':' + seconds;
+  return parseInt(hours) > 0 ? hours + ':' : '' + minutes + ':' + seconds;
 }
 
-
 export function isSameDay(first, second) {
+  if (!first || !second) return false;
   return (
     differenceInDays(
       first.setHours(0, 0, 0, 0),

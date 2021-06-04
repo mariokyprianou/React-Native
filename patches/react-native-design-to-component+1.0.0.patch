@@ -1,0 +1,80 @@
+diff --git a/node_modules/react-native-design-to-component/src/ScaleProvider.js b/node_modules/react-native-design-to-component/src/ScaleProvider.js
+index 33144bf..d65e53f 100644
+--- a/node_modules/react-native-design-to-component/src/ScaleProvider.js
++++ b/node_modules/react-native-design-to-component/src/ScaleProvider.js
+@@ -28,6 +28,23 @@ export default props => {
+ 	}, [currentDimensions.height, currentDimensions.width, originalDimensions.height, originalDimensions.width, props.config]);
+ 
+ 	const getHeight = React.useCallback(
++		value => {
++			// Returns computed height
++			// const heightValue = PixelRatio.roundToNearestPixel(currentDimensions)
++			return value;
++		},
++		[]
++	);
++
++	const getWidth = React.useCallback(
++		value => {
++			// Returns computed width
++			return value;
++		},
++		[]
++	);
++
++	const getScaledHeight = React.useCallback(
+ 		value => {
+ 			// Returns computed height
+ 			// const heightValue = PixelRatio.roundToNearestPixel(currentDimensions)
+@@ -36,7 +53,7 @@ export default props => {
+ 		[heightPercentage]
+ 	);
+ 
+-	const getWidth = React.useCallback(
++	const getScaledWidth = React.useCallback(
+ 		value => {
+ 			// Returns computed width
+ 			return value * widthPercentage;
+@@ -47,8 +64,7 @@ export default props => {
+ 	const fontSize = React.useCallback(
+ 		value => {
+ 			// Returns computed font size
+-			const averageChange = (heightPercentage + widthPercentage) / 2;
+-			return value * averageChange;
++			return value;
+ 		},
+ 		[heightPercentage, widthPercentage]
+ 	);
+@@ -56,8 +72,15 @@ export default props => {
+ 	const radius = React.useCallback(
+ 		value => {
+ 			// Returns computed radius
+-			const averageChange = (heightPercentage + widthPercentage) / 2;
++			return value;
++		},
++		[heightPercentage, widthPercentage]
++	);
+ 
++	const scaledRadius = React.useCallback(
++		value => {
++			// Returns computed radius
++			const averageChange = (heightPercentage + widthPercentage) / 2;
+ 			return value * averageChange;
+ 		},
+ 		[heightPercentage, widthPercentage]
+@@ -70,10 +93,13 @@ export default props => {
+ 			fontSize,
+ 			radius,
+ 			originalDimensions,
+-			currentDimensions
++			currentDimensions,
++			getScaledWidth,
++			getScaledHeight,
++			scaledRadius
+ 		}),
+ 
+-		[currentDimensions, fontSize, getHeight, getWidth, originalDimensions, radius]
++		[currentDimensions, fontSize, getHeight, getWidth, originalDimensions, radius, getScaledHeight, getScaledWidth, scaledRadius]
+ 	);
+ 
+ 	return <ScaleContext.Provider value={values}>{props.children}</ScaleContext.Provider>;

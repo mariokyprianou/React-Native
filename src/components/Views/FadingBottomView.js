@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 export default function FadingBottomView({
   customStart,
   customEnd,
+  customArray,
   color = 'white',
   height,
 }) {
@@ -38,6 +39,7 @@ export default function FadingBottomView({
     blue: [colors.powderBlue0, colors.powderBlue100],
     black: [colors.black0, colors.black0point5],
     custom: [customStart, customEnd],
+    customArray: customArray,
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **

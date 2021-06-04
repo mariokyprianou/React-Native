@@ -19,9 +19,6 @@ import Header from '../../components/Headers/Header';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import useUserData from '../../hooks/data/useUserData';
-import {useLazyQuery, useApolloClient} from '@apollo/client';
-import ProgressImage from '../../apollo/queries/ProgressImage';
-import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
 import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
@@ -38,7 +35,7 @@ const overlay = require('../../../assets/images/progressZero.png');
 
 export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight} = ScaleHook();
+  const {getHeight, getScaledHeight} = ScaleHook();
   const {colors} = useTheme();
   const {
     userImages,
@@ -50,12 +47,11 @@ export default function TransformationScreen() {
   const screenWidth = Dimensions.get('screen').width;
   const {dictionary} = useDictionary();
   const {ProgressDict, ShareDict, ProfileDict} = dictionary;
-  const {setLoading} = useLoading();
+  const {loading, setLoading} = useLoading();
   const navigation = useNavigation();
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {ShareMediaType, getShareData} = useShare();
-
 
   navigation.setOptions({
     header: () => (
@@ -76,17 +72,17 @@ export default function TransformationScreen() {
       backgroundColor: colors.backgroundWhite100,
     },
     sliderStyles: {
-      height: getHeight(10),
+      height: getScaledHeight(10),
       width: '92%',
       minimumTrackTintColor: 'transparent',
       maximumTrackTintColor: 'transparent',
     },
     image: {
       width: screenWidth,
-      height: getHeight(460),
+      height: getScaledHeight(460),
     },
     spacerHeight: {
-      height: getHeight(190),
+      height: getScaledHeight(190),
     },
     buttonContainer: {
       width: '100%',
@@ -100,9 +96,9 @@ export default function TransformationScreen() {
   async function handleSelectDate(dateItem, imageToSelect) {
     if (!dateItem.id) return;
     setLoading(true);
-   
+
     const existingImage = userImages.find((it) => it.id === dateItem.id);
-    
+
     // Change image
     if (imageToSelect === 'before') {
       setBeforePic(existingImage);
@@ -129,7 +125,7 @@ export default function TransformationScreen() {
           {
             text: ProfileDict.Ok,
             onPress: () => {
-              navigateAddPhoto();
+              navigateAddPhoto(alreadyExists);
             },
           },
         ],
@@ -139,7 +135,7 @@ export default function TransformationScreen() {
     }
   }
 
-  function navigateAddPhoto() {
+  function navigateAddPhoto(alreadyExists = false) {
     request(
       Platform.select({
         ios: PERMISSIONS.IOS.CAMERA,
@@ -154,14 +150,18 @@ export default function TransformationScreen() {
           Alert.alert(ProgressDict.NoCamera);
         }
         if (result === RESULTS.GRANTED) {
-          navigation.navigate('AddPhoto');
+          navigation.navigate('AddPhoto', {alreadyExists: alreadyExists});
         }
       })
       .catch((err) => console.log('Error add photo: ', err));
   }
 
   const handleShare = useCallback(async () => {
-    
+    if (!beforePic || !afterPic) {
+      displayAlert({text: ProgressDict.ShareNotAvailableWarning});
+      return;
+    }
+
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -187,10 +187,14 @@ export default function TransformationScreen() {
 
     setLoading(true);
 
-    
-
-    const {colour, url} = await getShareData(ShareMediaType.progress);
-
+    const {colour, url} = await getShareData(ShareMediaType.progress).catch(
+      (err) => {
+        console.log(err, '<---getShareData err');
+        displayAlert({text: ShareDict.UnableToShareProgress});
+        setLoading(false);
+        return;
+      },
+    );
 
     try {
       let beforeDate = parseISO(beforePic.value);
@@ -203,7 +207,7 @@ export default function TransformationScreen() {
         ? 'TODAY'
         : format(afterDate, 'dd/LL/yyyy');
 
-      let res = await PowerShareAssetsManager.shareProgress({
+      await PowerShareAssetsManager.shareProgress({
         backgroundImageUrl: url,
         beforeImageUrl: beforePic.url,
         afterImageUrl: afterPic.url,
@@ -217,12 +221,7 @@ export default function TransformationScreen() {
     }
 
     setLoading(false);
-  }, [
-    beforePic,
-    afterPic,
-    getShareData,
-  ]);
-
+  }, [beforePic, afterPic, getShareData]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

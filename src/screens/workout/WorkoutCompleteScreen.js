@@ -21,6 +21,8 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import Spacer from '../../components/Utility/Spacer';
 import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
+import CompleteOnDemandWorkout from '../../apollo/mutations/CompleteOnDemandWorkout';
+import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
 import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
@@ -30,26 +32,40 @@ import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
 import displayAlert from '../../utils/DisplayAlert';
 
+import {useNetInfo} from '@react-native-community/netinfo';
+import OfflineUtils from '../../hooks/data/OfflineUtils';
+import FastImage from 'react-native-fast-image';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const insets = useSafeAreaInsets();
+
   const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict, ProfileDict} = dictionary;
   const navigation = useNavigation();
+  const {isConnected, isInternetReachable} = useNetInfo();
 
   const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
+    getProgramme,
     selectedWorkout,
     weightsToUpload,
     setWeightsToUpload,
+    setIsSelectedWorkoutOnDemand,
+    isSelectedWorkoutOnDemand,
+    shouldIncrementOnDemandWorkoutCount,
+    setShouldIncrementOnDemandWorkoutCount,
   } = UseData();
 
   const {setLoading} = useLoading();
-  const { setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
+  const {setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
 
+  const [completeOnDemandWorkout] = useMutation(CompleteOnDemandWorkout);
   const [completeWorkout] = useMutation(CompleteWorkout);
+  const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
   const [addWeight] = useMutation(AddExerciseWeight);
 
   const [selectedIntensity, setSelectedIntensity] = useState(10);
@@ -57,26 +73,16 @@ export default function WorkoutCompleteScreen() {
 
   const [stats, setStats] = useState({});
 
-  
-
-  useEffect(()=> {
+  useEffect(() => {
     navigation.setOptions({
-      header: () => (
-        <Header
-          title={WorkoutDict.WorkoutComplete}
-          showModalCross
-          rightAction={checkGoBack}
-        />
-      ),
+      header: () => <Header title={WorkoutDict.WorkoutComplete} />,
     });
 
     setIsWorkoutTimerRunning(false);
   }, []);
 
-
   useBackHandler(() => {
-    checkGoBack()
-      return true;
+    return true;
   });
 
   useEffect(() => {
@@ -94,7 +100,7 @@ export default function WorkoutCompleteScreen() {
             reps += set.quantity;
             break;
           }
-          case 'TIME', 'SECS': {
+          case ('TIME', 'SECS'): {
             seconds += set.quantity;
             break;
           }
@@ -155,13 +161,16 @@ export default function WorkoutCompleteScreen() {
       textAlign: 'left',
     },
     sliderContainer: {
-      marginTop: getHeight(20),
-      marginBottom: getHeight(28),
+      marginTop: getHeight(4),
+      marginBottom: getHeight(18),
     },
     buttonContainer: {
       width: '100%',
-      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
       marginTop: getHeight(30),
+      marginBottom: getHeight(20 + insets.bottom),
+      alignItems: 'center',
     },
   });
 
@@ -181,12 +190,50 @@ export default function WorkoutCompleteScreen() {
       intensity: intensity,
       emoji: selectedEmoji,
       timeTaken: stats.duration,
-      weightsUsed: weightsToUpload
+      weightsUsed: weightsToUpload,
     };
 
-    console.log("workoutComplete", workoutComplete)
+    let firebaseEventPayload = {
+      workoutId: selectedWorkout.id,
+      workoutName: selectedWorkout.name,
+    };
 
-    completeWorkout({
+    if (isSelectedWorkoutOnDemand) {
+      firebaseEventPayload = {
+        ...firebaseEventPayload,
+        onDemand: true,
+      };
+    }
+
+    // Handle offline programme workout
+    if (!isConnected && !isInternetReachable && !isSelectedWorkoutOnDemand) {
+      handleOffline(workoutComplete, firebaseEventPayload);
+      return;
+    }
+
+    if (isSelectedWorkoutOnDemand && shouldIncrementOnDemandWorkoutCount) {
+      startOnDemandWorkout({
+        variables: {
+          input: {
+            workoutId: selectedWorkout.id,
+          },
+        },
+      })
+        .then(async (res) => {
+          console.log('startOnDemandWorkout: ', res);
+        })
+        .catch((err) => {
+          console.log(err, '<---start on demand workout error');
+        });
+    } else {
+      setShouldIncrementOnDemandWorkoutCount(true);
+    }
+
+    const completeMutation = isSelectedWorkoutOnDemand
+      ? completeOnDemandWorkout
+      : completeWorkout;
+
+    completeMutation({
       variables: {
         input: {
           ...workoutComplete,
@@ -194,29 +241,70 @@ export default function WorkoutCompleteScreen() {
       },
     })
       .then(async (res) => {
-        const success = R.path(['data', 'completeWorkout'], res);
+        const success = R.path(
+          [
+            'data',
+            isSelectedWorkoutOnDemand
+              ? 'completeOnDemandWorkout'
+              : 'completeWorkout',
+          ],
+          res,
+        );
 
         if (success) {
-          firebaseLogEvent(analyticsEvents.completedWorkout, {
-            workoutId: selectedWorkout.id,
-            workoutName: selectedWorkout.name,
-          });
-          setWeightsToUpload([]);
-          await getProfile();
+          firebaseLogEvent(
+            analyticsEvents.completedWorkout,
+            firebaseEventPayload,
+          );
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'TabContainer'}],
-          });
+          completeWorkoutDone();
+        } else {
+          console.log(res, '<---workout complete error');
+
+          if (isSelectedWorkoutOnDemand) {
+            completeWorkoutDone();
+          } else {
+            handleOffline(workoutComplete, firebaseEventPayload);
+          }
         }
       })
-      .catch((err) => console.log(err, '<---workout complete error'))
-      .finally(()=> setLoading(false));
+      .catch((err) => {
+        console.log(err, '<---workout complete error');
+        if (isSelectedWorkoutOnDemand) {
+          completeWorkoutDone();
+        } else {
+          handleOffline(workoutComplete, firebaseEventPayload);
+        }
+      });
   }
 
+  async function handleOffline(workoutComplete, firebaseEventPayload) {
+    await OfflineUtils.completeWorkout(workoutComplete, firebaseEventPayload);
+    completeWorkoutDone();
+  }
+
+  async function completeWorkoutDone() {
+    setWeightsToUpload([]);
+    await getProgramme();
+    await getProfile();
+
+    setLoading(false);
+
+    if (isSelectedWorkoutOnDemand) {
+      setIsSelectedWorkoutOnDemand(false);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabContainer', params: {screen: 'Tab2'}}],
+      });
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabContainer'}],
+      });
+    }
+  }
 
   function checkGoBack() {
-
     displayAlert({
       title: null,
       text: WorkoutDict.WorkoutGoBackWarning,
@@ -241,12 +329,13 @@ export default function WorkoutCompleteScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scroll}>
         <View style={styles.imageContainer}>
-          <Image
+          <FastImage
             source={
-              stats.overviewImage
-                ? {uri: stats.overviewImage}
-                : require('../../../assets/fakeWorkout.png')
+              stats.overviewImage === undefined
+                ? require('../../../assets/fakeWorkout.png')
+                : {uri: stats.overviewImage}
             }
+            fallback={true}
             style={styles.image}
           />
           <View style={styles.fadeContainer}>
@@ -265,7 +354,10 @@ export default function WorkoutCompleteScreen() {
         </View>
         <View style={styles.contentContainer}>
           <Text style={styles.question}>{WorkoutDict.HowIntense}</Text>
-          <View style={styles.sliderContainer}>
+          <View
+            style={{
+              ...styles.sliderContainer,
+            }}>
             <SliderProgressView
               slider={true}
               min={0}
@@ -273,6 +365,12 @@ export default function WorkoutCompleteScreen() {
               progress={selectedIntensity}
               setProgress={setSelectedIntensity}
               height={getHeight(4)}
+              containerStyle={{
+                height: getHeight(42),
+                alignContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
               rounded={true}
             />
           </View>
@@ -281,17 +379,16 @@ export default function WorkoutCompleteScreen() {
             setSelectedEmoji={setSelectedEmoji}
           />
         </View>
-        <View style={styles.buttonContainer}>
-          <DefaultButton
-            type="done"
-            variant="white"
-            icon="chevron"
-            onPress={submitWorkout}
-            disabled={selectedEmoji ? false : true}
-          />
-        </View>
-        <Spacer height={50} />
       </ScrollView>
+      <View style={styles.buttonContainer}>
+        <DefaultButton
+          type="done"
+          variant="white"
+          icon="chevron"
+          onPress={submitWorkout}
+          disabled={selectedEmoji ? false : true}
+        />
+      </View>
     </View>
   );
 }

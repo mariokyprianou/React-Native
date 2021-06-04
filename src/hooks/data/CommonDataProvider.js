@@ -2,12 +2,12 @@
  * Created Date: Sun, 31st Jan 2021, 01:19:11 am
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
-import React, {useState, useMemo, useEffect} from 'react';
-import {useLazyQuery, useQuery} from '@apollo/client';
+import React, {useState, useMemo, useEffect, useCallback} from 'react';
+import {useQuery} from '@apollo/client';
 import fetchPolicy from '../../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './CommonDataContext';
 import Onboarding from '../../apollo/queries/Onboarding';
 import Trainers from '../../apollo/queries/Trainers';
@@ -15,14 +15,42 @@ import Legals from '../../apollo/queries/Legals';
 import ProgrammeQuestionnaire from '../../apollo/queries/ProgrammeQuestionnaire';
 import useDictionary from '../localisation/useDictionary';
 import isRTL from '../../utils/isRTL';
+import useCustomQuery from '../customQuery/useCustomQuery';
+import FastImage from 'react-native-fast-image';
+import SplashScreen from 'react-native-splash-screen';
 
 export default function DataProvider(props) {
+  const {runQuery} = useCustomQuery();
+
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const {dictionary} = useDictionary();
   const {HelpMeChooseDict, OnboardingDict} = dictionary;
 
-  const [onboarding, setOnboarding] = useState(isRTL() ? OnboardingDict.fallbackData.reverse() : OnboardingDict.fallbackData);
+  const [onboarding, setOnboarding] = useState();
+
+  const fallbackData = [
+    {
+      ...OnboardingDict.fallbackData[0],
+      image: require('../../../assets/onboarding/onboarding1.png'),
+      local: true,
+    },
+    {
+      ...OnboardingDict.fallbackData[1],
+      image: require('../../../assets/onboarding/onboarding2.png'),
+      local: true,
+    },
+    {
+      ...OnboardingDict.fallbackData[2],
+      image: require('../../../assets/onboarding/onboarding3.png'),
+      local: true,
+    },
+    {
+      ...OnboardingDict.fallbackData[3],
+      image: require('../../../assets/onboarding/onboarding4.png'),
+      local: true,
+    },
+  ];
 
   const [trainers, setTrainers] = useState([]);
 
@@ -33,46 +61,86 @@ export default function DataProvider(props) {
   const [suggestedProgramme, setSuggestedProgramme] = useState();
 
   useEffect(() => {
-    console.log("CommondataProvider: useEffect");
+    console.log('CommondataProvider: useEffect');
     getOnboarding();
     getTrainers();
   }, []);
 
+  async function isNetworkAvailable() {
+    const response = await NetInfo.fetch();
+    return response.isConnected; //&& response.isInternetReachable;
+  }
 
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+  }, [onboarding]);
 
-  const [getOnboarding] = useLazyQuery(Onboarding, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const data = [];
-        res.onboardingScreens.forEach((screen) => {
-          const isRightToLeft = isRTL();
-          if (isRightToLeft === true) {
-            data.unshift(screen);
-          } else {
-            data.push(screen);
+  const getOnboarding = useCallback(async () => {
+    const available = await isNetworkAvailable();
+    if (available) {
+      const res = await runQuery({
+        query: Onboarding,
+        key: 'onboardingScreens',
+        setValue: async (res) => {
+          if (res) {
+            const data = [];
+            res.forEach((screen) => {
+              const isRightToLeft = isRTL();
+              if (isRightToLeft === true) {
+                data.unshift(screen);
+              } else {
+                data.push(screen);
+              }
+            });
+
+            if (data && data.length > 0) {
+              // Preload all onboarding images
+              const images = data.map((it) => {
+                return {uri: it.image};
+              });
+              FastImage.preload(images);
+
+              setOnboarding(data);
+            } else {
+              setOnboarding(isRTL() ? fallbackData.reverse() : fallbackData);
+            }
           }
-        });
-        setOnboarding(data);
-      }
-    },
-    onError: (error) => {
-      console.log(error);
+        },
+      });
+    } else {
+      setOnboarding(isRTL() ? fallbackData.reverse() : fallbackData);
     }
-  });
+  }, [runQuery, isConnected, isInternetReachable, onboarding]);
 
-  const [getTrainers] = useLazyQuery(Trainers, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const data = res.getTrainers
-          .slice()
-          .filter((it) => it.programmes.length > 0);
-        setTrainers(data);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
+  const getTrainers = useCallback(async () => {
+    const res = await runQuery({
+      query: Trainers,
+      key: 'getTrainers',
+      setValue: async (res) => {
+        if (res) {
+          const data = res.slice().filter((it) => it.programmes.length > 0);
+
+          // Preload all programmeImages
+
+          const available = await isNetworkAvailable();
+          if (available) {
+            const images = [];
+            data.map((trainer) => {
+              trainer.programmes.map((it) => {
+                images.push({uri: it.programmeImage});
+              });
+            });
+
+            FastImage.preload(images);
+          }
+
+          setTrainers(data);
+        }
+      },
+    });
+  }, [runQuery]);
 
   useQuery(Legals, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),

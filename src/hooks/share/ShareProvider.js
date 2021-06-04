@@ -1,52 +1,43 @@
-
-import { useApolloClient, useLazyQuery } from '@apollo/client';
-import { useNetInfo } from '@react-native-community/netinfo';
+import {useApolloClient} from '@apollo/client';
 import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
 import ShareMedia from '../../apollo/queries/ShareMedia';
-import fetchPolicy from '../../utils/fetchPolicy';
 import DataContext from './Context';
 
-
 export default function DataProvider(props) {
+  const client = useApolloClient();
 
-    const {isConnected, isInternetReachable} = useNetInfo();
+  const ShareMediaType = {
+    weekComplete: 'WEEK_COMPLETE',
+    challengeComplete: 'CHALLENGE_COMPLETE',
+    progress: 'PROGRESS',
+  };
 
-    const client = useApolloClient();
-
-    const ShareMediaType = {
-        weekComplete: 'WEEK_COMPLETE',
-        challengeComplete: 'CHALLENGE_COMPLETE', 
-        progress: 'PROGRESS'
-    };
-    
-
-    const getShareData = useCallback(async (shareType) => {
-
-        return client.query({
-            query: ShareMedia,
-            fetchPolicy: 'no-cache',
-            variables: {
-                type: shareType
-            },
-        })
-        .then((res) => {
-            return res.data.shareMedia;
-        })
-        .catch((err) => console.log(err, 'getShareData error'));
-    }, []);
-
+  const getShareData = useCallback(async (shareType) => {
+    return client
+      .query({
+        query: ShareMedia,
+        fetchPolicy: 'no-cache',
+        variables: {
+          type: shareType,
+        },
+      })
+      .then((res) => {
+        return res.data.shareMedia;
+      })
+      .catch((err) => {
+        console.log(err, 'getShareData error');
+        return null;
+      });
+  }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
     () => ({
-        ShareMediaType,
-        getShareData
+      ShareMediaType,
+      getShareData,
     }),
-    [
-        ShareMediaType,
-        getShareData
-    ],
+    [ShareMediaType, getShareData],
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

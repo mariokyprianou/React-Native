@@ -17,7 +17,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import TransformationChallenge from '../../components/Buttons/TransformationChallenge';
@@ -27,9 +27,10 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import useUserData from '../../hooks/data/useUserData';
 import {parseISO} from 'date-fns';
 import useProgressData from '../../hooks/data/useProgressData';
+import displayAlert from '../../utils/DisplayAlert';
 
-const fakeImage = require('../../../assets/fake2.png');
-const fakeGraph = require('../../../assets/fakeGraph.png');
+const transformationTileImage = require('../../../assets/transformationTileImage.png');
+const challengePlaceholderGraph = require('../../../assets/fakeGraph.png');
 
 export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -54,7 +55,7 @@ export default function ProgressScreen() {
     pillWidth,
   } = singleCalendarStyles;
   const {dictionary} = useDictionary();
-  const {ProgressDict} = dictionary;
+  const {ProgressDict, OfflineMessage} = dictionary;
   const navigation = useNavigation();
 
   const [progressData, setProgressData] = useState();
@@ -64,17 +65,25 @@ export default function ProgressScreen() {
     navigation.setOptions({
       header: () => null,
     });
-
-    getPreferences();
-    getProgress();
-    getChallenges();
-    if (userImages.length === 0) {
-      getImages();
-    }
   }, []);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    if (preferences.weightPreference) {
+    if (isFocused && !progress) {
+      console.log('Focused Tab3: need refetch');
+
+      getPreferences();
+      getProgress();
+      getChallenges();
+      if (userImages.length === 0) {
+        getImages();
+      }
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (preferences && preferences.weightPreference) {
       const weightPreference = preferences.weightPreference.toLowerCase();
       setWeightLabel(weightPreference);
     }
@@ -144,12 +153,13 @@ export default function ProgressScreen() {
       backgroundColor: colors.white100,
       marginBottom: '4%',
       alignSelf: 'center',
+      paddingBottom: getHeight(5),
     },
     calendarTitle: {
       ...textStyles.bold20_black100,
       textAlign: 'left',
       marginTop: getHeight(17),
-      marginBottom: getHeight(7),
+      marginBottom: getHeight(4),
       marginHorizontal: getWidth(24),
     },
     boxWrapper: {
@@ -198,9 +208,15 @@ export default function ProgressScreen() {
               <>
                 <TransformationChallenge
                   type="progress"
-                  title="Transformation"
-                  image={fakeImage}
-                  onPress={() => navigation.navigate('Transformation')}
+                  title={ProgressDict.TransformationScreenTitle}
+                  image={transformationTileImage}
+                  onPress={() => {
+                    if (!isConnected) {
+                      displayAlert({text: OfflineMessage});
+                      return;
+                    }
+                    navigation.navigate('Transformation');
+                  }}
                 />
                 {challenges.map((challenge, index) => {
                   const {
@@ -211,7 +227,7 @@ export default function ProgressScreen() {
                     duration,
                     fieldTitle,
                     unitType,
-                    imageUrl
+                    imageUrl,
                   } = challenge;
 
                   return (
@@ -219,9 +235,14 @@ export default function ProgressScreen() {
                       key={index}
                       type="challenge"
                       title={name}
-                      image={fakeGraph}
+                      image={challengePlaceholderGraph}
                       imageUrl={imageUrl}
-                      onPress={() =>
+                      onPress={() => {
+                        if (!isConnected) {
+                          displayAlert({text: OfflineMessage});
+                          return;
+                        }
+
                         navigation.navigate('Challenge', {
                           id: id,
                           name: name,
@@ -231,8 +252,8 @@ export default function ProgressScreen() {
                           duration: duration,
                           unitType: type === 'STOPWATCH' ? 'seconds' : unitType,
                           weightPreference: weightLabel,
-                        })
-                      }
+                        });
+                      }}
                     />
                   );
                 })}

@@ -48,7 +48,7 @@ export default function ({
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const style = {
-    ...textStyles.regular15_brownishGrey100,
+    ...textStyles.regular12_brownishGrey100,
     fontWeight: active ? 'bold' : 'normal',
     ...highlightedStyle,
   };

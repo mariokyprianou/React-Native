@@ -28,15 +28,15 @@ const PermissionScreenUI = ({
   onPressButton,
   onPressBottomButton,
   disabled = false,
-  closeModal = true
+  closeModal = false,
 }) => {
   // MARK: - Hooks
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getScaledHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const navigation = useNavigation();
 
   navigation.setOptions({
-    header: () =>  <Header title={title} showModalCross={closeModal} />,
+    header: () => <Header title={title} showModalCross={closeModal} />,
     ...TransitionPresets.ModalSlideFromBottomIOS,
   });
 
@@ -58,14 +58,17 @@ const PermissionScreenUI = ({
       textAlign: 'center',
     },
     imageView: {
-      height: getHeight(270),
+      height: getScaledHeight(270),
       width: '100%',
-      marginTop: getHeight(20),
+    },
+    imageViewContainer: {
+      flex: 1,
+      width: '100%',
+      justifyContent: 'center',
     },
     bottomContainer: {
       marginBottom: getHeight(35),
       marginTop: getHeight(46),
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'flex-end',
     },
@@ -74,7 +77,9 @@ const PermissionScreenUI = ({
   // MARK: - Render
   return (
     <View style={styles.container}>
-      <Image style={styles.imageView} source={image} resizeMode={'contain'} />
+      <View style={styles.imageViewContainer}>
+        <Image style={styles.imageView} source={image} resizeMode={'contain'} />
+      </View>
       <View style={styles.bottomContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.text}>{text}</Text>

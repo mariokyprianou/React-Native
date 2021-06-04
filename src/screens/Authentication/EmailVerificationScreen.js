@@ -18,7 +18,6 @@ import ResendVerificationEmail from '../../apollo/mutations/ResendVerificationEm
 import useUserData from '../../hooks/data/useUserData';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 export default function EmailVerificationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {dictionary} = useDictionary();
@@ -30,17 +29,16 @@ export default function EmailVerificationScreen() {
   const {permissionsNeeded, updateDefaultPreferences} = useUserData();
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
-
   useEffect(() => {
     let interval = setInterval(async () => {
       await Auth.signIn(email, password)
         .then(async () => {
           clearInterval(interval);
 
-          await AsyncStorage.setItem(
-            '@DOWNLOAD_ENABLED',
-            JSON.stringify(true),
-          );
+          // New user needs to set these agains
+          await AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(true));
+          await AsyncStorage.removeItem('@ANALYTICS_ASKED');
+          await AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 
           await updateDefaultPreferences();
           const permissionNeeded = await permissionsNeeded();
@@ -59,11 +57,10 @@ export default function EmailVerificationScreen() {
         });
     }, 1000);
 
-  return () => {
-    clearInterval(interval);
-    interval = null;
-  }
-
+    return () => {
+      clearInterval(interval);
+      interval = null;
+    };
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -73,7 +70,7 @@ export default function EmailVerificationScreen() {
       .then(() => {
         Alert.alert(AuthDict.VerificationLinkSent);
       })
-      .catch((err) => console.log("resendEmail", err));
+      .catch((err) => console.log('resendEmail', err));
   }
 
   async function onPressBottomButton() {
@@ -86,7 +83,7 @@ export default function EmailVerificationScreen() {
         onPress: async () => {
           if (fromLogin === true) {
             navigation.goBack();
-           } else {
+          } else {
             navigation.navigate('MeetYourIcons', {switchProgramme: false});
           }
         },

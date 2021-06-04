@@ -1,5 +1,5 @@
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-index e9042f5..c6d4818 100644
+index e9042f5..b1181e4 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
 @@ -12,7 +12,7 @@ const appNamePath = DeviceInfo.getApplicationName();
@@ -20,7 +20,7 @@ index e9042f5..c6d4818 100644
  async function filterNewFiles(newFiles) {
  	const allFiles = await getAllSavedFiles();
  
-@@ -56,27 +58,112 @@ async function filterNewFiles(newFiles) {
+@@ -56,27 +58,118 @@ async function filterNewFiles(newFiles) {
  	return toSaveFiles;
  }
  
@@ -38,8 +38,10 @@ index e9042f5..c6d4818 100644
 +
 +		console.log("Files to save:", filesToSave.length);
 +		results = await Promise.all(
-+			filesToSave.map(async (it) => {
++			filesToSave.map(async (it, index) => {
++				console.log(`Trying at item ${index}: ${it.filename}`)
 +				const result = await downloadWithName(it);
++				console.log(`${result.success ? "downloaded": "failed"} at item ${index}: ${it.filename}`)
 +				return { success: result.success, file: it.filename };
 +			})
 +		);
@@ -61,24 +63,27 @@ index e9042f5..c6d4818 100644
 +
 +async function filterNewFilesWithNames(newFiles) {
 +	const allFiles = await getAllSavedFiles();
-+	var toSaveFiles = [];
++	
 +
 +	if (allFiles && allFiles.length > 0) {
-+		allFiles.map((savedFile) => {
-+			const result = newFiles.filter((it) => {
-+				var name = it.filename;
-+				if (!savedFile.includes(name)) return it;
-+			});
++		var toSaveFiles = []; 
 +
-+			toSaveFiles = toSaveFiles.concat(result);
-+		});
-+	} else {
-+		toSaveFiles = newFiles;
++		newFiles.map(it => {
++			const existsAlready = allFiles.find(saved => saved.includes(it.filename));
++			if (!existsAlready) {
++			toSaveFiles.push(it)
++			}
++			
+ 		})
+-		.catch((error) => console.log(error));
++
++		return toSaveFiles;
++	} 
++	else {
++		return newFiles;
 +	}
-+
-+	return toSaveFiles;
-+}
-+
+ }
+ 
 +async function downloadWithName({filename, url}) {
 +
 +	const options = {
@@ -94,14 +99,15 @@ index e9042f5..c6d4818 100644
 +			} else {
 +				return { success: false };
 +			}
- 		})
--		.catch((error) => console.log(error));
++		}, cause => {
++			console.log("causse", cause)
++		})
 +		.catch((error) => {
 +			console.log(error);
 +			return { success: false };
 +		});
- }
- 
++}
++
 +
 +async function getAllSavedFiles() {
 +
@@ -145,12 +151,12 @@ index e9042f5..c6d4818 100644
  	};
  
  	return config(options)
-@@ -115,17 +202,17 @@ function fileExists(path) {
+@@ -115,17 +208,17 @@ function fileExists(path) {
  }
  
  async function clearAllFiles() {
 -	let PictureDir = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
- 	
+ 
 -	var path = PictureDir + '/' + appNamePath;
 +	var path = fileDirectory + '/' + appNamePath;
  
@@ -166,7 +172,7 @@ index e9042f5..c6d4818 100644
  			return { success: false, error: error };
  		});
  }
-@@ -182,10 +269,26 @@ async function getLocalFile(url) {
+@@ -182,10 +275,26 @@ async function getLocalFile(url) {
  	}
  }
  
@@ -194,7 +200,7 @@ index e9042f5..c6d4818 100644
 +	getLocalFileByName,
  };
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..ab4fa3e 100644
+index c1656ea..7ed0216 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 @@ -5,29 +5,40 @@
@@ -312,12 +318,13 @@ index c1656ea..ab4fa3e 100644
  			<Video
  				onEnd={onEnd}
  				onLoad={onLoad}
-@@ -135,9 +151,12 @@ export default function VideoView(props) {
+@@ -135,9 +151,13 @@ export default function VideoView(props) {
  				}}
  				style={styles.mediaPlayer}
  				volume={props.volume || 13}
 +				muted={props.muted || false}
-+
++				repeat={props.repeat || false}
++				playWhenInactive={props.playWhenInactive || false}
  			/>
  
 -			<MediaControls
@@ -326,7 +333,7 @@ index c1656ea..ab4fa3e 100644
  				isFullScreen={isFullScreen}
  				duration={duration}
  				isLoading={isLoading}
-@@ -153,6 +172,8 @@ export default function VideoView(props) {
+@@ -153,6 +173,8 @@ export default function VideoView(props) {
  				fadeOutDelay={3000}
  				showOnStart={false}
  			/>
@@ -335,7 +342,7 @@ index c1656ea..ab4fa3e 100644
  		</View>
  	);
  }
-@@ -175,5 +196,10 @@ const styles = StyleSheet.create({
+@@ -175,5 +197,10 @@ const styles = StyleSheet.create({
  		bottom: 0,
  		right: 0,
  		backgroundColor: 'black',

@@ -22,15 +22,14 @@ import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {useRoute} from '@react-navigation/core';
 import format from 'date-fns/format';
-import { differenceInDays, parseISO } from 'date-fns';
+import {differenceInDays, parseISO} from 'date-fns';
 import {useBackHandler} from '@react-native-community/hooks';
-import { filter } from 'ramda';
-import { isSameDay } from '../../utils/dateTimeUtils';
-
+import {filter} from 'ramda';
+import {isSameDay} from '../../utils/dateTimeUtils';
 
 export default function WeightCaptureScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight, getScaledHeight, getWidth, fontSize} = ScaleHook();
   const {
     colors,
     textStyles,
@@ -44,14 +43,15 @@ export default function WeightCaptureScreen() {
   const {cleanErrors, getValues, updateError, cleanValues} = FormHook();
 
   const {
-    params: {exerciseName = "Squats", weightHistory, weightPreference, setType},
+    params: {exerciseName = 'Squats', weightHistory, weightPreference, setType},
   } = useRoute();
-  
+
   const [historyData, setHistoryData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [dropdownData, setDropDownData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [graphIsSelectable, setGraphIsSelectable] = useState(false);
 
   useBackHandler(() => {
     navigation.goBack();
@@ -68,70 +68,88 @@ export default function WeightCaptureScreen() {
       }, {});
     };
   }
-  const groupByDate = groupBy("date");
+  const groupByDate = groupBy('date');
 
-  useEffect(()=> {
+  useEffect(() => {
     navigation.setOptions({
       header: () => <Header title={WorkoutDict.WeightsTitle} showModalCross />,
     });
 
-    const data = processChallengeHistory(weightHistory, weightPreference, "WEIGHT")
-        .sort((a, b)=> parseISO(a.createdAt) - parseISO(b.createdAt) || a.setNumber > b.setNumber);
-    
-
-    setHistoryData(data);
-    setFilteredData(data);
+    const data = processChallengeHistory(
+      weightHistory,
+      weightPreference,
+      'WEIGHT',
+    ).sort(
+      (a, b) =>
+        parseISO(a.createdAt) - parseISO(b.createdAt) ||
+        a.setNumber > b.setNumber,
+    );
 
     const dropdown = data
-    .map((event) => `${event.quantity}`)
-    .filter((value, index, self) => self.indexOf(value) === index);
-
-    setDropDownData(dropdown);
+      .map((event) => `${event.quantity}`)
+      .filter((value, index, self) => self.indexOf(value) === index);
 
     // Initial date is last available3 date from historic date
     if (data.length > 0) {
       setSelectedDate(parseISO(data.pop().createdAt));
     }
 
+    setHistoryData(data);
+    setFilteredData(data);
+    setDropDownData(dropdown);
   }, []);
-
 
   const dropDownSelect = getValues('repsHistory').repsHistory;
 
   // Drop down changed
-  useEffect(()=> {
-  const data = processChallengeHistory(weightHistory, weightPreference, "WEIGHT")
-      .sort((a, b)=> parseISO(a.createdAt) - parseISO(b.createdAt) || a.setNumber > b.setNumber);
+  useEffect(() => {
+    const data = processChallengeHistory(
+      weightHistory,
+      weightPreference,
+      'WEIGHT',
+    ).sort(
+      (a, b) =>
+        parseISO(a.createdAt) - parseISO(b.createdAt) ||
+        a.setNumber > b.setNumber,
+    );
 
-  if (!dropDownSelect) {
-      setFilteredData(data)
-    }
-    else {
-      const filter = data.filter(it => it.quantity === Number(dropDownSelect));
+    if (!dropDownSelect) {
+      setFilteredData(data);
+    } else {
+      const filter = data.filter(
+        (it) => it.quantity === Number(dropDownSelect),
+      );
       setFilteredData(filter);
 
       // If selectedDate dowsnt have any data in the current filtered array, set date to the latest available
-      const dateHasData = filter.find(it => isSameDay(parseISO(it.createdAt), selectedDate));
-      if (!dateHasData) {
-        setSelectedDate(parseISO(filter[filter.length -1].createdAt));
+      if (!selectedDate) {
+        setSelectedDate(parseISO(filter[filter.length - 1].createdAt));
+      } else {
+        const dateHasData = filter.find((it) =>
+          isSameDay(parseISO(it.createdAt), selectedDate),
+        );
+        if (!dateHasData) {
+          setSelectedDate(parseISO(filter[filter.length - 1].createdAt));
+        }
       }
     }
-  }, [historyData, dropDownSelect])
-  
-  function setDate(index) {  
+  }, [historyData, dropDownSelect]);
+
+  function setDate(index) {
+    if (!graphIsSelectable) {
+      setGraphIsSelectable(true);
+    }
+
     const chartData = getChartData(filteredData);
     setSelectedDate(parseISO(chartData[index].createdAt));
   }
 
-
   function getChartData(data) {
-    const chartData = Object.values(groupByDate(data)).map(it=> {
-      return it.find((a, b) =>  a.weight > b.weight ? b : a)
+    const chartData = Object.values(groupByDate(data)).map((it) => {
+      return it.sort((a, b) => a.weight < b.weight)[0];
     });
-
     return chartData;
   }
-
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -151,7 +169,6 @@ export default function WeightCaptureScreen() {
     title: {
       ...textStyles.bold20_black100,
       textAlign: 'left',
-    
     },
     subtitleContainer: {
       width: '90%',
@@ -180,7 +197,7 @@ export default function WeightCaptureScreen() {
       width: '100%',
       alignItems: 'center',
       position: 'absolute',
-      top: getHeight(490),
+      top: getScaledHeight(490),
       elevation: 9,
     },
     iconStyle: {
@@ -196,7 +213,10 @@ export default function WeightCaptureScreen() {
     {
       name: 'repsHistory',
       type: 'dropdown',
-      placeholder: 'Reps',
+      placeholder:
+        setType === 'REPS'
+          ? WorkoutDict.WeightsRepsSelector
+          : WorkoutDict.WeightsSecsSelector,
       data: ['', ...dropdownData],
       underline: false,
       rightAccessory: () => (
@@ -222,13 +242,13 @@ export default function WeightCaptureScreen() {
     ...cellFormConfig,
   };
 
-
-  
-  let titletext = exerciseName.length > 20 ? `${exerciseName.substring(0, 17)}...` : exerciseName;
+  let titletext =
+    exerciseName.length > 20
+      ? `${exerciseName.substring(0, 17)}...`
+      : exerciseName;
   titletext = `${titletext} -`;
-  
-  const chartData = getChartData(filteredData);
 
+  const chartData = getChartData(filteredData);
 
   return (
     <View style={styles.card}>
@@ -245,25 +265,24 @@ export default function WeightCaptureScreen() {
             data={chartData}
             weightPreference={weightPreference}
             setDate={setDate}
-            selectable={true}
+            selectable={graphIsSelectable}
             background={false}
           />
         </View>
         <Spacer height={30} />
-        {selectedDate &&
-        (
+        {selectedDate && (
           <View style={{...styles.chartCard, ...styles.scrollCard}}>
-          <SetsTable
-            selectedDate={selectedDate}
-            date={format(selectedDate, 'do LLL yyyy')}
-            weightData={filteredData}
-            weightPreference={weightPreference}
-            setType={setType}
-            dropDownSelect={dropDownSelect}
-          />
-        </View>
+            <SetsTable
+              selectedDate={selectedDate}
+              date={format(selectedDate, 'do LLL yyyy')}
+              weightData={filteredData}
+              weightPreference={weightPreference}
+              setType={setType}
+              dropDownSelect={dropDownSelect}
+            />
+          </View>
         )}
-        
+
         <View style={styles.buttonContainer}>
           <DefaultButton
             type="done"

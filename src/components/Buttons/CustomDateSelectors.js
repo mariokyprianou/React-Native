@@ -18,9 +18,9 @@ const arrowUp = require('../../../assets/icons/sortUp.png');
 
 const CustomDateSelectors = ({
   onPress,
-  storedImages, 
+  storedImages,
   selectedBeforeDate,
-  selectedAfterDate
+  selectedAfterDate,
 }) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius, fontSize} = ScaleHook();
@@ -36,7 +36,7 @@ const CustomDateSelectors = ({
       top: getHeight(20),
       left: getWidth(20),
       zIndex: 9,
-      height: getHeight(170)
+      height: getHeight(170),
     },
     dropdownContainer: {
       height: getHeight(30),
@@ -78,12 +78,25 @@ const CustomDateSelectors = ({
     <Image source={arrowDown} style={styles.arrowStyle} />
   );
 
+  const storedImageDates = storedImages.map((obj) => obj.value);
+  const beforeDefaultValue = storedImageDates.includes(selectedBeforeDate)
+    ? selectedBeforeDate
+    : storedImageDates.length > 0
+    ? storedImageDates[0]
+    : null;
+
+  const afterDefaultValue = storedImageDates.includes(selectedAfterDate)
+    ? selectedAfterDate
+    : storedImageDates.length > 0
+    ? storedImageDates[0]
+    : null;
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.dropdown}>
       <DropDownPicker
         items={storedImages}
-        defaultValue={selectedBeforeDate}
+        defaultValue={beforeDefaultValue}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}
@@ -96,7 +109,7 @@ const CustomDateSelectors = ({
       />
       <DropDownPicker
         items={storedImages}
-        defaultValue={selectedAfterDate}
+        defaultValue={afterDefaultValue}
         containerStyle={styles.dropdownContainer}
         style={styles.dropdownBox}
         dropDownStyle={styles.dropdownList}

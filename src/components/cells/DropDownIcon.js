@@ -24,7 +24,10 @@ export default function ({enabled = true}) {
   };
   return (
     <View style={{marginRight: getWidth(-5)}}>
-      <TDIcon input={icon} inputStyle={styles} />
+      <TDIcon
+        input="chevron-down"
+        inputStyle={{solid: true, size: fontSize(12.5), color: colors.black100}}
+      />
     </View>
   );
 }

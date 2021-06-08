@@ -96,7 +96,7 @@ export default function ChallengeEndScreen() {
         const found = value.match(regex);
 
         // Reset value
-        if (!found || value.length > 8) {
+        if (!found || value.length > 5) {
           updateValue({name: 'result', value: elapsed});
         } else {
           // Remove any symbols other than the regex we want
@@ -192,8 +192,21 @@ export default function ChallengeEndScreen() {
     setLoading(true);
     let challengeResult = '';
     if (type === 'STOPWATCH') {
-      // Extract value from Input
       const value = getValueByName('result');
+
+      // Time pattern must be fullfilled
+      const regex = /\d{2}:\d{2}/g;
+      const found = value.match(regex);
+
+      if (!found) {
+        displayAlert({
+          text: ProgressDict.CompleteChallengeFailedMessage,
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Extract value from Input
       const array = value.split(':');
       if (array.length === 2) {
         const minsSecs = parseInt(array[0]) * 60;

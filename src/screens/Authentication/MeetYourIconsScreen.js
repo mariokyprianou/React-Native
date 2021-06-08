@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useCallback} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -338,14 +338,17 @@ export default function MeetYourIconsScreen() {
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handlePress(direction) {
-    if (direction === 'left' && activeIndex !== 0) {
-      scrollTo(activeIndex - 1);
-    }
-    if (direction === 'right' && activeIndex !== trainers.length - 1) {
-      scrollTo(activeIndex + 1);
-    }
-  }
+  const handlePress = useCallback(
+    (direction) => {
+      if (direction === 'left' && activeIndex !== 0) {
+        scrollTo(activeIndex - 1);
+      }
+      if (direction === 'right' && activeIndex !== trainers.length - 1) {
+        scrollTo(activeIndex + 1);
+      }
+    },
+    [activeIndex],
+  );
 
   function scrollTo(index) {
     if (iconsSwiper && iconsSwiper.current) {

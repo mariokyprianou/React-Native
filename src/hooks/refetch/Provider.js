@@ -3,6 +3,7 @@ import {AppState} from 'react-native';
 import DataContext from './Context';
 import UseData from '../data/UseData';
 import useLoading from '../loading/useLoading';
+import useCommonData from '../data/useCommonData';
 
 const originalDelay = 40 * 60 * 1000; // 40 minutes
 
@@ -11,6 +12,7 @@ export default function DataProvider(props) {
   const appState = useRef(AppState.currentState);
   const {setLoading} = useLoading();
   const {refetchData} = UseData();
+  const {getTrainers} = useCommonData();
 
   const intervalRef = useRef();
 
@@ -18,6 +20,7 @@ export default function DataProvider(props) {
     if (appState.current.match(/background/) && nextAppState === 'active') {
       console.log('App has come to the foreground! refetchData');
       refetchData();
+      getTrainers();
 
       initInterval();
     }

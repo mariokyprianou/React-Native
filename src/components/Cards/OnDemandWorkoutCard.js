@@ -152,7 +152,7 @@ export default function OnDemandWorkoutCard({
           <PersistentImage
             imageUrl={image}
             style={styles.image}
-            //showLoading={true}
+            showLoading={true}
             //fallback={fallback}
             //placeholder={true}
             //overlayStyle={overlayStyle}

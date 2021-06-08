@@ -83,22 +83,22 @@ export default function MeetYourIconsScreen() {
 
   const [selectedTrainer, setSelectedTrainer] = useState();
   const [selectedProgram, setSelectedProgram] = useState();
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
+  // Handling re fetch trainers based on focus is messsing up the suggested programme functionality
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      if (!trainers || trainers.length === 0) setLoading(true);
-      console.log('Focused Trainers Screen: need refetch');
-      getTrainers();
-    }
-  }, [isFocused]);
-
-  useEffect(() => {
     StatusBar.setBarStyle('dark-content');
+
+    if (!trainers || trainers.length === 0) {
+      setLoading(true);
+    }
+    console.log('Focused Trainers Screen: need refetch');
+    getTrainers();
   }, []);
 
   // Newelly suggestedProgramme handle

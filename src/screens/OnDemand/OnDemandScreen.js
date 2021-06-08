@@ -97,6 +97,7 @@ export default function OnDemandScreen() {
       setLoading(false);
     } else {
       // TODO - Handle Zero State
+      setLoading(false);
     }
   }, [onDemandWorkouts]);
 
@@ -188,7 +189,7 @@ export default function OnDemandScreen() {
           showsHorizontalScrollIndicator={false}
           data={workoutTagsToDisplay}
           style={styles.tagsList}
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={(item, index) => `${item.id}`}
           ItemSeparatorComponent={() => (
             <View style={styles.seperatorComponent} />
           )}
@@ -223,7 +224,7 @@ export default function OnDemandScreen() {
           style={styles.list}
           scrollEnabled={false}
           data={workoutsToDisplay}
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={(item, index) => `${item.id}`}
           renderItem={({item, index}) => {
             return (
               <View

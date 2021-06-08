@@ -46,7 +46,7 @@ import {useMutation} from '@apollo/client';
 import StylisedText from '../../components/text/StylisedText';
 
 const purchaseImage = require('../../../assets/images/powerPurchaseImage.png');
-const purchaseModalVideo = require('../../../assets/videos/purchaseModalVideo.m4v');
+const purchaseModalVideo = require('../../../assets/videos/purchaseModalVideo.mp4');
 
 const productIds = [
   'app.power.subscription.yearly',

@@ -64,6 +64,17 @@ export default function DataProvider(props) {
     console.log('CommondataProvider: useEffect');
     getOnboarding();
     getTrainers();
+    getProgrammeQuestionnaire();
+    getLegals();
+  }, []);
+
+  const syncronousUpdate = useCallback(async () => {
+    await Promise.all([
+      getOnboarding(),
+      getTrainers(),
+      getProgrammeQuestionnaire(),
+      getLegals(),
+    ]);
   }, []);
 
   async function isNetworkAvailable() {
@@ -144,54 +155,56 @@ export default function DataProvider(props) {
     });
   }, [runQuery]);
 
-  useQuery(Legals, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        setLegals(res.legals);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
+  const getLegals = useCallback(async () => {
+    const res = await runQuery({
+      query: Legals,
+      key: 'legals',
+      setValue: async (res) => {
+        setLegals(res);
+      },
+    });
+  }, [runQuery]);
 
-  useQuery(ProgrammeQuestionnaire, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res) {
-        const qMap = res.programmeQuestionnaire.map((question) => {
-          const answers = [];
-          answers.push(
-            (question.question && question.question.answer1) || '',
-            (question.question && question.question.answer2) || '',
-            (question.question && question.question.answer3) || '',
-            (question.question && question.question.answer4) || '',
-          );
-          const formattedQuestion = answers.map((val, index) => {
-            return {
-              key: `${index + 1}`,
-              answerText: val,
-            };
+  const getProgrammeQuestionnaire = useCallback(async () => {
+    const res = await runQuery({
+      query: ProgrammeQuestionnaire,
+      key: 'programmeQuestionnaire',
+      setValue: async (res) => {
+        if (res) {
+          const qMap = res.map((question) => {
+            const answers = [];
+            answers.push(
+              (question.question && question.question.answer1) || '',
+              (question.question && question.question.answer2) || '',
+              (question.question && question.question.answer3) || '',
+              (question.question && question.question.answer4) || '',
+            );
+            const formattedQuestion = answers.map((val, index) => {
+              return {
+                key: `${index + 1}`,
+                answerText: val,
+              };
+            });
+            return {...question, answers: formattedQuestion};
           });
-          return {...question, answers: formattedQuestion};
-        });
-        const localQuestion = {
-          orderIndex: 1,
-          answers: [
-            {answerText: HelpMeChooseDict.Home, key: '1'},
-            {answerText: HelpMeChooseDict.Gym, key: '2'},
-          ],
-          question: {
-            language: HelpMeChooseDict.Locale,
-            question: HelpMeChooseDict.EnvironmentQuestion,
-          },
-        };
+          const localQuestion = {
+            orderIndex: 1,
+            answers: [
+              {answerText: HelpMeChooseDict.Home, key: '1'},
+              {answerText: HelpMeChooseDict.Gym, key: '2'},
+            ],
+            question: {
+              language: HelpMeChooseDict.Locale,
+              question: HelpMeChooseDict.EnvironmentQuestion,
+            },
+          };
 
-        qMap.unshift(localQuestion);
-        setProgrammeQuestionnaire(qMap);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
+          qMap.unshift(localQuestion);
+          setProgrammeQuestionnaire(qMap);
+        }
+      },
+    });
+  }, [runQuery]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -205,6 +218,7 @@ export default function DataProvider(props) {
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
+      syncronousUpdate,
     }),
     [
       onboarding,
@@ -215,6 +229,7 @@ export default function DataProvider(props) {
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
+      syncronousUpdate,
     ],
   );
 

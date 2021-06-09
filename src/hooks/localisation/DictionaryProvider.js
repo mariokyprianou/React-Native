@@ -49,10 +49,6 @@ const DictionaryProvider = ({children}) => {
     updateDictionary();
   }, [locale]);
 
-  useEffect(() => {
-    console.log('dictonary valid', dictionary !== undefined);
-  }, [dictionary]);
-
   const saveLanguage = useCallback(async (language = 'en-GB') => {
     try {
       await setItem(language);
@@ -62,7 +58,7 @@ const DictionaryProvider = ({children}) => {
     return;
   }, []);
 
-  const setLanguage = useCallback((language) => {
+  const setLanguage = useCallback(async (language) => {
     const languageMap = {
       English: 'en-GB',
       अंग्रेजी: 'en-GB',
@@ -72,9 +68,9 @@ const DictionaryProvider = ({children}) => {
     const value = languageMap[language];
 
     // Update session locale
-    setLocale(value);
+    await setLocale(value);
     // Update saved value
-    saveLanguage(value);
+    return await saveLanguage(value);
   }, []);
 
   const getLanguage = useCallback(() => {
@@ -92,12 +88,13 @@ const DictionaryProvider = ({children}) => {
 
   const publicMethods = React.useMemo(
     () => ({
+      locale,
       dictionary,
       setLanguage,
       getLanguage,
       dictionaryLoading,
     }),
-    [dictionary, setLanguage, getLanguage, dictionaryLoading],
+    [locale, dictionary, setLanguage, getLanguage, dictionaryLoading],
   );
 
   /*

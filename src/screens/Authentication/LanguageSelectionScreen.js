@@ -17,8 +17,9 @@ import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
 import {languageRestart} from '../../utils/languageRestart';
 import Video from 'react-native-video';
+import useCommonData from '../../hooks/data/useCommonData';
+import useLoading from '../../hooks/loading/useLoading';
 
-const splashImage = require('../../../assets/images/splash.png');
 const splashVideo = require('../../../assets/videos/splashScreen.mp4');
 
 export default function LanguageSelectionScreen() {
@@ -31,18 +32,19 @@ export default function LanguageSelectionScreen() {
     textStyles,
     dropdownStyle,
   } = useTheme();
+
+  const {getOnboarding, getTrainers, syncronousUpdate} = useCommonData();
   const {dictionary, setLanguage, getLanguage} = useDictionary();
   const {LanguageDict} = dictionary;
 
   const screenHeight = Dimensions.get('screen').height;
 
-  const dropdownData = [
-    LanguageDict.English,
-    LanguageDict.Hindi,
-    //LanguageDict.Urdu,
-  ];
+  const dropdownData = [LanguageDict.English, LanguageDict.Hindi];
+
   const navigation = useNavigation();
   const {getValues} = FormHook();
+
+  const {setLoading, loading} = useLoading();
 
   navigation.setOptions({
     header: () => null,
@@ -130,18 +132,36 @@ export default function LanguageSelectionScreen() {
         <DefaultButton
           type="setLanguage"
           variant="white"
+          disabled={loading}
           onPress={async () => {
+            const prevLang = getLanguage();
             const language = getValues().language || getLanguage();
 
-            setLanguage(language);
+            await setLanguage(language);
 
-            const navigate = await languageRestart(
-              language === LanguageDict.Urdu ? 'rtl' : 'ltr',
-            );
-
-            if (navigate === true) {
+            const navigate = () => {
+              setLoading(false);
               navigation.navigate('Onboarding');
+            };
+
+            if (language !== prevLang) {
+              setLoading(true);
+              await syncronousUpdate();
+
+              setTimeout(() => {
+                navigate();
+              }, 1000);
+            } else {
+              navigate();
             }
+
+            // const navigate = await languageRestart(
+            //   language === LanguageDict.Urdu ? 'rtl' : 'ltr',
+            // );
+
+            // if (navigate === true) {
+            //   navigation.navigate('Onboarding');
+            // }
           }}
         />
       </View>

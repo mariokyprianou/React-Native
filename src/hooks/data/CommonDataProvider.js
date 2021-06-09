@@ -72,9 +72,11 @@ export default function DataProvider(props) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 1000);
+    if (onboarding) {
+      setTimeout(() => {
+        SplashScreen.hide();
+      }, 1000);
+    }
   }, [onboarding]);
 
   const getOnboarding = useCallback(async () => {

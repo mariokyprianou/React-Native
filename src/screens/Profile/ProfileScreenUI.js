@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {useQuery, useMutation} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {Form} from 'the-core-ui-module-tdforms';
 import {format, parseISO} from 'date-fns';
 import {Auth} from 'aws-amplify';
@@ -89,6 +89,8 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {setSuggestedProgramme} = useCommonData();
   const {setLoading} = useLoading();
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     if (countryData) {
       const countries = countryData.allCountries.map(
@@ -105,13 +107,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       console.log(countryLoading, countryError);
     }
   }, [countryData, countryLoading, countryError]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      cleanValues();
-    });
-    return unsubscribe;
-  }, [navigation]);
 
   useQuery(Profile, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
@@ -140,6 +135,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       });
     }
   }, [userData, updateValue]);
+
+  // Re-render user data to revert any unsaved changes
+  useEffect(() => {
+    if (!isFocused && userData) {
+      setUserData({...userData});
+    }
+  }, [isFocused]);
 
   const gendersData = [
     GenderDict.Female,
@@ -231,16 +233,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       profile_country,
     } = getValues();
 
-    // if (
-    //   !profile_firstName &&
-    //   !profile_lastName &&
-    //   !profile_gender &&
-    //   !profile_dateOfBirth &&
-    //   !profile_country
-    // ) {
-    //   return;
-    // }
-
     setLoading(true);
 
     const dob = parseISO(newDateOfBirth || userData.dateOfBirth);
@@ -284,8 +276,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         });
       })
       .finally(() => setLoading(false));
-
-    //cleanValues();
   }
 
   function handleLogout() {
@@ -526,8 +516,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         paddingRight: getWidth(6),
         marginTop: -getHeight(5),
       },
-      placeholder: countriesList[0],
-      defaultValue: userData.country || countriesList[0],
+      defaultValue: countriesList[0],
       data: countriesList,
     },
   ];

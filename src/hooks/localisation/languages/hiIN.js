@@ -121,8 +121,8 @@ const hiIN = {
     InvalidResetCode: 'अवैध कोड',
     ResetPasswordDescriptionText:
       'आपका पासवर्ड रिसेट करने के लिए हमने बस अभी आपको एक कोड ईमेल किया है। यहाँ कोड दर्ज करें, और आपको एक नया पासवर्ड बनाने के लिए कहा जाएगा',
-    TermsPattern: /Terms & Conditions/,
-    PolicyPattern: /Privacy Policy/,
+    TermsPattern: /नियम और शर्त/,
+    PolicyPattern: /निजता नीति/,
     TermsAndConditionsScreenTitle: 'नियम और शर्त',
     ResetPasswordScreenTitle: 'पासवर्ड भूल गए',
     RegistrationScreenTitle: 'अकाउंट बनाएं',
@@ -202,8 +202,8 @@ const hiIN = {
 
     SubscriptionPrivacyLink: '•गोपनीयता नीति को यहां देखा जा सकता है',
     SubscriptionTermsLink: '•उपयोग की शर्तें यहां देखी जा सकती हैं',
-    TermsPattern: /here/,
-    PolicyPattern: /here/,
+    TermsPattern: /यहाँ/,
+    PolicyPattern: /यहाँ/,
     NeedHelp: 'मदद चाहिए?',
 
     PaymentFailedAlreadyExists:

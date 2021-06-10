@@ -73,17 +73,20 @@ async function cacheWeekVideos(workouts) {
 }
 
 async function shouldCacheWeek() {
+  // AsyncStorage.getItem('@SHOULD_CACHE_NEW_WEEK').then((res) => {
+  //   console.log(res);
+  // });
   const SHOULD_CACHE_NEW_WEEK =
     (await AsyncStorage.getItem('@SHOULD_CACHE_NEW_WEEK')) || 'true';
   const cacheWeekEnabled = JSON.parse(SHOULD_CACHE_NEW_WEEK);
   console.log('cacheWeekEnabled', cacheWeekEnabled);
 
-  const DOWNLOAD_ENABLED =
-    (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
-  const downloadEnabled = JSON.parse(DOWNLOAD_ENABLED);
-  console.log('downloadEnabled', downloadEnabled);
+  // const DOWNLOAD_ENABLED =
+  //   (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+  // const downloadEnabled = JSON.parse(DOWNLOAD_ENABLED);
+  // console.log('downloadEnabled', downloadEnabled);
 
-  return cacheWeekEnabled && downloadEnabled;
+  return cacheWeekEnabled;
 }
 
 async function cacheImages(images) {

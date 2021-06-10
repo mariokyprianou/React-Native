@@ -36,7 +36,10 @@ export default function EmailVerificationScreen() {
           clearInterval(interval);
 
           // New user needs to set these agains
-          await AsyncStorage.setItem('@DOWNLOAD_ENABLED', JSON.stringify(true));
+          await AsyncStorage.setItem(
+            '@DOWNLOAD_ENABLED',
+            JSON.stringify(false),
+          );
           await AsyncStorage.removeItem('@ANALYTICS_ASKED');
           await AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 

@@ -258,14 +258,9 @@ export default function DataProvider(props) {
 
     console.log('initCacheWeekVideos isConnected', response.isConnected);
     if (response.isConnected) {
-      const shouldCache = await shouldCacheWeek();
-
-      console.log('shouldCacheWeekVideos', shouldCache);
-      if (shouldCache !== true) {
-        return;
-      }
-
-      cacheWeekVideos(workouts);
+      return await cacheWeekVideos(workouts);
+    } else {
+      return;
     }
   }, []);
 
@@ -337,7 +332,7 @@ export default function DataProvider(props) {
     };
 
     setProgrammeModalImage(newData.programmeImage);
-    initCacheWeekVideos(newData.currentWeek.workouts);
+    //initCacheWeekVideos(newData.currentWeek.workouts);
 
     const images = newData.currentWeek.workouts.map((it) => {
       return it.overviewImage;
@@ -363,7 +358,7 @@ export default function DataProvider(props) {
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 
   const getDownloadEnabled = useCallback(async () => {
-    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
     const enabled = JSON.parse(value);
     setDownloadEnabled(enabled);
   }, []);

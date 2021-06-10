@@ -17,8 +17,10 @@ export default function DataProvider(props) {
     () => ({
       loading,
       setLoading,
+      downloading,
+      setDownloading,
     }),
-    [loading, setLoading],
+    [loading, setLoading, downloading, setDownloading],
   );
 
   // ** ** ** ** ** Return ** ** ** ** **

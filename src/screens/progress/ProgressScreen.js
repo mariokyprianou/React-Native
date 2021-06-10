@@ -227,7 +227,7 @@ export default function ProgressScreen() {
                     duration,
                     fieldTitle,
                     unitType,
-                    imageUrl,
+                    imageThumbnailUrl,
                   } = challenge;
 
                   return (
@@ -236,7 +236,7 @@ export default function ProgressScreen() {
                       type="challenge"
                       title={name}
                       image={challengePlaceholderGraph}
-                      imageUrl={imageUrl}
+                      imageUrl={imageThumbnailUrl}
                       onPress={() => {
                         if (!isConnected) {
                           displayAlert({text: OfflineMessage});

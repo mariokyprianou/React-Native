@@ -16,7 +16,13 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export default function HelpMeChooseButton({letter, text, onPress}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, getScaledHeight, getScaledWidth} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    fontSize,
+    getScaledHeight,
+    getScaledWidth,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   const [selected, setSelected] = useState(false);
@@ -31,7 +37,7 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
     box: {
       justifyContent: 'flex-end',
       paddingHorizontal: getScaledWidth(10),
-      paddingBottom: getScaledHeight(30),
+      paddingBottom: getScaledHeight(20),
     },
     touch: {
       flex: 1,
@@ -56,6 +62,8 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
     },
     selectedBodyText: {
       ...textStyles.bold16_white100,
+      lineHeight: fontSize(22),
+      height: getHeight(50),
       textAlign: 'left',
     },
     unselectedLetterText: {
@@ -64,7 +72,9 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
     },
     unselectedBodyText: {
       ...textStyles.medium15_black100,
+      lineHeight: fontSize(20),
       textAlign: 'left',
+      height: getHeight(50),
     },
   });
 
@@ -100,7 +110,7 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
         style={{
           ...styles.touch,
           paddingHorizontal: getScaledWidth(10),
-          paddingBottom: getScaledHeight(30),
+          paddingBottom: getScaledHeight(20),
         }}>
         <Text style={styles.unselectedLetterText}>{letter}</Text>
         <Text style={styles.unselectedBodyText}>{text}</Text>

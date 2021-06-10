@@ -32,6 +32,7 @@ import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import UseData from '../../hooks/data/UseData';
 import {useNetInfo} from '@react-native-community/netinfo';
+import RNRestart from 'react-native-restart';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -198,9 +199,6 @@ const SettingsScreen = ({}) => {
       formWeightMeasurement,
     } = getValues();
 
-    const language = formLanguage || getLanguage();
-    setLanguage(language);
-
     const newDownloadQuality =
       Object.keys(downloadQualityMap).find(
         (key) => downloadQualityMap[key] === formDownloadsQuality,
@@ -265,11 +263,37 @@ const SettingsScreen = ({}) => {
           setPreferences(newPreferences);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         displayAlert({
           text: ProfileDict.UnableToUpdate,
         });
       });
+
+    const prevLanguage = getLanguage();
+    const language = formLanguage;
+
+    if (prevLanguage !== language) {
+      displayAlert({
+        title: null,
+        text:
+          'For the language change to take effect, the app needs to restart.',
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: 'Restart',
+            onPress: async () => {
+              // We only want to change language if the user selects to restart,
+              // otherwise we'll end up with static translated content and not strtanslated dynamic content
+              await setLanguage(language);
+              RNRestart.Restart();
+            },
+          },
+        ],
+      });
+    }
   };
 
   function onToggleMarketingPrefEmail() {

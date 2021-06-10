@@ -20,7 +20,7 @@ export default gql`
         }
       }
       environment
-      programmeImage
+      programmeImageThumbnail
       isComplete
       currentWeek {
         startedAt

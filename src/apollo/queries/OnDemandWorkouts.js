@@ -15,6 +15,7 @@ export default gql`
         isNew
         name
         overviewImage
+        overviewImageThumbnail
         intensity
         isContinuous
         duration

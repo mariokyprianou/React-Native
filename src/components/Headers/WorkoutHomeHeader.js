@@ -35,7 +35,7 @@ export default function WorkoutHomeHeader() {
   useEffect(() => {
     setTrainerData({
       name: programme?.trainer?.name,
-      image: programme?.programmeImage,
+      image: programme?.programmeImageThumbnail,
     });
   }, [programme]);
 

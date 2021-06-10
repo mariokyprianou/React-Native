@@ -27,6 +27,7 @@ import * as R from 'ramda';
 import {differenceInDays, format} from 'date-fns';
 import OnDemandWorkoutCard from '../../components/Cards/OnDemandWorkoutCard';
 import WorkoutTagButton from '../../components/Buttons/WorkoutTagButton';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function OnDemandScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -238,10 +239,10 @@ export default function OnDemandScreen() {
                   title={item.name}
                   duration={item.duration}
                   intensity={item.intensity}
-                  image={item.overviewImage}
+                  image={item.overviewImageThumbnail}
                   onPressCard={async (workout) => {
                     if (suspendedAccount === true) {
-                      DisplayAlert({
+                      displayAlert({
                         text: WorkoutDict.SuspendedAccount,
                       });
                       return;

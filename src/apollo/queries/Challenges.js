@@ -19,7 +19,7 @@ export default gql`
       createdAt
       duration
       unitType
-      imageUrl
+      imageThumbnailUrl
     }
   }
 `;

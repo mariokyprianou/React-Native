@@ -30,7 +30,7 @@ import useLoading from '../../hooks/loading/useLoading';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 import format from 'date-fns/format';
 
-const {clearAllFiles} = FileManager;
+const {clearDirectory, videosDirectoryPath} = FileManager;
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -146,7 +146,7 @@ export default function WorkoutHomeScreen() {
             '@SHOULD_CACHE_NEW_WEEK',
             JSON.stringify(true),
           );
-          await clearAllFiles();
+          await clearDirectory(videosDirectoryPath);
 
           getProgramme();
         } else {

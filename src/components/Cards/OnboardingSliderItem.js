@@ -6,15 +6,15 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Image, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from '../Views/FadingBottomView';
-import TDIcon from 'the-core-ui-component-tdicon';
-import isRTL from '../../utils/isRTL';
+
 import FastImage from 'react-native-fast-image';
-import SafeFastImage from '../Utility/SafeFastImage';
+
+import PersistentImage from '../Utility/PersistedImage';
 
 const fallBackImage = require('../../../assets/images/onboardingImage.png');
 
@@ -28,8 +28,6 @@ export default function OnboardingSliderItem({image, header, text, local}) {
     fontSize,
   } = ScaleHook();
   const {textStyles, colors} = useTheme();
-
-  const url = local && image ? image : image ? {uri: image} : fallBackImage;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -66,11 +64,12 @@ export default function OnboardingSliderItem({image, header, text, local}) {
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <SafeFastImage
-          resizeMode={FastImage.resizeMode.contain}
-          source={url}
-          style={styles.image}
-        />
+        {image && !local ? (
+          <PersistentImage imageUrl={image} style={styles.image} />
+        ) : (
+          <FastImage source={fallBackImage} style={styles.image} />
+        )}
+
         <FadingBottomView
           customStart={colors.white0}
           customEnd={colors.backgroundWhite100}

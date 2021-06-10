@@ -18,6 +18,7 @@ import isRTL from '../../utils/isRTL';
 import useCustomQuery from '../customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
 import SplashScreen from 'react-native-splash-screen';
+import {cacheImages} from './VideoCacheUtils';
 
 export default function DataProvider(props) {
   const {runQuery} = useCustomQuery();
@@ -115,6 +116,9 @@ export default function DataProvider(props) {
               });
               FastImage.preload(images);
 
+              // const images = data.map((it) => it.image);
+              // await cacheImages(images);
+
               setOnboarding(data);
             } else {
               setOnboarding(isRTL() ? fallbackData.reverse() : fallbackData);
@@ -145,8 +149,15 @@ export default function DataProvider(props) {
                 images.push({uri: it.programmeImage});
               });
             });
-
             FastImage.preload(images);
+
+            // const images = [];
+            // data.map((trainer) => {
+            //   trainer.programmes.map((it) => {
+            //     images.push(it.programmeImage);
+            //   });
+            // });
+            // await cacheImages(images);
           }
 
           setTrainers(data);

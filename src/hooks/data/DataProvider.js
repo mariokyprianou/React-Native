@@ -36,7 +36,7 @@ import FastImage from 'react-native-fast-image';
 import OfflineUtils from './OfflineUtils';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 
-const {clearAllFiles} = FileManager;
+const {clearDirectory, videosDirectoryPath} = FileManager;
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -269,17 +269,19 @@ export default function DataProvider(props) {
     }
   }, []);
 
-  const initCacheImages = useCallback(async (list) => {
+  const initCacheImages = useCallback(async (images) => {
     const response = await NetInfo.fetch();
     if (response.isConnected) {
-      console.log('Caching Images FastImage.preload ', list.length);
+      // Preload all images
       FastImage.preload(
-        list
+        images
           .map((it) => {
             return {uri: it};
           })
           .filter((it) => it.uri !== null),
       );
+
+      //await cacheImages(images);
     }
   }, []);
 
@@ -451,6 +453,12 @@ export default function DataProvider(props) {
         key: 'onDemandWorkouts',
         variables: {tagIds: tags},
         setValue: async (data) => {
+          const images = [];
+          data.nodes.map((node) => {
+            images.push(node.overviewImage);
+          });
+          initCacheImages(images);
+
           setOnDemandWorkouts(data.nodes);
         },
       });
@@ -476,7 +484,7 @@ export default function DataProvider(props) {
     //AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 
     await AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(true));
-    await clearAllFiles();
+    await clearDirectory(videosDirectoryPath);
   }, []);
 
   const refetchData = useCallback(async () => {

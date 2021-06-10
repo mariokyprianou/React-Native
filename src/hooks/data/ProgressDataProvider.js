@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect} from 'react';
-import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './ProgressDataContext';
 import Progress from '../../apollo/queries/Progress';
 import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
@@ -99,29 +99,29 @@ export default function DataProvider(props) {
 
   const [challenges, setChallenges] = useState([]);
 
-  const initCacheImages = useCallback(
-    async (list) => {
-      if (isConnected) {
-        cacheImages(list);
-        FastImage.preload(
-          list.map((it) => {
-            return {uri: it};
-          }),
-        );
-      }
-    },
-    [isConnected],
-  );
+  const initCacheImages = useCallback(async (images) => {
+    const response = await NetInfo.fetch();
+    if (response.isConnected) {
+      // Preload all images
+      FastImage.preload(
+        list.map((it) => {
+          return {uri: it};
+        }),
+      );
+
+      //await cacheImages(images);
+    }
+  }, []);
 
   const getChallenges = useCallback(async () => {
     const res = await runQuery({
       query: Challenges,
       key: 'challenges',
       setValue: async (data) => {
-        // const images = data.map(it => {
-        //   return it.imageUrl
-        //  })
-        // initCacheImages(images);
+        const images = data.map((it) => {
+          return it.imageUrl;
+        });
+        initCacheImages(images);
 
         setChallenges(data);
         return data;

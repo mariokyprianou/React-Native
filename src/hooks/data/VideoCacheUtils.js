@@ -8,7 +8,11 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 
-const {downloadFilesWithNames, getLocalFileByName} = FileManager;
+const {
+  downloadFilesWithNamesToDirectory,
+  videosDirectoryPath,
+  imagesDirectoryPath,
+} = FileManager;
 
 async function cacheWeekVideos(workouts) {
   // Take out all video urls
@@ -54,7 +58,10 @@ async function cacheWeekVideos(workouts) {
   console.log('allVideosToDownload', result.length);
 
   // Download and return files and success
-  const res = await downloadFilesWithNames(result);
+  const res = await downloadFilesWithNamesToDirectory(
+    result,
+    videosDirectoryPath,
+  );
   console.log('Download result:', res.message);
 
   // Week was cached, don't download again
@@ -103,8 +110,11 @@ async function cacheImages(images) {
   }
 
   // Download and return files and success
-  const res = await downloadFilesWithNames(result);
-  console.log('Download result:', res.message);
+  const res = await downloadFilesWithNamesToDirectory(
+    result,
+    imagesDirectoryPath,
+  );
+  console.log('Images Download result:', res.message);
 
   // Week was cached, don't download again
   if (res.success) {

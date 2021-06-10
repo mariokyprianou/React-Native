@@ -1,17 +1,24 @@
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-index e9042f5..b1181e4 100644
+index e9042f5..9bee460 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-@@ -12,7 +12,7 @@ const appNamePath = DeviceInfo.getApplicationName();
+@@ -12,9 +12,13 @@ const appNamePath = DeviceInfo.getApplicationName();
  
  const { config, fs } = RNFetchBlob;
  
 -const fileDirectory = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
 +const fileDirectory = fs.dirs.DocumentDir;
++
++const videosDirectoryPath = fileDirectory + '/' + appNamePath + '/videos/';
++const imagesDirectoryPath = fileDirectory + '/' + appNamePath + '/images/';
++
++let directoryPath = videosDirectoryPath;
  
- const directoryPath = fileDirectory + '/' + appNamePath + '/';
+-const directoryPath = fileDirectory + '/' + appNamePath + '/';
  
-@@ -35,6 +35,8 @@ async function downloadFiles(files) {
+ async function downloadFiles(files) {
+ 	if (files && files.length > 0) {
+@@ -35,6 +39,8 @@ async function downloadFiles(files) {
  	}
  }
  
@@ -20,17 +27,15 @@ index e9042f5..b1181e4 100644
  async function filterNewFiles(newFiles) {
  	const allFiles = await getAllSavedFiles();
  
-@@ -56,27 +58,118 @@ async function filterNewFiles(newFiles) {
+@@ -56,27 +62,118 @@ async function filterNewFiles(newFiles) {
  	return toSaveFiles;
  }
- 
+  
 -async function getAllSavedFiles() {
 -	return fs
 -		.ls(directoryPath)
 -		.then((files) => {
 -			return files;
-+
-+ 
 +async function downloadFilesWithNames(files) {
 +	if (files && files.length > 0) {
 +		let results = [];
@@ -82,8 +87,8 @@ index e9042f5..b1181e4 100644
 +	else {
 +		return newFiles;
 +	}
- }
- 
++}
++
 +async function downloadWithName({filename, url}) {
 +
 +	const options = {
@@ -106,12 +111,13 @@ index e9042f5..b1181e4 100644
 +			console.log(error);
 +			return { success: false };
 +		});
-+}
-+
+ }
+ 
 +
 +async function getAllSavedFiles() {
 +
 +    const assetsDirExists =  await fs.isDir(directoryPath);
++	//console.log("assetsDirExists", assetsDirExists);
 +    if (assetsDirExists) {
 +        return fs
 +            .ls(directoryPath)
@@ -124,6 +130,7 @@ index e9042f5..b1181e4 100644
 +            });
 +    }
 +    else {
++		
 +        return fs.mkdir(directoryPath)
 +        .then(() => {
 +            return [];
@@ -151,7 +158,7 @@ index e9042f5..b1181e4 100644
  	};
  
  	return config(options)
-@@ -115,17 +208,17 @@ function fileExists(path) {
+@@ -115,17 +212,31 @@ function fileExists(path) {
  }
  
  async function clearAllFiles() {
@@ -169,13 +176,43 @@ index e9042f5..b1181e4 100644
  		.catch((error) => {
 -			console.log(error);
 +			console.log("Failed to clear all files", error);
++			return { success: false, error: error };
++		});
++}
++
++async function clearDirectory(directory) {
++
++	return fs
++		.unlink(directory)
++		.then((exist) => {
++			console.log("Cleared all files");
++			return { success: true };
++		})
++		.catch((error) => {
++			console.log("Failed to clear all files", error);
  			return { success: false, error: error };
  		});
  }
-@@ -182,10 +275,26 @@ async function getLocalFile(url) {
+@@ -182,10 +293,48 @@ async function getLocalFile(url) {
  	}
  }
  
++
++async function downloadFilesWithNamesToDirectory(files, directory) {
++	directoryPath = directory; 
++	return await downloadFilesWithNames(files);
++}
++
++async function getLocalFileByNameFromDirectory(filename, directory) {
++	directoryPath = directory; 
++	return await getLocalFileByName(filename);
++}
++
++async function getLocalFileFromDirectory(filename, directory) {
++	directoryPath = directory; 
++	return await getLocalFile(filename);
++}
++
 +async function getLocalFileByName(filename) {
 +	const allFiles = await getAllSavedFiles();
 +
@@ -193,14 +230,20 @@ index e9042f5..b1181e4 100644
  export default {
  	downloadFiles,
  	clearAllFiles,
++	clearDirectory,
  	clearBeforeDate,
  	getAllSavedFiles,
  	getLocalFile,
 +	downloadFilesWithNames,
 +	getLocalFileByName,
++	downloadFilesWithNamesToDirectory,
++	getLocalFileByNameFromDirectory,
++	getLocalFileFromDirectory,
++	videosDirectoryPath,
++	imagesDirectoryPath
  };
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..7ed0216 100644
+index c1656ea..cc63c8e 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 @@ -5,29 +5,40 @@
@@ -218,7 +261,7 @@ index c1656ea..7ed0216 100644
 -export default function VideoView(props) {
 -	const { getLocalFile } = FileManager;
 +export function CustomVideoView(props, ref) {
-+	const { getLocalFile, getLocalFileByName } = FileManager;
++	const { getLocalFileFromDirectory, getLocalFileByNameFromDirectory, videosDirectoryPath } = FileManager;
  
  	const videoPlayer = useRef(null);
  
@@ -260,10 +303,10 @@ index c1656ea..7ed0216 100644
 -		const res = await getLocalFile(props.url);
 +		let res;
 +		if (props.filename) {
-+		 res = await getLocalFileByName(props.filename);	
++		 res = await getLocalFileByNameFromDirectory(props.filename, videosDirectoryPath);	
 +		}
 +		else {
-+		 res = await getLocalFile(props.url);
++		 res = await getLocalFileFromDirectory(props.url, videosDirectoryPath);
 +		}
  
 +		console.log("Play Existing File",res)

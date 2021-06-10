@@ -31,7 +31,7 @@ export default function ({
   };
 
   const {getHeight} = ScaleHook();
-  const {colors} = useTheme();
+  const {colors, Constants} = useTheme();
   const {isDownloadEnabled, currentExerciseIndex} = UseData();
 
   const [videoDuration, setVideoDuration] = useState(100);
@@ -48,11 +48,16 @@ export default function ({
 
   const videoRef = useRef();
 
-  const videoHeight = Dimensions.get('window').width;
+  // For 16:9 it will be 1:1 square video view, for anything longer, will be 60% of the screen.
+  const videoHeight =
+    Constants.SCREEN_LAYOUT <= 16
+      ? Dimensions.get('window').width
+      : Constants.EXERCISE_VIEW_HEIGHT * 0.6;
 
   const styles = {
     container: {
       width: '100%',
+      height: videoHeight,
     },
   };
 

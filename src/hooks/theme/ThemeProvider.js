@@ -7,7 +7,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -17,9 +17,18 @@ import Colors from '../../styles/Colors';
 import isRTL from '../../utils/isRTL';
 import ThemeContext from './ThemeContext';
 
+function getHeightRatio(layout) {
+  const ratio = layout.height / layout.width;
+  const heightRatio = Math.round(ratio * 9 * 10) / 10;
+  return heightRatio;
+}
+
+const INITIAL_DIMENSIONS = Dimensions.get('window');
+
 const DEFAULT_DIMENSIONS_CONTEXT_VALUE = {
-  width: Dimensions.get('window').width,
-  height: Dimensions.get('window').height,
+  width: INITIAL_DIMENSIONS.width,
+  height: INITIAL_DIMENSIONS.height,
+  heightRatio: getHeightRatio(INITIAL_DIMENSIONS),
 };
 
 export default function ThemeProvider({children}) {
@@ -38,7 +47,7 @@ export default function ThemeProvider({children}) {
 
   const handleLayout = ({nativeEvent}) => {
     const {width, height} = nativeEvent.layout;
-    setLayout({width, height});
+    setLayout({width, height, heightRatio: getHeightRatio(nativeEvent.layout)});
   };
 
   const SCREEN_WIDTH = Dimensions.get('screen').width;
@@ -60,6 +69,7 @@ export default function ThemeProvider({children}) {
     SCREEN_HEIGHT,
     HEADER_HEIGHT,
     EXERCISE_VIEW_HEIGHT,
+    SCREEN_LAYOUT: layout,
   };
 
   const colors = {

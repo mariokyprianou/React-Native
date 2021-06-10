@@ -99,7 +99,7 @@ const SettingsScreen = ({}) => {
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
-    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
     const enabled = JSON.parse(value);
     setDownloadWorkouts(enabled);
   };
@@ -177,19 +177,19 @@ const SettingsScreen = ({}) => {
     }
     console.log('DOWNLOAD_ENABLED', downloadWorkouts);
 
-    await AsyncStorage.setItem(
-      '@DOWNLOAD_ENABLED',
-      JSON.stringify(downloadWorkouts),
-    );
+    // await AsyncStorage.setItem(
+    //   '@DOWNLOAD_ENABLED',
+    //   JSON.stringify(downloadWorkouts),
+    // );
 
-    if (downloadWorkouts) {
-      await AsyncStorage.setItem(
-        '@SHOULD_CACHE_NEW_WEEK',
-        JSON.stringify(true),
-      );
+    // if (downloadWorkouts) {
+    //   await AsyncStorage.setItem(
+    //     '@SHOULD_CACHE_NEW_WEEK',
+    //     JSON.stringify(true),
+    //   );
 
-      //initCacheWeekVideos(programme.currentWeek.workouts);
-    }
+    //   //initCacheWeekVideos(programme.currentWeek.workouts);
+    // }
 
     const {
       formDownloadsQuality,
@@ -526,11 +526,11 @@ const SettingsScreen = ({}) => {
       <Spacer height={25} />
 
       {/* Download */}
-      <TDSettings
+      {/* <TDSettings
         cells={cells3}
         config={settingsConfig}
         scrollProps={{scrollEnabled: false}}
-      />
+      /> */}
 
       {/* Download Quality */}
       <Form cells={cells4} config={formConfig} />

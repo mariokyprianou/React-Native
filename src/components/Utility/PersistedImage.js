@@ -1,9 +1,13 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {View, Image} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import FastImage from 'react-native-fast-image';
 import {ActivityIndicator} from 'react-native';
 import SafeFastImage from './SafeFastImage';
+
+import {FileManager} from 'the-core-ui-module-tdmediamanager';
+
+const {getLocalFileByNameFromDirectory, imagesDirectoryPath} = FileManager;
 
 // USAGE
 /* 
@@ -31,6 +35,34 @@ const PersistentImage = ({
 }) => {
   const [urlLoaded, setUrlLoaded] = useState();
 
+  // const [imageSource, setImageSource] = useState();
+
+  // const checkLocal = async (imageUrl) => {
+  //   console.log('Image', imageUrl);
+  //   const imageName = imageUrl.split('/').pop().split('?').shift();
+
+  //   const res = await getLocalFileByNameFromDirectory(
+  //     imageName,
+  //     imagesDirectoryPath,
+  //   );
+
+  //   console.log('Local image found: ', res.success);
+  //   if (res.success) {
+  //     setImageSource({
+  //       uri: 'file://' + res.path,
+  //     });
+  //   } else {
+  //     setImageSource({uri: image});
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (imageSource) return;
+  //   if (imageUrl) {
+  //     checkLocal(imageUrl);
+  //   }
+  // }, [imageUrl]);
+
   return (
     <View style={{...style}}>
       {/* No url to load only static image */}
@@ -48,7 +80,10 @@ const PersistentImage = ({
 
       {/* Main url image load */}
       <SafeFastImage
-        source={{uri: imageUrl, priority: FastImage.priority.high}}
+        source={{
+          uri: imageUrl,
+          priority: FastImage.priority.high,
+        }}
         imageUrl={imageUrl}
         style={style}
         onLoadEnd={() => {

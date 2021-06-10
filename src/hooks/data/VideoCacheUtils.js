@@ -8,7 +8,11 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 
-const {downloadFilesWithNames, getLocalFileByName} = FileManager;
+const {
+  downloadFilesWithNamesToDirectory,
+  videosDirectoryPath,
+  imagesDirectoryPath,
+} = FileManager;
 
 async function cacheWeekVideos(workouts) {
   // Take out all video urls
@@ -54,7 +58,10 @@ async function cacheWeekVideos(workouts) {
   console.log('allVideosToDownload', result.length);
 
   // Download and return files and success
-  const res = await downloadFilesWithNames(result);
+  const res = await downloadFilesWithNamesToDirectory(
+    result,
+    videosDirectoryPath,
+  );
   console.log('Download result:', res.message);
 
   // Week was cached, don't download again
@@ -66,17 +73,20 @@ async function cacheWeekVideos(workouts) {
 }
 
 async function shouldCacheWeek() {
+  // AsyncStorage.getItem('@SHOULD_CACHE_NEW_WEEK').then((res) => {
+  //   console.log(res);
+  // });
   const SHOULD_CACHE_NEW_WEEK =
     (await AsyncStorage.getItem('@SHOULD_CACHE_NEW_WEEK')) || 'true';
   const cacheWeekEnabled = JSON.parse(SHOULD_CACHE_NEW_WEEK);
   console.log('cacheWeekEnabled', cacheWeekEnabled);
 
-  const DOWNLOAD_ENABLED =
-    (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
-  const downloadEnabled = JSON.parse(DOWNLOAD_ENABLED);
-  console.log('downloadEnabled', downloadEnabled);
+  // const DOWNLOAD_ENABLED =
+  //   (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+  // const downloadEnabled = JSON.parse(DOWNLOAD_ENABLED);
+  // console.log('downloadEnabled', downloadEnabled);
 
-  return cacheWeekEnabled && downloadEnabled;
+  return cacheWeekEnabled;
 }
 
 async function cacheImages(images) {
@@ -103,8 +113,11 @@ async function cacheImages(images) {
   }
 
   // Download and return files and success
-  const res = await downloadFilesWithNames(result);
-  console.log('Download result:', res.message);
+  const res = await downloadFilesWithNamesToDirectory(
+    result,
+    imagesDirectoryPath,
+  );
+  console.log('Images Download result:', res.message);
 
   // Week was cached, don't download again
   if (res.success) {

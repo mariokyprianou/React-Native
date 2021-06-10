@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import {View, Image, Text, TouchableOpacity, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -29,22 +29,27 @@ import AsyncStorage from '@react-native-community/async-storage';
 import useLoading from '../../hooks/loading/useLoading';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 import format from 'date-fns/format';
+import {useNetInfo} from '@react-native-community/netinfo';
 
-const {clearAllFiles} = FileManager;
+import {shouldCacheWeek} from '../../hooks/data/VideoCacheUtils';
+
+const {clearDirectory, videosDirectoryPath} = FileManager;
 
 export default function WorkoutHomeScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles, colors} = useTheme();
   const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
+  const {WorkoutDict, ProfileDict, OfflineMessage} = dictionary;
 
   const [weekNumber, setWeekNumber] = useState(1);
   const [stayTunedEnabled, setStayTunedEnabled] = useState(true);
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const navigation = useNavigation();
-  const {setLoading} = useLoading();
+  const {setLoading, setDownloading} = useLoading();
 
   useEffect(() => {
     navigation.setOptions({
@@ -65,6 +70,7 @@ export default function WorkoutHomeScreen() {
     clearConsecutiveDays,
     wasLastWorkoutToday,
     setIsSelectedWorkoutOnDemand,
+    initCacheWeekVideos,
   } = useData();
 
   const {
@@ -146,7 +152,7 @@ export default function WorkoutHomeScreen() {
             '@SHOULD_CACHE_NEW_WEEK',
             JSON.stringify(true),
           );
-          await clearAllFiles();
+          await clearDirectory(videosDirectoryPath);
 
           getProgramme();
         } else {
@@ -392,6 +398,52 @@ export default function WorkoutHomeScreen() {
     });
   }
 
+  const [shouldCache, setShouldCache] = useState(false);
+
+  useEffect(() => {
+    const check = async () => {
+      const res = await shouldCacheWeek();
+      setShouldCache(res);
+    };
+    check();
+  }, [isFocused]);
+
+  async function handleDownloadWeek() {
+    if (!isConnected) {
+      DisplayAlert({text: OfflineMessage});
+      return;
+    }
+
+    DisplayAlert({
+      title: null,
+      text: "Download this week's workouts to access offline?",
+      buttons: [
+        {
+          text: ProfileDict.Cancel,
+          style: 'cancel',
+        },
+        {
+          text: 'Download',
+          onPress: async () => {
+            setDownloading(true);
+            const res = await initCacheWeekVideos(
+              programme.currentWeek.workouts,
+            );
+
+            DisplayAlert({
+              text:
+                res && res.success
+                  ? 'Downloading workouts for week completed.'
+                  : 'Oops! Something went wrong. Try again later.',
+            });
+            setShouldCache(false);
+            setDownloading(false);
+          },
+        },
+      ],
+    });
+  }
+  //setDownloading(false);
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
@@ -408,13 +460,14 @@ export default function WorkoutHomeScreen() {
     titleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      width: '90%',
+      width: '100%',
       alignSelf: 'center',
       marginTop: getHeight(10),
     },
     titleLeftContainer: {
       flexDirection: 'row',
       marginRight: getWidth(30),
+      paddingHorizontal: getWidth(20),
     },
     weekText: {
       ...textStyles.bold24_black100,
@@ -497,6 +550,29 @@ export default function WorkoutHomeScreen() {
             />
           </TouchableOpacity>
         </View>
+        {programme?.currentWeek && weekNumber === 1 && shouldCache && (
+          <View
+            style={{
+              position: 'absolute',
+              right: getWidth(15),
+              width: getWidth(30),
+              flexDirection: 'row',
+              height: '100%',
+            }}>
+            <TouchableOpacity
+              onPress={handleDownloadWeek}
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={require('../../../assets/icons/downloadIcon.png')}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       <View style={{flex: 1, width: '100%'}}>
@@ -566,10 +642,10 @@ export default function WorkoutHomeScreen() {
                           return;
                         }
 
-                        if (completedFreeWorkouts && !isSubscriptionActive) {
-                          navigation.navigate('PurchaseModal');
-                          return;
-                        }
+                        // if (completedFreeWorkouts && !isSubscriptionActive) {
+                        //   navigation.navigate('PurchaseModal');
+                        //   return;
+                        // }
 
                         if (weekNumber !== 1) {
                           if (stayTunedEnabled) {

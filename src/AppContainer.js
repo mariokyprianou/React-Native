@@ -55,7 +55,7 @@ const DownloadingView = () => {
 };
 
 export default function AppContainer() {
-  const {loading} = useLoading();
+  const {loading, downloading} = useLoading();
 
   return (
     <>
@@ -169,6 +169,7 @@ export default function AppContainer() {
           options={{...TransitionPresets.ModalSlideFromBottomIOS}}
         />
       </AppStack.Navigator>
+      {downloading && DownloadingView()}
       {loading && LoadingView()}
     </>
   );

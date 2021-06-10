@@ -126,7 +126,7 @@ const PurchaseModalScreen = ({}) => {
 
     getSubscriptions(productIds)
       .then((res) => {
-        console.log('Subscriptions', res);
+        //console.log('Subscriptions', res);
         res.forEach((it) => {
           switch (it.productId) {
             case yearlySubscription.productId:

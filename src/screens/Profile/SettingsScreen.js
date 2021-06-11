@@ -37,7 +37,7 @@ import RNRestart from 'react-native-restart';
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getValues} = FormHook();
-  const {dictionary, getLanguage, setLanguage} = useDictionary();
+  const {dictionary, getLanguage, setLanguage, locale} = useDictionary();
   const {SettingsDict, LanguageDict, ProfileDict, OfflineMessage} = dictionary;
   const {getHeight, getWidth} = ScaleHook();
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -270,7 +270,7 @@ const SettingsScreen = ({}) => {
       });
 
     const prevLanguage = getLanguage();
-    const language = formLanguage;
+    const language = formLanguage || languageDropdownData[0];
 
     if (prevLanguage !== language) {
       displayAlert({
@@ -312,11 +312,7 @@ const SettingsScreen = ({}) => {
     setDownloadWorkouts(!downloadWorkouts);
   }
 
-  const languageDropdownData = [
-    LanguageDict.English,
-    LanguageDict.Hindi,
-    //LanguageDict.Urdu,
-  ];
+  const languageDropdownData = [LanguageDict.English, LanguageDict.Hindi];
 
   const downloadQualityDropdownData = [
     SettingsDict.DownloadQualityHigh,
@@ -511,6 +507,8 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
+  // const language = getLanguage();
+  const language = locale === 'hi-IN' ? 'हिंदी' : 'English';
   const cells6 = [
     {
       name: 'formLanguage',
@@ -519,11 +517,11 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: getLanguage() || languageDropdownData[0],
-      data: getLanguage()
+      placeholder: language || languageDropdownData[0],
+      data: language
         ? [
-            getLanguage(),
-            ...languageDropdownData.filter((item) => item !== getLanguage()),
+            language,
+            ...languageDropdownData.filter((item) => item !== language),
           ]
         : languageDropdownData,
       inputContainerStyle: {

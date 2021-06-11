@@ -45,6 +45,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import useData from '../../hooks/data/UseData';
 import useProgressData from '../../hooks/data/useProgressData';
 import useCommonData from '../../hooks/data/useCommonData';
+import {getYear} from 'date-fns';
 
 const notifications = [
   {
@@ -82,12 +83,15 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {cleanErrors, getValues, cleanValues, cleanValueByName} = FormHook();
   const [newDateOfBirth, setNewDateOfBirth] = useState();
   const [storedNotifications, setStoredNotifications] = useState();
+  const [memberSince, setMemberSince] = useState();
 
   const {userData, setUserData} = useUserData();
   const {reset} = useData();
   const {setUserImages} = useProgressData();
   const {setSuggestedProgramme} = useCommonData();
   const {setLoading} = useLoading();
+
+  console.log(userData, '<---userData');
 
   const isFocused = useIsFocused();
 
@@ -142,6 +146,13 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
       setUserData({...userData});
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (userData) {
+      const year = getYear(new Date(userData.createdAt));
+      setMemberSince(year);
+    }
+  }, [userData]);
 
   const gendersData = [
     GenderDict.Female,
@@ -340,7 +351,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         <ProfileUserCard
           firstName={userData.givenName}
           lastName={userData.familyName}
-          memberSince={userData.memberSince}
+          memberSince={memberSince}
           workoutsComplete={userData.completedWorkouts}
           onPressRightIcon={() => {
             navigation.navigate('Settings', {timeZone: userData.timeZone});

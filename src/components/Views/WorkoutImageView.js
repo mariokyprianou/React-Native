@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import FastImage from 'react-native-fast-image';
@@ -46,9 +46,12 @@ export default function ({
 
   return (
     <View style={styles.container}>
-      <FastImage source={ image === undefined ? fakeImage : {uri: image}} style={styles.imageStyle} />
-      <View style={{position: 'absolute',  width: '100%'}}>
-        <FadingBottomView color={"black"} height={300}/>
+      <FastImage
+        source={image === undefined ? fakeImage : {uri: image}}
+        style={styles.imageStyle}
+      />
+      <View style={{position: 'absolute', width: '100%'}}>
+        <FadingBottomView color={'black'} height={300} />
       </View>
       <View style={styles.contentStyle}>
         <IconTextView

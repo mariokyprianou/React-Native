@@ -530,7 +530,7 @@ index 507924f..0000000
 -
 -export default Header;
 diff --git a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
-index 1bbdec1..32d4e6e 100644
+index 1bbdec1..a81dcca 100644
 --- a/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 +++ b/node_modules/the-core-ui-module-tdslideshow/src/components/ImageSlider.js
 @@ -6,70 +6,82 @@
@@ -661,7 +661,7 @@ index 1bbdec1..32d4e6e 100644
 -          {beforePic && (
 -            <Image source={{ uri: beforePic }} style={styles.beforeImage} />
 -          )}
-+          {beforePic && <FastImage 
++          {beforePic && <Image 
 +          source={beforePic} 
 +          style={styles.beforeImage} 
 +          onLoadEnd={() => setLoading(false)}
@@ -671,7 +671,7 @@ index 1bbdec1..32d4e6e 100644
 -          {afterPic && (
 -            <Image source={{ uri: afterPic }} style={styles.afterImage} />
 -          )}
-+          {afterPic && <FastImage
++          {afterPic && <Image
 +          source={afterPic} 
 +          style={styles.afterImage} 
 +          onLoadEnd={() => setLoading(false)}

@@ -23,6 +23,7 @@ export default function IconTextView({
   sets,
   color = 'grey',
   alignLeft,
+  customColor,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
@@ -32,7 +33,7 @@ export default function IconTextView({
   const {WorkoutDict} = dictionary;
 
   const timeIcon = require('../../../assets/icons/reminder.png');
-  const lightningIcon = require('../../../assets/icons/lightning.png');
+  const lightningIcon = require('../../../assets/icons/lightningOriginal.png');
   const repsIcon = require('../../../assets/icons/weight.png');
 
   const intensityRef = {
@@ -68,17 +69,16 @@ export default function IconTextView({
     icon: {
       tintColor:
         color === 'grey'
-          ? {tintColor: colors.brownishGreyTwo100}
-          : {
-              tintColor: colors.white100,
-            },
+          ? customColor || colors.brownishGreyTwo100
+          : colors.white100,
+
       resizeMode: 'contain',
       height: getHeight(15),
       width: getWidth(15),
     },
     iconColor:
       color === 'grey'
-        ? {tintColor: colors.brownishGreyTwo100}
+        ? {tintColor: customColor || colors.brownishGreyTwo100}
         : {
             tintColor: colors.white100,
           },
@@ -88,6 +88,7 @@ export default function IconTextView({
     },
     greyText: {
       ...textStyles.medium15_brownishGreyTwo100,
+      color: customColor || colors.brownishGreyTwo100,
     },
     whiteText: {
       ...textStyles.medium15_white100,

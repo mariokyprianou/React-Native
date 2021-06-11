@@ -28,22 +28,35 @@ export default function SetCompletionScreen({
   setType,
   weightPreference,
 }) {
-
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
   // const [addWeight] = useMutation(AddExerciseWeight);
-  const {selectedWeight, weightsToUpload, setWeightsToUpload, setSelectedWeight} = UseData();
+  const {
+    selectedWeight,
+    weightsToUpload,
+    setWeightsToUpload,
+    setSelectedWeight,
+  } = UseData();
 
   // Selected value passed to horizontal scroll to preselect
   const [preSelected, setPreSelected] = useState(20);
+  const [timerFinished, setTimerFinished] = useState(false);
+  const [weightAdded, setWeightAdded] = useState(false);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
-    containerStyle: {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: colors.brownishGrey60},
-    offModalTouchableStyle: { flex: 1 },
+    containerStyle: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: colors.brownishGrey60,
+    },
+    offModalTouchableStyle: {flex: 1},
     card: {
       width: '100%',
       backgroundColor: colors.backgroundWhite100,
@@ -84,14 +97,12 @@ export default function SetCompletionScreen({
     },
   });
 
-
-  useEffect(()=> {
-
-    if (exerciseHistory.length > 0) {
+  useEffect(() => {
+    if (exerciseHistory && exerciseHistory.length > 0) {
       let lastWeight = exerciseHistory[exerciseHistory.length - 1].weight;
-      console.log("Last weight in KG ",lastWeight);
+      console.log('Last weight in KG ', lastWeight);
 
-      if (weightPreference === 'lb') {
+      if (weightPreference && weightPreference === 'lb') {
         lastWeight = Math.round(lastWeight * 2.20462262185);
       }
 
@@ -99,17 +110,14 @@ export default function SetCompletionScreen({
     }
   }, [exerciseHistory]);
 
-
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddWeight() {
-    console.log("handleAddWeight", selectedWeight)
-    let weightToAdd = Number(selectedWeight);
+    let weightToAdd = selectedWeight || 20;
+    console.log('handleAddWeight', weightToAdd);
 
-    if (weightPreference === 'lb') {
+    if (weightPreference && weightPreference === 'lb') {
       weightToAdd = Math.round(weightToAdd / 2.20462262185);
     }
-
-    
 
     let weightDetails = {
       exerciseId: exercise,
@@ -117,57 +125,74 @@ export default function SetCompletionScreen({
       setNumber: currentSet.setNumber,
       setType: setType,
       quantity: currentSet.quantity,
-      completedAt: new Date()
+      completedAt: new Date(),
     };
 
     setWeightsToUpload([...weightsToUpload, weightDetails]);
 
-
     // Add to history so it sshows on the graph
     weightDetails = {
       ...weightDetails,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     setWeightHistory([...exerciseHistory, weightDetails]);
-    setSetComplete(false);
 
+    setWeightAdded(true);
+    if (!restTime || timerFinished === true) {
+      setSetComplete(false);
+    }
   }
+
+  console.log('WEIGHT ADDED: ', weightAdded);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.containerStyle}>
-    <TouchableOpacity style={styles.offModalTouchableStyle} onPress={() => setSetComplete(false)}/>
-     
-        <View style={styles.card}>
-          <View style={styles.contentContainer}>
-            <View>
-              {restTime ? (
-                <TimerView
-                  title={WorkoutDict.GreatJob}
-                  restTime={restTime}
-                  setSetComplete={setSetComplete}
-                />
-              ) : (
-                <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
-              )}
-            </View>
-            <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
-            
-            <View style={styles.weightSelectionContainer}>
-              <HorizontalScrollPicker weightPreference={weightPreference} selected={preSelected}  />
-            </View> 
-            
+      <TouchableOpacity
+        style={styles.offModalTouchableStyle}
+        onPress={() => setSetComplete(false)}
+      />
+
+      <View style={styles.card}>
+        <View style={styles.contentContainer}>
+          <View>
+            {restTime ? (
+              <TimerView
+                title={WorkoutDict.GreatJob}
+                restTime={restTime}
+                setSetComplete={setSetComplete}
+                onFinish={() => {
+                  setTimerFinished(true);
+                  if (weightAdded === true) {
+                    setSetComplete(false);
+                  }
+                }}
+              />
+            ) : (
+              <Text style={styles.title}>{WorkoutDict.GreatJobNoRest}</Text>
+            )}
           </View>
-          <View style={styles.buttonContainer}>
-            <DefaultButton
-              type="addWeight"
-              variant="gradient"
-              icon="chevron"
-              onPress={handleAddWeight}
+          <Text style={styles.text}>{WorkoutDict.WhichWeight}</Text>
+
+          <View style={styles.weightSelectionContainer}>
+            <HorizontalScrollPicker
+              weightPreference={weightPreference}
+              selected={preSelected}
+              weightAdded={weightAdded}
             />
           </View>
-        </View> 
+        </View>
+        <View style={styles.buttonContainer}>
+          <DefaultButton
+            type="addWeight"
+            variant="gradient"
+            icon="chevron"
+            disabled={weightAdded}
+            onPress={handleAddWeight}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -201,7 +226,7 @@ function TimerView(props) {
   useEffect(() => {
     if (remainingMS === 0) {
       setTimeout(() => {
-        props.setSetComplete(false);
+        props.onFinish && props.onFinish();
       }, 1000);
     }
   }, [remainingMS]);

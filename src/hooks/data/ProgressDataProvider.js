@@ -6,132 +6,172 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect} from 'react';
-import {useLazyQuery, useApolloClient} from '@apollo/client';
-import fetchPolicy from '../../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import DataContext from './ProgressDataContext';
 import Progress from '../../apollo/queries/Progress';
 import ChallengeHistory from '../../apollo/queries/ChallengeHistory';
 import Challenges from '../../apollo/queries/Challenges';
 import ProgressImages from '../../apollo/queries/ProgressImages';
 import formatProgressImages from '../../utils/formatProgressImages';
-import AsyncStorage from '@react-native-community/async-storage';
-import ProgressImage from '../../apollo/queries/ProgressImage';
 
-import {
-  differenceInDays,
-  differenceInCalendarDays,
-  addDays,
-  format,
-  parseISO,
-} from 'date-fns';
+import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+
+import {format} from 'date-fns';
 
 import {Auth, Hub} from 'aws-amplify';
+import FastImage from 'react-native-fast-image';
+
+import {cacheImages} from './VideoCacheUtils';
 
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
+  const {runQuery} = useCustomQuery();
 
   // Get progress data
   const [progress, setProgress] = useState();
 
-  const [getProgress] = useLazyQuery(Progress, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      setProgress(res.progress);
-    },
-    onError: (error) => console.log(error, '<---progress query error'),
-  });
+  const getProgress = useCallback(async () => {
+    const res = await runQuery({
+      query: Progress,
+      key: 'progress',
+      setValue: async (data) => {
+        setProgress(data);
+        return data;
+      },
+    });
+  }, [runQuery]);
 
   // Get challenge history data
   const [history, setHistory] = useState();
 
-  const [getHistory] = useLazyQuery(ChallengeHistory, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      setHistory(res.challengeHistory);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+  const getHistory = useCallback(async () => {
+    const res = await runQuery({
+      query: ChallengeHistory,
+      key: 'challengeHistory',
+      setValue: async (data) => {
+        setHistory(data);
+        return data;
+      },
+    });
+  }, [runQuery]);
 
   // Get progress images
   const [userImages, setUserImages] = useState([]);
 
-  const [getImages] = useLazyQuery(ProgressImages, {
-    fetchPolicy: 'no-cache',
-    onCompleted: (res) => {
-      const today = new Date();
-      const formattedToday = format(today, 'dd/LL/yyyy');
-      const emptyListObject = {value: today, label: formattedToday};
-      if (res.progressImages.length === 0) {
-        setUserImages([emptyListObject]);
-      } else {
-        const formattedImages = formatProgressImages(res.progressImages);
-        setUserImages(formattedImages);
+  const getImages = useCallback(async () => {
+    const res = await runQuery({
+      query: ProgressImages,
+      key: 'progressImages',
+      setValue: async (res) => {
+        const today = new Date();
+        const formattedToday = format(today, 'dd/LL/yyyy');
+        const emptyListObject = {value: today, label: formattedToday};
+        if (res.length === 0) {
+          setUserImages([emptyListObject]);
+          return [];
+        } else {
+          const formattedImages = formatProgressImages(res);
+          setUserImages(formattedImages);
+
+          return formattedImages;
+        }
+      },
+    });
+  }, [runQuery]);
+
+  const addProgressImage = useCallback(
+    async (progressImage, alreadyExists) => {
+      let images = userImages.filter((it) => it.id);
+
+      // Add to existing images
+      const formattedImages = formatProgressImages([progressImage]);
+
+      // We already have an image for today, need to replace
+      if (alreadyExists) {
+        images.shift();
       }
+
+      images = [].concat(formattedImages, images);
+      setUserImages(images);
     },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+    [userImages],
+  );
 
-  const [challenges, setChallenges] = useState();
+  const [challenges, setChallenges] = useState([]);
 
-  const [getChallenges] = useLazyQuery(Challenges, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      setChallenges(res.challenges);
-    },
-    onError: (err) => console.log(err, '<---progress images err'),
-  });
+  const initCacheImages = useCallback(async (images) => {
+    const response = await NetInfo.fetch();
+    if (response.isConnected) {
+      // Preload all images
+      FastImage.preload(
+        list.map((it) => {
+          return {uri: it};
+        }),
+      );
 
+      //await cacheImages(images);
+    }
+  }, []);
+
+  const getChallenges = useCallback(async () => {
+    const res = await runQuery({
+      query: Challenges,
+      key: 'challenges',
+      setValue: async (data) => {
+        const images = data.map((it) => {
+          return it.imageUrl;
+        });
+        initCacheImages(images);
+
+        setChallenges(data);
+        return data;
+      },
+    });
+  }, [runQuery]);
 
   useEffect(() => {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then((_res) => {
-          getProgress();
-          getHistory();
-          getImages();
-
-          getChallenges();
+          getProgressData();
         })
         .catch((err) => {
           console.log('UserDataProvider - checkAuth', err);
         });
     }
 
-    Hub.listen("auth", (data) => {
-      const { payload } = data;
-      console.log("new event has happend ", data);
-      if (payload.event === "signIn") {
-        console.log("user has signed in");
+    Hub.listen('auth', (data) => {
+      const {payload} = data;
+      if (payload.event === 'signIn') {
+        console.log('user has signed in');
         checkAuth();
       }
-      if (payload.event === "signOut") {
-        console.log("user has signed out");
+      if (payload.event === 'signOut') {
+        console.log('user has signed out');
       }
     });
 
     checkAuth();
   }, []);
 
-
   const [beforePic, setBeforePic] = useState();
   const [afterPic, setAfterPic] = useState();
 
-
   async function checkImages(images) {
-    console.log(images[0])
     if (images.length === 1) {
+      console.log('SET before image only ', images[0].takenOn);
       setBeforePic(images[0]);
-    }
-    else {
+    } else {
+      console.log('SET before image ', images[0].takenOn);
+      console.log('SET after image  ', images[images.length - 1].takenOn);
+
       setAfterPic(images[0]);
-      setBeforePic(images[images.length - 1]);  
+      setBeforePic(images[images.length - 1]);
     }
     return true;
   }
 
-  useEffect(() => {   
-
+  useEffect(() => {
     if (userImages) {
       const images = userImages.filter((it) => it.id);
       if (images && images.length > 0) {
@@ -140,6 +180,19 @@ export default function DataProvider(props) {
     }
   }, [userImages, setBeforePic, setAfterPic]);
 
+  const getProgressData = useCallback(async () => {
+    getProgress();
+    getHistory();
+    getImages();
+    getChallenges();
+  }, []);
+
+  const resetProgressData = useCallback(async () => {
+    setProgress(null);
+    setHistory(null);
+    setUserImages([]);
+    setChallenges([]);
+  }, []);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 
@@ -158,6 +211,9 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
+      getProgressData,
+      resetProgressData,
+      addProgressImage,
     }),
     [
       progress,
@@ -173,6 +229,9 @@ export default function DataProvider(props) {
       setBeforePic,
       afterPic,
       setAfterPic,
+      getProgressData,
+      resetProgressData,
+      addProgressImage,
     ],
   );
 

@@ -2,7 +2,7 @@
  * Created Date: Thu, 14th Jan 2021, 16:39:16 pm
  * Author: Christos Demetriou
  * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
+ * Copyright (c) 2020 The Distance
  */
 
 import React, {useState, useCallback, useEffect} from 'react';
@@ -10,11 +10,9 @@ import {Platform} from 'react-native';
 import {Auth, Hub} from 'aws-amplify';
 import {getUniqueId} from 'react-native-device-info';
 
-
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {useLazyQuery, useMutation} from '@apollo/client';
-import fetchPolicy from '../../utils/fetchPolicy';
+import {useMutation} from '@apollo/client';
 import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
@@ -27,10 +25,14 @@ import crashlytics from '@react-native-firebase/crashlytics';
 
 import Profile from '../../apollo/queries/Profile';
 
-
+import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
+import OfflineUtils from './OfflineUtils';
+import Intercom from 'react-native-intercom';
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
+
+  const {runQuery} = useCustomQuery();
 
   const [userData, setUserData] = useState({});
   const [preferences, setPreferences] = useState({
@@ -38,8 +40,8 @@ export default function UserDataProvider(props) {
     emails: false,
     errorReports: true,
     analytics: false,
-    downloadQuality: "HIGH",
-    weightPreference: "KG",
+    downloadQuality: 'HIGH',
+    weightPreference: 'KG',
   });
 
   const [timeZones, setTimeZones] = useState([
@@ -94,33 +96,34 @@ export default function UserDataProvider(props) {
   ]);
 
   const [analyticsEvents] = useState({
-    registration: 'REGISTRATION', 
-    signIn: 'SIGN_IN', 
-    selectedTrainer: 'SELECTED_TRAINER', 
-    leftTrainer: 'LEFT_TRAINER', 
+    registration: 'REGISTRATION',
+    signIn: 'SIGN_IN',
+    selectedTrainer: 'SELECTED_TRAINER',
+    leftTrainer: 'LEFT_TRAINER',
     restartContinueTrainer: 'RESTART_CONTINUE_TRAINER',
     completedWorkout: 'COMPLETED_WORKOUT',
-    startedWorkout: 'STARTED_WORKOUT', 
+    startedWorkout: 'STARTED_WORKOUT',
     completedExercise: 'COMPLETED_EXERCISE',
-    startedExercise: 'STARTED_EXERCISE', 
+    startedExercise: 'STARTED_EXERCISE',
     newSubscription: 'SUBSCRIPTION',
     cancelSubscription: 'CANCEL_SUBSCRIPTION', // Not trackable
-    completedChallenge: 'COMPLETED_CHALLENGE', 
-    accessedIntercom: 'ACCESSED_INTERCOM', 
-    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER', 
-    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT', 
+    completedChallenge: 'COMPLETED_CHALLENGE',
+    accessedIntercom: 'ACCESSED_INTERCOM',
+    shareSelectedTrainer: 'SHARE_SELECTED_TRAINER',
+    shareCompletedWorkout: 'SHARE_COMPLETED_WORKOUT',
     shareCompletedChallenge: 'SHARE_COMPLETED_CHALLENGE',
     shareTransformation: 'SHARE_TRANSFORMATION',
   });
 
-  const [getPreferences] = useLazyQuery(Preferences, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      const data = res.preferences;
-      setPreferences(data);
-    },
-    onError: (error) => console.log(error, '<---get preferences query error'),
-  });
+  const getPreferences = useCallback(() => {
+    runQuery({
+      query: Preferences,
+      key: 'preferences',
+      setValue: async (data) => {
+        setPreferences(data);
+      },
+    });
+  }, [runQuery]);
 
   const permissionsNeeded = useCallback(async () => {
     if (Platform.OS !== 'ios') {
@@ -132,9 +135,9 @@ export default function UserDataProvider(props) {
       '@NOTIFICATIONS_ASKED',
     );
 
-    if (R.isNil(notificationsEnabled)) {
-      return 'Notifications';
-    }
+    // if (R.isNil(notificationsEnabled)) {
+    //   return 'Notifications';
+    // }
     if (R.isNil(analyticsEnabled)) {
       return 'Analytics';
     }
@@ -164,13 +167,18 @@ export default function UserDataProvider(props) {
   const [updatePreferences] = useMutation(UpdatePreference);
 
   const updateDefaultPreferences = useCallback(async () => {
+    const optOutMarketing =
+      (await AsyncStorage.getItem('@REGISTRATION_MARKETING_OPTION')) || 'off';
+
+    console.log('updateDefaultPreferences: optOutMarketing:', optOutMarketing);
+
     const newPreferences = {
       notifications: Platform.OS === 'ios' ? false : true,
-      emails: Platform.OS === 'ios' ? false: true,
+      emails: optOutMarketing === 'on' ? false : true,
       errorReports: true,
       analytics: Platform.OS === 'ios' ? false : true,
-      downloadQuality: "HIGH",
-      weightPreference: "KG",
+      downloadQuality: 'HIGH',
+      weightPreference: 'KG',
     };
 
     updatePreferences({
@@ -179,132 +187,156 @@ export default function UserDataProvider(props) {
           ...newPreferences,
         },
       },
-    }).then(()=> {
-      setPreferences(newPreferences);
     })
+      .then(() => {
+        setPreferences(newPreferences);
+      })
       .catch((err) => {
-        console.log("updateDefaultPreferences", err);
+        console.log('updateDefaultPreferences', err);
       });
   }, []);
-
 
   const [changeDevice, setChangeDevice] = useState(null);
   const [suspendedAccount, setSuspendedAccount] = useState(false);
   const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
-  
+
   // 3 workouts are allowed without subscription
   const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
 
-
   // Update completedFreeWorkouts
-  useEffect(()=> {
+  useEffect(() => {
     if (userData && userData.completedWorkouts) {
-    const { completedWorkouts } = userData;
-    console.log("completedWorkouts", completedWorkouts);
-    setCompletedFreeWorkouts(completedWorkouts >= 3);
+      const {completedWorkouts} = userData;
+      console.log('completedWorkouts', completedWorkouts);
+      setCompletedFreeWorkouts(completedWorkouts >= 3);
+    } else {
+      setCompletedFreeWorkouts(false);
     }
-  }, [userData])
 
-  
-  const [getProfile] = useLazyQuery(Profile, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res && res.profile) {
-        setUserData(res.profile);
+    updateUserData(userData);
+  }, [userData]);
 
-        const {canChangeDevice, deviceUDID, screenshotsTaken} = res.profile;
+  async function updateUserData(newData) {
+    const language = await AsyncStorage.getItem('@language');
+    Intercom.updateUser({
+      name: `${userData.givenName} ${userData.familyName}`,
+      language_override: language.slice(0, 2),
+    });
+  }
 
-        if (screenshotsTaken >= 7) {
-          setSuspendedAccount(true);
+  const getProfile = useCallback(() => {
+    runQuery({
+      query: Profile,
+      key: 'profile',
+      setValue: async (res) => {
+        if (res) {
+          let data = {
+            ...res,
+          };
+
+          // Add offline icnreament completed workouts
+          const increament = await OfflineUtils.getWorkoutsCompleteIncreament();
+
+          data = {
+            ...res,
+            completedWorkouts: res.completedWorkouts + increament,
+          };
+
+          setUserData(data);
+
+          const {canChangeDevice, deviceUDID, screenshotsTaken} = data;
+
+          if (screenshotsTaken >= 7) {
+            setSuspendedAccount(true);
+          }
+
+          checkDeviceId(canChangeDevice, deviceUDID);
         }
-        
-        checkDeviceId(canChangeDevice, deviceUDID);
+      },
+    });
+  }, [runQuery]);
+
+  const checkDeviceId = useCallback(
+    (canChangeDevice, existingId) => {
+      const deviceId = getUniqueId();
+
+      console.log('ChangeDevice', {
+        canChangeDevice: canChangeDevice,
+        existingId: existingId,
+        newDeviceId: deviceId,
+      });
+
+      if (deviceId === existingId) {
+        setChangeDevice(null);
+      } else {
+        setChangeDevice({
+          canChangeDevice: canChangeDevice,
+          newDeviceId: deviceId,
+        });
       }
     },
-    onError: (error) => console.log(error),
-  });
+    [getUniqueId, setChangeDevice],
+  );
 
-  const checkDeviceId = useCallback(async (canChangeDevice, existingId) => {
-    const deviceId = getUniqueId();
+  const checkUserSubscription = useCallback(async () => {
+    const {success} = await runQuery({
+      query: GetSubscription,
+      key: 'subscription',
+      setValue: async (res) => {
+        console.log('RESSS', res);
+        if (res) {
+          const {isActive} = res;
+          setIsSubscriptionActive(isActive);
+        } else {
+          setIsSubscriptionActive(false);
+        }
+      },
+    });
 
-    // This is a new device
-    if (deviceId !== existingId) {
-      console.log("ChangeDevice", {
-        canChangeDevice: canChangeDevice,
-        newDeviceId: deviceId
-      })
-      setChangeDevice({
-        canChangeDevice: canChangeDevice,
-        newDeviceId: deviceId
-      })
-    }
-   
-  },  []);
-
-
-  const [checkUserSubscription] = useLazyQuery(GetSubscription, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res.subscription) {
-      const {isActive} = res.subscription;
-        setIsSubscriptionActive(isActive);
-      }
-      else {
-        setIsSubscriptionActive(false);
-
-      }
-      
-    },
-    onError: (error) => {
-      console.log('subscription fetch error',error);
+    if (!success) {
       setIsSubscriptionActive(false);
     }
-  });
+  }, [runQuery]);
 
   useEffect(() => {
-    console.log("isSubscriptionActive Changed", isSubscriptionActive);
-  }, [isSubscriptionActive])
+    console.log('isSubscriptionActive Changed', isSubscriptionActive);
+  }, [isSubscriptionActive]);
 
-
-  useEffect(()=> {
-
+  useEffect(() => {
     if (preferences) {
-
       // check analytics error reporting
       analytics().setAnalyticsCollectionEnabled(preferences.analytics);
       crashlytics().setCrashlyticsCollectionEnabled(preferences.errorReports);
-
     }
-  }, [preferences])
+  }, [preferences]);
 
   useEffect(() => {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
-        .then((_res) => {
+        .then(async (_res) => {
           getProfile();
           checkUserSubscription();
         })
-        .catch(err => {
-          console.log("UserDataProvider - checkAuth", err);
+        .catch((err) => {
+          console.log('UserDataProvider - checkAuth', err);
         });
-      }
+    }
 
-    Hub.listen("auth", (data) => {
-      const { payload } = data;
-      console.log("new event has happend ", data);
-      if (payload.event === "signIn") {
-        console.log("user has signed in");
+    Hub.listen('auth', (data) => {
+      const {payload} = data;
+      console.log('new event has happend ', data);
+      if (payload.event === 'signIn') {
+        console.log('user has signed in');
         checkAuth();
       }
-      if (payload.event === "signOut") {
-        console.log("user has signed out");
+      if (payload.event === 'signOut') {
+        console.log('user has signed out');
       }
     });
 
     checkAuth();
   }, []);
 
-  
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({
@@ -320,12 +352,13 @@ export default function UserDataProvider(props) {
       firebaseLogEvent,
       analyticsEvents,
       changeDevice,
+      setChangeDevice,
       suspendedAccount,
       setSuspendedAccount,
       checkUserSubscription,
       isSubscriptionActive,
       getProfile,
-      completedFreeWorkouts
+      completedFreeWorkouts,
     }),
     [
       userData,
@@ -340,12 +373,13 @@ export default function UserDataProvider(props) {
       firebaseLogEvent,
       analyticsEvents,
       changeDevice,
+      setChangeDevice,
       suspendedAccount,
       setSuspendedAccount,
       checkUserSubscription,
       isSubscriptionActive,
       getProfile,
-      completedFreeWorkouts
+      completedFreeWorkouts,
     ],
   );
 

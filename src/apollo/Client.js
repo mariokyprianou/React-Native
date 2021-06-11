@@ -3,32 +3,22 @@
  * Created: Wed, 6th January 212021
  * Copyright 2021 - The Distance
  */
-import {HttpLink, InMemoryCache, ApolloClient} from '@apollo/client';
-import {persistCache} from 'apollo3-cache-persist';
+import {
+  HttpLink,
+  InMemoryCache,
+  ApolloClient,
+  ApolloLink,
+} from '@apollo/client';
+import {persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist';
 import AsyncStorage from '@react-native-community/async-storage';
-import TypeDefs from './TypeDefs';
+
 import Authoriser from './ApolloMiddleware/Authoriser';
 import {onError} from '@apollo/client/link/error';
+import {RetryLink} from '@apollo/client/link/retry';
+
 import Secrets from '../environment/Secrets';
 
-const errorLink = onError(
-  ({graphQLErrors, networkError, operation, response}) => {
-    if (graphQLErrors) {
-      graphQLErrors.map(({message, locations, path}) =>
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        ),
-      );
-    }
-    if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
-    }
-  },
-);
-
 export async function TDGraphQLProvider() {
-  const cache = new InMemoryCache();
-
   const authFetch = async (_, options) => {
     const storedLocale = await AsyncStorage.getItem('@language');
 
@@ -58,25 +48,44 @@ export async function TDGraphQLProvider() {
     });
   };
 
-  const link = new HttpLink({fetch: authFetch});
+  const authLink = new HttpLink({fetch: authFetch});
 
-  const client = new ApolloClient({
-    link: errorLink.concat(link),
-    cache,
-    typeDefs: TypeDefs,
-    connectToDevTools: true,
+  const retryLink = new RetryLink({
+    delay: {
+      initial: 300,
+      max: Infinity,
+      jitter: true,
+    },
+    attempts: {
+      max: 3,
+      retryIf: (error, _operation) => !!error,
+    },
   });
 
-  try {
-    await persistCache({
-      cache,
-      storage: AsyncStorage,
-      debug: true,
-    });
-  } catch (error) {
-    console.error('Error restoring Apollo cache', error);
-    return null;
-  }
+  const errorLink = onError((error) => {
+    const {graphQLErrors, networkError} = error;
+
+    if (graphQLErrors)
+      graphQLErrors.map(({message, locations, path}) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+        ),
+      );
+    if (networkError)
+      console.log(`[Network error]: ${networkError}`, networkError);
+  });
+
+  const cache = new InMemoryCache({});
+
+  await persistCache({
+    cache,
+    storage: new AsyncStorageWrapper(AsyncStorage),
+  });
+
+  const client = new ApolloClient({
+    link: ApolloLink.from([errorLink, retryLink, authLink]),
+    cache: cache,
+  });
 
   return client;
 }

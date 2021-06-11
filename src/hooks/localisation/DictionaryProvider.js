@@ -10,77 +10,77 @@ import React, {useCallback, useState, useEffect} from 'react';
 import {useAsyncStorage} from '@react-native-community/async-storage';
 
 import DictionaryContext from './DictionaryContext';
-import {enGB, hiIN, urIN} from './languages';
+import {enGB, hiIN} from './languages';
 
 const DictionaryProvider = ({children}) => {
   const [dictionaryLoading, setDictionaryLoading] = useState(true);
   const [locale, setLocale] = useState('en-GB');
   const {getItem, setItem} = useAsyncStorage('@language');
 
-  const fetchLanguage = async () => {
-    // console.log('Dictionary - fetchLanguage - FETCHING');
+  const translateMap = {
+    'en-GB': enGB,
+    'hi-IN': hiIN,
+  };
+
+  const [dictionary, setDictionary] = useState(translateMap[locale]);
+
+  const fetchLanguage = useCallback(async () => {
     try {
       const language = await getItem();
-      console.log('Dictionary - fetchLanguage - language: ', language);
       setLocale(language || 'en-GB');
       setDictionaryLoading(false);
     } catch (e) {
       console.log('Dictionary - fetchLanguage - error: ', e);
     }
-    // console.log('Fetch Done.');
     return;
-  };
+  }, [getItem]);
 
   useEffect(() => {
-    // console.log('Dictionary - useEffect - fetchLanguage');
     fetchLanguage();
   }, []);
 
-  const saveLanguage = async (language = 'en-GB') => {
-    // console.log('Dictionary - saveLanguage - SAVING: ', language);
+  const updateDictionary = useCallback(() => {
+    const value = translateMap[locale];
+    setDictionary(value);
+    return value;
+  }, [locale]);
+
+  useEffect(() => {
+    updateDictionary();
+  }, [locale]);
+
+  const saveLanguage = useCallback(async (language = 'en-GB') => {
     try {
       await setItem(language);
     } catch (e) {
       console.log('Dictionary - saveLanguage - error: ', e);
     }
-    // console.log('Save Done.');
     return;
-  };
+  }, []);
 
-  const setLanguage = useCallback((language) => {
-    // console.log('Dictionary - setLanguage - language: ', language);
+  const setLanguage = useCallback(async (language) => {
     const languageMap = {
       English: 'en-GB',
+      अंग्रेजी: 'en-GB',
       Hindi: 'hi-IN',
-      Urdu: 'ur-IN',
+      हिंदी: 'hi-IN',
     };
     const value = languageMap[language];
-    console.log('Dictionary - setLanguage - value: ', value);
-    setLocale(value);
-    saveLanguage(value);
+
+    // Update session locale
+    await setLocale(value);
+    // Update saved value
+    return await saveLanguage(value);
   }, []);
 
   const getLanguage = useCallback(() => {
-    // console.log('Dictionary - getLanguage - GET LANGUAGE');
-    // Populates the dropdown text.
     const languageMap = {
       'en-GB': 'English',
       'hi-IN': 'Hindi',
-      'ur-IN': 'Urdu',
     };
 
-    const value = languageMap[locale];
-    // console.log('Dictionary - getLanguage - value: ', value);
-    return value;
+    return languageMap[locale];
   }, [locale]);
-
-  const translateMap = {
-    'en-GB': enGB,
-    'hi-IN': hiIN,
-    'ur-IN': urIN,
-  };
-
-  const dictionary = translateMap[locale];
 
   /*
    * Memoize
@@ -88,12 +88,13 @@ const DictionaryProvider = ({children}) => {
 
   const publicMethods = React.useMemo(
     () => ({
+      locale,
       dictionary,
       setLanguage,
       getLanguage,
       dictionaryLoading,
     }),
-    [dictionary, setLanguage, getLanguage, dictionaryLoading],
+    [locale, dictionary, setLanguage, getLanguage, dictionaryLoading],
   );
 
   /*

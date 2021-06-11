@@ -6,16 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  Platform,
-  ActionSheetIOS,
-  StatusBar,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, Text, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -26,7 +18,6 @@ import {useRoute} from '@react-navigation/core';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import useCommonData from '../../hooks/data/useCommonData';
-import useLoading from '../../hooks/loading/useLoading';
 import RestartProgramme from '../../apollo/mutations/RestartProgramme';
 import ContinueProgramme from '../../apollo/mutations/ContinueProgramme';
 import StartProgramme from '../../apollo/mutations/StartProgramme';
@@ -35,10 +26,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
 
-import {SampleImageUrl} from '../../utils/SampleData';
-
 import useShare from '../../hooks/share/useShare';
 import displayAlert from '../../utils/DisplayAlert';
+import FastImage from 'react-native-fast-image';
+import useProgressData from '../../hooks/data/useProgressData';
+import LoadingView from '../../components/Views/LoadingView';
 
 const fakeImage = require('../../../assets/congratulationsBackground.png');
 
@@ -65,6 +57,7 @@ export default function CongratulationsScreen() {
   const [startProgramme] = useMutation(StartProgramme);
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
+  const {getProgressData, resetProgressData} = useProgressData();
 
   const {getTrainers} = useCommonData();
   const {
@@ -74,7 +67,9 @@ export default function CongratulationsScreen() {
     getProgramme,
     reset,
   } = UseData();
-  const {setLoading} = useLoading();
+
+  const [loading, setLoading] = useState(false);
+
   const {ShareMediaType, getShareData} = useShare();
 
   navigation.setOptions({
@@ -277,11 +272,11 @@ export default function CongratulationsScreen() {
 
   async function changedAssignedProgramme() {
     await reset();
+    await resetProgressData();
 
-    await getProgramme();
     await getTrainers();
-
-    setProgrammeModalImage(newProgramme.programmeImage);
+    await getProgramme();
+    await getProgressData();
     navigation.navigate('TabContainer');
     setLoading(false);
   }
@@ -308,7 +303,7 @@ export default function CongratulationsScreen() {
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Image
+        <FastImage
           source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
           style={styles.image}
         />
@@ -359,6 +354,8 @@ export default function CongratulationsScreen() {
           </>
         )}
       </View>
+
+      {loading && LoadingView()}
     </View>
   );
 }

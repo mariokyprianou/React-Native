@@ -58,7 +58,7 @@ export default function Header({
       justifyContent: 'center',
       alignItems: 'center',
       width: '70%',
-      paddingTop: getHeight(2)
+      paddingTop: getHeight(2),
     },
     titleStyle: {
       ...textStyles.bold22_black100,
@@ -152,6 +152,11 @@ export default function Header({
           input={photoSelectIcon}
           inputStyle={{style: styles.photoIconStyle}}
         />
+      );
+    }
+    if (icon === arrowBackIcon) {
+      return (
+        <TDIcon input={arrowBackIcon} inputStyle={{style: styles.iconStyle}} />
       );
     }
     return <TDIcon input={icon} inputStyle={styles.iconStyle} />;

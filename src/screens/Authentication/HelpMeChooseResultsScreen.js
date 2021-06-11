@@ -21,7 +21,6 @@ import isIPhoneX from '../../utils/isIphoneX';
 import UseData from '../../hooks/data/UseData';
 import {useBackHandler} from '@react-native-community/hooks';
 
-
 const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
 export default function HelpMeChooseResultsScreen() {
@@ -37,15 +36,12 @@ export default function HelpMeChooseResultsScreen() {
 
   const capitalizedName = recommendedTrainer.toUpperCase();
 
-
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
     return () => {
       StatusBar.setBarStyle('light-content');
-    }
+    };
   }, []);
-
-
 
   navigation.setOptions({
     header: () => (
@@ -62,7 +58,12 @@ export default function HelpMeChooseResultsScreen() {
     containerStyle: {flex: 8, backgroundColor: colors.backgroundWhite100},
     topContainerStyle: {flex: 1, width: '90%', alignSelf: 'center'},
     middleContainerStyle: {flex: 6},
-    bottomContainerStyle: {flex: 1, alignSelf: 'center',justifyContent: 'center', marginBottom: isIPhoneX() ? getHeight(8) : 0},
+    bottomContainerStyle: {
+      flex: 1,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      marginBottom: isIPhoneX() ? getHeight(8) : 0,
+    },
     image: {
       width: '100%',
       resizeMode: 'cover',
@@ -109,7 +110,7 @@ export default function HelpMeChooseResultsScreen() {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.containerStyle}>
-    <View style={styles.topContainerStyle}>
+      <View style={styles.topContainerStyle}>
         <Text style={styles.title}>{HelpMeChooseDict.Result}</Text>
 
         <View style={styles.barContainer}>
@@ -120,13 +121,12 @@ export default function HelpMeChooseResultsScreen() {
             colors={[colors.tealish100, colors.tiffanyBlue100]}
           />
         </View>
-      
-    </View>
-    <View style={styles.middleContainerStyle}>
-      <ImageBackground
+      </View>
+      <View style={styles.middleContainerStyle}>
+        <ImageBackground
           source={programmeImage ? {uri: programmeImage} : fakeImage}
           style={styles.image}>
-          <FadingBottomView color="black"/>
+          <FadingBottomView color="black" />
 
           <View style={styles.titleContainer}>
             <Text style={styles.name}>{capitalizedName}</Text>
@@ -135,9 +135,9 @@ export default function HelpMeChooseResultsScreen() {
             </Text>
           </View>
         </ImageBackground>
-    </View>
+      </View>
 
-    <View style={styles.bottomContainerStyle}>
+      <View style={styles.bottomContainerStyle}>
         <DefaultButton
           type="programme"
           trainerName={capitalizedName}
@@ -145,8 +145,7 @@ export default function HelpMeChooseResultsScreen() {
           variant="transparentBlackBoldText"
           onPress={() => navigation.navigate('MeetYourIcons')}
         />
-    </View>
-
+      </View>
     </View>
   );
 }

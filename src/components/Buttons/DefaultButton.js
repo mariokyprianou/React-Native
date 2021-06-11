@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -157,6 +157,7 @@ export default function DefaultButton({
     saveChanges: ButtonDict.SaveChanges,
     needToSignOut: ButtonDict.NeedToSignOut,
     logout: ButtonDict.Logout,
+    close: ButtonDict.Close,
   };
 
   const iconType = {
@@ -199,7 +200,7 @@ export default function DefaultButton({
 
   const iconVariant = {
     white: {
-      color: colors.black100,
+      color: disabled === true ? colors.black30 : colors.black100,
     },
     gradient: {
       color: colors.white100,
@@ -267,27 +268,27 @@ export default function DefaultButton({
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   const text = buttonText[type] || customText;
-  let finalText = capitalise === false ? text :
-    variant === 'white' ||
-    variant === 'gradient' ||
-    variant === 'transparentBlackBoldText' ||
-    capitalise 
+  let finalText =
+    capitalise === false
+      ? text
+      : variant === 'white' ||
+        variant === 'gradient' ||
+        variant === 'transparentBlackBoldText' ||
+        capitalise
       ? text.toUpperCase()
       : text;
 
-
-  useEffect(()=> {
+  useEffect(() => {
     if (pressed) {
       setTimeout(() => setPressed(false), 1000);
     }
-
   }, [pressed]);
 
   const handlePress = () => {
     setPressed(true);
     onPress();
-  }
- 
+  };
+
   const renderButtonText = () => {
     if (customSubtext) {
       return (
@@ -311,12 +312,19 @@ export default function DefaultButton({
   if (variant === 'gradient') {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={pressed ? null : handlePress} style={styles.touch}>
+        <TouchableOpacity
+          onPress={pressed ? null : handlePress}
+          style={styles.touch}
+          disabled={disabled}>
           <LinearGradient
             style={styles.gradient}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
-            colors={[colors.tealish100, colors.tiffanyBlue100]}>
+            colors={
+              disabled
+                ? [colors.tealish20, colors.tiffanyBlue20]
+                : [colors.tealish100, colors.tiffanyBlue100]
+            }>
             {renderButtonText()}
             {icon && (
               <View style={styles.iconContainer}>
@@ -340,7 +348,9 @@ export default function DefaultButton({
   if (type === 'continueFromWeek') {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={pressed ? null : handlePress} style={styles.touch}>
+        <TouchableOpacity
+          onPress={pressed ? null : handlePress}
+          style={styles.touch}>
           <Text style={styles.text}>{`${buttonText[type]} ${weekNo}`}</Text>
           <View style={styles.iconContainer}>
             <TDIcon
@@ -356,7 +366,9 @@ export default function DefaultButton({
   if (type === 'programme') {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={pressed ? null : handlePress} style={styles.touch}>
+        <TouchableOpacity
+          onPress={pressed ? null : handlePress}
+          style={styles.touch}>
           <Text
             style={
               styles.text

@@ -173,13 +173,16 @@ public class GIFManager extends ReactContextBaseJavaModule {
 
         String beforePicUri = reactContext.getFilesDir().getAbsolutePath() + map.getString("beforeUrl");
         double margin = assetWidth * 0.05;
-        double width = assetWidth - (margin * 2);
+
+        double resolution = (double) assetHeight / (double) assetWidth;
+        double width = assetWidth * 0.9;
+        double height = width * resolution * 0.85;
         Bitmap image1Bitmap = Glide.with(reactContext).asBitmap().load(beforePicUri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .centerCrop()
-                .submit((int) width, assetHeight / 2).get();
-        imageBeforeCanvas.drawBitmap(image1Bitmap,(int) margin, (int) (assetHeight * 0.2), null);
+                .submit((int) width, (int) height).get();
+        imageBeforeCanvas.drawBitmap(image1Bitmap,(int) margin, (int) 120.0, null);
 
         // After image canvas
         Bitmap backgroundAfterBitmap = Bitmap.createBitmap(assetWidth, assetHeight, config);
@@ -190,8 +193,8 @@ public class GIFManager extends ReactContextBaseJavaModule {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .centerCrop()
-                .submit((int) width, assetHeight / 2).get();
-        imageAfterCanvas.drawBitmap(image2Bitmap,(int) margin, (int) (assetHeight * 0.2), null);
+                .submit((int) width, (int) height).get();
+        imageAfterCanvas.drawBitmap(image2Bitmap,(int) margin, (int) 120.0, null);
 
 
         // Date Text UI
@@ -206,7 +209,7 @@ public class GIFManager extends ReactContextBaseJavaModule {
                 afterSpan, titleStyle, imageBeforeCanvas.getWidth(), Layout.Alignment.ALIGN_OPPOSITE, 0.8f, 0.0f, false);
 
         // Add text on images
-        float textPositionY = (assetHeight * 0.2f) + (assetHeight / 2f) + 20;
+        float textPositionY = (float) (120.0 + height + 12.0);
         float textLeftPositionX = (float) margin;
         float textRightPositionX = -(float) margin;
 
@@ -252,10 +255,10 @@ public class GIFManager extends ReactContextBaseJavaModule {
 
             double afterWidth = (numberOfImages - i) * chunkWidth;
             if (afterWidth == 0.0) {
-                afterWidth = 1.0;
+                afterWidth = 0.1;
             }
             else if (afterWidth == targetWidth) {
-                afterWidth = afterWidth - 1f;
+                afterWidth = afterWidth - 0.1;
             }
 
             Bitmap croppedImage2 = Bitmap.createBitmap(backgroundAfterBitmap, (int)beforeWidth - 1, 0, (int)afterWidth + 1, targetHeight);

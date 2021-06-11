@@ -12,7 +12,7 @@ index 5161f5a..9fac292 100644
    return (
      <GlobalTimeContext.Provider value={date}>
 diff --git a/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js b/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js
-index 6387017..e99b22d 100644
+index 6387017..d92f189 100644
 --- a/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js
 +++ b/node_modules/the-core-ui-module-tdcountdown/src/stopwatch/useStopwatch.js
 @@ -9,8 +9,8 @@ import { GlobalTimeContext } from "../TDCountdown";
@@ -60,13 +60,13 @@ index 6387017..e99b22d 100644
 -  }, [date]);
 +  }, [start])
 +
-   
+ 
 -  //   return date;
    return {
      elapsed: msToHMS(elapsedTime),
      elapsedMS: elapsedTime,
 diff --git a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
-index 1b1c1fe..2b20273 100644
+index 1b1c1fe..43d96f1 100644
 --- a/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
 +++ b/node_modules/the-core-ui-module-tdcountdown/src/timer/useTimer.js
 @@ -10,9 +10,8 @@ import msToHMS from "../utils/msToHMS";
@@ -80,24 +80,58 @@ index 1b1c1fe..2b20273 100644
    // This is the time remaining in milliseconds (timer is a HH:MM:SS string)
    const [remaining, setRemaining] = useState(HMStoMS(timer));
  
-@@ -31,6 +30,25 @@ export default function useTimer({ timer }) {
+@@ -23,14 +22,57 @@ export default function useTimer({ timer }) {
+   // Toggle the state of the timer
+   const toggle = () => {
+     if (!start) {
+-      console.log("Start timer");
+-      setStart(true);
++      console.log("Starting Timer");
+       setTargetTime(Date.now() + remaining);
++      setStart(true);
+     } else {
+       setStart(false);
      }
    };
  
-+  useEffect(() => {
++  const restart = (durationMS) => {
++    console.log("Restarting Timer")
++    clearInterval(this.interval);
++    this.interval = null;
++    const newTargetTime = Date.now() + durationMS;
++    setTargetTime(newTargetTime);
++    setRemaining(durationMS);
++    setStart(true);
 +
-+    if (start && targetTime > new Date()) {
-+    this.interval = setInterval(() => {
-+      const value = (Math.ceil((targetTime - new Date()) / 1000) * 1000)
-+      if (value >= 0) {
-+        setRemaining(Math.abs(value));
-+      }
-+      else {
-+        setStart(false)
-+      }
-+    }, 1000);
-+  }
-+    else{
++    if (newTargetTime > Date.now()) {
++      this.interval = setInterval(() => {
++        const value = (Math.ceil((newTargetTime - Date.now()) / 1000) * 1000)
++        if (value >= 0) {
++          setRemaining(Math.abs(value));
++        }
++        else {
++          setStart(false)
++        }
++      }, 1000);
++    } else {
++      clearInterval(this.interval);
++      this.interval = null;
++    }
++  };
++
++  useEffect(() => {
++    if (start && targetTime > Date.now()) {
++      console.log("Setting Timer Start to:", start)
++      this.interval = setInterval(() => {
++        const value = (Math.ceil((targetTime - new Date()) / 1000) * 1000)
++        if (value >= 0) {
++          setRemaining(Math.abs(value));
++        }
++        else {
++          setStart(false)
++        }
++      }, 1000);
++    } else if (!start) {
 +      clearInterval(this.interval);
 +      this.interval = null;
 +    }
@@ -106,7 +140,7 @@ index 1b1c1fe..2b20273 100644
    // Reset the timer
    const reset = () => {
      setStart(false);
-@@ -38,15 +56,6 @@ export default function useTimer({ timer }) {
+@@ -38,20 +80,12 @@ export default function useTimer({ timer }) {
      setRemaining(HMStoMS(timer));
    };
  
@@ -122,3 +156,10 @@ index 1b1c1fe..2b20273 100644
    return {
      remaining: msToHMS(remaining),
      remainingMS: remaining,
+     toggle,
+     reset,
+-    active: start,
++    restart,
++    active: start
+   };
+ }

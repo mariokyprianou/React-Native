@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -35,6 +35,8 @@ export default function WeekCompleteScreen() {
       totalDuration = 1,
       totalReps = 1,
       totalSets = 1,
+      totalWorkouts = 1,
+      environment = 'GYM',
     },
   } = useRoute();
 
@@ -49,8 +51,6 @@ export default function WeekCompleteScreen() {
   const {ShareMediaType, getShareData} = useShare();
   const {setLoading} = useLoading();
 
-
-
   useEffect(() => {
     navigation.setOptions({
       header: () => <></>,
@@ -58,7 +58,7 @@ export default function WeekCompleteScreen() {
     StatusBar.setBarStyle('light-content');
     return () => {
       StatusBar.setBarStyle('dark-content');
-    }
+    };
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -94,13 +94,10 @@ export default function WeekCompleteScreen() {
     },
   };
 
-
-
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-   
-    // handle share
-  async function handleShare() {
 
+  // handle share
+  async function handleShare() {
     const isInstaAvailable = await PowerShareAssetsManager.isInstagramAvailable();
 
     if (!isInstaAvailable) {
@@ -124,40 +121,50 @@ export default function WeekCompleteScreen() {
       return;
     }
 
+    setLoading(true);
+    const {colour, url} = await getShareData(ShareMediaType.weekComplete).catch(
+      (err) => {
+        console.log(err, '<---getShareData err');
+        displayAlert({text: ShareDict.UnableToShareWeekComplete});
+        setLoading(false);
+        return;
+      },
+    );
 
-    setLoading(true)
-    const { colour, url } = await getShareData(ShareMediaType.weekComplete);
-    console.log("url", url)
+    console.log('getShareData(ShareMediaType.weekComplete)', {colour, url});
+
     let mins = totalDuration % 60;
-    let hrs = (totalDuration - mins)/60;
-    
-    hrs = hrs === 0 ? "00" : hrs < 10 ? `0${hrs}` : hrs;
-    mins = mins === 0 ? "00" : mins < 10 ? `0${mins}` : mins;
+    let hrs = (totalDuration - mins) / 60;
 
-    const totalTimeTrained = hrs.toString() + ":" + mins.toString() + ":00";
+    hrs = hrs === 0 ? '00' : hrs < 10 ? `0${hrs}` : hrs;
+    mins = mins === 0 ? '00' : mins < 10 ? `0${mins}` : mins;
+
+    const totalTimeTrained = hrs.toString() + ':' + mins.toString() + ':00';
 
     try {
-      const programmeName = 'home';
       // TODO: - Hook up relevant values
       // TODO: -  Display loading
       let res = await PowerShareAssetsManager.shareWeekComplete({
         imageUrl: url,
-        title: ShareDict.WeekCompleteTitle(weekNumber, name, programmeName.toLowerCase()),
-        workoutsCompleted: 6,
+        title: ShareDict.WeekCompleteTitle(
+          weekNumber,
+          name,
+          environment.toLowerCase(),
+        ),
+        workoutsCompleted: totalWorkouts,
         totalTimeTrained: totalTimeTrained,
-        colour: colour
+        colour: colour,
       });
 
       firebaseLogEvent(analyticsEvents.shareCompletedWorkout, {
         trainerId: programme.trainer.id,
         programmeId: programme.id,
       });
-
+      setLoading(false);
     } catch (err) {
       console.log('SHARE ERR: ', err);
+      setLoading(false);
     }
-
-  
 
     setLoading(false);
   }

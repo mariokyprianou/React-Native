@@ -107,7 +107,8 @@ const shareProgress = async ({
       beforeDate,
       afterDate,
     });
-    return shareDirectlyToInstagramStory(localSharePath, true);
+    await shareDirectlyToInstagramStory(localSharePath, true);
+    return;
   } catch (err) {
     throw err;
   }
@@ -117,7 +118,7 @@ const shareProgress = async ({
 
 const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
   console.log('shareDirectlyToInstagramStory', path);
-  
+
   // Path should always be this for Android
   // file://data/user/0/com.powerdigitallimited.power/files/imageCache/...
 
@@ -138,7 +139,7 @@ const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
     }),
   };
 
-  return Share.shareSingle(shareSingleOptions)
+  Share.shareSingle(shareSingleOptions)
     .then((res) => {
       // .then  is called before we actually share  :/
       console.log('res', res);
@@ -152,26 +153,27 @@ const shareDirectlyToInstagramStory = async (path, isVideo = false) => {
       ImagesCacheManager.unlinkFileFromAbsolutePath(path);
       throw err;
     });
+
+  return;
 };
 
 const isInstagramAvailable = async () => {
-
   return Linking.canOpenURL(`instagram://user`)
-    .then(supported => {
+    .then((supported) => {
       return supported;
     })
-    .catch(error => {
+    .catch((error) => {
       return false;
     });
 };
 
 const promptIsntagramAppDownload = () => {
   Linking.openURL(
-    Platform.OS === "ios"
-      ? "https://apps.apple.com/gb/app/instagram/id389801252"
-      : "market://details?id=com.instagram.android"
+    Platform.OS === 'ios'
+      ? 'https://apps.apple.com/gb/app/instagram/id389801252'
+      : 'market://details?id=com.instagram.android',
   );
-}
+};
 
 // WIP for share multiple - depreciated
 
@@ -208,7 +210,7 @@ const PowerShareAssetsManager = {
   shareProgrammeStart,
   shareProgress,
   isInstagramAvailable,
-  promptIsntagramAppDownload
+  promptIsntagramAppDownload,
 };
 
 export default PowerShareAssetsManager;

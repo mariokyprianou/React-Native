@@ -25,7 +25,14 @@ const width = Dimensions.get('window').width;
 
 export default function OnboardingScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, radius, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getWidth,
+    getScaledHeight,
+    getScaledWidth,
+    radius,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles} = useTheme();
   const onboardSwiper = useRef();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -33,17 +40,13 @@ export default function OnboardingScreen() {
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
 
-  const {onboarding, getOnboarding} = useCommonData();
+  const {onboarding} = useCommonData();
 
-  const [scrollOffset, setScrollOfset] = useState(new Animated.Value(0));
+  const [scrollOffset, setScrollOffset] = useState(new Animated.Value(0));
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
   });
-
-  useEffect(() => {
-    getOnboarding();
-  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -56,7 +59,7 @@ export default function OnboardingScreen() {
     },
     title: {
       ...textStyles.bold24_black100,
-      marginTop: getHeight(36),
+      marginTop: getScaledHeight(36),
     },
     text: {
       ...textStyles.medium15_brownishGrey100,
@@ -64,20 +67,22 @@ export default function OnboardingScreen() {
       marginBottom: getHeight(10),
     },
     loginContainer: {
-      width: getWidth(100),
+      width: getScaledWidth(120),
+      flex: 1,
     },
     loginText: {
       ...textStyles.bold15_black100,
       textAlign: 'left',
+      marginLeft: getWidth(10),
     },
     buttonWrapper: {
       backgroundColor: 'transparent',
       flexDirection: 'row',
       position: 'absolute',
-      top: getHeight(-30),
+      top: getScaledHeight(-30),
       left: 0,
       flex: 1,
-      paddingHorizontal: getWidth(20),
+      paddingHorizontal: getScaledWidth(20),
       justifyContent: 'space-between',
       alignItems: 'center',
     },
@@ -91,7 +96,9 @@ export default function OnboardingScreen() {
   const Login = () => {
     return (
       <View style={styles.loginContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity
+          style={{flex: 1, justifyContent: 'center'}}
+          onPress={() => navigation.navigate('Login')}>
           <Text style={styles.loginText}>{ButtonDict.Login}</Text>
         </TouchableOpacity>
       </View>
@@ -106,7 +113,7 @@ export default function OnboardingScreen() {
   function onScroll(e) {
     const scrollSensitivity = 4 / 3;
     const offset = e.nativeEvent.contentOffset.x / scrollSensitivity;
-    setScrollOfset(new Animated.Value(offset));
+    setScrollOffset(new Animated.Value(offset));
   }
 
   const position = Animated.divide(scrollOffset, width - getWidth(100));
@@ -123,9 +130,10 @@ export default function OnboardingScreen() {
           setActiveIndex(index);
         }}
         showsPagination={false}>
-        {onboarding.map(({title, description, image}) => (
+        {onboarding.map(({title, description, image, local}) => (
           <OnboardingSliderItem
             image={image}
+            local={local}
             header={title}
             text={description}
           />

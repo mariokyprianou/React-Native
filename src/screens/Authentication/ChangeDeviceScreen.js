@@ -19,14 +19,24 @@ import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
 import {useBackHandler} from '@react-native-community/hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function ChangeDeviceScreen() {
   // MARK: - Hooks
   const {dictionary} = useDictionary();
-  const {ChangeDeviceDict} = dictionary;
+  const {ChangeDeviceDict, OfflineMessage} = dictionary;
   const navigation = useNavigation();
-  const {permissionsNeeded, firebaseLogEvent, analyticsEvents} = useUserData();
+
+  const {isConnected, isInternetReachable} = useNetInfo();
+
+  const {
+    permissionsNeeded,
+    firebaseLogEvent,
+    analyticsEvents,
+    setChangeDevice,
+    getProfile,
+  } = useUserData();
+
   const {setLoading} = useLoading();
 
   const [changeDevice] = useMutation(ChangeDevice);
@@ -39,13 +49,19 @@ export default function ChangeDeviceScreen() {
     return true;
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     setLoading(false);
   }, []);
 
   // MARK: - Actions
   const onPressButton = async () => {
-    
+    if (!isConnected) {
+      displayAlert({
+        text: OfflineMessage,
+      });
+      return;
+    }
+    setLoading(true);
     changeDevice({
       variables: {
         input: {
@@ -55,24 +71,25 @@ export default function ChangeDeviceScreen() {
     })
       .then(async (res) => {
         const response = getResponse(res, 'changeDevice');
+        console.log('changeDeviceRes', response);
 
         if (response) {
+          // Reset change devoce data
+          setChangeDevice(null);
 
-          await AsyncStorage.setItem(
-            '@DOWNLOAD_ENABLED',
-            JSON.stringify(true),
-          );
-          
+          // Reset new device settings
+          await AsyncStorage.removeItem('@ANALYTICS_ASKED');
+          await AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+
           const permissionNeeded = await permissionsNeeded();
 
+          await getProfile();
           if (permissionNeeded) {
             navigation.goBack();
             navigation.navigate(permissionNeeded);
-          }
-          else {
+          } else {
             navigation.goBack();
           }
-
         } else {
           displayAlert({
             text: ChangeDeviceDict.ChangeDeviceFailedText,
@@ -84,7 +101,8 @@ export default function ChangeDeviceScreen() {
         displayAlert({
           text: ChangeDeviceDict.ChangeDeviceFailedText,
         });
-      });
+      })
+      .finally(() => setLoading(false));
   };
   const onPressBottomButton = () => {
     firebaseLogEvent(analyticsEvents.accessedIntercom, {});

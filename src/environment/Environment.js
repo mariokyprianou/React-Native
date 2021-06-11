@@ -16,5 +16,5 @@ const selectEnv = () => {
 };
 
 // const Environment = selectEnv();
-const Environment = 'development';
+const Environment = 'production';
 export default Environment;

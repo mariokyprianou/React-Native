@@ -16,11 +16,11 @@ struct GraphicContextTextContent {
 }
 
 @objc public class SwiftAssetCreator: NSObject {
-  
+
   // MARK: - Initializers
-  
-  var assetWidth: CGFloat = 1080
-  var assetHeight: CGFloat = 1920
+
+  var assetWidth: CGFloat = 1125
+  var assetHeight: CGFloat = 2001
   let fontColor: UIColor = .black
   var padding: CGFloat {
     return assetWidth / 23
@@ -32,30 +32,34 @@ struct GraphicContextTextContent {
   var documentsUrl: URL {
       return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
   }
-  
+
   override init() {
   }
-  
+
   // MARK: -  Exposed Methods
-  
+
   @objc public func encodeTransformationImage(image: UIImage, beforeDate: String, afterDate: String, color: String) -> UIImage {
+    let resolution = image.size.height / image.size.width
+    let foregroundImageWidth = image.size.width * 0.9
+    let foregroundImageHeight = foregroundImageWidth * resolution * 0.85
+    
     let beforeDateX = image.size.width * 0.05
-    let beforeDateY = (image.size.height * 0.2) + (image.size.height / 2.0) + 20.0
+    let beforeDateY = 120.0 + foregroundImageHeight + 12.0
     let beforeDateWidth = image.size.width * 0.9
     let beforeDateHeight: CGFloat = 80.0
     let labelFrame = CGRect(x: beforeDateX, y: beforeDateY, width: beforeDateWidth, height: beforeDateHeight)
     let beforeDateLabel = NSAttributedString(string: beforeDate, attributes: fontAttributes(rightAlign: false, fontType: .medium, color: color))
     let afterDateLabel = NSAttributedString(string: afterDate, attributes: fontAttributes(rightAlign: true, fontType: .medium, color: color))
-    
+
     let contents = [
       GraphicContextTextContent(string: beforeDateLabel, frame: labelFrame),
       GraphicContextTextContent(string: afterDateLabel, frame: labelFrame)
     ]
-    
+
     let assetFrame = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
     let bgImageView = UIImageView(frame: assetFrame)
     bgImageView.image = image
-    
+
     UIGraphicsBeginImageContext(assetFrame.size)
     if let currentContext = UIGraphicsGetCurrentContext() {
       bgImageView.layer.render(in: currentContext)
@@ -65,49 +69,48 @@ struct GraphicContextTextContent {
       let newImage = UIGraphicsGetImageFromCurrentImageContext()
       return newImage ?? UIImage()
     }
-    
+
     return UIImage()
   }
-  
-  @objc public func encodedWorkoutCompleteImage(with upperTitle: String, from imageUrl: String, completedWorkoutsNumber: Int, totalTime: String) -> String? {
+
+  @objc public func encodedWorkoutCompleteImage(with upperTitle: String, from imageUrl: String, completedWorkoutsNumber: Int, totalTime: String, color: String = "WHITE") -> String? {
         let fifthHeight = self.assetHeight / 5
-      
+
         let topLabelFrame = CGRect(x: padding, y: fifthHeight * 0.92, width: contentWidth, height: fifthHeight * 2)
-        let topLabel =
-            NSAttributedString(string: upperTitle, attributes: fontAttributes(fontType: .medium))
-  
+        let topLabel = NSAttributedString(string: upperTitle, attributes: fontAttributes(fontType: .medium, color: color))
+
         let bottomLabelFrame = CGRect(x: padding, y: fifthHeight * 3.55, width: contentWidth, height: fifthHeight * 1.5)
-        let workoutsNumber = NSAttributedString(string: "\(completedWorkoutsNumber)", attributes: fontAttributes(fontType: .large))
-        let workoutsText = NSAttributedString(string: "\nWorkouts", attributes: fontAttributes(fontType: .small))
-        let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(fontType: .medium))
-        let totalTimeValue = NSAttributedString(string: "\n\(totalTime)", attributes: fontAttributes(fontType: .large))
-        let totalTimeText = NSAttributedString(string: "\nTotal time", attributes: fontAttributes(fontType: .small))
+        let workoutsNumber = NSAttributedString(string: "\(completedWorkoutsNumber)", attributes: fontAttributes(fontType: .large, color: color))
+        let workoutsText = NSAttributedString(string: "\nWorkouts", attributes: fontAttributes(fontType: .small, color: color))
+        let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(fontType: .medium, color: color))
+        let totalTimeValue = NSAttributedString(string: "\n\(totalTime)", attributes: fontAttributes(fontType: .large, color: color))
+        let totalTimeText = NSAttributedString(string: "\nTotal time", attributes: fontAttributes(fontType: .small, color: color))
         let bottomLabel = join([workoutsNumber, workoutsText, spacing, totalTimeValue, totalTimeText])
-  
+
         let contents = [
           GraphicContextTextContent(string: topLabel, frame: topLabelFrame),
           GraphicContextTextContent(string: bottomLabel, frame: bottomLabelFrame)
         ]
         return createAsset(from: imageUrl, and: contents)
   }
-  
+
   // MARK: -  Private Generating Methods
-  
-  @objc public func encodedAchievementImageIntBased(for achievedValue: Int, with subtext: String, from imageUrl: String) -> String? {
-    let valueText = NSAttributedString(string: "\(achievedValue)", attributes: fontAttributes(rightAlign: false, fontType: .superGrand))
-    let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(rightAlign: false, fontType: .small, moveUp: true))
-    let descriptionText = NSAttributedString(string: "\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium))
+
+  @objc public func encodedAchievementImageIntBased(for achievedValue: Int, with subtext: String, from imageUrl: String, color: String = "WHITE") -> String? {
+    let valueText = NSAttributedString(string: "\(achievedValue)", attributes: fontAttributes(rightAlign: false, fontType: .superGrand, color: color))
+    let spacing = NSAttributedString(string: "\n ", attributes: fontAttributes(rightAlign: false, fontType: .small, moveUp: true, color: color))
+    let descriptionText = NSAttributedString(string: "\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium, color: color))
     let title = join([valueText, spacing, descriptionText])
     return encodedImage(with: title, from: imageUrl)
   }
-  
-  @objc public func encodedAchievementImageStringBased(for string: String, with subtext: String, from imageUrl: String) -> String? {
-    let valueText = NSAttributedString(string: string, attributes: fontAttributes(rightAlign: false, fontType: .grand))
-    let descriptionText = NSAttributedString(string: "\n\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium))
+
+  @objc public func encodedAchievementImageStringBased(for string: String, with subtext: String, from imageUrl: String, color: String = "WHITE") -> String? {
+    let valueText = NSAttributedString(string: string, attributes: fontAttributes(rightAlign: false, fontType: .grand, color: color))
+    let descriptionText = NSAttributedString(string: "\n\(subtext)", attributes: fontAttributes(rightAlign: false, fontType: .medium, color: color))
     let title = join([valueText, descriptionText])
     return encodedImage(with: title, from: imageUrl, spacingFromTopMultiplier: 1.2)
   }
-  
+
   private func encodedImage(with centerLeftTitle: NSAttributedString, from imageUrl: String, spacingFromTopMultiplier: CGFloat = 0.92) -> String? {
     let fifthHeight = self.assetHeight / 5
     let centerLeftFrame = CGRect(x: padding, y: fifthHeight * spacingFromTopMultiplier, width: contentWidth, height: fifthHeight * 2)
@@ -116,7 +119,7 @@ struct GraphicContextTextContent {
     ]
     return createAsset(from: imageUrl, and: contents)
   }
-  
+
   private func createAsset(from imageUrl: String, and contents: [GraphicContextTextContent]) -> String? {
 //    guard let backgroundImage = UIImage(named: "shareSample") else {
     guard let backgroundImage = loadImage(from: imageUrl) else {
@@ -125,11 +128,12 @@ struct GraphicContextTextContent {
     let assetFrame = CGRect(x: 0, y: 0, width: assetWidth, height: assetHeight)
     let bgImageView = UIImageView(frame: assetFrame)
     bgImageView.image = backgroundImage
-    
+    bgImageView.contentMode = .scaleAspectFill
+
     UIGraphicsBeginImageContext(assetFrame.size)
     if let currentContext = UIGraphicsGetCurrentContext() {
       bgImageView.layer.render(in: currentContext)
-      
+
       contents.forEach { (content) in
         content.string.draw(in: content.frame)
       }
@@ -139,10 +143,10 @@ struct GraphicContextTextContent {
     }
     return nil
   }
-  
-  
+
+
   // MARK: - Private UI Methods
-  
+
   private func fontAttributes(rightAlign: Bool = true, fontType: AssetFontType, moveUp: Bool = false, color: String = "WHITE") -> [NSAttributedString.Key: Any] {
     var attributes = [
       NSAttributedString.Key.font: fontType.font,
@@ -158,7 +162,7 @@ struct GraphicContextTextContent {
     attributes[NSAttributedString.Key.paragraphStyle] = paragraphStyle
     return attributes
   }
-  
+
   private func join(_ allStrings: [NSAttributedString]) -> NSMutableAttributedString {
     let mutableString = NSMutableAttributedString()
     allStrings.forEach { (string) in
@@ -166,15 +170,15 @@ struct GraphicContextTextContent {
     }
     return mutableString
   }
-  
+
   // MARK: - Private Data Methods
-  
+
   private func encode(_ image: UIImage?) -> String? {
     let imageData: NSData? = image?.pngData() as NSData?
     let encoded = imageData?.base64EncodedString(options: .endLineWithCarriageReturn)
     return encoded
   }
-  
+
   @objc public func loadImage(from path: String) -> UIImage? {
       guard let fileURL = URL(string: "\(documentsUrl)\(path)") else {
         return nil
@@ -187,11 +191,10 @@ struct GraphicContextTextContent {
       }
       return nil
   }
-  
-  
+
   
   // Video Creation
-  
+
   @objc public func encodeVideo(allImages: [UIImage], videoSize: CGSize, completion: @escaping (String?) -> Void) {
       let videoFPS: Int32 = 10
       let videoOutputURL = documentsUrl.appendingPathComponent("videoTransformation.mov", isDirectory: false)
@@ -211,7 +214,7 @@ struct GraphicContextTextContent {
           kCVPixelBufferHeightKey as String : videoSize.height,
       ]
       let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: sourceBufferAttributes)
-    
+
       if FileManager.default.fileExists(atPath: videoPath) {
         try? FileManager.default.removeItem(atPath: videoPath)
       }
@@ -305,10 +308,10 @@ struct GraphicContextTextContent {
                 pixelBufferPool,
                 &pixelBuffer
               )
-            
+
               if let pixelBuffer = pixelBuffer, status == 0 {
                 fillPixelBufferFromImage(image: image, pixelBuffer: pixelBuffer)
-                
+
                 appendSucceeded = pixelBufferAdaptor.append(
                   pixelBuffer,
                   withPresentationTime: presentationTime

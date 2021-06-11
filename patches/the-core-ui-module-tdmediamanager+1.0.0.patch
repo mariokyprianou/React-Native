@@ -1,17 +1,24 @@
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-index e9042f5..c6d4818 100644
+index e9042f5..9bee460 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/utilities/FileManager.js
-@@ -12,7 +12,7 @@ const appNamePath = DeviceInfo.getApplicationName();
+@@ -12,9 +12,13 @@ const appNamePath = DeviceInfo.getApplicationName();
  
  const { config, fs } = RNFetchBlob;
  
 -const fileDirectory = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
 +const fileDirectory = fs.dirs.DocumentDir;
++
++const videosDirectoryPath = fileDirectory + '/' + appNamePath + '/videos/';
++const imagesDirectoryPath = fileDirectory + '/' + appNamePath + '/images/';
++
++let directoryPath = videosDirectoryPath;
  
- const directoryPath = fileDirectory + '/' + appNamePath + '/';
+-const directoryPath = fileDirectory + '/' + appNamePath + '/';
  
-@@ -35,6 +35,8 @@ async function downloadFiles(files) {
+ async function downloadFiles(files) {
+ 	if (files && files.length > 0) {
+@@ -35,6 +39,8 @@ async function downloadFiles(files) {
  	}
  }
  
@@ -20,17 +27,15 @@ index e9042f5..c6d4818 100644
  async function filterNewFiles(newFiles) {
  	const allFiles = await getAllSavedFiles();
  
-@@ -56,27 +58,112 @@ async function filterNewFiles(newFiles) {
+@@ -56,27 +62,118 @@ async function filterNewFiles(newFiles) {
  	return toSaveFiles;
  }
- 
+  
 -async function getAllSavedFiles() {
 -	return fs
 -		.ls(directoryPath)
 -		.then((files) => {
 -			return files;
-+
-+ 
 +async function downloadFilesWithNames(files) {
 +	if (files && files.length > 0) {
 +		let results = [];
@@ -38,8 +43,10 @@ index e9042f5..c6d4818 100644
 +
 +		console.log("Files to save:", filesToSave.length);
 +		results = await Promise.all(
-+			filesToSave.map(async (it) => {
++			filesToSave.map(async (it, index) => {
++				console.log(`Trying at item ${index}: ${it.filename}`)
 +				const result = await downloadWithName(it);
++				console.log(`${result.success ? "downloaded": "failed"} at item ${index}: ${it.filename}`)
 +				return { success: result.success, file: it.filename };
 +			})
 +		);
@@ -61,22 +68,25 @@ index e9042f5..c6d4818 100644
 +
 +async function filterNewFilesWithNames(newFiles) {
 +	const allFiles = await getAllSavedFiles();
-+	var toSaveFiles = [];
++
 +
 +	if (allFiles && allFiles.length > 0) {
-+		allFiles.map((savedFile) => {
-+			const result = newFiles.filter((it) => {
-+				var name = it.filename;
-+				if (!savedFile.includes(name)) return it;
-+			});
++		var toSaveFiles = [];
 +
-+			toSaveFiles = toSaveFiles.concat(result);
-+		});
-+	} else {
-+		toSaveFiles = newFiles;
++		newFiles.map(it => {
++			const existsAlready = allFiles.find(saved => saved.includes(it.filename));
++			if (!existsAlready) {
++			toSaveFiles.push(it)
++			}
++
+ 		})
+-		.catch((error) => console.log(error));
++
++		return toSaveFiles;
 +	}
-+
-+	return toSaveFiles;
++	else {
++		return newFiles;
++	}
 +}
 +
 +async function downloadWithName({filename, url}) {
@@ -94,8 +104,9 @@ index e9042f5..c6d4818 100644
 +			} else {
 +				return { success: false };
 +			}
- 		})
--		.catch((error) => console.log(error));
++		}, cause => {
++			console.log("causse", cause)
++		})
 +		.catch((error) => {
 +			console.log(error);
 +			return { success: false };
@@ -106,6 +117,7 @@ index e9042f5..c6d4818 100644
 +async function getAllSavedFiles() {
 +
 +    const assetsDirExists =  await fs.isDir(directoryPath);
++	//console.log("assetsDirExists", assetsDirExists);
 +    if (assetsDirExists) {
 +        return fs
 +            .ls(directoryPath)
@@ -118,6 +130,7 @@ index e9042f5..c6d4818 100644
 +            });
 +    }
 +    else {
++
 +        return fs.mkdir(directoryPath)
 +        .then(() => {
 +            return [];
@@ -145,12 +158,12 @@ index e9042f5..c6d4818 100644
  	};
  
  	return config(options)
-@@ -115,17 +202,17 @@ function fileExists(path) {
+@@ -115,17 +212,31 @@ function fileExists(path) {
  }
  
  async function clearAllFiles() {
 -	let PictureDir = Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.PictureDir;
- 	
+ 
 -	var path = PictureDir + '/' + appNamePath;
 +	var path = fileDirectory + '/' + appNamePath;
  
@@ -163,13 +176,43 @@ index e9042f5..c6d4818 100644
  		.catch((error) => {
 -			console.log(error);
 +			console.log("Failed to clear all files", error);
++			return { success: false, error: error };
++		});
++}
++
++async function clearDirectory(directory) {
++
++	return fs
++		.unlink(directory)
++		.then((exist) => {
++			console.log("Cleared all files");
++			return { success: true };
++		})
++		.catch((error) => {
++			console.log("Failed to clear all files", error);
  			return { success: false, error: error };
  		});
  }
-@@ -182,10 +269,26 @@ async function getLocalFile(url) {
+@@ -182,10 +293,48 @@ async function getLocalFile(url) {
  	}
  }
  
++
++async function downloadFilesWithNamesToDirectory(files, directory) {
++	directoryPath = directory;
++	return await downloadFilesWithNames(files);
++}
++
++async function getLocalFileByNameFromDirectory(filename, directory) {
++	directoryPath = directory;
++	return await getLocalFileByName(filename);
++}
++
++async function getLocalFileFromDirectory(filename, directory) {
++	directoryPath = directory;
++	return await getLocalFile(filename);
++}
++
 +async function getLocalFileByName(filename) {
 +	const allFiles = await getAllSavedFiles();
 +
@@ -187,14 +230,20 @@ index e9042f5..c6d4818 100644
  export default {
  	downloadFiles,
  	clearAllFiles,
++	clearDirectory,
  	clearBeforeDate,
  	getAllSavedFiles,
  	getLocalFile,
 +	downloadFilesWithNames,
 +	getLocalFileByName,
++	downloadFilesWithNamesToDirectory,
++	getLocalFileByNameFromDirectory,
++	getLocalFileFromDirectory,
++	videosDirectoryPath,
++	imagesDirectoryPath
  };
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..ab4fa3e 100644
+index c1656ea..cc63c8e 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 @@ -5,29 +5,40 @@
@@ -212,7 +261,7 @@ index c1656ea..ab4fa3e 100644
 -export default function VideoView(props) {
 -	const { getLocalFile } = FileManager;
 +export function CustomVideoView(props, ref) {
-+	const { getLocalFile, getLocalFileByName } = FileManager;
++	const { getLocalFileFromDirectory, getLocalFileByNameFromDirectory, videosDirectoryPath } = FileManager;
  
  	const videoPlayer = useRef(null);
  
@@ -239,7 +288,7 @@ index c1656ea..ab4fa3e 100644
  	const [url, setUrl] = useState(null);
  
  	useEffect(() => {
-+		
++
  		if (props.startInFullScreen) {
  			onFullScreen();
  		}
@@ -254,10 +303,10 @@ index c1656ea..ab4fa3e 100644
 -		const res = await getLocalFile(props.url);
 +		let res;
 +		if (props.filename) {
-+		 res = await getLocalFileByName(props.filename);	
++		 res = await getLocalFileByNameFromDirectory(props.filename, videosDirectoryPath);
 +		}
 +		else {
-+		 res = await getLocalFile(props.url);
++		 res = await getLocalFileFromDirectory(props.url, videosDirectoryPath);
 +		}
  
 +		console.log("Play Existing File",res)
@@ -312,12 +361,13 @@ index c1656ea..ab4fa3e 100644
  			<Video
  				onEnd={onEnd}
  				onLoad={onLoad}
-@@ -135,9 +151,12 @@ export default function VideoView(props) {
+@@ -135,9 +151,13 @@ export default function VideoView(props) {
  				}}
  				style={styles.mediaPlayer}
  				volume={props.volume || 13}
 +				muted={props.muted || false}
-+
++				repeat={props.repeat || false}
++				playWhenInactive={props.playWhenInactive || false}
  			/>
  
 -			<MediaControls
@@ -326,20 +376,20 @@ index c1656ea..ab4fa3e 100644
  				isFullScreen={isFullScreen}
  				duration={duration}
  				isLoading={isLoading}
-@@ -153,6 +172,8 @@ export default function VideoView(props) {
+@@ -153,6 +173,8 @@ export default function VideoView(props) {
  				fadeOutDelay={3000}
  				showOnStart={false}
  			/>
 +			)}
-+			
++
  		</View>
  	);
  }
-@@ -175,5 +196,10 @@ const styles = StyleSheet.create({
+@@ -175,5 +197,10 @@ const styles = StyleSheet.create({
  		bottom: 0,
  		right: 0,
  		backgroundColor: 'black',
-+		
++
  	},
  });
 +

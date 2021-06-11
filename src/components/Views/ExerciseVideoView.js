@@ -13,8 +13,18 @@ import SliderProgressView from './SliderProgressView';
 import {VideoView} from 'the-core-ui-module-tdmediamanager';
 import ControlsView from './ControlsView';
 import UseData from '../../hooks/data/UseData';
+import crashlytics from '@react-native-firebase/crashlytics';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
-export default function ({video, videoEasy, videoEasiest, index}) {
+export default function ({
+  video,
+  videoEasy,
+  videoEasiest,
+  index,
+  isContinuous,
+  showUpNext,
+  isPreview,
+}) {
   const videos = {
     video,
     videoEasy,
@@ -22,7 +32,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   };
 
   const {getHeight} = ScaleHook();
-  const {colors} = useTheme();
+  const {colors, Constants} = useTheme();
   const {isDownloadEnabled, currentExerciseIndex} = UseData();
 
   const [videoDuration, setVideoDuration] = useState(100);
@@ -31,18 +41,29 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   const [isPaused, setIsPaused] = useState(true);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
-  const [showControls, setShowControls] = useState(true);
+  const [showControls, setShowControls] = useState(!isContinuous);
 
   const [currentVideo, setCurrentVideo] = useState('video');
-  const [ended, setEnded] = useState(false);
+
+  const {isWorkoutTimerRunning} = useWorkoutTimer();
 
   const videoRef = useRef();
 
-  const videoHeight = Dimensions.get('window').width;
+  // For 16:9 it will be 1:1 square video view, for anything longer, will be 60% of the screen.
+  const videoHeight =
+    Constants.SCREEN_LAYOUT <= 16
+      ? Dimensions.get('window').width
+      : Constants.EXERCISE_VIEW_HEIGHT * 0.6;
 
   const styles = {
     container: {
       width: '100%',
+      height: videoHeight,
+    },
+    containerPreview: {
+      width: '100%',
+      height: videoHeight,
+      position: 'absolute',
     },
   };
 
@@ -56,24 +77,33 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       videoRef.current.pause();
 
       // Only call if any other than current is playing
-    } else if (!isPaused) {
+    } else if (!isPaused && !isContinuous) {
       videoRef.current.pause();
     }
   }, [currentExerciseIndex, index]);
 
-  // Video url has changed
+  // When timer is paused by user.
   useEffect(() => {
-    setEnded(false);
-    setIsPaused(false);
-  }, [currentVideo]);
+    if (isContinuous) {
+      if (isWorkoutTimerRunning === false) {
+        videoRef.current.pause();
+        setIsPaused(true);
+      } else if (isWorkoutTimerRunning === true && isPaused === true) {
+        videoRef.current.pause();
+        setIsPaused(false);
+      }
+    }
+  }, [isWorkoutTimerRunning]);
 
   const videoProps = {
     height: videoHeight,
     url: videos[currentVideo],
     filename: videos[currentVideo].split('/').pop().split('?').shift(),
     skipCache: !isDownloadEnabled,
-    autoplay: false, //index === currentExerciseIndex,
+    autoplay: false,
     muted: true,
+    repeat: true,
+    playWhenInactive: true,
 
     onLoadEnd: (duration) => {
       setVideoDuration(duration);
@@ -82,17 +112,25 @@ export default function ({video, videoEasy, videoEasiest, index}) {
     onProgress: (currentTime) => {
       setCurrentProgress(currentTime);
     },
+
     onPaused: (paused) => {
       setIsPaused(paused);
     },
+
     onEnd: () => {
       setCurrentProgress(videoDuration);
-      setEnded(true);
-      setIsPaused(true);
-      //videoRef.current.reset()
     },
 
-    onError: (error) => console.log('Error loading video:', error),
+    onError: (error) => {
+      console.log('Error loading video:', error);
+      crashlytics().log(
+        `Error loading video: ${videos[currentVideo]
+          .split('/')
+          .pop()
+          .split('?')
+          .shift()}, ${error}`,
+      );
+    },
 
     customControls: <></>,
     renderToolbar: () => <></>,
@@ -130,11 +168,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
       useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
-          if (ended) {
-            setEnded(false);
-            setIsPaused(false);
-            videoRef.current.reset();
-          } else videoRef.current.pause();
+          videoRef.current.pause();
         }}
         isPaused={isPaused}
         videos={videos}
@@ -145,7 +179,7 @@ export default function ({video, videoEasy, videoEasiest, index}) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={isPreview ? styles.containerPreview : styles.container}>
       <View style={{height: videoHeight}}>
         <VideoView {...videoProps} ref={videoRef} />
 
@@ -159,16 +193,14 @@ export default function ({video, videoEasy, videoEasiest, index}) {
             }}
             activeOpacity={1}
             onPress={() => {
-              setShowControls(!showControls);
+              if (!isContinuous) {
+                setShowControls(!showControls);
+              }
             }}
           />
         )}
-        <SliderProgressView
-          max={videoDuration}
-          progress={currentProgress}
-          height={getHeight(5)}
-        />
         {showControls && controls()}
+        {showUpNext}
       </View>
     </View>
   );

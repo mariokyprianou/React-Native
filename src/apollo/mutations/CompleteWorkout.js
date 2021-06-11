@@ -10,6 +10,8 @@ import gql from 'graphql-tag';
 
 export default gql`
   mutation CompleteWorkout($input: CompleteWorkoutInput!) {
-    completeWorkout(input: $input)
+    completeWorkout(input: $input) {
+      success
+    }
   }
 `;

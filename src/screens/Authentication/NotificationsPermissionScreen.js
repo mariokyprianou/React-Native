@@ -30,7 +30,6 @@ export default function NotificationPermissionScreen() {
   const {preferences, getPreferences, setPreferences} = useUserData();
   const {setLoading} = useLoading();
 
-
   const [updatePreferences] = useMutation(UpdatePreference);
 
   // MARK: - Logic
@@ -45,14 +44,13 @@ export default function NotificationPermissionScreen() {
     // updateNotificationsPreferencesTo(true);
 
     const newPreferences = {
-      emails: enabled,
+      emails: preferences.emails,
       errorReports: preferences.errorReports,
       analytics: preferences.analytics,
       downloadQuality: preferences.downloadQuality,
       notifications: enabled,
       weightPreference: preferences.weightPreference,
     };
-
 
     setPreferences(newPreferences);
 

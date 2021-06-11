@@ -9,6 +9,8 @@ import React, {useEffect, useState} from 'react';
 import {Text, ScrollView, View} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import {useBackHandler} from '@react-native-community/hooks';
+
 import TDSettings from 'the-core-ui-module-tdsettings';
 import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
@@ -29,13 +31,17 @@ import UpdateProfile from '../../apollo/mutations/UpdateProfile';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import UseData from '../../hooks/data/UseData';
+import {useNetInfo} from '@react-native-community/netinfo';
+import RNRestart from 'react-native-restart';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getValues} = FormHook();
-  const {dictionary, getLanguage, setLanguage} = useDictionary();
-  const {SettingsDict, LanguageDict, ProfileDict} = dictionary;
+  const {dictionary, getLanguage, setLanguage, locale} = useDictionary();
+  const {SettingsDict, LanguageDict, ProfileDict, OfflineMessage} = dictionary;
   const {getHeight, getWidth} = ScaleHook();
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const {
     colors,
     cellFormConfig,
@@ -67,32 +73,34 @@ const SettingsScreen = ({}) => {
     ),
   });
 
+  useBackHandler(() => {
+    updateSettingsAndNavigate();
+    return true;
+  });
+
   const [updatePreferences] = useMutation(UpdatePreference);
   const [updateProfile] = useMutation(UpdateProfile);
 
   const [marketingPrefEmail, setMarketingPrefEmail] = useState(
-    preferences.emails || false,
+    preferences.emails,
   );
   const [marketingPrefNotifications, setMarketingPrefNotifications] = useState(
-    preferences.notifications || false,
+    preferences.notifications,
   );
+
   const [prefErrorReports, setPrefErrorReports] = useState(
-    preferences.errorReports || true,
+    preferences.errorReports,
   );
-  const [prefAnalytics, setPrefAnalytics] = useState(
-    preferences.analytics || false,
-  );
+  const [prefAnalytics, setPrefAnalytics] = useState(preferences.analytics);
   const [downloadWorkouts, setDownloadWorkouts] = useState(true);
   const [downloadQuality, setDownloadQuality] = useState(
-    preferences.downloadQuality || 'HIGH',
+    preferences.downloadQuality,
   );
-  const [weightPref, setWeightPref] = useState(
-    preferences.weightPreference || 'KG',
-  );
+  const [weightPref, setWeightPref] = useState(preferences.weightPreference);
 
   // MARK: - Logic
   const checkDownloadEnabled = async () => {
-    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'true';
+    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
     const enabled = JSON.parse(value);
     setDownloadWorkouts(enabled);
   };
@@ -103,12 +111,14 @@ const SettingsScreen = ({}) => {
   }, []);
 
   useEffect(() => {
-    setMarketingPrefEmail(preferences.emails || false);
-    setMarketingPrefNotifications(preferences.notifications || false);
-    setPrefErrorReports(preferences.errorReports || true);
-    setPrefAnalytics(preferences.analytics || false);
-    setDownloadQuality(preferences.downloadQuality || 'HIGH');
-    setWeightPref(preferences.weightPreference || 'KG');
+    if (preferences) {
+      setMarketingPrefEmail(preferences.emails);
+      setMarketingPrefNotifications(preferences.notifications);
+      setPrefErrorReports(preferences.errorReports);
+      setPrefAnalytics(preferences.analytics);
+      setDownloadQuality(preferences.downloadQuality);
+      setWeightPref(preferences.weightPreference);
+    }
   }, [preferences]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -162,19 +172,25 @@ const SettingsScreen = ({}) => {
   const updateSettingsAndNavigate = async () => {
     navigation.goBack();
 
-    await AsyncStorage.setItem(
-      '@DOWNLOAD_ENABLED',
-      JSON.stringify(downloadWorkouts),
-    );
-
-    if (downloadWorkouts) {
-      await AsyncStorage.setItem(
-        '@SHOULD_CACHE_NEW_WEEK',
-        JSON.stringify(true),
-      );
-
-      initCacheWeekVideos(programme.currentWeek.workouts);
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+      return;
     }
+    console.log('DOWNLOAD_ENABLED', downloadWorkouts);
+
+    // await AsyncStorage.setItem(
+    //   '@DOWNLOAD_ENABLED',
+    //   JSON.stringify(downloadWorkouts),
+    // );
+
+    // if (downloadWorkouts) {
+    //   await AsyncStorage.setItem(
+    //     '@SHOULD_CACHE_NEW_WEEK',
+    //     JSON.stringify(true),
+    //   );
+
+    //   //initCacheWeekVideos(programme.currentWeek.workouts);
+    // }
 
     const {
       formDownloadsQuality,
@@ -182,9 +198,6 @@ const SettingsScreen = ({}) => {
       formLanguage,
       formWeightMeasurement,
     } = getValues();
-
-    const language = formLanguage || getLanguage();
-    setLanguage(language);
 
     const newDownloadQuality =
       Object.keys(downloadQualityMap).find(
@@ -207,10 +220,8 @@ const SettingsScreen = ({}) => {
 
     analytics().setAnalyticsCollectionEnabled(prefAnalytics);
     crashlytics().setCrashlyticsCollectionEnabled(prefErrorReports);
-   
-    console.log(
-      "newPreferences", newPreferences
-    );
+
+    console.log('newPreferences', newPreferences);
 
     const newUserData = {
       familyName: userData.familyName,
@@ -252,11 +263,44 @@ const SettingsScreen = ({}) => {
           setPreferences(newPreferences);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         displayAlert({
           text: ProfileDict.UnableToUpdate,
         });
       });
+
+    const prevLanguage = getLanguage();
+
+    const languageMap = {
+      English: 'English',
+      अंग्रेजी: 'English',
+      Hindi: 'Hindi',
+      हिंदी: 'Hindi',
+    };
+    const language = languageMap[formLanguage] || languageDropdownData[0];
+
+    if (prevLanguage !== language) {
+      displayAlert({
+        title: null,
+        text:
+          'For the language change to take effect, the app needs to restart.',
+        buttons: [
+          {
+            text: ProfileDict.Cancel,
+            style: 'cancel',
+          },
+          {
+            text: ProfileDict.Restart,
+            onPress: async () => {
+              // We only want to change language if the user selects to restart,
+              // otherwise we'll end up with static translated content and not strtanslated dynamic content
+              await setLanguage(language);
+              RNRestart.Restart();
+            },
+          },
+        ],
+      });
+    }
   };
 
   function onToggleMarketingPrefEmail() {
@@ -275,11 +319,7 @@ const SettingsScreen = ({}) => {
     setDownloadWorkouts(!downloadWorkouts);
   }
 
-  const languageDropdownData = [
-    LanguageDict.English,
-    LanguageDict.Hindi,
-    //LanguageDict.Urdu,
-  ];
+  const languageDropdownData = [LanguageDict.English, LanguageDict.Hindi];
 
   const downloadQualityDropdownData = [
     SettingsDict.DownloadQualityHigh,
@@ -334,19 +374,19 @@ const SettingsScreen = ({}) => {
         />
       ),
     },
-    {
-      customComponent: () => (
-        <SettingsCell
-          title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
-          titleTextStyle={styles.switchTitleStyle}
-          titleSwitchContainerStyle={styles.switchTitleContainerStyle}
-          showSwitch
-          switchValue={marketingPrefNotifications}
-          switchStyle={styles.switchStyle}
-          onSwitchChange={onToggleMarketingPrefNotifications}
-        />
-      ),
-    },
+    // {
+    //   customComponent: () => (
+    //     <SettingsCell
+    //       title={SettingsDict.MarketingPrefNotifications.toUpperCase()}
+    //       titleTextStyle={styles.switchTitleStyle}
+    //       titleSwitchContainerStyle={styles.switchTitleContainerStyle}
+    //       showSwitch
+    //       switchValue={marketingPrefNotifications}
+    //       switchStyle={styles.switchStyle}
+    //       onSwitchChange={onToggleMarketingPrefNotifications}
+    //     />
+    //   ),
+    // },
     {
       customComponent: () => (
         <View style={{marginTop: getHeight(8)}}>
@@ -424,6 +464,7 @@ const SettingsScreen = ({}) => {
       data: timeZones,
     },
   ];
+
   const cells5 = [
     {
       customComponent: () => (
@@ -473,6 +514,8 @@ const SettingsScreen = ({}) => {
       ),
     },
   ];
+  // const language = getLanguage();
+  const language = locale === 'hi-IN' ? 'हिंदी' : 'English';
   const cells6 = [
     {
       name: 'formLanguage',
@@ -481,11 +524,11 @@ const SettingsScreen = ({}) => {
       ...cellFormStyles,
       ...dropdownStyle,
       rightAccessory: () => <DropDownIcon />,
-      placeholder: getLanguage() || languageDropdownData[0],
-      data: getLanguage()
+      placeholder: language || languageDropdownData[0],
+      data: language
         ? [
-            getLanguage(),
-            ...languageDropdownData.filter((item) => item !== getLanguage()),
+            language,
+            ...languageDropdownData.filter((item) => item !== language),
           ]
         : languageDropdownData,
       inputContainerStyle: {
@@ -501,9 +544,10 @@ const SettingsScreen = ({}) => {
       keyboardShouldPersistTaps="handled"
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
-      <TDSettings cells={cells}
-       config={settingsConfig}
-       scrollProps={{scrollEnabled: false}}
+      <TDSettings
+        cells={cells}
+        config={settingsConfig}
+        scrollProps={{scrollEnabled: false}}
       />
       <Spacer height={20} />
       {/* Weight */}
@@ -511,11 +555,11 @@ const SettingsScreen = ({}) => {
       <Spacer height={25} />
 
       {/* Download */}
-      <TDSettings
+      {/* <TDSettings
         cells={cells3}
         config={settingsConfig}
         scrollProps={{scrollEnabled: false}}
-      />
+      /> */}
 
       {/* Download Quality */}
       <Form cells={cells4} config={formConfig} />

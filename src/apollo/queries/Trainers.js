@@ -25,6 +25,7 @@ export default gql`
         fatLoss
         fitness
         muscle
+        wellness
         description
         firstWeek {
           orderIndex

@@ -12,6 +12,7 @@ import BottomTab from './BottomTab';
 import ProfileStack from './ProfileStack';
 import ProgressStack from './ProgressStack';
 import WorkoutStack from './WorkoutStack';
+import OnDemandStack from './OnDemandStack';
 
 export {
   AppStack,
@@ -20,4 +21,5 @@ export {
   ProfileStack,
   ProgressStack,
   WorkoutStack,
+  OnDemandStack,
 };

@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
-import {StyleSheet, Platform, View, Image, Alert} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {StyleSheet, Platform, View, Image, Alert, AppState} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import TDIcon from 'the-core-ui-component-tdicon';
 import useTheme from '../hooks/theme/UseTheme';
@@ -16,32 +16,34 @@ import {BottomTab} from '../navigation';
 import WorkoutContainer from './WorkoutContainer';
 import ProgressContainer from './ProgressContainer';
 import ProfileContainer from './ProfileContainer';
+import OnDemandContainer from './OnDemandContainer';
 import isIphoneX from '../utils/isIphoneX';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import useUserData from '../hooks/data/useUserData';
 import * as ScreenCapture from 'expo-screen-capture';
 import displayAlert from '../utils/DisplayAlert';
 import ScreenshotTaken from '../apollo/mutations/ScreenshotTaken';
 import {useMutation} from '@apollo/client';
+import UseData from '../hooks/data/UseData';
+import useLoading from '../hooks/loading/useLoading';
 
-const notificationCount = 2;
+const notificationCount = 0;
 
 export default function TabContainer() {
   // ** ** ** ** ** SETUP ** ** ** ** **
 
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
 
-
-  const {fontSize, getHeight, getWidth} = ScaleHook();
+  const {fontSize, getHeight, getScaledHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
   const {dictionary} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
-  const {changeDevice, setSuspendedAccount, getProfile} = useUserData();
+  const {loading, setLoading} = useLoading();
 
-  const [increaseShotTaken] = useMutation(ScreenshotTaken);
+  // CHANGE DEVICE
+  const {changeDevice, setSuspendedAccount} = useUserData();
 
   useEffect(() => {
     if (changeDevice && changeDevice.newDeviceId) {
@@ -49,9 +51,8 @@ export default function TabContainer() {
     }
   }, [changeDevice]);
 
-  useEffect(() => {
-    getProfile();
-  }, []);
+  // SCREENSHOT BLOCKING
+  const [increaseShotTaken] = useMutation(ScreenshotTaken);
 
   useEffect(() => {
     let screenshotListener;
@@ -100,18 +101,19 @@ export default function TabContainer() {
     workout: require('../../assets/icons/workout.png'),
     progress: require('../../assets/icons/progress.png'),
     profile: require('../../assets/icons/profile.png'),
+    onDemand: require('../../assets/icons/onDemand.png'),
   };
   const notificationDot = require('../../assets/icons/notificationDot.png');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     tabBarStyle: {
-      height: getHeight(70),
+      height: getHeight(74),
     },
     tabBarItemStyle: {
       justifyContent: 'center',
-      marginBottom: isIphoneX() ? getHeight(0) : getHeight(20),
-      marginTop: isIphoneX() ? getHeight(10) : getHeight(15),
+      marginBottom: isIphoneX() ? getScaledHeight(0) : getScaledHeight(15),
+      marginTop: isIphoneX() ? getScaledHeight(2) : getScaledHeight(15),
     },
     labelStyle: {
       fontFamily: 'proximanova-semibold',
@@ -127,8 +129,6 @@ export default function TabContainer() {
           input={tabIcons[name]}
           inputStyle={{
             style: {
-              height: getHeight(18),
-              width: getWidth(18),
               resizeMode: 'contain',
               tintColor: color,
             },
@@ -139,8 +139,12 @@ export default function TabContainer() {
             source={notificationDot}
             style={{
               position: 'absolute',
-              top: 0,
-              right: -6,
+              top: -5,
+              right: -4,
+              tintColor: 'red',
+              resizeMode: 'contain',
+              width: getWidth(6),
+              aspectRatio: 1,
             }}
           />
         )}
@@ -182,40 +186,60 @@ export default function TabContainer() {
     return true;
   }
 
+  function icon(name, color) {
+    return <TabIcon name={name} color={color} />;
+  }
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <BottomTab.Navigator
+      lazy={false}
       tabBarOptions={{
         tabStyle: styles.tabBarItemStyle,
         style: styles.tabBarStyle,
         labelStyle: styles.labelStyle,
         activeTintColor: colors.black100,
         inactiveTintColor: colors.black30,
+        allowFontScaling: false,
       }}>
       <BottomTab.Screen
         name="Tab1"
         component={WorkoutContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="workout" color={color} />,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('workout', color), [color]),
+
           tabBarLabel: TabsTitleDict.Workouts,
         })}
       />
       <BottomTab.Screen
         name="Tab2"
-        component={ProgressContainer}
+        component={OnDemandContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="progress" color={color} />,
-          tabBarLabel: TabsTitleDict.Progress,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('onDemand', color), [color]),
+          tabBarLabel: TabsTitleDict.OnDemand,
         })}
       />
       <BottomTab.Screen
         name="Tab3"
+        component={ProgressContainer}
+        options={({route}) => ({
+          tabBarVisible: getTabBarVisibility(route),
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('progress', color), [color]),
+          tabBarLabel: TabsTitleDict.Progress,
+        })}
+      />
+      <BottomTab.Screen
+        name="Tab4"
         component={ProfileContainer}
         options={({route}) => ({
           tabBarVisible: getTabBarVisibility(route),
-          tabBarIcon: ({color}) => <TabIcon name="profile" color={color} />,
+          tabBarIcon: ({color}) =>
+            React.useMemo(() => icon('profile', color), [color]),
           tabBarLabel: TabsTitleDict.Profile,
         })}
       />

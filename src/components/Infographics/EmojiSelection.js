@@ -34,9 +34,7 @@ export default function EmojiSelection(props) {
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
-    container: {
-      height: getHeight(55),
-    },
+    container: {},
     text: {
       ...textStyles.regular15_brownishGrey100,
       marginBottom: getHeight(10),

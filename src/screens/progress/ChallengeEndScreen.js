@@ -23,16 +23,26 @@ import UseData from '../../hooks/data/UseData';
 import useLoading from '../../hooks/loading/useLoading';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useProgressData from '../../hooks/data/useProgressData';
+import {useNetInfo} from '@react-native-community/netinfo';
+import displayAlert from '../../utils/DisplayAlert';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const zeroStateImage = require('../../../assets/images/graphZeroState.png');
 
 export default function ChallengeEndScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {
+    getHeight,
+    getScaledHeight,
+    getWidth,
+    getScaledWidth,
+    fontSize,
+  } = ScaleHook();
   const {colors, textStyles, cellFormConfig, cellFormStyles} = useTheme();
+  const {isConnected, isInternetReachable} = useNetInfo();
 
   const {dictionary} = useDictionary();
-  const {ProgressDict} = dictionary;
+  const {ProgressDict, OfflineMessage} = dictionary;
   const {updateValue, getValueByName, cleanValues} = FormHook();
   const {setLoading} = useLoading();
   const navigation = useNavigation();
@@ -86,7 +96,7 @@ export default function ChallengeEndScreen() {
         const found = value.match(regex);
 
         // Reset value
-        if (!found || value.length > 8) {
+        if (!found || value.length > 5) {
           updateValue({name: 'result', value: elapsed});
         } else {
           // Remove any symbols other than the regex we want
@@ -114,15 +124,15 @@ export default function ChallengeEndScreen() {
     },
     card: {
       backgroundColor: colors.white100,
-      height: getHeight(200),
-      width: getWidth(335),
+      height: getScaledHeight(200),
+      width: getScaledWidth(335),
       shadowColor: colors.black10,
       shadowOffset: {width: 0, height: 3},
       shadowRadius: 4,
       shadowOpacity: 1,
       elevation: 4,
-      marginBottom: getHeight(20),
-      marginTop: getHeight(1),
+      marginBottom: getScaledHeight(20),
+      marginTop: getScaledHeight(1),
     },
     descriptionContainer: {
       width: '90%',
@@ -161,24 +171,42 @@ export default function ChallengeEndScreen() {
     zeroChart: {
       ...textStyles.semiBold10_brownGrey100,
       lineHeight: fontSize(12),
-      marginTop: getHeight(18),
-      marginLeft: getWidth(15),
-      marginBottom: getHeight(20),
+      marginTop: getScaledHeight(18),
+      marginLeft: getScaledWidth(15),
+      marginBottom: getScaledHeight(20),
     },
     image: {
-      height: getHeight(120),
-      width: getWidth(250),
+      height: getScaledHeight(120),
+      width: getScaledWidth(250),
       alignSelf: 'center',
     },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleAddResult() {
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+      return;
+    }
+
     setLoading(true);
     let challengeResult = '';
     if (type === 'STOPWATCH') {
-      // Extract value from Input
       const value = getValueByName('result');
+
+      // Time pattern must be fullfilled
+      const regex = /\d{2}:\d{2}/g;
+      const found = value.match(regex);
+
+      if (!found) {
+        displayAlert({
+          text: ProgressDict.CompleteChallengeFailedMessage,
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Extract value from Input
       const array = value.split(':');
       if (array.length === 2) {
         const minsSecs = parseInt(array[0]) * 60;
@@ -219,16 +247,26 @@ export default function ChallengeEndScreen() {
           weightPreference,
           result: challengeResult,
           trainer: programme.trainer.name,
-          ellapsedTime: elapsedMS && getValueByName('result'),
+          ellapsedTime: getValueByName('result'),
           description: description,
           duration: duration,
         });
+
+        cleanValues();
       })
       .catch((err) => {
-        console.log(err, '<---sendResult err');
+        console.log(
+          `Error on CompleteChallenge: ${name} of trainer ${programme.trainer.name}, ${err}`,
+          '<---sendResult err',
+        );
+        crashlytics().log(
+          `Error on CompleteChallenge: ${name} of trainer ${programme.trainer.name}, ${err}`,
+        );
         setLoading(false);
-      })
-      .finally(() => cleanValues());
+        displayAlert({
+          text: ProgressDict.CompleteChallengeFailedMessage,
+        });
+      });
   }
 
   function handleGoBack() {

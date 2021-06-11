@@ -7,15 +7,14 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import useDictionary from '../../hooks/localisation/useDictionary';
 import FadingBottomView from '../Views/FadingBottomView';
 import GymHomeSelector from '../Buttons/GymHomeSelector';
-import PercentageBar from '../Infographics/PercentageBar';
-import Spacer from '../Utility/Spacer';
-import FastImage from 'react-native-fast-image';
+import TrainerIconCard from '../Cards/TrainerIconCard';
+import PersistedImage from '../Utility/PersistedImage';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function TrainerCard({
   trainer,
@@ -24,11 +23,10 @@ export default function TrainerCard({
   suggestedEnv,
 }) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight} = ScaleHook();
-  const {textStyles} = useTheme();
-  const {dictionary} = useDictionary();
+  const {getHeight, getWidth} = ScaleHook();
+  const insets = useSafeAreaInsets();
 
-  const {MeetYourIconsDict} = dictionary;
+  const {textStyles, colors, Constants} = useTheme();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -45,28 +43,25 @@ export default function TrainerCard({
       width: '100%',
       height: '100%',
       position: 'absolute',
-      top: 0,
-      left: 0,
       resizeMode: 'cover',
     },
     overlay: {
       width: '100%',
-      bottom: getHeight(140),
-      paddingTop: getHeight(60),
+      position: 'absolute',
+      bottom: getHeight(140 + insets.bottom / 2),
+      alignItems: 'center',
     },
     titleContainer: {
-      width: '90%',
+      width: '100%',
       alignSelf: 'center',
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: getHeight(20),
+      paddingHorizontal: getWidth(20),
+      marginBottom: getHeight(5),
     },
     nameText: {
-      ...textStyles.bold30_white100,
-    },
-    barsContainer: {
-      justifyContent: 'center',
+      ...textStyles.bold30_black100,
     },
   });
 
@@ -75,11 +70,29 @@ export default function TrainerCard({
   return (
     <View style={styles.container}>
       <View style={styles.imagesContainer}>
-        <FastImage
-          source={{uri: currentProgram.programmeImage}}
+        <PersistedImage
+          imageUrl={currentProgram.programmeImage}
           style={styles.image}
+          fallback={null}
+          showLoading={true}
+          placeholder={false}
+          overlayStyle={null}
         />
-        <FadingBottomView color="blue" height={250} />
+
+        <FadingBottomView
+          color="customArray"
+          customArray={[
+            colors.veryLightPinkTwo0,
+            colors.veryLightPinkTwo90,
+            colors.veryLightPinkTwo95,
+            colors.veryLightPinkTwo95,
+            colors.veryLightPinkTwo100,
+            colors.veryLightPinkTwo100,
+            colors.veryLightPinkTwo100,
+            colors.veryLightPinkTwo100,
+          ]}
+          height={Constants.SCREEN_HEIGHT / 4}
+        />
       </View>
       <View style={styles.overlay}>
         <View style={styles.titleContainer}>
@@ -90,25 +103,12 @@ export default function TrainerCard({
             singleProgramme={trainer.programmes.length === 1 ? true : false}
           />
         </View>
-        <View style={styles.barsContainer}>
-          <PercentageBar
-            icon="lightning"
-            text={MeetYourIconsDict.FatLoss}
-            percentage={currentProgram.fatLoss}
-          />
-          <Spacer height={10} />
-          <PercentageBar
-            icon="heartRate"
-            text={MeetYourIconsDict.Fitness}
-            percentage={currentProgram.fitness}
-          />
-          <Spacer height={10} />
-          <PercentageBar
-            icon="weight"
-            text={MeetYourIconsDict.BuildMuscle}
-            percentage={currentProgram.muscle}
-          />
-        </View>
+        <TrainerIconCard
+          fatLossPercentage={currentProgram.fatLoss}
+          fitnessPercentage={currentProgram.fitness}
+          musclePercentage={currentProgram.muscle}
+          wellnessPercentage={currentProgram.wellness}
+        />
       </View>
     </View>
   );

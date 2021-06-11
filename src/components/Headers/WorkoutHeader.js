@@ -41,14 +41,12 @@ export default function ({currentExercise, totalExercises, rightAction}) {
     },
     titleTextContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
       width: getWidth(190),
-      marginStart: getWidth(20),
     },
     titleTextStyle: {
       ...textStyles.bold22_black100,
-      marginLeft: getWidth(40),
     },
     timerTouchStyle: {
       position: 'absolute',

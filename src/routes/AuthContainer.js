@@ -14,8 +14,6 @@ import MeetYourIconsScreen from '../screens/Authentication/MeetYourIconsScreen';
 import RegistrationScreen from '../screens/Authentication/RegistrationScreen';
 import LoginScreen from '../screens/Authentication/LoginScreen';
 import CongratulationsScreen from '../screens/Authentication/CongratulationsScreen';
-import TermsAndConditionsScreen from '../screens/Authentication/TermsConditionsScreen';
-import PrivacyPolicyScreen from '../screens/Authentication/PrivacyPolicyScreen';
 import ForgotPasswordScreen from '../screens/Authentication/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/Authentication/ResetPasswordScreen';
 import {TransitionPresets} from '@react-navigation/stack';
@@ -52,16 +50,7 @@ export default function AuthContainer(props) {
         component={CongratulationsScreen}
         options={{...TransitionPresets.ModalSlideFromBottomIOS}}
       />
-      <AuthStack.Screen
-        name="TermsAndConditions"
-        component={TermsAndConditionsScreen}
-        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
-      />
-      <AuthStack.Screen
-        name="PrivacyPolicy"
-        component={PrivacyPolicyScreen}
-        options={{...TransitionPresets.ModalSlideFromBottomIOS}}
-      />
+     
       <AuthStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}

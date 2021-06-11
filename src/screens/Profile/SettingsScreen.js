@@ -270,7 +270,14 @@ const SettingsScreen = ({}) => {
       });
 
     const prevLanguage = getLanguage();
-    const language = formLanguage || languageDropdownData[0];
+
+    const languageMap = {
+      English: 'English',
+      अंग्रेजी: 'English',
+      Hindi: 'Hindi',
+      हिंदी: 'Hindi',
+    };
+    const language = languageMap[formLanguage] || languageDropdownData[0];
 
     if (prevLanguage !== language) {
       displayAlert({

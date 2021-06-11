@@ -145,7 +145,9 @@ export default function WorkoutCard({
         )}
         <View style={{padding: getWidth(20)}}>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title}>
+              {title === 'REST DAY' ? WorkoutDict.RestDay : title}
+            </Text>
             <View style={styles.dayContainer}>
               {status === 'complete' && (
                 <View style={styles.completeIconContainer}>

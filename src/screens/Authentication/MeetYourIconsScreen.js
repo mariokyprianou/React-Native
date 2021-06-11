@@ -69,7 +69,6 @@ export default function MeetYourIconsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
-  const [scrollOffset, setScrollOffset] = useState(new Animated.Value(0));
   const [arrowsDisabled, setArrowsDisabled] = useState(false);
 
   const {
@@ -95,6 +94,13 @@ export default function MeetYourIconsScreen() {
 
   // Handling re fetch trainers based on focus is messing up the suggested programme functionality
   const isFocused = useIsFocused();
+
+  const yOffset = useRef(new Animated.Value(0)).current;
+  const headerOpacity = yOffset.interpolate({
+    inputRange: [0, 100],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
 
   useEffect(() => {
     StatusBar.setBarStyle('dark-content');
@@ -431,22 +437,6 @@ export default function MeetYourIconsScreen() {
     );
   }
 
-  const onScroll = (e) => {
-    const scrollSensitivity = 4 / 3;
-    const offset = e.nativeEvent.contentOffset.y / scrollSensitivity;
-    setScrollOffset(new Animated.Value(offset));
-    console.log('onScroll', offset);
-    if (offset > 0 && !safeArea) {
-      setSafeArea(true);
-    } else if (offset <= 0 && safeArea) {
-      setSafeArea(false);
-    }
-
-    if (offset >= 0 && offset < 30) {
-      setArrowsDisabled(false);
-    }
-  };
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   const programmeWithProgressView = (weekNumber) => (
     <View style={{paddingBottom: getHeight(15 + insets.bottom / 2)}}>
@@ -494,10 +484,21 @@ export default function MeetYourIconsScreen() {
           height: Dimensions.get('window').height,
           alignSelf: 'center',
         }}>
-        <ScrollView
+        <Animated.ScrollView
           style={styles.sliderContainer}
-          onScroll={onScroll}
-          scrollEventThrottle={10}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    y: yOffset,
+                  },
+                },
+              },
+            ],
+            {useNativeDriver: true},
+          )}
+          scrollEventThrottle={20}
           showsVerticalScrollIndicator={false}
           bounces={false}>
           <View style={styles.cardContainer}>
@@ -561,16 +562,10 @@ export default function MeetYourIconsScreen() {
             </Text>
             <Spacer height={80} />
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </View>
     );
   };
-
-  const imageFadeIn = scrollOffset.interpolate({
-    inputRange: [0, 70],
-    outputRange: [1, 0],
-    extrapolate: 'clamp',
-  });
 
   const renderHeaderItems = () => (
     <>
@@ -579,13 +574,13 @@ export default function MeetYourIconsScreen() {
           source={logo}
           style={{
             ...styles.image,
-            opacity: imageFadeIn,
+            opacity: headerOpacity,
           }}
         />
         <Animated.Text
           style={{
             ...styles.selectText,
-            opacity: imageFadeIn,
+            opacity: headerOpacity,
           }}>
           {MeetYourIconsDict.SelectYourProgramme}
         </Animated.Text>
@@ -594,7 +589,7 @@ export default function MeetYourIconsScreen() {
       <Animated.View
         style={{
           ...styles.cantChooseContainer,
-          opacity: imageFadeIn,
+          opacity: headerOpacity,
         }}>
         <View style={styles.cantChooseStyle}>
           <CantChooseButton
@@ -611,7 +606,7 @@ export default function MeetYourIconsScreen() {
       <Animated.View
         style={{
           ...styles.leftIconContainer,
-          opacity: imageFadeIn,
+          opacity: headerOpacity,
         }}>
         <TouchableOpacity
           style={styles.arrowsTouchableStyle}
@@ -629,7 +624,7 @@ export default function MeetYourIconsScreen() {
       <Animated.View
         style={{
           ...styles.rightIconContainer,
-          opacity: imageFadeIn,
+          opacity: headerOpacity,
         }}>
         <TouchableOpacity
           style={styles.arrowsTouchableStyle}

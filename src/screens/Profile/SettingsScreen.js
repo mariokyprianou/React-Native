@@ -270,7 +270,7 @@ const SettingsScreen = ({}) => {
       });
 
     const prevLanguage = getLanguage();
-    const language = formLanguage;
+    const language = formLanguage || languageDropdownData[0];
 
     if (prevLanguage !== language) {
       displayAlert({

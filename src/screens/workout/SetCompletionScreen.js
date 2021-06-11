@@ -179,6 +179,7 @@ export default function SetCompletionScreen({
             <HorizontalScrollPicker
               weightPreference={weightPreference}
               selected={preSelected}
+              weightAdded={weightAdded}
             />
           </View>
         </View>

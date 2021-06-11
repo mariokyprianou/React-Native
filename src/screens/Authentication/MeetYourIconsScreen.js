@@ -41,6 +41,7 @@ import useLoading from '../../hooks/loading/useLoading';
 import useUserData from '../../hooks/data/useUserData';
 import {Dimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import * as Animatable from 'react-native-animatable';
 
 const zeroState = require('../../../assets/images/zeroState.jpeg');
 const logo = require('../../../assets/images/logoDark.png');
@@ -67,6 +68,13 @@ export default function MeetYourIconsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
+  const imageRef = useRef();
+  const textRef = useRef();
+  const buttonRef = useRef();
+  const leftIconRef = useRef();
+  const rightIconRef = useRef();
+  const [arrowsDisabled, setArrowsDisabled] = useState(false);
+
   const {
     params: {switchProgramme},
   } = useRoute();
@@ -88,7 +96,7 @@ export default function MeetYourIconsScreen() {
   const [safeArea, setSafeArea] = useState(false);
   const {setLoading} = useLoading();
 
-  // Handling re fetch trainers based on focus is messsing up the suggested programme functionality
+  // Handling re fetch trainers based on focus is messing up the suggested programme functionality
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -101,7 +109,7 @@ export default function MeetYourIconsScreen() {
     getTrainers();
   }, []);
 
-  // Newelly suggestedProgramme handle
+  // Newly suggestedProgramme handle
   useEffect(() => {
     if (!trainers || trainers.length === 0) {
       return;
@@ -433,10 +441,38 @@ export default function MeetYourIconsScreen() {
     } else if (offset <= 0 && safeArea) {
       setSafeArea(false);
     }
+
+    if (offset >= 0 && offset < 30) {
+      imageRef.current.fadeIn(1000);
+      textRef.current.fadeIn(1000);
+      buttonRef.current.fadeIn(1000);
+      leftIconRef.current.fadeIn(1000);
+      rightIconRef.current.fadeIn(1000);
+      setArrowsDisabled(false);
+    }
+  };
+
+  const onScrollBeginDrag = (e) => {
+    const offset = e.nativeEvent.contentOffset.y;
+    if (
+      offset >= 0 &&
+      offset < 10 &&
+      imageRef &&
+      textRef &&
+      buttonRef &&
+      leftIconRef &&
+      rightIconRef
+    ) {
+      imageRef.current.fadeOut(1000);
+      textRef.current.fadeOut(1000);
+      buttonRef.current.fadeOut(1000);
+      leftIconRef.current.fadeOut(1000);
+      rightIconRef.current.fadeOut(1000);
+      setArrowsDisabled(true);
+    }
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-
   const programmeWithProgressView = (weekNumber) => (
     <View style={{paddingBottom: getHeight(15 + insets.bottom / 2)}}>
       <DefaultButton
@@ -486,6 +522,7 @@ export default function MeetYourIconsScreen() {
         <ScrollView
           style={styles.sliderContainer}
           onScroll={onScroll}
+          onScrollBeginDrag={onScrollBeginDrag}
           scrollEventThrottle={10}
           showsVerticalScrollIndicator={false}
           bounces={false}>
@@ -558,48 +595,54 @@ export default function MeetYourIconsScreen() {
   const renderHeaderItems = () => (
     <>
       <View style={styles.logoContainer}>
-        <Image source={logo} style={styles.image} />
-        <Text style={styles.selectText}>
+        <Animatable.Image source={logo} style={styles.image} ref={imageRef} />
+        <Animatable.Text style={styles.selectText} ref={textRef}>
           {MeetYourIconsDict.SelectYourProgramme}
-        </Text>
+        </Animatable.Text>
       </View>
 
-      <View style={styles.cantChooseContainer}>
+      <Animatable.View style={styles.cantChooseContainer} ref={buttonRef}>
         <View style={styles.cantChooseStyle}>
           <CantChooseButton
             onPress={() => navigation.navigate('HelpMeChoose')}
             navigation={navigation}
           />
         </View>
-      </View>
+      </Animatable.View>
     </>
   );
 
   const renderArrows = () => (
     <>
-      <View style={styles.leftIconContainer}>
+      <Animatable.View style={styles.leftIconContainer} ref={leftIconRef}>
         <TouchableOpacity
           style={styles.arrowsTouchableStyle}
           onPress={() => handlePress('left')}
-          disabled={activeIndex === 0 ? true : false}>
+          disabled={
+            activeIndex === 0 || arrowsDisabled === true ? true : false
+          }>
           <TDIcon
             input={isRTL() ? 'chevron-right' : 'chevron-left'}
             inputStyle={styles.icon}
           />
         </TouchableOpacity>
-      </View>
+      </Animatable.View>
 
-      <View style={styles.rightIconContainer}>
+      <Animatable.View style={styles.rightIconContainer} ref={rightIconRef}>
         <TouchableOpacity
           style={styles.arrowsTouchableStyle}
           onPress={() => handlePress('right')}
-          disabled={activeIndex === trainers.length - 1 ? true : false}>
+          disabled={
+            activeIndex === trainers.length - 1 || arrowsDisabled === true
+              ? true
+              : false
+          }>
           <TDIcon
             input={isRTL() ? 'chevron-left' : 'chevron-right'}
             inputStyle={styles.icon}
           />
         </TouchableOpacity>
-      </View>
+      </Animatable.View>
     </>
   );
 

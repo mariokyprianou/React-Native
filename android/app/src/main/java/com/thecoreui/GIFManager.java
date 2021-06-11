@@ -255,10 +255,10 @@ public class GIFManager extends ReactContextBaseJavaModule {
 
             double afterWidth = (numberOfImages - i) * chunkWidth;
             if (afterWidth == 0.0) {
-                afterWidth = 1.0;
+                afterWidth = 0.1;
             }
             else if (afterWidth == targetWidth) {
-                afterWidth = afterWidth - 1f;
+                afterWidth = afterWidth - 0.1;
             }
 
             Bitmap croppedImage2 = Bitmap.createBitmap(backgroundAfterBitmap, (int)beforeWidth - 1, 0, (int)afterWidth + 1, targetHeight);

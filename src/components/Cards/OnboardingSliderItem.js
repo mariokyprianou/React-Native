@@ -61,7 +61,7 @@ export default function OnboardingSliderItem({image, header, text, local}) {
         {image && !local ? (
           <PersistentImage imageUrl={image} style={styles.image} />
         ) : (
-          <FastImage source={fallBackImage} style={styles.image} />
+          <FastImage source={image ?? fallBackImage} style={styles.image} />
         )}
 
         <FadingBottomView

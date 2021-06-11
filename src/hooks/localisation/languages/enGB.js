@@ -341,6 +341,7 @@ const enGB = {
       'Sharing your transformation requires a before and an after progress photo.',
     CompleteChallengeFailedMessage:
       'Oops! Unable to complete this challenge at this time.',
+    SubHeader: 'Track your transformation!',
   },
 
   TabsTitleDict: {
@@ -446,6 +447,8 @@ const enGB = {
       'Once you have added a weight you will be able to view your weight history for this exercise',
     Rest: 'REST',
     UpNext: 'UP NEXT',
+    YourProgramme: 'Your Programme',
+    SubHeader: 'Get to your goals faster with an expertly designed routine',
   },
 
   OnDemandDict: {

@@ -34,7 +34,7 @@ const challengePlaceholderGraph = require('../../../assets/fakeGraph.png');
 
 export default function ProgressScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {colors, textStyles, singleCalendarStyles} = useTheme();
   const {isConnected, isInternetReachable} = useNetInfo();
   const {getPreferences, preferences} = useUserData();
@@ -128,8 +128,8 @@ export default function ProgressScreen() {
       alignSelf: 'center',
     },
     titleContainer: {
-      flexDirection: 'row',
-      marginTop: getHeight(20),
+      flexDirection: 'column',
+      marginTop: getHeight(40),
       marginBottom: getHeight(15),
       width: '100%',
       alignSelf: 'center',
@@ -138,6 +138,12 @@ export default function ProgressScreen() {
       ...textStyles.bold34_black100,
       textAlign: 'left',
       marginRight: getWidth(6),
+      letterSpacing: -0.51,
+    },
+    subHeader: {
+      ...textStyles.regular16_black90,
+      lineHeight: fontSize(20),
+      letterSpacing: -0.32,
     },
     progressTitle: {
       ...textStyles.bold34_aquamarine100,
@@ -179,9 +185,11 @@ export default function ProgressScreen() {
       <ScrollView style={styles.screen}>
         <View style={styles.container}>
           <View style={styles.titleContainer}>
-            <Text style={styles.yourTitle}>{ProgressDict.Your}</Text>
             <Text
-              style={styles.progressTitle}>{`${ProgressDict.Progress}`}</Text>
+              style={
+                styles.yourTitle
+              }>{`${ProgressDict.Your} ${ProgressDict.Progress}`}</Text>
+            <Text style={styles.subHeader}>{ProgressDict.SubHeader}</Text>
           </View>
           <View style={styles.calendarContainer}>
             <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>

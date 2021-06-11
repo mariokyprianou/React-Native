@@ -142,7 +142,7 @@ export default function OnDemandScreen() {
     },
     titleContainer: {
       flexDirection: 'column',
-      marginTop: getHeight(20),
+      marginTop: getHeight(40),
       marginBottom: getHeight(15),
       width: '100%',
       alignSelf: 'center',
@@ -154,6 +154,8 @@ export default function OnDemandScreen() {
     },
     subtitle: {
       ...textStyles.regular16_black90,
+      letterSpacing: -0.32,
+      lineHeight: fontSize(20),
       textAlign: 'left',
       marginRight: getWidth(6),
     },

@@ -23,6 +23,7 @@ export default function ({
   index,
   isContinuous,
   showUpNext,
+  isPreview,
 }) {
   const videos = {
     video,
@@ -58,6 +59,11 @@ export default function ({
     container: {
       width: '100%',
       height: videoHeight,
+    },
+    containerPreview: {
+      width: '100%',
+      height: videoHeight,
+      position: 'absolute',
     },
   };
 
@@ -173,7 +179,7 @@ export default function ({
   );
 
   return (
-    <View style={styles.container}>
+    <View style={isPreview ? styles.containerPreview : styles.container}>
       <View style={{height: videoHeight}}>
         <VideoView {...videoProps} ref={videoRef} />
 

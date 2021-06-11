@@ -10,9 +10,9 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  StatusBar,
-  Alert,
+  Text,
   Platform,
+  Dimensions,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +23,8 @@ import {useMutation} from '@apollo/client';
 import useTheme from '../../hooks/theme/UseTheme';
 import WorkoutHeader from '../../components/Headers/WorkoutHeader';
 import ExerciseView from '../../components/Views/ExerciseView';
+import ExerciseVideoView from '../../components/Views/ExerciseVideoView';
+import FadingBottomView from '../../components/Views/FadingBottomView';
 import useData from '../../hooks/data/UseData';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
@@ -31,7 +33,7 @@ import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {colors, Constants} = useTheme();
+  const {colors, exerciseViewStyle, Constants} = useTheme();
   const navigation = useNavigation();
   const {getHeight} = ScaleHook();
   const {dictionary} = useDictionary();
@@ -59,6 +61,9 @@ export default function WorkoutScreen() {
   const {getPreferences, preferences} = useUserData();
 
   const [enableScroll, setEnableScroll] = useState(true);
+
+  const [showPreviewOfNextVideo, setShowPreviewOfNextVideo] = useState(false);
+  const [exerciseToPreview, setExerciseToPreview] = useState(null);
 
   const [weightLabel, setWeightLabel] = useState('kg');
 
@@ -113,6 +118,19 @@ export default function WorkoutScreen() {
       setWeightLabel(weightPreference);
     }
   }, [preferences]);
+
+  useEffect(() => {
+    if (
+      showPreviewOfNextVideo === true &&
+      currentExerciseIndex < selectedWorkout.exercises.length - 2
+    ) {
+      setExerciseToPreview(
+        selectedWorkout.exercises[currentExerciseIndex + 1].exercise,
+      );
+    } else {
+      setExerciseToPreview(null);
+    }
+  }, [showPreviewOfNextVideo]);
 
   navigation.setOptions({
     header: () => (
@@ -224,6 +242,8 @@ export default function WorkoutScreen() {
         handleIndex(newOffset);
       }
     }
+
+    setShowPreviewOfNextVideo(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -249,12 +269,40 @@ export default function WorkoutScreen() {
             index={index}
             exerciseFinished={exerciseFinished}
             setEnableScroll={setEnableScroll}
+            setShowPreviewOfNextVideo={setShowPreviewOfNextVideo}
             weightLabel={weightLabel}
             isContinuous={selectedWorkout.isContinuous}
             isLastExercise={index === selectedWorkout.exercises.length - 1}
           />
         ))}
       </ScrollView>
+
+      {exerciseToPreview &&
+        showPreviewOfNextVideo === true &&
+        selectedWorkout.isContinuous === true && (
+          <ExerciseVideoView
+            {...exerciseToPreview}
+            index={currentExerciseIndex + 1}
+            setType={exerciseToPreview.setType}
+            isContinuous={selectedWorkout.isContinuous}
+            isPreview={true}
+            showUpNext={
+              <>
+                <View
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                  }}>
+                  <FadingBottomView color="black" height={150} />
+                </View>
+                <Text style={exerciseViewStyle.timerUpNextTextStyle}>
+                  {WorkoutDict.UpNext}
+                </Text>
+              </>
+            }
+          />
+        )}
     </View>
   );
 }

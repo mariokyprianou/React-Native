@@ -159,6 +159,11 @@ export default function ExerciseView(props) {
     }
   }, [countDown, restTime, setComplete]);
 
+  useEffect(() => {
+    props.setShowPreviewOfNextVideo &&
+      props.setShowPreviewOfNextVideo(showUpNextLabel);
+  }, [showUpNextLabel]);
+
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
   const onSetCompleted = (completedIndex) => {
@@ -266,8 +271,9 @@ export default function ExerciseView(props) {
   }
 
   const handleSelectWeights = () => {
-    if (!weightHistory || !exercise.name || !props.setType || !weightLabel)
+    if (!weightHistory || !exercise.name || !props.setType || !weightLabel) {
       return;
+    }
 
     if (weightHistory.length > 0) {
       navigation.navigate('WeightCapture', {

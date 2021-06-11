@@ -15,6 +15,7 @@ import {
   Image,
   Platform,
   StatusBar,
+  Animated,
 } from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 
@@ -68,11 +69,7 @@ export default function MeetYourIconsScreen() {
   const {dictionary} = useDictionary();
   const {MeetYourIconsDict} = dictionary;
   const iconsSwiper = useRef();
-  const imageRef = useRef();
-  const textRef = useRef();
-  const buttonRef = useRef();
-  const leftIconRef = useRef();
-  const rightIconRef = useRef();
+  const [scrollOffset, setScrollOffset] = useState(new Animated.Value(0));
   const [arrowsDisabled, setArrowsDisabled] = useState(false);
 
   const {
@@ -435,7 +432,10 @@ export default function MeetYourIconsScreen() {
   }
 
   const onScroll = (e) => {
-    const offset = e.nativeEvent.contentOffset.y;
+    const scrollSensitivity = 4 / 3;
+    const offset = e.nativeEvent.contentOffset.y / scrollSensitivity;
+    setScrollOffset(new Animated.Value(offset));
+    console.log('onScroll', offset);
     if (offset > 0 && !safeArea) {
       setSafeArea(true);
     } else if (offset <= 0 && safeArea) {
@@ -443,32 +443,7 @@ export default function MeetYourIconsScreen() {
     }
 
     if (offset >= 0 && offset < 30) {
-      imageRef.current.fadeIn(1000);
-      textRef.current.fadeIn(1000);
-      buttonRef.current.fadeIn(1000);
-      leftIconRef.current.fadeIn(1000);
-      rightIconRef.current.fadeIn(1000);
       setArrowsDisabled(false);
-    }
-  };
-
-  const onScrollBeginDrag = (e) => {
-    const offset = e.nativeEvent.contentOffset.y;
-    if (
-      offset >= 0 &&
-      offset < 10 &&
-      imageRef &&
-      textRef &&
-      buttonRef &&
-      leftIconRef &&
-      rightIconRef
-    ) {
-      imageRef.current.fadeOut(1000);
-      textRef.current.fadeOut(1000);
-      buttonRef.current.fadeOut(1000);
-      leftIconRef.current.fadeOut(1000);
-      rightIconRef.current.fadeOut(1000);
-      setArrowsDisabled(true);
     }
   };
 
@@ -522,7 +497,6 @@ export default function MeetYourIconsScreen() {
         <ScrollView
           style={styles.sliderContainer}
           onScroll={onScroll}
-          onScrollBeginDrag={onScrollBeginDrag}
           scrollEventThrottle={10}
           showsVerticalScrollIndicator={false}
           bounces={false}>
@@ -592,29 +566,53 @@ export default function MeetYourIconsScreen() {
     );
   };
 
+  const imageFadeIn = scrollOffset.interpolate({
+    inputRange: [0, 70],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
+
   const renderHeaderItems = () => (
     <>
       <View style={styles.logoContainer}>
-        <Animatable.Image source={logo} style={styles.image} ref={imageRef} />
-        <Animatable.Text style={styles.selectText} ref={textRef}>
+        <Animated.Image
+          source={logo}
+          style={{
+            ...styles.image,
+            opacity: imageFadeIn,
+          }}
+        />
+        <Animated.Text
+          style={{
+            ...styles.selectText,
+            opacity: imageFadeIn,
+          }}>
           {MeetYourIconsDict.SelectYourProgramme}
-        </Animatable.Text>
+        </Animated.Text>
       </View>
 
-      <Animatable.View style={styles.cantChooseContainer} ref={buttonRef}>
+      <Animated.View
+        style={{
+          ...styles.cantChooseContainer,
+          opacity: imageFadeIn,
+        }}>
         <View style={styles.cantChooseStyle}>
           <CantChooseButton
             onPress={() => navigation.navigate('HelpMeChoose')}
             navigation={navigation}
           />
         </View>
-      </Animatable.View>
+      </Animated.View>
     </>
   );
 
   const renderArrows = () => (
     <>
-      <Animatable.View style={styles.leftIconContainer} ref={leftIconRef}>
+      <Animated.View
+        style={{
+          ...styles.leftIconContainer,
+          opacity: imageFadeIn,
+        }}>
         <TouchableOpacity
           style={styles.arrowsTouchableStyle}
           onPress={() => handlePress('left')}
@@ -626,9 +624,13 @@ export default function MeetYourIconsScreen() {
             inputStyle={styles.icon}
           />
         </TouchableOpacity>
-      </Animatable.View>
+      </Animated.View>
 
-      <Animatable.View style={styles.rightIconContainer} ref={rightIconRef}>
+      <Animated.View
+        style={{
+          ...styles.rightIconContainer,
+          opacity: imageFadeIn,
+        }}>
         <TouchableOpacity
           style={styles.arrowsTouchableStyle}
           onPress={() => handlePress('right')}
@@ -642,7 +644,7 @@ export default function MeetYourIconsScreen() {
             inputStyle={styles.icon}
           />
         </TouchableOpacity>
-      </Animatable.View>
+      </Animated.View>
     </>
   );
 

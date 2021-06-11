@@ -212,7 +212,17 @@ export default function UserDataProvider(props) {
     } else {
       setCompletedFreeWorkouts(false);
     }
+
+    updateUserData(userData);
   }, [userData]);
+
+  async function updateUserData(newData) {
+    const language = await AsyncStorage.getItem('@language');
+    Intercom.updateUser({
+      name: `${userData.givenName} ${userData.familyName}`,
+      language_override: language.slice(0, 2),
+    });
+  }
 
   const getProfile = useCallback(() => {
     runQuery({
@@ -304,11 +314,6 @@ export default function UserDataProvider(props) {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
         .then(async (_res) => {
-          const language = await AsyncStorage.getItem('@language');
-          Intercom.updateUser({
-            name: `${userData.givenName} ${userData.familyName}`,
-            language_override: language.slice(0, 2),
-          });
           getProfile();
           checkUserSubscription();
         })

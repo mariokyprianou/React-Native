@@ -211,6 +211,7 @@ export default function DataProvider(props) {
           };
 
           qMap.unshift(localQuestion);
+          console.log(qMap, '<----qMap');
           setProgrammeQuestionnaire(qMap);
         }
       },

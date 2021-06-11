@@ -469,8 +469,8 @@ const hiIN = {
     SuggestedProgramme: (name) =>
       `आपके जवाबों के आधार पर, हमें लगता है ${name} आपके लिए सबसे बेहतर ट्रेनर हैं।`,
     EnvironmentQuestion: 'क्या आप घर पर या जिम में ट्रेन होना चाहेंगे?',
-    Home: SharedDict.Home,
-    Gym: SharedDict.Gym,
+    Home: 'होम',
+    Gym: 'जिम',
     Locale: SharedDict.Locale,
   },
 

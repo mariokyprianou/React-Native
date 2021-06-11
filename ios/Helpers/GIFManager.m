@@ -86,10 +86,12 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
 
   [backgroundImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
   
+  
+  CGFloat resolution = foregroundImage.size.height / foregroundImage.size.width;
   CGFloat foregroundImageWidth = size.width * 0.9;
   CGFloat foregroundImageX = size.width * 0.05;
-  CGFloat foregroundImageHeight = size.height / 2.0;
-  CGFloat foregroundImageY = size.height * 0.2;
+  CGFloat foregroundImageHeight = foregroundImageWidth * resolution * 0.85;
+  CGFloat foregroundImageY = 120.0;
   [foregroundImage drawInRectAspectFillWithRect:CGRectMake(foregroundImageX, foregroundImageY, foregroundImageWidth, foregroundImageHeight)];
   UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
 

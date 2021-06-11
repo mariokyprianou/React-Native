@@ -39,8 +39,12 @@ struct GraphicContextTextContent {
   // MARK: -  Exposed Methods
 
   @objc public func encodeTransformationImage(image: UIImage, beforeDate: String, afterDate: String, color: String) -> UIImage {
+    let resolution = image.size.height / image.size.width
+    let foregroundImageWidth = image.size.width * 0.9
+    let foregroundImageHeight = foregroundImageWidth * resolution * 0.85
+    
     let beforeDateX = image.size.width * 0.05
-    let beforeDateY = (image.size.height * 0.2) + (image.size.height / 2.0) + 20.0
+    let beforeDateY = 120.0 + foregroundImageHeight + 12.0
     let beforeDateWidth = image.size.width * 0.9
     let beforeDateHeight: CGFloat = 80.0
     let labelFrame = CGRect(x: beforeDateX, y: beforeDateY, width: beforeDateWidth, height: beforeDateHeight)

@@ -94,7 +94,9 @@ export default function TransformationScreen() {
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function handleSelectDate(dateItem, imageToSelect) {
-    if (!dateItem.id) return;
+    if (!dateItem.id) {
+      return;
+    }
     setLoading(true);
 
     const existingImage = userImages.find((it) => it.id === dateItem.id);

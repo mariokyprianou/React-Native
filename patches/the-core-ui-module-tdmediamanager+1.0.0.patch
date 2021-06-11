@@ -68,22 +68,22 @@ index e9042f5..9bee460 100644
 +
 +async function filterNewFilesWithNames(newFiles) {
 +	const allFiles = await getAllSavedFiles();
-+	
++
 +
 +	if (allFiles && allFiles.length > 0) {
-+		var toSaveFiles = []; 
++		var toSaveFiles = [];
 +
 +		newFiles.map(it => {
 +			const existsAlready = allFiles.find(saved => saved.includes(it.filename));
 +			if (!existsAlready) {
 +			toSaveFiles.push(it)
 +			}
-+			
++
  		})
 -		.catch((error) => console.log(error));
 +
 +		return toSaveFiles;
-+	} 
++	}
 +	else {
 +		return newFiles;
 +	}
@@ -130,7 +130,7 @@ index e9042f5..9bee460 100644
 +            });
 +    }
 +    else {
-+		
++
 +        return fs.mkdir(directoryPath)
 +        .then(() => {
 +            return [];
@@ -199,17 +199,17 @@ index e9042f5..9bee460 100644
  
 +
 +async function downloadFilesWithNamesToDirectory(files, directory) {
-+	directoryPath = directory; 
++	directoryPath = directory;
 +	return await downloadFilesWithNames(files);
 +}
 +
 +async function getLocalFileByNameFromDirectory(filename, directory) {
-+	directoryPath = directory; 
++	directoryPath = directory;
 +	return await getLocalFileByName(filename);
 +}
 +
 +async function getLocalFileFromDirectory(filename, directory) {
-+	directoryPath = directory; 
++	directoryPath = directory;
 +	return await getLocalFile(filename);
 +}
 +
@@ -288,7 +288,7 @@ index c1656ea..cc63c8e 100644
  	const [url, setUrl] = useState(null);
  
  	useEffect(() => {
-+		
++
  		if (props.startInFullScreen) {
  			onFullScreen();
  		}
@@ -303,7 +303,7 @@ index c1656ea..cc63c8e 100644
 -		const res = await getLocalFile(props.url);
 +		let res;
 +		if (props.filename) {
-+		 res = await getLocalFileByNameFromDirectory(props.filename, videosDirectoryPath);	
++		 res = await getLocalFileByNameFromDirectory(props.filename, videosDirectoryPath);
 +		}
 +		else {
 +		 res = await getLocalFileFromDirectory(props.url, videosDirectoryPath);
@@ -381,7 +381,7 @@ index c1656ea..cc63c8e 100644
  				showOnStart={false}
  			/>
 +			)}
-+			
++
  		</View>
  	);
  }
@@ -389,7 +389,7 @@ index c1656ea..cc63c8e 100644
  		bottom: 0,
  		right: 0,
  		backgroundColor: 'black',
-+		
++
  	},
  });
 +

@@ -27,6 +27,7 @@ import Profile from '../../apollo/queries/Profile';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import OfflineUtils from './OfflineUtils';
+import Intercom from 'react-native-intercom';
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -302,7 +303,12 @@ export default function UserDataProvider(props) {
   useEffect(() => {
     async function checkAuth() {
       await Auth.currentAuthenticatedUser()
-        .then((_res) => {
+        .then(async (_res) => {
+          const language = await AsyncStorage.getItem('@language');
+          Intercom.updateUser({
+            name: `${userData.givenName} ${userData.familyName}`,
+            language_override: language.slice(0, 2),
+          });
           getProfile();
           checkUserSubscription();
         })

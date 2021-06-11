@@ -91,8 +91,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const {setSuggestedProgramme} = useCommonData();
   const {setLoading} = useLoading();
 
-  console.log(userData, '<---userData');
-
   const isFocused = useIsFocused();
 
   useEffect(() => {

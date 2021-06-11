@@ -8,8 +8,6 @@
 import getGraphTicksInterval from './getGraphTicksInterval';
 import processChallengeHistory from './processChallengeHistory';
 
-
-
 export default generateChartInfo = (
   history,
   id,
@@ -17,7 +15,6 @@ export default generateChartInfo = (
   unitType,
   type,
 ) => {
-
   let processedHistory = [];
   let chartLabel = '';
 
@@ -48,13 +45,12 @@ export default generateChartInfo = (
 
   const highestDataPoint = Math.max(...dataPoints.map((point) => point.y));
 
-
   const highestValue =
     highestDataPoint > 10
       ? Math.ceil(highestDataPoint / 10) * 10
       : highestDataPoint;
-   
-  const { ticks, interval } = getGraphTicksInterval(highestValue);
+
+  const {ticks, interval} = getGraphTicksInterval(highestValue);
 
   if (type === 'STOPWATCH') {
     chartLabel = 'secs';
@@ -64,11 +60,10 @@ export default generateChartInfo = (
     } else if (unitType === 'REPS') {
       chartLabel = 'reps';
     } else if (unitType === 'DISTANCE' && weightPreference === 'lb') {
-      chartLabel = 'm';
+      chartLabel = 'mi';
     } else if (unitType === 'DISTANCE' && weightPreference === 'kg') {
       chartLabel = 'km';
-    }
-    else if (unitType && unitType.length > 0) {
+    } else if (unitType && unitType.length > 0) {
       chartLabel = unitType;
     }
   }

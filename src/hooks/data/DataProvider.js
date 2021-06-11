@@ -238,10 +238,14 @@ export default function DataProvider(props) {
           differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
           nextWeekStartDate.getDay() === nextWeek[0].exactDate.getDay();
 
-        if (isSameStartDay) return;
+        if (isSameStartDay) {
+          return;
+        }
       }
 
-      if (!programme.nextWeek) return;
+      if (!programme.nextWeek) {
+        return;
+      }
 
       let weekWorkout = programme.nextWeek.workouts
         .slice()
@@ -358,9 +362,10 @@ export default function DataProvider(props) {
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 
   const getDownloadEnabled = useCallback(async () => {
-    const value = (await AsyncStorage.getItem('@DOWNLOAD_ENABLED')) || 'false';
+    const value =
+      (await AsyncStorage.getItem('@SHOULD_CACHE_NEW_WEEK')) || 'true';
     const enabled = JSON.parse(value);
-    setDownloadEnabled(enabled);
+    setDownloadEnabled(!enabled);
   }, []);
 
   useEffect(() => {

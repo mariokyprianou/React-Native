@@ -272,6 +272,9 @@ const enGB = {
     CancelButton: SharedDict.Cancel,
     Cancel: SharedDict.Cancel,
     UnableToUpdate: 'Unable to update settings',
+    Restart: 'Restart',
+    RestartAlert:
+      'For the language change to take effect, the app needs to restart.',
   },
 
   ShareDict: {
@@ -449,6 +452,9 @@ const enGB = {
     UpNext: 'UP NEXT',
     YourProgramme: 'Your Programme',
     SubHeader: 'Get to your goals faster with an expertly designed routine',
+    SomethingWentWrong: 'Oops! Something went wrong. Try again later.',
+    DownloadComplete: 'Downloading workouts for week completed.',
+    DownloadWeek: 'Download this week’s workouts to access offline?',
   },
 
   OnDemandDict: {

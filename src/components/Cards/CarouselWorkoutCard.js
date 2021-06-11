@@ -22,11 +22,13 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
 
+  const isRestDay = title === WorkoutDict.RestDay || title === 'REST DAY';
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     card: {
       width: '100%',
-      height: title === WorkoutDict.RestDay ? getHeight(48) : getHeight(90),
+      height: isRestDay ? getHeight(48) : getHeight(90),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -57,7 +59,7 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
     dayContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: title === 'REST DAY' ? getHeight(0) : getHeight(10),
+      marginBottom: isRestDay ? getHeight(0) : getHeight(10),
     },
     completeIconContainer: {
       marginRight: getWidth(7),
@@ -71,7 +73,7 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.card}>
-      {title !== WorkoutDict.RestDay ? (
+      {!isRestDay ? (
         <View style={styles.dotContainer}>
           <View style={styles.dot}>
             <LinearGradient
@@ -87,7 +89,7 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
       )}
       <View style={styles.textContainer}>
         <View style={styles.dayContainer}>
-          {title === WorkoutDict.RestDay ? (
+          {isRestDay ? (
             <Text style={styles.restTitle}>
               {isRTL()
                 ? `${WorkoutDict.RestDayLower}`
@@ -101,7 +103,7 @@ export default function CarouselWorkoutCard({title, day, duration, intensity}) {
             </Text>
           )}
         </View>
-        {title !== WorkoutDict.RestDay && (
+        {!isRestDay && (
           <IconTextView
             type="intensity"
             duration={duration}

@@ -290,7 +290,7 @@ const SettingsScreen = ({}) => {
             style: 'cancel',
           },
           {
-            text: 'Restart',
+            text: ProfileDict.Restart,
             onPress: async () => {
               // We only want to change language if the user selects to restart,
               // otherwise we'll end up with static translated content and not strtanslated dynamic content

@@ -705,7 +705,9 @@ export default function MeetYourIconsScreen() {
               icon="chevron"
               variant="gradient"
               onPress={() => {
-                if (!selectedProgram) return;
+                if (!selectedProgram) {
+                  return;
+                }
 
                 setProgrammeModalImage(selectedProgram.programmeImage);
                 navigation.navigate('Congratulations', {

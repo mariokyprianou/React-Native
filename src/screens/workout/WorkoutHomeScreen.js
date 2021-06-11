@@ -106,7 +106,9 @@ export default function WorkoutHomeScreen() {
         if (remaining > 0) {
           setStayTunedEnabled(false);
           return;
-        } else weekCompleted();
+        } else {
+          weekCompleted();
+        }
       }
 
       console.log('WeekStartedAt:', programme.currentWeek.startedAt);
@@ -433,8 +435,8 @@ export default function WorkoutHomeScreen() {
             DisplayAlert({
               text:
                 res && res.success
-                  ? 'Downloading workouts for week completed.'
-                  : 'Oops! Something went wrong. Try again later.',
+                  ? WorkoutDict.DownloadComplete
+                  : WorkoutDict.SomethingWentWrong,
             });
             setShouldCache(false);
             setDownloading(false);

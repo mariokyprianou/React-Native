@@ -82,7 +82,7 @@ const hiIN = {
     TryAgain: 'दोबारा प्रयास करें',
     Secs: (time) => `${time}s`,
     Skip: 'छोड़ें',
-    NeedHelp: 'मदद चाहिए??',
+    NeedHelp: 'मदद चाहिए?',
     SaveChanges: 'परिवर्तनों को सेव करें',
     NeedToSignOut: 'साइन आउट करना है?',
     Logout: SharedDict.Logout,
@@ -117,7 +117,7 @@ const hiIN = {
       'ओह! आपका ईमेल या पासवर्ड ग़लत है। कृपया दोबारा प्रयास करें।',
     IncorrectPassword:
       'ओह! आपका वर्तमान पासवर्ड ग़लत है। कृपया दोबारा प्रयास करें।',
-    ForgotPasswordButtonText: 'पासवर्ड भूल गए??',
+    ForgotPasswordButtonText: 'पासवर्ड भूल गए?',
     ForgotPasswordCodeLabel: 'पासवर्ड रिसेट कोड',
     ForgotPasswordLabel: SharedDict.NewPassword,
     InvalidResetCode: 'अवैध कोड',
@@ -276,6 +276,9 @@ const hiIN = {
     CancelButton: SharedDict.Cancel,
     Cancel: SharedDict.Cancel,
     UnableToUpdate: 'सेटिंग्स को अपडेट करने में असमर्थ हैं',
+    Restart: 'रिस्टार्ट',
+    RestartAlert:
+      'भाषा परिवर्तन / चेंज होने के लिए, ऐप को पुनः आरंभ करने की आवश्यकता है',
   },
 
   ShareDict: {
@@ -453,6 +456,10 @@ const hiIN = {
     YourProgramme: 'आपके प्रोग्राम',
     SubHeader:
       'विशेषज्ञ द्वारा डिज़ाइन रूटीन से अपने लक्ष्यों को तेजी से पूरा करें',
+    SomethingWentWrong: 'कुछ गलत हो गया है। बाद में पुन: प्रयास करें',
+    DownloadComplete: 'सप्ताह के लिए वर्कआउट डाउनलोड कर लिए गए हैं',
+    DownloadWeek:
+      'इस सप्ताह के वर्कआउट ऑफ़लाइन एक्सेस करने के लिए वर्कआउट डाउनलोड करें?',
   },
 
   OnDemandDict: {

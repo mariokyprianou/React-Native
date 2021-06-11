@@ -20,13 +20,7 @@ const fallBackImage = require('../../../assets/images/onboardingImage.png');
 
 export default function OnboardingSliderItem({image, header, text, local}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {
-    getHeight,
-    getWidth,
-    getScaledHeight,
-    getScaledWidth,
-    fontSize,
-  } = ScaleHook();
+  const {getHeight, getScaledHeight, getScaledWidth} = ScaleHook();
   const {textStyles, colors} = useTheme();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -37,7 +31,7 @@ export default function OnboardingSliderItem({image, header, text, local}) {
     },
     imagesContainer: {
       height: getScaledHeight(310),
-      width: getScaledWidth(210),
+      width: '100%',
       alignSelf: 'center',
       justifyContent: 'flex-end',
     },

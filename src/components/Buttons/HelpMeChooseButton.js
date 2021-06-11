@@ -56,6 +56,11 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
     linearGradientStyle: {
       flex: 1,
     },
+    textContainer: {
+      position: 'absolute',
+      top: getHeight(78),
+      left: getWidth(10),
+    },
     selectedLetterText: {
       ...textStyles.bold14_white100,
       textAlign: 'left',
@@ -63,7 +68,6 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
     selectedBodyText: {
       ...textStyles.bold16_white100,
       lineHeight: fontSize(22),
-      height: getHeight(50),
       textAlign: 'left',
     },
     unselectedLetterText: {
@@ -74,7 +78,6 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
       ...textStyles.medium15_black100,
       lineHeight: fontSize(20),
       textAlign: 'left',
-      height: getHeight(50),
     },
   });
 
@@ -94,8 +97,10 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             colors={[colors.tealish100, colors.tiffanyBlue100]}>
-            <Text style={styles.selectedLetterText}>{letter}</Text>
-            <Text style={styles.selectedBodyText}>{text}</Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.selectedLetterText}>{letter}</Text>
+              <Text style={styles.selectedBodyText}>{text}</Text>
+            </View>
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -112,8 +117,10 @@ export default function HelpMeChooseButton({letter, text, onPress}) {
           paddingHorizontal: getScaledWidth(10),
           paddingBottom: getScaledHeight(20),
         }}>
-        <Text style={styles.unselectedLetterText}>{letter}</Text>
-        <Text style={styles.unselectedBodyText}>{text}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.unselectedLetterText}>{letter}</Text>
+          <Text style={styles.unselectedBodyText}>{text}</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );

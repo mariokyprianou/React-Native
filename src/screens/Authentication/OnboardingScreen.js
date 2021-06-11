@@ -40,17 +40,13 @@ export default function OnboardingScreen() {
   const {ButtonDict} = dictionary;
   const navigation = useNavigation();
 
-  const {onboarding, getOnboarding} = useCommonData();
+  const {onboarding} = useCommonData();
 
-  const [scrollOffset, setScrollOfset] = useState(new Animated.Value(0));
+  const [scrollOffset, setScrollOffset] = useState(new Animated.Value(0));
 
   navigation.setOptions({
     header: () => <Header title={''} goBack componentRight={() => <Login />} />,
   });
-
-  useEffect(() => {
-    //getOnboarding();
-  }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -117,7 +113,7 @@ export default function OnboardingScreen() {
   function onScroll(e) {
     const scrollSensitivity = 4 / 3;
     const offset = e.nativeEvent.contentOffset.x / scrollSensitivity;
-    setScrollOfset(new Animated.Value(offset));
+    setScrollOffset(new Animated.Value(offset));
   }
 
   const position = Animated.divide(scrollOffset, width - getWidth(100));

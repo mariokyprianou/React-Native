@@ -457,6 +457,22 @@ export default function WorkoutHomeScreen() {
       height: getHeight(2),
       backgroundColor: colors.offWhite100,
     },
+    headerContainer: {
+      flexDirection: 'column',
+      width: '100%',
+      paddingHorizontal: getWidth(20),
+    },
+    header: {
+      ...textStyles.bold34_black100,
+      letterSpacing: -0.51,
+      marginTop: getHeight(17),
+    },
+    subHeader: {
+      ...textStyles.regular16_black90,
+      lineHeight: fontSize(20),
+      marginBottom: getHeight(5),
+      letterSpacing: -0.32,
+    },
     titleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -515,6 +531,10 @@ export default function WorkoutHomeScreen() {
     <View style={styles.container}>
       <WorkoutHomeHeader />
       <View style={styles.headerBorder} />
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>{WorkoutDict.YourProgramme}</Text>
+        <Text style={styles.subHeader}>{WorkoutDict.SubHeader}</Text>
+      </View>
       <View style={styles.titleContainer}>
         <View style={styles.titleLeftContainer}>
           <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>

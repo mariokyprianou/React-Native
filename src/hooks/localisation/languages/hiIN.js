@@ -1,3 +1,5 @@
+import {TabBarIndicator} from 'react-native-tab-view';
+
 const SharedDict = {
   Cancel: 'रद्द करें',
   Gym: 'जिम',
@@ -342,6 +344,7 @@ const hiIN = {
     ShareNotAvailableWarning:
       'अपने परिवर्तन को शेयर करने के लिए प्रगति से पहले और बाद की तस्वीर की आवश्यकता होती है',
     CompleteChallengeFailedMessage: 'इस समय इस चुनौती को पूरा करने में असमर्थ',
+    SubHeader: 'अपने शरीर के परिवर्तन ट्रैक करें',
   },
 
   TabsTitleDict: {
@@ -447,6 +450,9 @@ const hiIN = {
       'वजन दर्ज करने के बाद आप इस एक्सरसाइज़ के लिए अपने वजन के इतिहास को देख पाएंगे',
     Rest: 'आराम',
     UpNext: 'अगला',
+    YourProgramme: 'आपके प्रोग्राम',
+    SubHeader:
+      'विशेषज्ञ द्वारा डिज़ाइन रूटीन से अपने लक्ष्यों को तेजी से पूरा करें',
   },
 
   OnDemandDict: {
@@ -463,8 +469,8 @@ const hiIN = {
     SuggestedProgramme: (name) =>
       `आपके जवाबों के आधार पर, हमें लगता है ${name} आपके लिए सबसे बेहतर ट्रेनर हैं।`,
     EnvironmentQuestion: 'क्या आप घर पर या जिम में ट्रेन होना चाहेंगे?',
-    Home: SharedDict.Home,
-    Gym: SharedDict.Gym,
+    Home: 'होम',
+    Gym: 'जिम',
     Locale: SharedDict.Locale,
   },
 

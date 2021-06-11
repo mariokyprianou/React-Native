@@ -19,6 +19,10 @@ export default gql`
         intensity
         isContinuous
         duration
+        tags {
+          id
+          name
+        }
         exercises {
           orderIndex
           exercise {

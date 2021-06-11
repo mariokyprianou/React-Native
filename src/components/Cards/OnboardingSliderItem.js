@@ -31,7 +31,7 @@ export default function OnboardingSliderItem({image, header, text, local}) {
     },
     imagesContainer: {
       height: getScaledHeight(310),
-      width: getScaledWidth(210),
+      width: '100%',
       alignSelf: 'center',
       justifyContent: 'flex-end',
     },

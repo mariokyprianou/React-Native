@@ -41,6 +41,7 @@ export default function OnDemandScreen() {
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
+  const [filteredWorkouts, setFilteredWorkouts] = useState();
   const navigation = useNavigation();
   const {setLoading} = useLoading();
   const {
@@ -113,8 +114,27 @@ export default function OnDemandScreen() {
         : workoutTagsToDisplay.map((x) => x.id);
 
     setSelectedWorkoutTags(tagIds);
-    getOnDemandWorkouts(tagIds);
+
+    if (onDemandWorkouts && onDemandWorkouts.length > 0) {
+      const filtered = onDemandWorkouts.filter((workout) => {
+        let matchingIds = 0;
+        workout.tags.forEach((tag) => {
+          if (tagIds.includes(tag.id)) matchingIds++;
+        });
+        return matchingIds > 0;
+      });
+      setFilteredWorkouts(filtered);
+    }
+
+    // getOnDemandWorkouts(tagIds);
   }, [workoutTagsToDisplay]);
+
+  useEffect(() => {
+    if (filteredWorkouts) {
+      setWorkoutsToDisplay(filteredWorkouts);
+      setLoading(false);
+    }
+  }, [filteredWorkouts]);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -168,7 +188,7 @@ export default function OnDemandScreen() {
       width: '100%',
       height: getWidth(90),
     },
-    seperatorComponent: {
+    separatorComponent: {
       height: '100%',
       width: getWidth(16),
     },
@@ -194,10 +214,10 @@ export default function OnDemandScreen() {
           style={styles.tagsList}
           keyExtractor={(item, index) => `${item.id}`}
           ItemSeparatorComponent={() => (
-            <View style={styles.seperatorComponent} />
+            <View style={styles.separatorComponent} />
           )}
-          ListHeaderComponent={() => <View style={styles.seperatorComponent} />}
-          ListFooterComponent={() => <View style={styles.seperatorComponent} />}
+          ListHeaderComponent={() => <View style={styles.separatorComponent} />}
+          ListFooterComponent={() => <View style={styles.separatorComponent} />}
           renderItem={({item, index}) => {
             return (
               <WorkoutTagButton

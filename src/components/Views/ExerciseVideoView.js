@@ -15,6 +15,7 @@ import ControlsView from './ControlsView';
 import UseData from '../../hooks/data/UseData';
 import crashlytics from '@react-native-firebase/crashlytics';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
+import LoadingView from '../../components/Views/LoadingView';
 
 export default function ({
   video,
@@ -39,6 +40,7 @@ export default function ({
   const [currentProgress, setCurrentProgress] = useState(0);
 
   const [isPaused, setIsPaused] = useState(true);
+  const [loading, setIsLoading] = useState(true);
 
   const [fadeAnimation, setFadeAnimation] = useState(new Animated.Value(1));
   const [showControls, setShowControls] = useState(!isContinuous);
@@ -69,16 +71,12 @@ export default function ({
 
   useEffect(() => {
     // Autoplay if its current exercise and there is remaining video
-    if (
-      index === currentExerciseIndex &&
-      currentProgress < videoDuration &&
-      isPaused
-    ) {
-      videoRef.current.pause();
+    if (index === currentExerciseIndex && currentProgress < videoDuration) {
+      videoRef.current && videoRef.current.pause();
 
       // Only call if any other than current is playing
     } else if (!isPaused && !isContinuous) {
-      videoRef.current.pause();
+      videoRef.current && videoRef.current.pause();
     }
   }, [currentExerciseIndex, index]);
 
@@ -86,16 +84,17 @@ export default function ({
   useEffect(() => {
     if (isContinuous) {
       if (isWorkoutTimerRunning === false) {
-        videoRef.current.pause();
+        videoRef.current && videoRef.current.pause();
         setIsPaused(true);
       } else if (isWorkoutTimerRunning === true && isPaused === true) {
-        videoRef.current.pause();
+        videoRef.current && videoRef.current.pause();
         setIsPaused(false);
       }
     }
   }, [isWorkoutTimerRunning]);
 
   const videoProps = {
+    index: index,
     height: videoHeight,
     url: videos[currentVideo],
     filename: videos[currentVideo].split('/').pop().split('?').shift(),
@@ -119,6 +118,10 @@ export default function ({
 
     onEnd: () => {
       setCurrentProgress(videoDuration);
+    },
+
+    onReadyForDisplay: () => {
+      setIsLoading(false);
     },
 
     onError: (error) => {
@@ -168,7 +171,7 @@ export default function ({
       useNativeDriver={true}>
       <ControlsView
         pauseOnPress={() => {
-          videoRef.current.pause();
+          videoRef.current && videoRef.current.pause();
         }}
         isPaused={isPaused}
         videos={videos}
@@ -181,7 +184,11 @@ export default function ({
   return (
     <View style={isPreview ? styles.containerPreview : styles.container}>
       <View style={{height: videoHeight}}>
-        <VideoView {...videoProps} ref={videoRef} />
+        {(currentExerciseIndex === index || isPreview === true) && (
+          <VideoView {...videoProps} ref={videoRef} />
+        )}
+
+        {loading && <LoadingView />}
 
         {/* Controls not showing so render a touch view to allow showing them */}
         {!showControls && (

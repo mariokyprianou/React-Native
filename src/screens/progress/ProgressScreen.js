@@ -14,9 +14,9 @@ import {
   TouchableOpacity,
   Platform,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -180,7 +180,7 @@ export default function ProgressScreen() {
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} forceInset={{top: 'always'}}>
       {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
       <ScrollView style={styles.screen}>
         <View style={styles.container}>

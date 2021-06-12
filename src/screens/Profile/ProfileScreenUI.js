@@ -6,17 +6,11 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  ScrollView,
-  Text,
-  SafeAreaView,
-  Platform,
-  TouchableOpacity,
-} from 'react-native';
+import {View, ScrollView, Text, Platform, TouchableOpacity} from 'react-native';
 import {useQuery, useMutation} from '@apollo/client';
 import {FormHook} from 'the-core-ui-module-tdforms';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Form} from 'the-core-ui-module-tdforms';
 import {format, parseISO} from 'date-fns';
 import {Auth} from 'aws-amplify';

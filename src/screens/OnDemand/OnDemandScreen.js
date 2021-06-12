@@ -12,10 +12,10 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   FlatList,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -119,7 +119,9 @@ export default function OnDemandScreen() {
       const filtered = onDemandWorkouts.filter((workout) => {
         let matchingIds = 0;
         workout.tags.forEach((tag) => {
-          if (tagIds.includes(tag.id)) matchingIds++;
+          if (tagIds.includes(tag.id)) {
+            matchingIds++;
+          }
         });
         return matchingIds > 0;
       });
@@ -196,7 +198,7 @@ export default function OnDemandScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} forceInset={{top: 'always'}}>
       {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
       <ScrollView style={styles.screen}>
         <View style={styles.container}>

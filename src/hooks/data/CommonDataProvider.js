@@ -25,7 +25,7 @@ export default function DataProvider(props) {
 
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const {dictionary} = useDictionary();
+  const {dictionary, locale} = useDictionary();
   const {HelpMeChooseDict, OnboardingDict} = dictionary;
 
   const [onboarding, setOnboarding] = useState();
@@ -77,6 +77,14 @@ export default function DataProvider(props) {
       getLegals(),
     ]);
   }, []);
+
+  useEffect(() => {
+    console.log('Locale Changed so updating data: ', locale);
+    getOnboarding();
+    getTrainers();
+    getProgrammeQuestionnaire();
+    getLegals();
+  }, [locale]);
 
   async function isNetworkAvailable() {
     const response = await NetInfo.fetch();
@@ -215,7 +223,7 @@ export default function DataProvider(props) {
         }
       },
     });
-  }, [runQuery]);
+  }, [runQuery, HelpMeChooseDict]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 

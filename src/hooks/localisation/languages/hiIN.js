@@ -460,6 +460,8 @@ const hiIN = {
     DownloadComplete: 'सप्ताह के लिए वर्कआउट डाउनलोड कर लिए गए हैं',
     DownloadWeek:
       'इस सप्ताह के वर्कआउट ऑफ़लाइन एक्सेस करने के लिए वर्कआउट डाउनलोड करें?',
+    OnDemandInternet:
+      'Oops! Please check your internet connection to view on demand workouts.',
   },
 
   OnDemandDict: {

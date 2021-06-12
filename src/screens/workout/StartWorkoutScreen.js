@@ -9,7 +9,9 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
 import useTheme from '../../hooks/theme/UseTheme';
+import useDictionary from '../../hooks/localisation/useDictionary';
 import Header from '../../components/Headers/Header';
 import WorkoutImageView from '../../components/Views/WorkoutImageView';
 import ExerciseCell from '../../components/cells/ExerciseCell';
@@ -18,6 +20,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import useData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
+import displayAlert from '../../utils/DisplayAlert';
 
 export default function StartWorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -29,7 +32,11 @@ export default function StartWorkoutScreen() {
     getDownloadEnabled,
     setCurrentExerciseIndex,
     setCompletedExercises,
+    isSelectedWorkoutOnDemand,
   } = useData();
+
+  const {dictionary} = useDictionary();
+  const {WorkoutDict, ProfileDict} = dictionary;
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
   const {setWorkoutTime, setIsWorkoutTimerRunning} = useWorkoutTimer();
@@ -101,7 +108,25 @@ export default function StartWorkoutScreen() {
     );
   });
 
-  function startWorkout() {
+  async function startWorkout() {
+    if (isSelectedWorkoutOnDemand === true) {
+      const response = await NetInfo.fetch();
+      if (!response.isConnected) {
+        displayAlert({
+          title: null,
+          text: WorkoutDict.OnDemandInternet,
+          buttons: [
+            {
+              text: ProfileDict.Ok,
+              style: 'cancel',
+            },
+          ],
+        });
+
+        return;
+      }
+    }
+
     setCurrentExerciseIndex(0);
     setWorkoutTime(0);
     setIsWorkoutTimerRunning(true);
@@ -119,33 +144,26 @@ export default function StartWorkoutScreen() {
     <>
       <View style={styles.headerBorder} />
       <View style={{flex: 1}}>
-
-          <View style={{flex: 0.85}}>
-
-
-            <ScrollView
+        <View style={{flex: 0.85}}>
+          <ScrollView
             keyboardShouldPersistTaps="handled"
             style={styles.scrollViewContainer}>
             <WorkoutImageView {...topViewProps} />
             <ExerciseList exercises={selectedWorkout.exercises} />
-            </ScrollView>
-            <View style={styles.fadeContainer} pointerEvents="none">
+          </ScrollView>
+          <View style={styles.fadeContainer} pointerEvents="none">
             <FadingBottomView height={80} />
-            </View>
-              
           </View>
-          <View style={{flex: 0.15, ...styles.buttonContainer}}>
-
-            <DefaultButton
-              type="startWorkout"
-              variant="gradient"
-              icon="chevron"
-              onPress={() => startWorkout()}
-            />
-          </View>
-          
+        </View>
+        <View style={{flex: 0.15, ...styles.buttonContainer}}>
+          <DefaultButton
+            type="startWorkout"
+            variant="gradient"
+            icon="chevron"
+            onPress={() => startWorkout()}
+          />
+        </View>
       </View>
-     
     </>
   );
 }

@@ -558,7 +558,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
       {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
       <ScrollView
         style={styles.container}

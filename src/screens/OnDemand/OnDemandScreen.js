@@ -198,7 +198,10 @@ export default function OnDemandScreen() {
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <SafeAreaView style={styles.safeArea} forceInset={{top: 'always'}}>
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={['top']}
+      forceInset={{top: 'always'}}>
       {Platform.OS === 'android' && <View style={styles.androidSafeArea} />}
       <ScrollView style={styles.screen}>
         <View style={styles.container}>

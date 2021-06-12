@@ -32,7 +32,7 @@ import FastImage from 'react-native-fast-image';
 import useProgressData from '../../hooks/data/useProgressData';
 import LoadingView from '../../components/Views/LoadingView';
 
-const fakeImage = require('../../../assets/congratulationsBackground.png');
+const fakeImage = require('../../../assets/images/zeroState.jpeg');
 
 export default function CongratulationsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **

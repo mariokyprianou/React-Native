@@ -243,7 +243,7 @@ index e9042f5..33be09c 100644
 +	imagesDirectoryPath
  };
 diff --git a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
-index c1656ea..a854978 100644
+index c1656ea..0542102 100644
 --- a/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 +++ b/node_modules/the-core-ui-module-tdmediamanager/src/views/VideoView.js
 @@ -5,29 +5,40 @@
@@ -415,10 +415,12 @@ index c1656ea..a854978 100644
  		</View>
  	);
  }
-@@ -175,5 +211,10 @@ const styles = StyleSheet.create({
+@@ -174,6 +210,11 @@ const styles = StyleSheet.create({
+ 		left: 0,
  		bottom: 0,
  		right: 0,
- 		backgroundColor: 'black',
+-		backgroundColor: 'black',
++		backgroundColor: 'white',
 +
  	},
  });

@@ -601,120 +601,113 @@ export default function WorkoutHomeScreen() {
       </View>
 
       <View style={{flex: 1, width: '100%'}}>
-        {React.useMemo(() => {
-          return (
-            <DraggableFlatList
-              data={workoutsToDisplay}
-              keyExtractor={(item, index) => `${index}`}
-              onDragEnd={({data, from, to}) => {
-                const lastValidIndex = workoutsToDisplay.indexOf(
-                  workoutsToDisplay
-                    .slice()
-                    .filter(
-                      (it) =>
-                        it.completedAt ||
-                        differenceInDays(it.exactDate, new Date()) < 0,
-                    )
-                    .pop(),
-                );
+        <DraggableFlatList
+          data={workoutsToDisplay}
+          keyExtractor={(item, index) => `${index}`}
+          onDragEnd={({data, from, to}) => {
+            const lastValidIndex = workoutsToDisplay.indexOf(
+              workoutsToDisplay
+                .slice()
+                .filter(
+                  (it) =>
+                    it.completedAt ||
+                    differenceInDays(it.exactDate, new Date()) < 0,
+                )
+                .pop(),
+            );
 
-                // Only do order cange if its a valid position
-                if (
-                  from !== to &&
-                  (lastValidIndex === -1 || to > lastValidIndex)
-                ) {
-                  updateOrder(data);
-                }
-              }}
-              renderItem={({item, index, drag, isActive}) => {
-                return (
-                  <View
-                    style={{
-                      width: '100%',
-                      paddingHorizontal: getWidth(20),
-                      paddingTop: index === 0 ? getHeight(20) : 0,
-                    }}>
-                    <WorkoutCard
-                      workout={item}
-                      title={item.name}
-                      day={item.day}
-                      date={format(item.exactDate, 'iiii, do LLL', {
-                        locale: locale === 'hi-IN' ? hindiLocale : engLocale,
-                      })}
-                      duration={item.duration}
-                      intensity={item.intensity}
-                      image={item.overviewImage}
-                      drag={weekNumber === 1 && drag}
-                      status={
-                        item.completedAt ||
-                        differenceInDays(item.exactDate, new Date()) < 0
-                          ? 'complete'
-                          : null
+            // Only do order cange if its a valid position
+            if (from !== to && (lastValidIndex === -1 || to > lastValidIndex)) {
+              updateOrder(data);
+            }
+          }}
+          renderItem={({item, index, drag, isActive}) => {
+            return (
+              <View
+                style={{
+                  width: '100%',
+                  paddingHorizontal: getWidth(20),
+                  paddingTop: index === 0 ? getHeight(20) : 0,
+                }}>
+                <WorkoutCard
+                  workout={item}
+                  title={item.name}
+                  day={item.day}
+                  date={format(item.exactDate, 'iiii, do LLL', {
+                    locale: locale === 'hi-IN' ? hindiLocale : engLocale,
+                  })}
+                  duration={item.duration}
+                  intensity={item.intensity}
+                  image={item.overviewImage}
+                  drag={weekNumber === 1 && drag}
+                  status={
+                    item.completedAt ||
+                    differenceInDays(item.exactDate, new Date()) < 0
+                      ? 'complete'
+                      : null
+                  }
+                  onPressCard={async (workout) => {
+                    if (suspendedAccount === true) {
+                      DisplayAlert({
+                        text: WorkoutDict.SuspendedAccount,
+                      });
+                      return;
+                    }
+
+                    const wasWorkoutToday = wasLastWorkoutToday(
+                      programme.currentWeek.workouts,
+                    );
+                    if (wasWorkoutToday === true) {
+                      DisplayAlert({
+                        text: WorkoutDict.WorkoutCompetedWarningText,
+                      });
+                      return;
+                    }
+
+                    if (completedFreeWorkouts && !isSubscriptionActive) {
+                      navigation.navigate('PurchaseModal');
+                      return;
+                    }
+
+                    if (weekNumber !== 1) {
+                      if (stayTunedEnabled) {
+                        showStayTunedModal();
                       }
-                      onPressCard={async (workout) => {
-                        if (suspendedAccount === true) {
-                          DisplayAlert({
-                            text: WorkoutDict.SuspendedAccount,
-                          });
-                          return;
-                        }
+                      return;
+                    }
 
-                        const wasWorkoutToday = wasLastWorkoutToday(
-                          programme.currentWeek.workouts,
-                        );
-                        if (wasWorkoutToday === true) {
-                          DisplayAlert({
-                            text: WorkoutDict.WorkoutCompetedWarningText,
-                          });
-                          return;
-                        }
+                    // Sort exercises
+                    const newWorkout = {
+                      ...workout,
+                      exercises: workout.exercises
+                        .slice()
+                        .sort((a, b) => a.orderIndex - b.orderIndex),
+                    };
 
-                        if (completedFreeWorkouts && !isSubscriptionActive) {
-                          navigation.navigate('PurchaseModal');
-                          return;
-                        }
+                    const warning = await shouldShowWarning();
 
-                        if (weekNumber !== 1) {
-                          if (stayTunedEnabled) {
-                            showStayTunedModal();
-                          }
-                          return;
-                        }
+                    if (warning === true) {
+                      await AsyncStorage.setItem(
+                        '@LAST_WARNING_DATE',
+                        `${new Date()}`,
+                      );
+                      setSelectedWorkout(newWorkout);
+                      setIsSelectedWorkoutOnDemand(false);
+                      navigation.navigate('TakeARest', {
+                        name: programme.trainer.name,
+                      });
+                      return;
+                    }
 
-                        // Sort exercises
-                        const newWorkout = {
-                          ...workout,
-                          exercises: workout.exercises
-                            .slice()
-                            .sort((a, b) => a.orderIndex - b.orderIndex),
-                        };
-
-                        const warning = await shouldShowWarning();
-
-                        if (warning === true) {
-                          await AsyncStorage.setItem(
-                            '@LAST_WARNING_DATE',
-                            `${new Date()}`,
-                          );
-                          setSelectedWorkout(newWorkout);
-                          setIsSelectedWorkoutOnDemand(false);
-                          navigation.navigate('TakeARest', {
-                            name: programme.trainer.name,
-                          });
-                          return;
-                        }
-
-                        setSelectedWorkout(newWorkout);
-                        setIsSelectedWorkoutOnDemand(false);
-                        navigation.navigate('StartWorkout');
-                      }}
-                    />
-                  </View>
-                );
-              }}
-            />
-          );
-        }, [workoutsToDisplay])}
+                    setSelectedWorkout(newWorkout);
+                    setIsSelectedWorkoutOnDemand(false);
+                    navigation.navigate('StartWorkout');
+                  }}
+                />
+              </View>
+            );
+          }}
+        />
       </View>
     </View>
   );

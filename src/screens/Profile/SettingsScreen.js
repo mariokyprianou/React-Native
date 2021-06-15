@@ -282,8 +282,7 @@ const SettingsScreen = ({}) => {
     if (prevLanguage !== language) {
       displayAlert({
         title: null,
-        text:
-          'For the language change to take effect, the app needs to restart.',
+        text: ProfileDict.RestartAlert,
         buttons: [
           {
             text: ProfileDict.Cancel,

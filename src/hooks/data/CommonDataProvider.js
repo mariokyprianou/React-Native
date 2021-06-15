@@ -78,13 +78,13 @@ export default function DataProvider(props) {
     ]);
   }, []);
 
-  useEffect(() => {
-    console.log('Locale Changed so updating data: ', locale);
-    getOnboarding();
-    getTrainers();
-    getProgrammeQuestionnaire();
-    getLegals();
-  }, [locale]);
+  // useEffect(() => {
+  //   console.log('Locale Changed so updating data: ', locale);
+  //   getOnboarding();
+  //   getTrainers();
+  //   getProgrammeQuestionnaire();
+  //   getLegals();
+  // }, [locale]);
 
   async function isNetworkAvailable() {
     const response = await NetInfo.fetch();

@@ -64,7 +64,6 @@ export default function Header({
       ...textStyles.bold22_black100,
       color: white ? colors.white100 : colors.black100,
       textAlign: 'center',
-      lineHeight: getHeight(23),
     },
     leftButtonContainer: {
       height,

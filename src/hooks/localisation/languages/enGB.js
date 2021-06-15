@@ -156,7 +156,7 @@ const enGB = {
 
   LanguageDict: {
     English: 'English',
-    Hindi: 'Hindi',
+    Hindi: 'हिंदी',
     SelectLanguage: 'SELECT LANGUAGE',
     Urdu: 'Urdu',
   },

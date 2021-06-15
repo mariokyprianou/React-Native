@@ -12,9 +12,9 @@ import {useAsyncStorage} from '@react-native-community/async-storage';
 import DictionaryContext from './DictionaryContext';
 import {enGB, hiIN} from './languages';
 
-const DictionaryProvider = ({children}) => {
+const DictionaryProvider = ({presetLocale, children}) => {
   const [dictionaryLoading, setDictionaryLoading] = useState(true);
-  const [locale, setLocale] = useState('en-GB');
+  const [locale, setLocale] = useState(presetLocale);
   const {getItem, setItem} = useAsyncStorage('@language');
 
   const translateMap = {

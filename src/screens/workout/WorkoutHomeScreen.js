@@ -33,6 +33,9 @@ import {useNetInfo} from '@react-native-community/netinfo';
 
 import {shouldCacheWeek} from '../../hooks/data/VideoCacheUtils';
 
+var hindiLocale = require('date-fns/locale/hi');
+var engLocale = require('date-fns/locale/en-GB');
+
 const {clearDirectory, videosDirectoryPath} = FileManager;
 
 export default function WorkoutHomeScreen() {
@@ -41,7 +44,7 @@ export default function WorkoutHomeScreen() {
 
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles, colors} = useTheme();
-  const {dictionary} = useDictionary();
+  const {dictionary, locale} = useDictionary();
   const {WorkoutDict, ProfileDict, OfflineMessage} = dictionary;
 
   const [weekNumber, setWeekNumber] = useState(1);
@@ -84,12 +87,12 @@ export default function WorkoutHomeScreen() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused && !programme) {
+    if ((isFocused && !programme) || !currentWeek) {
       console.log('Focused Tab1: need refetch');
       setLoading(true);
       getProgramme();
     }
-  }, [isFocused]);
+  }, [isFocused, programme, currentWeek]);
 
   // Check if week is completed
   useEffect(() => {
@@ -635,7 +638,9 @@ export default function WorkoutHomeScreen() {
                       workout={item}
                       title={item.name}
                       day={item.day}
-                      date={format(item.exactDate, 'iiii, do LLL')}
+                      date={format(item.exactDate, 'iiii, do LLL', {
+                        locale: locale === 'hi-IN' ? hindiLocale : engLocale,
+                      })}
                       duration={item.duration}
                       intensity={item.intensity}
                       image={item.overviewImage}

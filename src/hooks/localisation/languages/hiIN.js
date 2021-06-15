@@ -48,7 +48,7 @@ const hiIN = {
     AllowAnalytics: 'एनालिटिक्स को अनुमति दें',
     AllowNotifications: 'नोटिफिकेशन्स को अनुमति दें',
     Cancel: SharedDict.Cancel.toUpperCase(),
-    CantChoose: 'चुन नहीं सकते?',
+    CantChoose: 'चुन नहीं सकते',
     Challenge: 'चुनौती',
     ChangeDevice: 'डिवाइस बदलें',
     ChangeEmail: SharedDict.ChangeEmail.toUpperCase(),
@@ -157,7 +157,7 @@ const hiIN = {
   },
 
   LanguageDict: {
-    English: 'अंग्रेजी',
+    English: 'English',
     Hindi: 'हिंदी',
     SelectLanguage: 'भाषा चुनें',
     Urdu: 'उर्दू',

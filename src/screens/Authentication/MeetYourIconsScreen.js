@@ -376,8 +376,9 @@ export default function MeetYourIconsScreen() {
     const newProgramme = selectedTrainer.programmes.find(
       (it) => it.id !== selectedProgram.id,
     );
-
-    setSelectedProgram(newProgramme);
+    if (newProgramme) {
+      setSelectedProgram(newProgramme);
+    }
   }
 
   function changedAssignedProgramme(type) {

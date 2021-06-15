@@ -15,6 +15,7 @@ export default function DataProvider(props) {
   const {refetchData} = UseData();
   const {getTrainers} = useCommonData();
 
+  const {isConnected, isInternetReachable} = useNetInfo();
   // ** ** ** ** ** App State Change Refetch Handling  ** ** ** ** **
   const handleAppStateChange = (nextAppState) => {
     if (appState.current.match(/background/) && nextAppState === 'active') {
@@ -67,20 +68,27 @@ export default function DataProvider(props) {
   const [needRefetch, setNeedRefetch] = useState(false);
 
   useEffect(() => {
-    console.log('needRefetch', needRefetch);
-  }, [needRefetch]);
+    if (needRefetch && isConnected && isInternetReachable) {
+      console.log('RefetchHandler: Back online and needRefetch');
+
+      refetchData();
+      getTrainers();
+      initInterval();
+      setNeedRefetch(false);
+    }
+  }, [
+    needRefetch,
+    isConnected,
+    isInternetReachable,
+    refetchData,
+    getTrainers,
+    initInterval,
+  ]);
 
   const networkListener = (state) => {
-    if (state.isConnected && state.isInternetReachable) {
-      if (needRefetch) {
-        refetchData();
-        getTrainers();
-
-        initInterval();
-        setNeedRefetch(false);
-      }
-    }
     if (!state.isConnected && !state.isInternetReachable) {
+      console.log('RefetchHandler: went offline, needRefetch');
+
       setNeedRefetch(true);
     }
   };

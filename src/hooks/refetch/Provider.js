@@ -1,9 +1,10 @@
-import React, {useMemo, useEffect, useRef, useCallback} from 'react';
+import React, {useMemo, useEffect, useRef, useCallback, useState} from 'react';
 import {AppState} from 'react-native';
 import DataContext from './Context';
 import UseData from '../data/UseData';
 import useLoading from '../loading/useLoading';
 import useCommonData from '../data/useCommonData';
+import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 
 const originalDelay = 40 * 60 * 1000; // 40 minutes
 
@@ -14,8 +15,7 @@ export default function DataProvider(props) {
   const {refetchData} = UseData();
   const {getTrainers} = useCommonData();
 
-  const intervalRef = useRef();
-
+  // ** ** ** ** ** App State Change Refetch Handling  ** ** ** ** **
   const handleAppStateChange = (nextAppState) => {
     if (appState.current.match(/background/) && nextAppState === 'active') {
       console.log('App has come to the foreground! refetchData');
@@ -34,6 +34,10 @@ export default function DataProvider(props) {
       AppState.removeEventListener('change', handleAppStateChange);
     };
   }, []);
+  // ** ** ** ** ** App State Change Refetch Handling  ** ** ** ** **
+
+  // ** ** ** ** ** Interval Refetch Handling  ** ** ** ** **
+  const intervalRef = useRef();
 
   const cancelInterval = useCallback(async () => {
     clearInterval(intervalRef.current);
@@ -56,6 +60,35 @@ export default function DataProvider(props) {
       cancelInterval();
     };
   }, []);
+  // ** ** ** ** ** Interval Refetch Handling  ** ** ** ** **
+
+  // ** ** ** ** ** Network Change Refetch Handling  ** ** ** ** **
+
+  const [needRefetch, setNeedRefetch] = useState(false);
+
+  useEffect(() => {
+    console.log('needRefetch', needRefetch);
+  }, [needRefetch]);
+
+  const networkListener = (state) => {
+    if (state.isConnected && state.isInternetReachable) {
+      if (needRefetch) {
+        refetchData();
+        getTrainers();
+
+        initInterval();
+        setNeedRefetch(false);
+      }
+    }
+    if (!state.isConnected && !state.isInternetReachable) {
+      setNeedRefetch(true);
+    }
+  };
+
+  useEffect(() => {
+    NetInfo.addEventListener(networkListener);
+  }, []);
+  // ** ** ** ** ** Network Change Refetch Handling  ** ** ** ** **
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = useMemo(() => ({}), []);

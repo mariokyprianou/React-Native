@@ -49,7 +49,8 @@ Amplify.configure(authConfig);
 const App = () => {
   const [client, setClient] = useState();
   const [validChecksum, setValidChecksum] = useState(true);
-  const {getItem, setItem} = useAsyncStorage('@language');
+  const {getItem} = useAsyncStorage('@language');
+  const [presetLocale, setPresetLocale] = useState();
 
   useEffect(() => {
     async function BuildClient() {
@@ -81,6 +82,8 @@ const App = () => {
         I18nManager.forceRTL(false);
       }
     }
+
+    setPresetLocale(language || 'en-GB');
   };
 
   useEffect(() => {
@@ -98,6 +101,10 @@ const App = () => {
     return <View />;
   }
 
+  if (!presetLocale) {
+    return <View />;
+  }
+
   return (
     <>
       {Platform.OS === 'android' && (
@@ -108,7 +115,8 @@ const App = () => {
           <QueryProvider>
             <ScaleProvider config={{height: 667, width: 375}}>
               <ThemeProvider>
-                <DictionaryProvider>
+                {/* Pass preset locale value on provider to avoid rendering wrong default value   */}
+                <DictionaryProvider presetLocale={presetLocale}>
                   <DataProvider>
                     <UserDataProvider>
                       <CommonDataProvider>

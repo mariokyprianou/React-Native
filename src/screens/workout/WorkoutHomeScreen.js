@@ -669,10 +669,10 @@ export default function WorkoutHomeScreen() {
                           return;
                         }
 
-                        // if (completedFreeWorkouts && !isSubscriptionActive) {
-                        //   navigation.navigate('PurchaseModal');
-                        //   return;
-                        // }
+                        if (completedFreeWorkouts && !isSubscriptionActive) {
+                          navigation.navigate('PurchaseModal');
+                          return;
+                        }
 
                         if (weekNumber !== 1) {
                           if (stayTunedEnabled) {

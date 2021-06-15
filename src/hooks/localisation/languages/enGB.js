@@ -457,6 +457,9 @@ const enGB = {
     DownloadWeek: 'Download this week’s workouts to access offline?',
     OnDemandInternet:
       'Oops! Please check your internet connection to view on demand workouts.',
+
+    ContinueWorkout: 'Would you like to continue the workout?',
+    Continue: 'Continue',
   },
 
   OnDemandDict: {

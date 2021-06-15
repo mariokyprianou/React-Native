@@ -468,9 +468,7 @@ function TimerView(props) {
 
   // When timer is paused by user.
   useEffect(() => {
-    if (props.isContinuous) {
-      toggle();
-    }
+    toggle();
   }, [isWorkoutTimerRunning]);
 
   useEffect(() => {

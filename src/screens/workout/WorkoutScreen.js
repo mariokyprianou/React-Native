@@ -13,6 +13,7 @@ import {
   Text,
   Platform,
   Dimensions,
+  AppState,
 } from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +31,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
 import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -57,6 +59,18 @@ export default function WorkoutScreen() {
     isSubscriptionActive,
     getProfile,
   } = useUserData();
+
+  // Value to determine if a workout is underway, needed in provider but depends on screen
+  const {setActiveWorkout} = useWorkoutTimer();
+  useEffect(() => {
+    console.log('IsActiveWorkoutUseEfffect: Set to true');
+
+    setActiveWorkout(true);
+    return () => {
+      console.log('IsActiveWorkoutUseEfffectReturn: Set to false');
+      setActiveWorkout(false);
+    };
+  }, []);
 
   const {getPreferences, preferences} = useUserData();
 
@@ -213,6 +227,10 @@ export default function WorkoutScreen() {
 
   function workoutFinished() {
     //etIsWorkoutTimerRunning(false);
+
+    // Value to determine if a workout is underway, needed in provider but depends on screen
+    setActiveWorkout(false);
+
     navigation.navigate('WorkoutComplete');
   }
 

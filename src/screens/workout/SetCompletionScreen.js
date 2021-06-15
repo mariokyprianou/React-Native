@@ -17,6 +17,7 @@ import {msToHMS} from '../../utils/dateTimeUtils';
 // import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import UseData from '../../hooks/data/UseData';
 import HorizontalScrollPicker from '../../components/Infographics/HorizontalScrollPicker';
+import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function SetCompletionScreen({
   restTime,
@@ -205,6 +206,8 @@ function TimerView(props) {
     timer: props.restTime,
   });
 
+  const {isWorkoutTimerRunning} = useWorkoutTimer();
+
   const styles = {
     title: {
       ...textStyles.bold22_black100,
@@ -222,6 +225,11 @@ function TimerView(props) {
     reset();
     toggle();
   }, []);
+
+  // When timer is paused by user.
+  useEffect(() => {
+    toggle();
+  }, [isWorkoutTimerRunning]);
 
   useEffect(() => {
     if (remainingMS === 0) {

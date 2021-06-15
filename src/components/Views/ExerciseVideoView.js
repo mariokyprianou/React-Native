@@ -82,14 +82,12 @@ export default function ({
 
   // When timer is paused by user.
   useEffect(() => {
-    if (isContinuous) {
-      if (isWorkoutTimerRunning === false) {
-        videoRef.current && videoRef.current.pause();
-        setIsPaused(true);
-      } else if (isWorkoutTimerRunning === true && isPaused === true) {
-        videoRef.current && videoRef.current.pause();
-        setIsPaused(false);
-      }
+    if (isWorkoutTimerRunning === false) {
+      videoRef.current && videoRef.current.pause();
+      setIsPaused(true);
+    } else if (isWorkoutTimerRunning === true && isPaused === true) {
+      videoRef.current && videoRef.current.pause();
+      setIsPaused(false);
     }
   }, [isWorkoutTimerRunning]);
 

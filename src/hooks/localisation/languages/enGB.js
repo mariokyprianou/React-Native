@@ -458,7 +458,7 @@ const enGB = {
     OnDemandInternet:
       'Oops! Please check your internet connection to view on demand workouts.',
 
-    ContinueWorkout: 'Would you like to continue the workout?',
+    ContinueWorkout: 'Are you ready to continue your workout?',
     Continue: 'Continue',
   },
 

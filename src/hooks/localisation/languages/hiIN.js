@@ -463,8 +463,8 @@ const hiIN = {
     OnDemandInternet:
       'Oops! Please check your internet connection to view on demand workouts.',
 
-    ContinueWorkout: 'Would you like to continue the workout?',
-    Continue: 'Continue',
+    ContinueWorkout: 'क्या आप अपना वर्क आउट जारी रखने के लिए तैयार हैं?',
+    Continue: 'जारी रखें',
   },
 
   OnDemandDict: {

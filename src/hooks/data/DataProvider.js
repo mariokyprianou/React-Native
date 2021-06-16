@@ -512,6 +512,16 @@ export default function DataProvider(props) {
     checkUser();
   }, []);
 
+  const dataProviderSyncronousUpdate = useCallback(async () => {
+    setProgramme(null);
+    setCurrentWeek(null);
+    setNextWeek(null);
+    setWorkoutTags(null);
+    setOnDemandWorkouts();
+
+    await Promise.all([getProgramme(), getWorkoutTags()]);
+  }, [getProgramme, getWorkoutTags]);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -544,7 +554,6 @@ export default function DataProvider(props) {
       reset,
       initCacheWeekVideos,
       workoutTags,
-      //setWorkoutTags,
       getWorkoutTags,
       selectedWorkoutTags,
       setSelectedWorkoutTags,
@@ -557,6 +566,7 @@ export default function DataProvider(props) {
       refetchData,
       setShouldIncrementOnDemandWorkoutCount,
       shouldIncrementOnDemandWorkoutCount,
+      dataProviderSyncronousUpdate,
     }),
     [
       programme,
@@ -587,7 +597,6 @@ export default function DataProvider(props) {
       reset,
       initCacheWeekVideos,
       workoutTags,
-      //setWorkoutTags,
       getWorkoutTags,
       selectedWorkoutTags,
       setSelectedWorkoutTags,
@@ -600,6 +609,7 @@ export default function DataProvider(props) {
       refetchData,
       setShouldIncrementOnDemandWorkoutCount,
       shouldIncrementOnDemandWorkoutCount,
+      dataProviderSyncronousUpdate,
     ],
   );
 

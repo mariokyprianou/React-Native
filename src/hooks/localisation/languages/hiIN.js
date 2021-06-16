@@ -276,8 +276,8 @@ const hiIN = {
     CancelButton: SharedDict.Cancel,
     Cancel: SharedDict.Cancel,
     UnableToUpdate: 'सेटिंग्स को अपडेट करने में असमर्थ हैं',
-    Restart: 'रिस्टार्ट',
-    RestartAlert:
+    Refresh: 'रिस्टार्ट',
+    RefreshAlert:
       'भाषा परिवर्तन / चेंज होने के लिए, ऐप को पुनः आरंभ करने की आवश्यकता है',
   },
 

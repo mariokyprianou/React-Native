@@ -194,6 +194,13 @@ export default function DataProvider(props) {
     setChallenges([]);
   }, []);
 
+  const progressProviderSyncronousUpdate = useCallback(async () => {
+    setHistory(null);
+    setChallenges([]);
+
+    await Promise.all([getChallenges(), getHistory()]);
+  }, [getChallenges, getHistory]);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
 
   const values = useMemo(
@@ -214,6 +221,7 @@ export default function DataProvider(props) {
       getProgressData,
       resetProgressData,
       addProgressImage,
+      progressProviderSyncronousUpdate,
     }),
     [
       progress,
@@ -232,6 +240,7 @@ export default function DataProvider(props) {
       getProgressData,
       resetProgressData,
       addProgressImage,
+      progressProviderSyncronousUpdate,
     ],
   );
 

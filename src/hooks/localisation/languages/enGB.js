@@ -272,9 +272,9 @@ const enGB = {
     CancelButton: SharedDict.Cancel,
     Cancel: SharedDict.Cancel,
     UnableToUpdate: 'Unable to update settings',
-    Restart: 'Restart',
-    RestartAlert:
-      'For the language change to take effect, the app needs to restart.',
+    Refresh: 'Refresh',
+    RefreshAlert:
+      'For the language change to take effect, the app needs to refresh.',
   },
 
   ShareDict: {

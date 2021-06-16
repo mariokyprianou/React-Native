@@ -15,7 +15,7 @@ import TDSettings from 'the-core-ui-module-tdsettings';
 import SettingsCell from 'the-core-ui-module-tdsettings/src/cells/SettingsCell';
 import VersionCell from 'the-core-ui-module-tdsettings/src/cells/VersionCell';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
-import {useQuery, useMutation} from '@apollo/client';
+import {useMutation} from '@apollo/client';
 import {useRoute} from '@react-navigation/core';
 import useTheme from '../../hooks/theme/UseTheme';
 import Header from '../../components/Headers/Header';
@@ -24,7 +24,6 @@ import DropDownIcon from '../../components/cells/DropDownIcon';
 import Spacer from '../../components/Utility/Spacer';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
 import useUserData from '../../hooks/data/useUserData';
-import useData from '../../hooks/data/UseData';
 import AsyncStorage from '@react-native-community/async-storage';
 import displayAlert from '../../utils/DisplayAlert';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
@@ -32,7 +31,9 @@ import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import UseData from '../../hooks/data/UseData';
 import {useNetInfo} from '@react-native-community/netinfo';
-import RNRestart from 'react-native-restart';
+import useCommonData from '../../hooks/data/useCommonData';
+import useProgressData from '../../hooks/data/useProgressData';
+import useLoading from '../../hooks/loading/useLoading';
 
 const SettingsScreen = ({}) => {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -57,9 +58,13 @@ const SettingsScreen = ({}) => {
     getPreferences,
     setPreferences,
     timeZones,
+    getProfile,
   } = useUserData();
 
-  const {programme, initCacheWeekVideos} = UseData();
+  const {commonDataProviderSyncronousUpdate} = useCommonData();
+  const {dataProviderSyncronousUpdate} = UseData();
+  const {progressProviderSyncronousUpdate} = useProgressData();
+  const {setLoading} = useLoading();
 
   const navigation = useNavigation();
 
@@ -282,19 +287,26 @@ const SettingsScreen = ({}) => {
     if (prevLanguage !== language) {
       displayAlert({
         title: null,
-        text: ProfileDict.RestartAlert,
+        text: ProfileDict.RefreshAlert,
         buttons: [
           {
             text: ProfileDict.Cancel,
             style: 'cancel',
           },
           {
-            text: ProfileDict.Restart,
+            text: ProfileDict.Refresh,
             onPress: async () => {
-              // We only want to change language if the user selects to restart,
+              setLoading(true);
+              // We only want to change language if the user selects to refresh,
               // otherwise we'll end up with static translated content and not strtanslated dynamic content
               await setLanguage(language);
-              RNRestart.Restart();
+              await Promise.all([
+                dataProviderSyncronousUpdate(),
+                commonDataProviderSyncronousUpdate(),
+                progressProviderSyncronousUpdate(),
+                getProfile(),
+              ]);
+              setLoading(false);
             },
           },
         ],

@@ -69,7 +69,7 @@ export default function DataProvider(props) {
     getLegals();
   }, []);
 
-  const syncronousUpdate = useCallback(async () => {
+  const commonDataProviderSyncronousUpdate = useCallback(async () => {
     await Promise.all([
       getOnboarding(),
       getTrainers(),
@@ -237,7 +237,7 @@ export default function DataProvider(props) {
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
-      syncronousUpdate,
+      commonDataProviderSyncronousUpdate,
     }),
     [
       onboarding,
@@ -248,7 +248,7 @@ export default function DataProvider(props) {
       programmeQuestionnaire,
       suggestedProgramme,
       setSuggestedProgramme,
-      syncronousUpdate,
+      commonDataProviderSyncronousUpdate,
     ],
   );
 

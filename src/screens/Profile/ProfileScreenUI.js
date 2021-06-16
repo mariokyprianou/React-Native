@@ -292,6 +292,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
         {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
+            setLoading(true);
             await Auth.signOut()
               .then(async (res) => {
                 console.log(res, '<----sign out res');
@@ -305,11 +306,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                   index: 0,
                   routes: [{name: 'AuthContainer'}],
                 });
-                setLoading(false);
               })
               .catch(async (err) => {
                 console.log('Error signing out', err);
-              });
+              })
+              .finally(() => setLoading(false));
           },
         },
       ],

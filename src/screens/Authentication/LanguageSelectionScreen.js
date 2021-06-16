@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
-import {View, Image, Dimensions, StatusBar} from 'react-native';
+import React from 'react';
+import {View, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -15,7 +15,6 @@ import {useNavigation} from '@react-navigation/native';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import {Form, FormHook} from 'the-core-ui-module-tdforms';
 import TDIcon from 'the-core-ui-component-tdicon';
-import {languageRestart} from '../../utils/languageRestart';
 import Video from 'react-native-video';
 import useCommonData from '../../hooks/data/useCommonData';
 import useLoading from '../../hooks/loading/useLoading';
@@ -33,7 +32,7 @@ export default function LanguageSelectionScreen() {
     dropdownStyle,
   } = useTheme();
 
-  const {getOnboarding, getTrainers, syncronousUpdate} = useCommonData();
+  const {commonDataProviderSyncronousUpdate} = useCommonData();
   const {dictionary, setLanguage, getLanguage} = useDictionary();
   const {LanguageDict} = dictionary;
 
@@ -146,7 +145,7 @@ export default function LanguageSelectionScreen() {
 
             if (language !== prevLang) {
               setLoading(true);
-              await syncronousUpdate();
+              await commonDataProviderSyncronousUpdate();
 
               setTimeout(() => {
                 navigate();

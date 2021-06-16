@@ -461,10 +461,15 @@ const hiIN = {
     DownloadWeek:
       'इस सप्ताह के वर्कआउट ऑफ़लाइन एक्सेस करने के लिए वर्कआउट डाउनलोड करें?',
     OnDemandInternet:
-      'Oops! Please check your internet connection to view on demand workouts.',
+      'ऑन-डिमांड वर्कआउट देखने के लिए कृपया अपने इंटरनेट कनेक्शन की जांच करें।',
 
     ContinueWorkout: 'क्या आप अपना वर्क आउट जारी रखने के लिए तैयार हैं?',
     Continue: 'जारी रखें',
+
+    ReviewRequest:
+      'Well done completing your 2nd workout! Would you take a minute to leave review about your experience?',
+    ReviewRequestSkip: 'Skip',
+    ReviewRequestReview: 'Review',
   },
 
   OnDemandDict: {

@@ -6,7 +6,7 @@
  */
 
 import React, {useState, useCallback, useEffect} from 'react';
-import {Platform} from 'react-native';
+import {Platform, Linking} from 'react-native';
 import {Auth, Hub} from 'aws-amplify';
 import {getUniqueId} from 'react-native-device-info';
 
@@ -28,6 +28,8 @@ import Profile from '../../apollo/queries/Profile';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import OfflineUtils from './OfflineUtils';
 import Intercom from 'react-native-intercom';
+import displayAlert from '../../utils/DisplayAlert';
+import useDictionary from '../localisation/useDictionary';
 
 export default function UserDataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
@@ -203,26 +205,66 @@ export default function UserDataProvider(props) {
   // 3 workouts are allowed without subscription
   const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
 
+  const updateUserData = useCallback(async () => {
+    const language = await AsyncStorage.getItem('@language');
+    Intercom.updateUser({
+      name: `${userData.givenName} ${userData.familyName}`,
+      language_override: language.slice(0, 2),
+    });
+  }, [userData]);
+
+  const {dictionary} = useDictionary();
+  const {WorkoutDict} = dictionary;
+
+  const checkShouldShowReviewMessage = useCallback(async () => {
+    const value =
+      (await AsyncStorage.getItem('@REVIEW_REQUEST_SHOWN')) || 'false';
+    const reviewRequestShown = JSON.parse(value);
+
+    if (reviewRequestShown) return;
+
+    const {completedWorkouts} = userData;
+
+    if (completedWorkouts === 2) {
+      displayAlert({
+        title: null,
+        text: WorkoutDict.ReviewRequest,
+        buttons: [
+          {
+            text: WorkoutDict.ReviewRequestSkip,
+          },
+          {
+            text: WorkoutDict.ReviewRequestReview,
+            onPress: async () => {
+              Linking.openURL(
+                Platform.OS === 'android'
+                  ? 'https://play.google.com/store/apps/details?id=com.powerdigitallimited.power'
+                  : 'https://apps.apple.com/gb/app/power-workout-with-the-stars/id1557873992',
+              );
+              await AsyncStorage.setItem(
+                '@REVIEW_REQUEST_SHOWN',
+                JSON.stringify(true),
+              );
+            },
+          },
+        ],
+      });
+    }
+  }, [userData]);
+
   // Update completedFreeWorkouts
   useEffect(() => {
     if (userData && userData.completedWorkouts) {
       const {completedWorkouts} = userData;
       console.log('completedWorkouts', completedWorkouts);
       setCompletedFreeWorkouts(completedWorkouts >= 3);
+      checkShouldShowReviewMessage();
     } else {
       setCompletedFreeWorkouts(false);
     }
 
-    updateUserData(userData);
+    updateUserData();
   }, [userData]);
-
-  async function updateUserData(newData) {
-    const language = await AsyncStorage.getItem('@language');
-    Intercom.updateUser({
-      name: `${userData.givenName} ${userData.familyName}`,
-      language_override: language.slice(0, 2),
-    });
-  }
 
   const getProfile = useCallback(() => {
     runQuery({

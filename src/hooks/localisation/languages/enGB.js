@@ -460,6 +460,11 @@ const enGB = {
 
     ContinueWorkout: 'Are you ready to continue your workout?',
     Continue: 'Continue',
+
+    ReviewRequest:
+      'Well done completing your 2nd workout! Would you take a minute to leave review about your experience?',
+    ReviewRequestSkip: 'Skip',
+    ReviewRequestReview: 'Review',
   },
 
   OnDemandDict: {

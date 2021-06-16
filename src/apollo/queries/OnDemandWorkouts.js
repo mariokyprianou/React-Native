@@ -40,6 +40,7 @@ export default gql`
             restTime
           }
           setType
+          notes
         }
         programme {
           environment

@@ -9,7 +9,6 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   Platform,
   StyleSheet,
   ScrollView,
@@ -23,8 +22,6 @@ import useLoading from '../../hooks/loading/useLoading';
 import useData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import * as R from 'ramda';
-import {differenceInDays, format} from 'date-fns';
 import OnDemandWorkoutCard from '../../components/Cards/OnDemandWorkoutCard';
 import WorkoutTagButton from '../../components/Buttons/WorkoutTagButton';
 import displayAlert from '../../utils/DisplayAlert';
@@ -36,12 +33,8 @@ export default function OnDemandScreen() {
   const {dictionary} = useDictionary();
   const {OnDemandDict, WorkoutDict} = dictionary;
 
-  const [weekNumber, setWeekNumber] = useState(1);
-  const [stayTunedEnabled, setStayTunedEnabled] = useState(true);
-
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
-  const [filteredWorkouts, setFilteredWorkouts] = useState();
   const navigation = useNavigation();
   const {setLoading} = useLoading();
   const {
@@ -53,11 +46,8 @@ export default function OnDemandScreen() {
   const {
     workoutTags,
     getWorkoutTags,
-    setWorkoutTags,
     setSelectedWorkoutTags,
     onDemandWorkouts,
-    getOnDemandWorkouts,
-    setOnDemandWorkouts,
     setSelectedWorkout,
     setIsSelectedWorkoutOnDemand,
   } = useData();
@@ -68,20 +58,21 @@ export default function OnDemandScreen() {
     navigation.setOptions({
       header: () => null,
     });
-  }, []);
+  }, [navigation]);
 
+  // Get tags on focus if there is no data already
   useEffect(() => {
     if (isFocused && (!workoutTags || workoutTags.length === 0)) {
       console.log('Focused Tab2: need refetch');
       setLoading(true);
       getWorkoutTags();
     }
-  }, [isFocused]);
+  }, [getWorkoutTags, isFocused, setLoading, workoutTags]);
 
-  // Check if week is completed
+  // Show tags on UI
   useEffect(() => {
     if (workoutTags && workoutTags.length > 0) {
-      const tagIds = workoutTags.map((tag) => tag.id);
+      console.log('Show all tags');
 
       const newWorkoutTags = workoutTags.map((obj) => ({
         ...obj,
@@ -93,19 +84,10 @@ export default function OnDemandScreen() {
     }
   }, [workoutTags]);
 
-  useEffect(() => {
-    if (onDemandWorkouts && onDemandWorkouts.length > 0) {
-      setWorkoutsToDisplay(onDemandWorkouts);
-      setLoading(false);
-    } else {
-      // TODO - Handle Zero State
-      setLoading(false);
-    }
-  }, [onDemandWorkouts]);
-
+  // Show filtered tags and workouts for them
   useEffect(() => {
     const selectedWorkouts = workoutTagsToDisplay.filter(
-      (x) => x.isSelected == true,
+      (x) => x.isSelected === true,
     );
 
     const tagIds =
@@ -116,6 +98,8 @@ export default function OnDemandScreen() {
     setSelectedWorkoutTags(tagIds);
 
     if (onDemandWorkouts && onDemandWorkouts.length > 0) {
+      console.log('Show filtered tags and workouts for them');
+
       const filtered = onDemandWorkouts.filter((workout) => {
         let matchingIds = 0;
         workout.tags.forEach((tag) => {
@@ -125,18 +109,18 @@ export default function OnDemandScreen() {
         });
         return matchingIds > 0;
       });
-      setFilteredWorkouts(filtered);
+      setWorkoutsToDisplay(filtered);
+    } else {
+      // TODO - Handle Zero State
+      setWorkoutsToDisplay([]);
     }
-
-    // getOnDemandWorkouts(tagIds);
-  }, [workoutTagsToDisplay]);
-
-  useEffect(() => {
-    if (filteredWorkouts) {
-      setWorkoutsToDisplay(filteredWorkouts);
-      setLoading(false);
-    }
-  }, [filteredWorkouts]);
+    setLoading(false);
+  }, [
+    onDemandWorkouts,
+    setLoading,
+    setSelectedWorkoutTags,
+    workoutTagsToDisplay,
+  ]);
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
 
@@ -231,7 +215,7 @@ export default function OnDemandScreen() {
                 onPressCard={(workoutTag) => {
                   let newTags = workoutTagsToDisplay.slice();
                   const foundIndex = newTags.findIndex(
-                    (x) => x.id == workoutTag.id,
+                    (x) => x.id === workoutTag.id,
                   );
                   const existingTag = newTags[foundIndex];
                   const newTag = {

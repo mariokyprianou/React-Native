@@ -60,18 +60,6 @@ export default function WorkoutScreen() {
     getProfile,
   } = useUserData();
 
-  // Value to determine if a workout is underway, needed in provider but depends on screen
-  const {setActiveWorkout} = useWorkoutTimer();
-  useEffect(() => {
-    console.log('IsActiveWorkoutUseEfffect: Set to true');
-
-    setActiveWorkout(true);
-    return () => {
-      console.log('IsActiveWorkoutUseEfffectReturn: Set to false');
-      setActiveWorkout(false);
-    };
-  }, []);
-
   const {getPreferences, preferences} = useUserData();
 
   const [enableScroll, setEnableScroll] = useState(true);
@@ -227,9 +215,6 @@ export default function WorkoutScreen() {
 
   function workoutFinished() {
     //etIsWorkoutTimerRunning(false);
-
-    // Value to determine if a workout is underway, needed in provider but depends on screen
-    setActiveWorkout(false);
 
     navigation.navigate('WorkoutComplete');
   }

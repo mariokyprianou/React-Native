@@ -37,7 +37,9 @@ const HorizontalScrollPicker = ({
 
   useEffect(() => {
     setTimeout(() => {
-      listRef.current.scrollToIndex({animated: true, index: selected});
+      if (listRef && listRef.current) {
+        listRef.current.scrollToIndex({animated: true, index: selected});
+      }
     }, 200);
   }, [selected]);
 

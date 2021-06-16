@@ -61,7 +61,11 @@ export default function WorkoutCompleteScreen() {
   } = UseData();
 
   const {setLoading} = useLoading();
-  const {setIsWorkoutTimerRunning, workoutTime} = useWorkoutTimer();
+  const {
+    setIsWorkoutTimerRunning,
+    workoutTime,
+    setActiveWorkout,
+  } = useWorkoutTimer();
 
   const [completeOnDemandWorkout] = useMutation(CompleteOnDemandWorkout);
   const [completeWorkout] = useMutation(CompleteWorkout);
@@ -79,6 +83,8 @@ export default function WorkoutCompleteScreen() {
     });
 
     setIsWorkoutTimerRunning(false);
+    // Value to determine if a workout is underway, needed in provider but depends on screen
+    setActiveWorkout(false);
   }, []);
 
   useBackHandler(() => {

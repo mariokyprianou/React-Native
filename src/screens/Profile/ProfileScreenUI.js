@@ -305,6 +305,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
                   index: 0,
                   routes: [{name: 'AuthContainer'}],
                 });
+                setLoading(false);
               })
               .catch(async (err) => {
                 console.log('Error signing out', err);

@@ -300,7 +300,7 @@ export default function DataProvider(props) {
     }
   }, [runQuery]);
 
-  const processProgramme = async (data) => {
+  const processProgramme = useCallback(async (data) => {
     console.log('Got programme');
     // Check programme is completed
     if (data.isComplete) {
@@ -357,7 +357,7 @@ export default function DataProvider(props) {
     );
 
     setProgramme(newData);
-  };
+  }, []);
 
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 

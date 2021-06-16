@@ -39,7 +39,11 @@ export default function StartWorkoutScreen() {
   const {WorkoutDict, ProfileDict} = dictionary;
 
   const {firebaseLogEvent, analyticsEvents} = useUserData();
-  const {setWorkoutTime, setIsWorkoutTimerRunning} = useWorkoutTimer();
+  const {
+    setWorkoutTime,
+    setIsWorkoutTimerRunning,
+    setActiveWorkout,
+  } = useWorkoutTimer();
 
   const [topViewProps, setTopViewProps] = useState({});
 
@@ -137,6 +141,7 @@ export default function StartWorkoutScreen() {
       workoutName: selectedWorkout.name,
     });
 
+    setActiveWorkout(true);
     navigation.navigate('Workout');
   }
 

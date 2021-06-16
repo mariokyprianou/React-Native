@@ -209,10 +209,10 @@ export default function ExerciseView(props) {
     setSets(newSets);
 
     // start rest timer
-    if (restTime && props.setType !== 'REPS') {
-      setCountDown(true);
-    } else if (exercise.weight) {
+    if (exercise.weight) {
       setSetComplete(true);
+    } else if (restTime) {
+      setCountDown(true);
     }
 
     // Handle no weight or rest time

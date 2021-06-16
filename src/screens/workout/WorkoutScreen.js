@@ -70,7 +70,7 @@ export default function WorkoutScreen() {
   const [weightLabel, setWeightLabel] = useState('kg');
 
   const {remainingMS, toggle, reset, restart} = useTimer({
-    timer: '03:00',
+    timer: '02:00',
   });
 
   const scrollRef = useRef();

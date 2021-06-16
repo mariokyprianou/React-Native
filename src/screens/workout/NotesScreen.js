@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';

@@ -181,7 +181,7 @@ export default function WorkoutCompleteScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function submitWorkout() {
+  async function submitWorkout() {
     if (!selectedEmoji) {
       return;
     }
@@ -218,7 +218,7 @@ export default function WorkoutCompleteScreen() {
     }
 
     if (isSelectedWorkoutOnDemand && shouldIncrementOnDemandWorkoutCount) {
-      startOnDemandWorkout({
+      await startOnDemandWorkout({
         variables: {
           input: {
             workoutId: selectedWorkout.id,

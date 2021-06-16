@@ -71,6 +71,13 @@ export default function ExerciseView(props) {
       key: 'getExerciseWeight',
       variables: {exercise: exercise.id},
       setValue: (res) => {
+        console.log(
+          'getWeightHistory Processed Res:',
+          exercise.id,
+          exercise.name,
+          res,
+        );
+
         if (res) {
           if (res && res.length > 0) {
             setWeightHistory(res);
@@ -78,11 +85,8 @@ export default function ExerciseView(props) {
             setWeightHistory([]);
           }
         }
-        return res;
       },
     });
-
-    console.log('getWeightHistory Processed Res:', res);
   }, [runQuery, exercise]);
 
   // To observe sets are behaving as expected

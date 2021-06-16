@@ -8,7 +8,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -144,6 +144,14 @@ export default function StartWorkoutScreen() {
     setActiveWorkout(true);
     navigation.navigate('Workout');
   }
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      setActiveWorkout(false);
+    }
+  }, [isFocused]);
 
   return (
     <>

@@ -25,7 +25,7 @@ export default function DataProvider(props) {
 
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const {dictionary, locale} = useDictionary();
+  const {dictionary, locale, getItem, translateMap} = useDictionary();
   const {HelpMeChooseDict, OnboardingDict} = dictionary;
 
   const [onboarding, setOnboarding] = useState();
@@ -206,15 +206,20 @@ export default function DataProvider(props) {
             });
             return {...question, answers: formattedQuestion};
           });
+
+          // Force get the correct dictionary as it didnt see to use the updated one
+          const language = await getItem();
+          const dict = translateMap[language];
+
           const localQuestion = {
             orderIndex: 1,
             answers: [
-              {answerText: HelpMeChooseDict.Home, key: '1'},
-              {answerText: HelpMeChooseDict.Gym, key: '2'},
+              {answerText: dict.HelpMeChooseDict.Home, key: '1'},
+              {answerText: dict.HelpMeChooseDict.Gym, key: '2'},
             ],
             question: {
-              language: HelpMeChooseDict.Locale,
-              question: HelpMeChooseDict.EnvironmentQuestion,
+              language: dict.HelpMeChooseDict.Locale,
+              question: dict.HelpMeChooseDict.EnvironmentQuestion,
             },
           };
 
@@ -223,7 +228,7 @@ export default function DataProvider(props) {
         }
       },
     });
-  }, [runQuery, HelpMeChooseDict]);
+  }, [runQuery, HelpMeChooseDict, locale]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 

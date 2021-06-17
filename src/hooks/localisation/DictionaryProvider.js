@@ -93,8 +93,18 @@ const DictionaryProvider = ({presetLocale, children}) => {
       setLanguage,
       getLanguage,
       dictionaryLoading,
+      getItem,
+      translateMap,
     }),
-    [locale, dictionary, setLanguage, getLanguage, dictionaryLoading],
+    [
+      locale,
+      dictionary,
+      setLanguage,
+      getLanguage,
+      dictionaryLoading,
+      getItem,
+      translateMap,
+    ],
   );
 
   /*

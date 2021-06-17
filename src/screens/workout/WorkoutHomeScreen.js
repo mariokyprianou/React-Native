@@ -416,14 +416,14 @@ export default function WorkoutHomeScreen() {
 
     DisplayAlert({
       title: null,
-      text: "Download this week's workouts to access offline?",
+      text: WorkoutDict.DownloadWeek,
       buttons: [
         {
           text: ProfileDict.Cancel,
           style: 'cancel',
         },
         {
-          text: 'Download',
+          text: WorkoutDict.Download,
           onPress: async () => {
             setDownloading(true);
             const res = await initCacheWeekVideos(

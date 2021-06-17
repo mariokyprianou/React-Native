@@ -455,6 +455,8 @@ const enGB = {
     SomethingWentWrong: 'Oops! Something went wrong. Try again later.',
     DownloadComplete: 'Downloading workouts for week completed.',
     DownloadWeek: 'Download this week’s workouts to access offline?',
+    Download: 'Download',
+
     OnDemandInternet:
       'Oops! Please check your internet connection to view on demand workouts.',
 

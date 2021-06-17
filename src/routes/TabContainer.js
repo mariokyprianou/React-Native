@@ -37,7 +37,7 @@ export default function TabContainer() {
 
   const {fontSize, getHeight, getScaledHeight, getWidth} = ScaleHook();
   const {colors} = useTheme();
-  const {dictionary} = useDictionary();
+  const {dictionary, locale, getItem, translateMap} = useDictionary();
   const {TabsTitleDict} = dictionary;
 
   const {loading, setLoading} = useLoading();
@@ -60,12 +60,16 @@ export default function TabContainer() {
     if (Platform.OS === 'ios') {
       ScreenCapture.preventScreenCaptureAsync();
 
-      screenshotListener = ScreenCapture.addScreenshotListener(() => {
+      screenshotListener = ScreenCapture.addScreenshotListener(async () => {
+        // Force get the correct dictionary as it didnt see to use the updated one
+        const language = await getItem();
+        const dict = translateMap[language];
+
         displayAlert({
-          text: TabsTitleDict.ScreenShotMessage,
+          text: dict.TabsTitleDict.ScreenShotMessage,
           buttons: [
             {
-              text: TabsTitleDict.ScreenShotButton,
+              text: dict.TabsTitleDict.ScreenShotButton,
               onPress: () => {
                 increaseShotTaken()
                   .then((res) => {
@@ -94,8 +98,7 @@ export default function TabContainer() {
         screenshotListener.remove();
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [TabsTitleDict, increaseShotTaken, locale, setSuspendedAccount]);
 
   const tabIcons = {
     workout: require('../../assets/icons/workout.png'),

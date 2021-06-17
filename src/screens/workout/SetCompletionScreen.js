@@ -140,12 +140,12 @@ export default function SetCompletionScreen({
     setWeightHistory([...exerciseHistory, weightDetails]);
 
     setWeightAdded(true);
-    if (!restTime || timerFinished === true) {
-      setSetComplete(false);
-    }
-  }
 
-  console.log('WEIGHT ADDED: ', weightAdded);
+    // if (!restTime || timerFinished === true) {
+    //   setSetComplete(false);
+    // }
+    setSetComplete(false);
+  }
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

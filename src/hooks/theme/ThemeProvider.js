@@ -814,7 +814,7 @@ export default function ThemeProvider({children}) {
       textAlign: 'center',
       position: 'absolute',
       width: '100%',
-      marginTop: SCREEN_WIDTH - 50,
+      bottom: 30,
     },
   };
 

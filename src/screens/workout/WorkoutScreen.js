@@ -6,15 +6,7 @@
  */
 
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Text,
-  Platform,
-  Dimensions,
-  AppState,
-} from 'react-native';
+import {StyleSheet, View, ScrollView, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {useBackHandler} from '@react-native-community/hooks';
@@ -31,7 +23,6 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
 import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
-import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -181,6 +172,15 @@ export default function WorkoutScreen() {
       height: getHeight(2),
       backgroundColor: colors.offWhite100,
     },
+    previewContainer: {
+      position: 'absolute',
+      width: '100%',
+    },
+    upNextOverlay: {
+      position: 'absolute',
+      width: '100%',
+      bottom: 0,
+    },
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
@@ -283,28 +283,26 @@ export default function WorkoutScreen() {
       {exerciseToPreview &&
         showPreviewOfNextVideo === true &&
         selectedWorkout.isContinuous === true && (
-          <ExerciseVideoView
-            {...exerciseToPreview}
-            index={currentExerciseIndex + 1}
-            setType={exerciseToPreview.setType}
-            isContinuous={selectedWorkout.isContinuous}
-            isPreview={true}
-            showUpNext={
-              <>
-                <View
-                  style={{
-                    position: 'absolute',
-                    width: '100%',
-                    bottom: 0,
-                  }}>
-                  <FadingBottomView color="black" height={150} />
-                </View>
-                <Text style={exerciseViewStyle.timerUpNextTextStyle}>
-                  {WorkoutDict.UpNext}
-                </Text>
-              </>
-            }
-          />
+          <View style={styles.previewContainer}>
+            <View style={styles.headerBorder} />
+            <ExerciseVideoView
+              {...exerciseToPreview}
+              index={currentExerciseIndex + 1}
+              setType={exerciseToPreview.setType}
+              isContinuous={selectedWorkout.isContinuous}
+              isPreview={true}
+              showUpNext={
+                <>
+                  <View style={styles.upNextOverlay}>
+                    <FadingBottomView color="black" height={180} />
+                  </View>
+                  <Text style={exerciseViewStyle.timerUpNextTextStyle}>
+                    {WorkoutDict.UpNext}
+                  </Text>
+                </>
+              }
+            />
+          </View>
         )}
     </View>
   );

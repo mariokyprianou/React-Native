@@ -9,7 +9,6 @@ import React, {useState, useRef, useEffect} from 'react';
 import {View, TouchableOpacity, Animated, Dimensions} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
-import SliderProgressView from './SliderProgressView';
 import {VideoView} from 'the-core-ui-module-tdmediamanager';
 import ControlsView from './ControlsView';
 import UseData from '../../hooks/data/UseData';
@@ -61,11 +60,6 @@ export default function ({
     container: {
       width: '100%',
       height: videoHeight,
-    },
-    containerPreview: {
-      width: '100%',
-      height: videoHeight,
-      position: 'absolute',
     },
   };
 
@@ -180,7 +174,7 @@ export default function ({
   );
 
   return (
-    <View style={isPreview ? styles.containerPreview : styles.container}>
+    <View style={styles.container}>
       <View style={{height: videoHeight}}>
         {(currentExerciseIndex === index || isPreview === true) && (
           <VideoView {...videoProps} ref={videoRef} />

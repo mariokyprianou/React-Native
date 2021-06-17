@@ -320,23 +320,6 @@ export default function ExerciseView(props) {
         index={index}
         setType={props.setType}
         isContinuous={props.isContinuous}
-        showUpNext={
-          showUpNextLabel && (
-            <>
-              <View
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  bottom: 0,
-                }}>
-                <FadingBottomView color="black" height={100} />
-              </View>
-              <Text style={styles.timerUpNextTextStyle}>
-                {WorkoutDict.UpNext}
-              </Text>
-            </>
-          )
-        }
       />
 
       <View style={styles.contentStyle}>

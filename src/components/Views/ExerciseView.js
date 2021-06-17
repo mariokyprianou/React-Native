@@ -214,6 +214,8 @@ export default function ExerciseView(props) {
 
       // also show rest timer behind weight input
       setCountDown(true);
+    } else if (exercise.weight && restTime && props.setType !== 'REPS') {
+      setCountDown(true);
     }
     // show weight input modal
     else if (exercise.weight) {

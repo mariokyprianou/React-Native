@@ -141,10 +141,10 @@ export default function SetCompletionScreen({
 
     setWeightAdded(true);
 
-    // if (!restTime || timerFinished === true) {
-    //   setSetComplete(false);
-    // }
-    setSetComplete(false);
+    if (!restTime || timerFinished === true) {
+      setSetComplete(false);
+    }
+    // setSetComplete(false);
   }
 
   // ** ** ** ** ** RENDER ** ** ** ** **

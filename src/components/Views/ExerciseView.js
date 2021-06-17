@@ -208,10 +208,19 @@ export default function ExerciseView(props) {
 
     setSets(newSets);
 
-    // start rest timer
-    if (exercise.weight) {
+    // Only if its Reps show weight first, timed sets need to show counddown first
+    if (exercise.weight && restTime && props.setType === 'REPS') {
       setSetComplete(true);
-    } else if (restTime) {
+
+      // also show rest timer behind weight input
+      setCountDown(true);
+    }
+    // show weight input modal
+    else if (exercise.weight) {
+      setSetComplete(true);
+    }
+    // Show rest timer countdown
+    else if (restTime) {
       setCountDown(true);
     }
 
@@ -241,7 +250,8 @@ export default function ExerciseView(props) {
   const onCancelTimer = () => {
     setCountDown(false);
 
-    if (exercise.weight) {
+    // Set with Reps already showed weight input, timed sets need to show weight after countdown
+    if (exercise.weight && props.setType !== 'REPS') {
       setSetComplete(true);
       return;
     }

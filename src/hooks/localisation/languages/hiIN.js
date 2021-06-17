@@ -466,10 +466,9 @@ const hiIN = {
     ContinueWorkout: 'क्या आप अपना वर्क आउट जारी रखने के लिए तैयार हैं?',
     Continue: 'जारी रखें',
 
-    ReviewRequest:
-      'Well done completing your 2nd workout! Would you take a minute to leave review about your experience?',
-    ReviewRequestSkip: 'Skip',
-    ReviewRequestReview: 'Review',
+    ReviewRequest: 'POWER का आनंद ले रहे हैं? हमें बताऐ!',
+    ReviewRequestSkip: 'छोड़ें',
+    ReviewRequestReview: 'हमें बताएं',
   },
 
   OnDemandDict: {

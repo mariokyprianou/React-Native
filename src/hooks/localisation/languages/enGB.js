@@ -353,7 +353,7 @@ const enGB = {
     OnDemand: 'On Demand',
     Progress: SharedDict.Progress,
     ScreenShotMessage:
-      'Screen record or taking screenshots whilst using the Power application, can lead to suspending your account. If you would like to share your progress, please use the Share buttons that can be found throughout the app.',
+      'Screen recording or taking screenshots whilst using Power goes against the Terms of Use and can lead to account suspension. Please use the Share buttons found throughout the app to share your progress!',
     ScreenshotButton: SharedDict.Ok,
   },
 

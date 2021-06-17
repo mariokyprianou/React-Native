@@ -152,24 +152,27 @@ export default function IconTextView({
               color === 'grey' ? styles.greyText : styles.whiteText
             }>{` ${WorkoutDict.Mins}`}</Text>
         </View>
-        <View style={styles.iconTextContainer}>
-          <View style={styles.iconContainer}>
-            <TDIcon
-              input={repsIcon}
-              inputStyle={{
-                style: {
-                  ...styles.icon,
-                  ...styles.iconColor,
-                  ...styles.repsIcon,
-                },
-              }}
-            />
+        {reps !== null && reps > 0 && (
+          <View style={styles.iconTextContainer}>
+            <View style={styles.iconContainer}>
+              <TDIcon
+                input={repsIcon}
+                inputStyle={{
+                  style: {
+                    ...styles.icon,
+                    ...styles.iconColor,
+                    ...styles.repsIcon,
+                  },
+                }}
+              />
+            </View>
+
+            <Text
+              style={
+                color === 'grey' ? styles.greyText : styles.whiteText
+              }>{`${reps} ${WorkoutDict.Reps}`}</Text>
           </View>
-          <Text
-            style={
-              color === 'grey' ? styles.greyText : styles.whiteText
-            }>{`${reps} ${WorkoutDict.Reps}`}</Text>
-        </View>
+        )}
         <View style={styles.iconTextContainer}>
           <View style={styles.iconContainer}>
             <TDIcon

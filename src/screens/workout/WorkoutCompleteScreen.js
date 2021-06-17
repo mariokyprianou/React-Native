@@ -101,15 +101,10 @@ export default function WorkoutCompleteScreen() {
     selectedWorkout.exercises.map((exercise) => {
       sets += exercise.sets.length;
       exercise.sets.map((set) => {
-        switch (exercise.setType) {
-          case 'REPS': {
-            reps += set.quantity;
-            break;
-          }
-          case ('TIME', 'SECS'): {
-            seconds += set.quantity;
-            break;
-          }
+        if (exercise.setType === 'REPS') {
+          reps += set.quantity;
+        } else {
+          seconds += set.quantity;
         }
       });
     });

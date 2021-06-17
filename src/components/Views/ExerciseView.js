@@ -406,25 +406,29 @@ export default function ExerciseView(props) {
           <RepsList sets={sets} />
         </View>
 
-        {countDown && (restTime > 0 || exerciseTime > 0) && (
-          <TimerView
-            exerciseTime={exerciseTime}
-            restTime={restTime}
-            onCancelTimer={onCancelTimer}
-            onFinish={onFinishTimer}
-            onStartRest={() => {
-              console.log('starting rest');
-              if (props.isContinuous && !props.isLastExercise) {
-                setShowUpNextLabel(true);
-              } else if (!props.isContinuous && exercise.weight) {
-                setCountDown(false);
-                setSetComplete(true);
-              }
-            }}
-            setType={props.setType}
-            isContinuous={props.isContinuous}
-          />
-        )}
+        {React.useMemo(() => {
+          if (countDown && (restTime > 0 || exerciseTime > 0)) {
+            return (
+              <TimerView
+                exerciseTime={exerciseTime}
+                restTime={restTime}
+                onCancelTimer={onCancelTimer}
+                onFinish={onFinishTimer}
+                onStartRest={() => {
+                  console.log('starting rest');
+                  if (props.isContinuous && !props.isLastExercise) {
+                    setShowUpNextLabel(true);
+                  } else if (!props.isContinuous && exercise.weight) {
+                    setCountDown(false);
+                    setSetComplete(true);
+                  }
+                }}
+                setType={props.setType}
+                isContinuous={props.isContinuous}
+              />
+            );
+          }
+        }, [countDown, restTime, exerciseTime])}
       </View>
       {setComplete && (
         <SetCompletionScreen
@@ -446,6 +450,8 @@ function TimerView(props) {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
 
+  const [initialLoad, setInitialLoad] = useState(true);
+
   let durationMS = props.exerciseTime ? props.exerciseTime : props.restTime;
   let durationFormatted = msToHMS(durationMS);
   const [restDurationMS, setRestDurationMS] = useState(null);
@@ -460,16 +466,43 @@ function TimerView(props) {
   const {isWorkoutTimerRunning} = useWorkoutTimer();
 
   useEffect(() => {
-    reset();
-    toggle();
-  }, []);
+    console.log('useEffect: active', active);
+  }, [active]);
+
+  useEffect(() => {
+    if (initialLoad) {
+      console.log('useEffect: initialLoad reset timer');
+
+      setInitialLoad(false);
+      reset();
+      toggle();
+    }
+  }, [initialLoad, reset, toggle]);
 
   // When timer is paused by user.
   useEffect(() => {
-    toggle();
-  }, [isWorkoutTimerRunning]);
+    if (
+      (!active && isWorkoutTimerRunning) ||
+      (active && !isWorkoutTimerRunning)
+    ) {
+      console.log('useEffect: toggle');
+
+      toggle();
+    }
+  }, [active, isWorkoutTimerRunning, toggle]);
 
   useEffect(() => {
+    if (restDurationMS) {
+      durationMS = restDurationMS;
+      durationFormatted = msToHMS(restDurationMS);
+      restart(durationMS);
+      setShouldRestAfterExercise(false);
+    }
+  }, [restDurationMS]);
+
+  useEffect(() => {
+    console.log('useEffect: remaining ms: ', remainingMS);
+
     if (remainingMS === 0) {
       if (
         shouldRestAfterExercise === true &&
@@ -478,11 +511,11 @@ function TimerView(props) {
       ) {
         durationMS = props.restTime;
         setRestDurationMS(props.restTime);
-        durationFormatted = msToHMS(durationMS);
-        restart(durationMS);
-        setShouldRestAfterExercise(false);
+
         props.onStartRest && props.onStartRest();
       } else {
+        console.log('Or is it this one?');
+
         props.onFinish && props.onFinish();
       }
     }

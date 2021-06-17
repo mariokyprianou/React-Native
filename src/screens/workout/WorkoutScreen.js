@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {StyleSheet, View, ScrollView, Text, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -60,7 +60,7 @@ export default function WorkoutScreen() {
 
   const [weightLabel, setWeightLabel] = useState('kg');
 
-  const {remainingMS, toggle, reset, restart} = useTimer({
+  const {remainingMS, toggle, reset, active} = useTimer({
     timer: '02:00',
   });
 
@@ -68,23 +68,19 @@ export default function WorkoutScreen() {
 
   const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
 
+  const checkStartTimer = useCallback(() => {
+    if (isSelectedWorkoutOnDemand && !isSubscriptionActive && !active) {
+      reset();
+      toggle();
+    }
+  }, [isSelectedWorkoutOnDemand, isSubscriptionActive, active, reset, toggle]);
+
   useEffect(() => {
     getPreferences();
-    reset();
-    toggle();
+    checkStartTimer();
   }, []);
 
   useEffect(() => {
-    if (!isSelectedWorkoutOnDemand) {
-      reset();
-      return;
-    }
-
-    if (isSubscriptionActive) {
-      reset();
-      return;
-    }
-
     if (remainingMS === 0) {
       startOnDemandWorkout({
         variables: {
@@ -266,18 +262,20 @@ export default function WorkoutScreen() {
         onMomentumScrollEnd={(event) => {
           handleIndex(event.nativeEvent.contentOffset.y);
         }}>
-        {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView
-            {...screen}
-            index={index}
-            exerciseFinished={exerciseFinished}
-            setEnableScroll={setEnableScroll}
-            setShowPreviewOfNextVideo={setShowPreviewOfNextVideo}
-            weightLabel={weightLabel}
-            isContinuous={selectedWorkout.isContinuous}
-            isLastExercise={index === selectedWorkout.exercises.length - 1}
-          />
-        ))}
+        {React.useMemo(() => {
+          return selectedWorkout.exercises.map((screen, index) => (
+            <ExerciseView
+              {...screen}
+              index={index}
+              exerciseFinished={exerciseFinished}
+              setEnableScroll={setEnableScroll}
+              setShowPreviewOfNextVideo={setShowPreviewOfNextVideo}
+              weightLabel={weightLabel}
+              isContinuous={selectedWorkout.isContinuous}
+              isLastExercise={index === selectedWorkout.exercises.length - 1}
+            />
+          ));
+        }, [selectedWorkout.exercises])}
       </ScrollView>
 
       {exerciseToPreview &&

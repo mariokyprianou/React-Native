@@ -36,6 +36,7 @@ export default function OnDemandWorkoutCard({
   const {OnDemandDict, ButtonDict, WorkoutDict} = dictionary;
   const trainerName = workout.programme.trainer.name.toUpperCase();
   const programmeEnvironment = workout.programme.environment;
+
   const environmentName =
     programmeEnvironment === 'GYM' ? ButtonDict.Gym : ButtonDict.Home;
 
@@ -188,7 +189,7 @@ export default function OnDemandWorkoutCard({
                 }}>
                 <View style={styles.iconContainer}>
                   <TDIcon
-                    input={environmentName === 'HOME' ? homeIcon : gymIcon}
+                    input={programmeEnvironment === 'HOME' ? homeIcon : gymIcon}
                     inputStyle={{
                       style: {
                         ...styles.icon,

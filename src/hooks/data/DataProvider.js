@@ -18,7 +18,7 @@ import {
   addDays,
   parseISO,
 } from 'date-fns';
-import {Auth} from 'aws-amplify';
+import {Auth, Hub} from 'aws-amplify';
 
 import {
   initializeRestDays,
@@ -475,6 +475,7 @@ export default function DataProvider(props) {
     setCurrentWeek(null);
     setNextWeek(null);
     setWorkoutTags(null);
+    setOnDemandWorkouts();
 
     AsyncStorage.removeItem('@CURRENT_WEEK');
     AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
@@ -510,6 +511,29 @@ export default function DataProvider(props) {
     }
 
     checkUser();
+  }, []);
+
+  useEffect(() => {
+    async function checkAuth() {
+      await Auth.currentAuthenticatedUser()
+        .then((_res) => {
+          getWorkoutTags();
+        })
+        .catch((err) => {
+          console.log('UserDataProvider - checkAuth', err);
+        });
+    }
+
+    Hub.listen('auth', (data) => {
+      const {payload} = data;
+      if (payload.event === 'signIn') {
+        console.log('user has signed in');
+        checkAuth();
+      }
+      if (payload.event === 'signOut') {
+        console.log('user has signed out');
+      }
+    });
   }, []);
 
   const dataProviderSyncronousUpdate = useCallback(async () => {

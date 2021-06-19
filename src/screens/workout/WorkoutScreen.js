@@ -111,7 +111,7 @@ export default function WorkoutScreen() {
   useEffect(() => {
     if (
       showPreviewOfNextVideo === true &&
-      currentExerciseIndex < selectedWorkout.exercises.length - 2
+      currentExerciseIndex < selectedWorkout.exercises.length - 1
     ) {
       setExerciseToPreview(
         selectedWorkout.exercises[currentExerciseIndex + 1].exercise,

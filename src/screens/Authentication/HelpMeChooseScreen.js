@@ -136,7 +136,7 @@ export default function HelpMeChooseScreen() {
       })
       .catch((err) => {
         showError('Server error', 'Unable to return program');
-        console.log("submitQuestionnaire", err);
+        console.log('submitQuestionnaire', err);
       })
       .finally(() => setLoading(false));
   }
@@ -156,21 +156,27 @@ export default function HelpMeChooseScreen() {
     4: 'D',
   };
 
+  const questionText = programmeQuestionnaire
+    ? programmeQuestionnaire[currentQuestion - 1].question.question
+    : '';
+
+  const listData = programmeQuestionnaire
+    ? programmeQuestionnaire[currentQuestion - 1].answers
+    : [];
+
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <HelpMeChooseBar
           currentQuestion={currentQuestion}
           totalQuestions={programmeQuestionnaire.length}
-          questionText={
-            programmeQuestionnaire[currentQuestion - 1].question.question
-          }
+          questionText={questionText}
         />
         <Spacer height={20} />
         <View style={{height: '100%'}}>
           <FlatList
             scrollEnabled={false}
-            data={programmeQuestionnaire[currentQuestion - 1].answers}
+            data={listData}
             numColumns={2}
             columnWrapperStyle={styles.columnWrapperStyle}
             renderItem={({item, index}) => (
@@ -178,18 +184,20 @@ export default function HelpMeChooseScreen() {
                 letter={keys[item.key]}
                 text={item.answerText}
                 onPress={() => {
-                  const questionId =
-                    programmeQuestionnaire[currentQuestion - 1].id;
-                  const answerTypes = {
-                    0: 'ONE',
-                    1: 'TWO',
-                    2: 'THREE',
-                    3: 'FOUR',
-                  };
-                  setNewAnswer({
-                    question: questionId || 'environment',
-                    answer: answerTypes[index],
-                  });
+                  if (programmeQuestionnaire) {
+                    const questionId =
+                      programmeQuestionnaire[currentQuestion - 1].id;
+                    const answerTypes = {
+                      0: 'ONE',
+                      1: 'TWO',
+                      2: 'THREE',
+                      3: 'FOUR',
+                    };
+                    setNewAnswer({
+                      question: questionId || 'environment',
+                      answer: answerTypes[index],
+                    });
+                  }
                 }}
               />
             )}

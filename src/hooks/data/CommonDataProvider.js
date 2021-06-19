@@ -208,7 +208,9 @@ export default function DataProvider(props) {
           });
 
           // Force get the correct dictionary as it didnt see to use the updated one
-          const language = await getItem();
+          const savedLanguage = await getItem();
+          const language = savedLanguage ?? 'en-GB';
+
           const dict = translateMap[language];
 
           const localQuestion = {

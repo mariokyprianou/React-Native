@@ -221,13 +221,15 @@ export default function UserDataProvider(props) {
       (await AsyncStorage.getItem('@REVIEW_REQUEST_SHOWN')) || 'false';
     const reviewRequestShown = JSON.parse(value);
 
-    if (reviewRequestShown) {
+    if (reviewRequestShown === true) {
       return;
     }
 
     const {completedWorkouts} = userData;
 
-    if (completedWorkouts === 2) {
+    if (completedWorkouts >= 2) {
+      await AsyncStorage.setItem('@REVIEW_REQUEST_SHOWN', JSON.stringify(true));
+
       displayAlert({
         title: null,
         text: WorkoutDict.ReviewRequest,
@@ -242,10 +244,6 @@ export default function UserDataProvider(props) {
                 Platform.OS === 'android'
                   ? 'https://play.google.com/store/apps/details?id=com.powerdigitallimited.power'
                   : 'https://apps.apple.com/gb/app/power-workout-with-the-stars/id1557873992',
-              );
-              await AsyncStorage.setItem(
-                '@REVIEW_REQUEST_SHOWN',
-                JSON.stringify(true),
               );
             },
           },

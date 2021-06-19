@@ -8,7 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridge.h>
 #import <React/RCTConvert.h>
+#import <UIKit/UIKit.h>
 
 @interface GIFManager : NSObject <RCTBridgeModule>
+
+@property (nonatomic) CGFloat image1Height;
 
 @end

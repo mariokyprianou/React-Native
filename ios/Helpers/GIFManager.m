@@ -90,7 +90,8 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
   CGFloat resolution = foregroundImage.size.height / foregroundImage.size.width;
   CGFloat foregroundImageWidth = size.width * 0.9;
   CGFloat foregroundImageX = size.width * 0.05;
-  CGFloat foregroundImageHeight = foregroundImageWidth * resolution * 0.85;
+  CGFloat foregroundImageHeight = _image1Height > 0.0 ? _image1Height :  foregroundImageWidth * resolution * 0.85;
+  _image1Height = foregroundImageHeight;
   CGFloat foregroundImageY = 120.0;
   [foregroundImage drawInRectAspectFillWithRect:CGRectMake(foregroundImageX, foregroundImageY, foregroundImageWidth, foregroundImageHeight)];
   UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -144,6 +145,8 @@ RCT_EXPORT_METHOD(fetch:(NSString*)beforeImagePath :(NSString*)afterImagePath re
 }
 
 RCT_EXPORT_METHOD(createVideoFile:(NSDictionary*)data resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  _image1Height = 0.0;
+  
   NSString *beforeImagePath = data[@"beforeUrl"];
   NSString *afterImagePath = data[@"afterUrl"];
   NSString *backgroundImagePath = data[@"url"];

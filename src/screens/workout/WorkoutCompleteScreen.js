@@ -48,7 +48,12 @@ export default function WorkoutCompleteScreen() {
   const navigation = useNavigation();
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
+  const {
+    firebaseLogEvent,
+    analyticsEvents,
+    getProfile,
+    checkShouldShowReviewMessage,
+  } = useUserData();
   const {
     getProgramme,
     selectedWorkout,
@@ -183,7 +188,9 @@ export default function WorkoutCompleteScreen() {
     setLoading(true);
 
     let intensity = Math.ceil(selectedIntensity);
-    if (intensity === 0) intensity = 1;
+    if (intensity === 0) {
+      intensity = 1;
+    }
 
     const workoutComplete = {
       workoutId: selectedWorkout.id,
@@ -288,6 +295,8 @@ export default function WorkoutCompleteScreen() {
     setWeightsToUpload([]);
     await getProgramme();
     await getProfile();
+
+    checkShouldShowReviewMessage();
 
     setLoading(false);
 

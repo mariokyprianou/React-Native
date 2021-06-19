@@ -221,7 +221,9 @@ export default function UserDataProvider(props) {
       (await AsyncStorage.getItem('@REVIEW_REQUEST_SHOWN')) || 'false';
     const reviewRequestShown = JSON.parse(value);
 
-    if (reviewRequestShown) return;
+    if (reviewRequestShown) {
+      return;
+    }
 
     const {completedWorkouts} = userData;
 
@@ -258,7 +260,6 @@ export default function UserDataProvider(props) {
       const {completedWorkouts} = userData;
       console.log('completedWorkouts', completedWorkouts);
       setCompletedFreeWorkouts(completedWorkouts >= 3);
-      checkShouldShowReviewMessage();
     } else {
       setCompletedFreeWorkouts(false);
     }
@@ -401,6 +402,7 @@ export default function UserDataProvider(props) {
       isSubscriptionActive,
       getProfile,
       completedFreeWorkouts,
+      checkShouldShowReviewMessage,
     }),
     [
       userData,
@@ -422,6 +424,7 @@ export default function UserDataProvider(props) {
       isSubscriptionActive,
       getProfile,
       completedFreeWorkouts,
+      checkShouldShowReviewMessage,
     ],
   );
 

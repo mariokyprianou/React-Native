@@ -60,20 +60,24 @@ export default function WorkoutScreen() {
 
   const [weightLabel, setWeightLabel] = useState('kg');
 
-  const {remainingMS, toggle, reset, active} = useTimer({
-    timer: '02:00',
-  });
-
   const scrollRef = useRef();
 
   const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
 
+  const [timerCount, setTimer] = useState(120);
+
   const checkStartTimer = useCallback(() => {
-    if (isSelectedWorkoutOnDemand && !isSubscriptionActive && !active) {
-      reset();
-      toggle();
+    if (isSelectedWorkoutOnDemand && !isSubscriptionActive) {
+      let interval = setInterval(() => {
+        setTimer((lastTimerCount) => {
+          lastTimerCount <= 1 && clearInterval(interval);
+          return lastTimerCount - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
     }
-  }, [isSelectedWorkoutOnDemand, isSubscriptionActive, active, reset, toggle]);
+  }, [isSelectedWorkoutOnDemand, isSubscriptionActive]);
 
   useEffect(() => {
     getPreferences();
@@ -81,7 +85,7 @@ export default function WorkoutScreen() {
   }, []);
 
   useEffect(() => {
-    if (remainingMS === 0) {
+    if (timerCount === 0) {
       startOnDemandWorkout({
         variables: {
           input: {
@@ -98,7 +102,7 @@ export default function WorkoutScreen() {
           console.log(err, '<---change device permissions error');
         });
     }
-  }, [remainingMS]);
+  }, [timerCount]);
 
   // Set weight preference
   useEffect(() => {

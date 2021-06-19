@@ -32,8 +32,6 @@ import FastImage from 'react-native-fast-image';
 import useProgressData from '../../hooks/data/useProgressData';
 import LoadingView from '../../components/Views/LoadingView';
 
-const fakeImage = require('../../../assets/images/zeroState.jpeg');
-
 export default function CongratulationsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
@@ -304,7 +302,7 @@ export default function CongratulationsScreen() {
     <View>
       <View style={styles.imageContainer}>
         <FastImage
-          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          source={programmeModalImage ? {uri: programmeModalImage} : null}
           style={styles.image}
         />
         <FadingBottomView color="black" />

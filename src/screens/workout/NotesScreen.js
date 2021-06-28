@@ -129,20 +129,7 @@ export default function NotesScreen() {
 
     setSelectedWorkout(workout);
 
-    if (isSelectedWorkoutOnDemand) {
-      let workouts = [...onDemandWorkouts];
-      let index = workouts.findIndex((it) => it.id === workout.id);
-      workouts[index] = workout;
-      setOnDemandWorkouts(workouts);
-    } else {
-      let newProgramme = {...programme};
-      let index = newProgramme.workouts.findIndex((it) => it.id === workout.id);
-      newProgramme.workouts[index] = workout;
-      processProgramme(newProgramme);
-    }
-
-    setIsSelectedWorkoutOnDemand(false);
-    cleanValueByName('notes');
+    // cleanValueByName('notes');
 
     await addNote({
       variables: {

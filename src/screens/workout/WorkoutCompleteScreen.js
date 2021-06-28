@@ -63,6 +63,7 @@ export default function WorkoutCompleteScreen() {
     isSelectedWorkoutOnDemand,
     shouldIncrementOnDemandWorkoutCount,
     setShouldIncrementOnDemandWorkoutCount,
+    refetchOnDemandWorkouts,
   } = UseData();
 
   const {setLoading} = useLoading();
@@ -200,6 +201,7 @@ export default function WorkoutCompleteScreen() {
       timeTaken: stats.duration,
       weightsUsed: weightsToUpload,
     };
+    console.log('workoutComplete: ', workoutComplete);
 
     let firebaseEventPayload = {
       workoutId: selectedWorkout.id,
@@ -295,11 +297,10 @@ export default function WorkoutCompleteScreen() {
     setWeightsToUpload([]);
     await getProgramme();
     await getProfile();
+    await refetchOnDemandWorkouts();
 
     // Already checked in useEffect of getProfile res data
     // checkShouldShowReviewMessage();
-
-    setLoading(false);
 
     if (isSelectedWorkoutOnDemand) {
       setIsSelectedWorkoutOnDemand(false);
@@ -313,6 +314,7 @@ export default function WorkoutCompleteScreen() {
         routes: [{name: 'TabContainer'}],
       });
     }
+    setLoading(false);
   }
 
   function checkGoBack() {

@@ -403,6 +403,10 @@ export default function DataProvider(props) {
 
   const [weightsToUpload, setWeightsToUpload] = useState([]);
 
+  useEffect(() => {
+    console.log('weightsToUpload', weightsToUpload.length);
+  }, [weightsToUpload]);
+
   const wasLastWorkoutToday = useCallback((workouts) => {
     const today = new Date();
     const wasToday = workouts.find((workout) => {
@@ -431,6 +435,11 @@ export default function DataProvider(props) {
       getOnDemandWorkouts(workoutTags.map((it) => it.id));
     }
   }, [workoutTags]);
+
+  const refetchOnDemandWorkouts = useCallback(async () => {
+    console.log('refetchOnDemandWorkouts OnDemand workouts');
+    getOnDemandWorkouts(workoutTags.map((it) => it.id));
+  }, [getOnDemandWorkouts, workoutTags]);
 
   const getWorkoutTags = useCallback(async () => {
     const res = await runQuery({
@@ -591,6 +600,7 @@ export default function DataProvider(props) {
       setShouldIncrementOnDemandWorkoutCount,
       shouldIncrementOnDemandWorkoutCount,
       dataProviderSyncronousUpdate,
+      refetchOnDemandWorkouts,
     }),
     [
       programme,
@@ -634,6 +644,7 @@ export default function DataProvider(props) {
       setShouldIncrementOnDemandWorkoutCount,
       shouldIncrementOnDemandWorkoutCount,
       dataProviderSyncronousUpdate,
+      refetchOnDemandWorkouts,
     ],
   );
 

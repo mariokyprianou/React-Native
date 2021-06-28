@@ -42,6 +42,8 @@ export default function WorkoutScreen() {
     isSelectedWorkoutOnDemand,
     completedFreeWorkouts,
     setShouldIncrementOnDemandWorkoutCount,
+    getProgramme,
+    refetchOnDemandWorkouts,
   } = useData();
   const {
     firebaseLogEvent,
@@ -152,6 +154,9 @@ export default function WorkoutScreen() {
         {
           text: ProfileDict.Ok,
           onPress: () => {
+            getProgramme();
+            refetchOnDemandWorkouts();
+
             setWeightsToUpload([]);
             navigation.pop();
           },

@@ -119,7 +119,7 @@ export default function WorkoutCompleteScreen() {
 
     setStats({
       duration,
-      reps,
+      reps: 0,
       sets,
       overviewImage,
       seconds,

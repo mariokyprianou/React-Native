@@ -197,7 +197,7 @@ export default function WorkoutHomeScreen() {
       name: programme.trainer.name,
       weekNumber: weekNumber,
       totalDuration: duration,
-      totalReps: reps,
+      totalReps: 0,
       totalSets: sets,
       totalSeconds: seconds,
       totalWorkouts: workouts.length,

@@ -296,7 +296,8 @@ export default function WorkoutCompleteScreen() {
     await getProgramme();
     await getProfile();
 
-    checkShouldShowReviewMessage();
+    // Already checked in useEffect of getProfile res data
+    // checkShouldShowReviewMessage();
 
     setLoading(false);
 

@@ -263,7 +263,8 @@ export default function UserDataProvider(props) {
     }
 
     updateUserData();
-  }, [userData]);
+    checkShouldShowReviewMessage();
+  }, [checkShouldShowReviewMessage, updateUserData, userData]);
 
   const getProfile = useCallback(() => {
     runQuery({

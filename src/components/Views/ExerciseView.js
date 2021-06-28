@@ -506,22 +506,26 @@ function TimerView(props) {
     console.log('useEffect: remaining ms: ', remainingMS);
 
     if (remainingMS === 0) {
-      if (
-        shouldRestAfterExercise === true &&
-        props.restTime &&
-        props.restTime > 0
-      ) {
-        durationMS = props.restTime;
-        setRestDurationMS(props.restTime);
-
-        props.onStartRest && props.onStartRest();
-      } else {
-        console.log('Or is it this one?');
-
+      if (!shouldRest()) {
         props.onFinish && props.onFinish();
       }
     }
   }, [remainingMS, shouldRestAfterExercise]);
+
+  const shouldRest = () => {
+    if (
+      shouldRestAfterExercise === true &&
+      props.restTime &&
+      props.restTime > 0
+    ) {
+      durationMS = props.restTime;
+      setRestDurationMS(props.restTime);
+
+      props.onStartRest && props.onStartRest();
+      return true;
+    }
+    return false;
+  };
 
   const {exerciseViewStyle} = useTheme();
   const {getHeight} = ScaleHook();
@@ -543,7 +547,9 @@ function TimerView(props) {
         style={styles.timerTouchArea}
         onPress={() => {
           if (!props.isContinuous) {
-            props.onCancelTimer();
+            if (!shouldRest()) {
+              props.onCancelTimer && props.onCancelTimer();
+            }
           }
         }}>
         <View style={styles.timerTextContainer}>

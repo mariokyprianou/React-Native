@@ -40,7 +40,7 @@ const SettingsScreen = ({}) => {
   const {getValues} = FormHook();
   const {dictionary, getLanguage, setLanguage, locale} = useDictionary();
   const {SettingsDict, LanguageDict, ProfileDict, OfflineMessage} = dictionary;
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
   const {isConnected, isInternetReachable} = useNetInfo();
 
   const {
@@ -142,6 +142,7 @@ const SettingsScreen = ({}) => {
     },
     headerTextStyle: {
       ...textStyles.bold20_black100,
+      lineHeight: fontSize(26),
       marginBottom: getHeight(12),
       textAlign: 'left',
     },
@@ -162,6 +163,7 @@ const SettingsScreen = ({}) => {
     },
     switchDescriptionStyle: {
       ...textStyles.regular15_brownishGrey100,
+      lineHeight: fontSize(20),
       marginBottom: getHeight(16),
       textAlign: 'left',
     },

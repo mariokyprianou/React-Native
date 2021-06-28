@@ -97,6 +97,7 @@ export default function ChallengeCompletionScreen() {
     description: {
       marginTop: getHeight(20),
       ...textStyles.semiBold16_brownishGrey100,
+      lineHeight: fontSize(22),
       textAlign: 'left',
     },
     buttonContainer: {

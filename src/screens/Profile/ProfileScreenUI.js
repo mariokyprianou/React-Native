@@ -395,6 +395,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           <Text
             style={{
               ...textStyles.bold20_black100,
+              lineHeight: fontSize(26),
               marginTop: getHeight(20),
               marginBottom: getHeight(10),
               textAlign: 'left',

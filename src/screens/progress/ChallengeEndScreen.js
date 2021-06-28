@@ -140,6 +140,7 @@ export default function ChallengeEndScreen() {
     },
     description: {
       ...textStyles.regular15_brownishGrey100,
+      lineHeight: fontSize(20),
       textAlign: 'left',
     },
     timerText: {
@@ -170,7 +171,7 @@ export default function ChallengeEndScreen() {
     },
     zeroChart: {
       ...textStyles.semiBold10_brownGrey100,
-      lineHeight: fontSize(12),
+      lineHeight: fontSize(14),
       marginTop: getScaledHeight(18),
       marginLeft: getScaledWidth(15),
       marginBottom: getScaledHeight(20),

@@ -738,6 +738,7 @@ export default function ThemeProvider({children}) {
       marginTop: getHeight(8),
       marginHorizontal: getWidth(20),
       ...textStyles.regular15_brownishGrey100,
+      lineHeight: fontSize(20),
       textAlign: 'left',
     },
     competedSetsTitleStyle: {

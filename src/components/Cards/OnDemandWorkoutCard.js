@@ -138,6 +138,7 @@ export default function OnDemandWorkoutCard({
     },
     greyText: {
       ...textStyles.medium10_brownishGrey100,
+      lineHeight: fontSize(16),
     },
   };
 

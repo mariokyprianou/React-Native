@@ -6,8 +6,8 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect, useState, useRef} from 'react';
-import {View, Platform, Text} from 'react-native';
+import React, {useState} from 'react';
+import {View, Platform, Text, ActivityIndicator} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
 import {useRoute} from '@react-navigation/core';
@@ -23,7 +23,6 @@ import UploadProgressImage from '../../apollo/mutations/UploadProgressImage';
 import ConfirmUploadProgressImage from '../../apollo/mutations/ConfirmUploadProgressImage';
 
 import RNFetchBlob from 'rn-fetch-blob';
-import useLoading from '../../hooks/loading/useLoading';
 import useProgressData from '../../hooks/data/useProgressData';
 import displayAlert from '../../utils/DisplayAlert';
 import useInterval from '../../utils/useInterval';
@@ -41,7 +40,7 @@ export default function TransformationScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, fontSize} = ScaleHook();
   const {colors, textStyles} = useTheme();
-  const {loading, setLoading} = useLoading();
+  const [loading, setLoading] = useState(false);
   const {dictionary} = useDictionary();
   const {ProgressDict} = dictionary;
   const {getImages, addProgressImage} = useProgressData();
@@ -227,7 +226,6 @@ export default function TransformationScreen() {
           // compression rates tested:
           // Android 0.92 compressed 12.6MB --> 8.8MB  about 70%
           // IOS 0.99 compressed 7.7MB -> 3.6MB about 46%
-
           ImagePicker.openPicker({
             mediaType: 'photo',
             compressImageQuality: Platform.OS === 'android' ? 0.92 : 0.99,
@@ -250,33 +248,49 @@ export default function TransformationScreen() {
       });
   }
 
+  const LoadingView = () => (
+    <View
+      style={{
+        width: 50,
+        height: 50,
+        alignSelf: 'center',
+        position: 'absolute',
+        top: '40%',
+      }}>
+      <ActivityIndicator size={'large'} color={colors.blueGreen100} />
+    </View>
+  );
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
-    <View style={styles.container}>
-      <TDAddPhoto
-        setPhoto={handlePhoto}
-        overlayImage={overlay}
-        overlayStyles={styles.overlay}
-        CustomCountdown={() => <CustomCountdown time={time} />}
-        CountdownTime={time}
-        cameraButtonImage={cameraButton}
-        cameraFadedButton={cameraFadedButton}
-        backgroundColor={colors.backgroundWhite100}
-        countdown0={countdown0}
-        countdown5={countdown5}
-        countdown10={countdown10}
-        setTime={setTime}
-        setLoading={setLoading}
-        cameraEnabled={!loading}
-        countDownStyle={styles.countDownStyle}
-        CountDownView={() => (
-          <CountDownView
-            time={time > 0 ? time / 1000 : 0}
-            countDownStyle={styles.countDownStyle}
-          />
-        )}
-      />
-    </View>
+    <>
+      <View style={styles.container}>
+        <TDAddPhoto
+          setPhoto={handlePhoto}
+          overlayImage={overlay}
+          overlayStyles={styles.overlay}
+          CustomCountdown={() => <CustomCountdown time={time} />}
+          CountdownTime={time}
+          cameraButtonImage={cameraButton}
+          cameraFadedButton={cameraFadedButton}
+          backgroundColor={colors.backgroundWhite100}
+          countdown0={countdown0}
+          countdown5={countdown5}
+          countdown10={countdown10}
+          setTime={setTime}
+          setLoading={setLoading}
+          cameraEnabled={!loading}
+          countDownStyle={styles.countDownStyle}
+          CountDownView={() => (
+            <CountDownView
+              time={time > 0 ? time / 1000 : 0}
+              countDownStyle={styles.countDownStyle}
+            />
+          )}
+        />
+        {loading && LoadingView()}
+      </View>
+    </>
   );
 }
 

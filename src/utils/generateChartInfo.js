@@ -8,13 +8,7 @@
 import getGraphTicksInterval from './getGraphTicksInterval';
 import processChallengeHistory from './processChallengeHistory';
 
-export default generateChartInfo = (
-  history,
-  id,
-  weightPreference,
-  unitType,
-  type,
-) => {
+export default (history, id, weightPreference, unitType, type) => {
   let processedHistory = [];
   let chartLabel = '';
 

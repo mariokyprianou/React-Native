@@ -112,8 +112,11 @@ export default function RegisterScreen() {
   useQuery(LookupCountry, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (data) => {
-      const estimatedCountry = data.lookupCountry.name;
-      setCountry(estimatedCountry);
+      const estimatedCountry = data?.lookupCountry?.name;
+
+      if (estimatedCountry) {
+        setCountry(estimatedCountry);
+      }
     },
   });
 

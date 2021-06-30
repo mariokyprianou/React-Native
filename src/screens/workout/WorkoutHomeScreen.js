@@ -314,7 +314,7 @@ export default function WorkoutHomeScreen() {
   // Capture current rest days
   // Set date to the date assigned on that index
   // Update asyncStorage
-  function updateStoredData(list) {
+  function updateStoredData(list = []) {
     let toStore = list.map((day, index) => {
       if (day.isRestDay) {
         return {
@@ -333,7 +333,8 @@ export default function WorkoutHomeScreen() {
     return toStore;
   }
 
-  async function updateOrder(newList) {
+  async function updateOrder(newList = []) {
+    if (newList.length === 0) return;
     // Previous data in case orderChange fails
     const prevList = currentWeek;
 

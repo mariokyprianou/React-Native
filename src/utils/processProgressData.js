@@ -13,7 +13,7 @@ import {
   format,
 } from 'date-fns';
 
-export default processProgressData = (data) => {
+export default (data) => {
   const sortedData = [...data].sort(
     (a, b) => new Date(a.date) - new Date(b.date),
   );

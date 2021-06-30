@@ -118,7 +118,7 @@ export default function MeetYourIconsScreen() {
       return;
     }
 
-    if (suggestedProgramme && suggestedProgramme.trainer) {
+    if (trainers && suggestedProgramme && suggestedProgramme.trainer) {
       const index = trainers.findIndex(
         (it) => suggestedProgramme.trainer.id === it.id,
       );

@@ -126,7 +126,7 @@ export default function HelpMeChooseScreen() {
           navigation.navigate('HelpMeChooseResults', {
             recommendedTrainer:
               res.data.submitProgrammeQuestionnaire.programme.trainer.name,
-            programmeImage: programme.programmeImage,
+            programmeImage: programme?.programmeImage,
           });
         } else {
           if (res.errors.length > 0) {

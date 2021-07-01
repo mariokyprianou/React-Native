@@ -80,7 +80,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: true,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -145,6 +145,7 @@ android {
 
 
         missingDimensionStrategy 'react-native-camera', 'mlkit'   
+        missingDimensionStrategy 'store', 'play'
         multiDexEnabled true
 
         def envVars = rootProject.file("../env-vars.sh")
@@ -261,6 +262,9 @@ dependencies {
 
     implementation 'org.jcodec:jcodec:0.2.3'
     implementation 'org.jcodec:jcodec-android:0.2.3'
+
+    implementation 'com.facebook.soloader:soloader:0.9.0+'
+
 
 
     // To fix react-native-camera conflict

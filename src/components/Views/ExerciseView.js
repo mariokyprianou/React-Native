@@ -112,9 +112,9 @@ export default function ExerciseView(props) {
 
   // Initialise sets, Sort and set states
   useEffect(() => {
-    let sets = props.sets.slice().sort((a, b) => a.setNumber > b.setNumber);
+    let initSets = props.sets.slice().sort((a, b) => a.setNumber > b.setNumber);
 
-    sets = sets.map((it, index) => {
+    initSets = initSets.map((it, index) => {
       if (index === 0) {
         if (it.restTime && it.restTime > 0) {
           setRestTime(it.restTime * 1000);
@@ -139,7 +139,7 @@ export default function ExerciseView(props) {
       setCountDown(true);
     }
 
-    setSets(sets);
+    setSets(initSets);
   }, []);
 
   useEffect(() => {

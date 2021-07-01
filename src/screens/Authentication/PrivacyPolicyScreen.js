@@ -26,7 +26,9 @@ export default function RegisterScreen() {
   const {getHeight} = ScaleHook();
 
   navigation.setOptions({
-    header: () => <Header title={AuthDict.PrivacyPolicyScreenTitle} showModalCross />,
+    header: () => (
+      <Header title={AuthDict.PrivacyPolicyScreenTitle} showModalCross />
+    ),
   });
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -53,7 +55,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.render.container}>
-      <TermsPolicyContentView isHtml={true} content={legals.privacyPolicy} /> 
+      <TermsPolicyContentView isHtml={true} content={legals.privacyPolicy} />
     </View>
   );
 }

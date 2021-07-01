@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useCallback, useEffect} from 'react';
-import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import DataContext from './DataContext';
 import Programme from '../../apollo/queries/Programme';
 import WorkoutTags from '../../apollo/queries/WorkoutTags';
@@ -29,7 +29,8 @@ import {
 import addWorkoutDates from '../../utils/addWorkoutDates';
 import addRestDays from '../../utils/addRestDays';
 
-import {cacheWeekVideos, cacheImages, shouldCacheWeek} from './VideoCacheUtils';
+import {cacheWeekVideos} from './VideoCacheUtils';
+//import {cacheImages, shouldCacheWeek} from './VideoCacheUtils';
 
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
@@ -39,8 +40,6 @@ import {FileManager} from 'the-core-ui-module-tdmediamanager';
 const {clearDirectory, videosDirectoryPath} = FileManager;
 
 export default function DataProvider(props) {
-  const {isConnected, isInternetReachable} = useNetInfo();
-
   const {runQuery} = useCustomQuery();
 
   const [programme, setProgramme] = useState();
@@ -50,27 +49,30 @@ export default function DataProvider(props) {
   const [nextWeek, setNextWeek] = useState();
 
   // Get stored rest days from Async or create defaults
-  const getStoredDays = useCallback(async (numberOfWorkouts) => {
-    let days = await AsyncStorage.getItem('@CURRENT_WEEK');
-    days = JSON.parse(days);
+  const getStoredDays = useCallback(
+    async (numberOfWorkouts) => {
+      let days = await AsyncStorage.getItem('@CURRENT_WEEK');
+      days = JSON.parse(days);
 
-    if (days) {
-      days = days.map((it) => {
-        return {
-          ...it,
-          date: parseISO(it.date),
-          exactDate: parseISO(it.exactDate),
-        };
-      });
-    }
-    // Set default rest days if nothing stored
-    if (!days || days.length === 0) {
-      days = initializeRestDays(numberOfWorkouts);
-      updateStoredDays(days);
-    }
+      if (days) {
+        days = days.map((it) => {
+          return {
+            ...it,
+            date: parseISO(it.date),
+            exactDate: parseISO(it.exactDate),
+          };
+        });
+      }
+      // Set default rest days if nothing stored
+      if (!days || days.length === 0) {
+        days = initializeRestDays(numberOfWorkouts);
+        updateStoredDays(days);
+      }
 
-    return days;
-  }, []);
+      return days;
+    },
+    [updateStoredDays],
+  );
 
   const updateStoredDays = useCallback(async (data) => {
     await AsyncStorage.setItem('@CURRENT_WEEK', JSON.stringify(data));
@@ -147,82 +149,85 @@ export default function DataProvider(props) {
   }, []);
 
   // Structure current week UI
-  const structureWeek = useCallback((workouts, storedDays) => {
-    let workoutIndex = 0;
+  const structureWeek = useCallback(
+    (workouts, storedDays) => {
+      let workoutIndex = 0;
 
-    // PAST
-    let pastWorkouts = workouts.filter((it) => it.completedAt);
+      // PAST
+      let pastWorkouts = workouts.filter((it) => it.completedAt);
 
-    pastWorkouts = pastWorkouts.map((workout) => {
-      workoutIndex = workoutIndex + 1;
-      console.log(workoutIndex, workout.completedAt);
-      return {
-        ...workout,
-        name: workout.name.toUpperCase(),
-        exactDate: new Date(workout.completedAt),
-        day: workoutIndex,
-      };
-    });
+      pastWorkouts = pastWorkouts.map((workout) => {
+        workoutIndex = workoutIndex + 1;
+        console.log(workoutIndex, workout.completedAt);
+        return {
+          ...workout,
+          name: workout.name.toUpperCase(),
+          exactDate: new Date(workout.completedAt),
+          day: workoutIndex,
+        };
+      });
 
-    let pastRestDays = getStoredPastRestDays(storedDays);
+      let pastRestDays = getStoredPastRestDays(storedDays);
 
-    let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
+      let week = getWeekArrayWithPastDays(pastWorkouts, pastRestDays);
 
-    // FUTURE
-    let futureWorkouts = workouts.filter(
-      (it) => !it.completedAt && !it.isRestDay,
-    );
-    const futureRestDays = getStoredFutureRestDays(storedDays);
+      // FUTURE
+      let futureWorkouts = workouts.filter(
+        (it) => !it?.completedAt && !it?.isRestDay,
+      );
+      const futureRestDays = getStoredFutureRestDays(storedDays);
 
-    let startDate = new Date();
+      let startDate = new Date();
 
-    // Move to next day if today has a completed workout already
-    const lastWorkoutToday = wasLastWorkoutToday(workouts);
-    if (lastWorkoutToday === true) {
-      startDate = addDays(startDate, 1);
-    }
+      // Move to next day if today has a completed workout already
+      const lastWorkoutToday = wasLastWorkoutToday(workouts);
+      if (lastWorkoutToday === true) {
+        startDate = addDays(startDate, 1);
+      }
 
-    // Add future dates
-    const remaining = 7 - week.length;
+      // Add future dates
+      const remaining = 7 - week.length;
 
-    for (let i = 0; i < remaining; i++) {
-      const date = addDays(startDate, i);
+      for (let i = 0; i < remaining; i++) {
+        const date = addDays(startDate, i);
 
-      const restDay = getRestDay(futureRestDays, date);
+        const restDay = getRestDay(futureRestDays, date);
 
-      if (restDay) {
-        week.push(restDay);
-      } else {
-        let workout = futureWorkouts.shift();
-
-        if (workout) {
-          workoutIndex = workoutIndex + 1;
-
-          workout = {
-            ...workout,
-            name: workout.name.toUpperCase(),
-            exactDate: date,
-            day: workoutIndex,
-          };
-          week.push(workout);
+        if (restDay) {
+          week.push(restDay);
         } else {
-          const extraRestDay = {
-            name: 'REST DAY',
-            isRestDay: true,
-            id: 'restDay',
-            exactDate: date,
-          };
+          let workout = futureWorkouts.shift();
 
-          week.push(extraRestDay);
+          if (workout) {
+            workoutIndex = workoutIndex + 1;
+
+            workout = {
+              ...workout,
+              name: workout.name.toUpperCase(),
+              exactDate: date,
+              day: workoutIndex,
+            };
+            week.push(workout);
+          } else {
+            const extraRestDay = {
+              name: 'REST DAY',
+              isRestDay: true,
+              id: 'restDay',
+              exactDate: date,
+            };
+
+            week.push(extraRestDay);
+          }
         }
       }
-    }
 
-    week = week.sort((a, b) => a.exactDate > b.exactDate);
-    setCurrentWeek(week);
+      week = week.sort((a, b) => a.exactDate > b.exactDate);
+      setCurrentWeek(week);
 
-    return week;
-  }, []);
+      return week;
+    },
+    [getRestDay, wasLastWorkoutToday],
+  );
 
   useEffect(() => {
     if (currentWeek && currentWeek.length > 0 && programme) {
@@ -255,7 +260,7 @@ export default function DataProvider(props) {
 
       setNextWeek(week);
     }
-  }, [currentWeek, programme]);
+  }, [currentWeek, nextWeek, programme]);
 
   const initCacheWeekVideos = useCallback(async (workouts) => {
     const response = await NetInfo.fetch();
@@ -293,71 +298,74 @@ export default function DataProvider(props) {
       },
     });
 
-    if (!res.success) {
+    if (!res || !res.success) {
       setCurrentWeek(null);
       setNextWeek(null);
       setProgramme(null);
     }
-  }, [runQuery]);
+  }, [processProgramme, runQuery]);
 
-  const processProgramme = useCallback(async (data) => {
-    console.log('Got programme');
-    // Check programme is completed
-    if (data.isComplete) {
-      setCurrentWeek([]);
-      setNextWeek([]);
-      setProgramme(data);
-      return;
-    }
+  const processProgramme = useCallback(
+    async (data) => {
+      console.log('Got programme');
+      // Check programme is completed
+      if (data.isComplete) {
+        setCurrentWeek([]);
+        setNextWeek([]);
+        setProgramme(data);
+        return;
+      }
 
-    let newData = data;
+      let newData = data;
 
-    // Add offline completed workouts
-    const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
+      // Add offline completed workouts
+      const offlineCompleted = await OfflineUtils.getOfflineCompletedWorkouts();
 
-    console.log('Offline completed to add', offlineCompleted.length);
-    const workouts = data.currentWeek.workouts.slice();
+      console.log('Offline completed to add', offlineCompleted.length);
+      const workouts = data.currentWeek.workouts.slice();
 
-    const updatedWorkouts = workouts.map((workout) => {
-      let newWorkout = offlineCompleted.find((it) => workout.id === it.id);
+      const updatedWorkouts = workouts.map((workout) => {
+        let newWorkout = offlineCompleted.find((it) => workout.id === it.id);
 
-      return {
-        ...workout,
-        completedAt: newWorkout ? newWorkout.date : workout.completedAt,
+        return {
+          ...workout,
+          completedAt: newWorkout ? newWorkout.date : workout.completedAt,
+        };
+      });
+
+      newData = {
+        ...data,
+        currentWeek: {
+          ...data.currentWeek,
+          workouts: updatedWorkouts,
+        },
       };
-    });
 
-    newData = {
-      ...data,
-      currentWeek: {
-        ...data.currentWeek,
-        workouts: updatedWorkouts,
-      },
-    };
+      setProgrammeModalImage(newData.programmeImage);
+      //initCacheWeekVideos(newData.currentWeek.workouts);
 
-    setProgrammeModalImage(newData.programmeImage);
-    //initCacheWeekVideos(newData.currentWeek.workouts);
+      const images = newData.currentWeek.workouts.map((it) => {
+        return it.overviewImage;
+      });
+      if (newData.programmeImage) {
+        images.push(newData.programmeImage);
+      }
+      initCacheImages(images);
 
-    const images = newData.currentWeek.workouts.map((it) => {
-      return it.overviewImage;
-    });
-    if (newData.programmeImage) {
-      images.push(newData.programmeImage);
-    }
-    initCacheImages(images);
+      const numberOfWorkouts = newData.currentWeek.workouts.length;
+      let storedDays = await getStoredDays(numberOfWorkouts);
 
-    const numberOfWorkouts = newData.currentWeek.workouts.length;
-    let storedDays = await getStoredDays(numberOfWorkouts);
+      structureWeek(
+        newData.currentWeek.workouts
+          .slice()
+          .sort((a, b) => a.orderIndex > b.orderIndex),
+        storedDays,
+      );
 
-    structureWeek(
-      newData.currentWeek.workouts
-        .slice()
-        .sort((a, b) => a.orderIndex > b.orderIndex),
-      storedDays,
-    );
-
-    setProgramme(newData);
-  }, []);
+      setProgramme(newData);
+    },
+    [getStoredDays, initCacheImages, structureWeek],
+  );
 
   const [isDownloadEnabled, setDownloadEnabled] = useState();
 
@@ -434,7 +442,7 @@ export default function DataProvider(props) {
       console.log('get all OnDemand workouts on initial load');
       getOnDemandWorkouts(workoutTags.map((it) => it.id));
     }
-  }, [workoutTags]);
+  }, [getOnDemandWorkouts, onDemandWorkouts, workoutTags]);
 
   const refetchOnDemandWorkouts = useCallback(async () => {
     console.log('refetchOnDemandWorkouts OnDemand workouts');
@@ -450,7 +458,7 @@ export default function DataProvider(props) {
       },
     });
 
-    if (!res.success) {
+    if (!res || !res.success) {
       setWorkoutTags(null);
     }
   }, [runQuery]);
@@ -472,11 +480,11 @@ export default function DataProvider(props) {
         },
       });
 
-      if (!res.success) {
+      if (!res || !res.success) {
         setOnDemandWorkouts(null);
       }
     },
-    [runQuery],
+    [initCacheImages, runQuery],
   );
 
   const reset = useCallback(async () => {
@@ -498,18 +506,18 @@ export default function DataProvider(props) {
   }, []);
 
   const refetchData = useCallback(async () => {
-    const cognitoUser = await Auth.currentAuthenticatedUser().catch(
-      (err) => null,
-    );
+    const cognitoUser = await Auth.currentAuthenticatedUser().catch(() => {
+      return null;
+    });
     if (cognitoUser) {
       getProgramme();
       getWorkoutTags();
     }
-  }, []);
+  }, [getProgramme, getWorkoutTags]);
 
   useEffect(() => {
     async function checkUser() {
-      const cognitoUser = await Auth.currentAuthenticatedUser().catch((err) => {
+      const cognitoUser = await Auth.currentAuthenticatedUser().catch(() => {
         return null;
       });
       if (cognitoUser) {
@@ -520,7 +528,7 @@ export default function DataProvider(props) {
     }
 
     checkUser();
-  }, []);
+  }, [getWorkoutTags]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -543,7 +551,7 @@ export default function DataProvider(props) {
         console.log('user has signed out');
       }
     });
-  }, []);
+  }, [getWorkoutTags]);
 
   const dataProviderSyncronousUpdate = useCallback(async () => {
     setProgramme(null);

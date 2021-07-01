@@ -65,7 +65,7 @@ async function cacheWeekVideos(workouts) {
   console.log('Download result:', res.message);
 
   // Week was cached, don't download again
-  if (res.success) {
+  if (res && res.success) {
     AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(false));
   }
 
@@ -120,7 +120,7 @@ async function cacheImages(images) {
   console.log('Images Download result:', res.message);
 
   // Week was cached, don't download again
-  if (res.success) {
+  if (res && res.success) {
   }
 }
 

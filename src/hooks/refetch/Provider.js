@@ -18,7 +18,11 @@ export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
   // ** ** ** ** ** App State Change Refetch Handling  ** ** ** ** **
   const handleAppStateChange = (nextAppState) => {
-    if (appState.current.match(/background/) && nextAppState === 'active') {
+    if (
+      appState.current &&
+      appState.current.match(/background/) &&
+      nextAppState === 'active'
+    ) {
       console.log('App has come to the foreground! refetchData');
       refetchData();
       getTrainers();

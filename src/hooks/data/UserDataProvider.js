@@ -13,7 +13,6 @@ import {getUniqueId} from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {useMutation} from '@apollo/client';
-import {useNetInfo} from '@react-native-community/netinfo';
 import UserDataContext from './UserDataContext';
 import Preferences from '../../apollo/queries/Preferences';
 import UpdatePreference from '../../apollo/mutations/UpdatePreference';
@@ -32,8 +31,6 @@ import displayAlert from '../../utils/DisplayAlert';
 import useDictionary from '../localisation/useDictionary';
 
 export default function UserDataProvider(props) {
-  const {isConnected, isInternetReachable} = useNetInfo();
-
   const {runQuery} = useCustomQuery();
 
   const [userData, setUserData] = useState({});
@@ -145,26 +142,29 @@ export default function UserDataProvider(props) {
     }
   }, []);
 
-  const firebaseLogEvent = useCallback((event, params = {}) => {
-    const time = format(new Date(), 'hh:mm');
-    const date = format(new Date(), 'dd/MM/yyyy');
+  const firebaseLogEvent = useCallback(
+    (event, params = {}) => {
+      const time = format(new Date(), 'hh:mm');
+      const date = format(new Date(), 'dd/MM/yyyy');
 
-    let data = {
-      time,
-      date,
-    };
-    if (userData && userData.email) {
-      data = {...data, email: userData.email};
-    }
+      let data = {
+        time,
+        date,
+      };
+      if (userData && userData.email) {
+        data = {...data, email: userData.email};
+      }
 
-    console.log('AnalyticsEvent: ' + event + ' : ' + {...data, ...params});
+      console.log('AnalyticsEvent: ' + event + ' : ' + {...data, ...params});
 
-    analytics()
-      .logEvent(event, {...data, ...params})
-      .catch((error) => {
-        console.log('AnalyticsEventError', error);
-      });
-  }, []);
+      analytics()
+        .logEvent(event, {...data, ...params})
+        .catch((error) => {
+          console.log('AnalyticsEventError', error);
+        });
+    },
+    [userData],
+  );
 
   const [updatePreferences] = useMutation(UpdatePreference);
 
@@ -196,7 +196,7 @@ export default function UserDataProvider(props) {
       .catch((err) => {
         console.log('updateDefaultPreferences', err);
       });
-  }, []);
+  }, [updatePreferences]);
 
   const [changeDevice, setChangeDevice] = useState(null);
   const [suspendedAccount, setSuspendedAccount] = useState(false);
@@ -250,7 +250,12 @@ export default function UserDataProvider(props) {
         ],
       });
     }
-  }, [userData]);
+  }, [
+    WorkoutDict.ReviewRequest,
+    WorkoutDict.ReviewRequestReview,
+    WorkoutDict.ReviewRequestSkip,
+    userData,
+  ]);
 
   // Update completedFreeWorkouts
   useEffect(() => {
@@ -296,7 +301,7 @@ export default function UserDataProvider(props) {
         }
       },
     });
-  }, [runQuery]);
+  }, [checkDeviceId, runQuery]);
 
   const checkDeviceId = useCallback(
     (canChangeDevice, existingId) => {
@@ -317,7 +322,7 @@ export default function UserDataProvider(props) {
         });
       }
     },
-    [getUniqueId, setChangeDevice],
+    [setChangeDevice],
   );
 
   const checkUserSubscription = useCallback(async () => {
@@ -377,7 +382,7 @@ export default function UserDataProvider(props) {
     });
 
     checkAuth();
-  }, []);
+  }, [checkUserSubscription, getProfile]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(

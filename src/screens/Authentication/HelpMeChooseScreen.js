@@ -157,11 +157,13 @@ export default function HelpMeChooseScreen() {
   };
 
   const questionText = programmeQuestionnaire
-    ? programmeQuestionnaire[currentQuestion - 1].question.question
+    ? programmeQuestionnaire[currentQuestion > 0 ? currentQuestion - 1 : 1]
+        .question.question
     : '';
 
   const listData = programmeQuestionnaire
-    ? programmeQuestionnaire[currentQuestion - 1].answers
+    ? programmeQuestionnaire[currentQuestion > 0 ? currentQuestion - 1 : 1]
+        .answers
     : [];
 
   return (
@@ -186,7 +188,9 @@ export default function HelpMeChooseScreen() {
                 onPress={() => {
                   if (programmeQuestionnaire) {
                     const questionId =
-                      programmeQuestionnaire[currentQuestion - 1].id;
+                      programmeQuestionnaire[
+                        currentQuestion > 0 ? currentQuestion - 1 : 1
+                      ].id;
                     const answerTypes = {
                       0: 'ONE',
                       1: 'TWO',

@@ -13,7 +13,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import FadingBottomView from './FadingBottomView';
 import RNFetchBlob from 'rn-fetch-blob';
 
-export default function TermsPolicyContentView({isHtml, content}) {
+export default function TermsPolicyContentView({isHtml, content = ''}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {textStyles, colors} = useTheme();
   const {getHeight, getWidth} = ScaleHook();

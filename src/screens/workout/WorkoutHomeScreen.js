@@ -102,7 +102,7 @@ export default function WorkoutHomeScreen() {
     } else if (programme && programme.currentWeek && currentWeek) {
       async function checkWeekComplete() {
         const remaining = currentWeek.filter(
-          (it) => !it.isRestDay && !it.completedAt,
+          (it) => !it?.isRestDay && !it?.completedAt,
         ).length;
 
         //Still have workouts for current week
@@ -316,7 +316,7 @@ export default function WorkoutHomeScreen() {
   // Update asyncStorage
   function updateStoredData(list = []) {
     let toStore = list.map((day, index) => {
-      if (day.isRestDay) {
+      if (day && day.isRestDay) {
         return {
           id: 'restDay',
           date: currentWeek[index].exactDate,
@@ -344,7 +344,7 @@ export default function WorkoutHomeScreen() {
 
     // Construct new order of workouts
     let index = 0;
-    const data = newList.filter((it) => !it.isRestDay);
+    const data = newList.filter((it) => !it?.isRestDay);
     const newOrder = data.map((it) => {
       index = index + 1;
       return {
@@ -428,7 +428,7 @@ export default function WorkoutHomeScreen() {
           onPress: async () => {
             setDownloading(true);
             const res = await initCacheWeekVideos(
-              programme.currentWeek.workouts,
+              programme?.currentWeek?.workouts,
             );
 
             DisplayAlert({
@@ -601,16 +601,18 @@ export default function WorkoutHomeScreen() {
           data={workoutsToDisplay}
           keyExtractor={(item, index) => `${index}`}
           onDragEnd={({data, from, to}) => {
-            const lastValidIndex = workoutsToDisplay.indexOf(
-              workoutsToDisplay
-                .slice()
-                .filter(
-                  (it) =>
-                    it.completedAt ||
-                    differenceInDays(it.exactDate, new Date()) < 0,
+            const lastValidIndex = workoutsToDisplay
+              ? workoutsToDisplay.indexOf(
+                  workoutsToDisplay
+                    .slice()
+                    .filter(
+                      (it) =>
+                        it.completedAt ||
+                        differenceInDays(it.exactDate, new Date()) < 0,
+                    )
+                    .pop(),
                 )
-                .pop(),
-            );
+              : -1;
 
             // Only do order cange if its a valid position
             if (from !== to && (lastValidIndex === -1 || to > lastValidIndex)) {
@@ -676,8 +678,10 @@ export default function WorkoutHomeScreen() {
                     const newWorkout = {
                       ...workout,
                       exercises: workout.exercises
-                        .slice()
-                        .sort((a, b) => a.orderIndex - b.orderIndex),
+                        ? workout.exercises
+                            .slice()
+                            .sort((a, b) => a.orderIndex - b.orderIndex)
+                        : [],
                     };
 
                     const warning = await shouldShowWarning();

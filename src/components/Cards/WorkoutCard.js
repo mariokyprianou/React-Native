@@ -40,9 +40,9 @@ export default function WorkoutCard({
   const today = new Date();
   const formattedToday = format(today, 'iiii, do LLL');
 
-  const datePart1 = date.slice(0, -6);
-  const dateSuperscript = date.slice(-6, -4);
-  const datePart2 = date.slice(-4);
+  const datePart1 = date.slice(0, -6) || '';
+  const dateSuperscript = date.slice(-6, -4) || '';
+  const datePart2 = date.slice(-4) || '';
 
   const isRestDay = title === WorkoutDict.RestDay || title === 'REST DAY';
 

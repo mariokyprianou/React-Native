@@ -19,6 +19,7 @@ import PasswordEyeIcon from '../../components/cells/PasswordEyeIcon';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../components/Headers/Header';
 import {Auth} from 'aws-amplify';
+import {Platform} from 'react-native';
 
 export default function Screen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -70,7 +71,7 @@ export default function Screen() {
 
   const handleUrl = (url = '') => {
     console.log('Handle url:', url);
-    const receivedCode = url.substr(url.length - 6);
+    const receivedCode = url.length > 0 ? url.substr(url.length - 6) : '';
     if (url.includes('forgotPassword') && onlyNumbersRegex.test(receivedCode)) {
       updateValue({name: 'code', value: receivedCode});
     }

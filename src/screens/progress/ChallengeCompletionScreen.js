@@ -25,6 +25,7 @@ import {SampleImageUrl} from '../../utils/SampleData';
 import useLoading from '../../hooks/loading/useLoading';
 import useShare from '../../hooks/share/useShare';
 import displayAlert from '../../utils/DisplayAlert';
+import generateChartInfo from '../../utils/generateChartInfo';
 
 const screenWidth = Dimensions.get('screen').width;
 

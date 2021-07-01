@@ -42,7 +42,11 @@ export default function DataProvider(props) {
   const appState = useRef(AppState.currentState);
 
   const handleAppStateChange = (nextAppState) => {
-    if (appState.current.match(/background/) && nextAppState === 'active') {
+    if (
+      appState.current &&
+      appState.current.match(/background/) &&
+      nextAppState === 'active'
+    ) {
       console.log('WorkoutTimer foreground');
       displayAlert({
         title: null,

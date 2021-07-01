@@ -98,14 +98,17 @@ export default function RegisterScreen() {
   useQuery(AllCountries, {
     fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
     onCompleted: (data) => {
-      const countries = data.allCountries.map((country) => country.country);
-      setCountriesList(['', ...countries]);
+      if (data && data.allCountries) {
+        const countries = data.allCountries.map((country) => country.country);
+        setCountriesList(['', ...countries]);
 
-      const countryIdLookup = data.allCountries.reduce((acc, obj) => {
-        let {country, id} = obj;
-        return {...acc, [country]: id};
-      }, {});
-      setCountryLookup(countryIdLookup);
+        const countryIdLookup = data.allCountries.reduce((acc, obj) => {
+          let {country, id} = obj;
+          return {...acc, [country]: id};
+        }, {});
+
+        setCountryLookup(countryIdLookup);
+      }
     },
   });
 

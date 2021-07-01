@@ -88,7 +88,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (countryData) {
+    if (countryData && countryData.allCountries) {
       const countries = countryData.allCountries.map(
         (country) => country.country,
       );

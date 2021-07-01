@@ -5,9 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
-import {useQuery} from '@apollo/client';
-import fetchPolicy from '../../utils/fetchPolicy';
-import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import DataContext from './CommonDataContext';
 import Onboarding from '../../apollo/queries/Onboarding';
 import Trainers from '../../apollo/queries/Trainers';
@@ -18,40 +16,41 @@ import isRTL from '../../utils/isRTL';
 import useCustomQuery from '../customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
 import SplashScreen from 'react-native-splash-screen';
-import {cacheImages} from './VideoCacheUtils';
+//import {cacheImages} from './VideoCacheUtils';
 
 export default function DataProvider(props) {
   const {runQuery} = useCustomQuery();
 
-  const {isConnected, isInternetReachable} = useNetInfo();
-
-  const {dictionary, locale, getItem, translateMap} = useDictionary();
-  const {HelpMeChooseDict, OnboardingDict} = dictionary;
+  const {dictionary, getItem, translateMap} = useDictionary();
+  const {OnboardingDict} = dictionary;
 
   const [onboarding, setOnboarding] = useState();
 
-  const fallbackData = [
-    {
-      ...OnboardingDict.fallbackData[0],
-      image: require('../../../assets/onboarding/onboarding1.png'),
-      local: true,
-    },
-    {
-      ...OnboardingDict.fallbackData[1],
-      image: require('../../../assets/onboarding/onboarding2.png'),
-      local: true,
-    },
-    {
-      ...OnboardingDict.fallbackData[2],
-      image: require('../../../assets/onboarding/onboarding3.png'),
-      local: true,
-    },
-    {
-      ...OnboardingDict.fallbackData[3],
-      image: require('../../../assets/onboarding/onboarding4.png'),
-      local: true,
-    },
-  ];
+  const fallbackData = useMemo(
+    () => [
+      {
+        ...OnboardingDict.fallbackData[0],
+        image: require('../../../assets/onboarding/onboarding1.png'),
+        local: true,
+      },
+      {
+        ...OnboardingDict.fallbackData[1],
+        image: require('../../../assets/onboarding/onboarding2.png'),
+        local: true,
+      },
+      {
+        ...OnboardingDict.fallbackData[2],
+        image: require('../../../assets/onboarding/onboarding3.png'),
+        local: true,
+      },
+      {
+        ...OnboardingDict.fallbackData[3],
+        image: require('../../../assets/onboarding/onboarding4.png'),
+        local: true,
+      },
+    ],
+    [OnboardingDict.fallbackData],
+  );
 
   const [trainers, setTrainers] = useState([]);
 
@@ -67,7 +66,7 @@ export default function DataProvider(props) {
     getTrainers();
     getProgrammeQuestionnaire();
     getLegals();
-  }, []);
+  }, [getLegals, getOnboarding, getProgrammeQuestionnaire, getTrainers]);
 
   const commonDataProviderSyncronousUpdate = useCallback(async () => {
     await Promise.all([
@@ -76,7 +75,7 @@ export default function DataProvider(props) {
       getProgrammeQuestionnaire(),
       getLegals(),
     ]);
-  }, []);
+  }, [getLegals, getOnboarding, getProgrammeQuestionnaire, getTrainers]);
 
   // useEffect(() => {
   //   console.log('Locale Changed so updating data: ', locale);
@@ -102,7 +101,7 @@ export default function DataProvider(props) {
   const getOnboarding = useCallback(async () => {
     const available = await isNetworkAvailable();
     if (available) {
-      const res = await runQuery({
+      await runQuery({
         query: Onboarding,
         key: 'onboardingScreens',
         setValue: async (res) => {
@@ -137,15 +136,17 @@ export default function DataProvider(props) {
     } else {
       setOnboarding(isRTL() ? fallbackData.reverse() : fallbackData);
     }
-  }, [runQuery, isConnected, isInternetReachable, onboarding]);
+  }, [runQuery, fallbackData]);
 
   const getTrainers = useCallback(async () => {
-    const res = await runQuery({
+    await runQuery({
       query: Trainers,
       key: 'getTrainers',
       setValue: async (res) => {
         if (res) {
-          const data = res.slice().filter((it) => it.programmes.length > 0);
+          const data = res
+            .slice()
+            .filter((it) => it.programmes && it.programmes.length > 0);
 
           // Preload all programmeImages
 
@@ -175,7 +176,7 @@ export default function DataProvider(props) {
   }, [runQuery]);
 
   const getLegals = useCallback(async () => {
-    const res = await runQuery({
+    await runQuery({
       query: Legals,
       key: 'legals',
       setValue: async (res) => {
@@ -185,7 +186,7 @@ export default function DataProvider(props) {
   }, [runQuery]);
 
   const getProgrammeQuestionnaire = useCallback(async () => {
-    const res = await runQuery({
+    await runQuery({
       query: ProgrammeQuestionnaire,
       key: 'programmeQuestionnaire',
       setValue: async (res) => {
@@ -209,7 +210,7 @@ export default function DataProvider(props) {
 
           // Force get the correct dictionary as it didnt see to use the updated one
           const savedLanguage = await getItem();
-          const language = savedLanguage ?? 'en-GB';
+          const language = savedLanguage || 'en-GB';
 
           const dict = translateMap[language];
 
@@ -230,7 +231,7 @@ export default function DataProvider(props) {
         }
       },
     });
-  }, [runQuery, HelpMeChooseDict, locale]);
+  }, [runQuery, getItem, translateMap]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
 

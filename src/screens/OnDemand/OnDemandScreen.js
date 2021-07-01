@@ -267,8 +267,10 @@ export default function OnDemandScreen() {
                     const newWorkout = {
                       ...workout,
                       exercises: workout.exercises
-                        .slice()
-                        .sort((a, b) => a.orderIndex - b.orderIndex),
+                        ? workout.exercises
+                            .slice()
+                            .sort((a, b) => a.orderIndex - b.orderIndex)
+                        : [],
                     };
 
                     setSelectedWorkout(newWorkout);

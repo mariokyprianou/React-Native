@@ -343,11 +343,7 @@ export default function WorkoutCompleteScreen() {
       <ScrollView style={styles.scroll}>
         <View style={styles.imageContainer}>
           <FastImage
-            source={
-              stats.overviewImage === undefined
-                ? require('../../../assets/fakeWorkout.png')
-                : {uri: stats.overviewImage}
-            }
+            source={stats.overviewImage && {uri: stats.overviewImage}}
             fallback={true}
             style={styles.image}
           />

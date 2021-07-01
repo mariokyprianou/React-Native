@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, ImageBackground, StatusBar} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import {useNavigation} from '@react-navigation/native';
@@ -16,8 +16,6 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import DefaultButton from '../../components/Buttons/DefaultButton';
 import Header from '../../components/Headers/Header';
 import useData from '../../hooks/data/UseData';
-
-const fakeImage = require('../../../assets/fake2.png');
 
 export default function TakeARestScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -36,7 +34,7 @@ export default function TakeARestScreen() {
     StatusBar.setBarStyle('light-content');
     return () => {
       StatusBar.setBarStyle('dark-content');
-    }
+    };
   }, []);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -83,7 +81,7 @@ export default function TakeARestScreen() {
     <>
       <View>
         <ImageBackground
-          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+          source={programmeModalImage && {uri: programmeModalImage}}
           style={styles.image}>
           <FadingBottomView color="black" />
           <View style={styles.infoTextContainer}>

@@ -13,8 +13,6 @@ import useTheme from '../../hooks/theme/UseTheme';
 import IconTextView from '../Infographics/IconTextView';
 import FadingBottomView from './FadingBottomView';
 
-const fakeImage = require('../../../assets/images/fake.png');
-
 export default function ({
   image,
   duration = 40,
@@ -46,10 +44,7 @@ export default function ({
 
   return (
     <View style={styles.container}>
-      <FastImage
-        source={image === undefined ? fakeImage : {uri: image}}
-        style={styles.imageStyle}
-      />
+      <FastImage source={image && {uri: image}} style={styles.imageStyle} />
       <View style={{position: 'absolute', width: '100%'}}>
         <FadingBottomView color={'black'} height={300} />
       </View>

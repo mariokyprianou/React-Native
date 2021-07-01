@@ -58,13 +58,7 @@ export default function CongratulationsScreen() {
   const {getProgressData, resetProgressData} = useProgressData();
 
   const {getTrainers} = useCommonData();
-  const {
-    programmeModalImage,
-    setProgrammeModalImage,
-    programme,
-    getProgramme,
-    reset,
-  } = UseData();
+  const {programmeModalImage, programme, getProgramme, reset} = UseData();
 
   const [loading, setLoading] = useState(false);
 
@@ -302,7 +296,7 @@ export default function CongratulationsScreen() {
     <View>
       <View style={styles.imageContainer}>
         <FastImage
-          source={programmeModalImage ? {uri: programmeModalImage} : null}
+          source={programmeModalImage && {uri: programmeModalImage}}
           style={styles.image}
         />
         <FadingBottomView color="black" />

@@ -19,8 +19,6 @@ import {useRoute} from '@react-navigation/core';
 import {format} from 'date-fns';
 import UseData from '../../hooks/data/UseData';
 
-const fakeImage = require('../../../assets/congratulationsBackground.png');
-
 export default function StayTuned() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight} = ScaleHook();
@@ -110,9 +108,7 @@ export default function StayTuned() {
       <>
         <View>
           <ImageBackground
-            source={
-              programmeModalImage ? {uri: programmeModalImage} : fakeImage
-            }
+            source={programmeModalImage && {uri: programmeModalImage}}
             style={styles.image}>
             <FadingBottomView color="black" />
             <View style={styles.infoTextContainer}>
@@ -137,7 +133,9 @@ export default function StayTuned() {
     return (
       <>
         <View>
-          <ImageBackground source={fakeImage} style={styles.image}>
+          <ImageBackground
+            source={programmeModalImage && {uri: programmeModalImage}}
+            style={styles.image}>
             <FadingBottomView color="black" />
             <View style={styles.infoTextContainer}>
               <Text style={styles.infoText}>

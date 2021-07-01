@@ -45,6 +45,13 @@ export default function DataProvider(props) {
   const [programme, setProgramme] = useState();
   const [programmeModalImage, setProgrammeModalImage] = useState();
 
+  // Cache programme image whenever it changes
+  useEffect(() => {
+    if (programmeModalImage) {
+      FastImage.preload([{uri: programmeModalImage}]);
+    }
+  }, [programmeModalImage]);
+
   const [currentWeek, setCurrentWeek] = useState();
   const [nextWeek, setNextWeek] = useState();
 
@@ -308,10 +315,17 @@ export default function DataProvider(props) {
   const processProgramme = useCallback(
     async (data) => {
       console.log('Got programme');
+
+      // Always cache the thumbnailImage
+      if (data.programmeImageThumbnail) {
+        FastImage.preload([{uri: data.programmeImageThumbnail}]);
+      }
+
       // Check programme is completed
       if (data.isComplete) {
         setCurrentWeek([]);
         setNextWeek([]);
+        setProgrammeModalImage(data.programmeImage);
         setProgramme(data);
         return;
       }
@@ -344,13 +358,11 @@ export default function DataProvider(props) {
       setProgrammeModalImage(newData.programmeImage);
       //initCacheWeekVideos(newData.currentWeek.workouts);
 
-      const images = newData.currentWeek.workouts.map((it) => {
+      const workoutImages = newData.currentWeek.workouts.map((it) => {
         return it.overviewImage;
       });
-      if (newData.programmeImage) {
-        images.push(newData.programmeImage);
-      }
-      initCacheImages(images);
+
+      initCacheImages(workoutImages);
 
       const numberOfWorkouts = newData.currentWeek.workouts.length;
       let storedDays = await getStoredDays(numberOfWorkouts);

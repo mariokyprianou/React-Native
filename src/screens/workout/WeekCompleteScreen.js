@@ -20,12 +20,10 @@ import {useRoute} from '@react-navigation/core';
 import UseData from '../../hooks/data/UseData';
 import useUserData from '../../hooks/data/useUserData';
 import PowerShareAssetsManager from '../../utils/PowerShareAssetsManager';
-import {SampleImageUrl} from '../../utils/SampleData';
 import useShare from '../../hooks/share/useShare';
 import useLoading from '../../hooks/loading/useLoading';
 import displayAlert from '../../utils/DisplayAlert';
-
-const fakeImage = require('../../../assets/fake2.png');
+import FastImage from 'react-native-fast-image';
 
 export default function WeekCompleteScreen() {
   const {
@@ -169,12 +167,14 @@ export default function WeekCompleteScreen() {
     setLoading(false);
   }
 
+  console.log(programmeModalImage);
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <>
       <View>
-        <Image
-          source={programmeModalImage ? {uri: programmeModalImage} : fakeImage}
+        <FastImage
+          source={programmeModalImage && {uri: programmeModalImage}}
           style={styles.image}
         />
         <FadingBottomView color="black" />

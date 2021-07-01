@@ -16,8 +16,6 @@ import {useNavigation} from '@react-navigation/native';
 import UseData from '../../hooks/data/UseData';
 import PersistedImage from '../Utility/PersistedImage';
 
-const fallback = require('../../../assets/images/fake.png');
-
 export default function WorkoutHomeHeader() {
   // ** ** ** ** ** SETUP ** ** ** ** **
   const {getHeight, getWidth, radius} = ScaleHook();

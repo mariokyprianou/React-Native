@@ -18,10 +18,7 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import FadingBottomView from '../../components/Views/FadingBottomView';
 import Header from '../../components/Headers/Header';
 import isIPhoneX from '../../utils/isIphoneX';
-import UseData from '../../hooks/data/UseData';
 import {useBackHandler} from '@react-native-community/hooks';
-
-const fakeImage = require('../../../assets/images/helpChooseResults.png');
 
 export default function HelpMeChooseResultsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -124,7 +121,7 @@ export default function HelpMeChooseResultsScreen() {
       </View>
       <View style={styles.middleContainerStyle}>
         <ImageBackground
-          source={programmeImage ? {uri: programmeImage} : fakeImage}
+          source={programmeImage && {uri: programmeImage}}
           style={styles.image}>
           <FadingBottomView color="black" />
 

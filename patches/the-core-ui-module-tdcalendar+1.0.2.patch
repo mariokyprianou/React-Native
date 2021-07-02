@@ -12,7 +12,7 @@ index feb9794..a9ca8b2 100644
          pillWidth={pillWidth || defaultPillWidth}
          lookupStyleTable={lookupStyleTable || defaultLookupStyleTable}
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
-index 4187631..5255034 100644
+index 4187631..a2525b9 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
 +++ b/node_modules/the-core-ui-module-tdcalendar/src/components/CalendarGrid.js
 @@ -6,18 +6,36 @@
@@ -53,7 +53,31 @@ index 4187631..5255034 100644
  export default function CalendarGrid({
    firstDayOfWeek,
    showPrevNextDays = true,
-@@ -77,6 +95,7 @@ export default function CalendarGrid({
+@@ -39,7 +57,7 @@ export default function CalendarGrid({
+   const [lastDayOfSingleMonth, setLastDayOfSingleMonth] = useState(null);
+   const [allMonthsArray, setAllMonthsArray] = useState(null);
+ 
+-  const { getWidth, getHeight } = ScaleHook();
++  const { getWidth, getHeight, getScaledHeight } = ScaleHook();
+ 
+   useEffect(() => {
+     if (calendarType === "multiple-month") {
+@@ -49,9 +67,12 @@ export default function CalendarGrid({
+       while (startArray.length > 27) {
+         const firstDate = Object.keys(startArray[0])[0];
+         const monthName = firstDate.slice(4, 7);
+-        const month = cellData.filter((day) => {
+-          return Object.keys(day)[0].includes(monthName);
++        const year = new Date(firstDate).getFullYear();
++        const month = cellData.filter((it) => {
++          let day = Object.keys(it)[0];
++          return day.includes(monthName) && day.includes(year);
+         });
++
+         allMonths.push(month);
+         startArray.splice(0, month.length);
+       }
+@@ -77,6 +98,7 @@ export default function CalendarGrid({
            id: index + 1,
            date: index + 1,
            status: Object.values(day)[0],
@@ -61,7 +85,7 @@ index 4187631..5255034 100644
          };
        });
  
-@@ -106,17 +125,15 @@ export default function CalendarGrid({
+@@ -106,17 +128,15 @@ export default function CalendarGrid({
    const styles = StyleSheet.create({
      container: {
        flex: 1,
@@ -81,7 +105,7 @@ index 4187631..5255034 100644
        justifyContent: "center",
        alignItems: "center",
        flexWrap: "wrap",
-@@ -134,18 +151,31 @@ export default function CalendarGrid({
+@@ -134,18 +154,31 @@ export default function CalendarGrid({
      },
      titleText: {
        ...titleTextStyles,
@@ -89,7 +113,7 @@ index 4187631..5255034 100644
      },
      spacer: {
 -      height: getHeight(70),
-+      height: Platform.OS === 'android' || isIphoneX() ? getHeight(440) : getHeight(350),
++      height: Platform.OS === 'android' || isIphoneX() ? getScaledHeight(460) : getScaledHeight(350),
      },
    });
  
@@ -115,7 +139,7 @@ index 4187631..5255034 100644
            {allMonthsArray?.map((month) => {
              const monthNumber = new Date(Object.keys(month[0])[0]).getMonth();
              const monthName = monthNames[monthNumber];
-@@ -164,11 +194,17 @@ export default function CalendarGrid({
+@@ -164,11 +197,17 @@ export default function CalendarGrid({
              }
  
              const dailyData = month.map((day, index) => {
@@ -135,7 +159,7 @@ index 4187631..5255034 100644
                    <Text style={styles.titleText}>
                      {monthName} {year}
                    </Text>
-@@ -180,7 +216,7 @@ export default function CalendarGrid({
+@@ -180,7 +219,7 @@ export default function CalendarGrid({
                      />
                    )}
                    {dailyData?.map((day) => {
@@ -144,7 +168,7 @@ index 4187631..5255034 100644
                      return datesSelectable ? (
                        <TouchableOpacity
                          onPress={() => handleSelect(id)}
-@@ -193,6 +229,7 @@ export default function CalendarGrid({
+@@ -193,6 +232,7 @@ export default function CalendarGrid({
                              status={status}
                              cellStyles={dateCellStyles}
                              lookupStyleTable={lookupStyleTable}
@@ -152,7 +176,7 @@ index 4187631..5255034 100644
                            />
                          </View>
                        </TouchableOpacity>
-@@ -206,6 +243,7 @@ export default function CalendarGrid({
+@@ -206,6 +246,7 @@ export default function CalendarGrid({
                            status={status}
                            cellStyles={dateCellStyles}
                            lookupStyleTable={lookupStyleTable}
@@ -160,7 +184,7 @@ index 4187631..5255034 100644
                          />
                        </View>
                      );
-@@ -222,6 +260,7 @@ export default function CalendarGrid({
+@@ -222,6 +263,7 @@ export default function CalendarGrid({
              );
            })}
            <View style={styles.spacer} />
@@ -168,7 +192,7 @@ index 4187631..5255034 100644
          </ScrollView>
        </View>
      );
-@@ -234,7 +273,7 @@ export default function CalendarGrid({
+@@ -234,7 +276,7 @@ export default function CalendarGrid({
            <View style={{ width: pillWidth.width * firstDayOfSingleMonth }} />
          )}
          {monthDatesArray?.map((monthDate) => {
@@ -177,7 +201,7 @@ index 4187631..5255034 100644
            return datesSelectable ? (
              <TouchableOpacity
                onPress={() => handleSelect(id)}
-@@ -247,6 +286,7 @@ export default function CalendarGrid({
+@@ -247,6 +289,7 @@ export default function CalendarGrid({
                    status={status}
                    cellStyles={dateCellStyles}
                    lookupStyleTable={lookupStyleTable}
@@ -185,7 +209,7 @@ index 4187631..5255034 100644
                  />
                </View>
              </TouchableOpacity>
-@@ -257,6 +297,7 @@ export default function CalendarGrid({
+@@ -257,6 +300,7 @@ export default function CalendarGrid({
                  status={status}
                  cellStyles={dateCellStyles}
                  lookupStyleTable={lookupStyleTable}
@@ -322,7 +346,7 @@ index ce79f6f..82a3b09 100644
      defaultMonthTitleTextStyles: { fontWeight: "bold", fontSize: fontSize(14) },
      defaultCalendarType: "single-month",
 diff --git a/node_modules/the-core-ui-module-tdcalendar/src/utils/index.js b/node_modules/the-core-ui-module-tdcalendar/src/utils/index.js
-index 0a41de9..421e176 100644
+index 0a41de9..a17a317 100644
 --- a/node_modules/the-core-ui-module-tdcalendar/src/utils/index.js
 +++ b/node_modules/the-core-ui-module-tdcalendar/src/utils/index.js
 @@ -73,16 +73,6 @@ export function checkCellData(cellData, calendarType = "multiple-month") {
@@ -342,3 +366,26 @@ index 0a41de9..421e176 100644
      const cellValue = Object.values(cell);
      if (typeof cellValue[0] !== "string")
        throw new Error("Each day's value must be a string");
+@@ -95,15 +85,19 @@ export function checkCellData(cellData, calendarType = "multiple-month") {
+       throw new Error(
+         "Cell data must include a day object for every day of the month"
+       );
+-  } else if (calendarType === "multiple-month") {
++  } 
++  else if (calendarType === "multiple-month") {
+     const allMonths = [];
+     const startArray = [...cellData];
+ 
+     while (startArray.length > 27) {
+       const firstDate = Object.keys(startArray[0])[0];
+       const monthName = firstDate.slice(4, 7);
+-      const month = cellData.filter((day) => {
+-        return Object.keys(day)[0].includes(monthName);
++      const year = new Date(firstDate).getFullYear();
++
++      const month = cellData.filter((it) => {
++        let day = Object.keys(it)[0];
++        return day.includes(monthName) && day.includes(year);
+       });
+       allMonths.push(month);
+       startArray.splice(0, month.length);

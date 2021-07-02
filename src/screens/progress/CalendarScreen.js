@@ -75,7 +75,6 @@ export default function CalendarScreen() {
       const currentMonth = new Date();
 
       let checkMonths = monthDiff(earliestMonth, currentMonth); // replace witth months to add
-      checkMonths = checkMonths > 11 ? 11 : checkMonths;
 
       // Iteerate all months from earliest till now
       for (let i = 1; i <= checkMonths; i++) {

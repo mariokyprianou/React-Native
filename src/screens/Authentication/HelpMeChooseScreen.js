@@ -46,7 +46,11 @@ export default function HelpMeChooseScreen() {
     ),
   });
 
-  const {programmeQuestionnaire, setSuggestedProgramme} = useCommonData();
+  const {
+    trainers,
+    programmeQuestionnaire,
+    setSuggestedProgramme,
+  } = useCommonData();
 
   const [execute] = useMutation(SubmitProgrammeQuestionnaire, {
     fetchPolicy: 'no-cache',
@@ -123,10 +127,15 @@ export default function HelpMeChooseScreen() {
           const {programme} = getResponse(res, 'submitProgrammeQuestionnaire');
           setSuggestedProgramme(programme);
 
+          // Get existing image from trainers for this suggested programme
+          const existingImage = trainers
+            .find((it) => it.id === programme.trainer.id)
+            .programmes.find((it) => it.environment === programme.environment)
+            .programmeImage;
+
           navigation.navigate('HelpMeChooseResults', {
-            recommendedTrainer:
-              res.data.submitProgrammeQuestionnaire.programme.trainer.name,
-            programmeImage: programme?.programmeImage,
+            recommendedTrainer: programme.trainer.name,
+            programmeImage: existingImage,
           });
         } else {
           if (res.errors.length > 0) {

@@ -19,6 +19,7 @@ import FadingBottomView from '../../components/Views/FadingBottomView';
 import Header from '../../components/Headers/Header';
 import isIPhoneX from '../../utils/isIphoneX';
 import {useBackHandler} from '@react-native-community/hooks';
+import FastImage from 'react-native-fast-image';
 
 export default function HelpMeChooseResultsScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -62,8 +63,9 @@ export default function HelpMeChooseResultsScreen() {
       marginBottom: isIPhoneX() ? getHeight(8) : 0,
     },
     image: {
+      position: 'absolute',
       width: '100%',
-      resizeMode: 'cover',
+      height: '100%',
     },
     titleContainer: {
       position: 'absolute',
@@ -120,18 +122,18 @@ export default function HelpMeChooseResultsScreen() {
         </View>
       </View>
       <View style={styles.middleContainerStyle}>
-        <ImageBackground
+        <FastImage
           source={programmeImage && {uri: programmeImage}}
-          style={styles.image}>
-          <FadingBottomView color="black" />
+          style={styles.image}
+        />
+        <FadingBottomView color="black" />
 
-          <View style={styles.titleContainer}>
-            <Text style={styles.name}>{capitalizedName}</Text>
-            <Text style={styles.result}>
-              {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
-            </Text>
-          </View>
-        </ImageBackground>
+        <View style={styles.titleContainer}>
+          <Text style={styles.name}>{capitalizedName}</Text>
+          <Text style={styles.result}>
+            {HelpMeChooseDict.SuggestedProgramme(recommendedTrainer)}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.bottomContainerStyle}>

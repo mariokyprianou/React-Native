@@ -41,7 +41,7 @@ export default function TermsPolicyContentView({isHtml, content = ''}) {
 
   const screenWidth = Dimensions.get('screen').width;
   const spacing =
-    '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>br><br><br><br><br>';
+    '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
   const style = `<style type="text/css">
         ${Platform.OS === 'ios' ? iOScss : Androidcss}
         body, h1, h2, h3, p {
@@ -113,9 +113,9 @@ export default function TermsPolicyContentView({isHtml, content = ''}) {
           )}
         </View>
       </View>
-      <View style={styles.bottomView} pointerEvents="none">
+      {/* <View style={styles.bottomView} pointerEvents="none">
         <FadingBottomView height={280} />
-      </View>
+      </View> */}
     </>
   );
 }

@@ -271,18 +271,31 @@ export default function WorkoutScreen() {
         onMomentumScrollEnd={(event) => {
           handleIndex(event.nativeEvent.contentOffset.y);
         }}>
-        {selectedWorkout.exercises.map((screen, index) => (
-          <ExerciseView
-            {...screen}
-            index={index}
-            exerciseFinished={exerciseFinished}
-            setEnableScroll={setEnableScroll}
-            setShowPreviewOfNextVideo={setShowPreviewOfNextVideo}
-            weightLabel={weightLabel}
-            isContinuous={selectedWorkout.isContinuous}
-            isLastExercise={index === selectedWorkout.exercises.length - 1}
-          />
-        ))}
+        {React.useMemo(() => {
+          return (
+            <>
+              {selectedWorkout.exercises.map((screen, index) => (
+                <ExerciseView
+                  {...screen}
+                  index={index}
+                  exerciseFinished={exerciseFinished}
+                  setEnableScroll={setEnableScroll}
+                  setShowPreviewOfNextVideo={setShowPreviewOfNextVideo}
+                  weightLabel={weightLabel}
+                  isContinuous={selectedWorkout.isContinuous}
+                  isLastExercise={
+                    index === selectedWorkout.exercises.length - 1
+                  }
+                />
+              ))}
+            </>
+          );
+        }, [
+          exerciseFinished,
+          selectedWorkout.exercises,
+          selectedWorkout.isContinuous,
+          weightLabel,
+        ])}
       </ScrollView>
 
       {exerciseToPreview &&

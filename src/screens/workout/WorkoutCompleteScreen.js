@@ -344,7 +344,6 @@ export default function WorkoutCompleteScreen() {
         <View style={styles.imageContainer}>
           <FastImage
             source={stats.overviewImage && {uri: stats.overviewImage}}
-            fallback={true}
             style={styles.image}
           />
           <View style={styles.fadeContainer}>

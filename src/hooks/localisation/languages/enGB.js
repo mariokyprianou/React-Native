@@ -85,6 +85,8 @@ const enGB = {
     NeedToSignOut: 'Need to sign out?',
     Logout: SharedDict.Logout,
     Close: 'CLOSE',
+    Send: 'SEND',
+    VerifyLater: 'Verify email later',
   },
 
   AuthDict: {
@@ -144,9 +146,9 @@ const enGB = {
     LoginScreenTitle: SharedDict.Login,
 
     VerifyEmailTitle: SharedDict.VerifyEmail,
-    VerificationLinkSent: 'Verification link sent',
+    VerificationLinkSent: 'Email sent! Please check your inbox.',
     VerifyEmail:
-      'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
+      'Click SEND below and we’ll email you a link to verify your email address. Just tap the link in the email to verify your Power account.',
     YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
     VerificationNotRecognized:
       'Oops! Verification code not recognised. Please try again.',

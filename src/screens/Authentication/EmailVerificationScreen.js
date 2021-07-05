@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
@@ -28,6 +28,8 @@ export default function EmailVerificationScreen() {
   } = useRoute();
   const {permissionsNeeded, updateDefaultPreferences} = useUserData();
   const [resendEmail] = useMutation(ResendVerificationEmail);
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(() => {
     let interval = setInterval(async () => {
@@ -66,11 +68,25 @@ export default function EmailVerificationScreen() {
     };
   }, []);
 
+  useEffect(() => {
+    if (buttonDisabled) {
+      let interval = setInterval(async () => {
+        setButtonDisabled(false);
+      }, 1000 * 60 * 5); // 5 mins re-enable
+
+      return () => {
+        clearInterval(interval);
+        interval = null;
+      };
+    }
+  }, [buttonDisabled]);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   async function onPressButton() {
     await resendEmail({variables: {email}})
       .then(() => {
+        setButtonDisabled(true);
         Alert.alert(AuthDict.VerificationLinkSent);
       })
       .catch((err) => console.log('resendEmail', err));
@@ -101,8 +117,10 @@ export default function EmailVerificationScreen() {
       text={AuthDict.VerifyEmail}
       closeModal={false}
       image={require('../../../assets/images/verifyEmailImage.png')}
-      buttonType="resend"
-      bottomButtonType="goBackLower"
+      buttonType="send"
+      disabled={buttonDisabled}
+      buttonVariant="gradient"
+      bottomButtonType="verifyLater"
       onPressButton={onPressButton}
       onPressBottomButton={onPressBottomButton}
     />

@@ -148,7 +148,7 @@ const hiIN = {
     LoginScreenTitle: SharedDict.Login,
 
     VerifyEmailTitle: SharedDict.VerifyEmail,
-    VerificationLinkSent: 'पुष्टि करने के लिए लिंक भेजा गया है',
+    VerificationLinkSent: 'ईमेल भेजा! कृपया अपना इनबॉक्स जांचें।',
     VerifyEmail:
       'ईमेल भेजें" क्लिक करें और हम आपका ईमेल पता सत्यापित करने के लिए आपको एक लिंक ईमेल करेंगे। अपना POWER खाता सत्यापित करने के लिए बस ईमेल में दिए गए लिंक पर टैप करें।',
     YouWillBeLoggedOut: 'आप लॉग आउट कर जाएंगे - क्या आप जारी रखना चाहते हैं?',

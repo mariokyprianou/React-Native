@@ -46,7 +46,7 @@ export default function RegisterScreen() {
 
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
-  const {AuthDict, GenderDict} = dictionary;
+  const {AuthDict, GenderDict, OfflineMessage, PurchaseDict} = dictionary;
   const [termsAndConditions, setTerms] = useState(false);
   const [marketingPreferences, setMarketingPreferences] = useState('off');
 
@@ -144,6 +144,10 @@ export default function RegisterScreen() {
     }
   }, [updateValue, country]);
 
+  useEffect(() => {
+    Intercom.registerUnidentifiedUser();
+  }, []);
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
     container: {
@@ -206,6 +210,11 @@ export default function RegisterScreen() {
     },
     marketingStyle: {
       ...textStyles.regular12_brownishGrey100,
+    },
+    needHelp: {
+      ...textStyles.semiBold16_brownishGrey100,
+      color: colors.brownishGrey80,
+      textAlign: 'center',
     },
   };
 
@@ -315,6 +324,16 @@ export default function RegisterScreen() {
       })
       .finally(() => setLoading(false));
   }
+
+  const onPressNeedHelp = () => {
+    if (!isConnected) {
+      displayAlert({text: OfflineMessage});
+      return;
+    }
+
+    firebaseLogEvent(analyticsEvents.accessedIntercom, {});
+    Intercom.displayMessenger();
+  };
 
   const handleTermsAndConditionsButton = () => {
     const value = termsAndConditions === 'on' ? 'off' : 'on';
@@ -530,6 +549,10 @@ export default function RegisterScreen() {
               onPress={handleRegister}
               disabled={termsAndConditions === 'on' ? false : true}
             />
+            <Spacer height={25} />
+            <TouchableOpacity onPress={onPressNeedHelp}>
+              <Text style={styles.needHelp}>{PurchaseDict.NeedHelp}</Text>
+            </TouchableOpacity>
           </View>
           <Spacer height={50} />
         </KeyboardAwareScrollView>

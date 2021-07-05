@@ -6,7 +6,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, Image, Text, TouchableOpacity, Platform} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -22,7 +22,7 @@ import useUserData from '../../hooks/data/useUserData';
 import {useMutation} from '@apollo/client';
 import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
-import {differenceInDays, addDays, parseISO} from 'date-fns';
+import {differenceInDays, addDays} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -58,7 +58,7 @@ export default function WorkoutHomeScreen() {
     navigation.setOptions({
       header: () => null,
     });
-  }, []);
+  }, [navigation]);
 
   const {
     programme,
@@ -92,57 +92,55 @@ export default function WorkoutHomeScreen() {
       setLoading(true);
       getProgramme();
     }
-  }, [isFocused, programme, currentWeek]);
+  }, [isFocused, programme, currentWeek, setLoading, getProgramme]);
 
   // Check if week is completed
   useEffect(() => {
-    if (programme && programme.isComplete) {
-      showStayTuned();
-      return;
-    } else if (programme && programme.currentWeek && currentWeek) {
-      async function checkWeekComplete() {
-        const remaining = currentWeek.filter(
-          (it) => !it?.isRestDay && !it?.completedAt,
-        ).length;
-
-        //Still have workouts for current week
-        if (remaining > 0) {
-          setStayTunedEnabled(false);
-          return;
-        } else {
-          weekCompleted();
-        }
+    if (programme && programme.currentWeek && currentWeek) {
+      if (programme.isComplete) {
+        weekCompleted();
+      } else {
+        setStayTunedEnabled(false);
       }
-
-      console.log('WeekStartedAt:', programme.currentWeek.startedAt);
-      checkWeekComplete();
     }
-  }, [programme, currentWeek]);
+  }, [programme, currentWeek, weekCompleted]);
 
-  async function weekCompleted() {
+  const weekCompleted = useCallback(async () => {
+    // Only show the week complete modal once when the last workout is done
     const shouldShowModal = await shouldShowWeekCompleteModal();
 
     if (shouldShowModal) {
       constructWeekCompleteModal();
+    } else {
+      showStayTuned();
     }
 
+    let startedAt = new Date(programme.currentWeek.startedAt);
+    startedAt.setUTCHours(0, 0, 0);
+
     // Check at least 7 days past week start date
-    let completeWeekLimitDate = addDays(
-      parseISO(programme.currentWeek.startedAt),
-      6,
-    ).setHours(0, 0, 0, 0);
+    let completeWeekLimitDate = addDays(startedAt, 6);
+
+    let now = new Date();
+    now.setUTCHours(0, 0, 0, 0);
 
     // Passed limit date  note: === 0 means same date as today, we need next day
-    const now = new Date().setHours(0, 0, 0, 0);
+    // When 0 means we are on last day of week
     if (differenceInDays(now, completeWeekLimitDate) > 0) {
       callCompleteWeekMutation();
     } else {
       // Week completee not allowed, show stay tuned where needed
       setStayTunedEnabled(true);
     }
-  }
+  }, [
+    callCompleteWeekMutation,
+    constructWeekCompleteModal,
+    programme.currentWeek.startedAt,
+    shouldShowWeekCompleteModal,
+    showStayTuned,
+  ]);
 
-  async function callCompleteWeekMutation() {
+  const callCompleteWeekMutation = useCallback(async () => {
     setLoading(true);
     await completeWeekMutation()
       .then(async (res) => {
@@ -168,9 +166,14 @@ export default function WorkoutHomeScreen() {
         console.log('completeWeekMutation', err);
         setLoading(false);
       });
-  }
+  }, [
+    completeWeekMutation,
+    getProgramme,
+    setLoading,
+    updateConsecutiveWorkouts,
+  ]);
 
-  async function constructWeekCompleteModal() {
+  const constructWeekCompleteModal = useCallback(async () => {
     const {environment} = programme;
     const {weekNumber, workouts} = programme.currentWeek;
 
@@ -207,20 +210,20 @@ export default function WorkoutHomeScreen() {
     // Set currentWeek id to prevent showing modal again for the same week
     setModalShown();
     navigation.navigate('WeekComplete', {...props});
-  }
+  }, [navigation, programme, setModalShown]);
 
-  async function shouldShowWeekCompleteModal() {
+  const shouldShowWeekCompleteModal = useCallback(async () => {
     let idOfLastWeekShown =
       (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '-1';
     return Number(idOfLastWeekShown) !== programme.currentWeek.weekNumber;
-  }
+  }, [programme.currentWeek.weekNumber]);
 
-  async function setModalShown() {
+  const setModalShown = useCallback(async () => {
     await AsyncStorage.setItem(
       '@COMPLETE_WEEK_MODAL_NUMBER',
       `${programme.currentWeek.weekNumber}`,
     );
-  }
+  }, [programme.currentWeek.weekNumber]);
 
   useEffect(() => {
     if (programme) {
@@ -385,20 +388,28 @@ export default function WorkoutHomeScreen() {
     showStayTuned(nextWeekStartDate, programmeLength);
   }
 
-  function showStayTuned(nextWeekStartDate = null, programmeLength = 0) {
-    navigation.navigate('StayTuned', {
-      name: programme?.trainer.name,
-      venue: programme?.environment,
-      image: programme?.programmeImage,
-      date: nextWeekStartDate,
-      type:
-        programme?.currentWeek === null ||
-        programme?.currentWeek?.weekNumber === programmeLength
-          ? 'programmeComplete'
-          : 'workoutsComplete',
-    });
-  }
-
+  const showStayTuned = useCallback(
+    (nextWeekStartDate = null, programmeLength = 0) => {
+      navigation.navigate('StayTuned', {
+        name: programme?.trainer.name,
+        venue: programme?.environment,
+        image: programme?.programmeImage,
+        date: nextWeekStartDate,
+        type:
+          programme?.currentWeek === null ||
+          programme?.currentWeek?.weekNumber === programmeLength
+            ? 'programmeComplete'
+            : 'workoutsComplete',
+      });
+    },
+    [
+      navigation,
+      programme?.currentWeek,
+      programme?.environment,
+      programme?.programmeImage,
+      programme?.trainer.name,
+    ],
+  );
   const [shouldCache, setShouldCache] = useState(false);
 
   useEffect(() => {

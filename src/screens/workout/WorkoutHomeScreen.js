@@ -135,7 +135,7 @@ export default function WorkoutHomeScreen() {
   }, [
     callCompleteWeekMutation,
     constructWeekCompleteModal,
-    programme.currentWeek.startedAt,
+    programme?.currentWeek?.startedAt,
     shouldShowWeekCompleteModal,
     showStayTuned,
   ]);
@@ -216,14 +216,14 @@ export default function WorkoutHomeScreen() {
     let idOfLastWeekShown =
       (await AsyncStorage.getItem('@COMPLETE_WEEK_MODAL_NUMBER')) || '-1';
     return Number(idOfLastWeekShown) !== programme.currentWeek.weekNumber;
-  }, [programme.currentWeek.weekNumber]);
+  }, [programme?.currentWeek?.weekNumber]);
 
   const setModalShown = useCallback(async () => {
     await AsyncStorage.setItem(
       '@COMPLETE_WEEK_MODAL_NUMBER',
       `${programme.currentWeek.weekNumber}`,
     );
-  }, [programme.currentWeek.weekNumber]);
+  }, [programme?.currentWeek?.weekNumber]);
 
   useEffect(() => {
     if (programme) {

@@ -295,6 +295,11 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
           text: ProfileDict.LogoutModalButton,
           onPress: async () => {
             setLoading(true);
+            await AsyncStorage.setItem(
+              '@LAST_SESSION_USER_EMAIL',
+              userData.email,
+            );
+
             await Auth.signOut()
               .then(async (res) => {
                 console.log(res, '<----sign out res');

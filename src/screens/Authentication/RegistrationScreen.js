@@ -291,12 +291,16 @@ export default function RegisterScreen() {
         },
       },
     })
-      .then((res) => {
+      .then(async (res) => {
         console.log('REGISTRATION RES', res);
         if (res.data.registerUser === true) {
           cleanValues();
-          Intercom.registerIdentifiedUser({email: email});
 
+          // We want to only remove these if the new user logged in is a different user
+          await AsyncStorage.removeItem('@CURRENT_WEEK');
+          await AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+
+          Intercom.registerIdentifiedUser({email: email});
           firebaseLogEvent(analyticsEvents.registration, {email: email});
 
           navigation.navigate('EmailVerification', {email, password});

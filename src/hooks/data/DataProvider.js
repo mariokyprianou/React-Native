@@ -36,6 +36,7 @@ import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import FastImage from 'react-native-fast-image';
 import OfflineUtils from './OfflineUtils';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
+import ProgrammeSchedule from '../../apollo/queries/ProgrammeSchedule';
 
 const {clearDirectory, videosDirectoryPath} = FileManager;
 
@@ -53,7 +54,7 @@ export default function DataProvider(props) {
   }, [programmeModalImage]);
 
   const [currentWeek, setCurrentWeek] = useState();
-  const [nextWeek, setNextWeek] = useState();
+  //const [nextWeek, setNextWeek] = useState();
 
   // Get stored rest days from Async or create defaults
   const getStoredDays = useCallback(
@@ -236,38 +237,38 @@ export default function DataProvider(props) {
     [getRestDay, wasLastWorkoutToday],
   );
 
-  useEffect(() => {
-    if (currentWeek && currentWeek.length > 0 && programme) {
-      const lastDate = currentWeek.reduce((a, b) =>
-        a.exactDate > b.exactDate ? a : b,
-      ).exactDate;
+  // useEffect(() => {
+  //   if (currentWeek && currentWeek.length > 0 && programme) {
+  //     const lastDate = currentWeek.reduce((a, b) =>
+  //       a.exactDate > b.exactDate ? a : b,
+  //     ).exactDate;
 
-      const nextWeekStartDate = addDays(new Date(lastDate), 1);
+  //     const nextWeekStartDate = addDays(new Date(lastDate), 1);
 
-      // Don't set next week if already correct
-      if (nextWeek && nextWeek.length > 0) {
-        let isSameStartDay =
-          differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
-          nextWeekStartDate.getDay() === nextWeek[0].exactDate.getDay();
+  //     // Don't set next week if already correct
+  //     if (nextWeek && nextWeek.length > 0) {
+  //       let isSameStartDay =
+  //         differenceInDays(nextWeekStartDate, nextWeek[0].exactDate) === 0 &&
+  //         nextWeekStartDate.getDay() === nextWeek[0].exactDate.getDay();
 
-        if (isSameStartDay) {
-          return;
-        }
-      }
+  //       if (isSameStartDay) {
+  //         return;
+  //       }
+  //     }
 
-      if (!programme.nextWeek) {
-        return;
-      }
+  //     if (!programme.nextWeek) {
+  //       return;
+  //     }
 
-      let weekWorkout = programme.nextWeek.workouts
-        .slice()
-        .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
+  //     let weekWorkout = programme.nextWeek.workouts
+  //       .slice()
+  //       .sort((a, b) => a.completedAt && a.orderIndex - b.orderIndex);
 
-      const week = addWorkoutDates(addRestDays(weekWorkout), nextWeekStartDate);
+  //     const week = addWorkoutDates(addRestDays(weekWorkout), nextWeekStartDate);
 
-      setNextWeek(week);
-    }
-  }, [currentWeek, nextWeek, programme]);
+  //     setNextWeek(week);
+  //   }
+  // }, [currentWeek, nextWeek, programme]);
 
   const initCacheWeekVideos = useCallback(async (workouts) => {
     const response = await NetInfo.fetch();
@@ -301,16 +302,69 @@ export default function DataProvider(props) {
       query: Programme,
       key: 'getProgramme',
       setValue: async (data) => {
+        setCurrentWeekNumber(data?.currentWeek?.currentWeekNumber || 1);
+        setCurrentWeekStartedAt(data?.currentWeek?.startedAt);
         processProgramme(data);
       },
     });
 
     if (!res || !res.success) {
       setCurrentWeek(null);
-      setNextWeek(null);
+      //setNextWeek(null);
       setProgramme(null);
     }
   }, [processProgramme, runQuery]);
+
+  const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
+  const [currentWeekStartedAt, setCurrentWeekStartedAt] = useState(new Date());
+  const [displayWeeks, setDisplayWeeks] = useState([]);
+
+  // This is only needed once per session or when week/programme changes
+  const [programmeScheduleData, setProgrammeScheduleData] = useState();
+  const getProgrammeSchedule = useCallback(async () => {
+    const res = await runQuery({
+      query: ProgrammeSchedule,
+      key: 'programmeSchedule',
+      setValue: async (data) => {
+        setProgrammeScheduleData(data);
+      },
+    });
+
+    if (!res || !res.success) {
+      setProgrammeScheduleData(null);
+    }
+  }, [runQuery]);
+
+  const WEEK_STATE = {
+    PAST: 'past',
+    CURRENT: 'current',
+    FUTURE: 'future',
+  };
+
+  // Changed schedule or current week
+  useEffect(() => {
+    if (programmeScheduleData && currentWeek) {
+      const weeks = programmeScheduleData.weeks.map((week) => {
+        const {weekNumber, workouts} = week;
+
+        const weekState =
+          weekNumber < currentWeekNumber
+            ? WEEK_STATE.PAST
+            : weekNumber === currentWeekNumber
+            ? WEEK_STATE.CURRENT
+            : WEEK_STATE.FUTURE;
+
+        return {
+          ...week,
+          state: weekState,
+          workouts: weekState === WEEK_STATE.CURRENT ? currentWeek : workouts,
+        };
+      });
+
+      setDisplayWeeks(weeks);
+      console.log('DISPLAY_WEEKS', weeks);
+    }
+  }, [programmeScheduleData, currentWeek]);
 
   const processProgramme = useCallback(
     async (data) => {
@@ -324,7 +378,7 @@ export default function DataProvider(props) {
       // Check programme is completed
       if (data.isComplete) {
         setCurrentWeek([]);
-        setNextWeek([]);
+        //setNextWeek([]);
         setProgrammeModalImage(data.programmeImage);
         setProgramme(data);
         return;
@@ -388,12 +442,7 @@ export default function DataProvider(props) {
     setDownloadEnabled(!enabled);
   }, []);
 
-  useEffect(() => {
-    console.log('isDownloadEnabled', isDownloadEnabled);
-  }, [isDownloadEnabled]);
-
   // ** ** ** ** **Current workout data ** ** ** ** **
-
   const [selectedWorkout, setSelectedWorkout] = useState();
   const [isSelectedWorkoutOnDemand, setIsSelectedWorkoutOnDemand] = useState(
     false,
@@ -406,11 +455,6 @@ export default function DataProvider(props) {
   const [completedExercises, setCompletedExercises] = useState([]);
 
   const [selectedWeight, setSelectedWeight] = useState(20);
-
-  useEffect(() => {
-    console.log('selectedWeight useEffect', selectedWeight);
-  }, [selectedWeight]);
-
   const [weightData, setWeightData] = useState([]);
 
   useEffect(() => {
@@ -422,10 +466,6 @@ export default function DataProvider(props) {
   }, []);
 
   const [weightsToUpload, setWeightsToUpload] = useState([]);
-
-  useEffect(() => {
-    console.log('weightsToUpload', weightsToUpload.length);
-  }, [weightsToUpload]);
 
   const wasLastWorkoutToday = useCallback((workouts) => {
     const today = new Date();
@@ -440,7 +480,6 @@ export default function DataProvider(props) {
   }, []);
 
   // ** ** ** ** ** On Demand ** ** ** ** **
-
   const [workoutTags, setWorkoutTags] = useState([]);
   const [selectedWorkoutTags, setSelectedWorkoutTags] = useState([]);
   const [onDemandWorkouts, setOnDemandWorkouts] = useState();
@@ -499,10 +538,12 @@ export default function DataProvider(props) {
     [initCacheImages, runQuery],
   );
 
+  // ** ** ** ** ** Utils ** ** ** ** **
+
   const reset = useCallback(async () => {
     setProgramme(null);
     setCurrentWeek(null);
-    setNextWeek(null);
+    //setNextWeek(null);
     setWorkoutTags(null);
     setOnDemandWorkouts();
 
@@ -568,7 +609,7 @@ export default function DataProvider(props) {
   const dataProviderSyncronousUpdate = useCallback(async () => {
     setProgramme(null);
     setCurrentWeek(null);
-    setNextWeek(null);
+    //setNextWeek(null);
     setWorkoutTags(null);
     setOnDemandWorkouts();
 
@@ -590,7 +631,7 @@ export default function DataProvider(props) {
       currentExerciseIndex,
       setCurrentExerciseIndex,
       currentWeek,
-      nextWeek,
+      //nextWeek,
       updateStoredDays,
       structureWeek,
       updateConsecutiveWorkouts,
@@ -621,6 +662,7 @@ export default function DataProvider(props) {
       shouldIncrementOnDemandWorkoutCount,
       dataProviderSyncronousUpdate,
       refetchOnDemandWorkouts,
+      getProgrammeSchedule,
     }),
     [
       programme,
@@ -634,7 +676,7 @@ export default function DataProvider(props) {
       currentExerciseIndex,
       setCurrentExerciseIndex,
       currentWeek,
-      nextWeek,
+      //nextWeek,
       updateStoredDays,
       structureWeek,
       updateConsecutiveWorkouts,
@@ -665,6 +707,7 @@ export default function DataProvider(props) {
       shouldIncrementOnDemandWorkoutCount,
       dataProviderSyncronousUpdate,
       refetchOnDemandWorkouts,
+      getProgrammeSchedule,
     ],
   );
 

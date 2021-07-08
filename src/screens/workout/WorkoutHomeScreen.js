@@ -63,6 +63,7 @@ export default function WorkoutHomeScreen() {
   const {
     programme,
     getProgramme,
+    getProgrammeSchedule,
     setSelectedWorkout,
     currentWeek,
     nextWeek,
@@ -90,6 +91,7 @@ export default function WorkoutHomeScreen() {
     if ((isFocused && !programme) || !currentWeek) {
       console.log('Focused Tab1: need refetch');
       setLoading(true);
+      getProgrammeSchedule();
       getProgramme();
     }
   }, [isFocused, programme, currentWeek]);

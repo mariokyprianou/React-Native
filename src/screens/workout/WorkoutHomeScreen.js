@@ -91,8 +91,12 @@ export default function WorkoutHomeScreen() {
     if ((isFocused && !programme) || !currentWeek) {
       console.log('Focused Tab1: need refetch');
       setLoading(true);
-      getProgrammeSchedule();
-      getProgramme();
+
+      async function getData() {
+        await getProgrammeSchedule();
+        getProgramme();
+      }
+      getData();
     }
   }, [isFocused, programme, currentWeek]);
 

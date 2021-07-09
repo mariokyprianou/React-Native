@@ -17,15 +17,13 @@ import IconTextView from '../Infographics/IconTextView';
 import isRTL from '../../utils/isRTL';
 
 // possible status' - currentDay, complete, todo
+const completeDayIcon = require('../../../assets/icons/completeDayIcon.png');
 
 export default function WorkoutCard({
   workout,
   title,
   day,
-  date,
   duration,
-  intensity,
-  image,
   drag,
   status,
   onPressCard,
@@ -37,20 +35,13 @@ export default function WorkoutCard({
 
   const {WorkoutDict} = dictionary;
 
-  const today = new Date();
-  const formattedToday = format(today, 'iiii, do LLL');
-
-  const datePart1 = date.slice(0, -6) || '';
-  const dateSuperscript = date.slice(-6, -4) || '';
-  const datePart2 = date.slice(-4) || '';
-
-  const isRestDay = title === WorkoutDict.RestDay || title === 'REST DAY';
+  const isRestDay = !day;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
-    card: {
+    cardContainer: {
       width: '100%',
-      height: isRestDay ? getHeight(66) : getHeight(100),
+      height: isRestDay ? getHeight(38) : getHeight(67),
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.white100,
@@ -61,127 +52,149 @@ export default function WorkoutCard({
       shadowOpacity: 1,
       elevation: 6,
     },
-    touch: {
+    touchContainer: {
       flex: 1,
+      height: '100%',
       flexDirection: 'row',
       alignItems: 'center',
     },
+
+    iconContainer: {
+      marginLeft: getWidth(7),
+    },
+    icon: {
+      solid: true,
+      width: 40,
+      color: colors.dividerGrey40,
+      size: fontSize(12),
+    },
+    completeIcon: {
+      marginTop: getHeight(6),
+    },
+
+    contentContainer: {
+      flex: 1,
+      height: '100%',
+      flexDirection: 'row',
+    },
+    space: {
+      width: getWidth(43),
+      height: '100%',
+      justifyContent: 'center',
+      paddingLeft: getWidth(4),
+    },
+    content: {
+      height: '100%',
+      flex: 1,
+      justifyContent: 'center',
+    },
+    restDayTitleStyle: {
+      ...textStyles.semiBold12_black100,
+      color: colors.brownishGrey100,
+    },
+
+    workoutContent: {
+      flex: 1,
+      height: '100%',
+      marginTop: getHeight(15),
+      marginBottom: getHeight(14),
+      flexDirection: 'row',
+    },
+    dayText: {
+      ...textStyles.semiBold15_aquamarine100,
+    },
+    divider: {
+      height: '90%',
+      width: getWidth(1),
+      alignSelf: 'center',
+      marginLeft: getWidth(8),
+      marginRight: getWidth(11),
+      backgroundColor: colors.dividerGrey10,
+    },
+
+    workoutTitleStyle: {
+      ...textStyles.semiBold15_aquamarine100,
+      color: colors.black100,
+    },
+    durationStyle: {
+      ...textStyles.medium12_brownishGrey100,
+      color: colors.durationGrey100,
+      transform: [{translateY: -4}],
+    },
     completeOverlay: {
       backgroundColor: colors.white75,
-      width: getWidth(335),
-      height: isRestDay ? getHeight(66) : getHeight(100),
+      width: '100%',
+      height: '100%',
       position: 'absolute',
       top: 0,
       left: 0,
     },
-    image: {
-      width: '100%',
-      height: '100%',
-      opacity: 0.2,
-      position: 'absolute',
-    },
-    iconContainer: {
-      marginLeft: getWidth(10),
-    },
-    icon: {
-      solid: true,
-      color: status === 'complete' ? colors.white100 : colors.black100,
-      size: fontSize(12),
-    },
-    completeIconContainer: {
-      marginRight: getWidth(7),
-    },
-    completeIcon: {
-      color: colors.brownGrey100,
-    },
-    textContainer: {
-      flexDirection: 'column',
-    },
-    title: {
-      ...textStyles.semiBold14_black100,
-      textAlign: 'left',
-    },
-    dayContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: isRestDay ? getHeight(0) : getHeight(17),
-    },
-    workoutDay: {
-      ...textStyles.medium14_aquamarine100,
-      marginRight: getWidth(2),
-      textAlign: 'left',
-    },
-    dateContainer: {
-      flexDirection: 'row',
-    },
-    date: {
-      ...textStyles.medium14_brownishGrey100,
-      textAlign: 'left',
-    },
-    dateSuperscript: {
-      ...textStyles.medium10_brownishGrey100,
-    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  // ** ** ** ** ** RENDER ** ** ** ** **
-  return (
-    <View style={styles.card}>
-      <TouchableOpacity
-        activeOpacity={drag ? 0.2 : 1}
-        style={styles.touch}
-        onLongPress={drag || null}
-        onPress={
-          title === WorkoutDict.RestDay ? null : () => onPressCard(workout)
-        }>
-        {date === formattedToday && (
-          <Image source={image} style={styles.image} />
-        )}
 
-        {drag && (
+  // ** ** ** ** ** RENDER ** ** ** ** **
+  const Icon = () => (
+    <>
+      {status === 'complete' ? (
+        <Image style={styles.completeIcon} source={completeDayIcon} />
+      ) : (
+        drag && (
           <View style={styles.iconContainer}>
             <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
           </View>
-        )}
-        <View style={{padding: getWidth(20)}}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>
-              {title === 'REST DAY' ? WorkoutDict.RestDay : title}
-            </Text>
-            <View style={styles.dayContainer}>
-              {status === 'complete' && (
-                <View style={styles.completeIconContainer}>
-                  <TDIcon
-                    input={'check-circle'}
-                    inputStyle={styles.completeIcon}
-                  />
-                </View>
-              )}
-              {!isRestDay && (
-                <Text style={styles.workoutDay}>
-                  {isRTL()
-                    ? `:${WorkoutDict.Day} ${day} `
-                    : `${WorkoutDict.Day} ${day}: `}
-                </Text>
-              )}
-              <View style={styles.dateContainer}>
-                <Text style={styles.date}>{datePart1}</Text>
-                <Text style={styles.dateSuperscript}>{dateSuperscript}</Text>
-                <Text style={styles.date}>{datePart2}</Text>
-              </View>
-            </View>
-            {!isRestDay && (
-              <IconTextView
-                type="intensity"
-                duration={duration}
-                intensity={intensity}
-                alignLeft
-              />
-            )}
-          </View>
+        )
+      )}
+    </>
+  );
+
+  const WorkoutContent = () => (
+    <>
+      <View style={styles.workoutContent}>
+        <Text style={styles.dayText}>{`${WorkoutDict.Day} ${day}`}</Text>
+        <View style={styles.divider} />
+        <View>
+          <Text style={styles.workoutTitleStyle}>{title}</Text>
+          <Text
+            style={
+              styles.durationStyle
+            }>{`${duration} ${WorkoutDict.Mins}`}</Text>
         </View>
-      </TouchableOpacity>
+      </View>
       {status === 'complete' && <View style={styles.completeOverlay} />}
+    </>
+  );
+
+  const Content = () => (
+    <View style={styles.contentContainer}>
+      <View style={styles.space} />
+      <View style={styles.content}>
+        {isRestDay ? (
+          <Text style={styles.restDayTitleStyle}>{WorkoutDict.RestDay}</Text>
+        ) : (
+          <WorkoutContent />
+        )}
+      </View>
+      <View style={styles.space}>
+        <Icon />
+      </View>
+    </View>
+  );
+
+  const canMove = status !== 'complete' && drag;
+  const canClickOn = !isRestDay && status !== 'complete';
+
+  return (
+    <View style={styles.cardContainer}>
+      <TouchableOpacity
+        activeOpacity={canMove ? 0.2 : 1}
+        style={styles.touchContainer}
+        onLongPress={canMove ? drag : null}
+        onPress={canClickOn ? () => onPressCard(workout) : null}>
+        {React.useMemo(() => {
+          return <Content />;
+        }, [workout, title, day, status, isRestDay])}
+      </TouchableOpacity>
     </View>
   );
 }

@@ -65,6 +65,11 @@ const Colors = {
   newWorkoutBlue100: 'rgba(32, 217, 210, 1)',
   weekPreviewGrey100: 'rgba(138, 138, 142, 1)',
   cantChooseGrey100: 'rgba(148, 148, 148, 1)',
+
+  dividerGrey10: 'rgba(112, 112, 112, 0.1)',
+  dividerGrey40: 'rgba(112, 112, 112, 0.4)',
+  dividerGrey100: 'rgba(112, 112, 112, 1)',
+  durationGrey100: 'rgba(188, 188, 188, 1)',
 };
 
 export default Colors;

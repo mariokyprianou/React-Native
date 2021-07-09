@@ -362,7 +362,6 @@ export default function DataProvider(props) {
       });
 
       setDisplayWeeks(weeks);
-      console.log('DISPLAY_WEEKS', weeks);
     }
   }, [programmeScheduleData, currentWeek]);
 
@@ -663,6 +662,8 @@ export default function DataProvider(props) {
       dataProviderSyncronousUpdate,
       refetchOnDemandWorkouts,
       getProgrammeSchedule,
+      displayWeeks,
+      currentWeekNumber,
     }),
     [
       programme,
@@ -708,6 +709,8 @@ export default function DataProvider(props) {
       dataProviderSyncronousUpdate,
       refetchOnDemandWorkouts,
       getProgrammeSchedule,
+      displayWeeks,
+      currentWeekNumber,
     ],
   );
 

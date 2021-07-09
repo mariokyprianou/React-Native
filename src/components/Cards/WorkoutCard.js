@@ -149,20 +149,17 @@ export default function WorkoutCard({
   );
 
   const WorkoutContent = () => (
-    <>
-      <View style={styles.workoutContent}>
-        <Text style={styles.dayText}>{`${WorkoutDict.Day} ${day}`}</Text>
-        <View style={styles.divider} />
-        <View>
-          <Text style={styles.workoutTitleStyle}>{title}</Text>
-          <Text
-            style={
-              styles.durationStyle
-            }>{`${duration} ${WorkoutDict.Mins}`}</Text>
-        </View>
+    <View style={styles.workoutContent}>
+      <Text style={styles.dayText}>{`${WorkoutDict.Day} ${day}`}</Text>
+      <View style={styles.divider} />
+      <View>
+        <Text style={styles.workoutTitleStyle}>{title}</Text>
+        <Text
+          style={
+            styles.durationStyle
+          }>{`${duration} ${WorkoutDict.Mins}`}</Text>
       </View>
-      {status === 'complete' && <View style={styles.completeOverlay} />}
-    </>
+    </View>
   );
 
   const Content = () => (
@@ -174,6 +171,7 @@ export default function WorkoutCard({
         ) : (
           <WorkoutContent />
         )}
+        {status === 'complete' && <View style={styles.completeOverlay} />}
       </View>
       <View style={styles.space}>
         <Icon />

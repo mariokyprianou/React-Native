@@ -37,6 +37,7 @@ import FastImage from 'react-native-fast-image';
 import OfflineUtils from './OfflineUtils';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
 import ProgrammeSchedule from '../../apollo/queries/ProgrammeSchedule';
+import WEEK_STATE from '../../utils/WEEK_STATE';
 
 const {clearDirectory, videosDirectoryPath} = FileManager;
 
@@ -334,12 +335,6 @@ export default function DataProvider(props) {
       setProgrammeScheduleData(null);
     }
   }, [runQuery]);
-
-  const WEEK_STATE = {
-    PAST: 'past',
-    CURRENT: 'current',
-    FUTURE: 'future',
-  };
 
   // Changed schedule or current week
   useEffect(() => {

@@ -32,6 +32,7 @@ import format from 'date-fns/format';
 import {useNetInfo} from '@react-native-community/netinfo';
 
 import {shouldCacheWeek} from '../../hooks/data/VideoCacheUtils';
+import ProgrammeUI from './ProgrammeUI';
 
 var hindiLocale = require('date-fns/locale/hi');
 var engLocale = require('date-fns/locale/en-GB');
@@ -601,7 +602,9 @@ export default function WorkoutHomeScreen() {
           </View>
         )}
       </View>
+      <ProgrammeUI />
 
+      {/* 
       <View style={{flex: 1, width: '100%'}}>
         <DraggableFlatList
           data={workoutsToDisplay}
@@ -715,6 +718,7 @@ export default function WorkoutHomeScreen() {
           }}
         />
       </View>
+    */}
     </View>
   );
 }

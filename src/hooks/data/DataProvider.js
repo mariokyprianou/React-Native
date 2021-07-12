@@ -532,12 +532,10 @@ export default function DataProvider(props) {
     setWorkoutTags(null);
     setOnDemandWorkouts();
 
-    AsyncStorage.removeItem('@CURRENT_WEEK');
-    AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
-
     // We don't remove them so they dont get shown on login again
-    //AsyncStorage.removeItem('@ANALYTICS_ASKED');
-    //AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
+    // Moved this on LoginScreen and RegistrationScreen
+    // AsyncStorage.removeItem('@ANALYTICS_ASKED');
+    // AsyncStorage.removeItem('@NOTIFICATIONS_ASKED');
 
     await AsyncStorage.setItem('@SHOULD_CACHE_NEW_WEEK', JSON.stringify(true));
     await clearDirectory(videosDirectoryPath);

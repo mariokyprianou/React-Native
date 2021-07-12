@@ -27,6 +27,7 @@ import useUserData from '../../hooks/data/useUserData';
 import useLoading from '../../hooks/loading/useLoading';
 import Intercom from 'react-native-intercom';
 import displayAlert from '../../utils/DisplayAlert';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function LoginScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -110,7 +111,18 @@ export default function LoginScreen() {
 
     await Auth.signIn(emailAddress, password)
       .then(async (res) => {
+        // We want to only remove these if the new user logged in is a different user
+        const lastUserEmail = await AsyncStorage.getItem(
+          '@LAST_SESSION_USER_EMAIL',
+        );
+
+        if (lastUserEmail !== emailAddress) {
+          await AsyncStorage.removeItem('@CURRENT_WEEK');
+          await AsyncStorage.removeItem('@COMPLETE_WEEK_MODAL_NUMBER');
+        }
+
         const {attributes} = await Auth.currentAuthenticatedUser();
+
         if (attributes.email_verified === false) {
           navigation.navigate('VerifyChangeEmail', {
             email: emailAddress,

@@ -58,7 +58,13 @@ export default function CongratulationsScreen() {
   const {getProgressData, resetProgressData} = useProgressData();
 
   const {getTrainers} = useCommonData();
-  const {programmeModalImage, programme, getProgramme, reset} = UseData();
+  const {
+    programmeModalImage,
+    programme,
+    getProgramme,
+    getProgrammeSchedule,
+    reset,
+  } = UseData();
 
   const [loading, setLoading] = useState(false);
 
@@ -267,6 +273,7 @@ export default function CongratulationsScreen() {
     await resetProgressData();
 
     await getTrainers();
+    await getProgrammeSchedule();
     await getProgramme();
     await getProgressData();
     navigation.navigate('TabContainer');

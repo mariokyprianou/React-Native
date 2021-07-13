@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, ScrollView, Alert} from 'react-native';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
@@ -18,12 +18,10 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import SliderProgressView from '../../components/Views/SliderProgressView';
 import IconTextView from '../../components/Infographics/IconTextView';
 import FadingBottomView from '../../components/Views/FadingBottomView';
-import Spacer from '../../components/Utility/Spacer';
 import UseData from '../../hooks/data/UseData';
 import CompleteWorkout from '../../apollo/mutations/CompleteWorkout';
 import CompleteOnDemandWorkout from '../../apollo/mutations/CompleteOnDemandWorkout';
 import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
-import AddExerciseWeight from '../../apollo/mutations/AddExerciseWeight';
 import {useMutation} from '@apollo/client';
 import * as R from 'ramda';
 import useUserData from '../../hooks/data/useUserData';
@@ -48,12 +46,7 @@ export default function WorkoutCompleteScreen() {
   const navigation = useNavigation();
   const {isConnected, isInternetReachable} = useNetInfo();
 
-  const {
-    firebaseLogEvent,
-    analyticsEvents,
-    getProfile,
-    checkShouldShowReviewMessage,
-  } = useUserData();
+  const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
   const {
     getProgramme,
     selectedWorkout,
@@ -61,8 +54,6 @@ export default function WorkoutCompleteScreen() {
     setWeightsToUpload,
     setIsSelectedWorkoutOnDemand,
     isSelectedWorkoutOnDemand,
-    shouldIncrementOnDemandWorkoutCount,
-    setShouldIncrementOnDemandWorkoutCount,
     refetchOnDemandWorkouts,
   } = UseData();
 
@@ -76,7 +67,6 @@ export default function WorkoutCompleteScreen() {
   const [completeOnDemandWorkout] = useMutation(CompleteOnDemandWorkout);
   const [completeWorkout] = useMutation(CompleteWorkout);
   const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
-  const [addWeight] = useMutation(AddExerciseWeight);
 
   const [selectedIntensity, setSelectedIntensity] = useState(10);
   const [selectedEmoji, setSelectedEmoji] = useState();
@@ -91,7 +81,12 @@ export default function WorkoutCompleteScreen() {
     setIsWorkoutTimerRunning(false);
     // Value to determine if a workout is underway, needed in provider but depends on screen
     setActiveWorkout(false);
-  }, []);
+  }, [
+    WorkoutDict?.WorkoutComplete,
+    navigation,
+    setActiveWorkout,
+    setIsWorkoutTimerRunning,
+  ]);
 
   useBackHandler(() => {
     return true;
@@ -124,7 +119,7 @@ export default function WorkoutCompleteScreen() {
       overviewImage,
       seconds,
     });
-  }, [selectedWorkout]);
+  }, [selectedWorkout, workoutTime]);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -221,7 +216,7 @@ export default function WorkoutCompleteScreen() {
       return;
     }
 
-    if (isSelectedWorkoutOnDemand && shouldIncrementOnDemandWorkoutCount) {
+    if (isSelectedWorkoutOnDemand) {
       await startOnDemandWorkout({
         variables: {
           input: {
@@ -235,8 +230,6 @@ export default function WorkoutCompleteScreen() {
         .catch((err) => {
           console.log(err, '<---start on demand workout error');
         });
-    } else {
-      setShouldIncrementOnDemandWorkoutCount(true);
     }
 
     const completeMutation = isSelectedWorkoutOnDemand

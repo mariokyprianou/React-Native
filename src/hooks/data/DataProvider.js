@@ -435,6 +435,7 @@ export default function DataProvider(props) {
     shouldIncrementOnDemandWorkoutCount,
     setShouldIncrementOnDemandWorkoutCount,
   ] = useState(true);
+
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [completedExercises, setCompletedExercises] = useState([]);
 
@@ -589,9 +590,9 @@ export default function DataProvider(props) {
   }, [getWorkoutTags]);
 
   const dataProviderSyncronousUpdate = useCallback(async () => {
+    setProgrammeScheduleData(null);
     setProgramme(null);
     setCurrentWeek(null);
-    //setNextWeek(null);
     setWorkoutTags(null);
     setOnDemandWorkouts();
 
@@ -643,8 +644,6 @@ export default function DataProvider(props) {
       isSelectedWorkoutOnDemand,
       processProgramme,
       refetchData,
-      setShouldIncrementOnDemandWorkoutCount,
-      shouldIncrementOnDemandWorkoutCount,
       dataProviderSyncronousUpdate,
       refetchOnDemandWorkouts,
       getProgrammeSchedule,
@@ -693,8 +692,6 @@ export default function DataProvider(props) {
       isSelectedWorkoutOnDemand,
       processProgramme,
       refetchData,
-      setShouldIncrementOnDemandWorkoutCount,
-      shouldIncrementOnDemandWorkoutCount,
       dataProviderSyncronousUpdate,
       refetchOnDemandWorkouts,
       getProgrammeSchedule,

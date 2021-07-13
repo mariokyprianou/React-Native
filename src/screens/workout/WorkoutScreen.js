@@ -64,6 +64,8 @@ export default function WorkoutScreen() {
 
   const scrollRef = useRef();
 
+  /*  NOT NEEDED ANYMORE
+
   const [startOnDemandWorkout] = useMutation(StartOnDemandWorkout);
 
   const [timerCount, setTimer] = useState(120);
@@ -80,11 +82,6 @@ export default function WorkoutScreen() {
       return () => clearInterval(interval);
     }
   }, [isSelectedWorkoutOnDemand, isSubscriptionActive]);
-
-  useEffect(() => {
-    getPreferences();
-    checkStartTimer();
-  }, []);
 
   useEffect(() => {
     if (timerCount === 0) {
@@ -104,7 +101,14 @@ export default function WorkoutScreen() {
           console.log(err, '<---change device permissions error');
         });
     }
-  }, [timerCount]);
+  }, [getProfile, selectedWorkout?.id, setShouldIncrementOnDemandWorkoutCount]);
+   
+  NOT NEEDED ANYMORE */
+
+  useEffect(() => {
+    getPreferences();
+    //checkStartTimer();
+  }, [getPreferences]);
 
   // Set weight preference
   useEffect(() => {
@@ -125,7 +129,11 @@ export default function WorkoutScreen() {
     } else {
       setExerciseToPreview(null);
     }
-  }, [showPreviewOfNextVideo]);
+  }, [
+    currentExerciseIndex,
+    selectedWorkout?.exercises,
+    showPreviewOfNextVideo,
+  ]);
 
   navigation.setOptions({
     header: () => (
@@ -189,49 +197,61 @@ export default function WorkoutScreen() {
   });
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
-  function handleIndex(newOffset) {
-    const newIndex = Math.round(newOffset / Constants.EXERCISE_VIEW_HEIGHT);
+  const handleIndex = useCallback(
+    (newOffset) => {
+      const newIndex = Math.round(newOffset / Constants.EXERCISE_VIEW_HEIGHT);
 
-    if (newIndex > currentExerciseIndex) {
-      const exerciseCompleted = selectedWorkout.exercises[currentExerciseIndex];
-      const exerciseStarted = selectedWorkout.exercises[newIndex];
+      if (newIndex > currentExerciseIndex) {
+        const exerciseCompleted =
+          selectedWorkout.exercises[currentExerciseIndex];
+        const exerciseStarted = selectedWorkout.exercises[newIndex];
 
-      if (selectedWorkout && exerciseCompleted) {
-        firebaseLogEvent(analyticsEvents.completedExercise, {
-          workoutId: selectedWorkout.id,
-          workoutName: selectedWorkout.name,
-          exerciseId: exerciseCompleted.id,
-          exerciseName: exerciseCompleted.name,
-        });
+        if (selectedWorkout && exerciseCompleted) {
+          firebaseLogEvent(analyticsEvents.completedExercise, {
+            workoutId: selectedWorkout.id,
+            workoutName: selectedWorkout.name,
+            exerciseId: exerciseCompleted.id,
+            exerciseName: exerciseCompleted.name,
+          });
+        }
+
+        if (selectedWorkout && exerciseStarted) {
+          firebaseLogEvent(analyticsEvents.startedExercise, {
+            workoutId: selectedWorkout.id,
+            workoutName: selectedWorkout.name,
+            exerciseId: exerciseStarted.id,
+            exerciseName: exerciseStarted.name,
+          });
+        }
       }
 
-      if (selectedWorkout && exerciseStarted) {
-        firebaseLogEvent(analyticsEvents.startedExercise, {
-          workoutId: selectedWorkout.id,
-          workoutName: selectedWorkout.name,
-          exerciseId: exerciseStarted.id,
-          exerciseName: exerciseStarted.name,
-        });
-      }
-    }
+      setCurrentExerciseIndex(newIndex);
+    },
+    [
+      Constants.EXERCISE_VIEW_HEIGHT,
+      analyticsEvents.completedExercise,
+      analyticsEvents.startedExercise,
+      currentExerciseIndex,
+      firebaseLogEvent,
+      selectedWorkout,
+      setCurrentExerciseIndex,
+    ],
+  );
 
-    setCurrentExerciseIndex(newIndex);
-  }
-
-  function workoutFinished() {
+  const workoutFinished = useCallback(() => {
     //etIsWorkoutTimerRunning(false);
 
     navigation.navigate('WorkoutComplete');
-  }
+  }, [navigation]);
 
   useEffect(() => {
     console.log('completedExercises changed', completedExercises);
     if (completedExercises.length === selectedWorkout.exercises.length) {
       workoutFinished();
     }
-  }, [completedExercises]);
+  }, [completedExercises, selectedWorkout?.exercises?.length, workoutFinished]);
 
-  function exerciseFinished() {
+  const exerciseFinished = useCallback(() => {
     console.log('WorkoutScreen - exerciseFinished');
     // check if specific exercise was already completed
     let index = completedExercises.indexOf(currentExerciseIndex);
@@ -252,7 +272,14 @@ export default function WorkoutScreen() {
     }
 
     setShowPreviewOfNextVideo(false);
-  }
+  }, [
+    Constants.EXERCISE_VIEW_HEIGHT,
+    completedExercises,
+    currentExerciseIndex,
+    handleIndex,
+    selectedWorkout?.isContinuous,
+    setCompletedExercises,
+  ]);
 
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (

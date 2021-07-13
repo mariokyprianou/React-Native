@@ -79,11 +79,7 @@ export default function WorkoutHomeScreen() {
     initCacheWeekVideos,
   } = useData();
 
-  const {
-    suspendedAccount,
-    isSubscriptionActive,
-    completedFreeWorkouts,
-  } = useUserData();
+  const {suspendedAccount, isSubscriptionActive} = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -539,7 +535,7 @@ export default function WorkoutHomeScreen() {
       return;
     }
 
-    if (completedFreeWorkouts && !isSubscriptionActive) {
+    if (!isSubscriptionActive) {
       navigation.navigate('PurchaseModal');
       return;
     }

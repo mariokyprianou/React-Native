@@ -175,7 +175,7 @@ const enGB = {
   PurchaseDict: {
     InfoTitle: 'Join POWER.',
     Info:
-      'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
+      'Access all POWER Programmes, each with +24 weeks of workouts, and more stars joining! Panning and tracking your fitness journey has never been so easy!',
     YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / year`,
     YearlyButtonSubTitle: (price) => `${price} / month billed annually`,
     MonthlyButtonTitle: (price) => `MONTHLY \u2022 ${price} / month`,

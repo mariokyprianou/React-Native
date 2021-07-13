@@ -62,7 +62,7 @@ const PurchaseModalScreen = ({}) => {
     getScaledWidth,
     fontSize,
   } = ScaleHook();
-  const {colors, textStyles} = useTheme();
+  const {colors, textStyles, fonts} = useTheme();
   const navigation = useNavigation();
   const {dictionary} = useDictionary();
   const {PurchaseDict} = dictionary;
@@ -409,10 +409,19 @@ const PurchaseModalScreen = ({}) => {
       textAlign: 'left',
       marginBottom: getHeight(6),
     },
-    termsText: {
-      ...textStyles.regular15_brownishGrey100,
+    infoText: {
+      fontFamily: fonts.regular,
+      color: colors.brownishGrey100,
       textAlign: 'left',
       marginBottom: getHeight(8),
+      fontSize: fontSize(14),
+    },
+    termsText: {
+      fontFamily: fonts.regular,
+      color: colors.brownishGrey100,
+      textAlign: 'left',
+      marginBottom: getHeight(8),
+      fontSize: fontSize(12),
     },
     needHelpTouchable: {
       width: '50%',
@@ -432,7 +441,7 @@ const PurchaseModalScreen = ({}) => {
     },
     highlightedStyle: {
       ...textStyles.semiBold16_brownishGrey100,
-      fontSize: fontSize(15),
+      fontSize: fontSize(12),
       color: colors.tealish100,
       textDecorationLine: 'underline',
     },
@@ -493,7 +502,7 @@ const PurchaseModalScreen = ({}) => {
         <View style={styles.textContainer}>
           <Text style={styles.infoTitleStyle}>{PurchaseDict.InfoTitle}</Text>
 
-          <Text style={styles.termsText}>{PurchaseDict.Info}</Text>
+          <Text style={styles.infoText}>{PurchaseDict.Info}</Text>
         </View>
         <Spacer height={20} />
         <DefaultButton

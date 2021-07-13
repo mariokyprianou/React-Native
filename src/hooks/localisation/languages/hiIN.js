@@ -472,6 +472,9 @@ const hiIN = {
     ReviewRequest: 'POWER का आनंद ले रहे हैं? हमें बताऐ!',
     ReviewRequestSkip: 'छोड़ें',
     ReviewRequestReview: 'हमें बताएं',
+
+    CurrentWeek: 'यह\nसप्ताह',
+    NewWorkoutsEachWeek: 'हर हफ्ते नए वर्कआउट!',
   },
 
   OnDemandDict: {

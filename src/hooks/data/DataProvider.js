@@ -304,7 +304,7 @@ export default function DataProvider(props) {
     }
   }, [runQuery]);
 
-  // Changed schedule or current week
+  // Changed schedule or current week, merge current week workouts and schedule
   useEffect(() => {
     if (programmeScheduleData && currentWeek) {
       const weeks = programmeScheduleData.weeks.map((week) => {
@@ -317,13 +317,11 @@ export default function DataProvider(props) {
             ? WEEK_STATE.CURRENT
             : WEEK_STATE.FUTURE;
 
-        // Need to add rest days to future dates
+        // Need to add rest days to future weeks
         if (weekState === WEEK_STATE.FUTURE) {
           let weekWorkouts = workouts
             .slice()
             .sort((a, b) => a.orderIndex - b.orderIndex);
-
-          console.log('weekWorkouts', weekWorkouts);
 
           const weekDays = addWorkoutDates(
             addRestDays(weekWorkouts),
@@ -336,6 +334,7 @@ export default function DataProvider(props) {
           };
         }
 
+        // If current week, replace workouts
         return {
           ...week,
           state: weekState,

@@ -9,6 +9,8 @@
 const Colors = {
   aquamarine15: 'rgba(81, 217, 212, 0.15)',
   aquamarine100: 'rgba(81, 217, 212, 1)',
+  aquamarine20: 'rgba(81, 217, 212, 0.2)',
+
   backgroundWhite100: 'rgba(252, 252, 252, 1)',
   black0: 'rgba(33, 33, 33, 0)',
   black0point5: 'rgba(33, 33, 33, 0.5)',

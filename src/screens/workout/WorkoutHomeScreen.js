@@ -503,7 +503,7 @@ export default function WorkoutHomeScreen() {
     },
     touchContainer: {
       position: 'absolute',
-      left: getWidth(110),
+      left: getWidth(170),
       flexDirection: 'row',
     },
     touch: {
@@ -615,8 +615,8 @@ export default function WorkoutHomeScreen() {
       <View
         style={{
           position: 'absolute',
-          right: getWidth(15),
-          width: getWidth(30),
+          right: getWidth(23),
+          width: getWidth(45),
           flexDirection: 'row',
           height: '100%',
         }}>
@@ -643,19 +643,22 @@ export default function WorkoutHomeScreen() {
         <Text style={styles.header}>{WorkoutDict.YourProgramme}</Text>
         <Text style={styles.subHeader}>{WorkoutDict.SubHeader}</Text>
       </View>
-      <View style={styles.titleContainer}>
-        <View style={styles.titleLeftContainer}>
-          <Text style={styles.weekText}>{WorkoutDict.WeekText}</Text>
-          <Text style={styles.numberText}>{`${
-            selectedWeekIndex !== null && selectedWeekIndex + 1
-          }`}</Text>
+
+      {selectedWeekIndex !== null && totalWeeks && (
+        <View style={styles.titleContainer}>
+          <View style={styles.titleLeftContainer}>
+            <Text style={styles.weekText}>{`${WorkoutDict.WeekText} ${
+              selectedWeekIndex + 1
+            } / ${totalWeeks}`}</Text>
+          </View>
+          {renderArrows()}
+          {programme?.currentWeek &&
+            selectedWeekIndex + 1 === currentWeekNumber &&
+            shouldCache &&
+            renderDownloadOption()}
         </View>
-        {renderArrows()}
-        {programme?.currentWeek &&
-          selectedWeekIndex + 1 === currentWeekNumber &&
-          shouldCache &&
-          renderDownloadOption()}
-      </View>
+      )}
+
       <WeekContent updateOrder={updateOrder} onPressCard={onPressCard} />
     </View>
   );

@@ -7,24 +7,26 @@
  */
 
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Text} from 'react-native';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 import useDictionary from '../../hooks/localisation/useDictionary';
 import {useNavigation} from '@react-navigation/native';
 import useData from '../../hooks/data/UseData';
 import WEEK_STATE from '../../utils/WEEK_STATE';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import WorkoutCard from '../../components/Cards/WorkoutCard';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import {differenceInDays} from 'date-fns';
 import useLoading from '../../hooks/loading/useLoading';
+import {CircularProgress} from 'react-native-circular-gradient-progress';
 
 export default function WeekContent({updateOrder, onPressCard}) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {getHeight, getWidth} = ScaleHook();
-  const {colors, Constants} = useTheme();
+  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {colors, Constants, textStyles, fonts} = useTheme();
   const {dictionary} = useDictionary();
+  const {WorkoutDict} = dictionary;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -33,7 +35,9 @@ export default function WeekContent({updateOrder, onPressCard}) {
       width: Constants.SCREEN_WIDTH,
     },
     bottomContainer: {
-      height: getHeight(216),
+      height: getHeight(235),
+      padding: getHeight(26),
+      marginTop: getHeight(12),
       width: Constants.SCREEN_WIDTH,
       backgroundColor: colors.white100,
       shadowColor: colors.black10,
@@ -41,13 +45,53 @@ export default function WeekContent({updateOrder, onPressCard}) {
       shadowRadius: 6,
       shadowOpacity: 1,
       elevation: 6,
+      alignItems: 'center',
     },
-    dayContainer: {},
+    circularProgressContainer: {
+      height: getHeight(130),
+      alignItems: 'center',
+    },
+    currentWeekContainer: {
+      position: 'absolute',
+      alignSelf: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
+    currentWeekNumber: {
+      justifyContent: 'center',
+      textAlign: 'center',
+
+      fontFamily: fonts.regular,
+      fontSize: fontSize(25),
+      color: colors.dividerGrey100,
+      marginTop: getHeight(20),
+    },
+    currentWeekText: {
+      justifyContent: 'center',
+      textAlign: 'center',
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(12),
+      color: colors.durationGrey100,
+      marginTop: getHeight(4),
+    },
+    newWorkoutsText: {
+      textAlign: 'center',
+      fontFamily: fonts.semiBold,
+      fontSize: fontSize(12),
+      color: colors.newWorkoutBlue100,
+      marginTop: getHeight(20),
+    },
   };
 
   // ** ** ** ** ** FUNCTIONS ** ** ** ** **
   const {setLoading} = useLoading();
-  const {displayWeeks, selectedWeekIndex} = useData();
+  const {
+    displayWeeks,
+    selectedWeekIndex,
+    setSelectedWeekIndex,
+    currentWeekNumber,
+    totalWeeks,
+  } = useData();
 
   useEffect(() => {
     if (displayWeeks.length > 0 && selectedWeekIndex !== null) {
@@ -160,7 +204,37 @@ export default function WeekContent({updateOrder, onPressCard}) {
   };
 
   const renderBottomContainer = () => {
-    return <View style={styles.bottomContainer} />;
+    return (
+      <View style={styles.bottomContainer}>
+        {selectedWeekIndex !== null && totalWeeks && (
+          <TouchableOpacity
+            disabled={selectedWeekIndex + 1 === currentWeekNumber}
+            onPress={() => setSelectedWeekIndex(currentWeekNumber - 1)}>
+            <View style={styles.circularProgressContainer}>
+              <CircularProgress
+                size={getHeight(130)}
+                progress={(currentWeekNumber * 100) / totalWeeks}
+                color={colors.aquamarine100}
+                emptyColor={colors.aquamarine20}
+                strokeWidth={1}
+              />
+              <View style={styles.currentWeekContainer}>
+                <Text
+                  style={
+                    styles.currentWeekNumber
+                  }>{` ${currentWeekNumber} / ${totalWeeks}`}</Text>
+                <Text style={styles.currentWeekText}>
+                  {WorkoutDict.CurrentWeek}
+                </Text>
+              </View>
+              <Text style={styles.newWorkoutsText}>
+                {WorkoutDict.NewWorkoutsEachWeek}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
   };
 
   return (

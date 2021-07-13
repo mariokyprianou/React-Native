@@ -18,6 +18,7 @@ import isRTL from '../../utils/isRTL';
 
 // possible status' - currentDay, complete, todo
 const completeDayIcon = require('../../../assets/icons/completeDayIcon.png');
+const gripLinesIcon = require('../../../assets/icons/gripLinesIcon.png');
 
 export default function WorkoutCard({
   workout,
@@ -141,7 +142,7 @@ export default function WorkoutCard({
       ) : (
         drag && (
           <View style={styles.iconContainer}>
-            <TDIcon input={'grip-lines'} inputStyle={styles.icon} />
+            <Image source={gripLinesIcon} />
           </View>
         )
       )}

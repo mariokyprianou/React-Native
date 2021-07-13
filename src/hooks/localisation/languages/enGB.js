@@ -468,6 +468,9 @@ const enGB = {
     ReviewRequest: 'Enjoying POWER? Let us know!',
     ReviewRequestSkip: 'Skip',
     ReviewRequestReview: 'Review',
+
+    CurrentWeek: 'CURRENT\nWEEK',
+    NewWorkoutsEachWeek: 'New workouts each week!',
   },
 
   OnDemandDict: {

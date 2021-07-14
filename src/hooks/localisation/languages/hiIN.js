@@ -178,11 +178,19 @@ const hiIN = {
   PurchaseDict: {
     InfoTitle: 'POWER जॉइन करें',
     Info:
-      'POWER पर सभी प्रोग्रामों तक असीमित पहुँच पाएँ, अपनी प्रगति को ट्रैक और अपने परिणामों को शेयर करें!',
-    YearlyButtonTitle: (price) => `वार्षिक \u2022 ${price} / वर्ष`,
-    YearlyButtonSubTitle: (price) => `${price} / माह वार्षिक बिलिंग  `,
-    MonthlyButtonTitle: (price) => `मासिक रूप से \u2022 ${price} / माह`,
-    SavePrompt: (percentage) => `सेव करें ${percentage}%`,
+      '24+ सप्ताह के वर्कआउट के साथ सभी पावर प्रोग्राम तक पहुंचें, और अधिक सितारे भी शामिल होंगे! अपनी फिटनेस यात्रा की योजना बनाना और उस पर नज़र रखना इतना आसान कभी नहीं रहा!',
+
+    FreeTrial: '7 दिन का मुफ़्त ट्रायल',
+
+    Monthly: 'महीने के',
+    Yearly: 'वार्षिक',
+    AfterFreeTrial: 'मुफ़्त ट्रायल के बाद बिल किया जाएगा',
+    BilledMonthly: ' बिल मासिक',
+    BilledAnnually: 'सालाना बिल',
+
+    YearlyButtonTitle: (price) => `${price}/वर्ष`,
+    MonthlyButtonTitle: (price) => `${price}/माह`,
+    SavePrompt: (percentage) => `${percentage}% बचाएं`,
     MonthlyButtonSubTitle: 'मासिक बिल',
     RestorePurchaseButton: 'खरीदारी को रिस्टोर करें',
     PurchaseRestored: 'आपकी खरीदारी बहाल कर दी गई है',

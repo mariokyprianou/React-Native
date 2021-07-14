@@ -175,11 +175,18 @@ const enGB = {
   PurchaseDict: {
     InfoTitle: 'Join POWER.',
     Info:
-      'Access all POWER Programmes, each with +24 weeks of workouts, and more stars joining! Panning and tracking your fitness journey has never been so easy!',
-    YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / year`,
-    YearlyButtonSubTitle: (price) => `${price} / month billed annually`,
-    MonthlyButtonTitle: (price) => `MONTHLY \u2022 ${price} / month`,
-    SavePrompt: (percentage) => `Save ${percentage}%`,
+      'Access all POWER Programmes, each with 24+ weeks of workouts, and more stars joining! Planning and tracking your fitness journey has never been so easy!',
+
+    FreeTrial: '7-day FREE trial',
+    Monthly: 'MONTHLY',
+    Yearly: 'YEARLY',
+    AfterFreeTrial: 'billed after free trial',
+    BilledMonthly: 'billed monthly',
+    BilledAnnually: 'billed annually',
+
+    YearlyButtonTitle: (price) => `${price}/year`,
+    MonthlyButtonTitle: (price) => `${price}/month`,
+    SavePrompt: (percentage) => `SAVE ${percentage}%`,
     MonthlyButtonSubTitle: 'billed monthly',
     RestorePurchaseButton: 'Restore purchases',
     PurchaseRestored: 'Your Purchases have been Restored.',

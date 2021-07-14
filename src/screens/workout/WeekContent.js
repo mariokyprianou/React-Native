@@ -227,10 +227,10 @@ export default function WeekContent({updateOrder, onPressCard}) {
                   {WorkoutDict.CurrentWeek}
                 </Text>
               </View>
-              <Text style={styles.newWorkoutsText}>
-                {WorkoutDict.NewWorkoutsEachWeek}
-              </Text>
             </View>
+            <Text style={styles.newWorkoutsText}>
+              {WorkoutDict.NewWorkoutsEachWeek}
+            </Text>
           </TouchableOpacity>
         )}
       </View>

@@ -98,19 +98,31 @@ export default function WorkoutHomeScreen() {
     }
   }, [isFocused, programme, currentWeek, setLoading, getProgramme]);
 
+  useEffect(() => {
+    if (programme && programme.isComplete) {
+      showStayTuned();
+    }
+  }, [programme, showStayTuned]);
+
   // Check if week is completed
   useEffect(() => {
-    if (programme && programme.currentWeek && currentWeek) {
-      if (programme.isComplete) {
+    if (programme?.currentWeek && currentWeek) {
+      const remaining = currentWeek.filter(
+        (it) => !it.isRestDay && !it.completedAt,
+      ).length;
+
+      //Still have workouts for current week
+      if (remaining === 0) {
         weekCompleted();
       } else {
         setStayTunedEnabled(false);
       }
     }
-  }, [programme, currentWeek, weekCompleted]);
+  }, [programme, currentWeek, weekCompleted, showStayTuned]);
 
   const weekCompleted = useCallback(async () => {
     // Only show the week complete modal once when the last workout is done
+
     const shouldShowModal = await shouldShowWeekCompleteModal();
 
     if (shouldShowModal) {

@@ -217,18 +217,24 @@ export default function UserDataProvider(props) {
   const {WorkoutDict} = dictionary;
 
   const checkShouldShowReviewMessage = useCallback(async () => {
+    const {completedWorkouts, email} = userData;
+
+    // Value stored with email so that the modal doesnt show on the same device and user again
+    // Also updated when changing email
     const value =
-      (await AsyncStorage.getItem('@REVIEW_REQUEST_SHOWN')) || 'false';
+      (await AsyncStorage.getItem(`@${email}REVIEW_REQUEST_SHOWN`)) || 'false';
     const reviewRequestShown = JSON.parse(value);
 
+    console.log('reviewRequestShown', reviewRequestShown);
     if (reviewRequestShown === true) {
       return;
     }
 
-    const {completedWorkouts} = userData;
-
     if (completedWorkouts >= 2) {
-      await AsyncStorage.setItem('@REVIEW_REQUEST_SHOWN', JSON.stringify(true));
+      await AsyncStorage.setItem(
+        `@${email}REVIEW_REQUEST_SHOWN`,
+        JSON.stringify(true),
+      );
 
       displayAlert({
         title: null,
@@ -288,6 +294,10 @@ export default function UserDataProvider(props) {
             ...res,
             completedWorkouts: res.completedWorkouts + increament,
           };
+
+          const memberSinceVal = res.createdAt ? res.createdAt.slice(0, 4) : '';
+
+          data = {...data, memberSince: memberSinceVal};
 
           setUserData(data);
 

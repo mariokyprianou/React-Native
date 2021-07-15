@@ -26,14 +26,11 @@ import {FlatList} from 'react-native-gesture-handler';
 import NotificationCell from '../../components/cells/NotificationCell';
 import TDIcon from 'the-core-ui-component-tdicon';
 import AllCountries from '../../apollo/queries/AllCountries';
-import Profile from '../../apollo/queries/Profile';
 import UpdateProfile from '../../apollo/mutations/UpdateProfile';
-import fetchPolicy from '../../utils/fetchPolicy';
 import {useNetInfo} from '@react-native-community/netinfo';
 import displayAlert from '../../utils/DisplayAlert';
 import useUserData from '../../hooks/data/useUserData';
 import Intercom from 'react-native-intercom';
-import TimeZone from 'react-native-timezone';
 import useLoading from '../../hooks/loading/useLoading';
 import AsyncStorage from '@react-native-community/async-storage';
 import useData from '../../hooks/data/UseData';
@@ -104,20 +101,6 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
     }
   }, [countryData, countryLoading, countryError]);
 
-  useQuery(Profile, {
-    fetchPolicy: fetchPolicy(isConnected, isInternetReachable),
-    onCompleted: (res) => {
-      if (res && res.profile) {
-        const memberSinceVal = res.profile.createdAt
-          ? res.profile.createdAt.slice(0, 4)
-          : '';
-        const userProfile = {...res.profile, memberSince: memberSinceVal};
-        setUserData(userProfile);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
-
   useEffect(() => {
     if (userData) {
       if (userData.gender === null) {
@@ -136,7 +119,7 @@ export default function ProfileScreenUI({onPressNeedHelp}) {
 
   // Re-render user data to revert any unsaved changes
   useEffect(() => {
-    if (!isFocused && userData) {
+    if (!isFocused && userData?.email) {
       setUserData({...userData});
     }
   }, [isFocused]);

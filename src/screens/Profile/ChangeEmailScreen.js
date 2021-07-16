@@ -18,6 +18,8 @@ import DefaultButton from '../../components/Buttons/DefaultButton';
 import {emailRegex} from '../../utils/regex';
 import {Auth} from 'aws-amplify';
 import Intercom from 'react-native-intercom';
+import useUserData from '../../hooks/data/useUserData';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function ChangeEmailScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -27,6 +29,7 @@ export default function ChangeEmailScreen() {
   const {ProfileDict} = dictionary;
   const {cleanErrors, getValues, updateError} = FormHook();
   const navigation = useNavigation();
+  const {userData} = useUserData();
 
   useEffect(() => {
     navigation.setOptions({
@@ -73,7 +76,16 @@ export default function ChangeEmailScreen() {
     let user = await Auth.currentAuthenticatedUser();
 
     await Auth.updateUserAttributes(user, {email: newEmail})
-      .then((res) => {
+      .then(async (res) => {
+        // Transfer value to new email address
+        const {email} = userData;
+        const value =
+          (await AsyncStorage.getItem(`@${email}REVIEW_REQUEST_SHOWN`)) ||
+          'false';
+
+        console.log(`@${email}REVIEW_REQUEST_SHOWN`, value);
+        await AsyncStorage.setItem(`@${newEmail}REVIEW_REQUEST_SHOWN`, value);
+
         Intercom.updateUser({email: newEmail});
         navigation.navigate('VerifyChangeEmail', {email: newEmail});
       })

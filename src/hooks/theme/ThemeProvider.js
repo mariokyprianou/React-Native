@@ -264,7 +264,7 @@ export default function ThemeProvider({children}) {
     bold34_black100: {
       fontFamily: fonts.bold,
       fontSize: fontSize(34),
-      lineHeight: fontSize(36),
+      lineHeight: fontSize(43),
       color: colors.black100,
     },
     bold76_black100: {

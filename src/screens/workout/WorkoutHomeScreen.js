@@ -86,8 +86,8 @@ export default function WorkoutHomeScreen() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if ((isFocused && !programme) || !currentWeek) {
-      console.log('Focused Tab1: need refetch');
+    if (isFocused && !programme) {
+      console.log('Focused Tab1: need refetch getProgramme');
       setLoading(true);
 
       async function getData() {
@@ -96,7 +96,7 @@ export default function WorkoutHomeScreen() {
       }
       getData();
     }
-  }, [isFocused, programme, currentWeek, setLoading, getProgramme]);
+  }, [isFocused, programme, setLoading, getProgramme]);
 
   useEffect(() => {
     if (programme && programme.isComplete) {
@@ -128,10 +128,11 @@ export default function WorkoutHomeScreen() {
     if (shouldShowModal) {
       constructWeekCompleteModal();
     } else {
-      showStayTuned();
+      showStayTunedModal();
     }
 
     let startedAt = new Date(programme.currentWeek.startedAt);
+
     startedAt.setUTCHours(0, 0, 0);
 
     // Check at least 7 days past week start date
@@ -151,9 +152,8 @@ export default function WorkoutHomeScreen() {
   }, [
     callCompleteWeekMutation,
     constructWeekCompleteModal,
-    programme?.currentWeek?.startedAt,
+    programme?.currentWeek,
     shouldShowWeekCompleteModal,
-    showStayTuned,
   ]);
 
   const callCompleteWeekMutation = useCallback(async () => {
@@ -410,7 +410,7 @@ export default function WorkoutHomeScreen() {
       programme?.currentWeek,
       programme?.environment,
       programme?.programmeImage,
-      programme?.trainer.name,
+      programme?.trainer?.name,
     ],
   );
   const [shouldCache, setShouldCache] = useState(false);

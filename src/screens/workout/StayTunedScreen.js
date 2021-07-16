@@ -113,7 +113,7 @@ export default function StayTuned() {
             <FadingBottomView color="black" />
             <View style={styles.infoTextContainer}>
               <Text style={styles.infoText}>
-                {WorkoutDict.StayTuned(name, format(date, 'do LLLL'))}
+                {date && WorkoutDict.StayTuned(name, format(date, 'do LLLL'))}
               </Text>
             </View>
             {renderButton()}

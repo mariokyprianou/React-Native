@@ -15,7 +15,7 @@ import CompleteWorkoutWithRes from '../../apollo/mutations/CompleteWorkoutWithRe
 export default function DataProvider(props) {
   const {isConnected, isInternetReachable} = useNetInfo();
   const {firebaseLogEvent, analyticsEvents, getProfile} = useUserData();
-  const {getProgramme, processProgramme} = UseData();
+  const {processProgramme} = UseData();
   const {setLoading} = useLoading();
 
   const [completeWorkout] = useMutation(CompleteWorkoutWithRes);
@@ -74,7 +74,14 @@ export default function DataProvider(props) {
           });
       });
     }
-  }, [isConnected, isInternetReachable, getProgramme, getProfile]);
+  }, [
+    setLoading,
+    completeWorkout,
+    processProgramme,
+    getProfile,
+    firebaseLogEvent,
+    analyticsEvents.completedWorkout,
+  ]);
 
   // On Network connection aquired
   useEffect(() => {
@@ -86,7 +93,7 @@ export default function DataProvider(props) {
     if (isConnected && isInternetReachable) {
       offlineQueueCheck();
     }
-  }, [isConnected, isInternetReachable]);
+  }, [isConnected, isInternetReachable, offlineQueueCheck]);
 
   const values = useMemo(() => ({}), []);
 

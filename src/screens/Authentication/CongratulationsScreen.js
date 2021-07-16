@@ -210,7 +210,7 @@ export default function CongratulationsScreen() {
     })
       .then((res) => {
         console.log('restartProgramme', res);
-        submitAnalyticsEvent(false);
+        submitAnalyticsEvent(false, true);
 
         changedAssignedProgramme();
       })
@@ -232,7 +232,7 @@ export default function CongratulationsScreen() {
       .then((res) => {
         console.log('continueProgramme', res);
 
-        submitAnalyticsEvent(false);
+        submitAnalyticsEvent(false, false);
         changedAssignedProgramme();
       })
       .catch((err) => {
@@ -253,7 +253,7 @@ export default function CongratulationsScreen() {
       .then((res) => {
         console.log('startProgramme', res);
 
-        submitAnalyticsEvent(true);
+        submitAnalyticsEvent(true, false);
         changedAssignedProgramme();
       })
       .catch((err) => {
@@ -273,7 +273,7 @@ export default function CongratulationsScreen() {
     setLoading(false);
   }
 
-  function submitAnalyticsEvent(newTrainer = false) {
+  function submitAnalyticsEvent(newStart = false, restart = false) {
     if (programme && currentProgramme.trainer) {
       firebaseLogEvent(analyticsEvents.leftTrainer, {
         trainerId: currentProgramme.trainer.id,
@@ -281,9 +281,11 @@ export default function CongratulationsScreen() {
       });
     }
     firebaseLogEvent(
-      newTrainer
+      newStart
         ? analyticsEvents.selectedTrainer
-        : analyticsEvents.restartContinueTrainer,
+        : restart
+        ? analyticsEvents.restartTrainer
+        : analyticsEvents.continueTrainer,
       {
         trainerId: newTrainer.id,
         programmeId: programmeId.id,

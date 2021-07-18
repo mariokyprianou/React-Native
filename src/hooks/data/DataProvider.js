@@ -166,7 +166,7 @@ export default function DataProvider(props) {
 
       pastWorkouts = pastWorkouts.map((workout) => {
         workoutIndex = workoutIndex + 1;
-        console.log(workoutIndex, workout.completedAt);
+        console.log(workoutIndex, workout.name, workout.completedAt);
         return {
           ...workout,
           name: workout.name.toUpperCase(),
@@ -208,6 +208,8 @@ export default function DataProvider(props) {
 
           if (workout) {
             workoutIndex = workoutIndex + 1;
+
+            console.log(workoutIndex, workout.name);
 
             workout = {
               ...workout,
@@ -327,6 +329,7 @@ export default function DataProvider(props) {
             addRestDays(weekWorkouts),
             new Date(),
           );
+
           return {
             ...week,
             state: weekState,

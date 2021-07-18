@@ -106,7 +106,7 @@ export default function WeekContent({updateOrder, onPressCard}) {
         <WorkoutCard
           workout={item}
           title={item.name}
-          day={item.orderIndex}
+          day={item.day}
           duration={item.duration}
           drag={null}
           status={state === WEEK_STATE.PAST && 'complete'}
@@ -122,7 +122,7 @@ export default function WeekContent({updateOrder, onPressCard}) {
         <WorkoutCard
           workout={item}
           title={item.name}
-          day={item.orderIndex}
+          day={item.day}
           duration={item.duration}
           drag={drag}
           status={

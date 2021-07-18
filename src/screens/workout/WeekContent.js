@@ -59,8 +59,6 @@ export default function WeekContent({updateOrder, onPressCard}) {
     },
     currentWeekNumber: {
       justifyContent: 'center',
-      textAlign: 'center',
-
       fontFamily: fonts.regular,
       fontSize: fontSize(25),
       color: colors.dividerGrey100,

@@ -299,9 +299,6 @@ export default function WorkoutCompleteScreen() {
     await getProfile();
     await refetchOnDemandWorkouts();
 
-    // Already checked in useEffect of getProfile res data
-    // checkShouldShowReviewMessage();
-
     if (isSelectedWorkoutOnDemand) {
       setIsSelectedWorkoutOnDemand(false);
       navigation.reset({

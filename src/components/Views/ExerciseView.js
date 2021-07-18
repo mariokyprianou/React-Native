@@ -237,7 +237,7 @@ export default function ExerciseView(props) {
     }
   };
 
-  async function checkShouldFinishExercise() {
+  const checkShouldFinishExercise = useCallback(async () => {
     // On timer done, check if exercise is done
     if (props.isContinuous) {
       finishExercise();
@@ -247,8 +247,9 @@ export default function ExerciseView(props) {
     if (currentSet === sets.length) {
       finishExercise();
     }
-  }
+  }, [currentSet, props.isContinuous, sets.length]);
 
+  /* DEPRECATED
   const onCancelTimer = () => {
     setCountDown(false);
 
@@ -266,6 +267,7 @@ export default function ExerciseView(props) {
     setShowUpNextLabel(false);
     checkShouldFinishExercise();
   };
+  */
 
   const onExerciseCompleted = () => {
     setCurrentSet(sets.length);
@@ -408,6 +410,7 @@ export default function ExerciseView(props) {
           <RepsList sets={sets} />
         </View>
 
+        {/* DEPRECATED
         {React.useMemo(() => {
           if (countDown && (restTime > 0 || exerciseTime > 0)) {
             return (
@@ -430,8 +433,99 @@ export default function ExerciseView(props) {
               />
             );
           }
-        }, [countDown, restTime, exerciseTime])}
+        }, [countDown, restTime, exerciseTime])} */}
+
+        {React.useMemo(() => {
+          if (countDown && exerciseTime > 0) {
+            const done = () => {
+              // Finished exercise time and have weight
+              if (exercise.weight) {
+                setSetComplete(true);
+              }
+
+              // Reset exercise time to start rest time if applicable
+              setExerciseTime(0);
+
+              // Exercise time is canceled without rest time, we finish exercise
+              if (!restTime) {
+                setCountDown(false);
+                checkShouldFinishExercise();
+              }
+            };
+
+            return (
+              <SimpleTimerView
+                duration={exerciseTime}
+                isExerciseTime={true}
+                setType={props.setType}
+                onCancel={() => {
+                  // Continuous cannot be canceled
+                  if (props.isContinuous) {
+                    return;
+                  }
+                  done();
+                }}
+                onFinish={() => {
+                  if (props.isContinuous) {
+                    setShowUpNextLabel(false);
+                  }
+                  done();
+                }}
+              />
+            );
+          }
+        }, [
+          countDown,
+          restTime,
+          exerciseTime,
+          props.setType,
+          props.isContinuous,
+          exercise.weight,
+          checkShouldFinishExercise,
+        ])}
+
+        {React.useMemo(() => {
+          if (
+            countDown &&
+            restTime > 0 &&
+            (!exerciseTime || exerciseTime === 0)
+          ) {
+            return (
+              <SimpleTimerView
+                duration={restTime}
+                isExerciseTime={false}
+                setType={props.setType}
+                onCancel={() => {
+                  // Continuous cannot be canceled
+                  if (props.isContinuous) {
+                    return;
+                  }
+
+                  // Rest time is canceled
+                  setCountDown(false);
+                  checkShouldFinishExercise();
+                }}
+                onFinish={() => {
+                  if (props.isContinuous) {
+                    setShowUpNextLabel(false);
+                  }
+                  // Rest time is canceled
+                  setCountDown(false);
+                  checkShouldFinishExercise();
+                }}
+              />
+            );
+          }
+        }, [
+          countDown,
+          restTime,
+          exerciseTime,
+          props.setType,
+          props.isContinuous,
+          checkShouldFinishExercise,
+        ])}
       </View>
+
       {setComplete && (
         <SetCompletionScreen
           restTime={restTime && restTime > 0 ? msToHMS(restTime) : 0}
@@ -555,6 +649,86 @@ function TimerView(props) {
         <View style={styles.timerTextContainer}>
           <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
           {!shouldRestAfterExercise && (
+            <Text style={styles.timerRestTextStyle}>{WorkoutDict.Rest}</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function SimpleTimerView({
+  duration,
+  isExerciseTime,
+  setType,
+  onCancel,
+  onFinish,
+}) {
+  const {dictionary} = useDictionary();
+  const {WorkoutDict} = dictionary;
+
+  const {exerciseViewStyle} = useTheme();
+  const {getHeight} = ScaleHook();
+  const styles = exerciseViewStyle;
+
+  const {remainingMS, toggle, reset, active} = useTimer({
+    timer: msToHMS(duration),
+  });
+
+  const [timerRunning, setTimerRunning] = useState(false);
+  const {isWorkoutTimerRunning} = useWorkoutTimer();
+
+  useEffect(() => {
+    if (!timerRunning) {
+      console.log('useEffect: initialLoad reset timer');
+
+      setTimerRunning(true);
+      reset();
+      toggle();
+    }
+  }, [timerRunning, reset, toggle]);
+
+  // When timer is paused by user.
+  useEffect(() => {
+    if (
+      (!active && isWorkoutTimerRunning) ||
+      (active && !isWorkoutTimerRunning)
+    ) {
+      console.log('useEffect: toggle');
+
+      toggle();
+    }
+  }, [active, isWorkoutTimerRunning, toggle]);
+
+  // Check remaining seconds
+  useEffect(() => {
+    console.log('useEffect: remaining ms: ', remainingMS);
+
+    if (remainingMS === 0) {
+      onFinish && onFinish();
+    }
+  }, [onFinish, remainingMS]);
+
+  const progress = duration - remainingMS;
+
+  return (
+    <View style={styles.timerContainer}>
+      {setType !== 'REPS' && (
+        <SliderProgressView
+          max={duration}
+          progress={progress}
+          height={getHeight(5)}
+        />
+      )}
+
+      <TouchableOpacity
+        style={styles.timerTouchArea}
+        onPress={() => {
+          onCancel && onCancel();
+        }}>
+        <View style={styles.timerTextContainer}>
+          <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+          {!isExerciseTime && (
             <Text style={styles.timerRestTextStyle}>{WorkoutDict.Rest}</Text>
           )}
         </View>

@@ -169,7 +169,7 @@ export default function DataProvider(props) {
         console.log(workoutIndex, workout.name, workout.completedAt);
         return {
           ...workout,
-          name: workout.name.toUpperCase(),
+          name: workout.name,
           exactDate: new Date(workout.completedAt),
           day: workoutIndex,
         };
@@ -213,7 +213,7 @@ export default function DataProvider(props) {
 
             workout = {
               ...workout,
-              name: workout.name.toUpperCase(),
+              name: workout.name,
               exactDate: date,
               day: workoutIndex,
             };

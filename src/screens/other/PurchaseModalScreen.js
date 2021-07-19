@@ -82,15 +82,15 @@ const PurchaseModalScreen = ({}) => {
 
   const [yearlySubscription, setYearlySubscription] = useState({
     productId: 'app.power.subscription.yearly',
-    localizedPrice: '£24.00',
-    price: 24.0,
-    trial: true,
+    // localizedPrice: '£24.00',
+    // price: 24.0,
+    // trial: true,
   });
   const [monthlySubscription, setMonthlySubscription] = useState({
     productId: 'app.power.subscription.monthly',
-    localizedPrice: '£4.00',
-    price: 4.0,
-    trial: true,
+    // localizedPrice: '£4.00',
+    // price: 4.0,
+    // trial: true,
   });
 
   const {
@@ -580,10 +580,10 @@ const PurchaseModalScreen = ({}) => {
             }}>
             {type === 'monthly'
               ? PurchaseDict.MonthlyButtonTitle(
-                  monthlySubscription.localizedPrice,
+                  monthlySubscription.localizedPrice || '',
                 )
               : PurchaseDict.YearlyButtonTitle(
-                  yearlySubscription.localizedPrice,
+                  yearlySubscription.localizedPrice || '',
                 )}
           </Text>
           {type === 'annually' && (
@@ -593,7 +593,7 @@ const PurchaseModalScreen = ({}) => {
                 fontSize: fontSize(14),
                 ...buttonTextVariant[type],
               }}>
-              {`(${PurchaseDict.MonthlyButtonTitle(yearlyMonthPrice)})`}
+              {`(${PurchaseDict.MonthlyButtonTitle(yearlyMonthPrice || '')})`}
             </Text>
           )}
         </View>
@@ -616,7 +616,7 @@ const PurchaseModalScreen = ({}) => {
     return (
       <View style={styles.promptContainer}>
         <Text style={styles.promptTextStyle}>
-          {PurchaseDict.SavePrompt(yearlyDiscount)}
+          {PurchaseDict.SavePrompt(yearlyDiscount || '')}
         </Text>
       </View>
     );

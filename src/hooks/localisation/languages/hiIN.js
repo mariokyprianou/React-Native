@@ -483,6 +483,9 @@ const hiIN = {
 
     CurrentWeek: 'यह\nसप्ताह',
     NewWorkoutsEachWeek: 'हर हफ्ते नए वर्कआउट!',
+
+    FutureWorkoutWarningText:
+      'Complete your current week to progress through your Programme!',
   },
 
   OnDemandDict: {

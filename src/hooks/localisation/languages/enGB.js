@@ -478,6 +478,9 @@ const enGB = {
 
     CurrentWeek: 'CURRENT\nWEEK',
     NewWorkoutsEachWeek: 'New workouts each week!',
+
+    FutureWorkoutWarningText:
+      'Complete your current week to progress through your Programme!',
   },
 
   OnDemandDict: {

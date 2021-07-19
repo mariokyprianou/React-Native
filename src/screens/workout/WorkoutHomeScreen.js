@@ -547,18 +547,21 @@ export default function WorkoutHomeScreen() {
       return;
     }
 
-    if (!isSubscriptionActive) {
-      navigation.navigate('PurchaseModal');
-      return;
-    }
-
     if (selectedWeekIndex + 1 > currentWeekNumber) {
       if (stayTunedEnabled) {
         showStayTunedModal();
+      } else {
+        DisplayAlert({
+          text: WorkoutDict.FutureWorkoutWarningText,
+        });
       }
       return;
     }
 
+    if (!isSubscriptionActive) {
+      navigation.navigate('PurchaseModal');
+      return;
+    }
     // Sort exercises
     const newWorkout = {
       ...workout,

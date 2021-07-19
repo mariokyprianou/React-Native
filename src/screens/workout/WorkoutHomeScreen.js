@@ -22,13 +22,18 @@ import useUserData from '../../hooks/data/useUserData';
 import {useMutation} from '@apollo/client';
 import UpdateOrder from '../../apollo/mutations/UpdateOrder';
 import * as R from 'ramda';
-import {differenceInDays, addDays} from 'date-fns';
+import {
+  addDays,
+  addWeeks,
+  startOfDay,
+  isAfter,
+  differenceInDays,
+} from 'date-fns';
 import CompleteWorkoutWeek from '../../apollo/mutations/CompleteWorkoutWeek';
 import DisplayAlert from '../../utils/DisplayAlert';
 import AsyncStorage from '@react-native-community/async-storage';
 import useLoading from '../../hooks/loading/useLoading';
 import {FileManager} from 'the-core-ui-module-tdmediamanager';
-import format from 'date-fns/format';
 import {useNetInfo} from '@react-native-community/netinfo';
 
 import {shouldCacheWeek} from '../../hooks/data/VideoCacheUtils';
@@ -131,19 +136,9 @@ export default function WorkoutHomeScreen() {
       showStayTunedModal();
     }
 
-    let startedAt = new Date(programme.currentWeek.startedAt);
+    let startedAt = startOfDay(new Date(programme.currentWeek.startedAt));
 
-    startedAt.setUTCHours(0, 0, 0);
-
-    // Check at least 7 days past week start date
-    let completeWeekLimitDate = addDays(startedAt, 6);
-
-    let now = new Date();
-    now.setUTCHours(0, 0, 0, 0);
-
-    // Passed limit date  note: === 0 means same date as today, we need next day
-    // When 0 means we are on last day of week
-    if (differenceInDays(now, completeWeekLimitDate) > 0) {
+    if (isAfter(new Date(), addWeeks(startedAt, 1))) {
       callCompleteWeekMutation();
     } else {
       // Week completee not allowed, show stay tuned where needed
@@ -340,7 +335,9 @@ export default function WorkoutHomeScreen() {
   }
 
   async function updateOrder(newList = []) {
-    if (newList.length === 0) return;
+    if (newList.length === 0) {
+      return;
+    }
     // Previous data in case orderChange fails
     const prevList = currentWeek;
 

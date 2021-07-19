@@ -37,11 +37,7 @@ export default function OnDemandScreen() {
   const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
   const navigation = useNavigation();
   const {setLoading} = useLoading();
-  const {
-    suspendedAccount,
-    isSubscriptionActive,
-    completedFreeWorkouts,
-  } = useUserData();
+  const {suspendedAccount, isSubscriptionActive} = useUserData();
 
   const {
     workoutTags,
@@ -259,7 +255,7 @@ export default function OnDemandScreen() {
                       return;
                     }
 
-                    if (completedFreeWorkouts && !isSubscriptionActive) {
+                    if (!isSubscriptionActive) {
                       navigation.navigate('PurchaseModal');
                       return;
                     }

@@ -9,6 +9,8 @@
 const Colors = {
   aquamarine15: 'rgba(81, 217, 212, 0.15)',
   aquamarine100: 'rgba(81, 217, 212, 1)',
+  aquamarine20: 'rgba(81, 217, 212, 0.2)',
+
   backgroundWhite100: 'rgba(252, 252, 252, 1)',
   black0: 'rgba(33, 33, 33, 0)',
   black0point5: 'rgba(33, 33, 33, 0.5)',
@@ -65,6 +67,11 @@ const Colors = {
   newWorkoutBlue100: 'rgba(32, 217, 210, 1)',
   weekPreviewGrey100: 'rgba(138, 138, 142, 1)',
   cantChooseGrey100: 'rgba(148, 148, 148, 1)',
+
+  dividerGrey10: 'rgba(112, 112, 112, 0.1)',
+  dividerGrey40: 'rgba(112, 112, 112, 0.4)',
+  dividerGrey100: 'rgba(112, 112, 112, 1)',
+  durationGrey100: 'rgba(188, 188, 188, 1)',
 };
 
 export default Colors;

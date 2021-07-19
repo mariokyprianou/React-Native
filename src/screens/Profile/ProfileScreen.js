@@ -36,7 +36,7 @@ export default function ProfileScreen() {
   const onPressNeedHelp = () => {
     if (!isConnected) {
       displayAlert({text: OfflineMessage});
-    return;
+      return;
     }
 
     firebaseLogEvent(analyticsEvents.accessedIntercom, {});

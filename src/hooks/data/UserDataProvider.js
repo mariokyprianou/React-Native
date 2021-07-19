@@ -266,13 +266,13 @@ export default function UserDataProvider(props) {
 
   // Update completedFreeWorkouts
   useEffect(() => {
-    if (userData && userData.completedWorkouts) {
-      const {completedWorkouts} = userData;
-      console.log('completedWorkouts', completedWorkouts);
-      setCompletedFreeWorkouts(completedWorkouts >= 3);
-    } else {
-      setCompletedFreeWorkouts(false);
-    }
+    // if (userData && userData.completedWorkouts) {
+    //   const {completedWorkouts} = userData;
+    //   console.log('completedWorkouts', completedWorkouts);
+    //   setCompletedFreeWorkouts(completedWorkouts >= 3);
+    // } else {
+    //   setCompletedFreeWorkouts(false);
+    // }
 
     updateUserData();
     checkShouldShowReviewMessage();
@@ -416,7 +416,6 @@ export default function UserDataProvider(props) {
       checkUserSubscription,
       isSubscriptionActive,
       getProfile,
-      completedFreeWorkouts,
       checkShouldShowReviewMessage,
     }),
     [
@@ -438,7 +437,6 @@ export default function UserDataProvider(props) {
       checkUserSubscription,
       isSubscriptionActive,
       getProfile,
-      completedFreeWorkouts,
       checkShouldShowReviewMessage,
     ],
   );

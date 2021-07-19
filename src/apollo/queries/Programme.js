@@ -57,39 +57,6 @@ export default gql`
           }
         }
       }
-      nextWeek {
-        weekNumber
-        workouts {
-          id
-          orderIndex
-          name
-          overviewImage
-          intensity
-          isContinuous
-          duration
-          completedAt
-          exercises {
-            id
-            orderIndex
-            exercise {
-              id
-              name
-              coachingTips
-              video
-              videoEasy
-              videoEasiest
-              weight
-            }
-            sets {
-              setNumber
-              quantity
-              restTime
-            }
-            setType
-            notes
-          }
-        }
-      }
     }
   }
 `;

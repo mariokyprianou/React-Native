@@ -804,7 +804,10 @@ export default function ThemeProvider({children}) {
     timerTextStyle: {
       ...textStyles.bold76_black100,
       lineHeight: getHeight(100),
-      textAlign: 'center',
+      width: getWidth(208),
+
+      // Needed to look centered as we are left aligned to avoid the view from jumping
+      marginStart: getWidth(4),
     },
     timerRestTextStyle: {
       ...textStyles.bold22_black100,

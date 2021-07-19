@@ -85,6 +85,8 @@ const enGB = {
     NeedToSignOut: 'Need to sign out?',
     Logout: SharedDict.Logout,
     Close: 'CLOSE',
+    Send: 'SEND',
+    VerifyLater: 'Verify email later',
   },
 
   AuthDict: {
@@ -105,9 +107,9 @@ const enGB = {
     InvalidFamilyName: 'Please enter your last name',
     InvalidEmail: 'Please enter a valid email',
     InvalidPassword:
-      'Password must include at least 1 lowercase, 1 uppercase, 1 numeric and 1 special character, and be eight characters or longer.',
+      'Your password must be at least 8 characters long and include at least 1 number.',
     InvalidNotNewPassword:
-      'Oops! Your password must consist of at least 8 alphanumeric, mixed-case characters. Please try again with a new password.',
+      'Oops! Your password must be at least 8 characters long and include at least 1 number. Please try again with a new password.',
     InvalidTsAndCs: 'Please accept the terms and conditions.',
     ChangePasswordFail:
       'Oops! Ensure you have entered your current password, along with your new password, in order to make the change.',
@@ -144,9 +146,9 @@ const enGB = {
     LoginScreenTitle: SharedDict.Login,
 
     VerifyEmailTitle: SharedDict.VerifyEmail,
-    VerificationLinkSent: 'Verification link sent',
+    VerificationLinkSent: 'Email sent! Please check your inbox.',
     VerifyEmail:
-      'We’ve just emailed you a link to verify your email. Tap the link in the email to verify your Power account.',
+      'Click SEND below and we’ll email you a link to verify your email address. Just tap the link in the email to verify your Power account.',
     YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
     VerificationNotRecognized:
       'Oops! Verification code not recognised. Please try again.',
@@ -173,11 +175,18 @@ const enGB = {
   PurchaseDict: {
     InfoTitle: 'Join POWER.',
     Info:
-      'Get unlimited access to all the programmes on POWER, track your progress & share your results! ',
-    YearlyButtonTitle: (price) => `YEARLY \u2022 ${price} / year`,
-    YearlyButtonSubTitle: (price) => `${price} / month billed annually`,
-    MonthlyButtonTitle: (price) => `MONTHLY \u2022 ${price} / month`,
-    SavePrompt: (percentage) => `Save ${percentage}%`,
+      'Access all POWER Programmes, each with 24+ weeks of workouts, and more stars joining! Planning and tracking your fitness journey has never been so easy!',
+
+    FreeTrial: '7-day FREE trial',
+    Monthly: 'MONTHLY',
+    Yearly: 'YEARLY',
+    AfterFreeTrial: 'billed after free trial',
+    BilledMonthly: 'billed monthly',
+    BilledAnnually: 'billed annually',
+
+    YearlyButtonTitle: (price) => `${price}/year`,
+    MonthlyButtonTitle: (price) => `${price}/month`,
+    SavePrompt: (percentage) => `SAVE ${percentage}%`,
     MonthlyButtonSubTitle: 'billed monthly',
     RestorePurchaseButton: 'Restore purchases',
     PurchaseRestored: 'Your Purchases have been Restored.',
@@ -466,6 +475,9 @@ const enGB = {
     ReviewRequest: 'Enjoying POWER? Let us know!',
     ReviewRequestSkip: 'Skip',
     ReviewRequestReview: 'Review',
+
+    CurrentWeek: 'CURRENT\nWEEK',
+    NewWorkoutsEachWeek: 'New workouts each week!',
   },
 
   OnDemandDict: {

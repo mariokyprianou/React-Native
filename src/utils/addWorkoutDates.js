@@ -16,7 +16,7 @@ const addWorkoutDates = (data, startDate) => {
     if (workout.workout) {
       // Data from getTrainers
       return {
-        name: workout.workout.name.toUpperCase(),
+        name: workout.workout.name,
         intensity: workout.workout.intensity,
         duration: workout.workout.duration,
         date: formattedDate,
@@ -27,7 +27,7 @@ const addWorkoutDates = (data, startDate) => {
       // Data from getProgramme
       return {
         ...workout,
-        name: workout.name.toUpperCase(),
+        name: workout.name,
         date: formattedDate,
         exactDate: date,
         day: workout.day,

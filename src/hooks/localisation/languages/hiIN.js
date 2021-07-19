@@ -87,6 +87,8 @@ const hiIN = {
     NeedToSignOut: 'साइन आउट करना है?',
     Logout: SharedDict.Logout,
     Close: 'बंद करे',
+    Send: 'ईमेल भेजें',
+    VerifyLater: 'ईमेल बाद में सत्यापित करें',
   },
 
   AuthDict: {
@@ -107,7 +109,7 @@ const hiIN = {
     InvalidFamilyName: 'कृपया अपना अंतिम नाम दर्ज करें',
     InvalidEmail: 'कृपया एक वैध ईमेल दर्ज करें',
     InvalidPassword:
-      'पासवर्ड में कम से कम 1 छोटा अक्षर, 1 बड़ा अक्षर, 1 नंबर और एक विशेष कैरेक्टर, और आठ कैरेक्टर या इससे अधिक होना आवश्यक है।',
+      'आपका पासवर्ड कम से कम 8 अक्षरों का होना चाहिए और इसमें कम से कम 1 नंबर शामिल होना चाहिए।',
     InvalidNotNewPassword:
       'ओह! आपके पासवर्ड में कम से कम 8 अक्षर-नंबर, मिक्स-केस कैरेक्टरों का होना आवश्यक है। कृपया एक नए पासवर्ड के साथ दोबारा प्रयास करें।',
     InvalidTsAndCs: 'कृपया नियमों और शर्तों को स्वीकार करें।',
@@ -146,9 +148,9 @@ const hiIN = {
     LoginScreenTitle: SharedDict.Login,
 
     VerifyEmailTitle: SharedDict.VerifyEmail,
-    VerificationLinkSent: 'पुष्टि करने के लिए लिंक भेजा गया है',
+    VerificationLinkSent: 'ईमेल भेजा! कृपया अपना इनबॉक्स जांचें।',
     VerifyEmail:
-      'आपके ईमेल की पुष्टि के लिए हमने अभी आपको एक लिंक भेजा है। अपने Power अकाउंट को पुष्टि करने के लिए ईमेल में दिए गए लिंक को टैप करें।',
+      'ईमेल भेजें" क्लिक करें और हम आपका ईमेल पता सत्यापित करने के लिए आपको एक लिंक ईमेल करेंगे। अपना POWER खाता सत्यापित करने के लिए बस ईमेल में दिए गए लिंक पर टैप करें।',
     YouWillBeLoggedOut: 'आप लॉग आउट कर जाएंगे - क्या आप जारी रखना चाहते हैं?',
     VerificationNotRecognized:
       'ओह! पुष्टिकरण के कोड की पहचान नहीं हो पाई। कृपया दोबारा प्रयास करें।',
@@ -176,11 +178,19 @@ const hiIN = {
   PurchaseDict: {
     InfoTitle: 'POWER जॉइन करें',
     Info:
-      'POWER पर सभी प्रोग्रामों तक असीमित पहुँच पाएँ, अपनी प्रगति को ट्रैक और अपने परिणामों को शेयर करें!',
-    YearlyButtonTitle: (price) => `वार्षिक \u2022 ${price} / वर्ष`,
-    YearlyButtonSubTitle: (price) => `${price} / माह वार्षिक बिलिंग  `,
-    MonthlyButtonTitle: (price) => `मासिक रूप से \u2022 ${price} / माह`,
-    SavePrompt: (percentage) => `सेव करें ${percentage}%`,
+      '24+ सप्ताह के वर्कआउट के साथ सभी पावर प्रोग्राम तक पहुंचें, और अधिक सितारे भी शामिल होंगे! अपनी फिटनेस यात्रा की योजना बनाना और उस पर नज़र रखना इतना आसान कभी नहीं रहा!',
+
+    FreeTrial: '7 दिन का मुफ़्त ट्रायल',
+
+    Monthly: 'महीने के',
+    Yearly: 'वार्षिक',
+    AfterFreeTrial: 'मुफ़्त ट्रायल के बाद बिल किया जाएगा',
+    BilledMonthly: ' बिल मासिक',
+    BilledAnnually: 'सालाना बिल',
+
+    YearlyButtonTitle: (price) => `${price}/वर्ष`,
+    MonthlyButtonTitle: (price) => `${price}/माह`,
+    SavePrompt: (percentage) => `${percentage}% बचाएं`,
     MonthlyButtonSubTitle: 'मासिक बिल',
     RestorePurchaseButton: 'खरीदारी को रिस्टोर करें',
     PurchaseRestored: 'आपकी खरीदारी बहाल कर दी गई है',
@@ -470,6 +480,9 @@ const hiIN = {
     ReviewRequest: 'POWER का आनंद ले रहे हैं? हमें बताऐ!',
     ReviewRequestSkip: 'छोड़ें',
     ReviewRequestReview: 'हमें बताएं',
+
+    CurrentWeek: 'यह\nसप्ताह',
+    NewWorkoutsEachWeek: 'हर हफ्ते नए वर्कआउट!',
   },
 
   OnDemandDict: {

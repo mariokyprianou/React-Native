@@ -18,14 +18,10 @@ import {msToHMS} from '../../utils/dateTimeUtils';
 import SetCompletionScreen from '../../screens/workout/SetCompletionScreen';
 import GetExerciseWeight from '../../apollo/queries/GetExerciseWeight';
 import SliderProgressView from './SliderProgressView';
-import fetchPolicy from '../../utils/fetchPolicy';
-import {useNetInfo} from '@react-native-community/netinfo';
 import UseData from '../../hooks/data/UseData';
-import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
 import {ScrollView} from 'react-native-gesture-handler';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
-import FadingBottomView from './FadingBottomView';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
@@ -43,7 +39,7 @@ export default function ExerciseView(props) {
   const styles = exerciseViewStyle;
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
-  const {selectedWorkout, setSelectedWeight, currentExerciseIndex} = UseData();
+  const {currentExerciseIndex} = UseData();
 
   const {runQuery} = useCustomQuery();
 
@@ -150,7 +146,7 @@ export default function ExerciseView(props) {
 
   // Finished weight submition, check if it was last set
   useEffect(() => {
-    if (setComplete === false) {
+    if (!props.isContinuous && setComplete === false) {
       checkShouldFinishExercise();
     }
   }, [setComplete]);
@@ -178,6 +174,8 @@ export default function ExerciseView(props) {
     } else {
       setCurrentSet(currentSet + 1);
     }
+    // Needed to determine of countdown is to be shown
+    let selectedSetSecs, selectedSetRest;
 
     // Update Sets states
     const newSets = sets.map((it, index) => {
@@ -185,10 +183,12 @@ export default function ExerciseView(props) {
         if (index === completedIndex) {
           if (it.restTime && it.restTime > 0) {
             setRestTime(it.restTime * 1000);
+            selectedSetRest = it.restTime * 1000;
           }
 
           if (it.quantity && it.quantity > 0 && props.setType !== 'REPS') {
             setExerciseTime(it.quantity * 1000);
+            selectedSetSecs = it.quantity * 1000;
           }
         }
 
@@ -208,21 +208,28 @@ export default function ExerciseView(props) {
 
     setSets(newSets);
 
+    console.log('selectedSetSecs', selectedSetSecs);
+    console.log('selectedSetRest', selectedSetRest);
+
     // Only if its Reps show weight first, timed sets need to show counddown first
-    if (exercise.weight && restTime && props.setType === 'REPS') {
+    if (exercise.weight && selectedSetRest && props.setType === 'REPS') {
       setSetComplete(true);
 
       // also show rest timer behind weight input
       setCountDown(true);
-    } else if (exercise.weight && restTime && props.setType !== 'REPS') {
+    } else if (exercise.weight && selectedSetRest && props.setType !== 'REPS') {
+      setCountDown(true);
+    }
+    // Show rest timer countdown
+    else if (selectedSetSecs) {
       setCountDown(true);
     }
     // show weight input modal
-    else if (exercise.weight) {
+    else if (!props.isContinuous && exercise.weight) {
       setSetComplete(true);
     }
     // Show rest timer countdown
-    else if (restTime) {
+    else if (selectedSetRest) {
       setCountDown(true);
     }
 
@@ -230,7 +237,7 @@ export default function ExerciseView(props) {
     // If we dont have rest time or weight option just finish exercise set immediately
     if (
       completedIndex === sets.length - 1 &&
-      (!restTime || restTime === 0) &&
+      (!selectedSetRest || selectedSetRest === 0) &&
       !exercise.weight
     ) {
       finishExercise();
@@ -410,36 +417,12 @@ export default function ExerciseView(props) {
           <RepsList sets={sets} />
         </View>
 
-        {/* DEPRECATED
-        {React.useMemo(() => {
-          if (countDown && (restTime > 0 || exerciseTime > 0)) {
-            return (
-              <TimerView
-                exerciseTime={exerciseTime}
-                restTime={restTime}
-                onCancelTimer={onCancelTimer}
-                onFinish={onFinishTimer}
-                onStartRest={() => {
-                  console.log('starting rest');
-                  if (props.isContinuous && !props.isLastExercise) {
-                    setShowUpNextLabel(true);
-                  } else if (!props.isContinuous && exercise.weight) {
-                    setCountDown(false);
-                    setSetComplete(true);
-                  }
-                }}
-                setType={props.setType}
-                isContinuous={props.isContinuous}
-              />
-            );
-          }
-        }, [countDown, restTime, exerciseTime])} */}
-
+        {/* Exercise timer */}
         {React.useMemo(() => {
           if (countDown && exerciseTime > 0) {
             const done = () => {
               // Finished exercise time and have weight
-              if (exercise.weight) {
+              if (!props.isContinuous && exercise.weight) {
                 setSetComplete(true);
               }
 
@@ -484,12 +467,17 @@ export default function ExerciseView(props) {
           checkShouldFinishExercise,
         ])}
 
+        {/* Rest timer */}
         {React.useMemo(() => {
           if (
             countDown &&
             restTime > 0 &&
             (!exerciseTime || exerciseTime === 0)
           ) {
+            if (props.isContinuous && !props.isLastExercise) {
+              setShowUpNextLabel(true);
+            }
+
             return (
               <SimpleTimerView
                 duration={restTime}
@@ -520,8 +508,9 @@ export default function ExerciseView(props) {
           countDown,
           restTime,
           exerciseTime,
-          props.setType,
           props.isContinuous,
+          props.isLastExercise,
+          props.setType,
           checkShouldFinishExercise,
         ])}
       </View>
@@ -538,121 +527,6 @@ export default function ExerciseView(props) {
           weightPreference={weightLabel}
         />
       )}
-    </View>
-  );
-}
-
-function TimerView(props) {
-  const {dictionary} = useDictionary();
-  const {WorkoutDict} = dictionary;
-
-  const [initialLoad, setInitialLoad] = useState(true);
-
-  let durationMS = props.exerciseTime ? props.exerciseTime : props.restTime;
-  let durationFormatted = msToHMS(durationMS);
-  const [restDurationMS, setRestDurationMS] = useState(null);
-  const [shouldRestAfterExercise, setShouldRestAfterExercise] = useState(
-    props.exerciseTime !== null,
-  );
-
-  const {remainingMS, toggle, reset, restart, active} = useTimer({
-    timer: durationFormatted,
-  });
-
-  const {isWorkoutTimerRunning} = useWorkoutTimer();
-
-  useEffect(() => {
-    console.log('useEffect: active', active);
-  }, [active]);
-
-  useEffect(() => {
-    if (initialLoad) {
-      console.log('useEffect: initialLoad reset timer');
-
-      setInitialLoad(false);
-      reset();
-      toggle();
-    }
-  }, [initialLoad, reset, toggle]);
-
-  // When timer is paused by user.
-  useEffect(() => {
-    if (
-      (!active && isWorkoutTimerRunning) ||
-      (active && !isWorkoutTimerRunning)
-    ) {
-      console.log('useEffect: toggle');
-
-      toggle();
-    }
-  }, [active, isWorkoutTimerRunning, toggle]);
-
-  useEffect(() => {
-    if (restDurationMS) {
-      durationMS = restDurationMS;
-      durationFormatted = msToHMS(restDurationMS);
-      restart(durationMS);
-      setShouldRestAfterExercise(false);
-    }
-  }, [restDurationMS]);
-
-  useEffect(() => {
-    console.log('useEffect: remaining ms: ', remainingMS);
-
-    if (remainingMS === 0) {
-      if (!shouldRest()) {
-        props.onFinish && props.onFinish();
-      }
-    }
-  }, [remainingMS, shouldRestAfterExercise]);
-
-  const shouldRest = () => {
-    if (
-      shouldRestAfterExercise === true &&
-      props.restTime &&
-      props.restTime > 0
-    ) {
-      durationMS = props.restTime;
-      setRestDurationMS(props.restTime);
-
-      props.onStartRest && props.onStartRest();
-      return true;
-    }
-    return false;
-  };
-
-  const {exerciseViewStyle} = useTheme();
-  const {getHeight} = ScaleHook();
-  const styles = exerciseViewStyle;
-  const duration = restDurationMS ?? durationMS;
-  const progress = duration - remainingMS;
-
-  return (
-    <View style={styles.timerContainer}>
-      {props.setType !== 'REPS' && (
-        <SliderProgressView
-          max={duration}
-          progress={progress}
-          height={getHeight(5)}
-        />
-      )}
-
-      <TouchableOpacity
-        style={styles.timerTouchArea}
-        onPress={() => {
-          if (!props.isContinuous) {
-            if (!shouldRest()) {
-              props.onCancelTimer && props.onCancelTimer();
-            }
-          }
-        }}>
-        <View style={styles.timerTextContainer}>
-          <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
-          {!shouldRestAfterExercise && (
-            <Text style={styles.timerRestTextStyle}>{WorkoutDict.Rest}</Text>
-          )}
-        </View>
-      </TouchableOpacity>
     </View>
   );
 }

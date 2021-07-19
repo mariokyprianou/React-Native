@@ -97,7 +97,7 @@ const hiIN = {
     LastNameLabel: SharedDict.LastName,
     EmailLabel: SharedDict.Email,
     PasswordLabel: SharedDict.Password,
-    SexLabel: SharedDict.Sex,
+    SexLabel: SharedDict.Gender,
     DobLabel: SharedDict.Dob,
     CountryLabel: SharedDict.Country,
     RegionLabel: SharedDict.Region,

@@ -328,6 +328,9 @@ const enGB = {
     Weight: 'WEIGHT MEASUREMENT',
     WeightKgs: 'Metric (kg)',
     WeightLbs: 'Imperial (lb)',
+    AppSounds: 'Play sounds',
+    Yes: 'Yes',
+    No: 'No',
   },
 
   ProgressDict: {

@@ -351,6 +351,32 @@ const SettingsScreen = ({}) => {
     LB: SettingsDict.WeightLbs,
   };
 
+  const [appSoundsPref, setAppSoundsPref] = useState('Yes');
+  const appSoundsData = [SettingsDict.Yes, SettingsDict.No];
+  const appSoundsMap = {
+    Yes: SettingsDict.Yes,
+    No: SettingsDict.No,
+  };
+
+  useEffect(() => {
+    AsyncStorage.getItem('@app_sounds').then((res) => {
+      if (res !== null) {
+        setAppSoundsPref(res);
+      } else {
+        setAppSoundsPref('Yes');
+        AsyncStorage.setItem('@app_sounds', 'Yes');
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const {formAppSounds} = getValues();
+    if (formAppSounds) {
+      AsyncStorage.setItem('@app_sounds', appSoundsMap[formAppSounds]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getValues]);
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const formConfig = {
     ...cellFormConfig,
@@ -552,6 +578,24 @@ const SettingsScreen = ({}) => {
     },
   ];
 
+  const cells7 = [
+    {
+      name: 'formAppSounds',
+      type: 'dropdown',
+      label: SettingsDict.AppSounds,
+      ...cellFormStyles,
+      ...dropdownStyle,
+      rightAccessory: () => <DropDownIcon />,
+      placeholder: appSoundsMap[appSoundsPref],
+      data: appSoundsData,
+      inputContainerStyle: {
+        paddingHorizontal: 0,
+        paddingRight: getWidth(6),
+        marginTop: -getHeight(5),
+      },
+    },
+  ];
+
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
@@ -576,6 +620,10 @@ const SettingsScreen = ({}) => {
 
       {/* Download Quality */}
       <Form cells={cells4} config={formConfig} />
+      <Spacer height={25} />
+
+      {/* Download Quality */}
+      <Form cells={cells7} config={formConfig} />
       <Spacer height={25} />
 
       {/* Data Collection */}

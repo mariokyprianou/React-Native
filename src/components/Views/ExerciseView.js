@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +23,9 @@ import displayAlert from '../../utils/DisplayAlert';
 import {ScrollView} from 'react-native-gesture-handler';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
+// import SoundPlayer from 'react-native-sound-player';
+import Sound from 'react-native-sound';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -574,14 +577,71 @@ function SimpleTimerView({
     }
   }, [active, isWorkoutTimerRunning, toggle]);
 
+  const [appSounds, setAppSounds] = useState('Yes');
+
+  useEffect(() => {
+    async function getAppSounds() {
+      await AsyncStorage.getItem('@app_sounds').then((res) => {
+        if (res !== null) {
+          setAppSounds(res);
+        }
+      });
+    }
+    getAppSounds();
+  }, []);
+
   // Check remaining seconds
   useEffect(() => {
-    console.log('useEffect: remaining ms: ', remainingMS);
+    if (appSounds === 'Yes') {
+      if (remainingMS === 3000 && isExerciseTime === true) {
+        const endExercise = new Sound(
+          'end_exercise.mp3',
+          Sound.MAIN_BUNDLE,
+          (error) => {
+            if (error) {
+              console.log('failed to load the sound', error);
+              return;
+            }
+
+            endExercise.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+              } else {
+                console.log('playback failed due to audio decoding errors');
+              }
+            });
+          },
+        );
+        endExercise.release();
+      }
+
+      if (remainingMS === 3000 && isExerciseTime === false) {
+        const endRest = new Sound(
+          'end_rest.mp3',
+          Sound.MAIN_BUNDLE,
+          (error) => {
+            if (error) {
+              console.log('failed to load the sound', error);
+              return;
+            }
+
+            endRest.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+              } else {
+                console.log('playback failed due to audio decoding errors');
+              }
+            });
+          },
+        );
+        endRest.release();
+      }
+    }
 
     if (remainingMS === 0) {
       onFinish && onFinish();
     }
-  }, [onFinish, remainingMS]);
+  }, [onFinish, remainingMS, isExerciseTime, appSounds]);
 
   const progress = duration - remainingMS;
 

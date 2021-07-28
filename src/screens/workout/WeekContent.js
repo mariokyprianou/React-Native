@@ -104,7 +104,7 @@ export default function WeekContent({updateOrder, onPressCard}) {
         <WorkoutCard
           workout={item}
           title={item.name}
-          day={item.day}
+          day={item.orderIndex}
           duration={item.duration}
           drag={null}
           status={state === WEEK_STATE.PAST && 'complete'}
@@ -116,7 +116,10 @@ export default function WeekContent({updateOrder, onPressCard}) {
 
   const CurrentWeekDay = ({item, index, drag, isActive}) => {
     return (
-      <View style={{paddingHorizontal: getWidth(20)}}>
+      <View
+        style={{
+          paddingHorizontal: getWidth(20),
+        }}>
         <WorkoutCard
           workout={item}
           title={item.name}

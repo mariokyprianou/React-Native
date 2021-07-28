@@ -5,7 +5,7 @@
  * Copyright (c) 2020 The Distance
  */
 
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import {View, TouchableOpacity, Text, Image} from 'react-native';
 import RepCell from '../cells/RepCell';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +23,9 @@ import displayAlert from '../../utils/DisplayAlert';
 import {ScrollView} from 'react-native-gesture-handler';
 import useCustomQuery from '../../hooks/customQuery/useCustomQuery';
 import useWorkoutTimer from '../../hooks/timer/useWorkoutTimer';
+// import SoundPlayer from 'react-native-sound-player';
+import Sound from 'react-native-sound';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const completeIcon = require('../../../assets/icons/completeExercise.png');
 const checkIcon = require('../../../assets/icons/check.png');
@@ -31,7 +34,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, setEnableScroll, weightLabel} = props;
+  const {exercise, index, setEnableScroll, weightLabel, hasAudioCues} = props;
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
   const {exerciseViewStyle, Constants} = useTheme();
@@ -441,6 +444,7 @@ export default function ExerciseView(props) {
                 duration={exerciseTime}
                 isExerciseTime={true}
                 setType={props.setType}
+                hasAudioCues={hasAudioCues}
                 onCancel={() => {
                   // Continuous cannot be canceled
                   if (props.isContinuous) {
@@ -459,11 +463,12 @@ export default function ExerciseView(props) {
           }
         }, [
           countDown,
-          restTime,
           exerciseTime,
           props.setType,
           props.isContinuous,
+          hasAudioCues,
           exercise.weight,
+          restTime,
           checkShouldFinishExercise,
         ])}
 
@@ -483,6 +488,7 @@ export default function ExerciseView(props) {
                 duration={restTime}
                 isExerciseTime={false}
                 setType={props.setType}
+                hasAudioCues={hasAudioCues}
                 onCancel={() => {
                   // Continuous cannot be canceled
                   if (props.isContinuous) {
@@ -511,6 +517,7 @@ export default function ExerciseView(props) {
           props.isContinuous,
           props.isLastExercise,
           props.setType,
+          hasAudioCues,
           checkShouldFinishExercise,
         ])}
       </View>
@@ -537,6 +544,7 @@ function SimpleTimerView({
   setType,
   onCancel,
   onFinish,
+  hasAudioCues = true,
 }) {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
@@ -576,12 +584,59 @@ function SimpleTimerView({
 
   // Check remaining seconds
   useEffect(() => {
-    console.log('useEffect: remaining ms: ', remainingMS);
+    if (hasAudioCues) {
+      if (remainingMS === 3000 && isExerciseTime === true) {
+        console.log("AUDIO CUE", 'endExercise')
+        const endExercise = new Sound(
+          'end_exercise.mp3',
+          Sound.MAIN_BUNDLE,
+          (error) => {
+            if (error) {
+              console.log('failed to load the sound', error);
+              return;
+            }
+
+            endExercise.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+              } else {
+                console.log('playback failed due to audio decoding errors');
+              }
+            });
+          },
+        );
+        endExercise.release();
+      }
+
+      if (remainingMS === 3000 && isExerciseTime === false) {
+        console.log("AUDIO CUE", 'endRest')
+
+        const endRest = new Sound(
+          'end_rest.mp3',
+          Sound.MAIN_BUNDLE,
+          (error) => {
+            if (error) {
+              console.log('failed to load the sound', error);
+              return;
+            }
+
+            endRest.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+              } else {
+                console.log('playback failed due to audio decoding errors');
+              }
+            });
+          },
+        );
+        endRest.release();
+      }
+    }
 
     if (remainingMS === 0) {
       onFinish && onFinish();
     }
-  }, [onFinish, remainingMS]);
+  }, [onFinish, remainingMS, isExerciseTime, hasAudioCues]);
 
   const progress = duration - remainingMS;
 

@@ -34,6 +34,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import OfflineUtils from '../../hooks/data/OfflineUtils';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import LoadingView from '../../components/Views/LoadingView';
 
 export default function WorkoutCompleteScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -57,7 +58,7 @@ export default function WorkoutCompleteScreen() {
     refetchOnDemandWorkouts,
   } = UseData();
 
-  const {setLoading} = useLoading();
+  const [loading, setLoading] = useState(false);
   const {
     setIsWorkoutTimerRunning,
     workoutTime,
@@ -254,6 +255,13 @@ export default function WorkoutCompleteScreen() {
           res,
         );
 
+        console.log(
+          isSelectedWorkoutOnDemand
+            ? 'completeOnDemandWorkout'
+            : 'completeWorkout',
+          success,
+        );
+
         if (success) {
           firebaseLogEvent(
             analyticsEvents.completedWorkout,
@@ -287,23 +295,24 @@ export default function WorkoutCompleteScreen() {
   }
 
   async function completeWorkoutDone() {
+    refetchOnDemandWorkouts();
     setWeightsToUpload([]);
     await getProgramme();
     await getProfile();
-    await refetchOnDemandWorkouts();
 
     if (isSelectedWorkoutOnDemand) {
       setIsSelectedWorkoutOnDemand(false);
       navigation.reset({
         index: 0,
-        routes: [{name: 'TabContainer', params: {screen: 'Tab2'}}],
+        routes: [{ name: 'TabContainer', params: { screen: 'Tab2' } }],
       });
     } else {
       navigation.reset({
         index: 0,
-        routes: [{name: 'TabContainer'}],
+        routes: [{ name: 'TabContainer' }],
       });
     }
+
     setLoading(false);
   }
 
@@ -387,6 +396,7 @@ export default function WorkoutCompleteScreen() {
           disabled={selectedEmoji ? false : true}
         />
       </View>
+      {loading && LoadingView()}
     </View>
   );
 }

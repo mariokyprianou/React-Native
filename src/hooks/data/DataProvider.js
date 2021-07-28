@@ -485,7 +485,9 @@ export default function DataProvider(props) {
 
   const refetchOnDemandWorkouts = useCallback(async () => {
     console.log('refetchOnDemandWorkouts OnDemand workouts');
-    getOnDemandWorkouts(workoutTags.map((it) => it.id));
+    if (workoutTags.length > 0) {
+      await getOnDemandWorkouts(workoutTags.map((it) => it.id));
+    }
   }, [getOnDemandWorkouts, workoutTags]);
 
   const getWorkoutTags = useCallback(async () => {

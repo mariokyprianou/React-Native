@@ -29,7 +29,7 @@ export default function EmailVerificationScreen() {
   const {permissionsNeeded, updateDefaultPreferences} = useUserData();
   const [resendEmail] = useMutation(ResendVerificationEmail);
 
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
     let interval = setInterval(async () => {
@@ -117,7 +117,7 @@ export default function EmailVerificationScreen() {
       text={AuthDict.VerifyEmail}
       closeModal={false}
       image={require('../../../assets/images/verifyEmailImage.png')}
-      buttonType="send"
+      buttonType="resend"
       disabled={buttonDisabled}
       buttonVariant="gradient"
       bottomButtonType="verifyLater"

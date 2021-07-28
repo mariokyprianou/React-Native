@@ -148,7 +148,7 @@ const enGB = {
     VerifyEmailTitle: SharedDict.VerifyEmail,
     VerificationLinkSent: 'Email sent! Please check your inbox.',
     VerifyEmail:
-      'Click SEND below and we’ll email you a link to verify your email address. Just tap the link in the email to verify your Power account.',
+      'Verify your POWER account by clicking the link we have just emailed you. If you haven’t received an email from us in 5 minutes, hit RESEND below.',
     YouWillBeLoggedOut: 'You will be logged out - do you wish to continue?',
     VerificationNotRecognized:
       'Oops! Verification code not recognised. Please try again.',

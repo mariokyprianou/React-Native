@@ -333,8 +333,8 @@ const hiIN = {
     WeightKgs: 'मीट्रिक (किग्रा)',
     WeightLbs: 'इंपीरियल (पाउंड)',
     AppSounds: 'Play sounds',
-    Yes: 'Yes',
-    No: 'No',
+    On: 'On-hin',
+    Off: 'Off-hin',
   },
 
   ProgressDict: {

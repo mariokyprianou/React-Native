@@ -351,11 +351,11 @@ const SettingsScreen = ({}) => {
     LB: SettingsDict.WeightLbs,
   };
 
-  const [appSoundsPref, setAppSoundsPref] = useState('Yes');
-  const appSoundsData = [SettingsDict.Yes, SettingsDict.No];
+  const [appSoundsPref, setAppSoundsPref] = useState('On');
+  const appSoundsData = [SettingsDict.On, SettingsDict.Off];
   const appSoundsMap = {
-    Yes: SettingsDict.Yes,
-    No: SettingsDict.No,
+    On: SettingsDict.On,
+    Off: SettingsDict.Off,
   };
 
   useEffect(() => {
@@ -363,8 +363,8 @@ const SettingsScreen = ({}) => {
       if (res !== null) {
         setAppSoundsPref(res);
       } else {
-        setAppSoundsPref('Yes');
-        AsyncStorage.setItem('@app_sounds', 'Yes');
+        setAppSoundsPref('On');
+        AsyncStorage.setItem('@app_sounds', 'On');
       }
     });
   }, []);
@@ -372,7 +372,10 @@ const SettingsScreen = ({}) => {
   useEffect(() => {
     const {formAppSounds} = getValues();
     if (formAppSounds) {
-      AsyncStorage.setItem('@app_sounds', appSoundsMap[formAppSounds]);
+      AsyncStorage.setItem(
+        '@app_sounds',
+        formAppSounds === appSoundsMap.On ? 'On' : 'Off',
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues]);

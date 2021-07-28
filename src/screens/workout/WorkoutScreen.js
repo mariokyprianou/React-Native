@@ -23,6 +23,7 @@ import useDictionary from '../../hooks/localisation/useDictionary';
 import useUserData from '../../hooks/data/useUserData';
 import displayAlert from '../../utils/DisplayAlert';
 import StartOnDemandWorkout from '../../apollo/mutations/StartOnDemandWorkout';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function WorkoutScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
@@ -61,6 +62,7 @@ export default function WorkoutScreen() {
   const [exerciseToPreview, setExerciseToPreview] = useState(null);
 
   const [weightLabel, setWeightLabel] = useState('kg');
+  const [hasAudioCues, setAudioCues] = useState(true);
 
   const scrollRef = useRef();
 
@@ -109,6 +111,26 @@ export default function WorkoutScreen() {
     getPreferences();
     //checkStartTimer();
   }, [getPreferences]);
+
+  useEffect(() => {
+    getAudioQues();
+  }, []);
+
+  useEffect(() => {
+    console.log("hasAudioCues", hasAudioCues)
+  }, [hasAudioCues]);
+
+
+  async function getAudioQues() {
+    AsyncStorage.getItem('@app_sounds').then((res) => {
+      if (res !== null) {
+        setAudioCues(res === 'On');
+      } else {
+        setAudioCues(true);
+        AsyncStorage.setItem('@app_sounds', 'On');
+      }
+    });
+  }
 
   // Set weight preference
   useEffect(() => {
@@ -309,6 +331,7 @@ export default function WorkoutScreen() {
                   setEnableScroll={setEnableScroll}
                   setShowPreviewOfNextVideo={setShowPreviewOfNextVideo}
                   weightLabel={weightLabel}
+                  hasAudioCues={hasAudioCues}
                   isContinuous={selectedWorkout.isContinuous}
                   isLastExercise={
                     index === selectedWorkout.exercises.length - 1
@@ -319,6 +342,7 @@ export default function WorkoutScreen() {
           );
         }, [
           exerciseFinished,
+          hasAudioCues,
           selectedWorkout.exercises,
           selectedWorkout.isContinuous,
           weightLabel,

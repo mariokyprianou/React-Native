@@ -34,7 +34,7 @@ const notesIcon = require('../../../assets/icons/notes.png');
 
 export default function ExerciseView(props) {
   // ** ** ** ** ** SETUP ** ** ** ** **
-  const {exercise, index, setEnableScroll, weightLabel} = props;
+  const {exercise, index, setEnableScroll, weightLabel, hasAudioCues} = props;
   const navigation = useNavigation();
   const {getHeight, getWidth} = ScaleHook();
   const {exerciseViewStyle, Constants} = useTheme();
@@ -444,6 +444,7 @@ export default function ExerciseView(props) {
                 duration={exerciseTime}
                 isExerciseTime={true}
                 setType={props.setType}
+                hasAudioCues={hasAudioCues}
                 onCancel={() => {
                   // Continuous cannot be canceled
                   if (props.isContinuous) {
@@ -462,11 +463,12 @@ export default function ExerciseView(props) {
           }
         }, [
           countDown,
-          restTime,
           exerciseTime,
           props.setType,
           props.isContinuous,
+          hasAudioCues,
           exercise.weight,
+          restTime,
           checkShouldFinishExercise,
         ])}
 
@@ -486,6 +488,7 @@ export default function ExerciseView(props) {
                 duration={restTime}
                 isExerciseTime={false}
                 setType={props.setType}
+                hasAudioCues={hasAudioCues}
                 onCancel={() => {
                   // Continuous cannot be canceled
                   if (props.isContinuous) {
@@ -514,6 +517,7 @@ export default function ExerciseView(props) {
           props.isContinuous,
           props.isLastExercise,
           props.setType,
+          hasAudioCues,
           checkShouldFinishExercise,
         ])}
       </View>
@@ -540,6 +544,7 @@ function SimpleTimerView({
   setType,
   onCancel,
   onFinish,
+  hasAudioCues = true,
 }) {
   const {dictionary} = useDictionary();
   const {WorkoutDict} = dictionary;
@@ -577,23 +582,11 @@ function SimpleTimerView({
     }
   }, [active, isWorkoutTimerRunning, toggle]);
 
-  const [appSounds, setAppSounds] = useState('Yes');
-
-  useEffect(() => {
-    async function getAppSounds() {
-      await AsyncStorage.getItem('@app_sounds').then((res) => {
-        if (res !== null) {
-          setAppSounds(res);
-        }
-      });
-    }
-    getAppSounds();
-  }, []);
-
   // Check remaining seconds
   useEffect(() => {
-    if (appSounds === 'Yes') {
+    if (hasAudioCues) {
       if (remainingMS === 3000 && isExerciseTime === true) {
+        console.log("AUDIO CUE", 'endExercise')
         const endExercise = new Sound(
           'end_exercise.mp3',
           Sound.MAIN_BUNDLE,
@@ -616,6 +609,8 @@ function SimpleTimerView({
       }
 
       if (remainingMS === 3000 && isExerciseTime === false) {
+        console.log("AUDIO CUE", 'endRest')
+
         const endRest = new Sound(
           'end_rest.mp3',
           Sound.MAIN_BUNDLE,
@@ -641,7 +636,7 @@ function SimpleTimerView({
     if (remainingMS === 0) {
       onFinish && onFinish();
     }
-  }, [onFinish, remainingMS, isExerciseTime, appSounds]);
+  }, [onFinish, remainingMS, isExerciseTime, hasAudioCues]);
 
   const progress = duration - remainingMS;
 

@@ -536,7 +536,8 @@ export default function WorkoutHomeScreen() {
       return;
     }
 
-    const wasWorkoutToday = wasLastWorkoutToday(programme.currentWeek.workouts);
+    const wasWorkoutToday = wasLastWorkoutToday(currentWeek);
+
     if (wasWorkoutToday === true) {
       DisplayAlert({
         text: WorkoutDict.WorkoutCompetedWarningText,

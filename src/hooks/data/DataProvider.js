@@ -455,17 +455,41 @@ export default function DataProvider(props) {
 
   const [weightsToUpload, setWeightsToUpload] = useState([]);
 
-  const wasLastWorkoutToday = useCallback((workouts) => {
-    const today = new Date();
-    const wasToday = workouts.find((workout) => {
-      return (
-        workout.completedAt &&
-        differenceInCalendarDays(parseISO(workout.completedAt), today) === 0
-      );
-    });
+  const wasLastWorkoutToday = useCallback(
+    (workouts) => {
+      const today = new Date();
 
-    return wasToday !== undefined ? true : false;
-  }, []);
+      const wasToday = workouts.find((workout) => {
+        return (
+          workout.completedAt &&
+          differenceInCalendarDays(parseISO(workout.completedAt), today) === 0
+        );
+      });
+
+      if (wasToday) {
+        return true;
+      }
+
+      // If there are no past weeks to check return false
+      if (currentWeekNumber === 1) {
+        return false;
+      }
+
+      let lastWeek = programmeScheduleData?.weeks.find(
+        (it) => it.weekNumber === currentWeekNumber - 1,
+      );
+
+      const wasTodayInCompletedWeek = lastWeek?.workouts?.find((workout) => {
+        return (
+          workout.completedAt &&
+          differenceInCalendarDays(parseISO(workout.completedAt), today) === 0
+        );
+      });
+
+      return !!wasTodayInCompletedWeek;
+    },
+    [currentWeekNumber, programmeScheduleData?.weeks],
+  );
 
   // ** ** ** ** ** On Demand ** ** ** ** **
   const [workoutTags, setWorkoutTags] = useState([]);

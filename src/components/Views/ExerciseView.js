@@ -430,11 +430,24 @@ export default function ExerciseView(props) {
               }
 
               // Reset exercise time to start rest time if applicable
-              setExerciseTime(0);
+              if (props.isContinuous && hasAudioCues) {
+                setTimeout(() => {
+                  setExerciseTime(0);
+                }, 1200);
+              } else {
+                setExerciseTime(0);
+              }
 
               // Exercise time is canceled without rest time, we finish exercise
               if (!restTime) {
-                setCountDown(false);
+                if (props.isContinuous && hasAudioCues) {
+                  setTimeout(() => {
+                    setCountDown(false);
+                  }, 1200);
+                } else {
+                  setCountDown(false);
+                }
+
                 checkShouldFinishExercise();
               }
             };
@@ -504,7 +517,14 @@ export default function ExerciseView(props) {
                     setShowUpNextLabel(false);
                   }
                   // Rest time is canceled
-                  setCountDown(false);
+                  if (props.isContinuous && hasAudioCues) {
+                    setTimeout(() => {
+                      setCountDown(false);
+                    }, 1200);
+                  } else {
+                    setCountDown(false);
+                  }
+
                   checkShouldFinishExercise();
                 }}
               />
@@ -534,6 +554,13 @@ export default function ExerciseView(props) {
           weightPreference={weightLabel}
         />
       )}
+
+      {/* <SimpleTimerView
+        duration={20000}
+        isExerciseTime={true}
+        setType={props.setType}
+        hasAudioCues={hasAudioCues}
+      /> */}
     </View>
   );
 }
@@ -550,7 +577,8 @@ function SimpleTimerView({
   const {WorkoutDict} = dictionary;
 
   const {exerciseViewStyle} = useTheme();
-  const {getHeight} = ScaleHook();
+
+  const {getHeight, getWidth} = ScaleHook();
   const styles = exerciseViewStyle;
 
   const {remainingMS, toggle, reset, active} = useTimer({
@@ -651,6 +679,27 @@ function SimpleTimerView({
 
   const progress = duration - remainingMS;
 
+  const renderTime = () => {
+    const timeStamp = msToHMS(remainingMS).split('');
+
+    return (
+      <>
+        {timeStamp.map((it) => {
+          return (
+            <Text
+              style={{
+                ...styles.timerTextStyle,
+                width: isNaN(it) ? getWidth(22) : getWidth(45),
+                lineHeight: isNaN(it) ? getHeight(95) : getHeight(100),
+              }}>
+              {it}
+            </Text>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <View style={styles.timerContainer}>
       {setType !== 'REPS' && (
@@ -667,7 +716,7 @@ function SimpleTimerView({
           onCancel && onCancel();
         }}>
         <View style={styles.timerTextContainer}>
-          <Text style={styles.timerTextStyle}>{msToHMS(remainingMS)}</Text>
+          <View style={{flexDirection: 'row'}}>{renderTime()}</View>
           {!isExerciseTime && (
             <Text style={styles.timerRestTextStyle}>{WorkoutDict.Rest}</Text>
           )}

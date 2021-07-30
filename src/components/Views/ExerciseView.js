@@ -560,6 +560,18 @@ function SimpleTimerView({
   const [timerRunning, setTimerRunning] = useState(false);
   const {isWorkoutTimerRunning} = useWorkoutTimer();
 
+  const audioCue = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (audioCue?.current) {
+        audioCue.current.stop();
+        audioCue.current.release();
+        audioCue.current = null;
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (!timerRunning) {
       console.log('useEffect: initialLoad reset timer');
@@ -586,8 +598,7 @@ function SimpleTimerView({
   useEffect(() => {
     if (hasAudioCues) {
       if (remainingMS === 3000 && isExerciseTime === true) {
-        console.log("AUDIO CUE", 'endExercise')
-        const endExercise = new Sound(
+        audioCue.current = new Sound(
           'end_exercise.mp3',
           Sound.MAIN_BUNDLE,
           (error) => {
@@ -596,7 +607,7 @@ function SimpleTimerView({
               return;
             }
 
-            endExercise.play((success) => {
+            audioCue.current.play((success) => {
               if (success) {
                 console.log('successfully finished playing');
               } else {
@@ -605,13 +616,11 @@ function SimpleTimerView({
             });
           },
         );
-        endExercise.release();
+        audioCue.current.release();
       }
 
       if (remainingMS === 3000 && isExerciseTime === false) {
-        console.log("AUDIO CUE", 'endRest')
-
-        const endRest = new Sound(
+        audioCue.current = new Sound(
           'end_rest.mp3',
           Sound.MAIN_BUNDLE,
           (error) => {
@@ -620,7 +629,7 @@ function SimpleTimerView({
               return;
             }
 
-            endRest.play((success) => {
+            audioCue.current.play((success) => {
               if (success) {
                 console.log('successfully finished playing');
               } else {
@@ -629,12 +638,14 @@ function SimpleTimerView({
             });
           },
         );
-        endRest.release();
+        audioCue.current.release();
       }
     }
 
     if (remainingMS === 0) {
-      onFinish && onFinish();
+      setTimeout(() => {
+        onFinish && onFinish();
+      }, 1200);
     }
   }, [onFinish, remainingMS, isExerciseTime, hasAudioCues]);
 

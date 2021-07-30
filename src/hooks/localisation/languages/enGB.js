@@ -328,7 +328,7 @@ const enGB = {
     Weight: 'WEIGHT MEASUREMENT',
     WeightKgs: 'Metric (kg)',
     WeightLbs: 'Imperial (lb)',
-    AppSounds: 'Play sounds',
+    AppSounds: 'PLAY AUDIO',
     On: 'On',
     Off: 'Off',
   },

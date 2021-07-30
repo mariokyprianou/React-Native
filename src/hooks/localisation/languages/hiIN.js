@@ -332,9 +332,9 @@ const hiIN = {
     Weight: 'वजन का माप',
     WeightKgs: 'मीट्रिक (किग्रा)',
     WeightLbs: 'इंपीरियल (पाउंड)',
-    AppSounds: 'Play sounds',
-    On: 'On-hin',
-    Off: 'Off-hin',
+    AppSounds: 'ऑडियो चलाएं',
+    On: 'शुरु',
+    Off: 'बंद',
   },
 
   ProgressDict: {

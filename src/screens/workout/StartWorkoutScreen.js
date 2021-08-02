@@ -132,8 +132,7 @@ export default function StartWorkoutScreen() {
     }
 
     setCurrentExerciseIndex(0);
-    setWorkoutTime(0);
-    setIsWorkoutTimerRunning(true);
+
     setCompletedExercises([]);
 
     firebaseLogEvent(analyticsEvents.startedWorkout, {
@@ -141,8 +140,14 @@ export default function StartWorkoutScreen() {
       workoutName: selectedWorkout.name,
     });
 
-    setActiveWorkout(true);
     navigation.navigate('Workout');
+
+    setWorkoutTime(0);
+    setActiveWorkout(true);
+
+    setTimeout(() => {
+      setIsWorkoutTimerRunning(true);
+    }, 1000);
   }
 
   const isFocused = useIsFocused();

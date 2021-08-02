@@ -433,7 +433,7 @@ export default function ExerciseView(props) {
               if (props.isContinuous && hasAudioCues) {
                 setTimeout(() => {
                   setExerciseTime(0);
-                }, 1200);
+                }, 1000);
               } else {
                 setExerciseTime(0);
               }
@@ -443,12 +443,19 @@ export default function ExerciseView(props) {
                 if (props.isContinuous && hasAudioCues) {
                   setTimeout(() => {
                     setCountDown(false);
-                  }, 1200);
+                  }, 1000);
                 } else {
                   setCountDown(false);
                 }
 
-                checkShouldFinishExercise();
+                // Delay check on last exercise to allow for sond to finish
+                if (props.isContinuous && props.isLastExercise) {
+                  setTimeout(() => {
+                    checkShouldFinishExercise();
+                  }, 1000);
+                } else {
+                  checkShouldFinishExercise();
+                }
               }
             };
 
@@ -479,6 +486,7 @@ export default function ExerciseView(props) {
           exerciseTime,
           props.setType,
           props.isContinuous,
+          props.isLastExercise,
           hasAudioCues,
           exercise.weight,
           restTime,
@@ -520,12 +528,19 @@ export default function ExerciseView(props) {
                   if (props.isContinuous && hasAudioCues) {
                     setTimeout(() => {
                       setCountDown(false);
-                    }, 1200);
+                    }, 1000);
                   } else {
                     setCountDown(false);
                   }
 
-                  checkShouldFinishExercise();
+                  // Delay check on last exercise to allow for sond to finish
+                  if (props.isContinuous && props.isLastExercise) {
+                    setTimeout(() => {
+                      checkShouldFinishExercise();
+                    }, 1000);
+                  } else {
+                    checkShouldFinishExercise();
+                  }
                 }}
               />
             );
@@ -554,13 +569,6 @@ export default function ExerciseView(props) {
           weightPreference={weightLabel}
         />
       )}
-
-      {/* <SimpleTimerView
-        duration={20000}
-        isExerciseTime={true}
-        setType={props.setType}
-        hasAudioCues={hasAudioCues}
-      /> */}
     </View>
   );
 }
@@ -591,6 +599,18 @@ function SimpleTimerView({
   const audioCue = useRef(null);
 
   useEffect(() => {
+    if (hasAudioCues) {
+      const resource =
+        isExerciseTime === true ? 'end_exercise.mp3' : 'end_rest.mp3';
+
+      // Load audio
+      audioCue.current = new Sound(resource, Sound.MAIN_BUNDLE, (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+        }
+      });
+    }
+
     return () => {
       if (audioCue?.current) {
         audioCue.current.stop();
@@ -598,7 +618,7 @@ function SimpleTimerView({
         audioCue.current = null;
       }
     };
-  }, []);
+  }, [hasAudioCues, isExerciseTime]);
 
   useEffect(() => {
     if (!timerRunning) {
@@ -612,6 +632,22 @@ function SimpleTimerView({
 
   // When timer is paused by user.
   useEffect(() => {
+    if (!isWorkoutTimerRunning) {
+      audioCue.current.pause();
+    } else {
+      if (
+        !audioCue.current.isPlaying() &&
+        hasAudioCues &&
+        remainingMS <= 3000
+      ) {
+        // Move audio back a bit to sync with UI
+        audioCue.current.getCurrentTime((secs) => {
+          audioCue.current.setCurrentTime(secs - 0.5);
+          audioCue.current.play();
+        });
+      }
+    }
+
     if (
       (!active && isWorkoutTimerRunning) ||
       (active && !isWorkoutTimerRunning)
@@ -620,60 +656,24 @@ function SimpleTimerView({
 
       toggle();
     }
-  }, [active, isWorkoutTimerRunning, toggle]);
+  }, [active, hasAudioCues, isWorkoutTimerRunning, toggle, remainingMS]);
 
   // Check remaining seconds
   useEffect(() => {
     if (hasAudioCues) {
-      if (remainingMS === 3000 && isExerciseTime === true) {
-        audioCue.current = new Sound(
-          'end_exercise.mp3',
-          Sound.MAIN_BUNDLE,
-          (error) => {
-            if (error) {
-              console.log('failed to load the sound', error);
-              return;
-            }
-
-            audioCue.current.play((success) => {
-              if (success) {
-                console.log('successfully finished playing');
-              } else {
-                console.log('playback failed due to audio decoding errors');
-              }
-            });
-          },
-        );
-        audioCue.current.release();
-      }
-
-      if (remainingMS === 3000 && isExerciseTime === false) {
-        audioCue.current = new Sound(
-          'end_rest.mp3',
-          Sound.MAIN_BUNDLE,
-          (error) => {
-            if (error) {
-              console.log('failed to load the sound', error);
-              return;
-            }
-
-            audioCue.current.play((success) => {
-              if (success) {
-                console.log('successfully finished playing');
-              } else {
-                console.log('playback failed due to audio decoding errors');
-              }
-            });
-          },
-        );
-        audioCue.current.release();
+      if (remainingMS === 3000) {
+        audioCue.current.play((success) => {
+          if (success) {
+            console.log('successfully finished playing');
+          } else {
+            console.log('playback failed due to audio decoding errors');
+          }
+        });
       }
     }
 
     if (remainingMS === 0) {
-      setTimeout(() => {
-        onFinish && onFinish();
-      }, 1200);
+      onFinish && onFinish();
     }
   }, [onFinish, remainingMS, isExerciseTime, hasAudioCues]);
 

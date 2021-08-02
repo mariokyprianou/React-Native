@@ -36,7 +36,7 @@ export default function WorkoutCard({
 
   const {WorkoutDict} = dictionary;
 
-  const isRestDay = !!workout.isRestDay;
+  const isRestDay = !day;
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {

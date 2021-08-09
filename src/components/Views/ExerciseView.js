@@ -337,6 +337,27 @@ export default function ExerciseView(props) {
     );
   };
 
+  const exerciseAudioCue = useRef(null);
+  const restAudioCue = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      setTimeout(() => {
+        if (exerciseAudioCue?.current) {
+          exerciseAudioCue.current.stop();
+          exerciseAudioCue.current.release();
+          exerciseAudioCue.current = null;
+        }
+
+        if (restAudioCue?.current) {
+          restAudioCue.current.stop();
+          restAudioCue.current.release();
+          restAudioCue.current = null;
+        }
+      }, 500);
+    };
+  }, [hasAudioCues]);
+
   return (
     <View style={{height: Constants.EXERCISE_VIEW_HEIGHT}}>
       <ExerciseVideoView
@@ -429,38 +450,19 @@ export default function ExerciseView(props) {
                 setSetComplete(true);
               }
 
-              // Reset exercise time to start rest time if applicable
-              if (props.isContinuous && hasAudioCues) {
-                setTimeout(() => {
-                  setExerciseTime(0);
-                }, 1000);
-              } else {
-                setExerciseTime(0);
-              }
+              setExerciseTime(0);
 
               // Exercise time is canceled without rest time, we finish exercise
               if (!restTime) {
-                if (props.isContinuous && hasAudioCues) {
-                  setTimeout(() => {
-                    setCountDown(false);
-                  }, 1000);
-                } else {
-                  setCountDown(false);
-                }
+                setCountDown(false);
 
-                // Delay check on last exercise to allow for sond to finish
-                if (props.isContinuous && props.isLastExercise) {
-                  setTimeout(() => {
-                    checkShouldFinishExercise();
-                  }, 1000);
-                } else {
-                  checkShouldFinishExercise();
-                }
+                checkShouldFinishExercise();
               }
             };
 
             return (
               <SimpleTimerView
+                audioRef={exerciseAudioCue}
                 duration={exerciseTime}
                 isExerciseTime={true}
                 setType={props.setType}
@@ -486,7 +488,6 @@ export default function ExerciseView(props) {
           exerciseTime,
           props.setType,
           props.isContinuous,
-          props.isLastExercise,
           hasAudioCues,
           exercise.weight,
           restTime,
@@ -506,6 +507,7 @@ export default function ExerciseView(props) {
 
             return (
               <SimpleTimerView
+                audioRef={restAudioCue}
                 duration={restTime}
                 isExerciseTime={false}
                 setType={props.setType}
@@ -524,23 +526,9 @@ export default function ExerciseView(props) {
                   if (props.isContinuous) {
                     setShowUpNextLabel(false);
                   }
-                  // Rest time is canceled
-                  if (props.isContinuous && hasAudioCues) {
-                    setTimeout(() => {
-                      setCountDown(false);
-                    }, 1000);
-                  } else {
-                    setCountDown(false);
-                  }
 
-                  // Delay check on last exercise to allow for sond to finish
-                  if (props.isContinuous && props.isLastExercise) {
-                    setTimeout(() => {
-                      checkShouldFinishExercise();
-                    }, 1000);
-                  } else {
-                    checkShouldFinishExercise();
-                  }
+                  setCountDown(false);
+                  checkShouldFinishExercise();
                 }}
               />
             );
@@ -574,6 +562,7 @@ export default function ExerciseView(props) {
 }
 
 function SimpleTimerView({
+  audioRef,
   duration,
   isExerciseTime,
   setType,
@@ -596,29 +585,19 @@ function SimpleTimerView({
   const [timerRunning, setTimerRunning] = useState(false);
   const {isWorkoutTimerRunning} = useWorkoutTimer();
 
-  const audioCue = useRef(null);
-
   useEffect(() => {
     if (hasAudioCues) {
       const resource =
         isExerciseTime === true ? 'end_exercise.mp3' : 'end_rest.mp3';
 
       // Load audio
-      audioCue.current = new Sound(resource, Sound.MAIN_BUNDLE, (error) => {
+      audioRef.current = new Sound(resource, Sound.MAIN_BUNDLE, (error) => {
         if (error) {
           console.log('failed to load the sound', error);
         }
       });
     }
-
-    return () => {
-      if (audioCue?.current) {
-        audioCue.current.stop();
-        audioCue.current.release();
-        audioCue.current = null;
-      }
-    };
-  }, [hasAudioCues, isExerciseTime]);
+  }, [audioRef, hasAudioCues, isExerciseTime]);
 
   useEffect(() => {
     if (!timerRunning) {
@@ -633,17 +612,17 @@ function SimpleTimerView({
   // When timer is paused by user.
   useEffect(() => {
     if (!isWorkoutTimerRunning) {
-      audioCue.current.pause();
+      audioRef.current.pause();
     } else {
       if (
-        !audioCue.current.isPlaying() &&
+        !audioRef.current.isPlaying() &&
         hasAudioCues &&
         remainingMS <= 3000
       ) {
         // Move audio back a bit to sync with UI
-        audioCue.current.getCurrentTime((secs) => {
-          audioCue.current.setCurrentTime(secs - 0.5);
-          audioCue.current.play();
+        audioRef.current.getCurrentTime((secs) => {
+          audioRef.current.setCurrentTime(secs - 0.5);
+          audioRef.current.play();
         });
       }
     }
@@ -656,13 +635,20 @@ function SimpleTimerView({
 
       toggle();
     }
-  }, [active, hasAudioCues, isWorkoutTimerRunning, toggle, remainingMS]);
+  }, [
+    active,
+    hasAudioCues,
+    isWorkoutTimerRunning,
+    toggle,
+    remainingMS,
+    audioRef,
+  ]);
 
   // Check remaining seconds
   useEffect(() => {
     if (hasAudioCues) {
       if (remainingMS === 3000) {
-        audioCue.current.play((success) => {
+        audioRef.current.play((success) => {
           if (success) {
             console.log('successfully finished playing');
           } else {
@@ -675,7 +661,7 @@ function SimpleTimerView({
     if (remainingMS === 0) {
       onFinish && onFinish();
     }
-  }, [onFinish, remainingMS, isExerciseTime, hasAudioCues]);
+  }, [onFinish, remainingMS, isExerciseTime, hasAudioCues, audioRef]);
 
   const progress = duration - remainingMS;
 

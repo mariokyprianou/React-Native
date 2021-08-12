@@ -51,7 +51,12 @@ export default function WorkoutHomeScreen() {
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles, colors} = useTheme();
   const {dictionary, locale} = useDictionary();
-  const {WorkoutDict, ProfileDict, OfflineMessage} = dictionary;
+  const {
+    WorkoutDict,
+    ProfileDict,
+    OfflineMessage,
+    OfflineSubsMessage,
+  } = dictionary;
 
   const [stayTunedEnabled, setStayTunedEnabled] = useState(true);
 
@@ -84,7 +89,11 @@ export default function WorkoutHomeScreen() {
     initCacheWeekVideos,
   } = useData();
 
-  const {suspendedAccount, isSubscriptionActive} = useUserData();
+  const {
+    suspendedAccount,
+    isSubscriptionActive,
+    getSubscription,
+  } = useUserData();
   const [updateOrderMutation] = useMutation(UpdateOrder);
   const [completeWeekMutation] = useMutation(CompleteWorkoutWeek);
 
@@ -556,10 +565,28 @@ export default function WorkoutHomeScreen() {
       return;
     }
 
-    if (!isSubscriptionActive) {
+    // No sub and no internet to check
+    if (!isSubscriptionActive && !isConnected) {
+      DisplayAlert({text: OfflineSubsMessage});
+      return;
+    }
+
+    // Havent checked sub yet
+    if (isSubscriptionActive === undefined) {
+      setLoading(true);
+      const res = await getSubscription();
+      setLoading(false);
+      if (!res?.value?.isActive) {
+        navigation.navigate('PurchaseModal');
+        return;
+      }
+    }
+
+    if (isSubscriptionActive === false) {
       navigation.navigate('PurchaseModal');
       return;
     }
+
     // Sort exercises
     const newWorkout = {
       ...workout,

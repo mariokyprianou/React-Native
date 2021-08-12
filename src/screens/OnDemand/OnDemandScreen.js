@@ -25,19 +25,26 @@ import {useNavigation, useIsFocused} from '@react-navigation/native';
 import OnDemandWorkoutCard from '../../components/Cards/OnDemandWorkoutCard';
 import WorkoutTagButton from '../../components/Buttons/WorkoutTagButton';
 import displayAlert from '../../utils/DisplayAlert';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function OnDemandScreen() {
   // ** ** ** ** ** SETUP ** ** ** ** **
+  const {isConnected, isInternetReachable} = useNetInfo();
+
   const {getHeight, getWidth, fontSize} = ScaleHook();
   const {textStyles, colors} = useTheme();
   const {dictionary} = useDictionary();
-  const {OnDemandDict, WorkoutDict} = dictionary;
+  const {OnDemandDict, WorkoutDict, OfflineSubsMessage} = dictionary;
 
   const [workoutsToDisplay, setWorkoutsToDisplay] = useState([]);
   const [workoutTagsToDisplay, setWorkoutTagsToDisplay] = useState([]);
   const navigation = useNavigation();
   const {setLoading} = useLoading();
-  const {suspendedAccount, isSubscriptionActive} = useUserData();
+  const {
+    suspendedAccount,
+    isSubscriptionActive,
+    getSubscription,
+  } = useUserData();
 
   const {
     workoutTags,
@@ -255,7 +262,24 @@ export default function OnDemandScreen() {
                       return;
                     }
 
-                    if (!isSubscriptionActive) {
+                    // No sub and no internet to check
+                    if (!isSubscriptionActive && !isConnected) {
+                      displayAlert({text: OfflineSubsMessage});
+                      return;
+                    }
+
+                    // Havent checked sub yet
+                    if (isSubscriptionActive === undefined) {
+                      setLoading(true);
+                      const res = await getSubscription();
+                      setLoading(false);
+                      if (!res?.value?.isActive) {
+                        navigation.navigate('PurchaseModal');
+                        return;
+                      }
+                    }
+
+                    if (isSubscriptionActive === false) {
                       navigation.navigate('PurchaseModal');
                       return;
                     }

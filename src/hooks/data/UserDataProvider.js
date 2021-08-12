@@ -201,7 +201,7 @@ export default function UserDataProvider(props) {
 
   const [changeDevice, setChangeDevice] = useState(null);
   const [suspendedAccount, setSuspendedAccount] = useState(false);
-  const [isSubscriptionActive, setIsSubscriptionActive] = useState(true);
+  const [isSubscriptionActive, setIsSubscriptionActive] = useState();
 
   // 3 workouts are allowed without subscription
   const [completedFreeWorkouts, setCompletedFreeWorkouts] = useState(false);
@@ -356,6 +356,24 @@ export default function UserDataProvider(props) {
     }
   }, [runQuery]);
 
+  const getSubscription = useCallback(async () => {
+    return await runQuery({
+      query: GetSubscription,
+      key: 'subscription',
+      setValue: async (res) => {
+        console.log('RESSS', res);
+        if (res) {
+          const {isActive} = res;
+          setIsSubscriptionActive(isActive);
+          return isActive;
+        } else {
+          setIsSubscriptionActive(false);
+          return false;
+        }
+      },
+    });
+  }, [runQuery]);
+
   useEffect(() => {
     console.log('isSubscriptionActive Changed', isSubscriptionActive);
   }, [isSubscriptionActive]);
@@ -417,6 +435,7 @@ export default function UserDataProvider(props) {
       isSubscriptionActive,
       getProfile,
       checkShouldShowReviewMessage,
+      getSubscription,
     }),
     [
       userData,
@@ -438,6 +457,7 @@ export default function UserDataProvider(props) {
       isSubscriptionActive,
       getProfile,
       checkShouldShowReviewMessage,
+      getSubscription,
     ],
   );
 

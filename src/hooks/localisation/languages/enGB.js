@@ -38,6 +38,8 @@ const SharedDict = {
 const enGB = {
   AppTitle: 'Power',
   OfflineMessage: 'You are currently offline. Please reconnect and try again.',
+  OfflineSubsMessage:
+    'Subscription information is currently unavailable. Please connect to the internet and try again.',
 
   ButtonDict: {
     AddPhoto: 'ADD PHOTO',

@@ -27,7 +27,7 @@ export default function DataProvider(props) {
         .then((res) => {
           const newValue = R.path(['data', key], res);
           setValue && setValue(newValue);
-          return {success: true};
+          return {success: true, value: newValue};
         })
         .catch((err) => {
           console.warn(key, '- Err: ', err);

@@ -40,6 +40,8 @@ const SharedDict = {
 const hiIN = {
   AppTitle: 'Power',
   OfflineMessage: 'आप अभी ऑफ़लाइन हैं। कृपया पुन: कनेक्ट करने का प्रयास करें',
+  OfflineSubsMessage:
+    'सदस्यता जानकारी अभी उपलब्ध नहीं है। कृपया इंटरनेट से कनेक्ट करें और पुन: प्रयास करें।',
 
   ButtonDict: {
     AddPhoto: 'फोटो जोड़ें',

@@ -69,17 +69,17 @@ export default function ({
       videoRef.current && videoRef.current.pause();
 
       // Only call if any other than current is playing
-    } else if (!isPaused && !isContinuous) {
+    } else if (index !== currentExerciseIndex && !isPaused && !isContinuous) {
       videoRef.current && videoRef.current.pause();
     }
   }, [currentExerciseIndex, index]);
 
   // When timer is paused by user.
   useEffect(() => {
-    if (isWorkoutTimerRunning === false) {
+    if (isWorkoutTimerRunning === false && !isPaused) {
       videoRef.current && videoRef.current.pause();
       setIsPaused(true);
-    } else if (isWorkoutTimerRunning === true && isPaused === true) {
+    } else if (isWorkoutTimerRunning === true && isPaused) {
       videoRef.current && videoRef.current.pause();
       setIsPaused(false);
     }
